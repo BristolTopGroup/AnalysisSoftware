@@ -1,0 +1,9 @@
+<Flags ADD_SUBDIR=yes>
+<FLAGS CXXFLAGS="-g3">
+<use name=boost>
+<use name=root>
+<use name=rootcore>
+<use name=boost_system>
+<use name=boost_filesystem>
+<use name=BristolAnalysis/Tools>
+<bin name="BAT_Tests" file=*.cpp></bin>
