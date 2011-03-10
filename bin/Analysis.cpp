@@ -33,8 +33,6 @@ void Analysis::analyze() {
         //        doEcalSpikeAnalysis();
         //                doSynchExercise();
 //        if (currentEvent.GoodElectrons().size() > 0) {
-//            cout << "PFIsolation: " << currentEvent.GoodElectrons().front()->pfIsolation();
-//            cout << " RelIso: " << currentEvent.GoodElectrons().front()->relativeIsolation() << endl;
 //        }
         doTTbarCutFlow();
         doDiElectronAnalysis();
