@@ -7,6 +7,7 @@
 
 #ifndef EventContentPrinter_H_
 #define EventContentPrinter_H_
+#include "../RecoObjects/MCParticle.h"
 #include "../RecoObjects/Particle.h"
 #include "../RecoObjects/Electron.h"
 #include "../RecoObjects/Jet.h"
@@ -21,6 +22,7 @@ namespace EventContentPrinter {
     extern void printPFJetExtra(const JetPointer jet);
     extern void printElectron(const ElectronPointer electron);
     extern void printParticle(const ParticlePointer particle);
+    extern void printGenParticle(const MCParticlePointer genParticle);
     extern void printCutFlowTable();
     extern void printWeightedCutFlowTable();
 }

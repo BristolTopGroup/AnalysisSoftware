@@ -84,5 +84,14 @@ extern void printParticle(const ParticlePointer particle) {
     cout << setw(30) << particle->d0() << setw(30) << particle->massFromEnergyAndMomentum() << setw(30)
             << particle->mass() << setw(30) << particle->charge() << endl;
 }
+
+extern void printGenParticle(const MCParticlePointer genParticle) {
+	printParticle(genParticle);
+
+    cout << setw(30) << "pdgid" << setw(30) << "status" << setw(30) << "mother index" << setw(30) << "energy" << endl;
+    cout << setw(30) << genParticle->pdgId() << setw(30) << genParticle->status() << setw(30) << genParticle->motherIndex() << setw(30)
+            << genParticle->energy()<< endl;
+}
+
 }
 }
