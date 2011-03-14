@@ -2,7 +2,6 @@
 #include "cute/cute_suite.h"
 
 #include "../interface/RecoObjects/Particle.h"
-#include "../interface/DetectorGeometry.h"
 
 using namespace BAT;
 
@@ -26,12 +25,12 @@ public:
 
         combinedVector = FourVector(particle1->getFourVector() + particle2->getFourVector());
 
-        assert(fabs(particleInBarrelRegion->eta()) < Detector::Barrel::MaximalAbsoluteEta);
+        assert(fabs(particleInBarrelRegion->eta()) < 1.4442);
 
-        assert(fabs(particleInEndcap->eta()) > Detector::EndCap::MinimalAbsoluteEta);
+        assert(fabs(particleInEndcap->eta()) > 1.5660);
 
-        assert(fabs(particleInCrack->eta()) > Detector::Crack::MinimalAbsoluteEta);
-        assert(fabs(particleInCrack->eta()) < Detector::Crack::MaximalAbsoluteEta);
+        assert(fabs(particleInCrack->eta()) > 1.4442);
+        assert(fabs(particleInCrack->eta()) < 1.5660);
 
         zParticle1->setCharge(-1);
         zParticle2->setCharge(1);
