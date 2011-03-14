@@ -33,7 +33,6 @@ NTupleEventReader::NTupleEventReader() :
     electronReader(new ElectronReader(input, NTupleEventReader::electronAlgorithm)),
     genParticleReader(new GenParticleReader(input)),
     jetReader(new JetReader(input, NTupleEventReader::jetAlgorithm)),
-    genJetReader(new GenJetReader(input, NTupleEventReader::jetAlgorithm)),
     muonReader(new MuonReader(input, NTupleEventReader::muonAlgorithm)),
     metReader(new METReader(input, NTupleEventReader::metAlgorithm)),
     runNumberReader(new VariableReader<unsigned int> (input, "run")),
@@ -62,22 +61,27 @@ void NTupleEventReader::addInputFileWithoutCheck(const char * fileName) {
 
 const Event& NTupleEventReader::getNextEvent() {
     currentEvent = Event();
-    currentEvent.setDataType(getDataType(getCurrentFile()));
     selectNextNtupleEvent();
+
     boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
 
     for(unsigned int i = 0; i < hltReader->size(); i++){
         triggers->push_back(hltReader->getIntVariableAt(i));
     }
+
+    currentEvent.setDataType(getDataType(getCurrentFile()));
     currentEvent.setHLTs(triggers);
     currentEvent.setPrimaryVertex(primaryReader->getVertex());
+
     if(NTupleEventReader::loadTracks)
         currentEvent.setTracks(trackReader->getTracks());
     currentEvent.setElectrons(electronReader->getElectrons());
+
     if(!currentEvent.isRealData()) {
     	currentEvent.setGenParticles(genParticleReader->getGenParticles());
-			currentEvent.setGenJets(genJetReader->getJets());
+    	currentEvent.setGenJets(jetReader->getGenJets());
     }
+
     currentEvent.setJets(jetReader->getJets());
     currentEvent.setMuons(muonReader->getMuons());
     currentEvent.setMET(metReader->getMET());
@@ -86,6 +90,7 @@ const Event& NTupleEventReader::getNextEvent() {
     currentEvent.setLocalEventNumber(currentEventEntry);
     currentEvent.setLumiBlock(lumiBlockReader->getVariable());
     currentEvent.setBeamScrapingVeto(beamScrapingReader->getVariable());
+
     return currentEvent;
 }
 
@@ -116,7 +121,6 @@ void NTupleEventReader::initiateReadersIfNotSet() {
         electronReader->initialise();
         genParticleReader->initialise();
         jetReader->initialise();
-        genJetReader->initialise();
         muonReader->initialise();
         metReader->initialise();
         runNumberReader->initialise();
@@ -176,6 +180,8 @@ void NTupleEventReader::readDataTypes() {
 }
 
 const char* NTupleEventReader::getCurrentFile() const {
+	if (input->GetCurrentFile() == 0)
+		throw NoFileFoundException("Tried to access non-existent file.");
     return input->GetCurrentFile()->GetName();
 }
 }
