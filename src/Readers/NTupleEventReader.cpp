@@ -33,6 +33,7 @@ NTupleEventReader::NTupleEventReader() :
     electronReader(new ElectronReader(input, NTupleEventReader::electronAlgorithm)),
     genParticleReader(new GenParticleReader(input)),
     jetReader(new JetReader(input, NTupleEventReader::jetAlgorithm)),
+    genJetReader(new GenJetReader(input)),
     muonReader(new MuonReader(input, NTupleEventReader::muonAlgorithm)),
     metReader(new METReader(input, NTupleEventReader::metAlgorithm)),
     runNumberReader(new VariableReader<unsigned int> (input, "run")),
@@ -79,7 +80,7 @@ const Event& NTupleEventReader::getNextEvent() {
 
     if(!currentEvent.isRealData()) {
     	currentEvent.setGenParticles(genParticleReader->getGenParticles());
-    	currentEvent.setGenJets(jetReader->getGenJets());
+    	currentEvent.setGenJets(genJetReader->getGenJets());
     }
 
     currentEvent.setJets(jetReader->getJets());
@@ -121,6 +122,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
         electronReader->initialise();
         genParticleReader->initialise();
         jetReader->initialise();
+        genJetReader->initialise();
         muonReader->initialise();
         metReader->initialise();
         runNumberReader->initialise();

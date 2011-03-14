@@ -28,15 +28,15 @@ JetReader::JetReader() :
     btagSimpleSecondaryVertexReader(),
     btagTrackCountingHighPurityReader(),
     btagTrackCountingHighEfficiencyReader(),
-    genEnergyReader(),
-    genPxReader(),
-    genPyReader(),
-    genPzReader(),
-    genMassReader(),
-    genChargeReader(),
-    genEmfReader(),
+//    genEnergyReader(),
+//    genPxReader(),
+//    genPyReader(),
+//    genPzReader(),
+//    genMassReader(),
+//    genChargeReader(),
+//    genEmfReader(),
     jets(),
-    genJets(),
+//    genJets(),
     usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05) {
 
 }
@@ -59,15 +59,15 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
     btagSimpleSecondaryVertexReader(input, JetAlgorithm::prefixes.at(algo) + ".SimpleSecondaryVertexHighEffBTag"),
     btagTrackCountingHighPurityReader(input, JetAlgorithm::prefixes.at(algo) + ".TrackCountingHighPurBTag"),
     btagTrackCountingHighEfficiencyReader(input, JetAlgorithm::prefixes.at(algo) + ".TrackCountingHighEffBTag"),
-    genEnergyReader(input, "GenJet.Energy"),
-    genPxReader(input, "GenJet.Px"),
-    genPyReader(input, "GenJet.Py"),
-    genPzReader(input, "GenJet.Pz"),
-    genMassReader(input, "GenJet.Mass"),
-    genChargeReader(input, "GenJet.Charge"),
-    genEmfReader(input, "GenJet.EMF"),
+//    genEnergyReader(input, "GenJet.Energy"),
+//    genPxReader(input, "GenJet.Px"),
+//    genPyReader(input, "GenJet.Py"),
+//    genPzReader(input, "GenJet.Pz"),
+//    genMassReader(input, "GenJet.Mass"),
+//    genChargeReader(input, "GenJet.Charge"),
+//    genEmfReader(input, "GenJet.EMF"),
     jets(),
-    genJets(),
+//    genJets(),
     usedAlgorithm(algo) {
 
 }
@@ -81,12 +81,12 @@ const JetCollection& JetReader::getJets() {
 	return jets;
 }
 
-const JetCollection& JetReader::getGenJets() {
-	if (genJets.empty() == false)
-		genJets.clear();
-	readGenJets();
-	return genJets;
-}
+//const JetCollection& JetReader::getGenJets() {
+//	if (genJets.empty() == false)
+//		genJets.clear();
+//	readGenJets();
+//	return genJets;
+//}
 
 void JetReader::readJets() {
 	for (unsigned int jetIndex = 0; jetIndex < energyReader.size(); jetIndex++) {
@@ -133,22 +133,22 @@ void JetReader::readJets() {
 	}
 }
 
-void JetReader::readGenJets() {
-	for (unsigned int jetIndex = 0; jetIndex < genEnergyReader.size(); jetIndex++) {
-		float energy = genEnergyReader.getVariableAt(jetIndex);
-		float px = genPxReader.getVariableAt(jetIndex);
-		float py = genPyReader.getVariableAt(jetIndex);
-		float pz = genPzReader.getVariableAt(jetIndex);
-		JetPointer jet(new Jet(energy, px, py, pz));
-
-		jet->setUsedAlgorithm(usedAlgorithm);
-		jet->setMass(genMassReader.getVariableAt(jetIndex));
-		jet->setCharge(genChargeReader.getVariableAt(jetIndex));
-		jet->setEMF(genEmfReader.getVariableAt(jetIndex));
-
-		genJets.push_back(jet);
-	}
-}
+//void JetReader::readGenJets() {
+//	for (unsigned int jetIndex = 0; jetIndex < genEnergyReader.size(); jetIndex++) {
+//		float energy = genEnergyReader.getVariableAt(jetIndex);
+//		float px = genPxReader.getVariableAt(jetIndex);
+//		float py = genPyReader.getVariableAt(jetIndex);
+//		float pz = genPzReader.getVariableAt(jetIndex);
+//		JetPointer jet(new Jet(energy, px, py, pz));
+//
+//		jet->setUsedAlgorithm(usedAlgorithm);
+//		jet->setMass(genMassReader.getVariableAt(jetIndex));
+//		jet->setCharge(genChargeReader.getVariableAt(jetIndex));
+//		jet->setEMF(genEmfReader.getVariableAt(jetIndex));
+//
+//		genJets.push_back(jet);
+//	}
+//}
 
 void JetReader::initialise() {
 	energyReader.initialise();
@@ -176,12 +176,12 @@ void JetReader::initialise() {
 		NCHReader.initialise();
 	}
 
-	genEnergyReader.initialiseBlindly();
-	genPxReader.initialiseBlindly();
-	genPyReader.initialiseBlindly();
-	genPzReader.initialiseBlindly();
-	genMassReader.initialiseBlindly();
-	genEmfReader.initialiseBlindly();
-	genChargeReader.initialiseBlindly();
+//	genEnergyReader.initialiseBlindly();
+//	genPxReader.initialiseBlindly();
+//	genPyReader.initialiseBlindly();
+//	genPzReader.initialiseBlindly();
+//	genMassReader.initialiseBlindly();
+//	genEmfReader.initialiseBlindly();
+//	genChargeReader.initialiseBlindly();
 }
 }

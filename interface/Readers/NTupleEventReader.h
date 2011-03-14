@@ -14,6 +14,7 @@
 #include "../Event.h"
 #include "ElectronReader.h"
 #include "JetReader.h"
+#include "GenJetReader.h"
 #include "MuonReader.h"
 #include "VariableReader.h"
 #include "PrimaryVertexReader.h"
@@ -75,6 +76,7 @@ private:
 	boost::scoped_ptr<ElectronReader> electronReader;
 	boost::scoped_ptr<GenParticleReader> genParticleReader;
 	boost::scoped_ptr<JetReader> jetReader;
+	boost::scoped_ptr<GenJetReader> genJetReader;
 	boost::scoped_ptr<MuonReader> muonReader;
 	boost::scoped_ptr<METReader> metReader;
 

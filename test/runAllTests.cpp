@@ -7,6 +7,7 @@
 #include "TestElectronReader.h"
 #include "TestEvent.h"
 #include "TestEventCounter.h"
+#include "TestGenJetReader.h"
 #include "TestHistogramManager.h"
 #include "TestJet.h"
 #include "TestJetReader.h"
@@ -43,6 +44,7 @@ void runSuite() {
     s += make_suite_TestElectronReader();
     s += make_suite_TestEvent();
     s += make_suite_TestEventCounter();
+    s += make_suite_TestGenJetReader();
     s += make_suite_TestHistogramManager();
     s += make_suite_TestJet();
     s += make_suite_TestJetReader();

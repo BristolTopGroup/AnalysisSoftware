@@ -9,7 +9,6 @@
 #define JETREADER_H_
 #include "VariableReader.h"
 #include "../RecoObjects/Jet.h"
-#include <string>
 
 namespace BAT {
 
@@ -20,7 +19,7 @@ public:
 			JetAlgorithm::value algo = JetAlgorithm::Calo_AntiKT_Cone05);
 	virtual ~JetReader();
 	virtual const JetCollection& getJets();
-	virtual const JetCollection& getGenJets();
+//	virtual const JetCollection& getGenJets();
 	virtual void initialise();
 
 protected:
@@ -47,19 +46,19 @@ protected:
 	VariableReader<MultiDoublePointer> btagTrackCountingHighPurityReader;
 	VariableReader<MultiDoublePointer> btagTrackCountingHighEfficiencyReader;
 
-	VariableReader<MultiDoublePointer> genEnergyReader;
-	VariableReader<MultiDoublePointer> genPxReader;
-	VariableReader<MultiDoublePointer> genPyReader;
-	VariableReader<MultiDoublePointer> genPzReader;
-	VariableReader<MultiDoublePointer> genMassReader;
-	VariableReader<MultiDoublePointer> genChargeReader;
-	VariableReader<MultiDoublePointer> genEmfReader;
+//	VariableReader<MultiDoublePointer> genEnergyReader;
+//	VariableReader<MultiDoublePointer> genPxReader;
+//	VariableReader<MultiDoublePointer> genPyReader;
+//	VariableReader<MultiDoublePointer> genPzReader;
+//	VariableReader<MultiDoublePointer> genMassReader;
+//	VariableReader<MultiDoublePointer> genChargeReader;
+//	VariableReader<MultiDoublePointer> genEmfReader;
 
 	JetCollection jets;
-	JetCollection genJets;
+//	JetCollection genJets;
 	JetAlgorithm::value usedAlgorithm;
 	virtual void readJets();
-	virtual void readGenJets();
+//	virtual void readGenJets();
 
 };
 

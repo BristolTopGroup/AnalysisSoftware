@@ -82,6 +82,7 @@ public:
 	void testUsedAlgorithmPFJet(){
 		ASSERT_EQUAL(JetAlgorithm::ParticleFlow, firstPFJet->getUsedAlgorithm());
 	}
+
 };
 extern cute::suite make_suite_TestJetReader() {
 	cute::suite s;
