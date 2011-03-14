@@ -81,49 +81,41 @@ public:
     }
 
     void testTTbarType() {
-    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(DataType::ttbar, currentEvent.getDataType());
     }
 
     void testQCD_EMEnriched_80_to_170Type() {
-    	ASSERT(QCDenri3Reader->hasNextEvent());
         Event currentEvent = QCDenri3Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt80to170, currentEvent.getDataType());
     }
 
     void testQCD_EMEnriched_30_to_80Type() {
-    	ASSERT(QCDenri2Reader->hasNextEvent());
         Event currentEvent = QCDenri2Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt30to80, currentEvent.getDataType());
     }
 
     void testQCD_EMEnriched_20_to_30Type() {
-    	ASSERT(QCDenri1Reader->hasNextEvent());
         Event currentEvent = QCDenri1Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt20to30, currentEvent.getDataType());
     }
 
     void testQCD_BCtoE_80_to_170Type() {
-    	ASSERT(QCDbce3Reader->hasNextEvent());
         Event currentEvent = QCDbce3Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_BCtoE_Pt80to170, currentEvent.getDataType());
     }
 
     void testQCD_BCtoE_30_to_80Type() {
-    	ASSERT(QCDbce2Reader->hasNextEvent());
         Event currentEvent = QCDbce2Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_BCtoE_Pt30to80, currentEvent.getDataType());
     }
 
     void testQCD_BCtoE_20_to_30Type() {
-    	ASSERT(QCDbce1Reader->hasNextEvent());
         Event currentEvent = QCDbce1Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_BCtoE_Pt20to30, currentEvent.getDataType());
     }
 
     void testWjetsType() {
-    	ASSERT(WjetsReader->hasNextEvent());
         Event currentEvent = WjetsReader->getNextEvent();
         ASSERT_EQUAL(DataType::Wjets, currentEvent.getDataType());
     }
@@ -141,13 +133,11 @@ public:
     }
 
     void testTChanType() {
-    	ASSERT(TChanReader->hasNextEvent());
         Event currentEvent = TChanReader->getNextEvent();
         ASSERT_EQUAL(DataType::singleTopTChannel, currentEvent.getDataType());
     }
 
     void testDataType() {
-    	ASSERT(DataReader->hasNextEvent());
         Event currentEvent = DataReader->getNextEvent();
         ASSERT_EQUAL(DataType::DATA, currentEvent.getDataType());
     }
@@ -165,19 +155,16 @@ public:
     }
 
     void testNumberOfElectronsInEvent1() {
-    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(2, currentEvent.Electrons().size());
     }
 
     void testNumberOfJetsInEvent1() {
-    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(8, currentEvent.Jets().size());
     }
 
     void testNumberOfMuonsInEvent1() {
-    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(1, currentEvent.Muons().size());
     }
@@ -192,7 +179,6 @@ public:
     }
 
     void testGetProccessedNumberOfEvents() {
-    	ASSERT(TTbarReader->hasNextEvent());
         TTbarReader->getNextEvent();
         ASSERT_EQUAL(1, TTbarReader->getNumberOfProccessedEvents());
         TTbarReader->getNextEvent();
@@ -200,7 +186,6 @@ public:
     }
 
     void testGetProccessedNumberOfEventsWithSkippedEvents() {
-    	ASSERT(TTbarReader->hasNextEvent());
         TTbarReader->getNextEvent();
         TTbarReader->skipNumberOfEvents(100);
         ASSERT_EQUAL(1, TTbarReader->getNumberOfProccessedEvents());
@@ -211,7 +196,6 @@ public:
     }
 
     void testGetCurrentLocalEventNumber() {
-    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(0, TTbarReader->getCurrentLocalEventNumber());
         TTbarReader->getNextEvent();
         ASSERT_EQUAL(1, TTbarReader->getCurrentLocalEventNumber());
@@ -232,17 +216,14 @@ public:
     }
 
     void testMCRunNumber() {
-    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(1, TTbarReader->getNextEvent().runnumber());
     }
 
     void testMCLumiBlock() {
-    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(7, TTbarReader->getNextEvent().lumiblock());
     }
 
     void testLocalEventNumber() {
-    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(1, TTbarReader->getNextEvent().localnumber());
     }
 
@@ -252,12 +233,10 @@ public:
     }
 
     void testPrimaryVertex() {
-        ASSERT_EQUAL(true, TTbarReader->hasNextEvent());
         ASSERT_EQUAL(true, TTbarReader->getNextEvent().PrimaryVertex()->isGood());
     }
 
     void testHLTTrigger() {
-    	ASSERT(TTbarReader->hasNextEvent());
         TopPairEventCandidate candidate = TopPairEventCandidate(TTbarReader->getNextEvent());
         ASSERT_EQUAL(true, candidate.passesHighLevelTrigger());
     }
@@ -267,7 +246,6 @@ public:
     }
 
     void testTTbarEventMET() {
-    	ASSERT(TTbarReader->hasNextEvent());
         Event event = TTbarReader->getNextEvent();
         ASSERT_EQUAL_DELTA(69.2572,event.MET()->et(), 0.001);
     }
@@ -305,6 +283,16 @@ public:
         boost::scoped_ptr<NTupleEventReader> reader(new NTupleEventReader());
         ASSERT_THROWS(reader->addInputFile("dfjndkjvnvh"), NoFileFoundException);
     }
+
+    void testGenJetsMC() {
+		Event event = TTbarReader->getNextEvent();
+		ASSERT_EQUAL(10, event.GenJets().size());
+	}
+
+	void testGenJetsDATA() {
+		Event event = DataReader->getNextEvent();
+		ASSERT_EQUAL(0, event.GenJets().size());
+	}
 
 };
 
@@ -352,7 +340,9 @@ extern cute::suite make_suite_TestNTupleEventReader() {
 
     s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testSeenTTbar));
     s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testSeenAllMC));
-//    s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testHLT));
     s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testAddInputFileNoFileThrowsException));
+
+    s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testGenJetsMC));
+    s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testGenJetsDATA));
     return s;
 }
