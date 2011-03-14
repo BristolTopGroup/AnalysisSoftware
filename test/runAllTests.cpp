@@ -17,8 +17,6 @@
 #include "TestMuonReader.h"
 #include "TestNTupleEventReader.h"
 #include "TestParticle.h"
-#include "TestPrimaryVertex.h"
-#include "TestPrimaryVertexReader.h"
 #include "TestROOT.h"
 #include "TestStringOperations.h"
 #include "TestTHCollection.h"
@@ -27,6 +25,8 @@
 #include "TestTrackReader.h"
 #include "TestTTbarSolution.h"
 #include "TestVariableReader.h"
+#include "TestVertex.h"
+#include "TestVertexReader.h"
 
 #include "TROOT.h"
 
@@ -54,8 +54,6 @@ void runSuite() {
     s += make_suite_TestMuonReader();
     s += make_suite_TestNTupleEventReader();
     s += make_suite_TestParticle();
-    s += make_suite_TestPrimaryVertex();
-    s += make_suite_TestPrimaryVertexReader();
     s += make_suite_ROOTLearnTests();
     s += make_suite_TestStringOperations();
     s += make_suite_TestTHCollection();
@@ -64,6 +62,8 @@ void runSuite() {
     s += make_suite_TestTrackReader();
     s += make_suite_TestTTbarSolution();
     s += make_suite_TestVariableReader();
+    s += make_suite_TestVertex();
+    s += make_suite_TestVertexReader();
     cute::ide_listener lis;
     cute::makeRunner(lis)(s, "Testing BristolAnalysis Tools");
 }

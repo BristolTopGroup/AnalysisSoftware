@@ -8,7 +8,7 @@
 #ifndef TESTOBJECTFACTORY_H_
 #define TESTOBJECTFACTORY_H_
 #include "../interface/Event.h"
-#include "../interface/RecoObjects/PrimaryVertex.h"
+#include "../interface/RecoObjects/Vertex.h"
 #include "../interface/RecoObjects/Jet.h"
 #include "../interface/RecoObjects/Electron.h"
 #include "../interface/RecoObjects/Track.h"
@@ -18,8 +18,8 @@ class TestObjectFactory {
 public:
     TestObjectFactory();
     virtual ~TestObjectFactory();
-    static BAT::PrimaryVertexPointer goodPrimaryVertex();
-    static BAT::PrimaryVertexPointer badFakePrimaryVertex();
+    static BAT::VertexPointer goodPrimaryVertex();
+    static BAT::VertexPointer badFakePrimaryVertex();
     static BAT::TrackPointer highPurityTrack();
     static BAT::TrackPointer lowPurityTrack();
     static BAT::ElectronPointer goodCaloElectron();

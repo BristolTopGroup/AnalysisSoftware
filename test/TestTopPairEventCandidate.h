@@ -20,8 +20,8 @@ struct TestTopPairEventCandidate {
     ElectronPointer badElectron;
     ElectronPointer electronFromConversion;
     JetPointer goodJet, goodBJet, badJet, goodJetCloseToElectron;
-    PrimaryVertexPointer goodVertex;
-    PrimaryVertexPointer badVertex;
+    VertexPointer goodVertex;
+    VertexPointer badVertex;
     Muon goodIsolatedMuon;
     Muon badMuon;
     METPointer met;

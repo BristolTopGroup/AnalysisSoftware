@@ -8,15 +8,15 @@
 #ifndef PRIMARYVERTEXREADER_H_
 #define PRIMARYVERTEXREADER_H_
 #include "VariableReader.h"
-#include "../RecoObjects/PrimaryVertex.h"
+#include "../RecoObjects/Vertex.h"
 namespace BAT {
 
-class PrimaryVertexReader {
+class VertexReader {
 public:
-	PrimaryVertexReader();
-	PrimaryVertexReader(TChainPointer input);
-	virtual ~PrimaryVertexReader();
-	const PrimaryVertexPointer getVertex();
+	VertexReader();
+	VertexReader(TChainPointer input);
+	virtual ~VertexReader();
+	const VertexPointer getVertex();
 	void initialise();
 private:
 	VariableReader<MultiDoublePointer> ndofReader;
@@ -24,7 +24,7 @@ private:
 	VariableReader<MultiDoublePointer> rhoReader;
 	VariableReader<MultiBoolPointer> isfakeReader;
 
-	PrimaryVertexPointer vertex;
+	VertexPointer vertex;
 	void readVertex();
 };
 

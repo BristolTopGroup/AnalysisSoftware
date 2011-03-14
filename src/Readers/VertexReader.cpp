@@ -5,16 +5,16 @@
  *      Author: kreczko
  */
 
-#include "../../interface/Readers/PrimaryVertexReader.h"
+#include "../../interface/Readers/VertexReader.h"
 
 namespace BAT {
 
-PrimaryVertexReader::PrimaryVertexReader() :
+VertexReader::VertexReader() :
 	ndofReader(), zReader(), rhoReader(), isfakeReader(), vertex() {
 
 }
 
-PrimaryVertexReader::PrimaryVertexReader(TChainPointer input) :
+VertexReader::VertexReader(TChainPointer input) :
 	ndofReader(input, "Vertex.NDF"),
 	zReader(input, "Vertex.Z"),
 	rhoReader(input, "Vertex.Rho"),
@@ -23,26 +23,26 @@ PrimaryVertexReader::PrimaryVertexReader(TChainPointer input) :
 
 }
 
-void PrimaryVertexReader::initialise() {
+void VertexReader::initialise() {
 	ndofReader.initialise();
 	zReader.initialise();
 	rhoReader.initialise();
 	isfakeReader.initialise();
 }
 
-const PrimaryVertexPointer PrimaryVertexReader::getVertex() {
+const VertexPointer VertexReader::getVertex() {
 	readVertex();
 	return vertex;
 }
 
-void PrimaryVertexReader::readVertex() {
-	vertex = PrimaryVertexPointer(new PrimaryVertex());
+void VertexReader::readVertex() {
+	vertex = VertexPointer(new Vertex());
 	vertex->setDegreesOfFreedom(ndofReader.getVariableAt(0));
 	vertex->setFake(isfakeReader.getBoolVariableAt(0));
 	vertex->setRho(rhoReader.getVariableAt(0));
 	vertex->setZPosition(zReader.getVariableAt(0));
 }
-PrimaryVertexReader::~PrimaryVertexReader() {
+VertexReader::~VertexReader() {
 }
 
 }

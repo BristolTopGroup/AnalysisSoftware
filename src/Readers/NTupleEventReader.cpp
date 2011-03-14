@@ -28,7 +28,7 @@ NTupleEventReader::NTupleEventReader() :
     numberOfFiles(0),
     input(new TChain(NTupleEventReader::EVENT_CHAIN)),
     hltReader(new VariableReader<MultiIntPointer>(input, "HLTResults")),
-    primaryReader(new PrimaryVertexReader(input)),
+    primaryReader(new VertexReader(input)),
     trackReader(new TrackReader(input)),
     electronReader(new ElectronReader(input, NTupleEventReader::electronAlgorithm)),
     genParticleReader(new GenParticleReader(input)),

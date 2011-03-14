@@ -10,7 +10,7 @@
 #include "RecoObjects/Electron.h"
 #include "RecoObjects/Jet.h"
 #include "RecoObjects/Muon.h"
-#include "RecoObjects/PrimaryVertex.h"
+#include "RecoObjects/Vertex.h"
 #include "RecoObjects/MET.h"
 #include "RecoObjects/MCParticle.h"
 #include "Constants.h"
@@ -21,7 +21,7 @@ namespace BAT {
 class Event {
 protected:
     boost::shared_ptr<std::vector<int> > HLTs;
-    PrimaryVertexPointer primaryVertex;
+    VertexPointer primaryVertex;
     TrackCollection tracks;
     ElectronCollection allElectrons;
     ElectronCollection goodElectrons;
@@ -60,7 +60,7 @@ public:
     bool isRealData() const;
     const DataType::value getDataType() const;
     void setDataType(DataType::value type);
-    void setPrimaryVertex(PrimaryVertexPointer vertex);
+    void setPrimaryVertex(VertexPointer vertex);
     void setTracks(TrackCollection tracks);
     void setGenParticles(MCParticleCollection genParticles);
     void setElectrons(ElectronCollection electrons);
@@ -76,7 +76,7 @@ public:
     void setEventWeight(float weight);
     void setBeamScrapingVeto(bool isScraping);
 
-    const PrimaryVertexPointer PrimaryVertex() const;
+    const VertexPointer PrimaryVertex() const;
     const TrackCollection& Tracks() const;
     const MCParticleCollection& GenParticles() const;
     const ElectronCollection& Electrons() const;

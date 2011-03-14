@@ -11,7 +11,7 @@
 
 namespace BAT {
 
-class PrimaryVertex {
+class Vertex {
 public:
 //	static unsigned int goodVertexMinimalNumberOfDegreesOfFreedom;
 //	static float goodVertexMaximalAbsoluteZPosition;
@@ -23,8 +23,8 @@ public:
 //	    PrimaryVertex::goodVertexMaximalAbsoluteRho = 2.0;
 //	}
 
-	PrimaryVertex();
-	virtual ~PrimaryVertex();
+	Vertex();
+	virtual ~Vertex();
 	bool isGood() const;
 	bool isFake() const;
 	unsigned int ndof() const;
@@ -42,7 +42,7 @@ private:
 	float rho;
 
 };
-typedef boost::shared_ptr<PrimaryVertex> PrimaryVertexPointer;
+typedef boost::shared_ptr<Vertex> VertexPointer;
 
 }
 

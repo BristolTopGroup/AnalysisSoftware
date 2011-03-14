@@ -17,7 +17,7 @@
 #include "GenJetReader.h"
 #include "MuonReader.h"
 #include "VariableReader.h"
-#include "PrimaryVertexReader.h"
+#include "VertexReader.h"
 #include "METReader.h"
 #include "TrackReader.h"
 #include "GenParticleReader.h"
@@ -71,7 +71,7 @@ private:
 	unsigned long numberOfFiles;
 	boost::shared_ptr<TChain> input;
 	boost::shared_ptr<VariableReader<MultiIntPointer> > hltReader;
-	boost::scoped_ptr<PrimaryVertexReader> primaryReader;
+	boost::scoped_ptr<VertexReader> primaryReader;
 	boost::scoped_ptr<TrackReader> trackReader;
 	boost::scoped_ptr<ElectronReader> electronReader;
 	boost::scoped_ptr<GenParticleReader> genParticleReader;

@@ -18,8 +18,8 @@ TestObjectFactory::TestObjectFactory() {
 TestObjectFactory::~TestObjectFactory() {
 }
 
-PrimaryVertexPointer TestObjectFactory::goodPrimaryVertex(){
-    PrimaryVertexPointer pv = PrimaryVertexPointer(new PrimaryVertex());
+VertexPointer TestObjectFactory::goodPrimaryVertex(){
+    VertexPointer pv = VertexPointer(new Vertex());
     pv->setFake(false);
     pv->setDegreesOfFreedom(10);
     pv->setRho(1.0);
@@ -28,8 +28,8 @@ PrimaryVertexPointer TestObjectFactory::goodPrimaryVertex(){
     return pv;
 }
 
-PrimaryVertexPointer TestObjectFactory::badFakePrimaryVertex(){
-    PrimaryVertexPointer pv = PrimaryVertexPointer(new PrimaryVertex());
+VertexPointer TestObjectFactory::badFakePrimaryVertex(){
+    VertexPointer pv = VertexPointer(new Vertex());
     pv->setFake(true);
     pv->setDegreesOfFreedom(10);
     pv->setRho(1.0);
@@ -43,7 +43,7 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
     electron->setUsedAlgorithm(ElectronAlgorithm::Calo);
     electron->setSuperClusterEta(0);
     electron->setD0_wrtBeamSpot(0);
-    PrimaryVertexPointer pv = TestObjectFactory::goodPrimaryVertex();
+    VertexPointer pv = TestObjectFactory::goodPrimaryVertex();
     // electron vertex == primary vertex
 //    electron->setElectronVertexZPosition(pv->z());
     electron->setZDistanceToPrimaryVertex(0);

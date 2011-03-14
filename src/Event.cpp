@@ -56,7 +56,7 @@ void Event::setDataType(DataType::value type) {
     dataType = type;
 }
 
-void Event::setPrimaryVertex(PrimaryVertexPointer vertex) {
+void Event::setPrimaryVertex(VertexPointer vertex) {
     primaryVertex = vertex;
 }
 
@@ -245,7 +245,7 @@ void Event::setBeamScrapingVeto(bool isScraping){
     isBeamScraping = isScraping;
 }
 
-const PrimaryVertexPointer Event::PrimaryVertex() const {
+const VertexPointer Event::PrimaryVertex() const {
     return primaryVertex;
 }
 

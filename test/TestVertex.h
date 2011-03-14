@@ -1,26 +1,26 @@
 #include "cute/cute.h"
 #include "cute/cute_suite.h"
 
-#include "../interface/RecoObjects/PrimaryVertex.h"
+#include "../interface/RecoObjects/Vertex.h"
 
 using namespace BAT;
 
-struct TestPrimaryVertex {
+struct TestVertex {
 private:
     double goodVertexMaximalAbsoluteRho;
     double goodVertexMinimalNumberOfDegreesOfFreedom;
     double goodVertexMaximalAbsoluteZPosition;
 
-    PrimaryVertex goodVertex;
-    PrimaryVertex badNDOFVertex;
-    PrimaryVertex badZPositionVertex;
-    PrimaryVertex badRhoVertex;
-    PrimaryVertex fakeVertex;
+    Vertex goodVertex;
+    Vertex badNDOFVertex;
+    Vertex badZPositionVertex;
+    Vertex badRhoVertex;
+    Vertex fakeVertex;
     float maxGoodRho, maxGoodAbsoluteZ;
     unsigned int minGoodNDOF;
 
 public:
-    TestPrimaryVertex() :
+    TestVertex() :
         goodVertexMaximalAbsoluteRho(2.0),
         goodVertexMinimalNumberOfDegreesOfFreedom(4),
         goodVertexMaximalAbsoluteZPosition(15.),
@@ -131,19 +131,19 @@ public:
     }
 };
 
-cute::suite make_suite_TestPrimaryVertex() {
+cute::suite make_suite_TestVertex() {
     cute::suite s;
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testSetDegreesOfFreedom));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testSetFake));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testSetPositiveRho));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testSetNegativeRho));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testSetPositiveZ));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testSetNegativeZ));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testSetDegreesOfFreedom));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testSetFake));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testSetPositiveRho));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testSetNegativeRho));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testSetPositiveZ));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testSetNegativeZ));
 
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testGoodVertex));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testBadNDOFVertex));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testBadZpositionVertex));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testBadRhoVertex));
-    s.push_back(CUTE_SMEMFUN(TestPrimaryVertex, testFakeVertex));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testGoodVertex));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testBadNDOFVertex));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testBadZpositionVertex));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testBadRhoVertex));
+    s.push_back(CUTE_SMEMFUN(TestVertex, testFakeVertex));
     return s;
 }

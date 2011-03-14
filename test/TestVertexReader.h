@@ -3,19 +3,19 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "../interface/Readers/PrimaryVertexReader.h"
+#include "../interface/Readers/VertexReader.h"
 #include "TChain.h"
 
 using namespace BAT;
 
-struct TestPrimaryVertexReader {
+struct TestVertexReader {
 	boost::shared_ptr<TChain> input;
-	boost::shared_ptr<PrimaryVertexReader> reader;
-	PrimaryVertexPointer vertex;
+	boost::shared_ptr<VertexReader> reader;
+	VertexPointer vertex;
 
-	TestPrimaryVertexReader() :
+	TestVertexReader() :
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)),
-		reader(new PrimaryVertexReader(input)),
+		reader(new VertexReader(input)),
 		vertex() {
 		input->Add(InputFile::ttbar);
 		input->SetBranchStatus("*", 0);
@@ -41,11 +41,11 @@ struct TestPrimaryVertexReader {
 	}
 };
 
-cute::suite make_suite_TestPrimaryVertexReader() {
+cute::suite make_suite_TestVertexReader() {
 	cute::suite s;
-	s.push_back(CUTE_SMEMFUN(TestPrimaryVertexReader, testVertexZPosition));
-	s.push_back(CUTE_SMEMFUN(TestPrimaryVertexReader, testVertexRho));
-	s.push_back(CUTE_SMEMFUN(TestPrimaryVertexReader, testVertexIsFake));
-	s.push_back(CUTE_SMEMFUN(TestPrimaryVertexReader, testVertexNDOF));
+	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexZPosition));
+	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexRho));
+	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexIsFake));
+	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexNDOF));
 	return s;
 }
