@@ -70,11 +70,19 @@ if __name__ == '__main__':
 
     chain.Add("/storage/TopQuarkGroup/mc/fall10_7TeV_v1_e25skim/TTJets_TuneD6T_7TeV-madgraph-tauola_Fall10-START38_V12-v2/nTuple_ttjet_merged_1.root");
     filesize = chain.GetFile().GetSize() / 1024 / 1024#MB
-    totalSize = 0
-    trackSize = 0
-    dic = {}
-    objects = []
-    others = []
+    
+    branches = getBranchInfo(chain.GetListOfBranches())
+    numberOfEvents = chain.GetEntries()
+    print '---++ MC content'
+    print 'Size of event: %.3f KB' % (filesize/numberOfEvents*1024)
+    printTwikiTable(branches, filesize)
+    
+    chain = TChain("rootTupleTree/tree");
+    chain.Add("/storage/TopQuarkGroup/data/Nov4ReReco_JEC_Spring_V8_36.145pb_e25skim/Run2010B/*_1.root");
+    filesize = chain.GetFile().GetSize() / 1024 / 1024#MB
+    
     branches = getBranchInfo(chain.GetListOfBranches())
     
+    print '---++ DATA content'
+    print 'Size of event: %.3f KB' % (filesize/numberOfEvents*1024)
     printTwikiTable(branches, filesize)
