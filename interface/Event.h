@@ -13,7 +13,6 @@
 #include "RecoObjects/PrimaryVertex.h"
 #include "RecoObjects/MET.h"
 #include "RecoObjects/MCParticle.h"
-#include "Selection.h"
 #include "Constants.h"
 #include "Printers/EventContentPrinter.h"
 

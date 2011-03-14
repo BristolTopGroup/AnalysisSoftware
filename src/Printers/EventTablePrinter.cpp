@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include "../../interface/Constants.h"
-#include "../../interface/Selection.h"
+#include "../../interface/TopPairEventCandidate.h"
 
 namespace BAT {
 namespace EventTablePrinter {

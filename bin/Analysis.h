@@ -16,7 +16,6 @@
 #include "TH2F.h"
 #include "TFile.h"
 #include "TDirectory.h"
-#include "../interface/Selection.h"
 #include "../interface/Event.h"
 #include "../interface/TopPairEventCandidate.h"
 #include <vector>

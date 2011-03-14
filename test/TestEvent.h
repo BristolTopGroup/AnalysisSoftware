@@ -4,7 +4,6 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "../interface/Event.h"
-#include "../interface/Selection.h"
 #include "../interface/VBTF_ElectronID.h"
 
 using namespace BAT;
@@ -44,16 +43,12 @@ struct TestEvent {
     goodIsolatedMuon(100., 99., 13., 5.),
     badMuon(100., 99., 13., 5.),
     met(new MET(40, 30)) {
-//        setUpGoodIsolatedElectron();
-//        setUpGoodIsolatedElectron2();
         setUpGoodLooseElectron();
         setUpBadElectron();
         setUpGoodIsolatedElectronFromConversion();
         setUpGoodJet();
         setUpGoodBJet();
         setUpGoodJetCloseToElectron();
-//        setUpGoodVertex();
-//        setUpBadVertex();
         setUpIsolatedGoodMuon();
         setUpBadMuon();
 
@@ -65,23 +60,6 @@ struct TestEvent {
     }
 
 private:
-//    void setUpGoodIsolatedElectron() {
-//        goodIsolatedElectron->setHcalIsolation(0.5);
-//        goodIsolatedElectron->setEcalIsolation(0.3);
-//        goodIsolatedElectron->setTrackerIsolation(0.4);
-//        goodIsolatedElectron->setNumberOfMissingInnerLayerHits(0);
-//        goodIsolatedElectron->setD0(0);
-//        goodIsolatedElectron->setSuperClusterEta(1);
-//    }
-//
-//    void setUpGoodIsolatedElectron2() {
-//        goodIsolatedElectron2->setHcalIsolation(0.4);
-//        goodIsolatedElectron2->setEcalIsolation(0.3);
-//        goodIsolatedElectron2->setTrackerIsolation(0.4);
-//        goodIsolatedElectron2->setNumberOfMissingInnerLayerHits(0);
-//        goodIsolatedElectron2->setD0(0);
-//        goodIsolatedElectron2->setSuperClusterEta(1);
-//    }
 
     void setUpBadElectron() {
         badElectron->setHcalIsolation(4);
@@ -133,12 +111,6 @@ private:
         goodJetCloseToElectron->setN90Hits(2);
     }
 
-//    void setUpGoodVertex() {
-//        goodVertex.setDegreesOfFreedom(PrimaryVertex::goodVertexMinimalNumberOfDegreesOfFreedom);
-//        goodVertex.setFake(false);
-//        goodVertex.setRho(PrimaryVertex::goodVertexMaximalAbsoluteRho);
-//        goodVertex.setZPosition(PrimaryVertex::goodVertexMaximalAbsoluteZPosition);
-//    }
 
     void setUpBadVertex() {
         badVertex->setDegreesOfFreedom(4);
@@ -171,7 +143,6 @@ private:
         jets.push_back(goodBJet);
         jets.push_back(badJet);
         ttbarEvent.setJets(jets);
-//        ttbarEvent.setHLT_Photon15_TO20(true);
 
         MuonCollection muons;
         muons.push_back(badMuon);
@@ -193,7 +164,6 @@ private:
         jets.push_back(goodJet);
         jets.push_back(goodBJet);
         goodZEvent.setJets(jets);
-//        goodZEvent.setHLT_Photon15_TO20(true);
 
     }
 
@@ -211,7 +181,6 @@ private:
         jets.push_back(goodJet);
         jets.push_back(goodBJet);
         poorZEvent.setJets(jets);
-//        poorZEvent.setHLT_Photon15_TO20(true);
 
     }
 
@@ -221,7 +190,6 @@ private:
         jets.push_back(goodJet);
         jets.push_back(goodJet);
         DiJetEvent.setJets(jets);
-//        DiJetEvent.setHLT_Photon15_TO20(false);
 
     }
 
@@ -231,7 +199,6 @@ private:
         jets.push_back(goodJet);
         jets.push_back(goodJet);
         DiJetEventWithConversion.setJets(jets);
-//        DiJetEventWithConversion.setHLT_Photon15_TO20(false);
 
         ElectronCollection electrons;
         electrons.push_back(electronFromConversion);
@@ -251,7 +218,6 @@ private:
         jets.push_back(goodBJet);
         jets.push_back(badJet);
         muonEvent.setJets(jets);
-//        muonEvent.setHLT_Photon15_TO20(true);
         MuonCollection muons;
         muons.push_back(goodIsolatedMuon);
         muonEvent.setMuons(muons);

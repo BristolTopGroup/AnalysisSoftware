@@ -5,7 +5,6 @@
 
 #include "../interface/Event.h"
 #include "../interface/OnlyForTests/DummyTTbarEvent.h"
-#include "../interface/Selection.h"
 #include "TestObjectFactory.h"
 #include <iostream>
 
