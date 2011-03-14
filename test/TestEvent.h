@@ -4,7 +4,6 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "../interface/Event.h"
-#include "../interface/VBTF_ElectronID.h"
 
 using namespace BAT;
 
@@ -71,13 +70,10 @@ private:
         goodLooseElectron->setHcalIsolation(5);
         goodLooseElectron->setEcalIsolation(3);
         goodLooseElectron->setTrackerIsolation(4);
-        goodLooseElectron->setSigmaIEtaIEta(VBTF_W70::MaximalDEtaIn_BarrelRegion + 2);
-        goodLooseElectron->setSigmaIEtaIEta(VBTF_W95::MaximalSigmaIEtaIEta_BarrelRegion - 0.1
-                * VBTF_W95::MaximalSigmaIEtaIEta_BarrelRegion);
-        goodLooseElectron->setDPhiIn(VBTF_W95::MaximalDPhiIn_BarrelRegion - 0.1 * VBTF_W95::MaximalDPhiIn_BarrelRegion);
-        goodLooseElectron->setDEtaIn(VBTF_W95::MaximalDEtaIn_BarrelRegion - 0.1 * VBTF_W95::MaximalDEtaIn_BarrelRegion);
-        goodLooseElectron->setHadOverEm(VBTF_W95::MaximalHadOverEm_BarrelRegion - 0.1
-                * VBTF_W95::MaximalHadOverEm_BarrelRegion);
+        goodLooseElectron->setSigmaIEtaIEta(0.009);
+		goodLooseElectron->setDPhiIn(0.7);
+		goodLooseElectron->setDEtaIn(0.006);
+		goodLooseElectron->setHadOverEm(0.14);
         goodLooseElectron->setRobustLooseID(true);
         goodLooseElectron->setNumberOfMissingInnerLayerHits(0);
         goodLooseElectron->setD0(0);
@@ -296,7 +292,7 @@ public:
         Event event = Event();
         event.setPrimaryVertex(goodVertex);
         ElectronCollection electrons;
-        goodIsolatedElectron->setSigmaIEtaIEta(VBTF_W70::MaximalDEtaIn_BarrelRegion + 2);
+        goodIsolatedElectron->setSigmaIEtaIEta(0.01 + 2);
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(badElectron);
         event.setElectrons(electrons);

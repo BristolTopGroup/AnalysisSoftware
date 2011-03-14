@@ -127,20 +127,6 @@ private:
         goodJetCloseToElectron->setN90Hits(2);
     }
 
-//    void setUpGoodVertex() {
-//        goodVertex.setDegreesOfFreedom(PrimaryVertex::goodVertexMinimalNumberOfDegreesOfFreedom + 1);
-//        goodVertex.setFake(false);
-//        goodVertex.setRho(PrimaryVertex::goodVertexMaximalAbsoluteRho - 0.1
-//                * PrimaryVertex::goodVertexMaximalAbsoluteRho);
-//        goodVertex.setZPosition(PrimaryVertex::goodVertexMaximalAbsoluteZPosition);
-//    }
-//
-//    void setUpBadVertex() {
-//        badVertex.setDegreesOfFreedom(PrimaryVertex::goodVertexMinimalNumberOfDegreesOfFreedom);
-//        badVertex.setFake(true);
-//        badVertex.setRho(PrimaryVertex::goodVertexMaximalAbsoluteRho);
-//        badVertex.setZPosition(PrimaryVertex::goodVertexMaximalAbsoluteZPosition);
-//    }
 
     void setUpIsolatedGoodMuon() {
         goodIsolatedMuon.makeGlobal(true);
