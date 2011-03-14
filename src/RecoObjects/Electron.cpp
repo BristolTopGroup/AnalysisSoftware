@@ -8,7 +8,6 @@
 #include "../../interface/RecoObjects/Electron.h"
 #include <assert.h>
 #include "../../interface/DetectorGeometry.h"
-#include "../../interface/VBTF_ElectronID.h"
 
 namespace BAT {
 
@@ -203,6 +202,9 @@ bool Electron::isTaggedAsConversion(float maxDist, float maxDCotTheta) const{
     return fabs(distToNextTrack) < maxDist && fabs(dCotThetaToNextTrack) < maxDCotTheta;
 }
 
+/* Electron ID cuts (without isolation) from:
+ * https://twiki.cern.ch/twiki/bin/view/CMS/SimpleCutBasedEleID#Cuts_for_use_on_2010_data
+ */
 bool Electron::VBTF_W70_ElectronID() const {
     if (isInBarrelRegion())
         return getVBTF_W70_ElectronID_Barrel();
@@ -213,18 +215,18 @@ bool Electron::VBTF_W70_ElectronID() const {
 }
 
 bool Electron::getVBTF_W70_ElectronID_Barrel() const {
-    bool passesSigmaIEta = sigma_IEtaIEta < VBTF_W70::MaximalSigmaIEtaIEta_BarrelRegion;
-    bool passesDPhiIn = fabs(dPhi_In) < VBTF_W70::MaximalDPhiIn_BarrelRegion;
-    bool passesDEtaIn = fabs(dEta_In) < VBTF_W70::MaximalDEtaIn_BarrelRegion;
-    bool passesHadOverEm = hadOverEm < VBTF_W70::MaximalHadOverEm_BarrelRegion;
+    bool passesSigmaIEta = sigma_IEtaIEta < 0.01;
+    bool passesDPhiIn = fabs(dPhi_In) < 0.03;
+    bool passesDEtaIn = fabs(dEta_In) < 0.004;
+    bool passesHadOverEm = hadOverEm < 0.025;
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
 bool Electron::getVBTF_W70_ElectronID_Endcap() const {
-    bool passesSigmaIEta = sigma_IEtaIEta < VBTF_W70::MaximalSigmaIEtaIEta_EndcapRegion;
-    bool passesDPhiIn = fabs(dPhi_In) < VBTF_W70::MaximalDPhiIn_EndcapRegion;
-    bool passesDEtaIn = fabs(dEta_In) < VBTF_W70::MaximalDEtaIn_EndcapRegion;
-    bool passesHadOverEm = hadOverEm < VBTF_W70::MaximalHadOverEm_EndcapRegion;
+    bool passesSigmaIEta = sigma_IEtaIEta < 0.03;
+    bool passesDPhiIn = fabs(dPhi_In) < 0.02;
+    bool passesDEtaIn = fabs(dEta_In) < 0.005;
+    bool passesHadOverEm = hadOverEm < 0.025;
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
@@ -238,18 +240,18 @@ bool Electron::VBTF_W95_ElectronID() const {
 }
 
 bool Electron::getVBTF_W95_ElectronID_Barrel() const {
-    bool passesSigmaIEta = sigma_IEtaIEta < VBTF_W95::MaximalSigmaIEtaIEta_BarrelRegion;
-    bool passesDPhiIn = fabs(dPhi_In) < VBTF_W95::MaximalDPhiIn_BarrelRegion;
-    bool passesDEtaIn = fabs(dEta_In) < VBTF_W95::MaximalDEtaIn_BarrelRegion;
-    bool passesHadOverEm = hadOverEm < VBTF_W95::MaximalHadOverEm_BarrelRegion;
+    bool passesSigmaIEta = sigma_IEtaIEta < 0.01;
+    bool passesDPhiIn = fabs(dPhi_In) < 0.8;
+    bool passesDEtaIn = fabs(dEta_In) < 0.007;
+    bool passesHadOverEm = hadOverEm < 0.15;
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
 bool Electron::getVBTF_W95_ElectronID_Endcap() const {
-    bool passesSigmaIEta = sigma_IEtaIEta < VBTF_W95::MaximalSigmaIEtaIEta_EndcapRegion;
-    bool passesDPhiIn = fabs(dPhi_In) < VBTF_W95::MaximalDPhiIn_EndcapRegion;
-    bool passesDEtaIn = fabs(dEta_In) < VBTF_W95::MaximalDEtaIn_EndcapRegion;
-    bool passesHadOverEm = hadOverEm < VBTF_W95::MaximalHadOverEm_EndcapRegion;
+    bool passesSigmaIEta = sigma_IEtaIEta < 0.03;
+    bool passesDPhiIn = fabs(dPhi_In) < 0.7;
+    bool passesDEtaIn = fabs(dEta_In) < 0.01;
+    bool passesHadOverEm = hadOverEm < 0.07;
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
@@ -263,18 +265,18 @@ bool Electron::QCD_AntiID_W70() const {
 }
 
 bool Electron::QCD_AntiID_W70_Barrel() const {
-    bool passesSigmaIEta = sigma_IEtaIEta < VBTF_W70::MaximalSigmaIEtaIEta_BarrelRegion;
-    bool passesDPhiIn = fabs(dPhi_In) > VBTF_W70::MaximalDPhiIn_BarrelRegion;
-    bool passesDEtaIn = fabs(dEta_In) > VBTF_W70::MaximalDEtaIn_BarrelRegion;
-    bool passesHadOverEm = hadOverEm < VBTF_W70::MaximalHadOverEm_BarrelRegion;
+    bool passesSigmaIEta = sigma_IEtaIEta < 0.01;
+    bool passesDPhiIn = fabs(dPhi_In) > 0.03;
+    bool passesDEtaIn = fabs(dEta_In) > 0.004;
+    bool passesHadOverEm = hadOverEm < 0.025;
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
 bool Electron::QCD_AntiID_W70_Endcap() const {
-    bool passesSigmaIEta = sigma_IEtaIEta < VBTF_W70::MaximalSigmaIEtaIEta_EndcapRegion;
-    bool passesDPhiIn = fabs(dPhi_In) > VBTF_W70::MaximalDPhiIn_EndcapRegion;
-    bool passesDEtaIn = fabs(dEta_In) > VBTF_W70::MaximalDEtaIn_EndcapRegion;
-    bool passesHadOverEm = hadOverEm < VBTF_W70::MaximalHadOverEm_EndcapRegion;
+    bool passesSigmaIEta = sigma_IEtaIEta < 0.03;
+    bool passesDPhiIn = fabs(dPhi_In) > 0.02;
+    bool passesDEtaIn = fabs(dEta_In) > 0.005;
+    bool passesHadOverEm = hadOverEm < 0.025;
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
@@ -351,9 +353,6 @@ float Electron::shFracInnerLayer() const {
     return sharedFractionInnerHits;
 }
 
-//void Electron::setElectronVertexZPosition(float z) {
-//    vertex_z = z;
-//}
 
 void Electron::setZDistanceToPrimaryVertex(float dist) {
     zDistanceToPrimaryVertex = dist;

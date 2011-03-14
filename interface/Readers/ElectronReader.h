@@ -9,20 +9,17 @@
 #define ELECTRONREADER_H_
 #include "VariableReader.h"
 #include "../RecoObjects/Electron.h"
-#include "../VBTF_ElectronID.h"
 #include "../Constants.h"
 
 namespace BAT {
 class ElectronReader {
 public:
-//	const static std::string algorithmPrefixes[Electron::NUMBER_OF_ELECTRONALGORITHMS];
 	ElectronReader();
 	ElectronReader(TChainPointer input, ElectronAlgorithm::value algo = ElectronAlgorithm::Calo);
 	virtual ~ElectronReader();
 	const ElectronCollection& getElectrons();
 	void initialise();
 private:
-//	VariableReader<unsigned int> numberOfElectronsReader;
 	VariableReader<MultiDoublePointer> energyReader;
 	VariableReader<MultiDoublePointer> pxReader;
 	VariableReader<MultiDoublePointer> pyReader;
@@ -41,8 +38,6 @@ private:
     VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader;
     VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader;
 
-//	VariableReader<MultiDoublePointer> robustLooseIDReader;
-//	VariableReader<MultiDoublePointer> robustTightIDReader;
 	VariableReader<MultiDoublePointer> sigmaIEtaIEtaReader;
 	VariableReader<MultiDoublePointer> dPhiInReader;
 	VariableReader<MultiDoublePointer> dEtaInReader;
