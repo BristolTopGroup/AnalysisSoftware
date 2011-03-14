@@ -7,7 +7,6 @@
 
 #include "../../interface/RecoObjects/Electron.h"
 #include <assert.h>
-#include "../../interface/DetectorGeometry.h"
 
 namespace BAT {
 
@@ -181,17 +180,15 @@ bool Electron::isQCDElectron(const float minEt) const {
 }
 
 bool Electron::isInBarrelRegion() const {
-    return fabs(superClusterEta()) < Detector::Barrel::MaximalAbsoluteEta;
+    return fabs(superClusterEta()) < 1.4442;
 }
 
 bool Electron::isInCrack() const {
-    bool passesMinimalEta = fabs(superClusterEta()) > Detector::Crack::MinimalAbsoluteEta;
-    bool passesMaximalEta = fabs(superClusterEta()) < Detector::Crack::MaximalAbsoluteEta;
-    return passesMinimalEta && passesMaximalEta;
+	return !isInBarrelRegion() && !isInEndCapRegion();
 }
 
 bool Electron::isInEndCapRegion() const {
-    return fabs(superClusterEta()) > Detector::EndCap::MinimalAbsoluteEta;
+    return fabs(superClusterEta()) > 1.5660;
 }
 
 bool Electron::isFromConversion() const {

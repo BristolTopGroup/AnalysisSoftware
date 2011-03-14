@@ -6,7 +6,6 @@
  */
 
 #include "../../interface/RecoObjects/Particle.h"
-#include "../../interface/DetectorGeometry.h"
 
 namespace BAT {
 
@@ -135,17 +134,15 @@ const Particle Particle::operator +(const Particle &other) const {
 }
 
 bool Particle::isInBarrelRegion() const {
-    return fabs(eta()) < Detector::Barrel::MaximalAbsoluteEta;
+    return fabs(eta()) < 1.4442;
 }
 
 bool Particle::isInCrack() const {
-    bool passesMinimalEta = fabs(eta()) > Detector::Crack::MinimalAbsoluteEta;
-    bool passesMaximalEta = fabs(eta()) < Detector::Crack::MaximalAbsoluteEta;
-    return passesMinimalEta && passesMaximalEta;
+	return !isInBarrelRegion() && !isInEndCapRegion();
 }
 
 bool Particle::isInEndCapRegion() const {
-    return fabs(eta()) > Detector::EndCap::MinimalAbsoluteEta;
+    return fabs(eta()) > 1.5660;
 }
 
 const char* Particle::getEtaRegion() const {
