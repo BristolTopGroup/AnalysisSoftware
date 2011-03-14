@@ -44,122 +44,140 @@ public:
         DataReader(new NTupleEventReader()),
         DataReader2(new NTupleEventReader()),
         AllMCReader(new NTupleEventReader()) {
-        TTbarReader->addInputFileWithoutCheck(InputFile::ttbar);
-        QCDenri1Reader->addInputFileWithoutCheck(InputFile::enri1);
-        QCDenri2Reader->addInputFileWithoutCheck(InputFile::enri2);
-        QCDenri3Reader->addInputFileWithoutCheck(InputFile::enri3);
 
-        QCDbce1Reader->addInputFileWithoutCheck(InputFile::bce1);
-        QCDbce2Reader->addInputFileWithoutCheck(InputFile::bce2);
-        QCDbce3Reader->addInputFileWithoutCheck(InputFile::bce3);
+        TTbarReader->addInputFile(InputFile::ttbar);
+        QCDenri1Reader->addInputFile(InputFile::enri1);
+        QCDenri2Reader->addInputFile(InputFile::enri2);
+        QCDenri3Reader->addInputFile(InputFile::enri3);
 
-        WjetsReader->addInputFileWithoutCheck(InputFile::wjets);
-        ZJetsReader->addInputFileWithoutCheck(InputFile::zjets);
-        TWReader->addInputFileWithoutCheck(InputFile::tW);
-        TChanReader->addInputFileWithoutCheck(InputFile::tchan);
-        DataReader->addInputFileWithoutCheck(InputFile::data);
-        DataReader->addInputFileWithoutCheck(InputFile::data2);
-        DataReader2->addInputFileWithoutCheck(InputFile::data2);
-        DataReader2->addInputFileWithoutCheck(InputFile::data);
+        QCDbce1Reader->addInputFile(InputFile::bce1);
+        QCDbce2Reader->addInputFile(InputFile::bce2);
+        QCDbce3Reader->addInputFile(InputFile::bce3);
 
-        AllMCReader->addInputFileWithoutCheck(InputFile::ttbar);
-        AllMCReader->addInputFileWithoutCheck(InputFile::enri1);
-        AllMCReader->addInputFileWithoutCheck(InputFile::enri2);
-        AllMCReader->addInputFileWithoutCheck(InputFile::enri3);
-        AllMCReader->addInputFileWithoutCheck(InputFile::bce1);
-        AllMCReader->addInputFileWithoutCheck(InputFile::bce2);
-        AllMCReader->addInputFileWithoutCheck(InputFile::bce3);
-        AllMCReader->addInputFileWithoutCheck(InputFile::wjets);
-        AllMCReader->addInputFileWithoutCheck(InputFile::zjets);
-        AllMCReader->addInputFileWithoutCheck(InputFile::tW);
-        AllMCReader->addInputFileWithoutCheck(InputFile::tchan);
-        AllMCReader->addInputFileWithoutCheck(InputFile::pj1);
-        AllMCReader->addInputFileWithoutCheck(InputFile::pj2);
-        AllMCReader->addInputFileWithoutCheck(InputFile::pj3);
+        WjetsReader->addInputFile(InputFile::wjets);
+        ZJetsReader->addInputFile(InputFile::zjets);
+        TWReader->addInputFile(InputFile::tW);
+        TChanReader->addInputFile(InputFile::tchan);
+        DataReader->addInputFile(InputFile::data);
+        DataReader->addInputFile(InputFile::data2);
+        DataReader2->addInputFile(InputFile::data2);
+        DataReader2->addInputFile(InputFile::data);
+
+        AllMCReader->addInputFile(InputFile::ttbar);
+        AllMCReader->addInputFile(InputFile::enri1);
+        AllMCReader->addInputFile(InputFile::enri2);
+        AllMCReader->addInputFile(InputFile::enri3);
+        AllMCReader->addInputFile(InputFile::bce1);
+        AllMCReader->addInputFile(InputFile::bce2);
+        AllMCReader->addInputFile(InputFile::bce3);
+        AllMCReader->addInputFile(InputFile::wjets);
+        AllMCReader->addInputFile(InputFile::zjets);
+        AllMCReader->addInputFile(InputFile::tW);
+        AllMCReader->addInputFile(InputFile::tchan);
+        AllMCReader->addInputFile(InputFile::pj1);
+        AllMCReader->addInputFile(InputFile::pj2);
+        AllMCReader->addInputFile(InputFile::pj3);
 
     }
 
     void testTTbarType() {
+    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(DataType::ttbar, currentEvent.getDataType());
     }
 
     void testQCD_EMEnriched_80_to_170Type() {
+    	ASSERT(QCDenri3Reader->hasNextEvent());
         Event currentEvent = QCDenri3Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt80to170, currentEvent.getDataType());
     }
 
     void testQCD_EMEnriched_30_to_80Type() {
+    	ASSERT(QCDenri2Reader->hasNextEvent());
         Event currentEvent = QCDenri2Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt30to80, currentEvent.getDataType());
     }
 
     void testQCD_EMEnriched_20_to_30Type() {
+    	ASSERT(QCDenri1Reader->hasNextEvent());
         Event currentEvent = QCDenri1Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt20to30, currentEvent.getDataType());
     }
 
     void testQCD_BCtoE_80_to_170Type() {
+    	ASSERT(QCDbce3Reader->hasNextEvent());
         Event currentEvent = QCDbce3Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_BCtoE_Pt80to170, currentEvent.getDataType());
     }
 
     void testQCD_BCtoE_30_to_80Type() {
+    	ASSERT(QCDbce2Reader->hasNextEvent());
         Event currentEvent = QCDbce2Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_BCtoE_Pt30to80, currentEvent.getDataType());
     }
 
     void testQCD_BCtoE_20_to_30Type() {
+    	ASSERT(QCDbce1Reader->hasNextEvent());
         Event currentEvent = QCDbce1Reader->getNextEvent();
         ASSERT_EQUAL(DataType::QCD_BCtoE_Pt20to30, currentEvent.getDataType());
     }
 
     void testWjetsType() {
+    	ASSERT(WjetsReader->hasNextEvent());
         Event currentEvent = WjetsReader->getNextEvent();
         ASSERT_EQUAL(DataType::Wjets, currentEvent.getDataType());
     }
 
     void testZjetsType() {
+    	ASSERT(ZJetsReader->hasNextEvent());
         Event currentEvent = ZJetsReader->getNextEvent();
         ASSERT_EQUAL(DataType::Zjets, currentEvent.getDataType());
     }
 
     void testTWType() {
+    	ASSERT(TWReader->hasNextEvent());
         Event currentEvent = TWReader->getNextEvent();
         ASSERT_EQUAL(DataType::singleTop_And_W, currentEvent.getDataType());
     }
 
     void testTChanType() {
+    	ASSERT(TChanReader->hasNextEvent());
         Event currentEvent = TChanReader->getNextEvent();
         ASSERT_EQUAL(DataType::singleTopTChannel, currentEvent.getDataType());
     }
 
     void testDataType() {
+    	ASSERT(DataReader->hasNextEvent());
         Event currentEvent = DataReader->getNextEvent();
         ASSERT_EQUAL(DataType::DATA, currentEvent.getDataType());
     }
 
     void testReadDataType() {
+    	ASSERT(DataReader->hasNextEvent());
         Event currentEvent = DataReader->getNextEvent();
         ASSERT_EQUAL(true, currentEvent.isRealData());
     }
 
     void testNumberOfTracksInEvent1() {
+    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(0, currentEvent.Tracks().size());//Tracks deactivated
     }
 
     void testNumberOfElectronsInEvent1() {
+    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(2, currentEvent.Electrons().size());
     }
 
     void testNumberOfJetsInEvent1() {
+    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(8, currentEvent.Jets().size());
     }
 
     void testNumberOfMuonsInEvent1() {
+    	ASSERT(TTbarReader->hasNextEvent());
         Event currentEvent = TTbarReader->getNextEvent();
         ASSERT_EQUAL(1, currentEvent.Muons().size());
     }
@@ -174,6 +192,7 @@ public:
     }
 
     void testGetProccessedNumberOfEvents() {
+    	ASSERT(TTbarReader->hasNextEvent());
         TTbarReader->getNextEvent();
         ASSERT_EQUAL(1, TTbarReader->getNumberOfProccessedEvents());
         TTbarReader->getNextEvent();
@@ -181,6 +200,7 @@ public:
     }
 
     void testGetProccessedNumberOfEventsWithSkippedEvents() {
+    	ASSERT(TTbarReader->hasNextEvent());
         TTbarReader->getNextEvent();
         TTbarReader->skipNumberOfEvents(100);
         ASSERT_EQUAL(1, TTbarReader->getNumberOfProccessedEvents());
@@ -191,6 +211,7 @@ public:
     }
 
     void testGetCurrentLocalEventNumber() {
+    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(0, TTbarReader->getCurrentLocalEventNumber());
         TTbarReader->getNextEvent();
         ASSERT_EQUAL(1, TTbarReader->getCurrentLocalEventNumber());
@@ -211,18 +232,22 @@ public:
     }
 
     void testMCRunNumber() {
+    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(1, TTbarReader->getNextEvent().runnumber());
     }
 
     void testMCLumiBlock() {
+    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(7, TTbarReader->getNextEvent().lumiblock());
     }
 
     void testLocalEventNumber() {
+    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(1, TTbarReader->getNextEvent().localnumber());
     }
 
     void testInitialEventWeigth() {
+    	ASSERT(TTbarReader->hasNextEvent());
         ASSERT_EQUAL(1., TTbarReader->getNextEvent().weight());
     }
 
@@ -232,6 +257,7 @@ public:
     }
 
     void testHLTTrigger() {
+    	ASSERT(TTbarReader->hasNextEvent());
         TopPairEventCandidate candidate = TopPairEventCandidate(TTbarReader->getNextEvent());
         ASSERT_EQUAL(true, candidate.passesHighLevelTrigger());
     }
@@ -241,6 +267,7 @@ public:
     }
 
     void testTTbarEventMET() {
+    	ASSERT(TTbarReader->hasNextEvent());
         Event event = TTbarReader->getNextEvent();
         ASSERT_EQUAL_DELTA(69.2572,event.MET()->et(), 0.001);
     }
@@ -273,25 +300,6 @@ public:
 
         }
     }
-
-//    void testHLT() {
-//        unsigned int passedHLT = 0;
-//        DataReader->setMaximumNumberOfEvents(1000);
-//        DataReader2->setMaximumNumberOfEvents(1000);
-//        while (DataReader->hasNextEvent()) {
-//            TopPairEventCandidate cand = TopPairEventCandidate(DataReader->getNextEvent());
-//            if (cand.passesHighLevelTrigger())
-//                passedHLT++;
-//        }
-//
-//        unsigned int passedHLT2 = 0;
-//        while (DataReader2->hasNextEvent()) {
-//            TopPairEventCandidate cand = TopPairEventCandidate(DataReader2->getNextEvent());
-//            if (cand.passesHighLevelTrigger())
-//                passedHLT2++;
-//        }
-//        ASSERT_EQUAL(passedHLT, passedHLT2);
-//    }
 
     void testAddInputFileNoFileThrowsException() {
         boost::scoped_ptr<NTupleEventReader> reader(new NTupleEventReader());
