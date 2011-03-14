@@ -1,12 +1,12 @@
-<Flags ADD_SUBDIR=yes>
-<FLAGS CXXFLAGS="-O3">
-<use name=boost>
-<use name=root>
-<use name=rootcore>
+<Flags ADD_SUBDIR="yes" />
+<FLAGS CXXFLAGS="-O3" />
+<use name="boost" />
+<use name="root" />
+<use name="rootcore" />
 
 <export>
-<use name=boost>
-<use name=root>
-<use name=rootcore>
-<lib name="BristolAnalysisTools">
+<use name="boost" />
+<use name="root" />
+<use name="rootcore" />
+<lib name="BristolAnalysisTools" />
 </export>
