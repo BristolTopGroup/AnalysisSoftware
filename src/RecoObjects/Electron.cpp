@@ -309,7 +309,7 @@ void Electron::setNumberOfMissingInnerLayerHits(float missingHits) {
     innerLayerMissingHits = missingHits;
 }
 
-unsigned short Electron::getClosestJetID(const JetCollection& jets) const {//#TODO fix definition in Particles!!!
+unsigned short Electron::getClosestJetIndex(const JetCollection& jets) const {
     unsigned short idOfClosest = 999;
     float closestDR = 999.;
     for (unsigned short index = 0; index < jets.size(); ++index) {

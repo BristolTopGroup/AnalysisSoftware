@@ -39,6 +39,7 @@ void Analysis::analyze() {
         doTTBarAnalysis();
         doNotePlots();
         doQCDStudy();
+
 //        if(currentEvent.getDataType() == DataType::DATA)
 //            eventCheck[currentEvent.runnumber()].push_back(currentEvent.eventnumber());
 //        checkForBrokenEvents();
@@ -414,7 +415,7 @@ void Analysis::doNotePlots() {
                     goodjets.push_back(ttbarCandidate.Jets().at(index));
             }
             if (goodjets.size() >= 2) {
-                unsigned int closestID = electron->getClosestJetID(goodjets);
+                unsigned int closestID = electron->getClosestJetIndex(goodjets);
                 float minDR = electron->deltaR(goodjets.at(closestID));
                 float ptRel = electron->relativePtTo(goodjets.at(closestID));
                 histMan.H2D("ptRel_vs_DRmin")->Fill(minDR, ptRel, weight);
@@ -895,4 +896,3 @@ void Analysis::checkForBrokenEvents(){
         ttbarCandidate.inspect();
     }
 }
-

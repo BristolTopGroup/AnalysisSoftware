@@ -54,7 +54,7 @@ public:
     bool QCD_AntiID_W70_Endcap() const;
     bool RobustLooseID() const;
     bool RobustTightID() const;
-    unsigned short getClosestJetID(const JetCollection& jets) const;
+    unsigned short getClosestJetIndex(const JetCollection& jets) const;
     ElectronAlgorithm::value getUsedAlgorithm() const;
     const TrackPointer GSFTrack() const;
     int closestCTFTrackID() const;

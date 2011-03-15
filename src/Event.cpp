@@ -302,6 +302,10 @@ const MuonCollection& Event::GoodIsolatedMuons() const {
     return goodIsolatedMuons;
 }
 
+const MCParticleCollection& Event::GenParticles() const {
+	return genParticles;
+}
+
 const METPointer Event::MET() const {
     return met;
 }
