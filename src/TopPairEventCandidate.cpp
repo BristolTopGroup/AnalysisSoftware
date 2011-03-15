@@ -826,6 +826,11 @@ const JetPointer TopPairEventCandidate::getJet1FromHadronicW() const {
     return jet1FromW;
 }
 
+const JetPointer TopPairEventCandidate::getJet2FromHadronicW() const {
+    throwExpeptionIfNotReconstructed();
+    return jet2FromW;
+}
+
 const ParticlePointer TopPairEventCandidate::getLeptonicTop() const {
     throwExpeptionIfNotReconstructed();
     if (selectedNeutrino == 1)
