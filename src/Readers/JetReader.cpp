@@ -112,13 +112,13 @@ void JetReader::readJets() {
 
 		jet->setDiscriminatorForBtagType(
 				btagSimpleSecondaryVertexReader.getVariableAt(jetIndex),
-				BJetTagger::SimpleSecondaryVertex);
+				BtagAlgorithm::SimpleSecondaryVertexHighEffBTag);
 		jet->setDiscriminatorForBtagType(
 				btagTrackCountingHighPurityReader.getVariableAt(jetIndex),
-				BJetTagger::TrackCountingHighPurity);
+				BtagAlgorithm::TrackCountingHighPurBTag);
 		jet->setDiscriminatorForBtagType(
 				btagTrackCountingHighEfficiencyReader.getVariableAt(jetIndex),
-				BJetTagger::TrackCountingHighEfficiency);
+				BtagAlgorithm::TrackCountingHighEffBTag);
 
 		if (usedAlgorithm == JetAlgorithm::ParticleFlow || usedAlgorithm
 				== JetAlgorithm::PF2PAT) {

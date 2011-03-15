@@ -18,11 +18,6 @@ namespace sevenTeV {
 extern boost::array<float, DataType::NUMBER_OF_DATA_TYPES> getXSections();
 }
 
-namespace tenTeV{
-extern boost::array<float, DataType::NUMBER_OF_DATA_TYPES> getXSections();
-}
-
-
 
 struct CrossSectionProvider{
 private:

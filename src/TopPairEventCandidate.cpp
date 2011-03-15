@@ -6,7 +6,6 @@
  */
 
 #include "../interface/TopPairEventCandidate.h"
-#include "../interface/Taggers/BJetTagger.h"
 #include <iostream>
 #include <iomanip>
 using namespace std;

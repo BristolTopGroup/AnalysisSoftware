@@ -10,7 +10,6 @@
 #include "THCollection.h"
 #include "TH1D.h"
 #include "TH2D.h"
-#include "../Taggers/BJetTagger.h"
 #include "../../interface/Constants.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>

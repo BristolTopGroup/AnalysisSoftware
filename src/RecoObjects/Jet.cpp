@@ -15,42 +15,49 @@ Jet::Jet() :
     electromagneticFraction(0.),
     numberOfRecHitsContaining90PercentOfTheJetEnergy(0.),
     fractionOfEnergyIntheHottestHPDReadout(0.),
-    btag_discriminators(BJetTagger::NUMBER_OF_BTAGALGORITHMS),
+    btag_discriminators(BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS),
     numberOfDaughters(0),
     chargedEmEnergyFraction(1),
     neutralHadronEnergyFraction(1),
     neutralEmEnergyFraction(1),
     chargedHadronEnergyFraction(1),
-    chargedMultiplicity(0) {
-
+    chargedMultiplicity(0),
+    partonFlavour(0) {
+    for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
+        btag_discriminators[btag] = -9999;
+    }
 }
 
-Jet::Jet(const Particle& particle) :
-    Particle(particle),
-    usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05),
-    electromagneticFraction(0.),
-    numberOfRecHitsContaining90PercentOfTheJetEnergy(0.),
-    fractionOfEnergyIntheHottestHPDReadout(0.),
-    btag_discriminators(BJetTagger::NUMBER_OF_BTAGALGORITHMS),
-    numberOfDaughters(0),
-    chargedEmEnergyFraction(1),
-    neutralHadronEnergyFraction(1),
-    neutralEmEnergyFraction(1),
-    chargedHadronEnergyFraction(1),
-    chargedMultiplicity(0) {
-
-}
+//Jet::Jet(const Particle& particle) :
+//    Particle(particle),
+//    usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05),
+//    electromagneticFraction(0.),
+//    numberOfRecHitsContaining90PercentOfTheJetEnergy(0.),
+//    fractionOfEnergyIntheHottestHPDReadout(0.),
+//    btag_discriminators(BJetTagger::NUMBER_OF_BTAGALGORITHMS),
+//    numberOfDaughters(0),
+//    chargedEmEnergyFraction(1),
+//    neutralHadronEnergyFraction(1),
+//    neutralEmEnergyFraction(1),
+//    chargedHadronEnergyFraction(1),
+//    chargedMultiplicity(0) {
+//
+//}
 Jet::Jet(float energy, float px, float py, float pz) :
     Particle(energy, px, py, pz),
     usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05),
     electromagneticFraction(0.),
-    btag_discriminators(BJetTagger::NUMBER_OF_BTAGALGORITHMS),
+    btag_discriminators(BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS),
     numberOfDaughters(0),
     chargedEmEnergyFraction(1),
     neutralHadronEnergyFraction(1),
     neutralEmEnergyFraction(1),
     chargedHadronEnergyFraction(1),
-    chargedMultiplicity(0) {
+    chargedMultiplicity(0),
+    partonFlavour(0) {
+    for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
+        btag_discriminators[btag] = -9999;
+    }
 
 }
 
@@ -112,7 +119,7 @@ void Jet::setFHPD(float fHPD) {
     fractionOfEnergyIntheHottestHPDReadout = fHPD;
 }
 
-void Jet::setDiscriminatorForBtagType(float discriminator, BJetTagger::Algorithm type) {
+void Jet::setDiscriminatorForBtagType(float discriminator, BtagAlgorithm::value type) {
     btag_discriminators[type] = discriminator;
 }
 
@@ -162,8 +169,74 @@ bool Jet::isGood() const {
     return passesPt && passesEta && jetID;
 }
 
-bool Jet::isBJetAccordingToBtagAlgorithm(BJetTagger::Algorithm btag) const {
-    return BJetTagger::doesDiscriminatorPassBtagOfType(btag_discriminators.at(btag), btag);
-}
+/* Values taken from
+ * https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagPerformance
+ */
+bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) const {
+    float cut(-9998);
+    switch (type) {
+    case BtagAlgorithm::GenPartonFlavour:
+        return abs(partonFlavour) == 5;
 
+    case BtagAlgorithm::SimpleSecondaryVertexHighEffBTag:
+        if (wp == BtagAlgorithm::LOOSE)
+            cut = -9998;//no input found
+        else if (wp == BtagAlgorithm::MEDIUM)
+            cut = 1.74;
+        else if (wp == BtagAlgorithm::TIGHT)
+            cut = 3.05;
+        break;
+
+    case BtagAlgorithm::SimpleSecondaryVertexHighPurBTag:
+        if (wp == BtagAlgorithm::LOOSE)
+            cut = -9998;//no input found
+        else if (wp == BtagAlgorithm::MEDIUM)
+            cut = -9998;//no input found
+        else if (wp == BtagAlgorithm::TIGHT)
+            cut = 2.;
+        break;
+
+    case BtagAlgorithm::TrackCountingHighEffBTag:
+        if (wp == BtagAlgorithm::LOOSE)
+            cut = 1.7;
+        else if (wp == BtagAlgorithm::MEDIUM)
+            cut = 3.3;
+        else if (wp == BtagAlgorithm::TIGHT)
+            cut = 10.2;
+        break;
+
+    case BtagAlgorithm::TrackCountingHighPurBTag:
+        if (wp == BtagAlgorithm::LOOSE)
+            cut = 1.19;
+        else if (wp == BtagAlgorithm::MEDIUM)
+            cut = 1.93;
+        else if (wp == BtagAlgorithm::TIGHT)
+            cut = 3.41;
+        break;
+
+    case BtagAlgorithm::JetProbabilityBTag:
+        if (wp == BtagAlgorithm::LOOSE)
+            cut = 0.215;
+        else if (wp == BtagAlgorithm::MEDIUM)
+            cut = 0.459;
+        else if (wp == BtagAlgorithm::TIGHT)
+            cut = 0.669;
+        break;
+
+    case BtagAlgorithm::JetBProbabilityBTag:
+        if (wp == BtagAlgorithm::LOOSE)
+            cut = 0.988;
+        else if (wp == BtagAlgorithm::MEDIUM)
+            cut = 1.83;
+        else if (wp == BtagAlgorithm::TIGHT)
+            cut = 1.95;
+        break;
+    default:
+        return false;
+
+    }
+    return btag_discriminators[type] > cut;
 }
+}
+;
+

@@ -98,7 +98,7 @@ private:
         goodBJet->setEMF(0.2);
         goodBJet->setFHPD(0.5);
         goodBJet->setN90Hits(2);
-        goodBJet->setDiscriminatorForBtagType(2.5, BJetTagger::SimpleSecondaryVertex);
+        goodBJet->setDiscriminatorForBtagType(2.5, BtagAlgorithm::SimpleSecondaryVertexHighEffBTag);
     }
 
     void setUpGoodJetCloseToElectron() {

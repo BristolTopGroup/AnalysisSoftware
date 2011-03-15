@@ -13,17 +13,18 @@ struct TestJet {
 	Jet badfHPDJet;
 
 	TestJet() :
-		goodJet(290., 200., 200., 0.),
-		badEtaJet(2900., 200., 0., 2000.),
-		badEtJet(20., 20., 20., 0.),
-		badEMFJet(goodJet),
-		badn90HitsJet(goodJet),
-		badfHPDJet(goodJet),
-		goodJetMaximalAbsoluteEta(2.4),
-		goodJetMinimalPt(30.0),
-		goodJetMinimalElectromagneticFraction(0.01),
-		goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy(1),
-		goodJetMaximalFractionOfEnergyIntheHottestHPDReadout(0.98) {
+				goodJet(290., 200., 200., 0.),
+				badEtaJet(2900., 200., 0., 2000.),
+				badEtJet(20., 20., 20., 0.),
+				badEMFJet(goodJet),
+				badn90HitsJet(goodJet),
+				badfHPDJet(goodJet),
+				goodJetMaximalAbsoluteEta(2.4),
+				goodJetMinimalPt(30.0),
+				goodJetMinimalElectromagneticFraction(0.01),
+				goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy(
+						1),
+				goodJetMaximalFractionOfEnergyIntheHottestHPDReadout(0.98) {
 		setUpGoodJet();
 		setUpBadEtaJet();
 		setUpBadEtJet();
@@ -34,10 +35,10 @@ struct TestJet {
 private:
 
 	double goodJetMaximalAbsoluteEta;
-    double goodJetMinimalPt;
-    double goodJetMinimalElectromagneticFraction;
-    double goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy;
-    double goodJetMaximalFractionOfEnergyIntheHottestHPDReadout;
+	double goodJetMinimalPt;
+	double goodJetMinimalElectromagneticFraction;
+	double goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy;
+	double goodJetMaximalFractionOfEnergyIntheHottestHPDReadout;
 
 	void setUpJet(Jet& jet) {
 		jet.setEMF(0.1);
@@ -67,12 +68,15 @@ private:
 
 	void setUpBadn90HitsJet() {
 		setUpJet(badn90HitsJet);
-		badn90HitsJet.setN90Hits(goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy - 1);
+		badn90HitsJet.setN90Hits(
+				goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy
+						- 1);
 	}
 
 	void setUpBadfHPDJet() {
 		setUpJet(badfHPDJet);
-		badfHPDJet.setFHPD(goodJetMaximalFractionOfEnergyIntheHottestHPDReadout + 0.01);
+		badfHPDJet.setFHPD(
+				goodJetMaximalFractionOfEnergyIntheHottestHPDReadout + 0.01);
 	}
 public:
 	void testGoodJet() {
@@ -100,7 +104,8 @@ public:
 	}
 
 	void testUsedJetAlgorithm() {
-		ASSERT_EQUAL(JetAlgorithm::Calo_AntiKT_Cone05, goodJet.getUsedAlgorithm());
+		ASSERT_EQUAL(JetAlgorithm::Calo_AntiKT_Cone05,
+				goodJet.getUsedAlgorithm());
 		goodJet.setUsedAlgorithm(JetAlgorithm::ParticleFlow);
 		ASSERT_EQUAL(JetAlgorithm::ParticleFlow, goodJet.getUsedAlgorithm());
 	}
@@ -121,34 +126,34 @@ public:
 	}
 
 	void testPositiveBtag() {
-		goodJet.setDiscriminatorForBtagType(BJetTagger::simpleSecondaryVertexHighEfficiencyMediumCut + 0.1,
-				BJetTagger::SimpleSecondaryVertex);
-		ASSERT(goodJet.isBJetAccordingToBtagAlgorithm(BJetTagger::SimpleSecondaryVertex));
+		goodJet.setDiscriminatorForBtagType(1.7 + 0.1,
+				BtagAlgorithm::SimpleSecondaryVertexHighEffBTag);
+		ASSERT(goodJet.isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEffBTag));
 	}
 
 	void testNegativeBtag() {
-		goodJet.setDiscriminatorForBtagType(BJetTagger::simpleSecondaryVertexHighEfficiencyMediumCut - 0.1,
-				BJetTagger::SimpleSecondaryVertex);
-		ASSERT(goodJet.isBJetAccordingToBtagAlgorithm(BJetTagger::SimpleSecondaryVertex) == false);
+		goodJet.setDiscriminatorForBtagType(1.7 - 0.1,
+				BtagAlgorithm::SimpleSecondaryVertexHighEffBTag);
+		ASSERT(goodJet.isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEffBTag) == false);
 	}
 
 };
 
 extern cute::suite make_suite_TestJet() {
 	cute::suite s;
-	s.push_back(CUTE_SMEMFUN(TestJet,testGoodJet));
-	s.push_back(CUTE_SMEMFUN(TestJet,testBadEtaJet));
-	s.push_back(CUTE_SMEMFUN(TestJet,testBadEtJet));
-	s.push_back(CUTE_SMEMFUN(TestJet,testBadEMFJet));
-	s.push_back(CUTE_SMEMFUN(TestJet,testBadN90HitsJet));
-	s.push_back(CUTE_SMEMFUN(TestJet,testBadfHPDJet));
+	s.push_back(CUTE_SMEMFUN(TestJet, testGoodJet));
+	s.push_back(CUTE_SMEMFUN(TestJet, testBadEtaJet));
+	s.push_back(CUTE_SMEMFUN(TestJet, testBadEtJet));
+	s.push_back(CUTE_SMEMFUN(TestJet, testBadEMFJet));
+	s.push_back(CUTE_SMEMFUN(TestJet, testBadN90HitsJet));
+	s.push_back(CUTE_SMEMFUN(TestJet, testBadfHPDJet));
 
-	s.push_back(CUTE_SMEMFUN(TestJet,testUsedJetAlgorithm));
-	s.push_back(CUTE_SMEMFUN(TestJet,testJetEMF));
-	s.push_back(CUTE_SMEMFUN(TestJet,testJetN90Hits));
-	s.push_back(CUTE_SMEMFUN(TestJet,testJetFHPD));
+	s.push_back(CUTE_SMEMFUN(TestJet, testUsedJetAlgorithm));
+	s.push_back(CUTE_SMEMFUN(TestJet, testJetEMF));
+	s.push_back(CUTE_SMEMFUN(TestJet, testJetN90Hits));
+	s.push_back(CUTE_SMEMFUN(TestJet, testJetFHPD));
 
-	s.push_back(CUTE_SMEMFUN(TestJet,testPositiveBtag));
-	s.push_back(CUTE_SMEMFUN(TestJet,testNegativeBtag));
+	s.push_back(CUTE_SMEMFUN(TestJet, testPositiveBtag));
+	s.push_back(CUTE_SMEMFUN(TestJet, testNegativeBtag));
 	return s;
 }

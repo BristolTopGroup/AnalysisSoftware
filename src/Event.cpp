@@ -6,7 +6,6 @@
  */
 
 #include "../interface/Event.h"
-#include "../interface/Taggers/BJetTagger.h"
 #include <iostream>
 using namespace std;
 
@@ -128,7 +127,7 @@ void Event::selectGoodJets() {
     cleanGoodJets();
     for (unsigned int index = 0; index < goodJets.size(); ++index) {
         const JetPointer jet = goodJets.at(index);
-        if (jet->isBJetAccordingToBtagAlgorithm(BJetTagger::SimpleSecondaryVertex))
+        if (jet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEffBTag))
             goodBJets.push_back(jet);
     }
 }

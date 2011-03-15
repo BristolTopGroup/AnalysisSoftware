@@ -48,20 +48,11 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     return xsection;
 }
 
-boost::array<float, DataType::NUMBER_OF_DATA_TYPES> tenTeV::getXSections() {
-    boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
-    xsection[DataType::DATA] = 0;
-    xsection[DataType::ttbar] = 0;
-    return xsection;
-}
-
 CrossSectionProvider::CrossSectionProvider(float lumiInInversePb, unsigned short tev) :
     lumiInInversePb(lumiInInversePb), tev(tev), useSkimEff(true), xsection(), numberOfProducedEvents(),
             numberOfSkimmedEvents() {
     if (tev == 7)
         xsection = sevenTeV::getXSections();
-    else if (tev == 10)
-        xsection = tenTeV::getXSections();
     defineNumberOfProducedEvents();
     defineNumberOfSkimmedEvents();
 }
@@ -140,11 +131,6 @@ void CrossSectionProvider::defineNumberOfSkimmedEvents() {
     numberOfSkimmedEvents[DataType::Zprime_M3TeV_W300GeV] = 50;
     numberOfSkimmedEvents[DataType::Zprime_M4TeV_W40GeV] = 50;
     numberOfSkimmedEvents[DataType::Zprime_M4TeV_W400GeV] = 50;
-    //    pj1: 311575. / 2255228.
-    //  pj2: 241590. / 1071393.
-    //pj3: 338407. / 960198.
-
-
 }
 
 CrossSectionProvider::~CrossSectionProvider() {

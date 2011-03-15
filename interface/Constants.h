@@ -125,7 +125,7 @@ enum value {
 };
 
 const boost::array<std::string, JetBinSummed::NUMBER_OF_SUMMED_JET_BINS> names = { {
-        "allJets",
+        "0orMoreJets",
         "1orMoreJets",
         "2orMoreJets",
         "3orMoreJets" } };
@@ -159,33 +159,33 @@ enum value {
 };
 
 const boost::array<std::string, BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS> names = { {
-        "allBtags",
+        "0orMoreBtag",
         "1orMoreBtag",
         "2orMoreBtags",
         "3orMoreBtags" } };
 }
 
-namespace JetAlgorithm {
-enum value {
-    Calo_AntiKT_Cone05,
-    JPT_AntiKt_ConeDR05,
-    ParticleFlow,
-    PF2PAT,
-    NUMBER_OF_JETALGORITHMS
-};
-//for nTuple branch names
-const boost::array<std::string, JetAlgorithm::NUMBER_OF_JETALGORITHMS> prefixes = { {
-        "CaloJet",
-        "",
-        "PFJet",
-        "PF2PATJet" } };
-
-const boost::array<std::string, JetAlgorithm::NUMBER_OF_JETALGORITHMS> names = { {
-        "CaloJets",
-        "JPT",
-        "PFJets",
-        "PF2PATJets" } };
-}
+//namespace JetAlgorithm {
+//enum value {
+//    Calo_AntiKT_Cone05,
+//    JPT_AntiKt_ConeDR05,
+//    ParticleFlow,
+//    PF2PAT,
+//    NUMBER_OF_JETALGORITHMS
+//};
+////for nTuple branch names
+//const boost::array<std::string, JetAlgorithm::NUMBER_OF_JETALGORITHMS> prefixes = { {
+//        "CaloJet",
+//        "",
+//        "PFJet",
+//        "PF2PATJet" } };
+//
+//const boost::array<std::string, JetAlgorithm::NUMBER_OF_JETALGORITHMS> names = { {
+//        "CaloJets",
+//        "JPT",
+//        "PFJets",
+//        "PF2PATJets" } };
+//}
 
 namespace METAlgorithm {
 enum value {
