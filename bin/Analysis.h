@@ -113,6 +113,7 @@ private:
     void createHistograms();
     void doNotePlots();
     void doQCDStudy();
+    void doMCttbarReconstruction();
     void checkForDuplicatedEvents();
     void checkForBrokenEvents();
 };
