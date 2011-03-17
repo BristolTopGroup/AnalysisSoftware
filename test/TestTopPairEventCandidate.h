@@ -140,7 +140,9 @@ private:
     }
 
     void setUpTTbarEvent() {
-        ttbarEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        ttbarEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(badElectron);
@@ -170,7 +172,9 @@ private:
     }
 
     void setUpGoodZEvent() {
-        goodZEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        goodZEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(goodIsolatedElectron2);
@@ -190,7 +194,9 @@ private:
     }
 
     void setUpPoorZEvent() {
-        poorZEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        poorZEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(goodLooseElectron);
@@ -210,7 +216,9 @@ private:
     }
 
     void setUpDiJetEvent() {
-        DiJetEvent.setPrimaryVertex(badVertex);
+        VertexCollection vertices;
+        vertices.push_back(badVertex);
+        DiJetEvent.setVertices(vertices);
         JetCollection jets;
         jets.push_back(goodJet);
         jets.push_back(goodJet);
@@ -222,7 +230,9 @@ private:
     }
 
     void setUpDiJetEventWithConversion() {
-        DiJetEventWithConversion.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        DiJetEventWithConversion.setVertices(vertices);
         JetCollection jets;
         jets.push_back(goodJet);
         jets.push_back(goodJet);
@@ -237,7 +247,9 @@ private:
     }
 
     void setUpMuonEvent() {
-        muonEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        muonEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(badElectron);
@@ -494,7 +506,9 @@ public:
 
     void testComputeNeutrinoPzsWithoutMETThrowsExpeption() {
         TopPairEventCandidate cand = TopPairEventCandidate();
-        cand.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        cand.setVertices(vertices);
         ElectronPointer electron(new Electron(40, -40, 0, 0));
         electron->setHcalIsolation(0);
         electron->setEcalIsolation(0);
@@ -508,7 +522,9 @@ public:
 
     void testComputeNeutrinoPzsIsolatedElectronThrowsExpeption() {
         TopPairEventCandidate cand = TopPairEventCandidate();
-        cand.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        cand.setVertices(vertices);
         ElectronPointer electron(new Electron(40, -40, 0, 0));
         electron->setHcalIsolation(50);
         electron->setEcalIsolation(50);
@@ -543,15 +559,12 @@ public:
 
     void testReconstructTopEventUsingChiWithNotEnoughJetsThrowsException() {
         METPointer met(new MET(40, 0));
-//        ElectronPointer electron(new Electron(40, -40, 0, 0));
-//        electron->setHcalIsolation(0);
-//        electron->setEcalIsolation(0);
-//        electron->setTrackerIsolation(0);
-//        electron->setNumberOfMissingInnerLayerHits(0);
         ElectronCollection eCollection;
         eCollection.push_back(goodIsolatedElectron);
         TopPairEventCandidate cand = TopPairEventCandidate();
-        cand.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        cand.setVertices(vertices);
         cand.setMET(met);
         cand.setElectrons(eCollection);
         ASSERT_THROWS(cand.reconstructUsingChi2(goodIsolatedElectron),ReconstructionException);

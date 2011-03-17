@@ -23,7 +23,7 @@ namespace BAT {
 class Event {
 protected:
     boost::shared_ptr<std::vector<int> > HLTs;
-    VertexPointer primaryVertex;
+    VertexCollection vertices;
     TrackCollection tracks;
     ElectronCollection allElectrons;
     ElectronCollection goodElectrons;
@@ -62,7 +62,7 @@ public:
     bool isRealData() const;
     const DataType::value getDataType() const;
     void setDataType(DataType::value type);
-    void setPrimaryVertex(VertexPointer vertex);
+    void setVertices(VertexCollection vertices);
     void setTracks(TrackCollection tracks);
     void setGenParticles(MCParticleCollection genParticles);
     void setElectrons(ElectronCollection electrons);

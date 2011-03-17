@@ -54,7 +54,9 @@ struct TestEvent {
 private:
 
     void setUpTTbarEvent() {
-        ttbarEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        ttbarEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(badEtElectron);
@@ -74,7 +76,9 @@ private:
     }
 
     void setUpGoodZEvent() {
-        goodZEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        goodZEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(goodIsolatedElectron2);
@@ -91,7 +95,9 @@ private:
     }
 
     void setUpPoorZEvent() {
-        poorZEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        poorZEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(goodLooseElectron);
@@ -108,7 +114,9 @@ private:
     }
 
     void setUpDiJetEvent() {
-        DiJetEvent.setPrimaryVertex(badVertex);
+        VertexCollection vertices;
+        vertices.push_back(badVertex);
+        DiJetEvent.setVertices(vertices);
         JetCollection jets;
         jets.push_back(goodJet);
         jets.push_back(goodJet);
@@ -117,7 +125,9 @@ private:
     }
 
     void setUpDiJetEventWithConversion() {
-        DiJetEventWithConversion.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        DiJetEventWithConversion.setVertices(vertices);
         JetCollection jets;
         jets.push_back(goodJet);
         jets.push_back(goodJet);
@@ -129,7 +139,9 @@ private:
     }
 
     void setUpMuonEvent() {
-        muonEvent.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        muonEvent.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(badEtElectron);
@@ -199,7 +211,9 @@ public:
 
     void testGoodJetCleaning() {
         Event event = Event();
-        event.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        event.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(badEtElectron);
@@ -217,7 +231,9 @@ public:
 
     void testGoodJetCleaningNoGoodElectrons() {
         Event event = Event();
-        event.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        event.setVertices(vertices);
         ElectronCollection electrons;
         goodIsolatedElectron->setSigmaIEtaIEta(0.01 + 2);
         electrons.push_back(goodIsolatedElectron);
@@ -238,7 +254,9 @@ public:
 
     void testGoodJetCleaningNoElectrons() {
         Event event = Event();
-        event.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        event.setVertices(vertices);
         JetCollection jets;
         jets.push_back(goodJet);
         jets.push_back(goodJet);
@@ -252,7 +270,9 @@ public:
 
     void testGoodJetCleaningNoGoodJets() {
         Event event = Event();
-        event.setPrimaryVertex(goodVertex);
+        VertexCollection vertices;
+        vertices.push_back(goodVertex);
+        event.setVertices(vertices);
         ElectronCollection electrons;
         electrons.push_back(goodIsolatedElectron);
         electrons.push_back(badEtElectron);

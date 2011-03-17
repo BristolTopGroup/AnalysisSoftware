@@ -21,7 +21,7 @@ struct TestVertexReader {
 		input->SetBranchStatus("*", 0);
 		reader->initialise();
 		input->GetEntry(1);
-		vertex = reader->getVertex();
+		vertex = reader->getVertices().front();
 	}
 
 	void testVertexZPosition() {

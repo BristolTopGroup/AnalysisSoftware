@@ -70,7 +70,7 @@ private:
 	unsigned long numberOfFiles;
 	boost::shared_ptr<TChain> input;
 	boost::shared_ptr<VariableReader<MultiIntPointer> > hltReader;
-	boost::scoped_ptr<VertexReader> primaryReader;
+	boost::scoped_ptr<VertexReader> vertexReader;
 	boost::scoped_ptr<TrackReader> trackReader;
 	boost::scoped_ptr<ElectronReader> electronReader;
 	boost::scoped_ptr<GenParticleReader> genParticleReader;

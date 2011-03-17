@@ -10,7 +10,11 @@
 namespace BAT {
 
 VertexReader::VertexReader() :
-	ndofReader(), zReader(), rhoReader(), isfakeReader(), vertex() {
+	ndofReader(),
+	zReader(),
+	rhoReader(),
+	isfakeReader(),
+	vertices() {
 
 }
 
@@ -19,29 +23,35 @@ VertexReader::VertexReader(TChainPointer input) :
 	zReader(input, "Vertex.Z"),
 	rhoReader(input, "Vertex.Rho"),
 	isfakeReader(input, "Vertex.IsFake"),
-	vertex() {
+	vertices() {
 
 }
 
 void VertexReader::initialise() {
-	ndofReader.initialise();
-	zReader.initialise();
-	rhoReader.initialise();
-	isfakeReader.initialise();
+    ndofReader.initialise();
+    zReader.initialise();
+    rhoReader.initialise();
+    isfakeReader.initialise();
 }
 
-const VertexPointer VertexReader::getVertex() {
-	readVertex();
-	return vertex;
+const VertexCollection& VertexReader::getVertices() {
+    if (vertices.empty() == false)
+        vertices.clear();
+    readVertices();
+    return vertices;
 }
 
-void VertexReader::readVertex() {
-	vertex = VertexPointer(new Vertex());
-	vertex->setDegreesOfFreedom(ndofReader.getVariableAt(0));
-	vertex->setFake(isfakeReader.getBoolVariableAt(0));
-	vertex->setRho(rhoReader.getVariableAt(0));
-	vertex->setZPosition(zReader.getVariableAt(0));
+void VertexReader::readVertices() {
+    for (unsigned int index = 0; index < ndofReader.size(); index++) {
+        VertexPointer vertex(new Vertex());
+        vertex->setDegreesOfFreedom(ndofReader.getVariableAt(0));
+        vertex->setFake(isfakeReader.getBoolVariableAt(0));
+        vertex->setRho(rhoReader.getVariableAt(0));
+        vertex->setZPosition(zReader.getVariableAt(0));
+        vertices.push_back(vertex);
+    }
 }
+
 VertexReader::~VertexReader() {
 }
 

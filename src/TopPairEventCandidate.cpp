@@ -122,7 +122,7 @@ bool TopPairEventCandidate::passesHighLevelTrigger() const {
 }
 
 bool TopPairEventCandidate::hasOneGoodPrimaryVertex() const {
-    return primaryVertex->isGood();
+    return PrimaryVertex()->isGood();
 }
 
 bool TopPairEventCandidate::hasOnlyOneGoodIsolatedElectron() const {

@@ -16,7 +16,7 @@ public:
 	VertexReader();
 	VertexReader(TChainPointer input);
 	virtual ~VertexReader();
-	const VertexPointer getVertex();
+	const VertexCollection& getVertices();
 	void initialise();
 private:
 	VariableReader<MultiDoublePointer> ndofReader;
@@ -24,8 +24,9 @@ private:
 	VariableReader<MultiDoublePointer> rhoReader;
 	VariableReader<MultiBoolPointer> isfakeReader;
 
-	VertexPointer vertex;
-	void readVertex();
+	VertexCollection vertices;
+
+	void readVertices();
 };
 
 }

@@ -28,7 +28,7 @@ NTupleEventReader::NTupleEventReader() :
     numberOfFiles(0),
     input(new TChain(NTupleEventReader::EVENT_CHAIN)),
     hltReader(new VariableReader<MultiIntPointer>(input, "HLTResults")),
-    primaryReader(new VertexReader(input)),
+    vertexReader(new VertexReader(input)),
     trackReader(new TrackReader(input)),
     electronReader(new ElectronReader(input, NTupleEventReader::electronAlgorithm)),
     genParticleReader(new GenParticleReader(input)),
@@ -72,7 +72,7 @@ const Event& NTupleEventReader::getNextEvent() {
 
     currentEvent.setDataType(getDataType(getCurrentFile()));
     currentEvent.setHLTs(triggers);
-    currentEvent.setPrimaryVertex(primaryReader->getVertex());
+    currentEvent.setVertices(vertexReader->getVertices());
 
     if(NTupleEventReader::loadTracks)
         currentEvent.setTracks(trackReader->getTracks());
@@ -116,7 +116,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
     if (areReadersSet == false) {
         input->SetBranchStatus("*", 0);
         hltReader->initialise();
-        primaryReader->initialise();
+        vertexReader->initialise();
         if(NTupleEventReader::loadTracks)
             trackReader->initialise();
         electronReader->initialise();

@@ -14,7 +14,7 @@ bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = false;
 Event::Event() :
     HLTs(new std::vector<int>()),
-    primaryVertex(),
+    vertices(),
     tracks(),
     allElectrons(),
     goodElectrons(),
@@ -55,8 +55,8 @@ void Event::setDataType(DataType::value type) {
     dataType = type;
 }
 
-void Event::setPrimaryVertex(VertexPointer vertex) {
-    primaryVertex = vertex;
+void Event::setVertices(VertexCollection vertices) {
+    this->vertices = vertices;
 }
 
 void Event::setTracks(TrackCollection tracks) {
@@ -245,7 +245,7 @@ void Event::setBeamScrapingVeto(bool isScraping){
 }
 
 const VertexPointer Event::PrimaryVertex() const {
-    return primaryVertex;
+    return vertices.front();
 }
 
 const TrackCollection& Event::Tracks() const {
