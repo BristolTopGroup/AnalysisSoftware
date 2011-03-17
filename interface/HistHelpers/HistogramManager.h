@@ -10,7 +10,7 @@
 #include "THCollection.h"
 #include "TH1D.h"
 #include "TH2D.h"
-#include "../../interface/Constants.h"
+#include "../../interface/DataTypes.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
 #include <boost/multi_array.hpp>
@@ -18,6 +18,72 @@
 #include <string>
 
 namespace BAT {
+
+namespace JetBin {
+enum value {
+    NoJet,
+    OneJet,
+    TwoJets,
+    ThreeJets,
+    FourOrMoreJets,
+    NUMBER_OF_JET_BINS
+};
+
+const boost::array<std::string, JetBin::NUMBER_OF_JET_BINS> names = {
+        { "0jet", "1jet", "2jets", "3jets", "4orMoreJets"
+        } };
+}
+
+namespace JetBinSummed {
+enum value {
+    allJet,
+    OneOrMoreJets,
+    TwoOrMoreJets,
+    ThreeOrMoreJets,
+    NUMBER_OF_SUMMED_JET_BINS
+};
+
+const boost::array<std::string, JetBinSummed::NUMBER_OF_SUMMED_JET_BINS> names = { {
+        "0orMoreJets",
+        "1orMoreJets",
+        "2orMoreJets",
+        "3orMoreJets" } };
+}
+
+namespace BJetBin {
+enum value {
+    NoBtag,
+    OneBTag,
+    TwoBtags,
+    ThreeBtags,
+    FourOrMoreBTags,
+    NUMBER_OF_BJET_BINS
+};
+
+const boost::array<std::string, BJetBin::NUMBER_OF_BJET_BINS> names = { {
+        "0btag",
+        "1btag",
+        "2btags",
+        "3btags",
+        "4orMoreBtags" } };
+}
+
+namespace BJetBinSummed {
+enum value {
+    allBtags,
+    OneOrMoreBTags,
+    TwoOrMoreBTags,
+    ThreeOrMoreBTags,
+    NUMBER_OF_SUMMED_BJET_BINS
+};
+
+const boost::array<std::string, BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS> names = { {
+        "0orMoreBtag",
+        "1orMoreBtag",
+        "2orMoreBtags",
+        "3orMoreBtags" } };
+}
+
 typedef unsigned short ushort;
 class HistogramManager {
 public:

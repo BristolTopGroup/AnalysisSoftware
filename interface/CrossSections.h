@@ -9,7 +9,7 @@
 #define CROSSSECTIONS_H_
 //https://twiki.cern.ch/twiki/bin/view/CMS/CrossSections_3XSeries#crosssections
 
-#include "Constants.h"
+#include "DataTypes.h"
 #include <vector>
 #include <boost/array.hpp>
 

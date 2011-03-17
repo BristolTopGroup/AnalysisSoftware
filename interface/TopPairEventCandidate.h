@@ -10,15 +10,24 @@
 
 #include <boost/shared_ptr.hpp>
 #include "Event.h"
-#include "Constants.h"
 #include "RecoObjects/Particle.h"
 #include "RecoObjects/Electron.h"
 #include "RecoObjects/Jet.h"
-//#include "Selection.h"
 #include "Taggers/ConversionTagger.h"
 #include "TtbarHypothesis.h"
 
 namespace BAT {
+
+namespace NeutrinoSelectionCriterion {
+enum value {
+    pzClosestToLepton,
+    mostCentral,
+    pzClosestToLeptonOrMostcentralIfAbove300,
+    largestValueOfCosine,
+    chi2,
+    TopMassDifference
+};
+}
 
 namespace TTbarEPlusJetsSelection {
 enum Step {

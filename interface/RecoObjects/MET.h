@@ -9,9 +9,29 @@
 #define MET_H_
 #include "Particle.h"
 #include <boost/shared_ptr.hpp>
-#include "../Constants.h"
+#include <string>
+#include <boost/array.hpp>
 
 namespace BAT {
+
+namespace METAlgorithm {
+enum value {
+    Calo,
+    tcMET,
+    ParticleFlowMET,
+    NUMBER_OF_METALGORITHMS
+};
+
+const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes = { {
+        "CaloMET",
+        "TCMET",
+        "PFMET"  } };
+
+const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
+        "CaloMET",
+        "TCMET",
+        "PFMET" } };
+}
 
 class MET: public Particle {
 public:

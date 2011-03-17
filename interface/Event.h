@@ -13,10 +13,12 @@
 #include "RecoObjects/Vertex.h"
 #include "RecoObjects/MET.h"
 #include "RecoObjects/MCParticle.h"
-#include "Constants.h"
+#include "DataTypes.h"
 #include "Printers/EventContentPrinter.h"
+#include "HighLevelTriggers.h"
 
 namespace BAT {
+
 
 class Event {
 protected:

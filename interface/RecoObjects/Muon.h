@@ -9,8 +9,27 @@
 #define MUON_H_
 #include "Particle.h"
 #include <vector>
+#include <string>
+#include <boost/array.hpp>
 
 namespace BAT {
+
+namespace MuonAlgorithm {
+enum value {
+    Default,
+    ParticleFlow,
+    NUMBER_OF_MUONALGORITHMS
+};
+
+const boost::array<std::string, MuonAlgorithm::NUMBER_OF_MUONALGORITHMS> prefixes = { {
+        "Muon",
+        "PFMuon"  } };
+
+const boost::array<std::string, MuonAlgorithm::NUMBER_OF_MUONALGORITHMS> names = { {
+        "Muon",
+        "PFMuon"} };
+}
+
 
 class Muon: public Particle {
 public:
@@ -34,7 +53,8 @@ private:
 	float ecal_Isolation, hcal_Isolation, tracker_Isolation;
 };
 
-typedef std::vector<Muon> MuonCollection;
+typedef boost::shared_ptr<Muon> MuonPointer;
+typedef std::vector<MuonPointer> MuonCollection;
 }
 
 #endif /* MUON_H_ */
