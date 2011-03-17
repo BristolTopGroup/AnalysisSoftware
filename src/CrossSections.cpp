@@ -8,6 +8,7 @@
 #include "../interface/CrossSections.h"
 
 namespace BAT {
+
 boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
     xsection[DataType::DATA] = 0;
