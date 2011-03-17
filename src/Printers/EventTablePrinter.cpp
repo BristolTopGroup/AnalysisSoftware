@@ -1,7 +1,6 @@
 #include "../../interface/Printers/EventTablePrinter.h"
 #include <iostream>
 #include <iomanip>
-#include "../../interface/Constants.h"
 #include "../../interface/TopPairEventCandidate.h"
 
 namespace BAT {
