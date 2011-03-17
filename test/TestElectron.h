@@ -8,142 +8,48 @@ using namespace BAT;
 
 struct TestElectron {
 private:
-    double isolatedElectronMaximalRelativeIsolation;
-    double goodElectronMaximalAbsoluteEta;
-    double goodElectronMinimalEt;
-    double goodElectronMaximalDistanceFromInteractionPoint;
-    double MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion;
-    double looseElectronMaximalAbsoluteEta;
-    double looseElectronMinimalEt;
-    double looseIsolatedElectronMaximalRelativeIsolation;
+//    double isolatedElectronMaximalRelativeIsolation;
+//    double goodElectronMaximalAbsoluteEta;
+//    double goodElectronMinimalEt;
+//    double goodElectronMaximalDistanceFromInteractionPoint;
+//    double MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion;
+//    double looseElectronMaximalAbsoluteEta;
+//    double looseElectronMinimalEt;
+//    double looseIsolatedElectronMaximalRelativeIsolation;
 
-    float invalidSwissCross;
     ElectronPointer isolatedElectron;
     ElectronPointer goodElectron;
     ElectronPointer badEtElectron;
     ElectronPointer badEtaElectron;
     ElectronPointer badInCrackElectron;
     ElectronPointer badD0Electron;
-    ElectronPointer badElectronFromConversion;
+    ElectronPointer badElectronWithMissingInnerLayerHit;
+    ElectronPointer badElectronWithPartnerTrack;
     ElectronPointer looseElectron;
     ElectronPointer badLooseElectronNoID;
     ElectronPointer badElectronNoID;
 
 public:
     TestElectron() :
-        isolatedElectronMaximalRelativeIsolation(0.1),
-        goodElectronMaximalAbsoluteEta(2.1),
-        goodElectronMinimalEt(20.),
-        goodElectronMaximalDistanceFromInteractionPoint(0.02),
-        MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion(0),
-        looseElectronMaximalAbsoluteEta(2.5),
-        looseElectronMinimalEt(25),
-        looseIsolatedElectronMaximalRelativeIsolation(1.0),
-        invalidSwissCross(2),
+//        isolatedElectronMaximalRelativeIsolation(0.1),
+//        goodElectronMaximalAbsoluteEta(2.1),
+//        goodElectronMinimalEt(20.),
+//        goodElectronMaximalDistanceFromInteractionPoint(0.02),
+//        MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion(0),
+//        looseElectronMaximalAbsoluteEta(2.5),
+//        looseElectronMinimalEt(25),
+//        looseIsolatedElectronMaximalRelativeIsolation(1.0),
         isolatedElectron(TestObjectFactory::goodIsolatedElectron()),
         goodElectron(TestObjectFactory::goodCaloElectron()),
-        badEtElectron(new Electron(20., 10., 0., 5.)),
-        badEtaElectron(new Electron(400., 50., 50., 380)),
-        badInCrackElectron(new Electron(400., 50., 50., 0)),
-        badD0Electron(new Electron(40., 5., 5., 0.)),
-        badElectronFromConversion(new Electron(400., 50., 50., 380)),
-        looseElectron(new Electron(40., 20., 20., 0.)),
-        badLooseElectronNoID(new Electron(30., 20., 5., 2.)),
-        badElectronNoID(new Electron(30., 20., 5., 2.)) {
-//        setElectronConditions();
-        setBadEtElectron();
-        setBadEtaElectron();
-        setBadD0Electron();
-        setBadInCrackElectron();
-        setElectronFromConversion();
-        setLooseElectron();
-        setBadLooseElectronNoID();
-        setBadElectronNoID();
-    }
-
-private:
-//    void setElectronConditions() {
-//        isolatedElectronMaximalRelativeIsolation = 0.1;
-//        goodElectronMaximalAbsoluteEta = 2.1;
-//        goodElectronMinimalEt = 20.;
-//        goodElectronMaximalDistanceFromInteractionPoint = 0.02;
-//        MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion = 0;
-//        looseElectronMaximalAbsoluteEta = 2.5;
-//        looseElectronMinimalEt = 25;
-//        looseIsolatedElectronMaximalRelativeIsolation = 1.0;
-//    }
-
-    void setBadEtElectron() {
-        badEtElectron->setD0(0.01);
-        badEtElectron->setSuperClusterEta(1);
-        assert(fabs(badEtElectron->eta()) < goodElectronMaximalAbsoluteEta);
-        assert(fabs(badEtElectron->d0()) < goodElectronMaximalDistanceFromInteractionPoint);
-        //and fails the selected
-        assert(badEtElectron->et() < goodElectronMinimalEt);
-    }
-
-    void setBadEtaElectron() {
-        badEtaElectron->setSuperClusterEta(2.6);
-        badEtaElectron->setD0(0.001);
-        //make sure it passes all other requirements
-        assert(badEtaElectron->et() > goodElectronMinimalEt);
-        assert(fabs(badEtaElectron->d0()) < goodElectronMaximalDistanceFromInteractionPoint);
-        //and fails the selected
-        assert(fabs(badEtaElectron->superClusterEta()) > goodElectronMaximalAbsoluteEta);
-    }
-
-    void setBadD0Electron() {
-        badD0Electron->setD0(300.);
-        //make sure it passes all other requirements
-        assert(badD0Electron->et() > goodElectronMinimalEt);
-        assert(fabs(badD0Electron->eta()) < goodElectronMaximalAbsoluteEta);
-        //and fails the selected
-        assert(fabs(badD0Electron->d0()) > goodElectronMaximalDistanceFromInteractionPoint);
-    }
-
-    void setBadInCrackElectron() {
-        badInCrackElectron->setSuperClusterEta(1.5);
-        badInCrackElectron->setD0_wrtBeamSpot(0.0001);
-        //make sure it passes all other requirements
-        assert(badInCrackElectron->et() > goodElectronMinimalEt);
-        assert(fabs(badInCrackElectron->d0_wrtBeamSpot()) < goodElectronMaximalDistanceFromInteractionPoint);
-        //and fails the selected
-        assert(fabs(badInCrackElectron->eta()) < goodElectronMaximalAbsoluteEta);
-        assert(badInCrackElectron->isInCrack());
-    }
-
-    void setElectronFromConversion() {
-        //        badElectronFromConversion = ElectronPointer(new Electron(400., 50., 50., 380));
-        badElectronFromConversion->setNumberOfMissingInnerLayerHits(1);
-    }
-
-    void setLooseElectron() {
-        //        looseElectron = Electron(40., 20., 20., 0.);
-        //        looseElectron->setRobustLooseID(true);
-    	looseElectron->setSigmaIEtaIEta(0.009);
-    	looseElectron->setDPhiIn(0.7);
-    	looseElectron->setDEtaIn(0.006);
-    	looseElectron->setHadOverEm(0.14);
-        looseElectron->setSuperClusterEta(1);
-        looseElectron->setEcalIsolation(0);
-        looseElectron->setTrackerIsolation(0);
-        looseElectron->setHcalIsolation(0);
-    }
-
-    void setBadLooseElectronNoID() {
-        //        badLooseElectronNoID = Electron(30., 20., 5., 2.);
-        badLooseElectronNoID->setHcalIsolation(0.5);
-        badLooseElectronNoID->setEcalIsolation(0.3);
-        badLooseElectronNoID->setTrackerIsolation(0.4);
-        badLooseElectronNoID->setSigmaIEtaIEta(0.009 + 2);
-    }
-
-    void setBadElectronNoID() {
-        //        badElectronNoID = Electron(30., 20., 5., 2.);
-        badElectronNoID->setHcalIsolation(0.5);
-        badElectronNoID->setEcalIsolation(0.3);
-        badElectronNoID->setTrackerIsolation(0.4);
-        badElectronNoID->setSigmaIEtaIEta(0.009 + 2);
+        badEtElectron(TestObjectFactory::badEtElectron()),
+        badEtaElectron(TestObjectFactory::badEtaElectron()),
+        badInCrackElectron(TestObjectFactory::badInCrackElectron()),
+        badD0Electron(TestObjectFactory::badD0Electron()),
+        badElectronWithMissingInnerLayerHit(TestObjectFactory::electronWithMissingInnerLayerHit()),
+        badElectronWithPartnerTrack(TestObjectFactory::electronWithMatchingPartnerTrack()),
+        looseElectron(TestObjectFactory::goodLooseElectron()),
+        badLooseElectronNoID(TestObjectFactory::badLooseElectronNoID()),
+        badElectronNoID(TestObjectFactory::badElectronNoID()) {
     }
 
 public:
@@ -172,8 +78,13 @@ public:
     }
 
     void testElectronFromConversion() {
-        ASSERT(badElectronFromConversion->isFromConversion());
+        ASSERT(badElectronWithMissingInnerLayerHit->isFromConversion());
     }
+
+    void testElectronFromConversionWithPartnerTrack() {
+        ASSERT(badElectronWithPartnerTrack->isTaggedAsConversion(0.2,0.2));
+    }
+
     void testBadD0Electron() {
         ASSERT(badD0Electron->isGood() == false);
     }
@@ -768,30 +679,6 @@ public:
         ASSERT_EQUAL(500, electron.mass());
     }
 
-    //    void testSwissCrossBarrel() {
-    //        goodElectron->setSuperClusterEta(1);
-    //        goodElectron->setSwissCross(invalidSwissCross);
-    //        goodElectron->setIsEcalDriven(true);
-    //        ASSERT_EQUAL(true, goodElectron->isEcalSpike());
-    //        ASSERT_EQUAL(false, goodElectron->isGood());
-    //    }
-    //
-    //    void testSwissCrossEndcap() {
-    //        goodElectron->setSuperClusterEta(2);
-    //        goodElectron->setSwissCross(invalidSwissCross);
-    //        goodElectron->setIsEcalDriven(true);
-    //        ASSERT_EQUAL(false, goodElectron->isEcalSpike());
-    //        ASSERT_EQUAL(true, goodElectron->isGood());
-    //    }
-    //
-    //    void testSwissCrossNotEcalDriven() {
-    //        goodElectron->setSuperClusterEta(2);
-    //        goodElectron->setSwissCross(invalidSwissCross);
-    //        goodElectron->setIsEcalDriven(false);
-    //        ASSERT_EQUAL(false, goodElectron->isEcalSpike());
-    //        ASSERT_EQUAL(true, goodElectron->isGood());
-    //    }
-
     void testGSFTrack() {
         TrackPointer track = TrackPointer(new Track(20, 20, 0, 0));
         goodElectron->setGSFTrack(track);
@@ -808,6 +695,7 @@ extern cute::suite make_suite_TestElectron() {
     s.push_back(CUTE_SMEMFUN(TestElectron, testBadD0Electron));
     s.push_back(CUTE_SMEMFUN(TestElectron, testBadInCrackElectron));
     s.push_back(CUTE_SMEMFUN(TestElectron, testElectronFromConversion));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testElectronFromConversionWithPartnerTrack));
     s.push_back(CUTE_SMEMFUN(TestElectron, testEcalIsolation));
     s.push_back(CUTE_SMEMFUN(TestElectron, testHcalIsolation));
     s.push_back(CUTE_SMEMFUN(TestElectron, testTrackerIsolation));

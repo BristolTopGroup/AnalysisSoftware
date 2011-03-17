@@ -8,7 +8,7 @@
 #include "cute/cute.h"
 #include "cute/cute_suite.h"
 #include "../interface/CrossSections.h"
-#include "../interface/Constants.h"
+#include "../interface/DataTypes.h"
 
 using namespace BAT;
 
@@ -95,6 +95,7 @@ public:
 
 extern cute::suite make_suite_TestCrossSectionProvider() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedTTbarEvents));
     s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedWjetsEvents));
     s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedZjetsEvents));

@@ -26,6 +26,7 @@ private:
     boost::scoped_ptr<TrackReader> trackReader;
     TrackCollection tracks;
     TrackPointer firstTrack;
+
 public:
     TestTrackReader() :
         input(new TChain(NTupleEventReader::EVENT_CHAIN)),
@@ -75,12 +76,14 @@ public:
 };
 extern cute::suite make_suite_TestTrackReader() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestTrackReader, testReadTracksSize));
     s.push_back(CUTE_SMEMFUN(TestTrackReader, testReadFirstTrackPhi));
     s.push_back(CUTE_SMEMFUN(TestTrackReader, testFirstTrackCharge));
     s.push_back(CUTE_SMEMFUN(TestTrackReader, testFirstTrackD0));
     s.push_back(CUTE_SMEMFUN(TestTrackReader, testFirstTrackIsHighPurity));
     s.push_back(CUTE_SMEMFUN(TestTrackReader, testNumberOfHighPurityTracks));
+
     return s;
 }
 

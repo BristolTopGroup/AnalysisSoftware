@@ -46,10 +46,12 @@ public:
 };
 extern cute::suite make_suite_TestStringOperations() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestStringOperations, testGetDirectoriesFromSimplePath));
     s.push_back(CUTE_SMEMFUN(TestStringOperations, testGetDirectoriesFromSimplePathWithEndingSlash));
     s.push_back(CUTE_SMEMFUN(TestStringOperations, testGetDirectoriesFromNestedPath));
     s.push_back(CUTE_SMEMFUN(TestStringOperations, testGetDirectoriesFromEmptyPath));
     s.push_back(CUTE_SMEMFUN(TestStringOperations, testGetDirectoriesFromEmptyPathWithSlash));
+
     return s;
 }

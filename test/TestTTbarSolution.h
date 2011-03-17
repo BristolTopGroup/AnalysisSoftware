@@ -46,7 +46,9 @@ public:
 
 extern cute::suite make_suite_TestTTbarSolution() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestTTbarSolution, testSorting));
+
     return s;
 }
 

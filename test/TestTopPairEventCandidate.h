@@ -22,8 +22,8 @@ struct TestTopPairEventCandidate {
     JetPointer goodJet, goodBJet, badJet, goodJetCloseToElectron;
     VertexPointer goodVertex;
     VertexPointer badVertex;
-    Muon goodIsolatedMuon;
-    Muon badMuon;
+    MuonPointer goodIsolatedMuon;
+    MuonPointer badMuon;
     METPointer met;
     TrackCollection lessThan10Tracks;
     TrackCollection moreThan10TracksHighPurity;
@@ -49,10 +49,10 @@ struct TestTopPairEventCandidate {
         goodBJet(new Jet(*goodJet)),
         badJet(new Jet(20, 19, 0, 0)),
         goodJetCloseToElectron(new Jet(100., 98., 13., 5.)),
-        goodVertex(TestObjectFactory::goodPrimaryVertex()),
-        badVertex(TestObjectFactory::badFakePrimaryVertex()),
-        goodIsolatedMuon(100., 99., 13., 5.),
-        badMuon(100., 99., 13., 5.),
+        goodVertex(TestObjectFactory::goodVertex()),
+        badVertex(TestObjectFactory::badFakeVertex()),
+        goodIsolatedMuon(new Muon(100., 99., 13., 5.)),
+        badMuon(new Muon(100., 99., 13., 5.)),
         met(new MET(40, 30)) {
         setUpGoodLooseElectron();
         setUpBadElectron();
@@ -129,14 +129,14 @@ private:
 
 
     void setUpIsolatedGoodMuon() {
-        goodIsolatedMuon.makeGlobal(true);
-        goodIsolatedMuon.setEcalIsolation(1);
-        goodIsolatedMuon.setHcalIsolation(1);
-        goodIsolatedMuon.setTrackerIsolation(1);
+        goodIsolatedMuon->makeGlobal(true);
+        goodIsolatedMuon->setEcalIsolation(1);
+        goodIsolatedMuon->setHcalIsolation(1);
+        goodIsolatedMuon->setTrackerIsolation(1);
     }
 
     void setUpBadMuon() {
-        badMuon.makeGlobal(false);
+        badMuon->makeGlobal(false);
     }
 
     void setUpTTbarEvent() {

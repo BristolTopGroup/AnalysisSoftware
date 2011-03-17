@@ -6,6 +6,7 @@
 
 #include "../interface/Readers/GenJetReader.h"
 #include "InputFiles.h"
+
 using namespace BAT;
 
 struct TestGenJetReader {
@@ -44,6 +45,7 @@ public:
 };
 extern cute::suite make_suite_TestGenJetReader() {
 	cute::suite s;
+
 	s.push_back(CUTE_SMEMFUN(TestGenJetReader, testReadJetsSize));
 	s.push_back(CUTE_SMEMFUN(TestGenJetReader, testReadFirstJetEnergy));
 	s.push_back(CUTE_SMEMFUN(TestGenJetReader, testReadFirstJetEMF));

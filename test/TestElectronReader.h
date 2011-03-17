@@ -19,6 +19,7 @@ private:
     boost::scoped_ptr<VariableReader<MultiFloatPointer> > swissCrossReader;
     ElectronCollection electrons;
     ElectronPointer firstElectron;
+
 public:
     TestElectronReader() :
         input(new TChain(NTupleEventReader::EVENT_CHAIN)),
@@ -110,13 +111,14 @@ public:
         ASSERT_EQUAL(34, firstElectron->closestCTFTrackID());
     }
 
-    void testTRackd0(){
+    void testTrackd0(){
         const TrackPointer track = firstElectron->GSFTrack();
         ASSERT_EQUAL(firstElectron->d0_wrtBeamSpot(), track->d0());
     }
 };
 extern cute::suite make_suite_TestElectronReader() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testReadElectronsSize));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testReadFirstElectronEnergy));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testReadFirstElectronIsIsolated));
@@ -127,12 +129,15 @@ extern cute::suite make_suite_TestElectronReader() {
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testFirstElectronCharge));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testFirstElectronD0));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testShFracInnerHits));
+
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrack));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPhi));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackEta));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPt));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackTheta));
+
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testClosestCTFTrackID));
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testTRackd0));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testTrackd0));
+
     return s;
 }

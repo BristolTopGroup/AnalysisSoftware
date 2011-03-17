@@ -21,6 +21,7 @@ private:
     TH1Collection collection;
     TH1Collection collectionWithPath;
     TH2Collection collection2D;
+
 public:
     TestTHCollection() :
         histFile(new TFile("testTHCollection.root", "RECREATE")), collection(), collectionWithPath("mc/ttbar"),
@@ -117,6 +118,7 @@ public:
 
 extern cute::suite make_suite_TestTHCollection() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testInitialSize));
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testSize));
     s.push_back(CUTE_SMEMFUN(TestTHCollection, test2DSize));
@@ -129,6 +131,7 @@ extern cute::suite make_suite_TestTHCollection() {
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testPrefix));
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testSuffix));
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testPrefixAndSuffix));
+
     return s;
 }
 

@@ -10,6 +10,7 @@ private:
     ParticlePointer particle1, particle2, particle3, particleInBarrelRegion, particleInCrack, particleInEndcap;
     ParticlePointer zParticle1, zParticle2;
     FourVector combinedVector;
+
 public:
     TestParticle() :
         particle1(new Particle(20., 10., 0., 0.)),
@@ -136,7 +137,6 @@ public:
 
     void testGetEtaRegionCrack() {
         ASSERT_EQUAL(0, strcmp("crack", particleInCrack->getEtaRegion()));
-        //		ASSERT(strcmp("crack", particleInCrack->getEtaRegion()) == 0);
     }
 
     void testGetEtaRegionBarrel() {
@@ -202,6 +202,7 @@ public:
 
 extern cute::suite make_suite_TestParticle() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestParticle, testPlusOperatorCorrectFourvector));
     s.push_back(CUTE_SMEMFUN(TestParticle, testAsignOperator));
     s.push_back(CUTE_SMEMFUN(TestParticle, testPlusOperatorCorrectMass));
@@ -236,5 +237,6 @@ extern cute::suite make_suite_TestParticle() {
     s.push_back(CUTE_SMEMFUN(TestParticle, testCharge));
     s.push_back(CUTE_SMEMFUN(TestParticle, testChargeInCollection));
     s.push_back(CUTE_SMEMFUN(TestParticle, testAngle));
+
     return s;
 }

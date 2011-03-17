@@ -19,9 +19,10 @@ private:
     TrackPointer track1, track2;
 public:
     TestTrack() :
-        particle1(new Particle(40, 40, 0, 0)), particle2(new Particle(40, -40, 0, 0)), track1(new Track(
-                particle1->phi(), particle1->eta(), particle1->pt(), particle1->theta())), track2(new Track(
-                particle2->phi(), particle2->eta(), particle2->pt(), particle2->theta())) {
+        particle1(new Particle(40, 40, 0, 0)),
+        particle2(new Particle(40, -40, 0, 0)),
+        track1(new Track(particle1->phi(), particle1->eta(), particle1->pt(), particle1->theta())),
+        track2(new Track(particle2->phi(), particle2->eta(), particle2->pt(), particle2->theta())) {
         track1->setCharge(1);
         track2->setCharge(-1);
         track1->setD0(1);
@@ -150,6 +151,7 @@ public:
 
 extern cute::suite make_suite_TestTrack() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestTrack, testCurvatureWithSTDBField));
     s.push_back(CUTE_SMEMFUN(TestTrack, testCurvatureWithCustomBField));
     s.push_back(CUTE_SMEMFUN(TestTrack, testRadiusWithSTDBField));
@@ -173,6 +175,7 @@ extern cute::suite make_suite_TestTrack() {
     s.push_back(CUTE_SMEMFUN(TestTrack, testYNCharge));
     s.push_back(CUTE_SMEMFUN(TestTrack, testXPCharge));
     s.push_back(CUTE_SMEMFUN(TestTrack, testYPCharge));
+
     return s;
 }
 #endif /* TESTTRACK_H_ */

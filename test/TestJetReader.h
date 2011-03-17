@@ -86,6 +86,7 @@ public:
 };
 extern cute::suite make_suite_TestJetReader() {
 	cute::suite s;
+
 	s.push_back(CUTE_SMEMFUN(TestJetReader, testReadJetsSize));
 	s.push_back(CUTE_SMEMFUN(TestJetReader, testReadFirstJetEnergy));
 	s.push_back(CUTE_SMEMFUN(TestJetReader, testReadFirstJetEMF));
@@ -100,5 +101,6 @@ extern cute::suite make_suite_TestJetReader() {
 
 	s.push_back(CUTE_SMEMFUN(TestJetReader, testUsedAlgorithmDefault));
 	s.push_back(CUTE_SMEMFUN(TestJetReader, testUsedAlgorithmPFJet));
+
 	return s;
 }

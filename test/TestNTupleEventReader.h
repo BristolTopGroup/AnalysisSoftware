@@ -298,6 +298,7 @@ public:
 
 extern cute::suite make_suite_TestNTupleEventReader() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testTTbarType));
 
     s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testQCD_EMEnriched_20_to_30Type));
@@ -344,5 +345,6 @@ extern cute::suite make_suite_TestNTupleEventReader() {
 
     s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testGenJetsMC));
     s.push_back(CUTE_SMEMFUN(TestNTupleEventReader, testGenJetsDATA));
+
     return s;
 }

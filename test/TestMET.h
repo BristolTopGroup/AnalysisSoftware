@@ -2,60 +2,63 @@
 #include "cute/cute_suite.h"
 
 #include "../interface/RecoObjects/MET.h"
+#include "TestObjectFactory.h"
 
 using namespace BAT;
 
 struct TestMET {
 private:
-    MET goodMET, badMET;
+    METPointer goodMET, badMET;
 public:
     TestMET() :
-        goodMET(40, 30), badMET(4, 3) {
+        goodMET(TestObjectFactory::goodMET()),
+        badMET(TestObjectFactory::badMET()) {
     }
 
     void testStandardConstructorEt() {
-        ASSERT_EQUAL(50, goodMET.et());
+        ASSERT_EQUAL(50, goodMET->et());
     }
 
     void testStandardConstructorPt() {
-        ASSERT_EQUAL(50, goodMET.pt());
+        ASSERT_EQUAL(50, goodMET->pt());
     }
 
     void testStandardConstructorPx() {
-        ASSERT_EQUAL(40, goodMET.px());
+        ASSERT_EQUAL(40, goodMET->px());
     }
     void testStandardConstructorPy() {
-        ASSERT_EQUAL(30, goodMET.py());
+        ASSERT_EQUAL(30, goodMET->py());
     }
 
     void testStandardConstructorPz() {
-        ASSERT_EQUAL(0, goodMET.pz());
+        ASSERT_EQUAL(0, goodMET->pz());
     }
 
     void testStandardConstructorMass() {
-        ASSERT_EQUAL(0, goodMET.mass());
+        ASSERT_EQUAL(0, goodMET->mass());
     }
 
     void testGoodMETIsGood() {
-        ASSERT_EQUAL(true, goodMET.isGood());
+        ASSERT_EQUAL(true, goodMET->isGood());
     }
 
     void testBadMETNoGood() {
-        ASSERT_EQUAL(false, badMET.isGood());
+        ASSERT_EQUAL(false, badMET->isGood());
     }
 
     void testSetAlgorithm() {
-        goodMET.setUsedAlgorithm(METAlgorithm::ParticleFlowMET);
-        ASSERT_EQUAL(METAlgorithm::ParticleFlowMET, goodMET.getUsedAlgorithm());
+        goodMET->setUsedAlgorithm(METAlgorithm::ParticleFlowMET);
+        ASSERT_EQUAL(METAlgorithm::ParticleFlowMET, goodMET->getUsedAlgorithm());
     }
 
     void testStandardAlgorithm() {
-        ASSERT_EQUAL(METAlgorithm::Calo, goodMET.getUsedAlgorithm());
+        ASSERT_EQUAL(METAlgorithm::Calo, goodMET->getUsedAlgorithm());
     }
 };
 
 extern cute::suite make_suite_TestMET() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestMET,testStandardConstructorEt));
     s.push_back(CUTE_SMEMFUN(TestMET,testStandardConstructorPt));
     s.push_back(CUTE_SMEMFUN(TestMET,testStandardConstructorPx));
@@ -66,5 +69,6 @@ extern cute::suite make_suite_TestMET() {
     s.push_back(CUTE_SMEMFUN(TestMET,testBadMETNoGood));
     s.push_back(CUTE_SMEMFUN(TestMET,testSetAlgorithm));
     s.push_back(CUTE_SMEMFUN(TestMET,testStandardAlgorithm));
+
     return s;
 }

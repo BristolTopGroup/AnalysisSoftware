@@ -43,9 +43,11 @@ struct TestVertexReader {
 
 cute::suite make_suite_TestVertexReader() {
 	cute::suite s;
+
 	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexZPosition));
 	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexRho));
 	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexIsFake));
 	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexNDOF));
+
 	return s;
 }

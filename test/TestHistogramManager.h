@@ -9,7 +9,7 @@
 #include "cute/cute_suite.h"
 #include "../interface/HistHelpers/HistogramManager.h"
 #include <boost/array.hpp>
-#include "../interface/Constants.h"
+#include "../interface/DataTypes.h"
 #include <boost/filesystem.hpp>
 
 using namespace BAT;
@@ -87,6 +87,7 @@ public:
 
 extern cute::suite make_suite_TestHistogramManager() {
     cute::suite s;
+
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testPreparationData));
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testPreparationTtbar));
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testDataFile));
@@ -94,6 +95,7 @@ extern cute::suite make_suite_TestHistogramManager() {
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testPreparationDatajetBinned));
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testNumberOfHistsInFile));
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testJetBinnedHistInFile));
+
     return s;
 }
 

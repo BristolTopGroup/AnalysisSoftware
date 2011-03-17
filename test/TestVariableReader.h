@@ -22,6 +22,7 @@ private:
 	boost::scoped_ptr<VariableReader<unsigned int> > singleVariableReader;
 	boost::scoped_ptr<VariableReader<MultiDoublePointer> > multipleVariableReader;
 	boost::scoped_ptr<VariableReader<int> > invalidEmptyVariableVariableReader, invalidnNotAvailableVariableReader;
+
 public:
 	TestVariableReader() :
 		invalidEmptyVariableName(""),
@@ -42,6 +43,7 @@ public:
 		input->LoadTree(1);
 		input->GetEntry(1);
 	}
+
 	void testReadSingleVariable() {
 		ASSERT_EQUAL(1, singleVariableReader->getVariable());
 	}
@@ -63,10 +65,12 @@ public:
 
 cute::suite make_suite_TestVariableReader() {
 	cute::suite s;
+
 	s.push_back(CUTE_SMEMFUN(TestVariableReader,testReadSingleVariable));
 	s.push_back(CUTE_SMEMFUN(TestVariableReader,testReadMultipleVariable));
 	s.push_back(CUTE_SMEMFUN(TestVariableReader,testInvalidVariableThrowsException));
 	s.push_back(CUTE_SMEMFUN(TestVariableReader,testInvalidEmptyVariableThrowsException));
+
 	return s;
 }
 

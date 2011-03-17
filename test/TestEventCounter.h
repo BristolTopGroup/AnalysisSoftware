@@ -41,9 +41,11 @@ public:
 
 extern cute::suite make_suite_TestEventCounter() {
 	cute::suite s;
+
 	s.push_back(CUTE_SMEMFUN(TestEventCounter, testStandardCounterConstructor));
 	s.push_back(CUTE_SMEMFUN(TestEventCounter, testCounterConstructor));
 	s.push_back(CUTE_SMEMFUN(TestEventCounter, testIncereaseCoutner));
 	s.push_back(CUTE_SMEMFUN(TestEventCounter, testIncreaseWeightedCounter));
+
 	return s;
 }
