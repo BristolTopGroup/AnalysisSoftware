@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iomanip>
 using namespace std;
+
 namespace BAT {
 
 double const TopPairEventCandidate::matched_angle = 0.945666;
@@ -940,7 +941,7 @@ double TopPairEventCandidate::fullHT() const {
     }
 
     for (unsigned int index = 0; index < goodIsolatedMuons.size(); ++index) {
-        ht += goodIsolatedMuons.at(index).pt();
+        ht += goodIsolatedMuons.at(index)->pt();
     }
 
     for (unsigned int index = 0; index < goodJets.size(); ++index) {

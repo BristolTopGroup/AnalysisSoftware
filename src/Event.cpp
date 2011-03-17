@@ -202,12 +202,12 @@ void Event::selectMuonsByQuality() {
     goodMuons.clear();
     goodIsolatedMuons.clear();
     for (unsigned int index = 0; index < allMuons.size(); ++index) {
-        Muon muon = allMuons.at(index);
+        MuonPointer muon = allMuons.at(index);
 
-        if (muon.isGood())
+        if (muon->isGood())
             goodMuons.push_back(muon);
 
-        if (muon.isGood() && muon.isIsolated())
+        if (muon->isGood() && muon->isIsolated())
             goodIsolatedMuons.push_back(muon);
     }
 }
