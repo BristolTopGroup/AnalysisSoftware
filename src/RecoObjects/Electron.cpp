@@ -20,7 +20,7 @@ Electron::Electron() :
     ecal_Isolation(initialBigValue),
     hcal_Isolation(initialBigValue),
     tracker_Isolation(initialBigValue),
-    innerLayerMissingHits(initialBigValue),
+    innerLayerMissingHits_(initialBigValue),
     sigma_IEtaIEta(0),
     dPhi_In(0),
     dEta_In(0),
@@ -45,7 +45,7 @@ Electron::Electron(float energy, float px, float py, float pz) :
     ecal_Isolation(initialBigValue),
     hcal_Isolation(initialBigValue),
     tracker_Isolation(initialBigValue),
-    innerLayerMissingHits(initialBigValue),
+    innerLayerMissingHits_(initialBigValue),
     sigma_IEtaIEta(0),
     dPhi_In(0),
     dEta_In(0),
@@ -154,9 +154,10 @@ bool Electron::isGood(const float minEt) const {
     bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
 
     bool passesD0 = false;
-    if(usedAlgorithm == ElectronAlgorithm::Calo)
+    if (usedAlgorithm == ElectronAlgorithm::Calo)
         passesD0 = fabs(d0_wrtBeamSpot()) < 0.02;//cm
-    else// use d0 wrt primary vertex for
+    else
+        // use d0 wrt primary vertex for
         passesD0 = fabs(d0()) < 0.01;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
@@ -169,7 +170,7 @@ bool Electron::isQCDElectron(const float minEt) const {
     bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
 
     bool passesD0 = false;
-    if(usedAlgorithm == ElectronAlgorithm::Calo)
+    if (usedAlgorithm == ElectronAlgorithm::Calo)
         passesD0 = fabs(d0_wrtBeamSpot()) < 0.02;//cm
     else
         passesD0 = fabs(d0()) < 0.02;//cm
@@ -184,7 +185,7 @@ bool Electron::isInBarrelRegion() const {
 }
 
 bool Electron::isInCrack() const {
-	return !isInBarrelRegion() && !isInEndCapRegion();
+    return !isInBarrelRegion() && !isInEndCapRegion();
 }
 
 bool Electron::isInEndCapRegion() const {
@@ -192,10 +193,10 @@ bool Electron::isInEndCapRegion() const {
 }
 
 bool Electron::isFromConversion() const {
-    return innerLayerMissingHits > 0;
+    return innerLayerMissingHits_ > 0;
 }
 
-bool Electron::isTaggedAsConversion(float maxDist, float maxDCotTheta) const{
+bool Electron::isTaggedAsConversion(float maxDist, float maxDCotTheta) const {
     return fabs(distToNextTrack) < maxDist && fabs(dCotThetaToNextTrack) < maxDCotTheta;
 }
 
@@ -207,7 +208,8 @@ bool Electron::VBTF_W70_ElectronID() const {
         return getVBTF_W70_ElectronID_Barrel();
     else if (isInEndCapRegion())
         return getVBTF_W70_ElectronID_Endcap();
-    else// in crack
+    else
+        // in crack
         return false;
 }
 
@@ -232,7 +234,8 @@ bool Electron::VBTF_W95_ElectronID() const {
         return getVBTF_W95_ElectronID_Barrel();
     else if (isInEndCapRegion())
         return getVBTF_W95_ElectronID_Endcap();
-    else// in crack
+    else
+        // in crack
         return false;
 }
 
@@ -306,7 +309,7 @@ bool Electron::RobustTightID() const {
 }
 
 void Electron::setNumberOfMissingInnerLayerHits(float missingHits) {
-    innerLayerMissingHits = missingHits;
+    innerLayerMissingHits_ = missingHits;
 }
 
 unsigned short Electron::getClosestJetIndex(const JetCollection& jets) const {
@@ -350,57 +353,68 @@ float Electron::shFracInnerLayer() const {
     return sharedFractionInnerHits;
 }
 
-
 void Electron::setZDistanceToPrimaryVertex(float dist) {
     zDistanceToPrimaryVertex = dist;
 }
 
-void Electron::setDistToNextTrack(float dist){
+void Electron::setDistToNextTrack(float dist) {
     distToNextTrack = dist;
 }
 
-void Electron::setDCotThetaToNextTrack(float dCotTheta){
+void Electron::setDCotThetaToNextTrack(float dCotTheta) {
     dCotThetaToNextTrack = dCotTheta;
 }
 
-void Electron::setPFGammaIsolation(float pfGammaIso){
+void Electron::setPFGammaIsolation(float pfGammaIso) {
     PFGamma_Isolation = pfGammaIso;
 }
 
-void Electron::setPFChargedHadronIsolation(float chargedHadronIso){
+void Electron::setPFChargedHadronIsolation(float chargedHadronIso) {
     PFChargedHadron_Isolation = chargedHadronIso;
 }
 
-void Electron::setPFNeutralHadronIsolation(float neutralHadronIso){
+void Electron::setPFNeutralHadronIsolation(float neutralHadronIso) {
     PFNeutralHadron_Isolation = neutralHadronIso;
 }
 
-float Electron::PFGammaIsolation() const{
+float Electron::PFGammaIsolation() const {
     return PFGamma_Isolation;
 }
 
-float Electron::PFChargedHadronIsolation() const{
+float Electron::PFChargedHadronIsolation() const {
     return PFChargedHadron_Isolation;
 }
 
-float Electron::PFNeutralHadronIsolation() const{
+float Electron::PFNeutralHadronIsolation() const {
     return PFNeutralHadron_Isolation;
 }
 
-float Electron::pfIsolation() const{
-    return (PFGamma_Isolation+PFChargedHadron_Isolation+PFNeutralHadron_Isolation)/et();
+float Electron::pfIsolation() const {
+    return (PFGamma_Isolation + PFChargedHadron_Isolation + PFNeutralHadron_Isolation) / et();
 }
 
-bool Electron::isPFIsolated() const{
+bool Electron::isPFIsolated() const {
     return pfIsolation() < 0.1;
 }
 
-float Electron::ZDistanceToPrimaryVertex() const{
+float Electron::ZDistanceToPrimaryVertex() const {
     return zDistanceToPrimaryVertex;
 }
 
-ElectronAlgorithm::value Electron::algorithm() const{
+ElectronAlgorithm::value Electron::algorithm() const {
     return usedAlgorithm;
+}
+
+float Electron::innerLayerMissingHits() const {
+    return innerLayerMissingHits_;
+}
+
+float Electron::distToClosestTrack() const {
+    return distToNextTrack;
+}
+
+float Electron::dCotThetaToClosestTrack() const {
+    return dCotThetaToNextTrack;
 }
 
 }

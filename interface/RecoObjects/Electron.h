@@ -15,9 +15,32 @@
 #include <boost/shared_ptr.hpp>
 #include "Jet.h"
 #include "Track.h"
-#include "../Constants.h"
 
 namespace BAT {
+
+namespace ElectronAlgorithm {
+enum value {
+    Calo,
+    ParticleFlow,
+    NUMBER_OF_ELECTRONALGORITHMS
+};
+
+const boost::array<std::string, ElectronAlgorithm::NUMBER_OF_ELECTRONALGORITHMS> prefixes = { {
+        "Electron",
+        "PFElectron"  } };
+
+const boost::array<std::string, ElectronAlgorithm::NUMBER_OF_ELECTRONALGORITHMS> names = { {
+        "CaloElectron",
+        "PFElectron"} };
+}
+
+namespace ElectronIsolation{
+enum value {
+    RelativeIsolation,
+    ParticleFlowIsolation,
+    NUMBER_OF_ELECTRONISOLATIONS
+};
+}
 
 class Electron: public Particle {
 public:
@@ -47,6 +70,9 @@ public:
     float dEtaIn() const;
     float HadOverEm() const;
     float HEEPet() const;
+    float innerLayerMissingHits() const;
+    float dCotThetaToClosestTrack() const;
+    float distToClosestTrack() const;
     bool VBTF_W70_ElectronID() const;
     bool VBTF_W95_ElectronID() const;
     bool QCD_AntiID_W70() const;
@@ -99,7 +125,7 @@ private:
     bool robustLooseId, robustTightId;
     float superCluser_Eta;
     float ecal_Isolation, hcal_Isolation, tracker_Isolation;
-    float innerLayerMissingHits;
+    float innerLayerMissingHits_;
     //used for HEEP
     float sigma_IEtaIEta, dPhi_In, dEta_In, hadOverEm;
     TrackPointer gsfTrack;
@@ -107,7 +133,6 @@ private:
     float sharedFractionInnerHits;
     float zDistanceToPrimaryVertex, dCotThetaToNextTrack, distToNextTrack;
     float PFGamma_Isolation, PFChargedHadron_Isolation, PFNeutralHadron_Isolation;
-
 
     bool getVBTF_W70_ElectronID_Barrel() const;
     bool getVBTF_W70_ElectronID_Endcap() const;
