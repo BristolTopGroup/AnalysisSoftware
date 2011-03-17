@@ -23,7 +23,6 @@
 #include "../interface/CrossSections.h"
 #include <iostream>
 #include <string>
-#include "../interface/Constants.h"
 #include "../interface/HistHelpers/HistogramManager.h"
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"

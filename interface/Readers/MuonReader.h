@@ -9,7 +9,6 @@
 #define MUONREADER_H_
 #include "VariableReader.h"
 #include "../RecoObjects/Muon.h"
-#include "../Constants.h"
 
 namespace BAT {
 

@@ -9,7 +9,6 @@
 #define ELECTRONREADER_H_
 #include "VariableReader.h"
 #include "../RecoObjects/Electron.h"
-#include "../Constants.h"
 
 namespace BAT {
 class ElectronReader {

@@ -22,7 +22,6 @@
 #include "TrackReader.h"
 #include "GenParticleReader.h"
 #include <string>
-#include "../Constants.h"
 #include "../CrossSections.h"
 
 namespace BAT {

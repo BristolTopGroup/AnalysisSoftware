@@ -11,7 +11,6 @@
 #include "Analysis.h"
 #include <iostream>
 #include <boost/scoped_ptr.hpp>
-#include "../interface/Constants.h"
 
 using namespace ROOT;
 using namespace std;
@@ -40,7 +39,7 @@ int main(int argc, char **argv) {
     Analysis::usePFIsolation(true);
 
     boost::scoped_ptr<Analysis> myAnalysis(new Analysis());
-//        myAnalysis->setMaximalNumberOfEvents(100000);
+//        myAnalysis->setMaximalNumberOfEvents(100);
     myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
 
     //Test samples
@@ -74,7 +73,7 @@ int main(int argc, char **argv) {
             "/storage/TopQuarkGroup/mc/fall10_7TeV_v1_e25skim/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6_Fall10-START38_V12-v1/*.root");
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/fall10_7TeV_v1_e25skim/QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6_Fall10-START38_V12-v1/*.root");
-//
+
 //    //QCD Photon + Jets
         myAnalysis->addInputFile(
                 "/storage/TopQuarkGroup/mc/fall10_7TeV_v1_e25skim/GJets_TuneD6T_HT-40To100_7TeV-madgraph_Fall10-START38_V12-v1/*.root");
