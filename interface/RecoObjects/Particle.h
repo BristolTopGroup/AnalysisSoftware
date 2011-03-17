@@ -17,6 +17,7 @@ typedef TLorentzVector FourVector;
 
 namespace BAT {
 class Particle;
+
 typedef boost::shared_ptr<Particle> ParticlePointer;
 typedef std::vector<ParticlePointer> ParticleCollection;
 
