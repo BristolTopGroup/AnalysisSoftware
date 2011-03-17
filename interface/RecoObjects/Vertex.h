@@ -8,20 +8,12 @@
 #ifndef PRIMARYVERTEX_H_
 #define PRIMARYVERTEX_H_
 #include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace BAT {
 
 class Vertex {
 public:
-//	static unsigned int goodVertexMinimalNumberOfDegreesOfFreedom;
-//	static float goodVertexMaximalAbsoluteZPosition;
-//	static float goodVertexMaximalAbsoluteRho;
-//
-//	static void resetSelectionValues() {
-//	    PrimaryVertex::goodVertexMinimalNumberOfDegreesOfFreedom = 4;
-//	    PrimaryVertex::goodVertexMaximalAbsoluteZPosition = 24;
-//	    PrimaryVertex::goodVertexMaximalAbsoluteRho = 2.0;
-//	}
 
 	Vertex();
 	virtual ~Vertex();
@@ -43,6 +35,7 @@ private:
 
 };
 typedef boost::shared_ptr<Vertex> VertexPointer;
+typedef std::vector<VertexPointer> VertexCollection;
 
 }
 
