@@ -174,6 +174,7 @@ ElectronPointer TestObjectFactory::badEtaElectron() {
     assert(fabs(badEtaElectron->eta()) > TestObjectFactory::goodElectronMaximalAbsoluteEta);
     assert(fabs(badEtaElectron->d0()) < TestObjectFactory::goodElectronMaximalDistanceFromInteractionPoint);
     assert(badEtaElectron->et() > TestObjectFactory::goodElectronMinimalEt);
+
     return badEtaElectron;
 }
 

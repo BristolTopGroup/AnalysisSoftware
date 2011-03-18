@@ -8,15 +8,6 @@ using namespace BAT;
 
 struct TestElectron {
 private:
-//    double isolatedElectronMaximalRelativeIsolation;
-//    double goodElectronMaximalAbsoluteEta;
-//    double goodElectronMinimalEt;
-//    double goodElectronMaximalDistanceFromInteractionPoint;
-//    double MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion;
-//    double looseElectronMaximalAbsoluteEta;
-//    double looseElectronMinimalEt;
-//    double looseIsolatedElectronMaximalRelativeIsolation;
-
     ElectronPointer isolatedElectron;
     ElectronPointer goodElectron;
     ElectronPointer badEtElectron;
@@ -31,14 +22,6 @@ private:
 
 public:
     TestElectron() :
-//        isolatedElectronMaximalRelativeIsolation(0.1),
-//        goodElectronMaximalAbsoluteEta(2.1),
-//        goodElectronMinimalEt(20.),
-//        goodElectronMaximalDistanceFromInteractionPoint(0.02),
-//        MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion(0),
-//        looseElectronMaximalAbsoluteEta(2.5),
-//        looseElectronMinimalEt(25),
-//        looseIsolatedElectronMaximalRelativeIsolation(1.0),
         isolatedElectron(TestObjectFactory::goodIsolatedElectron()),
         goodElectron(TestObjectFactory::goodCaloElectron()),
         badEtElectron(TestObjectFactory::badEtElectron()),
