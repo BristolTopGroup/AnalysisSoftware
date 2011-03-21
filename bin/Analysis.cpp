@@ -39,6 +39,7 @@ void Analysis::analyze() {
         doTTBarAnalysis();
         doNotePlots();
         doQCDStudy();
+        doJetAnalysis();
         if (currentEvent.getDataType() == DataType::ttbar)
         	doMCttbarReconstruction();
 
@@ -109,6 +110,31 @@ void Analysis::doTTbarCutFlow() {
         }
     }
 }
+
+void Analysis::doJetAnalysis() {
+    if (ttbarCandidate.passesSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)) {
+        for(unsigned short jetIndex = 0; jetIndex < ttbarCandidate.Jets().size(); ++jetIndex)
+            histMan.H1D_BJetBinned("AllJetMass")->Fill(ttbarCandidate.Jets().at(jetIndex)->mass());
+
+        for (unsigned short jetIndex = 0; jetIndex < ttbarCandidate.GoodJets().size(); ++jetIndex) {
+            double jetMass = ttbarCandidate.Jets().at(jetIndex)->mass();
+            histMan.H1D_BJetBinned("AllGoodJetMass")->Fill(jetMass, weight);
+
+            if (ttbarCandidate.passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastOneGoodJets))
+                histMan.H1D_BJetBinned("GoodJetMass_atLeastOneJets")->Fill(jetMass, weight);
+
+            if (ttbarCandidate.passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets))
+                histMan.H1D_BJetBinned("GoodJetMass_atLeastTwoJets")->Fill(jetMass, weight);
+
+            if (ttbarCandidate.passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastThreeGoodJets))
+                histMan.H1D_BJetBinned("GoodJetMass_atLeastThreeJets")->Fill(jetMass, weight);
+
+            if (ttbarCandidate.passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets))
+                histMan.H1D_BJetBinned("GoodJetMass_atLeastFourJets")->Fill(jetMass, weight);
+        }
+    }
+}
+
 void Analysis::doDiElectronAnalysis() {
     ElectronCollection electrons = currentEvent.GoodElectrons();
     if (electrons.size() == 2) {
@@ -172,7 +198,7 @@ void Analysis::doTTBarAnalysis() {
         histMan.H2D_BJetBinned("METvsMttbar")->Fill(mttbar, ttbarCandidate.MET()->et(), weight);
         histMan.H1D_BJetBinned("HT")->Fill(ttbarCandidate.fullHT(), weight);
         histMan.H2D_BJetBinned("HTvsMttbar")->Fill(mttbar, ttbarCandidate.fullHT(), weight);
-        histMan.H1D_BJetBinned("leadingJetMass")->Fill(ttbarCandidate.GoodJets().front()->mass(), weight);
+
         if (Event::usePFIsolation)
             histMan.H1D_BJetBinned("mtW")->Fill(ttbarCandidate.transverseWmass(
                     ttbarCandidate.GoodPFIsolatedElectrons().front()), weight);
@@ -639,7 +665,7 @@ void Analysis::doMCttbarReconstruction() {
 			continue;
 		}
 
-		//W± bosons
+		//Wï¿½ bosons
 		if (((*mc_particle)->pdgId() == 24) && ((*mc_particle)->motherIndex() == top_index)) {
 			W_plus = *mc_particle;
 			W_plus_index = index;
@@ -857,6 +883,13 @@ void Analysis::createHistograms() {
     histMan.setCurrentLumi(Analysis::luminosity);
     histMan.prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
+    //histograms for Jet study
+    histMan.addH1D_BJetBinned("AllJetMass", "AllJetMass", 500, 0, 500);
+    histMan.addH1D_BJetBinned("AllGoodJetMass", "AllGoodJetMass", 500, 0, 500);
+    histMan.addH1D_BJetBinned("GoodJetMass_atLeastOneJets", "GoodJetMass_atLeastOneJets", 500, 0, 500);
+    histMan.addH1D_BJetBinned("GoodJetMass_atLeastTwoJets", "GoodJetMass_atLeastTwoJets", 500, 0, 500);
+    histMan.addH1D_BJetBinned("GoodJetMass_atLeastThreeJets", "GoodJetMass_atLeastThreeJets", 500, 0, 500);
+    histMan.addH1D_BJetBinned("GoodJetMass_atLeastFourJets", "GoodJetMass_atLeastFourJets", 500, 0, 500);
     //MC histograms
     histMan.addH1D("deltaRElectron", "delta R between truth and reco electron", 100, 0, 0.2);
     histMan.addH1D("deltaRLeptonicBjet", "delta R between truth and reco b-jet on leptonic side", 100, 0, 0.5);
@@ -989,7 +1022,6 @@ void Analysis::createHistograms() {
     histMan.addH1D("numberOfBJets", "numberOfBJets", 10, 0, 10);
     histMan.addH1D_BJetBinned("MET", "MET", 200, 0, 1000);
     histMan.addH2D_BJetBinned("METvsMttbar", "MET vs mttbar", 500, 0, 5000, 200, 0, 1000);
-    histMan.addH1D_BJetBinned("leadingJetMass", "leadingJetMass", 200, 0, 200);
     histMan.addH1D_BJetBinned("mtW", "mtW", 600, 0, 600);
     histMan.addH1D("electronD0", "electronD0", 1000, 0, 0.2);
     histMan.addH1D_BJetBinned("neutrino_pz", "neutrino_pz", 1000, -500, 500);

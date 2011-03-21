@@ -115,6 +115,7 @@ private:
     void doMCttbarReconstruction();
     void checkForDuplicatedEvents();
     void checkForBrokenEvents();
+    void doJetAnalysis();
 };
 
 #endif /* ANALYSIS_H_ */
