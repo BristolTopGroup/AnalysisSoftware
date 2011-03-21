@@ -68,17 +68,17 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
         "Zprime_M500GeV_W5GeV",
         "Zprime_M500GeV_W50GeV",
         "Zprime_M750GeV_W7500MeV",//20
-        "Zprime_M1TeV_W10GeV",
-        "Zprime_M1TeV_W100GeV",
+        "Zprime_M1000GeV_W10GeV",
+        "Zprime_M1000GeV_W100GeV",
         "Zprime_M1250GeV_W12500MeV",
         "Zprime_M1500GeV_W15GeV",
         "Zprime_M1500GeV_W150GeV",
-        "Zprime_M2TeV_W20GeV",
-        "Zprime_M2TeV_W200GeV",
-        "Zprime_M3TeV_W30GeV",
-        "Zprime_M3TeV_W300GeV",
-        "Zprime_M4TeV_W40GeV",//30
-        "Zprime_M4TeV_W400GeV" } };
+        "Zprime_M2000GeV_W20GeV",
+        "Zprime_M2000GeV_W200GeV",
+        "Zprime_M3000GeV_W30GeV",
+        "Zprime_M3000GeV_W300GeV",
+        "Zprime_M4000GeV_W40GeV",//30
+        "Zprime_M4000GeV_W400GeV" } };
 }
 
 }
