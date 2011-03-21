@@ -238,5 +238,4 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
     return btag_discriminators[type] > cut;
 }
 }
-;
 
