@@ -35,12 +35,17 @@ def listDirectory(path):
 def deleteFiles(files):
     for file in files:
         file = file.replace(gpfsBase, SEbase)
-        print file
-        output = subprocess.Popen(['srmrm', file], stdout = subprocess.PIPE).communicate()[0]
+        print 'deleting file:', file
+        output = subprocess.Popen(['srmrm', file], stdout=subprocess.PIPE).communicate()[0]
 
 def deleteFolder(folder):
-    output = subprocess.Popen(['srmrmdir -r', folder], stdout = subprocess.PIPE).communicate()[0]
+    print 'deleting folder:', folder
+    output = subprocess.Popen(['srmrmdir', '-recursive', folder], stdout=subprocess.PIPE).communicate()[0]
     return output
+
+def printTotalSize(path):
+    output = subprocess.Popen(['du', '-sch', path], stdout=subprocess.PIPE).communicate()[0]
+    print output
 
 if __name__ == '__main__':
     parser = OptionParser()
@@ -49,10 +54,11 @@ if __name__ == '__main__':
                   help="delete gpfs folder recursively")
     
     (options, args) = parser.parse_args()
-    if len(args) >0 and options[recursive]:
+    if len(args) > 0 and vars(options)['recursive']:
         path = args[0]
         print 'getting files'
 #        print os.listdir(path)
+        printTotalSize(path)
         listDirectory(path)
         deleteFiles(files)
         deleteFolder(path.replace(gpfsBase, SEbase))
