@@ -248,6 +248,10 @@ const VertexPointer Event::PrimaryVertex() const {
     return vertices.front();
 }
 
+const VertexCollection& Event::Vertices() const {
+    return vertices;
+}
+
 const TrackCollection& Event::Tracks() const {
     return tracks;
 }

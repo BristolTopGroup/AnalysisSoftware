@@ -79,6 +79,7 @@ public:
     void setBeamScrapingVeto(bool isScraping);
 
     const VertexPointer PrimaryVertex() const;
+    const VertexCollection& Vertices() const;
     const TrackCollection& Tracks() const;
     const MCParticleCollection& GenParticles() const;
     const ElectronCollection& Electrons() const;
