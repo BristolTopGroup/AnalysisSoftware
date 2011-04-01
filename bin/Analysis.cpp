@@ -169,9 +169,9 @@ void Analysis::doTTBarAnalysis() {
     if (ttbarCandidate.passesFullTTbarEPlusJetSelection()) {
         histMan.H1D("numberOfBJets")->Fill(ttbarCandidate.GoodBJets().size(), weight);
         if(Event::usePFIsolation)
-            ttbarCandidate.reconstructUsingChi2(ttbarCandidate.GoodPFIsolatedElectrons().front());
+            ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodPFIsolatedElectrons().front());
         else
-            ttbarCandidate.reconstructUsingChi2(ttbarCandidate.GoodIsolatedElectrons().front());
+            ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodIsolatedElectrons().front());
 
         vector<TtbarHypothesisPointer> solutions = ttbarCandidate.Solutions();
         const ParticlePointer resonance = ttbarCandidate.getResonance();
@@ -561,7 +561,7 @@ void Analysis::doQCDStudy() {
         if (electron->isIsolated() == false && !isnan(electron->relativeIsolation()) && !isinf(
                 electron->relativeIsolation())) {
             try {
-                ttbarCandidate.reconstructUsingChi2(electron);
+                ttbarCandidate.reconstructTTbar(electron);
                 const ParticlePointer resonance = ttbarCandidate.getResonance();
                 histMan.H1D_BJetBinned("mttbar_controlRegion")->Fill(resonance->mass(), weight);
                 if (ttbarCandidate.MET()->pt() > 20) {
@@ -587,7 +587,7 @@ void Analysis::doQCDStudy() {
         else
             electron = currentEvent.GoodIsolatedElectrons().front();
         try {
-            ttbarCandidate.reconstructUsingChi2(electron);
+            ttbarCandidate.reconstructTTbar(electron);
             const ParticlePointer resonance = ttbarCandidate.getResonance();
             histMan.H1D_BJetBinned("mttbar_conversions")->Fill(resonance->mass(), weight);
             if (ttbarCandidate.MET()->pt() > 20) {
@@ -613,7 +613,7 @@ void Analysis::doQCDStudy() {
     if (ttbarCandidate.passesAntiIsolationSelection()) {
         ElectronPointer electron = ttbarCandidate.GoodElectrons().front();
         try {
-            ttbarCandidate.reconstructUsingChi2(electron);
+            ttbarCandidate.reconstructTTbar(electron);
             float mttbar = ttbarCandidate.mttbar();
             histMan.H1D_BJetBinned("mttbar_antiIsolated")->Fill(mttbar, weight);
             if (ttbarCandidate.MET()->pt() > 20) {
@@ -841,8 +841,12 @@ void Analysis::doMCttbarReconstruction() {
 		histMan.H1D("top_leptonic_inv_mass_from_truth")->Fill(MCttbarEvent.leptonicW->invariantMass(MCttbarEvent.leptonicBjet));
 		histMan.H1D("top_hadronic_inv_mass_from_truth")->Fill(MCttbarEvent.hadronicW->invariantMass(MCttbarEvent.hadronicBJet));
 
+		histMan.H1D("m3_mc")->Fill(MCttbarEvent.M3());
+
 		// comparing truth and reco objects
 		if (ttbarCandidate.passesFullTTbarEPlusJetSelection()) {
+			histMan.H1D("m3_diff")->Fill(fabs(MCttbarEvent.M3()-ttbarCandidate.M3()));
+
 			histMan.H1D("deltaRElectron")->Fill(MCttbarEvent.electronFromW->deltaR(ttbarCandidate.getElectronFromWDecay()));
 			histMan.H1D("deltaRLeptonicBjet")->Fill(MCttbarEvent.leptonicBjet->deltaR(ttbarCandidate.getLeptonicBJet()));
 			histMan.H1D("deltaRHadronicBjet")->Fill(MCttbarEvent.hadronicBJet->deltaR(ttbarCandidate.getHadronicBJet()));
@@ -909,6 +913,8 @@ void Analysis::createHistograms() {
     histMan.addH1D("W_inv_mass_from_genJets", "W inv. mass from genJets", 100, 0, 120);
     histMan.addH1D("top_leptonic_inv_mass_from_truth", "Leptonic top inv. mass from truth partons", 100, 100, 220);
     histMan.addH1D("top_hadronic_inv_mass_from_truth", "Haronic top inv. mass from truth partons", 100, 100, 220);
+    histMan.addH1D("m3_mc", "M3 for truth event", 500, 0, 500);
+    histMan.addH1D("m3_diff", "M3 difference between truth and reco", 500, 0, 500);
 
     //end of MC histograms
 
@@ -1139,6 +1145,10 @@ void Analysis::setMaximalNumberOfEvents(long maxEvents) {
 
 void Analysis::setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::value selection) {
     TopPairEventCandidate::usedNeutrinoSelection = selection;
+}
+
+void Analysis::setUsedTTbarReconstructionCriterion(TTbarReconstructionCriterion::value selection) {
+	TopPairEventCandidate::usedTTbarReconstruction = selection;
 }
 
 void Analysis::checkForDuplicatedEvents(){

@@ -23,6 +23,8 @@ public:
 	ElectronPointer electronFromW;
 	METPointer met;
 
+	double M3() const;
+
 	bool operator==(const TtbarHypothesis& hyp) const;
 	bool operator<(const TtbarHypothesis& hyp) const;
 

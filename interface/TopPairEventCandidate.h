@@ -29,6 +29,13 @@ enum value {
 };
 }
 
+namespace TTbarReconstructionCriterion {
+enum value {
+	TopMassDifference,
+	chi2
+};
+}
+
 namespace TTbarEPlusJetsSelection {
 enum Step {
     FilterOutScraping,
@@ -106,6 +113,7 @@ protected:
     compare_totalChi2 compareSolutions;
 public:
     static NeutrinoSelectionCriterion::value usedNeutrinoSelection;
+    static TTbarReconstructionCriterion::value usedTTbarReconstruction;
     TopPairEventCandidate();
     TopPairEventCandidate(const Event& event);
     virtual ~TopPairEventCandidate();
@@ -150,8 +158,7 @@ public:
     bool passesFullTTbarEPlusJetSelection() const;
     bool hasIsolatedElectronInBarrelRegion() const;
 
-	void reconstructUsingTopMassDifference(ElectronPointer electron);
-    void reconstructUsingChi2(ElectronPointer electron);
+	void reconstructTTbar(ElectronPointer electron);
     void reconstructUsingSubjets();
     void reconstructUsingMCTruth();
 

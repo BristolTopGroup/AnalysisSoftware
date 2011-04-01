@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
     boost::scoped_ptr<Analysis> myAnalysis(new Analysis());
 //        myAnalysis->setMaximalNumberOfEvents(100);
     myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
+    myAnalysis->setUsedTTbarReconstructionCriterion(TTbarReconstructionCriterion::TopMassDifference);
 
     //Test samples
     //    myAnalysis->addInputFile("/storage/TopQuarkGroup/data/test*.root");

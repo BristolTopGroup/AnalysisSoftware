@@ -76,6 +76,7 @@ public:
     void addInputFile(const char * fileName);
     void setMaximalNumberOfEvents(long maxEvents);
     void setUsedNeutrinoSelectionForTopPairReconstruction(BAT::NeutrinoSelectionCriterion::value selection);
+    void setUsedTTbarReconstructionCriterion(BAT::TTbarReconstructionCriterion::value selection);
     static void useJetAlgorithm(BAT::JetAlgorithm::value algo) {
         BAT::NTupleEventReader::jetAlgorithm = algo;
     }
