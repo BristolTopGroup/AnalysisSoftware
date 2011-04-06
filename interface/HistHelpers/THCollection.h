@@ -35,10 +35,6 @@ protected:
     map histMap;
     std::string prefix, suffix;
 public:
-    //    THCollection() :
-    //        histogramFile(), directories(), histMap() {
-    //
-    //    }
 
     THCollection(std::string virtualPath = "") :
         histogramFile(),
@@ -86,7 +82,7 @@ public:
         suffix = suf;
     }
 
-    map getAllHistograms(){
+    const map& getAllHistograms(){
         return histMap;
     }
 
@@ -99,16 +95,19 @@ private:
             const std::string dir = directories.at(index);
 
             if (index == 0) {
-                histogramFile->mkdir(dir.c_str());
+                if (histogramFile->Get(dir.c_str()) == 0)
+                    histogramFile->mkdir(dir.c_str());
                 currentPath = dir;
             } else {
                 TDirectory* currentDir = (TDirectory*) histogramFile->Get(currentPath.c_str());
                 assert(currentDir != 0);
-                currentDir->mkdir(dir.c_str());
+                if (currentDir->Get(dir.c_str()) == 0)
+                    currentDir->mkdir(dir.c_str());
                 currentPath += "/" + dir;
             }
         }
     }
+
     void writeHistograms() {
         for (typename map::const_iterator iter = histMap.begin(); iter != histMap.end(); ++iter) {
             std::string newName(iter->second->GetName());

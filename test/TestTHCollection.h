@@ -24,8 +24,10 @@ private:
 
 public:
     TestTHCollection() :
-        histFile(new TFile("testTHCollection.root", "RECREATE")), collection(), collectionWithPath("mc/ttbar"),
-                collection2D() {
+        histFile(new TFile("testTHCollection.root", "RECREATE")),
+        collection(),
+        collectionWithPath("mc/ttbar"),
+        collection2D() {
     }
 
     ~TestTHCollection() {

@@ -112,6 +112,7 @@ void Analysis::doTTbarCutFlow() {
 }
 
 void Analysis::doJetAnalysis() {
+    histMan.setCurrentCollection("jetStudy");
     if (ttbarCandidate.passesSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)) {
         for(unsigned short jetIndex = 0; jetIndex < ttbarCandidate.Jets().size(); ++jetIndex)
             histMan.H1D_BJetBinned("AllJetMass")->Fill(ttbarCandidate.Jets().at(jetIndex)->mass());
@@ -136,6 +137,7 @@ void Analysis::doJetAnalysis() {
 }
 
 void Analysis::doDiElectronAnalysis() {
+    histMan.setCurrentCollection("diElectronAnalysis");
     ElectronCollection electrons = currentEvent.GoodElectrons();
     if (electrons.size() == 2) {
         ElectronPointer leadingElectron = electrons.front();
@@ -145,6 +147,7 @@ void Analysis::doDiElectronAnalysis() {
 }
 
 void Analysis::doTTBarAnalysis() {
+    histMan.setCurrentCollection("topReconstruction");
     if (ttbarCandidate.passesNMinus1(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
         histMan.H1D("numberOfJets")->Fill(ttbarCandidate.GoodJets().size());
     }
@@ -391,6 +394,7 @@ void Analysis::doTTBarAnalysis() {
             //            cout << ", mass = " << solutions.at(solutionIndex)->resonance->mass() << endl;
         }
 
+        histMan.setCurrentCollection("topReconstruction/backgroundShape");
         if (ttbarCandidate.MET()->et() < 20) {
             histMan.H1D_BJetBinned("mttbar_QCDEnriched")->Fill(mttbar, weight);
             histMan.H1D_BJetBinned("ttbar_pt_QCDEnriched")->Fill(resonance->pt());
@@ -423,6 +427,7 @@ void Analysis::doTTBarAnalysis() {
 }
 
 void Analysis::doNotePlots() {
+    histMan.setCurrentCollection("QCDStudy");
     if (ttbarCandidate.GoodElectrons().size() >= 1 && ttbarCandidate.Jets().size() >= 2) {
         const ElectronCollection electrons = ttbarCandidate.GoodElectrons();
         ElectronCollection nonConversionElectrons;
@@ -461,6 +466,7 @@ void Analysis::doNotePlots() {
 }
 
 void Analysis::doQCDStudy() {
+    histMan.setCurrentCollection("QCDStudy");
     if (ttbarCandidate.passesRelIsoSelection()) {
         const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron();
         histMan.H1D_JetBinned("QCDest_CombRelIso")->Fill(electron->relativeIsolation(), weight);
@@ -888,13 +894,16 @@ void Analysis::createHistograms() {
     histMan.prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
     //histograms for Jet study
+    histMan.setCurrentCollection("jetStudy");
     histMan.addH1D_BJetBinned("AllJetMass", "AllJetMass", 500, 0, 500);
     histMan.addH1D_BJetBinned("AllGoodJetMass", "AllGoodJetMass", 500, 0, 500);
     histMan.addH1D_BJetBinned("GoodJetMass_atLeastOneJets", "GoodJetMass_atLeastOneJets", 500, 0, 500);
     histMan.addH1D_BJetBinned("GoodJetMass_atLeastTwoJets", "GoodJetMass_atLeastTwoJets", 500, 0, 500);
     histMan.addH1D_BJetBinned("GoodJetMass_atLeastThreeJets", "GoodJetMass_atLeastThreeJets", 500, 0, 500);
     histMan.addH1D_BJetBinned("GoodJetMass_atLeastFourJets", "GoodJetMass_atLeastFourJets", 500, 0, 500);
+
     //MC histograms
+    histMan.setCurrentCollection("MCStudy");
     histMan.addH1D("deltaRElectron", "delta R between truth and reco electron", 100, 0, 0.2);
     histMan.addH1D("deltaRLeptonicBjet", "delta R between truth and reco b-jet on leptonic side", 100, 0, 0.5);
     histMan.addH1D("deltaRHadronicBjet", "delta R between truth and reco b-jet on hadronic side", 100, 0, 0.5);
@@ -917,12 +926,14 @@ void Analysis::createHistograms() {
     histMan.addH1D("m3_diff", "M3 difference between truth and reco", 500, 0, 500);
 
     //end of MC histograms
-
-    histMan.addH1D("electron_et", "electron_et", 500, 0, 500);
-    histMan.addH1D_JetBinned("MostPFIsolatedElectron_dPhiIn", "MostPFIsolatedElectron_dPhiIn", 50, 0, 0.1);
-    histMan.addH1D_JetBinned("MostPFIsolatedElectron_dEtaIn", "MostPFIsolatedElectron_dEtaIn", 50, 0, 0.02 );
+    histMan.setCurrentCollection("diElectronAnalysis");
     histMan.addH1D_JetBinned("diElectronMass", "diElectronMass", 1000, 0, 1000);
 
+    histMan.setCurrentCollection("topReconstruction");
+    histMan.addH1D("electron_et", "electron_et", 500, 0, 500);
+
+
+    histMan.setCurrentCollection("topReconstruction/backgroundShape");
     histMan.addH1D_BJetBinned("mttbar_conversions", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_antiIsolated", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_QCDEnriched", "mttbar", 5000, 0, 5000);
@@ -939,7 +950,9 @@ void Analysis::createHistograms() {
     histMan.addH1D_BJetBinned("mttbar_conversions_withAsymJetsCut", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_antiIsolated_withAsymJetsCut", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_controlRegion_withAsymJetsCut", "mttbar", 5000, 0, 5000);
+    histMan.addH1D_BJetBinned("ttbar_pt_QCDEnriched", "ttbar_pt", 1000, 0, 1000);
 
+    histMan.setCurrentCollection("topReconstruction");
     histMan.addH1D_BJetBinned("mttbar", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_withMETCut", "mttbar_withMETCut", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_withMETAndAsymJets", "mttbar_withMETAndAsymJets", 5000, 0, 5000);
@@ -1021,7 +1034,7 @@ void Analysis::createHistograms() {
     histMan.addH1D_BJetBinned("ttbar_px", "ttbar_px", 1000, 0, 1000);
     histMan.addH1D_BJetBinned("ttbar_py", "ttbar_py", 1000, 0, 1000);
     histMan.addH1D_BJetBinned("ttbar_pz", "ttbar_pz", 1000, 0, 1000);
-    histMan.addH1D_BJetBinned("ttbar_pt_QCDEnriched", "ttbar_pt", 1000, 0, 1000);
+
     histMan.addH1D_BJetBinned("HT", "HT", 5000, 0, 5000);
     histMan.addH2D_BJetBinned("HTvsMttbar", "HT vs mttbar", 500, 0, 5000, 500, 0, 5000);
     histMan.addH1D("numberOfJets", "numberOfJets", 10, 0, 10);
@@ -1031,6 +1044,10 @@ void Analysis::createHistograms() {
     histMan.addH1D_BJetBinned("mtW", "mtW", 600, 0, 600);
     histMan.addH1D("electronD0", "electronD0", 1000, 0, 0.2);
     histMan.addH1D_BJetBinned("neutrino_pz", "neutrino_pz", 1000, -500, 500);
+
+    histMan.setCurrentCollection("QCDStudy");
+    histMan.addH1D_JetBinned("MostPFIsolatedElectron_dPhiIn", "MostPFIsolatedElectron_dPhiIn", 50, 0, 0.1);
+    histMan.addH1D_JetBinned("MostPFIsolatedElectron_dEtaIn", "MostPFIsolatedElectron_dEtaIn", 50, 0, 0.02 );
     histMan.addH2D("ptRel_vs_DRmin", "ptRel_vs_DRmin", 100, 0, 1, 300, 0, 300);
     histMan.addH1D("ptRel_QCDenriched", "ptRel_QCDenriched", 300, 0, 300);
     histMan.addH1D("DRmin_QCDenriched", "DRmin_QCDenriched", 100, 0, 1);
@@ -1065,6 +1082,8 @@ void Analysis::createHistograms() {
     histMan.addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_1btag", "PFIso control region", 1000, 0, 10);
     histMan.addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_2btag", "PFIso control region", 1000, 0, 10);
 
+
+    histMan.setCurrentCollection("topReconstruction");
     histMan.addH1D_BJetBinned("pt_leadingTop", "pt_leadingTop", 1000, 0, 1000);
     histMan.addH1D_BJetBinned("pt_NextToLeadingTop", "pt_NextToLeadingTop", 1000, 0, 1000);
     histMan.addH2D_BJetBinned("pt_leadingTop_vs_mttbar", "pt_leadingTop_vs_mttbar", 500, 0, 5000, 100, 0, 1000);

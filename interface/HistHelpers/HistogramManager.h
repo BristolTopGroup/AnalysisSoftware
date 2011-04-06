@@ -18,6 +18,10 @@
 #include <string>
 
 namespace BAT {
+typedef boost::array<TH1CollectionRef, DataType::NUMBER_OF_DATA_TYPES> TH1Array;
+typedef boost::array<TH2CollectionRef, DataType::NUMBER_OF_DATA_TYPES> TH2Array;
+typedef boost::multi_array<TH1CollectionRef, 2> TH1MultiArray;
+typedef boost::multi_array<TH2CollectionRef, 2> TH2MultiArray;
 
 namespace JetBin {
 enum value {
@@ -89,12 +93,13 @@ class HistogramManager {
 public:
     HistogramManager();
     virtual ~HistogramManager();
-    void createAllHistograms();
     void addH1D(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
     void addH1D_JetBinned(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
     void addH1D_BJetBinned(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
     void addH2D_BJetBinned(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax,
             unsigned int nYBins, float ymin, float ymax);
+    void addH2D_JetBinned(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax,
+                unsigned int nYBins, float ymin, float ymax);
 
     void addH2D(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax, unsigned int nYBins,
             float ymin, float ymax);
@@ -104,6 +109,27 @@ public:
     void setCurrentBJetBin(unsigned int jetbin);
     void setCurrentLumi(float lumi);
     void prepareForSeenDataTypes(const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& seenDataTypes);
+
+    void add1DCollection(std::string collection);
+    void add1DJetCollection(std::string collection);
+    void add1DBJetCollection(std::string collection);
+
+    void add2DCollection(std::string collection);
+    void add2DJetCollection(std::string collection);
+    void add2DBJetCollection(std::string collection);
+
+    void addCollection(std::string collection);
+
+
+
+    void setCurrent1DCollection(std::string collection);
+    void setCurrent1DJetCollection(std::string collection);
+    void setCurrent1DBJetCollection(std::string collection);
+    void setCurrent2DCollection(std::string collection);
+    void setCurrent2DJetCollection(std::string collection);
+    void setCurrent2DBJetCollection(std::string collection);
+
+    void setCurrentCollection(std::string collection);
 
     boost::shared_ptr<TH1> operator[](std::string);
     boost::shared_ptr<TH1> H1D(std::string);
@@ -116,24 +142,23 @@ public:
 
     void writeToDisk();
 private:
-    boost::multi_array<TH1CollectionRef, 2> jetBinned1DHists;
-    std::vector<std::string> jetBinned1DHistNames;
-    boost::multi_array<TH2CollectionRef, 2> jetBinned2DHists;
-    std::vector<std::string> jetBinned2DHistNames;
-    boost::multi_array<TH1CollectionRef, 2> bJetBinned1DHists;
-    std::vector<std::string> bJetBinned1DHistNames;
-    boost::multi_array<TH2CollectionRef, 2> bJetBinned2DHists;
-    std::vector<std::string> bJetBinned2DHistNames;
+
     boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
     boost::array<boost::shared_ptr<TFile>, DataType::NUMBER_OF_DATA_TYPES> histFiles;
-    boost::array<TH1CollectionRef, DataType::NUMBER_OF_DATA_TYPES> collection;// move to array of DataTypes
-    std::vector<std::string> collection1DHistNames;
-    boost::array<TH2CollectionRef, DataType::NUMBER_OF_DATA_TYPES> collection2D;
-    std::vector<std::string> collection2DHistNames;
+
     DataType::value currentDataType;
     unsigned int currentJetbin;
     unsigned int currentBJetbin;
     float currentIntegratedLumi;
+    std::string current1DCollection, current1DJetCollection, current1DBJetCollection;
+    std::string current2DCollection, current2DJetCollection, current2DBJetCollection;
+
+    unordered_map<std::string, TH1Array> collection1D;
+    unordered_map<std::string, TH2Array> collection2D;
+    unordered_map<std::string, TH1MultiArray> jetCollection1D;
+    unordered_map<std::string, TH2MultiArray> jetCollection2D;
+    unordered_map<std::string, TH1MultiArray> bJetCollection1D;
+    unordered_map<std::string, TH2MultiArray> bJetCollection2D;
 
     const std::string assembleFilename(DataType::value) const;
     void createSummedHistograms(DataType::value);
