@@ -86,6 +86,10 @@ public:
         return histMap;
     }
 
+    bool contains(std::string name){
+        return histMap.find(name) != histMap.end();
+    }
+
 private:
 
     void writeDirectories() {

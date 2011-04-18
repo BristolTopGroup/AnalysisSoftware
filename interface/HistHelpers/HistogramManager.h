@@ -88,6 +88,19 @@ const boost::array<std::string, BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS> names
         "3orMoreBtags" } };
 }
 
+struct HistogramAccessException: public std::exception {
+    TString msg;
+    HistogramAccessException(TString message) :
+        msg(message) {
+    }
+    ~HistogramAccessException() throw () {
+    }
+
+    const char* what() const throw () {
+        return msg;
+    }
+};
+
 typedef unsigned short ushort;
 class HistogramManager {
 public:

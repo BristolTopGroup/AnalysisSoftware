@@ -199,6 +199,37 @@ public:
         ASSERT(file->Get("test/myHist_0btag") != 0);
     }
 
+    void throwExceptionWhenAccessingNonExistentHistIn1DCollection() {
+        man.setCurrentCollection("test");
+        ASSERT_THROWS(man.H1D("tfdgsdf")->Fill(12), HistogramAccessException);
+    }
+
+    void throwExceptionWhenAccessingNonExistentHistIn1DBJetCollection() {
+        man.setCurrentCollection("test");
+        ASSERT_THROWS(man.H1D_BJetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+    }
+
+    void throwExceptionWhenAccessingNonExistentHistIn1DJetCollection() {
+        man.setCurrentCollection("test");
+        ASSERT_THROWS(man.H1D_JetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+    }
+
+    void throwExceptionWhenAccessingNonExistentHistIn2DCollection() {
+        man.setCurrentCollection("test");
+        ASSERT_THROWS(man.H2D("tfdgsdf")->Fill(12), HistogramAccessException);
+    }
+
+    void throwExceptionWhenAccessingNonExistentHistIn2DBJetCollection() {
+        man.setCurrentCollection("test");
+        ASSERT_THROWS(man.H2D_BJetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+    }
+
+    void throwExceptionWhenAccessingNonExistentHistIn2DJetCollection() {
+        man.setCurrentCollection("test");
+        ASSERT_THROWS(man.H2D_JetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+    }
+
+
 };
 
 extern cute::suite make_suite_TestHistogramManager() {
@@ -224,6 +255,14 @@ extern cute::suite make_suite_TestHistogramManager() {
 
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testAddCollection));
     s.push_back(CUTE_SMEMFUN(TestHistogramManager, testAddCollectionWithoutAdd));
+
+    s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn1DCollection));
+    s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn1DBJetCollection));
+    s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn1DJetCollection));
+
+    s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn2DCollection));
+    s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn2DBJetCollection));
+    s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn2DJetCollection));
 
     return s;
 }

@@ -156,18 +156,52 @@ boost::shared_ptr<TH1> HistogramManager::operator [](std::string histname) {
 }
 
 boost::shared_ptr<TH1> HistogramManager::H1D(std::string histname) {
+    if (collection1D.find(current1DCollection) == collection1D.end()
+            || !collection1D[current1DCollection][currentDataType]->contains(histname)) {
+        throw HistogramAccessException(
+                "Histogram '" + histname + "' in collection '" + current1DCollection + "' not found");
+    }
+
     return collection1D[current1DCollection][currentDataType]->get(histname);
 }
 
 boost::shared_ptr<TH1> HistogramManager::H1D_JetBinned(std::string histname) {
+    if (jetCollection1D.find(current1DJetCollection) == jetCollection1D.end()
+            || !jetCollection1D[current1DJetCollection][currentDataType][currentJetbin]->contains(histname)) {
+        throw HistogramAccessException(
+                "Histogram '" + histname + "' in jet collection '" + current1DJetCollection + "' not found");
+    }
+
     return jetCollection1D[current1DJetCollection][currentDataType][currentJetbin]->get(histname);
 }
 
+boost::shared_ptr<TH2> HistogramManager::H2D_JetBinned(std::string histname) {
+    if (jetCollection2D.find(current2DJetCollection) == jetCollection2D.end()
+            || !jetCollection2D[current2DJetCollection][currentDataType][currentJetbin]->contains(histname)) {
+        throw HistogramAccessException(
+                "Histogram '" + histname + "' in jet collection '" + current2DJetCollection + "' not found");
+    }
+
+    return jetCollection2D[current2DJetCollection][currentDataType][currentJetbin]->get(histname);
+}
+
 boost::shared_ptr<TH1> HistogramManager::H1D_BJetBinned(std::string histname) {
+    if (bJetCollection1D.find(current1DBJetCollection) == bJetCollection1D.end()
+            || !bJetCollection1D[current1DBJetCollection][currentDataType][currentBJetbin]->contains(histname)) {
+        throw HistogramAccessException(
+                "Histogram '" + histname + "' in bjet collection '" + current1DBJetCollection + "' not found");
+    }
+
     return bJetCollection1D[current1DBJetCollection][currentDataType][currentBJetbin]->get(histname);
 }
 
 boost::shared_ptr<TH2> HistogramManager::H2D_BJetBinned(std::string histname) {
+    if (bJetCollection2D.find(current2DBJetCollection) == bJetCollection2D.end()
+            || !bJetCollection2D[current2DBJetCollection][currentDataType][currentBJetbin]->contains(histname)) {
+        throw HistogramAccessException(
+                "Histogram '" + histname + "' in bjet collection '" + current2DBJetCollection + "' not found");
+    }
+
     return bJetCollection2D[current2DBJetCollection][currentDataType][currentBJetbin]->get(histname);
 }
 
@@ -176,6 +210,12 @@ boost::shared_ptr<TH2> HistogramManager::operator ()(std::string histname) {
 }
 
 boost::shared_ptr<TH2> HistogramManager::H2D(std::string histname) {
+    if (collection2D.find(current2DCollection) == collection2D.end()
+            || !collection2D[current2DCollection][currentDataType]->contains(histname)) {
+        throw HistogramAccessException(
+                "Histogram '" + histname + "' in collection '" + current2DCollection + "' not found");
+    }
+
     return collection2D[current2DCollection][currentDataType]->get(histname);
 }
 
