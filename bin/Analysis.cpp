@@ -30,7 +30,6 @@ void Analysis::analyze() {
         initiateEvent();
         printNumberOfProccessedEventsEvery(100000);
         inspectEvents();
-        //        doEcalSpikeAnalysis();
         //                doSynchExercise();
 //        if (currentEvent.GoodElectrons().size() > 0) {
 //        }
@@ -562,6 +561,7 @@ void Analysis::doQCDStudy() {
             histMan.H1D_JetBinned("QCDest_PFIsolation_controlRegion_2btag")->Fill(electron->pfIsolation(), weight);
     }
 
+    histMan.setCurrentCollection("topReconstruction/backgroundShape");
     if (ttbarCandidate.passesRelIsoSelection() && ttbarCandidate.hasAtLeastFourGoodJets()) {
         const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron(false);
         if (electron->isIsolated() == false && !isnan(electron->relativeIsolation()) && !isinf(
@@ -1146,6 +1146,7 @@ Analysis::Analysis() :
         cutflow[cut] = 0;
         singleCuts[cut] = 0;
     }
+//    histMan.enableDebugMode(true);
 }
 
 Analysis::~Analysis() {
