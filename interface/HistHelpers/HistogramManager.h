@@ -154,6 +154,8 @@ public:
     boost::shared_ptr<TH2> H2D_BJetBinned(std::string);
 
     void writeToDisk();
+
+    void enableDebugMode(bool enable);
 private:
 
     boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
@@ -172,6 +174,8 @@ private:
     unordered_map<std::string, TH2MultiArray> jetCollection2D;
     unordered_map<std::string, TH1MultiArray> bJetCollection1D;
     unordered_map<std::string, TH2MultiArray> bJetCollection2D;
+
+    bool debugMode;
 
     const std::string assembleFilename(DataType::value) const;
     void createSummedHistograms(DataType::value);

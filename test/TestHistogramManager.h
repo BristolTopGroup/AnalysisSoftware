@@ -25,6 +25,7 @@ public:
         lumi(1.5),
         expectedTtbarFile("ttjet_1.5pb_CaloElectron_CaloJets_CaloMET.root"),
         expectedDataFile("data_1.5pb_CaloElectron_CaloJets_CaloMET.root") {
+        man.enableDebugMode(true);
         boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes = boost::array<bool,
                 DataType::NUMBER_OF_DATA_TYPES>();
 
