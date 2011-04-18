@@ -609,6 +609,7 @@ void Analysis::doQCDStudy() {
 
     }
 
+    histMan.setCurrentCollection("QCDStudy");
     if (ttbarCandidate.Electrons().size() > 0 && ttbarCandidate.GoodPFIsolatedElectrons().size() < 2
             && NTupleEventReader::electronAlgorithm == ElectronAlgorithm::ParticleFlow) {
         const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron(true);
@@ -616,6 +617,7 @@ void Analysis::doQCDStudy() {
         histMan.H1D_JetBinned("MostPFIsolatedElectron_dEtaIn")->Fill(electron->dEtaIn(), weight);
     }
 
+    histMan.setCurrentCollection("topReconstruction/backgroundShape");
     if (ttbarCandidate.passesAntiIsolationSelection()) {
         ElectronPointer electron = ttbarCandidate.GoodElectrons().front();
         try {
@@ -1146,7 +1148,7 @@ Analysis::Analysis() :
         cutflow[cut] = 0;
         singleCuts[cut] = 0;
     }
-//    histMan.enableDebugMode(true);
+    histMan.enableDebugMode(true);
 }
 
 Analysis::~Analysis() {
