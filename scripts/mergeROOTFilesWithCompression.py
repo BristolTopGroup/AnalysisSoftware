@@ -34,12 +34,6 @@ def fuseFiles(groupedFiles):
         os.system(command)
         group += 1
 
-#def getProcess(filepath):
-#    file = filepath.split('/')[-1]
-#    a = file.split('_')
-#    process = a[0] + '_' + a[1]
-#    return process
-
 def getProcess(filepath):
     file = filepath.split('/')[-1]
     a = file.split('_')
@@ -69,4 +63,4 @@ if __name__ == "__main__":
     print 'Total number of unique files:', len(uniqueFiles)
     print 'Process recognised:', getProcess(files[0])
     print 'Input files per output file:', len(groupedFiles)
-    #fuseFiles(groupedFiles)
+    fuseFiles(groupedFiles)
