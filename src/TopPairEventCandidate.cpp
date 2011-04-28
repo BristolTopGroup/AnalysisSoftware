@@ -480,70 +480,6 @@ void TopPairEventCandidate::reconstructTTbar(ElectronPointer electron) {
     doneReconstruction = true;
 }
 
-//void TopPairEventCandidate::reconstructUsingChi2(ElectronPointer electron) {
-//    if (goodJets.size() < 4)
-//        throw ReconstructionException("Not enough jets available to reconstruct top event using Chi2 method.");
-//    electronFromW = electron;
-//    selectedNeutrino = 0;
-//    currentSelectedNeutrino = 0;
-//    reconstructNeutrinos();
-//
-//    double chosen_Chi2Total(9999999.);
-//
-//    for (unsigned short hadBindex = 0; hadBindex < goodJets.size(); ++hadBindex) {
-//        for (unsigned short lepBindex = 0; lepBindex < goodJets.size(); ++lepBindex) {
-//            if (lepBindex == hadBindex)
-//                continue;
-//            for (unsigned short jet1Index = 0; jet1Index < goodJets.size(); ++jet1Index) {
-//                if (jet1Index == lepBindex || jet1Index == hadBindex)
-//                    continue;
-//                for (unsigned short jet2Index = 0; jet2Index < goodJets.size(); ++jet2Index) {
-//                    if (jet2Index == jet1Index || jet2Index == lepBindex || jet2Index == hadBindex)
-//                        continue;
-//                    hadronicBJet = goodJets.at(hadBindex);
-//                    leptonicBJet = goodJets.at(lepBindex);
-//                    jet1FromW = goodJets.at(jet1Index);
-//                    jet2FromW = goodJets.at(jet2Index);
-//
-//                    leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
-//                    leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
-//                    hadronicW = ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
-//                    leptonicTop1 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW1));
-//                    leptonicTop2 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW2));
-//                    hadronicTop = ParticlePointer(new Particle(*hadronicBJet + *hadronicW));
-//                    fillHypotheses();
-//                    selectNeutrinoSolution();
-//                    double chi2 = getTotalChi2(currentSelectedNeutrino);
-//                    if (chi2 < chosen_Chi2Total) {
-//                        hadronicBIndex = hadBindex;
-//                        leptonicBIndex = lepBindex;
-//                        jet1FromWIndex = jet1Index;
-//                        jet2FromWIndex = jet2Index;
-//                        chosen_Chi2Total = chi2;
-//                        selectedNeutrino = currentSelectedNeutrino;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    std::sort(solutions.begin(), solutions.end(), compareSolutions);
-//    hadronicBJet = goodJets.at(hadronicBIndex);
-//    leptonicBJet = goodJets.at(leptonicBIndex);
-//    jet1FromW = goodJets.at(jet1FromWIndex);
-//    jet2FromW = goodJets.at(jet2FromWIndex);
-//    leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
-//    leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
-//    hadronicW = ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
-//    leptonicTop1 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW1));
-//    leptonicTop2 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW2));
-//    hadronicTop = ParticlePointer(new Particle(*hadronicBJet + *hadronicW));
-//    if (selectedNeutrino == 1)
-//        ttbarResonance = ParticlePointer(new Particle(*leptonicTop1 + *hadronicTop));
-//    else
-//        ttbarResonance = ParticlePointer(new Particle(*leptonicTop2 + *hadronicTop));
-//
-//    doneReconstruction = true;
-//}
 
 void TopPairEventCandidate::reconstructNeutrinos() {
     boost::array<double, 2> neutrinoPzs = computeNeutrinoPz();
@@ -596,14 +532,6 @@ const boost::array<double, 2> TopPairEventCandidate::computeNeutrinoPz() {
     return neutrinoPzs;
 }
 
-//bool TopPairEventCandidate::hasNextJetCombination(){
-//    unsigned short njets = goodJets.size();
-//    return (hadronicBIndex == njets && leptonicBJet == njets-1 && jet1FormWIndex == njets -2 && jet2);
-//}
-//
-//void TopPairEventCandidate::selectNextJetCombination(){
-//
-//}
 
 void TopPairEventCandidate::fillHypotheses() {
 	TtbarHypothesisPointer hypothesis1(fillHypothesis(1));
@@ -1004,6 +932,100 @@ double TopPairEventCandidate::transverseWmass(const ElectronPointer electron) co
         return sqrt(tMassSquared);
     else
         return -1;
+}
+
+void TopPairEventCandidate::reconstruct(Rule rule, const ElectronPointer electron) {
+    //TODO: change this into if(!Rule::meetsInitialConditaion())
+    if (goodJets.size() < 4 || electron == 0)
+          throw ReconstructionException("Not enough jets available to reconstruct top event using Mass Equality method.");
+        electronFromW = electron;
+        selectedNeutrino = 0;
+        currentSelectedNeutrino = 0;
+
+        reconstructNeutrinos();
+        double chosen_TopMassDifference(9999999.);
+        double chosen_Chi2Total(9999999.);
+    for (unsigned short hadBindex = 0; hadBindex < goodJets.size(); ++hadBindex) {
+        if (rule->hardHadronicBJetCondition(goodJets.at(hadBindex)))
+            continue;
+
+        for (unsigned short lepBindex = 0; lepBindex < goodJets.size(); ++lepBindex) {
+            if (lepBindex == hadBindex || rule->hardLeptonicBJetCondition(goodJets.at(lepBindex)))
+                continue;
+
+            for (unsigned short jet1Index = 0; jet1Index < goodJets.size(); ++jet1Index) {
+                if (jet1Index == lepBindex || jet1Index == hadBindex || rule->hardHadronicJetFromWCondition(
+                        goodJets.at(jet1Index)))
+                    continue;
+
+                for (unsigned short jet2Index = 0; jet2Index < goodJets.size(); ++jet2Index) {
+                    if (jet2Index == jet1Index || jet2Index == lepBindex || jet2Index == hadBindex
+                            || rule->hardHadronicJetFromWCondition(goodJets.at(jet2Index)))
+                        continue;
+
+                    hadronicBJet = goodJets.at(hadBindex);
+                    leptonicBJet = goodJets.at(lepBindex);
+                    jet1FromW = goodJets.at(jet1Index);
+                    jet2FromW = goodJets.at(jet2Index);
+
+                    leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
+                    leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
+                    hadronicW = ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
+                    leptonicTop1 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW1));
+                    leptonicTop2 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW2));
+                    hadronicTop = ParticlePointer(new Particle(*hadronicBJet + *hadronicW));
+                    fillHypotheses();
+                    selectNeutrinoSolution();
+                    double TopMassDifference = calculateTopMassDifference(currentSelectedNeutrino);
+                    double chi2 = getTotalChi2(currentSelectedNeutrino);
+                    switch (usedTTbarReconstruction) {
+                    case TTbarReconstructionCriterion::TopMassDifference:
+                        if (TopMassDifference < chosen_TopMassDifference) {
+                            hadronicBIndex = hadBindex;
+                            leptonicBIndex = lepBindex;
+                            jet1FromWIndex = jet1Index;
+                            jet2FromWIndex = jet2Index;
+                            chosen_TopMassDifference = TopMassDifference;
+                            selectedNeutrino = currentSelectedNeutrino;
+                        }
+                        break;
+
+                    case TTbarReconstructionCriterion::chi2:
+                        if (chi2 < chosen_Chi2Total) {
+                            hadronicBIndex = hadBindex;
+                            leptonicBIndex = lepBindex;
+                            jet1FromWIndex = jet1Index;
+                            jet2FromWIndex = jet2Index;
+                            chosen_Chi2Total = chi2;
+                            selectedNeutrino = currentSelectedNeutrino;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    compare_disc sorting;
+    std::sort(solutions.begin(), solutions.end(), sorting);
+    hadronicBJet = solutions.front()->hadronicBJet;
+    leptonicBJet = solutions.front()->leptonicBjet;
+    jet1FromW = solutions.front()->jet1FromW;
+    jet2FromW = solutions.front()->jet2FromW;
+    leptonicW1 = solutions.front()->leptonicW;
+    leptonicW2 = solutions.front()->leptonicW;
+    hadronicW = solutions.front()->hadronicW;
+//    leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
+//    leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
+//    hadronicW = ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
+    leptonicTop1 = solutions.front()->leptonicTop;
+    leptonicTop2 = solutions.front()->leptonicTop;
+    hadronicTop = solutions.front()->hadronicTop;
+    ttbarResonance = solutions.front()->resonance;
+    if (selectedNeutrino == 1)
+        ttbarResonance = ParticlePointer(new Particle(*leptonicTop1 + *hadronicTop));
+    else
+        ttbarResonance = ParticlePointer(new Particle(*leptonicTop2 + *hadronicTop));
+    doneReconstruction = true;
 }
 
 }
