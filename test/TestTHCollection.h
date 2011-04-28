@@ -116,6 +116,15 @@ public:
         ASSERT(histFile->Get("mc/ttbar/first_test_old") != 0);
     }
 
+    void containsHistogram() {
+        collectionWithPath.add("test", "test", 100, 0, 100);
+        ASSERT(collectionWithPath.contains("test"));
+    }
+
+    void doesNotContainHistogram() {
+        ASSERT(collectionWithPath.contains("sdfsdf") == false);
+    }
+
 };
 
 extern cute::suite make_suite_TestTHCollection() {
@@ -133,6 +142,9 @@ extern cute::suite make_suite_TestTHCollection() {
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testPrefix));
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testSuffix));
     s.push_back(CUTE_SMEMFUN(TestTHCollection, testPrefixAndSuffix));
+
+    s.push_back(CUTE_SMEMFUN(TestTHCollection, containsHistogram));
+    s.push_back(CUTE_SMEMFUN(TestTHCollection, doesNotContainHistogram));
 
     return s;
 }
