@@ -646,6 +646,7 @@ void Analysis::doMCttbarReconstruction() {
 	JetCollection genJets = currentEvent.GenJets();
 	JetPointer topBjet, antitopBjet, jet1fromW, jet2fromW;
 	TtbarHypothesis MCttbarEvent;
+	histMan.setCurrentCollection("MCStudy");
 	bool ejets_event = false;
 	bool leptonic_Wplus_found = false, leptonic_Wminus_found = false;
 	bool hadronic_Wplus_found = false, hadronic_Wminus_found = false;
