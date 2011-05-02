@@ -13,6 +13,8 @@ except:
     print "You have to use Python 2.4 or higher"
     sys.exit(0)
 from optparse import OptionParser
+files = []
+directories = []
 
 srmBase = 'srm://lcgse02.phy.bris.ac.uk:8444/srm/managerv2?SFN='
 
@@ -38,15 +40,26 @@ def delete(file):
 def deleteFolder(folder):
     output = subprocess.Popen(['srmrmdir', srmBase + folder], stdout = subprocess.PIPE).communicate()[0]
     return output
+
+def deleteGridFolder(path):
+    filelist = listFiles(path)
+    for file in getFiles(path, filelist):
+        delete(file)
+        deleteFolder(path)
+        
 if __name__ == '__main__':
     
     parser = OptionParser()
+    parser.add_option("-r", "--recursive",
+                  action="store_true", dest="recursive", default=False,
+                  help="delete grid folder recursively")
+    
     (options, args) = parser.parse_args()
-    if len(args) >0:
+    if len(args) >0 and not options['recursive']:
         path = args[0]
-        filelist = listFiles(path)
-        for file in getFiles(path, filelist):
-            delete(file)
-            deleteFolder(path)
+        deleteGridFolder(path)
+    elif len(args) >0 and options['recursive']:
+        pass
+    
     else:
         print 'Delete path was not specified. Use script "./deleteGridFolder path"'
