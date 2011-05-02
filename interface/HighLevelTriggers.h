@@ -39,7 +39,7 @@ enum value{
     HLT_Ele45_CaloIdVT_TrkIdT_v1, //23
     HLT_Ele10_CaloIdT_CaloIsoVL_TrkIdT_TrkIsoVL_HT200_v3, //24
     HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v2, //25
-    HLT_Ele45_CaloIdVT_TrkIdT_v2, //26
+    HLT_Ele45_CaloIdVT_TrkIdT_v2 //26
 };
 }
 #endif /* HIGHLEVELTRIGGERS_H_ */
