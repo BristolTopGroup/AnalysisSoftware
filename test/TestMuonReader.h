@@ -26,24 +26,39 @@ public:
 		input->Add(InputFile::ttbar);
 		input->SetBranchStatus("*", 0);
 		reader->initialise();
-		input->GetEntry(1);
-		muons = reader->getMuons();
+		unsigned int counter = 0;
+		while(muons.size() == 0){
+		    input->GetEntry(counter);
+            muons = reader->getMuons();
+            ++counter;
+		}
+
+		assert(muons.size() > 0);
 		leadingMuon = muons.front();
 	}
 
 	void testNumberOfMuons() {
-        ASSERT_EQUAL(1, muons.size());
+        ASSERT_EQUAL(2, muons.size());
     }
 
-    void testLeadingMuonFourVector() {
-        ASSERT_EQUAL_DELTA(79.3238, leadingMuon->energy(), 0.0001);
-        ASSERT_EQUAL_DELTA(-1.85475, leadingMuon->px(), 0.0001);
-        ASSERT_EQUAL_DELTA(-72.8907, leadingMuon->py(), 0.0001);
-        ASSERT_EQUAL_DELTA(-31.2372, leadingMuon->pz(), 0.0001);
+	void testLeadingMuonEnergy(){
+	    ASSERT_EQUAL_DELTA(14.1981, leadingMuon->energy(), 0.0001);
+	}
+
+	void testLeadingMuonPx(){
+	    ASSERT_EQUAL_DELTA(11.3069, leadingMuon->px(), 0.0001);
+	}
+
+	void testLeadingMuonPy(){
+	    ASSERT_EQUAL_DELTA(-5.54134, leadingMuon->py(), 0.0001);
+	}
+
+    void testLeadingMuonPz() {
+        ASSERT_EQUAL_DELTA(6.55911, leadingMuon->pz(), 0.0001);
     }
 
     void testLeadingMuonRelativeIsolation() {
-        ASSERT_EQUAL_DELTA(0.0144937, leadingMuon->relativeIsolation(), 0.00001);
+        ASSERT_EQUAL_DELTA(3.03852, leadingMuon->relativeIsolation(), 0.00001);
     }
 
     void testLeadingMuonIsGlobal() {
@@ -54,10 +69,13 @@ public:
 extern cute::suite make_suite_TestMuonReader() {
     cute::suite s;
 
-    s.push_back(CUTE_SMEMFUN(TestMuonReader,testNumberOfMuons));
-    s.push_back(CUTE_SMEMFUN(TestMuonReader,testLeadingMuonFourVector));
-    s.push_back(CUTE_SMEMFUN(TestMuonReader,testLeadingMuonRelativeIsolation));
-    s.push_back(CUTE_SMEMFUN(TestMuonReader,testLeadingMuonIsGlobal));
+    s.push_back(CUTE_SMEMFUN(TestMuonReader, testNumberOfMuons));
+    s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonEnergy));
+    s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonPx));
+    s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonPy));
+    s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonPz));
+    s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonRelativeIsolation));
+    s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonIsGlobal));
 
     return s;
 }

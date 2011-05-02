@@ -31,15 +31,15 @@ public:
 	}
 
 	void testReadJetsSize() {
-		ASSERT_EQUAL(10, genJets.size());
+		ASSERT_EQUAL(9, genJets.size());
 	}
 
 	void testReadFirstJetEnergy() {
-		ASSERT_EQUAL_DELTA(238.579, firstJet->energy(), 0.001);
+		ASSERT_EQUAL_DELTA(130.584, firstJet->energy(), 0.001);
 	}
 
 	void testReadFirstJetEMF() {
-		ASSERT_EQUAL_DELTA(0.191873, firstJet->emf(), 0.00001);
+		ASSERT_EQUAL_DELTA(0.172173, firstJet->emf(), 0.00001);
 	}
 
 };

@@ -36,31 +36,31 @@ public:
 	}
 
 	void testReadJetsSize() {
-		ASSERT_EQUAL(8, jets.size());
+		ASSERT_EQUAL(10, jets.size());
 	}
 
 	void testReadFirstJetEnergy() {
-		ASSERT_EQUAL_DELTA(212.538, firstJet->energy(), 0.001);
+		ASSERT_EQUAL_DELTA(138.88, firstJet->energy(), 0.001);
 	}
 
 	void testReadFirstJetEMF() {
-		ASSERT_EQUAL_DELTA(0.496578, firstJet->emf(), 0.00001);
+		ASSERT_EQUAL_DELTA(0.568266, firstJet->emf(), 0.00001);
 	}
 
 	void testReadFirstJetn90Hits() {
-		ASSERT_EQUAL_DELTA(24, firstJet->n90Hits(), 0.1);
+		ASSERT_EQUAL_DELTA(37, firstJet->n90Hits(), 0.1);
 	}
 
 	void testReadFirstJetfHPD() {
-		ASSERT_EQUAL_DELTA(0.243706, firstJet->fHPD(), 0.00001);
+		ASSERT_EQUAL_DELTA(0.262745, firstJet->fHPD(), 0.00001);
 	}
 
 	void testReadPFJetsSize() {
-		ASSERT_EQUAL(9, pfjets.size());
+		ASSERT_EQUAL(12, pfjets.size());
 	}
 
 	void testReadFirstPFJetEnergy() {
-		ASSERT_EQUAL_DELTA(88.1604, firstPFJet->energy(), 0.001);
+		ASSERT_EQUAL_DELTA(139.809, firstPFJet->energy(), 0.001);
 	}
 
 	void testReadFirstPFJetEMF() {

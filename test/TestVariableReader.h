@@ -27,7 +27,7 @@ public:
 	TestVariableReader() :
 		invalidEmptyVariableName(""),
 		invalidNotAvailableVariableName("thisIsNotInTheFile"),
-		runNumber("run"),
+		runNumber("Event.Run"),
 		energyForEachElectron("Electron.Energy"),
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)),
 		singleVariableReader(new VariableReader<unsigned int>::VariableReader(input, runNumber)),
@@ -49,8 +49,7 @@ public:
 	}
 
 	void testReadMultipleVariable() {
-		ASSERT_EQUAL_DELTA(108.714, multipleVariableReader->getVariableAt(0), 0.001);
-		ASSERT_EQUAL(singleVariableReader->getVariable(), multipleVariableReader->size());
+		ASSERT_EQUAL_DELTA(36.9815, multipleVariableReader->getVariableAt(0), 0.001);
 	}
 
 	void testInvalidVariableThrowsException() {

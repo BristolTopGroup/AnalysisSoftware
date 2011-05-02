@@ -82,64 +82,64 @@ public:
 
     void testTTbarType() {
         Event currentEvent = TTbarReader->getNextEvent();
-        ASSERT_EQUAL(DataType::ttbar, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::ttbar), short(currentEvent.getDataType()));
     }
 
     void testQCD_EMEnriched_80_to_170Type() {
         Event currentEvent = QCDenri3Reader->getNextEvent();
-        ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt80to170, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::QCD_EMEnriched_Pt80to170), short(currentEvent.getDataType()));
     }
 
     void testQCD_EMEnriched_30_to_80Type() {
         Event currentEvent = QCDenri2Reader->getNextEvent();
-        ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt30to80, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::QCD_EMEnriched_Pt30to80), short(currentEvent.getDataType()));
     }
 
     void testQCD_EMEnriched_20_to_30Type() {
         Event currentEvent = QCDenri1Reader->getNextEvent();
-        ASSERT_EQUAL(DataType::QCD_EMEnriched_Pt20to30, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::QCD_EMEnriched_Pt20to30), short(currentEvent.getDataType()));
     }
 
     void testQCD_BCtoE_80_to_170Type() {
         Event currentEvent = QCDbce3Reader->getNextEvent();
-        ASSERT_EQUAL(DataType::QCD_BCtoE_Pt80to170, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::QCD_BCtoE_Pt80to170), short(currentEvent.getDataType()));
     }
 
     void testQCD_BCtoE_30_to_80Type() {
         Event currentEvent = QCDbce2Reader->getNextEvent();
-        ASSERT_EQUAL(DataType::QCD_BCtoE_Pt30to80, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::QCD_BCtoE_Pt30to80), short(currentEvent.getDataType()));
     }
 
     void testQCD_BCtoE_20_to_30Type() {
         Event currentEvent = QCDbce1Reader->getNextEvent();
-        ASSERT_EQUAL(DataType::QCD_BCtoE_Pt20to30, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::QCD_BCtoE_Pt20to30), short(currentEvent.getDataType()));
     }
 
     void testWjetsType() {
         Event currentEvent = WjetsReader->getNextEvent();
-        ASSERT_EQUAL(DataType::Wjets, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::Wjets), short(currentEvent.getDataType()));
     }
 
     void testZjetsType() {
     	ASSERT(ZJetsReader->hasNextEvent());
         Event currentEvent = ZJetsReader->getNextEvent();
-        ASSERT_EQUAL(DataType::Zjets, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::Zjets), short(currentEvent.getDataType()));
     }
 
     void testTWType() {
     	ASSERT(TWReader->hasNextEvent());
         Event currentEvent = TWReader->getNextEvent();
-        ASSERT_EQUAL(DataType::singleTop_And_W, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::singleTop_And_W), short(currentEvent.getDataType()));
     }
 
     void testTChanType() {
         Event currentEvent = TChanReader->getNextEvent();
-        ASSERT_EQUAL(DataType::singleTopTChannel, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::singleTopTChannel), short(currentEvent.getDataType()));
     }
 
     void testDataType() {
         Event currentEvent = DataReader->getNextEvent();
-        ASSERT_EQUAL(DataType::DATA, currentEvent.getDataType());
+        ASSERT_EQUAL(short(DataType::DATA), short(currentEvent.getDataType()));
     }
 
     void testReadDataType() {
@@ -156,17 +156,17 @@ public:
 
     void testNumberOfElectronsInEvent1() {
         Event currentEvent = TTbarReader->getNextEvent();
-        ASSERT_EQUAL(2, currentEvent.Electrons().size());
+        ASSERT_EQUAL(3, currentEvent.Electrons().size());
     }
 
     void testNumberOfJetsInEvent1() {
         Event currentEvent = TTbarReader->getNextEvent();
-        ASSERT_EQUAL(8, currentEvent.Jets().size());
+        ASSERT_EQUAL(18, currentEvent.Jets().size());
     }
 
     void testNumberOfMuonsInEvent1() {
         Event currentEvent = TTbarReader->getNextEvent();
-        ASSERT_EQUAL(1, currentEvent.Muons().size());
+        ASSERT_EQUAL(0, currentEvent.Muons().size());
     }
 
     void testHasNextEvent() {
@@ -220,7 +220,7 @@ public:
     }
 
     void testMCLumiBlock() {
-        ASSERT_EQUAL(7, TTbarReader->getNextEvent().lumiblock());
+        ASSERT_EQUAL(1, TTbarReader->getNextEvent().lumiblock());
     }
 
     void testLocalEventNumber() {
@@ -247,7 +247,7 @@ public:
 
     void testTTbarEventMET() {
         Event event = TTbarReader->getNextEvent();
-        ASSERT_EQUAL_DELTA(69.2572,event.MET()->et(), 0.001);
+        ASSERT_EQUAL_DELTA(22.3616,event.MET()->et(), 0.001);
     }
 
     void testSeenTTbar() {
@@ -286,7 +286,7 @@ public:
 
     void testGenJetsMC() {
 		Event event = TTbarReader->getNextEvent();
-		ASSERT_EQUAL(10, event.GenJets().size());
+		ASSERT_EQUAL(26, event.GenJets().size());
 	}
 
 	void testGenJetsDATA() {

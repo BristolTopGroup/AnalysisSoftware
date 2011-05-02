@@ -25,11 +25,11 @@ struct TestVertexReader {
 	}
 
 	void testVertexZPosition() {
-		ASSERT_EQUAL_DELTA(1.86712, vertex->absoluteZPosition(), 0.00001);
+		ASSERT_EQUAL_DELTA(0.192176, vertex->absoluteZPosition(), 0.00001);
 	}
 
 	void testVertexRho(){
-		ASSERT_EQUAL_DELTA(0.461491, vertex->absoluteRho(), 0.000001);
+		ASSERT_EQUAL_DELTA(0.456797, vertex->absoluteRho(), 0.000001);
 	}
 
 	void testVertexIsFake(){
@@ -37,7 +37,7 @@ struct TestVertexReader {
 	}
 
 	void testVertexNDOF(){
-		ASSERT_EQUAL(111, vertex->ndof());
+		ASSERT_EQUAL(82, vertex->ndof());
 	}
 };
 
