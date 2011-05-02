@@ -68,6 +68,7 @@ if __name__ == '__main__':
     gROOT.SetBatch(1);
     chain = TChain("rootTupleTree/tree");
 
+    #chain.Add("/storage/TopQuarkGroup/mc/Spring11/TTJets_TuneD6T_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1/LQNTuple_TTJets_merged_1.root");
     chain.Add("/storage/TopQuarkGroup/mc/fall10_7TeV_v1_e25skim/TTJets_TuneD6T_7TeV-madgraph-tauola_Fall10-START38_V12-v2/nTuple_ttjet_merged_1.root");
     filesize = chain.GetFile().GetSize() / 1024 / 1024#MB
     
@@ -78,6 +79,7 @@ if __name__ == '__main__':
     printTwikiTable(branches, filesize)
     
     chain = TChain("rootTupleTree/tree");
+    #chain.Add("/storage/TopQuarkGroup/data/Run2011A-PromptReco-v2/*_1.root");
     chain.Add("/storage/TopQuarkGroup/data/Nov4ReReco_JEC_Spring_V8_36.145pb_e25skim/Run2010B/*_1.root");
     filesize = chain.GetFile().GetSize() / 1024 / 1024#MB
     
