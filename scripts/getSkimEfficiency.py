@@ -6,7 +6,7 @@ from fileInfo import *
 from ROOT import *
 from mergeROOTFilesWithCompression import getProcess
 
-pathToSkimHist = "LJFilter/EventCount/EventCounter"
+pathToSkimHist = "EventFilter/EventCounter"
 pathToEventTree = "rootTupleTree/tree"
 
 def getSkimmedEvents(files):
@@ -14,14 +14,47 @@ def getSkimmedEvents(files):
     skimHist = skimInfo[0]
     
     numberOfTotalEvents = skimHist.GetBinContent(1)
-    numberOfSkimmedEvents = skimHist.GetBinContent(2)
-    numberOfEventsAfterNoiseFilter = skimInfo[1]
-    electronSkimEfficiency = numberOfSkimmedEvents/numberOfTotalEvents
-    TotalSkimEfficiency = numberOfEventsAfterNoiseFilter/numberOfTotalEvents
-    return {'total': numberOfTotalEvents, 'skimmed':numberOfSkimmedEvents, 
-            'electronSkimEfficiency':electronSkimEfficiency,
-            'afterSkimAndNoiseFilter':numberOfEventsAfterNoiseFilter,
-            'totalSkimEfficiency':TotalSkimEfficiency}
+    numberOfEventsPassingHBHENoiseFilter = skimHist.GetBinContent(2)
+    numberOfEventsPassingScrapingVeto = skimHist.GetBinContent(3)
+    numberOfEventsHavingGoodPrimaryVertex = skimHist.GetBinContent(4)
+    numberOfEventsPassingElectronCuts = skimHist.GetBinContent(5)
+    numberOfEventsPassingJetCuts = skimHist.GetBinContent(6)
+    
+    numberOfEventsAfterAllFilters = skimInfo[1]
+    electronSkimEfficiency = numberOfEventsPassingHBHENoiseFilter / numberOfTotalEvents
+    TotalSkimEfficiency = numberOfEventsAfterAllFilters / numberOfTotalEvents
+    
+    
+    dataSetDescription, totals, lastStep = {}, {}, {}
+    dataSetDescription['numberOfEvents'] = numberOfTotalEvents
+    dataSetDescription['numberOfEventsAfterSkim'] = numberOfEventsAfterAllFilters
+    dataSetDescription['totalSkimEfficiency'] = dataSetDescription['numberOfEventsAfterSkim'] / dataSetDescription['numberOfEvents']
+    dataSetDescription['HBHENoiseFilter'] = int(numberOfEventsPassingHBHENoiseFilter)
+    dataSetDescription['ScrapingVeto'] = int(numberOfEventsPassingScrapingVeto)
+    dataSetDescription['GoodPrimaryVertex'] = int(numberOfEventsHavingGoodPrimaryVertex)
+    dataSetDescription['ElectronCuts'] = int(numberOfEventsPassingElectronCuts)
+    dataSetDescription['JetCuts'] = int(numberOfEventsPassingJetCuts)
+    
+    
+    totals['HBHENoiseFilter'] = numberOfEventsPassingHBHENoiseFilter / numberOfTotalEvents
+    totals['ScrapingVeto'] = numberOfEventsPassingScrapingVeto / numberOfTotalEvents
+    totals['GoodPrimaryVertex'] = numberOfEventsHavingGoodPrimaryVertex / numberOfTotalEvents
+    totals['ElectronCuts'] = numberOfEventsPassingElectronCuts / numberOfTotalEvents
+    totals['JetCuts'] = numberOfEventsPassingJetCuts / numberOfTotalEvents
+    
+    lastStep['HBHENoiseFilter'] = numberOfEventsPassingHBHENoiseFilter / numberOfTotalEvents
+    lastStep['ScrapingVeto'] = numberOfEventsPassingScrapingVeto / numberOfEventsPassingHBHENoiseFilter
+    lastStep['GoodPrimaryVertex'] = numberOfEventsHavingGoodPrimaryVertex / numberOfEventsPassingScrapingVeto
+    lastStep['ElectronCuts'] = numberOfEventsPassingElectronCuts / numberOfEventsHavingGoodPrimaryVertex
+    lastStep['JetCuts'] = numberOfEventsPassingJetCuts / numberOfEventsPassingElectronCuts
+    
+    return dataSetDescription, totals, lastStep
+
+#    return {'total': numberOfTotalEvents,
+#            'skimmed':numberOfEventsAfterAllFilters,
+#            'electronSkimEfficiency':electronSkimEfficiency,
+#            'afterSkimAndNoiseFilter':numberOfEventsAfterAllFilters,
+#            'totalSkimEfficiency':TotalSkimEfficiency}
             
 def getSkimInfo(files):
     skimHist = None
@@ -38,10 +71,10 @@ def getSkimInfo(files):
         if eventTree is None:
             print 'Could not find tree', pathToEventTree, 'in file', file
         else:
-            eventBranch = eventTree.GetBranch('event')
+            eventBranch = eventTree.GetBranch('Event.Number')
             
         if eventBranch is None:
-            print 'Could not find branch', pathToEventTree + '/event', 'in file', file
+            print 'Could not find branch', pathToEventTree + '/Event.Number', 'in file', file
         else:
             n_skim += eventBranch.GetEntries()
         
@@ -57,6 +90,27 @@ def getSkimInfo(files):
                 continue
             skimHist.Add(hist)
     return (skimHist, n_skim)
+
+
+def formatSkimEfficiencies(dataSetDescription, totals, lastStep):
+    print 'Local merged files:', dataSetDescription['path']
+    print
+    print 'Total number of files:', int(dataSetDescription['numberOfFiles'])
+    print
+    print 'Process recognised:', dataSetDescription['process']
+    print
+    print 'Total number of events:', int(dataSetDescription['numberOfEvents'])
+    print
+    print
+    print '| *Filter Name* | *# passing* | *efficiency(total) in %* | *efficiency(last step) in %* |'
+    print '| HBHENoiseFilter  | ', dataSetDescription['HBHENoiseFilter'], '| ', totals['HBHENoiseFilter'], '| ', lastStep['HBHENoiseFilter'], '|'
+    print '| ScrapingVeto  | ', dataSetDescription['ScrapingVeto'], '| ', totals['ScrapingVeto'], '| ', lastStep['ScrapingVeto'], '|'
+    print '| GoodPrimaryVertex  | ', dataSetDescription['GoodPrimaryVertex'], '| ', totals['GoodPrimaryVertex'], '| ', lastStep['GoodPrimaryVertex'], '|'
+    print '| ElectronCuts  | ', dataSetDescription['ElectronCuts'], '| ', totals['ElectronCuts'], '| ', lastStep['ElectronCuts'], '|'
+    print '| JetCuts  | ', dataSetDescription['JetCuts'], '| ', totals['JetCuts'], '| ', lastStep['JetCuts'], '|'    
+    print '| total | ', int(dataSetDescription['numberOfEventsAfterSkim']), '| ',
+    print dataSetDescription['totalSkimEfficiency'], '|  --- |'
+
             
 
 if __name__ == "__main__":
@@ -67,21 +121,19 @@ if __name__ == "__main__":
         
     path = sys.argv[1]
     files = getROOTFiles(path)
-    events = getSkimmedEvents(files)
-    print '='*100
-    print '{0:70} : {1:15d}'.format('Total number of files', len(files))
-    print '{0:70} : {1:15s}'.format('Process recognised', getProcess(files[0]))
-    print '{0:70} : {1:15d}'.format('Total number of events', int(events['total']))
-    print '{0:70} : {1:15d}'.format('Number of events after electron skim', int(events['skimmed']))
-    print '{0:70} : {1:15d}'.format('Number of events after electron skim and HBHE noise filter', events['afterSkimAndNoiseFilter'])
-    print
-    print '{0:70} : {1:15f}'.format('Electron skim efficiency', events['electronSkimEfficiency'])
-    print '{0:70} : {1:15f}'.format('Total skim efficiency', events['totalSkimEfficiency'])
-    print '='*100
-#    print 'Total number of files:', len(files)
-#    print 'Process recognised:', getProcess(files[0])
-#    print 'Total number of events:', int(events['total'])
-#    print 'Number of events after electron skim:', int(events['skimmed'])
-#    print 'Electron skim efficiency:', events['electronSkimEfficiency']
-#    print 'Number of events after electron skim and HBHE noise filter:', events['afterSkimAndNoiseFilter']
-#    print 'Total skim efficiency:', events['totalSkimEfficiency']
+    dataSetDescription, totals, lastStep = getSkimmedEvents(files)
+    dataSetDescription['numberOfFiles'] = len(files)
+    dataSetDescription['process'] = getProcess(files[0])
+    dataSetDescription['path'] = path
+    formatSkimEfficiencies(dataSetDescription, totals, lastStep)
+    
+#    print '=' * 100
+#    print '{0:70} : {1:15d}'.format('Total number of files', len(files))
+#    print '{0:70} : {1:15s}'.format('Process recognised', getProcess(files[0]))
+#    print '{0:70} : {1:15d}'.format('Total number of events', int(events['total']))
+#    print '{0:70} : {1:15d}'.format('Number of events after electron skim', int(events['skimmed']))
+#    print '{0:70} : {1:15d}'.format('Number of events after electron skim and HBHE noise filter', events['afterSkimAndNoiseFilter'])
+#    print
+#    print '{0:70} : {1:15f}'.format('Electron skim efficiency', events['electronSkimEfficiency'])
+#    print '{0:70} : {1:15f}'.format('Total skim efficiency', events['totalSkimEfficiency'])
+#    print '=' * 100
