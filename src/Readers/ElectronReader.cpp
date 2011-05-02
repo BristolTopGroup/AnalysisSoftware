@@ -75,7 +75,7 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
     trackIDReader(input, ElectronAlgorithm::prefixes.at(algo) + ".closestCtfTrackRef"),
     track_phi(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Phi"),
     track_eta(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Eta"),
-    track_pt(input, ElectronAlgorithm::prefixes.at(algo) + ".TrackPt"),
+    track_pt(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Pt"),
     track_theta(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Theta"),
     track_charge(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Charge"),
     vertex_dist_z(input, ElectronAlgorithm::prefixes.at(algo) + ".VtxDistZ"),
