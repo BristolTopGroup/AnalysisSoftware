@@ -157,7 +157,7 @@ const char* Particle::getEtaRegion() const {
 }
 
 float Particle::deltaEta(const ParticlePointer other) const {
-    return fabs(eta() - other->eta());
+    return eta() - other->eta();
 }
 
 float Particle::deltaPhi(const ParticlePointer other) const {
