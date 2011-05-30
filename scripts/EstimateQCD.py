@@ -1,6 +1,7 @@
 from __future__ import division
 
-from HistGetter import *
+import HistGetter
+import HistPlotter
 from tdrStyle import *
 from ROOT import *
 from math import pow, exp, sqrt
@@ -8,12 +9,12 @@ from copy import deepcopy
 from array import array
 
 class QCDEstimator:
-    luminosity = 36.145#pb-1
-    mc_luminosity = 36.145#pb-1
+    luminosity = 187.42#pb-1
+    mc_luminosity = 78.4361#pb-1
     luminosity_unit = 'pb-1'
     scale = luminosity / mc_luminosity
-    jetBins = ['0jet', 'allJets', '1jet', '1orMoreJets', '2jets', '2orMoreJets', '3jets', '3orMoreJets', '4orMoreJets']
-    jetBinsLatex = {'0jet':'0 jet', 'allJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
+    jetBins = ['0jet', '0orMoreJets', '1jet', '1orMoreJets', '2jets', '2orMoreJets', '3jets', '3orMoreJets', '4orMoreJets']
+    jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
                     '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
                     '4orMoreJets':'#geq 4 jets'}
     binWidth = 0.01
@@ -25,9 +26,9 @@ class QCDEstimator:
     fitRangesEstimation = [ ( 0.1, 1.1 ), ( 0.2, 1.1 )]#, ( 0.3, 1.1 )]
     signalRegion = ( 0, 0.1 )
     maxValue = 1.6
-    pfIsoHistogramPrefix = 'QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
-    pfIsoControlRegionHistogramPrefix = 'QCDest_PFIsolation_controlRegion2_WithMETCutAndAsymJetCuts_'
-    relIsoHistogramPrefix = 'QCDest_CombRelIso_'
+    pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
+    pfIsoControlRegionHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_controlRegion2_WithMETCutAndAsymJetCuts_'
+    relIsoHistogramPrefix = 'QCDStudy/QCDest_CombRelIso_'
     pfIsoResults = {}
     relIsoResults = {}
     allPfIsoResults = {}
@@ -46,10 +47,10 @@ class QCDEstimator:
 
     def __init__( self, files ):
         self.files = files
-        HistGetter.samplefiles = files
+#        HistGetter.samplefiles = files
         self.histograms = {}
-        self.histGetter = HistGetter()
-        self.histGetter.setStyle()
+#        self.histGetter = HistGetter()
+        HistPlotter.setStyle()
         self.getHistograms()
         self.applyStyleAndCreateStack()
 
@@ -68,10 +69,11 @@ class QCDEstimator:
         allHists = relIsoHists
         allHists.extend( pfIsoHists )
         allHists.extend( pfIsoControlHists )
-        HistGetter.hists = allHists
+        print allHists
+#        HistGetter.hists = allHists
 
-        self.histograms = self.histGetter.getHistsFromFiles()
-        self.histograms = self.histGetter.addSampleSum( self.histograms )
+        self.histograms = HistGetter.getHistsFromFiles(allHists, self.files);
+        self.histograms = HistGetter.addSampleSum( self.histograms )
 
     def applyStyleAndCreateStack( self ):
         samplesOfInterest = ['data', 'qcd', 'zjets', 'wjets', 'singleTop', 'ttbar', 'allMC']
@@ -541,24 +543,24 @@ if __name__ == '__main__':
     gROOT.SetBatch( True )
     gROOT.ProcessLine( 'gErrorIgnoreLevel = 1001;' )
 
-    path = '/storage/results/outputfiles/Preapproval2/'
-    files = {'data': path + "data_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'ttbar' :  path + "ttjet_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'wjets' :  path + "wj_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'zjets' :  path + "zj_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce1' :  path + "bce1_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce2' :  path + "bce2_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce3' :  path + "bce3_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri1' : path + "enri1_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri2' :  path + "enri2_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri3' :  path + "enri3_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj1' :  path + "pj1_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj2' :  path + "pj2_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj3' :  path + "pj3_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'tW' :  path + "tW_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-    'tchan' :  path + "tchan_36.145pb_PFElectron_PF2PATJets_PFMET.root"}
+    path = '/storage/results/2011/'
+    files = {'data': path + "data_187.42pb_PFElectron_PF2PATJets_PFMET.root",
+    'ttbar' :  path + "TTJet_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'wjets' :  path + "WJetsToLNu_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'zjets' :  path + "DYJetsToLL_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce1' :  path + "QCD_Pt-20to30_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce2' :  path + "QCD_Pt-30to80_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce3' :  path + "QCD_Pt-80to170_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri1' : path + "QCD_Pt-20to30_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri2' :  path + "QCD_Pt-30to80_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri3' :  path + "QCD_Pt-80to170_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj1' :  path + "GJets_TuneD6T_HT-40To100_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj2' :  path + "GJets_TuneD6T_HT-100To200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj3' :  path + "GJets_TuneD6T_HT-200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'tW' :  path + "TToBLNu_TuneZ2_tW-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'tchan' :  path + "TToBLNu_TuneZ2_t-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root"}
     q = QCDEstimator( files )
-    QCDEstimator.outputFolder = '/storage/results/QCD_Estimate/Preapproval2'
+    QCDEstimator.outputFolder = '/storage/results/2011'
     QCDEstimator.outputFormat = 'pdf'
 
     q.doEstimate( 'gaus' )
