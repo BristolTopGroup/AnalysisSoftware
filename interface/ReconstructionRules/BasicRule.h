@@ -29,7 +29,7 @@ public:
     double softGlobalCondition(const TtbarHypothesisPointer hypothesis) const;
     bool hardGlobalCondition(const TtbarHypothesisPointer hypothesis) const;
 
-    bool meetsInitialConditaion() const;
+    bool meetsInitialCondition() const;
 };
 
 typedef boost::shared_ptr<BasicRule> Rule;
