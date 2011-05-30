@@ -12,7 +12,10 @@ def getHistsFromFiles( histnames, files ):
             fg = file.Get
             gcd()
             for hist in histnames:
-                allHists[sample][hist] = fg( hist ).Clone()
+                fhist = fg( hist )
+                if not fhist:
+                    print 'sample:', sample, ',hist:', hist, "could not be found."
+                allHists[sample][hist] = fhist.Clone()
         return allHists
 
 def addSampleSum( hists = {} ):
@@ -21,8 +24,8 @@ def addSampleSum( hists = {} ):
         singleTopList = {}
 
         qcdSamples = ['bce1', 'bce2', 'bce3', 'enri1', 'enri2', 'enri3', 'pj1', 'pj2', 'pj3']
-#        allMCSamples = ['ttbar', 'wjets', 'zjets', 'tW', 'tchan', 'bce1', 'bce2', 'bce3', 'enri1',
-#                        'enri2', 'enri3', 'pj1', 'pj2', 'pj3']
+        allMCSamples = ['ttbar', 'wjets', 'zjets', 'tW', 'tchan', 'bce1', 'bce2', 'bce3', 'enri1',
+                        'enri2', 'enri3', 'pj1', 'pj2', 'pj3']
         singleTopSamples = ['tW', 'tchan']
 
 
@@ -34,11 +37,11 @@ def addSampleSum( hists = {} ):
                     else:
                         qcdList[histname].Add( hist )
 
-#                if sample in allMCSamples:
-#                    if not mc_all_list.has_key( histname ):
-#                        mc_all_list[histname] = hist.Clone( 'all_mc' )
-#                    else:
-#                        mc_all_list[histname].Add( hist )
+                if sample in allMCSamples:
+                    if not mc_all_list.has_key( histname ):
+                        mc_all_list[histname] = hist.Clone( 'all_mc' )
+                    else:
+                        mc_all_list[histname].Add( hist )
 
                 if sample in singleTopSamples:
                     if not singleTopList.has_key( histname ):
@@ -47,7 +50,7 @@ def addSampleSum( hists = {} ):
                         singleTopList[histname].Add( hist )
 
         hists['qcd'] = qcdList
-#        hists['allMC'] = mc_all_list
+        hists['allMC'] = mc_all_list
         hists['singleTop'] = singleTopList
 
         return hists
