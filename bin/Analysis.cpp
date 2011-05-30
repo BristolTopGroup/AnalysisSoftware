@@ -33,6 +33,7 @@ void Analysis::analyze() {
         //                doSynchExercise();
 //        if (currentEvent.GoodElectrons().size() > 0) {
 //        }
+        doPileUpStudy();
         doTTbarCutFlow();
         doDiElectronAnalysis();
         doTTBarAnalysis();
@@ -896,6 +897,9 @@ void Analysis::createHistograms() {
     histMan.setCurrentLumi(Analysis::luminosity);
     histMan.prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
+    //histograms for Pile-up
+    histMan.setCurrentCollection("pileupStudy");
+    histMan.addH1D("nVertex", "number of primary vertices", 31, 0, 30);
     //histograms for Jet study
     histMan.setCurrentCollection("jetStudy");
     histMan.addH1D_BJetBinned("AllJetMass", "AllJetMass", 500, 0, 500);
@@ -1205,4 +1209,10 @@ void Analysis::checkForBrokenEvents(){
         cout << "broken event" << endl;
         ttbarCandidate.inspect();
     }
+}
+
+void Analysis::doPileUpStudy(){
+    histMan.setCurrentCollection("pileupStudy");
+    histMan.H1D("nVertex")->Fill(currentEvent.Vertices().size());
+
 }

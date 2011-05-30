@@ -5,7 +5,7 @@
  *      Author: kreczko
  */
 
-#include "../interface/CrossSections.h"
+#include "../interface/EventWeightProvider.h"
 
 namespace BAT {
 
@@ -49,7 +49,7 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     return xsection;
 }
 
-CrossSectionProvider::CrossSectionProvider(float lumiInInversePb, unsigned short tev) :
+EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short tev) :
     lumiInInversePb(lumiInInversePb), tev(tev), useSkimEff(true), xsection(), numberOfProducedEvents(),
             numberOfSkimmedEvents() {
     if (tev == 7)
@@ -58,7 +58,7 @@ CrossSectionProvider::CrossSectionProvider(float lumiInInversePb, unsigned short
     defineNumberOfSkimmedEvents();
 }
 
-void CrossSectionProvider::defineNumberOfProducedEvents() {
+void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProducedEvents[DataType::DATA] = 0;
     numberOfProducedEvents[DataType::ttbar] = 1306182;
     numberOfProducedEvents[DataType::Zjets] = 2543727;
@@ -96,7 +96,7 @@ void CrossSectionProvider::defineNumberOfProducedEvents() {
     numberOfProducedEvents[DataType::Zprime_M4TeV_W400GeV] = 238142;
 }
 
-void CrossSectionProvider::defineNumberOfSkimmedEvents() {
+void EventWeightProvider::defineNumberOfSkimmedEvents() {
     numberOfSkimmedEvents[DataType::DATA] = 0;
     numberOfSkimmedEvents[DataType::ttbar] = 642707.;
     numberOfSkimmedEvents[DataType::Zjets] = 329061.;
@@ -134,26 +134,30 @@ void CrossSectionProvider::defineNumberOfSkimmedEvents() {
     numberOfSkimmedEvents[DataType::Zprime_M4TeV_W400GeV] = 50;
 }
 
-CrossSectionProvider::~CrossSectionProvider() {
+EventWeightProvider::~EventWeightProvider() {
 
 }
 
-void CrossSectionProvider::useSkimEfficiency(bool use) {
+void EventWeightProvider::useSkimEfficiency(bool use) {
     useSkimEff = use;
 }
 
-float CrossSectionProvider::getExpectedNumberOfEvents(DataType::value type) {
+float EventWeightProvider::getExpectedNumberOfEvents(DataType::value type) {
     if (useSkimEff)
         return xsection[type] * lumiInInversePb * numberOfSkimmedEvents[type] / numberOfProducedEvents[type];
     else
         return xsection[type] * lumiInInversePb;
 }
 
-float CrossSectionProvider::getWeight(DataType::value type) {
+float EventWeightProvider::getWeight(DataType::value type) {
     if (type == DataType::DATA)
         return 1.;
     else
         return xsection[type] * lumiInInversePb / numberOfProducedEvents[type];
+}
+
+float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
+    return 0;
 }
 
 } // namespace BAT

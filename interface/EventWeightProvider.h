@@ -5,8 +5,8 @@
  *      Author: kreczko
  */
 
-#ifndef CROSSSECTIONS_H_
-#define CROSSSECTIONS_H_
+#ifndef EVENTWEIGHTPROVIDER_H_
+#define EVENTWEIGHTPROVIDER_H_
 //https://twiki.cern.ch/twiki/bin/view/CMS/CrossSections_3XSeries#crosssections
 
 #include "DataTypes.h"
@@ -19,7 +19,7 @@ extern boost::array<float, DataType::NUMBER_OF_DATA_TYPES> getXSections();
 }
 
 
-struct CrossSectionProvider{
+class EventWeightProvider{
 private:
     float lumiInInversePb;
     unsigned short tev;
@@ -32,15 +32,16 @@ private:
 public:
 
 
-    CrossSectionProvider(float lumiInInversePb, unsigned short tev = 7);
-    ~CrossSectionProvider();
+    EventWeightProvider(float lumiInInversePb, unsigned short tev = 7);
+    ~EventWeightProvider();
 
     void useSkimEfficiency(bool use);
 
     float getExpectedNumberOfEvents(DataType::value type);
     float getWeight(DataType::value type);
+    float reweightPileUp(unsigned int numberOfVertices);
 
 };
 }
 
-#endif /* CROSSSECTIONS_H_ */
+#endif /* EVENTWEIGHTPROVIDER_H_ */

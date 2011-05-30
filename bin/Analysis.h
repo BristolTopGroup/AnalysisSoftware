@@ -20,7 +20,7 @@
 #include "../interface/TopPairEventCandidate.h"
 #include <vector>
 #include <utility>
-#include "../interface/CrossSections.h"
+#include "../interface/EventWeightProvider.h"
 #include <iostream>
 #include <string>
 #include "../interface/HistHelpers/HistogramManager.h"
@@ -65,7 +65,7 @@ private:
     cutmap singleCutsPerFile;
     std::vector<InterestingEvent> interestingEvents, brokenEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
-    BAT::CrossSectionProvider weights;
+    BAT::EventWeightProvider weights;
     float weight;
     BAT::Counter cutflowPerSample;
 public:
@@ -117,6 +117,7 @@ private:
     void checkForDuplicatedEvents();
     void checkForBrokenEvents();
     void doJetAnalysis();
+    void doPileUpStudy();
 };
 
 #endif /* ANALYSIS_H_ */
