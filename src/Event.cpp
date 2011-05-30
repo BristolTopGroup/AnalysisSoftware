@@ -15,6 +15,7 @@ bool Event::usePFIsolation = false;
 Event::Event() :
     HLTs(new std::vector<int>()),
     vertices(),
+    goodVertices(),
     tracks(),
     allElectrons(),
     goodElectrons(),
@@ -56,10 +57,23 @@ void Event::setDataType(DataType::value type) {
 }
 
 void Event::setVertices(VertexCollection vertices) {
+    this->vertices.clear();
     this->vertices = vertices;
+
+    selectVerticesByQuality();
+}
+
+void Event::selectVerticesByQuality() {
+    goodVertices.clear();
+
+    for (unsigned int i = 0; i < vertices.size(); ++i) {
+        if (vertices.at(i)->isGood())
+            goodVertices.push_back(vertices.at(i));
+    }
 }
 
 void Event::setTracks(TrackCollection tracks) {
+    this->tracks.clear();
     this->tracks = tracks;
     numberOfHighPurityTracks = 0;
     for (unsigned int index = 0; index < tracks.size(); ++index) {
@@ -245,11 +259,15 @@ void Event::setBeamScrapingVeto(bool isScraping){
 }
 
 const VertexPointer Event::PrimaryVertex() const {
-    return vertices.front();
+    return goodVertices.front();
 }
 
 const VertexCollection& Event::Vertices() const {
     return vertices;
+}
+
+const VertexCollection& Event::GoodVertices() const {
+    return goodVertices;
 }
 
 const TrackCollection& Event::Tracks() const {

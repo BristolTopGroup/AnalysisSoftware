@@ -24,6 +24,7 @@ class Event {
 protected:
     boost::shared_ptr<std::vector<int> > HLTs;
     VertexCollection vertices;
+    VertexCollection goodVertices;
     TrackCollection tracks;
     ElectronCollection allElectrons;
     ElectronCollection goodElectrons;
@@ -80,6 +81,7 @@ public:
 
     const VertexPointer PrimaryVertex() const;
     const VertexCollection& Vertices() const;
+    const VertexCollection& GoodVertices() const;
     const TrackCollection& Tracks() const;
     const MCParticleCollection& GenParticles() const;
     const ElectronCollection& Electrons() const;
@@ -115,6 +117,7 @@ private:
     void cleanGoodJetsAgainstMostIsolatedElectron();
     void selectGoodJets();
     void selectMuonsByQuality();
+    void selectVerticesByQuality();
 };
 
 }
