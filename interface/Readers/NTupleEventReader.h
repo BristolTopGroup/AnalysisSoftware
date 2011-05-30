@@ -22,7 +22,6 @@
 #include "TrackReader.h"
 #include "GenParticleReader.h"
 #include <string>
-#include "../CrossSections.h"
 
 namespace BAT {
 struct NoFileFoundException: public std::exception {
