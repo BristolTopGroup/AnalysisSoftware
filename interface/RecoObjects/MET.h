@@ -23,9 +23,9 @@ enum value {
 };
 
 const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes = { {
-        "CaloMET",
+        "patMETs",
         "TCMET",
-        "PFMET"  } };
+        "patMETsPFlow"  } };
 
 const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
         "CaloMET",

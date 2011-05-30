@@ -19,10 +19,10 @@ VertexReader::VertexReader() :
 }
 
 VertexReader::VertexReader(TChainPointer input) :
-	ndofReader(input, "Vertex.NDF"),
-	zReader(input, "Vertex.Z"),
-	rhoReader(input, "Vertex.Rho"),
-	isfakeReader(input, "Vertex.IsFake"),
+	ndofReader(input, "goodOfflinePrimaryVertices.NDF"),
+	zReader(input, "goodOfflinePrimaryVertices.Z"),
+	rhoReader(input, "goodOfflinePrimaryVertices.Rho"),
+	isfakeReader(input, "goodOfflinePrimaryVertices.IsFake"),
 	vertices() {
 
 }

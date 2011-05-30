@@ -56,8 +56,8 @@ public:
 
     void testUsedJetAlgorithm() {
         ASSERT_EQUAL(JetAlgorithm::Calo_AntiKT_Cone05, goodJet->getUsedAlgorithm());
-        goodJet->setUsedAlgorithm(JetAlgorithm::ParticleFlow);
-        ASSERT_EQUAL(JetAlgorithm::ParticleFlow, goodJet->getUsedAlgorithm());
+        goodJet->setUsedAlgorithm(JetAlgorithm::CA08PF);
+        ASSERT_EQUAL(JetAlgorithm::CA08PF, goodJet->getUsedAlgorithm());
     }
 
     void testJetEMF() {

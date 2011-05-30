@@ -26,8 +26,8 @@ enum value {
 };
 
 const boost::array<std::string, ElectronAlgorithm::NUMBER_OF_ELECTRONALGORITHMS> prefixes = { {
-        "Electron",
-        "PFElectron"  } };
+        "selectedPatElectrons",
+        "selectedPatElectronsLoosePFlow"  } };
 
 const boost::array<std::string, ElectronAlgorithm::NUMBER_OF_ELECTRONALGORITHMS> names = { {
         "CaloElectron",

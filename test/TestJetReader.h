@@ -19,7 +19,7 @@ public:
 	TestJetReader() :
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)),
 		reader(new JetReader(input)),
-		PFreader(new JetReader(input, JetAlgorithm::ParticleFlow)),
+		PFreader(new JetReader(input, JetAlgorithm::CA08PF)),
 		jets(),
 		pfjets(),
 		firstJet(),
@@ -80,7 +80,7 @@ public:
 	}
 
 	void testUsedAlgorithmPFJet(){
-		ASSERT_EQUAL(JetAlgorithm::ParticleFlow, firstPFJet->getUsedAlgorithm());
+		ASSERT_EQUAL(JetAlgorithm::CA08PF, firstPFJet->getUsedAlgorithm());
 	}
 
 };

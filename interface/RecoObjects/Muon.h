@@ -22,8 +22,8 @@ enum value {
 };
 
 const boost::array<std::string, MuonAlgorithm::NUMBER_OF_MUONALGORITHMS> prefixes = { {
-        "Muon",
-        "PFMuon"  } };
+        "selectedPatMuons",
+        "selectedPatMuonsLoosePFlow"  } };
 
 const boost::array<std::string, MuonAlgorithm::NUMBER_OF_MUONALGORITHMS> names = { {
         "Muon",

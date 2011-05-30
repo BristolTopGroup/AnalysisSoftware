@@ -146,7 +146,7 @@ bool Jet::isGood() const {
     bool passesPt = pt() > 30;
     bool passesEta = fabs(eta()) < 2.4;
     bool jetID = false;
-    if (usedAlgorithm == JetAlgorithm::ParticleFlow || usedAlgorithm == JetAlgorithm::PF2PAT) {
+    if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
         bool passNOD = NOD() > 1;
         bool passCEF = CEF() < 0.99;
         bool passNHF = NHF() < 0.99;

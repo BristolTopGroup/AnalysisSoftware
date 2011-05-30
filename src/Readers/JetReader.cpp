@@ -99,8 +99,7 @@ void JetReader::readJets() {
 		jet->setMass(massReader.getVariableAt(jetIndex));
 		jet->setCharge(chargeReader.getVariableAt(jetIndex));
 
-		if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05 || usedAlgorithm
-				== JetAlgorithm::JPT_AntiKt_ConeDR05) {
+		if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 			jet->setEMF(emfReader.getVariableAt(jetIndex));
 			jet->setN90Hits(n90HitsReader.getIntVariableAt(jetIndex));
 			jet->setFHPD(fHPDReader.getVariableAt(jetIndex));
@@ -120,7 +119,7 @@ void JetReader::readJets() {
 				btagTrackCountingHighEfficiencyReader.getVariableAt(jetIndex),
 				BtagAlgorithm::TrackCountingHighEffBTag);
 
-		if (usedAlgorithm == JetAlgorithm::ParticleFlow || usedAlgorithm
+		if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm
 				== JetAlgorithm::PF2PAT) {
 			jet->setNOD(NODReader.getIntVariableAt(jetIndex));
 			jet->setCEF(CEFReader.getVariableAt(jetIndex));
@@ -157,8 +156,7 @@ void JetReader::initialise() {
 	pzReader.initialise();
 	massReader.initialise();
 	chargeReader.initialise();
-	if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05 || usedAlgorithm
-			== JetAlgorithm::JPT_AntiKt_ConeDR05) {
+	if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 		emfReader.initialise();
 		n90HitsReader.initialise();
 		fHPDReader.initialise();
@@ -166,7 +164,7 @@ void JetReader::initialise() {
 	btagSimpleSecondaryVertexReader.initialise();
 	btagTrackCountingHighPurityReader.initialise();
 	btagTrackCountingHighEfficiencyReader.initialise();
-	if (usedAlgorithm == JetAlgorithm::ParticleFlow || usedAlgorithm
+	if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm
 			== JetAlgorithm::PF2PAT) {
 		NODReader.initialise();
 		CEFReader.initialise();

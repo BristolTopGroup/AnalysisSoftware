@@ -33,19 +33,20 @@ enum workingPoint {
 
 namespace JetAlgorithm {
 enum value {
-    Calo_AntiKT_Cone05, JPT_AntiKt_ConeDR05, ParticleFlow, PF2PAT, NUMBER_OF_JETALGORITHMS
+    Calo_AntiKT_Cone05,
+    CA08PF,
+    PF2PAT,
+    NUMBER_OF_JETALGORITHMS
 };
 //for nTuple branch names
 const boost::array<std::string, JetAlgorithm::NUMBER_OF_JETALGORITHMS> prefixes = { {
-        "CaloJet",
-        "",
-        "PFJet",
-        "PF2PATJet" } };
+        "goodPatJets",
+        "goodPatJetsCA8PF",
+        "goodPatJetsPFlow" } };
 
 const boost::array<std::string, JetAlgorithm::NUMBER_OF_JETALGORITHMS> names = { {
         "CaloJets",
-        "JPT",
-        "PFJets",
+        "CA08PFJets",
         "PF2PATJets" } };
 }
 
