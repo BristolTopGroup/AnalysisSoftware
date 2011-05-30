@@ -1,5 +1,5 @@
 /*
- * TestCrossSectionProvider.h
+ * TestEventWeightProvider.h
  *
  *  Created on: 16 Aug 2010
  *      Author: kreczko
@@ -7,23 +7,23 @@
 
 #include "cute/cute.h"
 #include "cute/cute_suite.h"
-#include "../interface/CrossSections.h"
+#include "../interface/EventWeightProvider.h"
 #include "../interface/DataTypes.h"
 
 using namespace BAT;
 
-struct TestCrossSectionProvider {
+struct TestEventWeightProvider {
 private:
     float lumi;
-    CrossSectionProvider xSectionProvider;
+    EventWeightProvider xSectionProvider;
 
 public:
-    TestCrossSectionProvider() :
+    TestEventWeightProvider() :
         lumi(20), xSectionProvider(lumi) {
         xSectionProvider.useSkimEfficiency(false);
     }
 
-    ~TestCrossSectionProvider() {
+    ~TestEventWeightProvider() {
 
     }
 
@@ -93,30 +93,30 @@ public:
 
 };
 
-extern cute::suite make_suite_TestCrossSectionProvider() {
+extern cute::suite make_suite_TestEventWeightProvider() {
     cute::suite s;
 
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedTTbarEvents));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedWjetsEvents));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedZjetsEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedTTbarEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedWjetsEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedZjetsEvents));
 
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedQCD_EMEnriched_Pt20to30Events));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedQCD_EMEnriched_Pt30to80Events));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedQCD_EMEnriched_Pt80to170Events));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedQCD_EMEnriched_Pt20to30Events));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedQCD_EMEnriched_Pt30to80Events));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedQCD_EMEnriched_Pt80to170Events));
 
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedQCD_BCtoE_Pt20to30Events));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedQCD_BCtoE_Pt30to80Events));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedQCD_BCtoE_Pt80to170Events));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedQCD_BCtoE_Pt20to30Events));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedQCD_BCtoE_Pt30to80Events));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedQCD_BCtoE_Pt80to170Events));
 
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedVQQEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedVQQEvents));
 
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedsingleTop_And_WEvents));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedsingleTopTChannelEvents));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedsingleTopSChannelEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedsingleTop_And_WEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedsingleTopTChannelEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedsingleTopSChannelEvents));
 
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetExpectedDataEvents));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetWeightData));
-    s.push_back(CUTE_SMEMFUN(TestCrossSectionProvider, testGetWeightTtbar));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetExpectedDataEvents));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetWeightData));
+    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetWeightTtbar));
 
     return s;
 }

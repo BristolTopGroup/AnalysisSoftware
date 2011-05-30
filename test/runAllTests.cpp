@@ -2,7 +2,7 @@
 #include "cute/ide_listener.h"
 #include "cute/cute_runner.h"
 
-#include "TestCrossSectionProvider.h"
+#include "TestEventWeightProvider.h"
 #include "TestElectron.h"
 #include "TestElectronReader.h"
 #include "TestEvent.h"
@@ -39,7 +39,7 @@ void setUpOnce() {
 
 void runSuite() {
     setUpOnce();
-    cute::suite s = make_suite_TestCrossSectionProvider();
+    cute::suite s = make_suite_TestEventWeightProvider();
     s += make_suite_TestElectron();
     s += make_suite_TestElectronReader();
     s += make_suite_TestEvent();
