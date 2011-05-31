@@ -21,25 +21,38 @@ enum value{
     HLT_Ele17_SW_TightEleId_L1R, //7
     HLT_Ele17_SW_TighterEleIdIsol_L1R_v1, //8
     HLT_Ele17_SW_TighterEleId_L1R_v1, //9
-    HLT_Ele22_SW_TighterEleId_L1R_v2, //10
-    HLT_Ele22_SW_TighterEleId_L1R_v3, //11
-    HLT_Ele27_SW_TightCaloEleIdTrack_L1R_v1, //12
-    //2011 data
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30_v1, //13
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_v1, //14
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralJet40_BTagIP_v1, //15
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30_v1, //16
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30_v2, //17
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_v2, //18
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralJet40_BTagIP_v2, //19
-    HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30_v2, //20
-    //additional triggers to recover boosted top
-    HLT_Ele10_CaloIdT_CaloIsoVL_TrkIdT_TrkIsoVL_HT200_v2, //21
-    HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v1, //22
-    HLT_Ele45_CaloIdVT_TrkIdT_v1, //23
-    HLT_Ele10_CaloIdT_CaloIsoVL_TrkIdT_TrkIsoVL_HT200_v3, //24
-    HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v2, //25
-    HLT_Ele45_CaloIdVT_TrkIdT_v2 //26
+    HLT_Ele22_SW_TighterEleId_L1R, //10
+    HLT_Ele27_SW_TightCaloEleIdTrack_L1R_v1, //11
+    //========== 2011 data ==============
+    //ElectronHad PD
+    HLT_Ele25_CaloIdVT_TrkIdT_CentralJet40_BTagIP, //12
+    HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30, //13
+    HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30, //14
+    HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30, //15
+    //renaming for 1E33
+    HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_BTagIP, //16
+    HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30,//17
+    HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30, //18
+    HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30, //19
+    //new iso triggers:
+    HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_BTagIP,//20
+    HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30,//21
+    HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30,//22
+    HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30,//23
+    HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30,//24
+    //Higgs trigger
+    HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_CentralJet25_PFMHT20,//25
+    //EWK triggers
+    HLT_Ele25_WP80_PFMT40,//26
+    HLT_Ele27_WP70_PFMT40_PFMHT20,//27
+
+
+    //SingleElectron PD
+//HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT, //28
+    HLT_Ele25_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL,//29
+    HLT_Ele32_CaloIdVL_CaloIsoVL_TrkIdVL_TrkIsoVL,//30
+    HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT,//31
+    NUMBER_OF_TRIGGERS
 };
 }
 #endif /* HIGHLEVELTRIGGERS_H_ */
