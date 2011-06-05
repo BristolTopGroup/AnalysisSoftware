@@ -6,6 +6,9 @@
  */
 
 #include "../interface/EventWeightProvider.h"
+#include "TFile.h"
+#include <boost/scoped_ptr.hpp>
+#include <iostream>
 
 namespace BAT {
 
@@ -15,6 +18,7 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::ttbar] = 157.5;
     xsection[DataType::Zjets] = 3048.;
     xsection[DataType::Wjets] = 31314.;
+    xsection[DataType::WToENu] = 7899.;
 
     xsection[DataType::QCD_EMEnriched_Pt20to30] = 0.2355e9 * 0.0073;//xs 0.2355 mb (filter efficiency=0.0073)
     xsection[DataType::QCD_EMEnriched_Pt30to80] = 0.0593e9 * 0.059; //xs 0.0593 mb
@@ -49,9 +53,16 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     return xsection;
 }
 
-EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short tev) :
-    lumiInInversePb(lumiInInversePb), tev(tev), useSkimEff(true), xsection(), numberOfProducedEvents(),
-            numberOfSkimmedEvents() {
+EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short tev, std::string pileUpEstimationFile) :
+    lumiInInversePb(lumiInInversePb),
+    tev(tev),
+    useSkimEff(true),
+    xsection(),
+    numberOfProducedEvents(),
+    numberOfSkimmedEvents(),
+    estimatedPileUp(getPileUpHistogram(pileUpEstimationFile)),
+    pileUpWeights(){
+    generate_flat10_weights();
     if (tev == 7)
         xsection = sevenTeV::getXSections();
     defineNumberOfProducedEvents();
@@ -60,9 +71,13 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
 
 void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProducedEvents[DataType::DATA] = 0;
-    numberOfProducedEvents[DataType::ttbar] = 1306182;
+    //Summer 11 hotfix!
+    numberOfProducedEvents[DataType::ttbar] = 1089625;//1306182;
     numberOfProducedEvents[DataType::Zjets] = 2543727;
-    numberOfProducedEvents[DataType::Wjets] = 14805546;
+    //hotfix for missing stats!
+    numberOfProducedEvents[DataType::Wjets] = 8866555;//14805546;
+
+    numberOfProducedEvents[DataType::WToENu] = 5334220;
 
     numberOfProducedEvents[DataType::QCD_EMEnriched_Pt20to30] = 37169939;
     numberOfProducedEvents[DataType::QCD_EMEnriched_Pt30to80] = 71845473;
@@ -157,7 +172,33 @@ float EventWeightProvider::getWeight(DataType::value type) {
 }
 
 float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
-    return 0;
+    if(numberOfVertices >= pileUpWeights.size())
+        throw "numberOfVertices too big";
+    return pileUpWeights.at(numberOfVertices);
+}
+
+boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pileUpEstimationFile){
+    std::cout << "Using pile-up estimation file " << pileUpEstimationFile << std::endl;
+    boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
+    boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup"));
+    return pileUp;
+}
+
+void EventWeightProvider::generate_flat10_weights(){
+    // see SimGeneral/MixingModule/python/mix_E7TeV_FlatDist10_2011EarlyData_inTimeOnly_cfi.py; copy and paste from there:
+    const boost::array<double, 25> npu_probs = {{0.0698146584, 0.0698146584, 0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584 /* <-- 10*/,
+           0.0630151648,0.0526654164,0.0402754482,0.0292988928,0.0194384503,0.0122016783,0.007207042,0.004003637,0.0020278322,
+           0.0010739954,0.0004595759,0.0002229748,0.0001028162,4.58337152809607E-05 /* <-- 24 */}};
+    double s = 0.0;
+    for(int npu=0; npu<25; ++npu){
+        double npu_estimated = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
+        pileUpWeights[npu] = npu_estimated / npu_probs[npu];
+        s += npu_estimated;
+    }
+    // normalize weights such that the total sum of weights over thw whole sample is 1.0, i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
+    for(int npu=0; npu<25; ++npu){
+        pileUpWeights[npu] /= s;
+    }
 }
 
 } // namespace BAT
