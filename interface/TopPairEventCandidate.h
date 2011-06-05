@@ -51,6 +51,10 @@ enum Step {
     AtLeastTwoGoodJets,
     AtLeastThreeGoodJets,
     AtLeastFourGoodJets,
+    MissingTransverseEnergy,
+    AsymmetricJetCuts,
+    AtLeastOneBtag,
+    AtLeastTwoBtags,
     NUMBER_OF_SELECTION_STEPS
 };
 
@@ -66,7 +70,13 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = {
         ">= 1 jets",
         ">= 2 jets",
         ">= 3 jets",
-        ">= 4 jets" };
+        ">= 4 jets",
+        "MET > 20GeV",
+        "jet pT: 1st > 70 GeV, 2nd > 50 GeV",
+        ">=1 SSV b-tag",
+        ">=2 SSV b-tag"
+
+};
 }
 
 struct ReconstructionException: public std::exception {
@@ -85,16 +95,16 @@ struct ReconstructionException: public std::exception {
 class TopPairEventCandidate: public Event {
 
 protected:
-    static double const matched_angle;// = 0.945666;
-    static double const matched_angle_sigma;// = 0.311091;
+//    static double const matched_angle;// = 0.945666;
+//    static double const matched_angle_sigma;// = 0.311091;
     static double const matched_leptonic_top_mass;// = 178.377;
     static double const matched_leptonic_top_mass_sigma;// = 31.050;
     static double const matched_hadronic_W_mass;// = 89.9153;
     static double const matched_hadronic_W_mass_sigma;// = 13.8711;
     static double const matched_hadronic_top_mass;// = 182.191;
     static double const matched_hadronic_top_mass_sigma;// = 22.1484;
-    static double const matched_ptratio;// = 0.18552;
-    static double const matched_ptratio_sigma;// = 0.401973;
+//    static double const matched_ptratio;// = 0.18552;
+//    static double const matched_ptratio_sigma;// = 0.401973;
     static double const matched_pt_ttbarSystem;// = 0.0760939;
     static double const matched_pt_ttbarSystem_sigma;// = 0.0700391;
     static double const matched_HTSystem;// = 1;
@@ -158,6 +168,11 @@ public:
     bool isNotAZBosonEvent() const;
     bool passesFullTTbarEPlusJetSelection() const;
     bool hasIsolatedElectronInBarrelRegion() const;
+
+    bool passesMETCut() const;
+    bool passesAsymmetricJetCuts() const;
+    bool hasAtLeastOneBtag() const;
+    bool hasAtLeastTwoBtags() const;
 
 	void reconstructTTbar(ElectronPointer electron);
     void reconstructUsingSubjets();
