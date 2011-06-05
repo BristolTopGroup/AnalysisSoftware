@@ -14,6 +14,7 @@ TtbarHypothesis::TtbarHypothesis() :
 	leptonicChi2(99999.), 
 	hadronicChi2(99999.), 
 	globalChi2(99999.), 
+	disc(999999),
 	hadronicTop(), 
 	leptonicTop(),
 	leptonicW(), 
