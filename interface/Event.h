@@ -57,6 +57,8 @@ protected:
     unsigned int numberOfHighPurityTracks;
     bool isBeamScraping;
 
+    unsigned int genNumberOfPileUpVertices;
+
 public:
     Event();
     virtual ~Event();
@@ -78,6 +80,7 @@ public:
     void setLumiBlock(unsigned long block);
     void setEventWeight(float weight);
     void setBeamScrapingVeto(bool isScraping);
+    void setGenNumberOfPileUpVertices(unsigned int pileup);
 
     const VertexPointer PrimaryVertex() const;
     const VertexCollection& Vertices() const;
@@ -109,6 +112,8 @@ public:
     bool HLT(HLTriggers::value trigger) const;
     static bool useCustomConversionTagger;
     static bool usePFIsolation;
+
+    float numberOfGeneratedPileUpVertices() const;
 
 private:
     void selectElectronsByQuality();

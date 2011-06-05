@@ -61,7 +61,6 @@ public:
 	void setMaximumNumberOfEvents(unsigned long maxNumberOfEvents);
 	const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& getSeenDatatypes();
 	const char* getCurrentFile() const;
-	Double_t test;
 private:
 	unsigned long processedEvents;
 	unsigned long maximalNumberOfEvents;
@@ -81,6 +80,7 @@ private:
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > lumiBlockReader;
+	boost::scoped_ptr<VariableReader<unsigned int> > PileupInfoReader;
 //	boost::scoped_ptr<VariableReader<bool> > beamScrapingReader;
 	bool areReadersSet, areDatatypesKnown;
 	Event currentEvent;

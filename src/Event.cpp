@@ -38,7 +38,8 @@ Event::Event() :
     eventWeight(1.),
     jetCleaningEfficiency(1.),
     numberOfHighPurityTracks(0),
-    isBeamScraping(true){
+    isBeamScraping(true),
+    genNumberOfPileUpVertices(0){
 }
 
 Event::~Event() {
@@ -374,6 +375,14 @@ void Event::inspect() const {
 
 bool Event::HLT(HLTriggers::value trigger) const{
     return HLTs->at(trigger) > 0;
+}
+
+void Event::setGenNumberOfPileUpVertices(unsigned int pileup){
+    genNumberOfPileUpVertices = pileup;
+}
+
+float Event::numberOfGeneratedPileUpVertices() const{
+    return genNumberOfPileUpVertices;
 }
 
 }

@@ -39,6 +39,7 @@ NTupleEventReader::NTupleEventReader() :
     runNumberReader(new VariableReader<unsigned int> (input, "Event.Run")),
     eventNumberReader(new VariableReader<unsigned int> (input, "Event.Number")),
     lumiBlockReader(new VariableReader<unsigned int> (input, "Event.LumiSection")),
+    PileupInfoReader(new VariableReader<unsigned int> (input, "Event.PileUpInteractions")),
     areReadersSet(false),
     areDatatypesKnown(false),
     currentEvent(),
@@ -65,7 +66,7 @@ const Event& NTupleEventReader::getNextEvent() {
 
     boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
 
-    assert(hltReader->size() == HLTriggers::NUMBER_OF_TRIGGERS);
+//    assert(hltReader->size() == HLTriggers::NUMBER_OF_TRIGGERS);
     for(unsigned int i = 0; i < hltReader->size(); i++){
         triggers->push_back(hltReader->getIntVariableAt(i));
     }
@@ -81,6 +82,7 @@ const Event& NTupleEventReader::getNextEvent() {
     if(!currentEvent.isRealData()) {
     	currentEvent.setGenParticles(genParticleReader->getGenParticles());
     	currentEvent.setGenJets(genJetReader->getGenJets());
+    	currentEvent.setGenNumberOfPileUpVertices(PileupInfoReader->getVariable());
     }
 
     currentEvent.setJets(jetReader->getJets());
@@ -128,6 +130,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
         runNumberReader->initialise();
         eventNumberReader->initialise();
         lumiBlockReader->initialise();
+        PileupInfoReader->initialiseBlindly();
         areReadersSet = true;
     }
 
