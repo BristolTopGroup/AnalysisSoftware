@@ -66,6 +66,10 @@ void Analysis::initiateEvent() {
     currentEvent = eventReader->getNextEvent();
     ttbarCandidate = TopPairEventCandidate(currentEvent);
     weight = weights.getWeight(currentEvent.getDataType());
+    if(!currentEvent.isRealData()){
+        weight *= weights.reweightPileUp(currentEvent.numberOfGeneratedPileUpVertices());
+    }
+
     histMan.setCurrentDataType(ttbarCandidate.getDataType());
     histMan.setCurrentJetBin(currentEvent.GoodJets().size());
     histMan.setCurrentBJetBin(currentEvent.GoodBJets().size());
@@ -171,11 +175,15 @@ void Analysis::doTTBarAnalysis() {
     }
     if (ttbarCandidate.passesFullTTbarEPlusJetSelection()) {
         histMan.H1D("numberOfBJets")->Fill(ttbarCandidate.GoodBJets().size(), weight);
-        if(Event::usePFIsolation)
-            ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodPFIsolatedElectrons().front());
-        else
-            ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodIsolatedElectrons().front());
-
+        try {
+            if (Event::usePFIsolation)
+                ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodPFIsolatedElectrons().front());
+            else
+                ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodIsolatedElectrons().front());
+        } catch (ReconstructionException &e) {
+            cout << e.what() << endl;
+            return;
+        }
         vector<TtbarHypothesisPointer> solutions = ttbarCandidate.Solutions();
         const ParticlePointer resonance = ttbarCandidate.getResonance();
         double mttbar = ttbarCandidate.mttbar();
@@ -410,13 +418,14 @@ void Analysis::doTTBarAnalysis() {
         if (mttbar != mttbar) {//isnan
             ttbarCandidate.inspectReconstructedEvent();
         }
-        if (ttbarCandidate.isRealData()) {
+        if (ttbarCandidate.isRealData() && mttbar > 800 && ttbarCandidate.passesSelectionStepUpTo(
+                TTbarEPlusJetsSelection::AsymmetricJetCuts)) {
             cout << "run " << ttbarCandidate.runnumber() << ", event " << ttbarCandidate.eventnumber() << ", lumi "
                     << ttbarCandidate.lumiblock();
             cout << ", top pair invariant mass = " << mttbar << " GeV" << endl;
             interestingEvents.push_back(InterestingEvent(ttbarCandidate, eventReader->getCurrentFile()));
 
-            if (resonance->pt() > 100) {
+            if (resonance->pt() > 200) {
                 cout << "top pair pt = " << resonance->pt() << " GeV" << endl;
                 ttbarCandidate.inspect();
                 ttbarCandidate.inspectReconstructedEvent();
@@ -489,6 +498,8 @@ void Analysis::doQCDStudy() {
         if (ttbarCandidate.GoodBJets().size() >= 2)
             histMan.H1D_JetBinned("QCDest_PFIsolation_2btag")->Fill(electron->pfIsolation(), weight);
 
+        if(ttbarCandidate.GoodJets().size() >= 4)
+            histMan.H1D_BJetBinned("PFIsolation")->Fill(electron->pfIsolation(), weight);
         if (ttbarCandidate.MET()->pt() > 20) {
             histMan.H1D_JetBinned("QCDest_PFIsolation_WithMETCut")->Fill(electron->pfIsolation(), weight);
 
@@ -496,16 +507,19 @@ void Analysis::doQCDStudy() {
                 if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
                     histMan.H1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
                             weight);
+                    if (ttbarCandidate.GoodJets().size() >= 4)
+                        histMan.H1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
+                                weight);
                 }
             }
         }
 
-        if (ttbarCandidate.GoodJets().size() >= 2) {
-            if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
-                histMan.H1D_JetBinned("QCDest_PFIsolation_WithAsymJetCuts")->Fill(electron->pfIsolation(), weight);
-
-            }
-        }
+//        if (ttbarCandidate.GoodJets().size() >= 2) {
+//            if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
+//                histMan.H1D_JetBinned("QCDest_PFIsolation_WithAsymJetCuts")->Fill(electron->pfIsolation(), weight);
+//
+//            }
+//        }
     }
 
 
@@ -934,7 +948,7 @@ void Analysis::createHistograms() {
 
     //end of MC histograms
     histMan.setCurrentCollection("diElectronAnalysis");
-    histMan.addH1D_JetBinned("diElectronMass", "diElectronMass", 1000, 0, 1000);
+    histMan.addH1D_JetBinned("diElectronMass", "diElectronMass", 2000, 0, 2000);
 
     histMan.setCurrentCollection("topReconstruction");
     histMan.addH1D("electron_et", "electron_et", 500, 0, 500);
@@ -1007,22 +1021,22 @@ void Analysis::createHistograms() {
 
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar", "ttbar_pt_vs_mttbar", 500, 0, 5000, 100, 0, 1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_2ndSolution", "ttbar_pt_vs_mttbar_2ndSolution", 500, 0, 5000, 500,
-            0, 5000);
+            0, 1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_3rdSolution", "ttbar_pt_vs_mttbar_3rdSolution", 500, 0, 5000, 500,
-            0, 5000);
+            0, 1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions", "ttbar_pt_vs_mttbar_allSolutions", 500, 0, 5000, 500,
-            0, 5000);
+            0, 1000);
 
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_withMETCut", "ttbar_pt_vs_mttbar", 500, 0, 5000, 100, 0, 1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_2ndSolution_withMETCut", "ttbar_pt_vs_mttbar", 500, 0, 5000, 500,
-            0, 5000);
+            0, 1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_3rdSolution_withMETCut", "ttbar_pt_vs_mttbar", 500, 0, 5000, 500,
-            0, 5000);
+            0, 1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions_withMETCut", "ttbar_pt_vs_mttbar", 500, 0, 5000, 500,
-            0, 5000);
+            0, 1000);
 
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_withMETAndAsymJets", "ttbar_pt_vs_mttbar", 500, 0, 5000, 500, 0,
-            5000);
+            1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_2ndSolution_withMETAndAsymJets", "ttbar_pt_vs_mttbar", 500, 0, 5000,
             100, 0, 1000);
     histMan.addH2D_BJetBinned("ttbar_pt_vs_mttbar_3rdSolution_withMETAndAsymJets", "ttbar_pt_vs_mttbar", 500, 0, 5000,
@@ -1067,10 +1081,14 @@ void Analysis::createHistograms() {
     histMan.addH1D_JetBinned("QCDest_CombRelIso_2btag", "RelIso (>=2 btag)", 1000, 0, 10);
     histMan.addH1D_JetBinned("QCDest_CombRelIso_controlRegion_2btag", "RelIso control region", 1000, 0, 10);
 
-    histMan.addH1D_JetBinned("QCDest_PFIsolation", "PFIso", 1000, 0, 10);
-    histMan.addH1D_JetBinned("QCDest_PFIsolation_WithMETCut", "PFIso", 1000, 0, 10);
-    histMan.addH1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts", "PFIso", 1000, 0, 10);
-    histMan.addH1D_JetBinned("QCDest_PFIsolation_WithAsymJetCuts", "PFIso", 1000, 0, 10);
+    histMan.addH1D_JetBinned("QCDest_PFIsolation", "PFIso", 500, 0, 5);
+    histMan.addH1D_JetBinned("QCDest_PFIsolation_WithMETCut", "PFIso", 500, 0, 5);
+    histMan.addH1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
+
+    histMan.addH1D_BJetBinned("PFIsolation", "PFIso", 500, 0, 5);
+    histMan.addH1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
+
+    //histMan.addH1D_JetBinned("QCDest_PFIsolation_WithAsymJetCuts", "PFIso", 1000, 0, 10);
 
     histMan.addH1D_JetBinned("QCDest_PFIsolation_controlRegion", "PFIso control region", 1000, 0, 10);
     histMan.addH1D_JetBinned("QCDest_PFIsolation_1btag", "PFIso (>=1 btag)", 1000, 0, 10);
@@ -1144,7 +1162,7 @@ Analysis::Analysis() :
     interestingEvents(),
     brokenEvents(),
     eventCheck(),
-    weights(Analysis::luminosity/*current lumi*/),
+    weights(Analysis::luminosity/*current lumi*/, 7, "pileup_160404-165970.root"),
     weight(0),
     cutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
                     JetBin::NUMBER_OF_JET_BINS) {
