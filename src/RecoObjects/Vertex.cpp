@@ -10,7 +10,10 @@
 namespace BAT {
 
 Vertex::Vertex() :
-	is_fake(false), degreesOfFreedom(0), z_position(0), rho(0) {
+	is_fake(false),
+	degreesOfFreedom(0),
+	z_position(0),
+	rho(0) {
 
 }
 
@@ -50,7 +53,7 @@ bool Vertex::isFake() const {
 }
 
 bool Vertex::isGood() const {
-	bool passesNDOF = ndof() >= 7;
+	bool passesNDOF = ndof() >= 4;
 	bool passesZ = absoluteZPosition() <= 24;//cm
 	bool passesRho = absoluteRho() <= 2.0;
 	bool isNotFake = isFake() == false;
