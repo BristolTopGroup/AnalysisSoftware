@@ -9,7 +9,7 @@ from copy import deepcopy
 from array import array
 
 class QCDEstimator:
-    luminosity = 187.42#pb-1
+    luminosity = 498.267#349.007#pb-1
     mc_luminosity = 78.4361#pb-1
     luminosity_unit = 'pb-1'
     scale = luminosity / mc_luminosity
@@ -69,22 +69,22 @@ class QCDEstimator:
         allHists = relIsoHists
         allHists.extend( pfIsoHists )
         allHists.extend( pfIsoControlHists )
-        print allHists
+        #print allHists
 #        HistGetter.hists = allHists
 
         self.histograms = HistGetter.getHistsFromFiles(allHists, self.files);
         self.histograms = HistGetter.addSampleSum( self.histograms )
 
     def applyStyleAndCreateStack( self ):
+#        self.histograms = HistPlotter.applyDefaultStylesAndColors(self.histograms)
         samplesOfInterest = ['data', 'qcd', 'zjets', 'wjets', 'singleTop', 'ttbar', 'allMC']
         colors = {'ttbar' :  kRed + 1,
                   'wjets' :  kGreen - 3,
                   'zjets' :  kAzure - 2,
                   'qcd' :  kYellow,
                   'singleTop' :  kMagenta}
-
+#
         mcStack = {}
-
         for sample in samplesOfInterest:#sample
             for histname in self.histograms[sample].keys():
                 self.histograms[sample][histname].Rebin( self.rebin )
@@ -92,14 +92,19 @@ class QCDEstimator:
                     self.histograms[sample][histname].Scale( self.scale )
                     self.histograms[sample][histname].SetFillStyle( 1001 )
                     self.histograms[sample][histname].SetFillColor( colors[sample] )
+##                    if sample == 'ttbar':
+##                        self.histograms[sample][histname].Scale( 1.15 )
                     if not mcStack.has_key( histname ):
                         mcStack[histname] = THStack( "MC_" + histname, "MC_" + histname );
                     mcStack[histname].Add( self.histograms[sample][histname] )
-                else:
-                    self.histograms[sample][histname].SetMarkerStyle( 8 );
-
-
+                if sample == 'allMC':
+                    self.histograms[sample][histname].Scale( self.scale )
+#                else:
+#                    self.histograms[sample][histname].SetMarkerStyle( 8 );
+#
+#
         self.histograms['MCStack'] = mcStack
+#        HistPlotter.setStyle()
         self.setStyle()
         print "=" * 40
         print "data integrated luminosity:", self.luminosity, self.luminosity_unit
@@ -454,10 +459,10 @@ class QCDEstimator:
         return ( leg, red, blue )
 
     def printResults( self, results ):
-        self.printJetBinResults( results, '3jets' )
-        print '=' * 60
-        self.printJetBinResults( results, '3orMoreJets' )
-        print '=' * 60
+        #self.printJetBinResults( results, '3jets' )
+        #print '=' * 60
+        #self.printJetBinResults( results, '3orMoreJets' )
+        #print '=' * 60
         self.printJetBinResults( results, '4orMoreJets' )
         print '=' * 60
 
@@ -541,38 +546,40 @@ class QCDEstimator:
 
 if __name__ == '__main__':
     gROOT.SetBatch( True )
-    gROOT.ProcessLine( 'gErrorIgnoreLevel = 1001;' )
+    gROOT.ProcessLine( 'gErrorIgnoreLevel = 3001;' )
 
     path = '/storage/results/2011/'
-    files = {'data': path + "data_187.42pb_PFElectron_PF2PATJets_PFMET.root",
-    'ttbar' :  path + "TTJet_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'wjets' :  path + "WJetsToLNu_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'zjets' :  path + "DYJetsToLL_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce1' :  path + "QCD_Pt-20to30_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce2' :  path + "QCD_Pt-30to80_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce3' :  path + "QCD_Pt-80to170_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri1' : path + "QCD_Pt-20to30_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri2' :  path + "QCD_Pt-30to80_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri3' :  path + "QCD_Pt-80to170_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj1' :  path + "GJets_TuneD6T_HT-40To100_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj2' :  path + "GJets_TuneD6T_HT-100To200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj3' :  path + "GJets_TuneD6T_HT-200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'tW' :  path + "TToBLNu_TuneZ2_tW-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'tchan' :  path + "TToBLNu_TuneZ2_t-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root"}
+    files = {'data': "/storage/results/2011/new/ElectronHad_498.266pb_PFElectron_PF2PATJets_PFMET.root",
+    'ttbar' :  "/storage/results/2011/new/TTJet_Spring11_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'wjets' :  "/storage/results/2011/new/WJetsToLNu_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'zjets' :  "/storage/results/2011/DYJetsToLL_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce1' :  "/storage/results/2011/QCD_Pt-20to30_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce2' :  "/storage/results/2011/QCD_Pt-30to80_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce3' :  "/storage/results/2011/QCD_Pt-80to170_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri1' : "/storage/results/2011/QCD_Pt-20to30_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri2' :  "/storage/results/2011/QCD_Pt-30to80_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri3' :  "/storage/results/2011/QCD_Pt-80to170_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj1' :  "/storage/results/2011/GJets_TuneD6T_HT-40To100_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj2' :  "/storage/results/2011/GJets_TuneD6T_HT-100To200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj3' :  "/storage/results/2011/GJets_TuneD6T_HT-200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'tW' :  "/storage/results/2011/TToBLNu_TuneZ2_tW-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
+    'tchan' :  "/storage/results/2011/TToBLNu_TuneZ2_t-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root"}
     q = QCDEstimator( files )
-    QCDEstimator.outputFolder = '/storage/results/2011'
-    QCDEstimator.outputFormat = 'pdf'
+    QCDEstimator.outputFolder = '/storage/results/2011/ElectronHad/Spring11TTJet/'
+    QCDEstimator.outputFormat = 'png'
 
     q.doEstimate( 'gaus' )
     print '=' * 60
     print 'ParticleFlowIsolation results'
     q.printResults( q.allPfIsoResults )
+#    q.plot('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_4orMoreJets', q.allPfIsoResults['0.2-1.1']['4orMoreJets'])
+    #q.pfIsoHistogramPrefix = 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts'
 #    print 'Relative isolation results'
 #    q.printResults( q.allRelIsoResults )
 #    print '=' * 60
 
 
-    print 'Starting closure tests'
-    q.doClosureTests( 'gaus' )
-    q.plotControlRegionComparison()
+    #print 'Starting closure tests'
+    #q.doClosureTests( 'gaus' )
+    #q.plotControlRegionComparison()
 
