@@ -2,19 +2,32 @@ from ROOT import *
 from math import fsum
 
 
-def getHistsFromFiles( histnames, files ):
+def getHistsFromFiles( histnames = [], files = {}, bJetBins = [], jetBins = [] ):
         TFileOpen = TFile.Open
         allHists = {}
         gcd = gROOT.cd
-        for sample, file in files.iteritems():
-            file = TFileOpen( file )
+        
+        if bJetBins and jetBins:
+            print 'enabling both binnings at the same time is not supported!'
+            return []
+        
+        if bJetBins:
+            histnames = [name + '_' + bjetBin for name in histnames for bjetBin in bJetBins]
+            
+        if jetBins:
+            histnames = [name + '_' + jetBin for name in histnames for jetBin in jetBins]
+            
+        for sample, filename in files.iteritems():
+            file = TFileOpen( filename )
             allHists[sample] = {}
             fg = file.Get
             gcd()
             for hist in histnames:
                 fhist = fg( hist )
                 if not fhist:
+                    print filename
                     print 'sample:', sample, ',hist:', hist, "could not be found."
+                    continue
                 allHists[sample][hist] = fhist.Clone()
         return allHists
 
