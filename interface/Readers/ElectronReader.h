@@ -9,6 +9,7 @@
 #define ELECTRONREADER_H_
 #include "VariableReader.h"
 #include "../RecoObjects/Electron.h"
+#include <boost/scoped_ptr.hpp>
 
 namespace BAT {
 class ElectronReader {
@@ -53,6 +54,7 @@ private:
 	VariableReader<MultiDoublePointer> vertex_dist_z;
 	VariableReader<MultiDoublePointer> dist;
 	VariableReader<MultiDoublePointer> dCotTheta;
+	boost::scoped_ptr<VariableReader<int> > CiCElectronIDReader;
 	ElectronAlgorithm::value algorithm;
 	ElectronCollection electrons;
 	void readElectrons();

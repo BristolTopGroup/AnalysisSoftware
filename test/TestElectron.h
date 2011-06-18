@@ -668,6 +668,89 @@ public:
         ASSERT_EQUAL(track, goodElectron->GSFTrack());
     }
 
+    void testCiCElectronIDVeryLooseMC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidVeryLooseMC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDLooseMC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidLooseMC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDMediumMC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidMediumMC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDTightMC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidTightMC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDSuperTightMC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidSuperTightMC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDHyperTight1MC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight1MC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDHyperTight2MC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight2MC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDHyperTight3MC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight3MC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+    void testCiCElectronIDHyperTight4MC() {
+        int passId = 0;
+        CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight4MC;
+        passId = passId | 1 << (int) IDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+        ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+    }
+
+
+
 };
 extern cute::suite make_suite_TestElectron() {
     cute::suite s;
@@ -735,6 +818,17 @@ extern cute::suite make_suite_TestElectron() {
     s.push_back(CUTE_SMEMFUN(TestElectron, testElectronInCollection));
     s.push_back(CUTE_SMEMFUN(TestElectron, testElectronSetMass));
     s.push_back(CUTE_SMEMFUN(TestElectron, testElectronInSTDCollection));
+
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDVeryLooseMC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDLooseMC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDMediumMC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDTightMC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDSuperTightMC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight1MC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight2MC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight3MC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight4MC));
+
     //    s.push_back(CUTE_SMEMFUN(TestElectron, testSwissCrossBarrel));
     //    s.push_back(CUTE_SMEMFUN(TestElectron, testSwissCrossEndcap));
     //    s.push_back(CUTE_SMEMFUN(TestElectron, testSwissCrossNotEcalDriven));

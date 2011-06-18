@@ -25,6 +25,7 @@ Electron::Electron() :
     dPhi_In(0),
     dEta_In(0),
     hadOverEm(0),
+    CiCElectronIDCompressed(0),
     gsfTrack(),
     closesTrackID(-1),
     sharedFractionInnerHits(0),
@@ -50,6 +51,7 @@ Electron::Electron(float energy, float px, float py, float pz) :
     dPhi_In(0),
     dEta_In(0),
     hadOverEm(0),
+    CiCElectronIDCompressed(0),
     gsfTrack(),
     closesTrackID(-1),
     sharedFractionInnerHits(0),
@@ -153,15 +155,12 @@ bool Electron::isGood(const float minEt) const {
     bool passesEt = et() > minEt;
     bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
 
-    bool passesD0 = false;
-    if (usedAlgorithm == ElectronAlgorithm::Calo)
-        passesD0 = fabs(d0_wrtBeamSpot()) < 0.02;//cm
-    else
-        // use d0 wrt primary vertex for
-        passesD0 = fabs(d0()) < 0.01;//cm
+    // use d0 wrt primary vertex for
+    bool passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = VBTF_W70_ElectronID();
+    bool passesID = CiC_ElectronID(CiCElectronID::eidSuperTightMC);
+
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }
 
@@ -176,7 +175,7 @@ bool Electron::isQCDElectron(const float minEt) const {
         passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = QCD_AntiID_W70();
+    bool passesID = !CiC_ElectronID(CiCElectronID::eidSuperTightMC);
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }
 
@@ -415,6 +414,15 @@ float Electron::distToClosestTrack() const {
 
 float Electron::dCotThetaToClosestTrack() const {
     return dCotThetaToNextTrack;
+}
+
+void Electron::setCompressedCiCElectronID(int electronID){
+    CiCElectronIDCompressed = electronID;
+}
+
+bool Electron::CiC_ElectronID(CiCElectronID::value electronID) const{
+
+    return CiCElectronIDCompressed >> (int) electronID;
 }
 
 }

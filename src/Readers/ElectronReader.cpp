@@ -27,8 +27,6 @@ ElectronReader::ElectronReader() :
     PFGammaIsolationReader(),
     PFChargedHadronIsolationReader(),
     PFNeutralHadronIsolationReader(),
-//    robustLooseIDReader(),
-//    robustTightIDReader(),
     sigmaIEtaIEtaReader(),
     dPhiInReader(),
     dEtaInReader(),
@@ -43,6 +41,7 @@ ElectronReader::ElectronReader() :
     vertex_dist_z(),
     dist(),
     dCotTheta(),
+    CiCElectronIDReader(),
     algorithm(ElectronAlgorithm::Calo),
     electrons() {
 
@@ -65,8 +64,6 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
     PFGammaIsolationReader(input,ElectronAlgorithm::prefixes.at(algo) + ".PFGammaIso"),
     PFChargedHadronIsolationReader(input,ElectronAlgorithm::prefixes.at(algo) + ".PfChargedHadronIso"),
     PFNeutralHadronIsolationReader(input,ElectronAlgorithm::prefixes.at(algo) + ".PfNeutralHadronIso"),
-//    robustLooseIDReader(input, ElectronAlgorithm::prefixes.at(algo) + ".robustLooseId"),
-//    robustTightIDReader(input, ElectronAlgorithm::prefixes.at(algo) + ".robustTightId"),
     sigmaIEtaIEtaReader(input, ElectronAlgorithm::prefixes.at(algo) + ".SigmaIEtaIEta"),
     dPhiInReader(input, ElectronAlgorithm::prefixes.at(algo) + ".DeltaPhiTrkSC"),
     dEtaInReader(input, ElectronAlgorithm::prefixes.at(algo) + ".DeltaEtaTrkSC"),
@@ -81,6 +78,7 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
     vertex_dist_z(input, ElectronAlgorithm::prefixes.at(algo) + ".VtxDistZ"),
     dist(input, ElectronAlgorithm::prefixes.at(algo) + ".Dist"),
     dCotTheta(input, ElectronAlgorithm::prefixes.at(algo) + ".DCotTheta"),
+    CiCElectronIDReader(new VariableReader<int>(input, ElectronAlgorithm::prefixes.at(algo) + ".PassID")),
     algorithm(algo),
     electrons() {
 
@@ -126,6 +124,7 @@ void ElectronReader::readElectrons() {
 
         electron->setSharedFractionInnerHits(sharedFractionInnerHits.getVariableAt(index));
         electron->setClosestTrackID(trackIDReader.getIntVariableAt(index));
+        electron->setCompressedCiCElectronID(CiCElectronIDReader->getVariable());
         float trackPhi = track_phi.getVariableAt(index);
         float trackEta = track_eta.getVariableAt(index);
         float trackPt = track_pt.getVariableAt(index);
@@ -183,6 +182,7 @@ void ElectronReader::initialise() {
     vertex_dist_z.initialise();
     dist.initialise();
     dCotTheta.initialise();
+    CiCElectronIDReader->initialise();
     if(algorithm == ElectronAlgorithm::ParticleFlow){
         PFGammaIsolationReader.initialise();
         PFChargedHadronIsolationReader.initialise();

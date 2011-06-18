@@ -42,6 +42,21 @@ enum value {
 };
 }
 
+namespace CiCElectronID {
+enum value {
+    eidVeryLooseMC,
+    eidLooseMC,
+    eidMediumMC,
+    eidTightMC,
+    eidSuperTightMC,
+    eidHyperTight1MC,
+    eidHyperTight2MC,
+    eidHyperTight3MC,
+    eidHyperTight4MC,
+    NUMBER_OF_CiCIds
+};
+}
+
 class Electron: public Particle {
 public:
 
@@ -75,6 +90,7 @@ public:
     float distToClosestTrack() const;
     bool VBTF_W70_ElectronID() const;
     bool VBTF_W95_ElectronID() const;
+    bool CiC_ElectronID(CiCElectronID::value id) const;
     bool QCD_AntiID_W70() const;
     bool QCD_AntiID_W70_Barrel() const;
     bool QCD_AntiID_W70_Endcap() const;
@@ -110,6 +126,7 @@ public:
     void setPFGammaIsolation(float pfGammaIso);
     void setPFChargedHadronIsolation(float chargedHadronIso);
     void setPFNeutralHadronIsolation(float neutralHadronIso);
+    void setCompressedCiCElectronID(int electronID);
 
     float relativeIsolation() const;
     float pfIsolation() const;
@@ -126,8 +143,9 @@ private:
     float superCluser_Eta;
     float ecal_Isolation, hcal_Isolation, tracker_Isolation;
     float innerLayerMissingHits_;
-    //used for HEEP
+    //used for electron ID
     float sigma_IEtaIEta, dPhi_In, dEta_In, hadOverEm;
+    int CiCElectronIDCompressed;
     TrackPointer gsfTrack;
     int closesTrackID;
     float sharedFractionInnerHits;
