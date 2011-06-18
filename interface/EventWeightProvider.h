@@ -27,10 +27,11 @@ private:
     unsigned short tev;
     bool useSkimEff;
     boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
-    boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfProducedEvents;
+    boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfProcessedEvents;
     boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfSkimmedEvents;
     boost::shared_ptr<TH1D> estimatedPileUp;
     boost::array<double, 25> pileUpWeights;
+    unsigned long numberOfEventsWithTooHighPileUp;
     void defineNumberOfSkimmedEvents();
     void defineNumberOfProducedEvents();
 public:
@@ -46,6 +47,7 @@ public:
     float reweightPileUp(unsigned int numberOfVertices);
     boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
     void generate_flat10_weights();
+    unsigned long getNumberOfEventsWithTooHighPileUp() const;
 
 };
 }

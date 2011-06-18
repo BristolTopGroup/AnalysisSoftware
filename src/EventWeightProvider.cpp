@@ -14,6 +14,7 @@ namespace BAT {
 
 boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
+    //from https://twiki.cern.ch/twiki/bin/view/CMS/CrossSections_3XSeries
     xsection[DataType::DATA] = 0;
     xsection[DataType::ttbar] = 157.5;
     xsection[DataType::Zjets] = 3048.;
@@ -32,9 +33,14 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::PhotonJets_Pt100to200] = 3476.; //pb
     xsection[DataType::PhotonJets_Pt200toInf] = 485.; //pb
 
+    xsection[DataType::WWtoAnything] = 43.; //pb
+    xsection[DataType::WZtoAnything] = 18.; //pb
+    xsection[DataType::ZZtoAnything] = 5.9; //pb
+
     xsection[DataType::singleTop_And_W] = 10.6; //xs  11 pb (NLO MCFM) inclusive t,W decay
-    xsection[DataType::singleTopTChannel] = 21.53; //=64.6/3 15Jul
+    xsection[DataType::singleTopTChannel] = 21.53;
     xsection[DataType::singleTopSChannel] = 1.40; //=4.21/3 15Jul
+
     xsection[DataType::VQQ] = 36.;
     xsection[DataType::Zprime_M500GeV_W5GeV] = 50;
     xsection[DataType::Zprime_M500GeV_W50GeV] = 50;
@@ -58,10 +64,11 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
     tev(tev),
     useSkimEff(true),
     xsection(),
-    numberOfProducedEvents(),
+    numberOfProcessedEvents(),
     numberOfSkimmedEvents(),
     estimatedPileUp(getPileUpHistogram(pileUpEstimationFile)),
-    pileUpWeights(){
+    pileUpWeights(),
+    numberOfEventsWithTooHighPileUp(0){
     generate_flat10_weights();
     if (tev == 7)
         xsection = sevenTeV::getXSections();
@@ -70,45 +77,53 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
 }
 
 void EventWeightProvider::defineNumberOfProducedEvents() {
-    numberOfProducedEvents[DataType::DATA] = 0;
-    //Summer 11 hotfix!
-    numberOfProducedEvents[DataType::ttbar] = 1089625;//1306182;
-    numberOfProducedEvents[DataType::Zjets] = 2543727;
+    numberOfProcessedEvents[DataType::DATA] = 0;
+    //Summer 11 !
+//    numberOfProducedEvents[DataType::ttbar] = 1089625;
+
+
+    //Spring 11
+    numberOfProcessedEvents[DataType::ttbar] = 1286491;
+    numberOfProcessedEvents[DataType::Zjets] = 2543727;
     //hotfix for missing stats!
-    numberOfProducedEvents[DataType::Wjets] = 8866555;//14805546;
+    numberOfProcessedEvents[DataType::Wjets] = 12878622;//14805546;
 
-    numberOfProducedEvents[DataType::WToENu] = 5334220;
+    numberOfProcessedEvents[DataType::WToENu] = 5334220;
 
-    numberOfProducedEvents[DataType::QCD_EMEnriched_Pt20to30] = 37169939;
-    numberOfProducedEvents[DataType::QCD_EMEnriched_Pt30to80] = 71845473;
-    numberOfProducedEvents[DataType::QCD_EMEnriched_Pt80to170] = 5546413;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 37169939;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 71845473;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 5546413;
 
-    numberOfProducedEvents[DataType::QCD_BCtoE_Pt20to30] = 2243439;
-    numberOfProducedEvents[DataType::QCD_BCtoE_Pt30to80] = 1995502;
-    numberOfProducedEvents[DataType::QCD_BCtoE_Pt80to170] = 1043390;
+    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2243439;
+    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt30to80] = 1995502;
+    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt80to170] = 1043390;
 
-    numberOfProducedEvents[DataType::PhotonJets_Pt40to100] = 2217101;
-    numberOfProducedEvents[DataType::PhotonJets_Pt100to200] = 1065691;
-    numberOfProducedEvents[DataType::PhotonJets_Pt200toInf] = 1142171;
+    numberOfProcessedEvents[DataType::PhotonJets_Pt40to100] = 2217101;
+    numberOfProcessedEvents[DataType::PhotonJets_Pt100to200] = 1065691;
+    numberOfProcessedEvents[DataType::PhotonJets_Pt200toInf] = 1079950;
 
-    numberOfProducedEvents[DataType::singleTop_And_W] = 494961;
-    numberOfProducedEvents[DataType::singleTopTChannel] = 484060;
-    numberOfProducedEvents[DataType::singleTopSChannel] = 494967;
-    numberOfProducedEvents[DataType::VQQ] = 720613;
-    numberOfProducedEvents[DataType::Zprime_M500GeV_W5GeV] = 227068;
-    numberOfProducedEvents[DataType::Zprime_M500GeV_W50GeV] = 238963;
-    numberOfProducedEvents[DataType::Zprime_M750GeV_W7500MeV] = 204819;
-    numberOfProducedEvents[DataType::Zprime_M1TeV_W10GeV] = 213384;
-    numberOfProducedEvents[DataType::Zprime_M1TeV_W100GeV] = 200387;
-    numberOfProducedEvents[DataType::Zprime_M1250GeV_W12500MeV] = 233361;
-    numberOfProducedEvents[DataType::Zprime_M1500GeV_W15GeV] = 193779;
-    numberOfProducedEvents[DataType::Zprime_M1500GeV_W150GeV] = 199121;
-    numberOfProducedEvents[DataType::Zprime_M2TeV_W20GeV] = 238752;
-    numberOfProducedEvents[DataType::Zprime_M2TeV_W200GeV] = 213363;
-    numberOfProducedEvents[DataType::Zprime_M3TeV_W30GeV] = 205270;
-    numberOfProducedEvents[DataType::Zprime_M3TeV_W300GeV] = 229034;
-    numberOfProducedEvents[DataType::Zprime_M4TeV_W40GeV] = 183920;
-    numberOfProducedEvents[DataType::Zprime_M4TeV_W400GeV] = 238142;
+    numberOfProcessedEvents[DataType::WWtoAnything] = 2039440;
+    numberOfProcessedEvents[DataType::WZtoAnything] = 2085696;
+    numberOfProcessedEvents[DataType::ZZtoAnything] = 2108608;
+
+    numberOfProcessedEvents[DataType::singleTop_And_W] = 489417;
+    numberOfProcessedEvents[DataType::singleTopTChannel] = 484060;
+    numberOfProcessedEvents[DataType::singleTopSChannel] = 494967;
+    numberOfProcessedEvents[DataType::VQQ] = 720613;
+    numberOfProcessedEvents[DataType::Zprime_M500GeV_W5GeV] = 227068;
+    numberOfProcessedEvents[DataType::Zprime_M500GeV_W50GeV] = 238963;
+    numberOfProcessedEvents[DataType::Zprime_M750GeV_W7500MeV] = 204819;
+    numberOfProcessedEvents[DataType::Zprime_M1TeV_W10GeV] = 213384;
+    numberOfProcessedEvents[DataType::Zprime_M1TeV_W100GeV] = 200387;
+    numberOfProcessedEvents[DataType::Zprime_M1250GeV_W12500MeV] = 233361;
+    numberOfProcessedEvents[DataType::Zprime_M1500GeV_W15GeV] = 193779;
+    numberOfProcessedEvents[DataType::Zprime_M1500GeV_W150GeV] = 199121;
+    numberOfProcessedEvents[DataType::Zprime_M2TeV_W20GeV] = 238752;
+    numberOfProcessedEvents[DataType::Zprime_M2TeV_W200GeV] = 213363;
+    numberOfProcessedEvents[DataType::Zprime_M3TeV_W30GeV] = 205270;
+    numberOfProcessedEvents[DataType::Zprime_M3TeV_W300GeV] = 229034;
+    numberOfProcessedEvents[DataType::Zprime_M4TeV_W40GeV] = 183920;
+    numberOfProcessedEvents[DataType::Zprime_M4TeV_W400GeV] = 238142;
 }
 
 void EventWeightProvider::defineNumberOfSkimmedEvents() {
@@ -159,7 +174,7 @@ void EventWeightProvider::useSkimEfficiency(bool use) {
 
 float EventWeightProvider::getExpectedNumberOfEvents(DataType::value type) {
     if (useSkimEff)
-        return xsection[type] * lumiInInversePb * numberOfSkimmedEvents[type] / numberOfProducedEvents[type];
+        return xsection[type] * lumiInInversePb * numberOfSkimmedEvents[type] / numberOfProcessedEvents[type];
     else
         return xsection[type] * lumiInInversePb;
 }
@@ -168,12 +183,16 @@ float EventWeightProvider::getWeight(DataType::value type) {
     if (type == DataType::DATA)
         return 1.;
     else
-        return xsection[type] * lumiInInversePb / numberOfProducedEvents[type];
+        return xsection[type] * lumiInInversePb / numberOfProcessedEvents[type];
 }
 
 float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
-    if(numberOfVertices >= pileUpWeights.size())
-        throw "numberOfVertices too big";
+    if(numberOfVertices >= pileUpWeights.size()){
+        ++numberOfEventsWithTooHighPileUp;
+//        std::cout << "numberOfVertices too big" << std::endl;
+        return 1.;
+    }
+
     return pileUpWeights.at(numberOfVertices);
 }
 
@@ -190,15 +209,19 @@ void EventWeightProvider::generate_flat10_weights(){
            0.0630151648,0.0526654164,0.0402754482,0.0292988928,0.0194384503,0.0122016783,0.007207042,0.004003637,0.0020278322,
            0.0010739954,0.0004595759,0.0002229748,0.0001028162,4.58337152809607E-05 /* <-- 24 */}};
     double s = 0.0;
-    for(int npu=0; npu<25; ++npu){
+    for (unsigned int npu = 0; npu < npu_probs.size(); ++npu) {
         double npu_estimated = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
         pileUpWeights[npu] = npu_estimated / npu_probs[npu];
         s += npu_estimated;
     }
     // normalize weights such that the total sum of weights over thw whole sample is 1.0, i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
-    for(int npu=0; npu<25; ++npu){
+    for (unsigned int npu = 0; npu < pileUpWeights.size(); ++npu) {
         pileUpWeights[npu] /= s;
     }
+}
+
+unsigned long EventWeightProvider::getNumberOfEventsWithTooHighPileUp() const{
+    return numberOfEventsWithTooHighPileUp;
 }
 
 } // namespace BAT

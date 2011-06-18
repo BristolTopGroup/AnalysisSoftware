@@ -45,6 +45,9 @@ enum value {
     Zprime_M3TeV_W300GeV,
     Zprime_M4TeV_W40GeV,//30
     Zprime_M4TeV_W400GeV,
+    WWtoAnything,
+    WZtoAnything,
+    ZZtoAnything,
     NUMBER_OF_DATA_TYPES
 };
 
@@ -80,7 +83,11 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
         "Zprime_M3000GeV_W30GeV",
         "Zprime_M3000GeV_W300GeV",
         "Zprime_M4000GeV_W40GeV",//30
-        "Zprime_M4000GeV_W400GeV" } };
+        "Zprime_M4000GeV_W400GeV",
+        "WWtoAnything",
+        "WZtoAnything",
+        "ZZtoAnything"
+} };
 }
 
 }
