@@ -19,7 +19,8 @@ private:
 
 public:
     TestEventWeightProvider() :
-        lumi(20), xSectionProvider(lumi) {
+        lumi(20),
+        xSectionProvider(lumi, 7, "pileup_160404-166502.root") {
         xSectionProvider.useSkimEfficiency(false);
     }
 
