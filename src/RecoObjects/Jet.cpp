@@ -28,21 +28,6 @@ Jet::Jet() :
     }
 }
 
-//Jet::Jet(const Particle& particle) :
-//    Particle(particle),
-//    usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05),
-//    electromagneticFraction(0.),
-//    numberOfRecHitsContaining90PercentOfTheJetEnergy(0.),
-//    fractionOfEnergyIntheHottestHPDReadout(0.),
-//    btag_discriminators(BJetTagger::NUMBER_OF_BTAGALGORITHMS),
-//    numberOfDaughters(0),
-//    chargedEmEnergyFraction(1),
-//    neutralHadronEnergyFraction(1),
-//    neutralEmEnergyFraction(1),
-//    chargedHadronEnergyFraction(1),
-//    chargedMultiplicity(0) {
-//
-//}
 Jet::Jet(float energy, float px, float py, float pz) :
     Particle(energy, px, py, pz),
     usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05),
@@ -169,7 +154,8 @@ bool Jet::isGood() const {
     return passesPt && passesEta && jetID;
 }
 
-/* Values taken from
+/*
+ * Values taken from
  * https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagPerformance
  */
 bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) const {
