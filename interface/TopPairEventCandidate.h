@@ -151,6 +151,7 @@ public:
     bool passesAntiIsolationSelection() const;
 
     bool passesConversionSelection() const;
+    bool passedAntiIDSelection() const;
 
     bool passesScrapingFilter() const;
     bool passesHighLevelTrigger() const;

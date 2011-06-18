@@ -421,6 +421,11 @@ bool TopPairEventCandidate::passesConversionSelection() const {
     return passesFirst6 && (isConversion1 || isConversion2) && atLeast4Jets;
 }
 
+bool TopPairEventCandidate::passedAntiIDSelection() const{
+    bool passesAntiID = passesRelIsoControlSelection();
+    bool atLeast4Jets = hasAtLeastFourGoodJets();
+    return passesAntiID && atLeast4Jets;
+}
 bool TopPairEventCandidate::passesAntiIsolationSelection() const {
     //require at least one good electron and no isolated good electrons
     if (!(goodElectrons.size() > 0 && goodIsolatedElectrons.size() == 0))
