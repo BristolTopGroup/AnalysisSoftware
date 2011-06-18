@@ -1,6 +1,39 @@
 from tdrStyle import *
 from ROOT import *
 
+inclusiveJetBins = [
+        "0orMoreJets",
+        "1orMoreJets",
+        "2orMoreJets",
+        "3orMoreJets" , 
+        "4orMoreJets"]
+
+exclusiveJetBins = [
+        "0jet",
+        "1jet",
+        "2jets",
+        "3jets"]
+
+inclusiveBjetBins = [
+        "0orMoreBtag",
+        "1orMoreBtag",
+        "2orMoreBtags",
+        "3orMoreBtags",
+        '4orMoreBtags' ]
+
+exclusiveBjetBins = [
+        '0btag',
+        "1btag",
+        "2btags",
+        "3btags"]
+
+allJetBins = []
+allJetBins.extend(inclusiveJetBins)
+allJetBins.extend(exclusiveJetBins)
+
+allBjetBins = []
+allBjetBins.extend(inclusiveBjetBins)
+allBjetBins.extend(exclusiveBjetBins)
 
 def setStyle():
         tdrStyle = setTDRStyle();
@@ -112,6 +145,53 @@ def applyDefaultStylesAndColors( hists ):
                 hists[sample][histname].SetLineColor( defaultColors[sample] )
             else:
                 hists[sample][histname].SetFillStyle( 1001 );
+                hists[sample][histname].SetFillColor( defaultColors[sample] )
 
     return hists
+
+def get_cms_label( lumi, njet = "4orMoreJets", nbjet = "0orMoreBtag" ):
+    jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
+                    '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
+                    '4orMoreJets':'#geq 4 jets'}
+    
+    BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags', 
+                    '1orMoreBtag':'#geq 1 b-tags',
+                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags', 
+                    '3btags':'3 b-tags', '3orMoreBtags':'#geq 3 b-tags',
+                    '4orMoreBtags':'#geq 4 b-tags'}
+
+    mytext = TPaveText( 0.35, 0.8, 0.6, 0.93, "NDC" );
+    mytext.AddText( "CMS Preliminary" );
+    mytext.AddText( "%.1f pb^{-1} at  #sqrt{s} = 7 TeV" % lumi );
+    if njet != "":
+        mytext.AddText( "e, %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet] ))   
+             
+    mytext.SetFillStyle( 0 );
+    mytext.SetBorderSize( 0 );
+    mytext.SetTextFont( 42 );
+    mytext.SetTextAlign( 13 );
+    
+    return mytext
+
+def getJetBin(histname):
+    for bin in allJetBins:
+        if bin in histname:
+            return bin
+    #default
+    return '4orMoreJets'
+
+def getBjetBin(histname):
+    for bin in allBjetBins:
+        if bin in histname:
+            return bin
+    #default
+    return '0orMoreBtag'
+
+def normalise(histogram):
+    if histogram and histogram.Integral() > 0:
+        histogram.Scale(1/histogram.Integral())
+    return histogram
+
+def saveAs(canvas, name, outputFormat= 'png', outputFolder = ''):
+    canvas.SaveAs(outputFolder + name + '.' + outputFormat)
 
