@@ -104,6 +104,9 @@ if __name__ == "__main__":
              '/storage/workspaceTutorial/BristolAnalysisTools/scripts/test_run163374_10.log',
              '/storage/workspaceTutorial/BristolAnalysisTools/scripts/test_run163374_11.log']
     
+    if len(sys.argv) > 1: 
+        files = sys.argv[1:]
+        
     triggerTables = []
     for file in files:
         triggerTable = readTriggerSummaryTable(file)
