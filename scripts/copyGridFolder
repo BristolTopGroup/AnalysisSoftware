@@ -53,7 +53,7 @@ if __name__ == '__main__':
         for file in getFiles(path, filelist):
             filename = file.split('/')[-1]
             if not os.path.exists(filename):
-                to = os.getcwd() + filename
+                to = os.getcwd() + '/' + filename
                 print 'Copying file', srmBase + file
                 copylcg(file, to)
                 print
