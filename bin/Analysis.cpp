@@ -17,7 +17,7 @@
 
 using namespace BAT;
 using namespace std;
-float Analysis::luminosity = 36.145;
+float Analysis::luminosity = 715.09;
 
 void Analysis::analyze() {
     createHistograms();
@@ -48,7 +48,7 @@ void Analysis::analyze() {
 //        checkForBrokenEvents();
     }
 //    checkForDuplicatedEvents();
-    printInterestingEvents();
+//    printInterestingEvents();
     printSummary();
 }
 
@@ -415,9 +415,9 @@ void Analysis::doTTBarAnalysis() {
 //        cout << "First solution, compare to chosen one" << endl;
 //        cout << solutions.front()->totalChi2 << ", " << ttbarCandidate.getTotalChi2() << endl;
 
-        if (mttbar != mttbar) {//isnan
-            ttbarCandidate.inspectReconstructedEvent();
-        }
+//        if (mttbar != mttbar) {//isnan
+//            ttbarCandidate.inspectReconstructedEvent();
+//        }
         if (ttbarCandidate.isRealData() && mttbar > 800 && ttbarCandidate.passesSelectionStepUpTo(
                 TTbarEPlusJetsSelection::AsymmetricJetCuts)) {
             cout << "run " << ttbarCandidate.runnumber() << ", event " << ttbarCandidate.eventnumber() << ", lumi "
@@ -425,11 +425,11 @@ void Analysis::doTTBarAnalysis() {
             cout << ", top pair invariant mass = " << mttbar << " GeV" << endl;
             interestingEvents.push_back(InterestingEvent(ttbarCandidate, eventReader->getCurrentFile()));
 
-            if (resonance->pt() > 200) {
-                cout << "top pair pt = " << resonance->pt() << " GeV" << endl;
-                ttbarCandidate.inspect();
-                ttbarCandidate.inspectReconstructedEvent();
-            }
+//            if (resonance->pt() > 200) {
+//                cout << "top pair pt = " << resonance->pt() << " GeV" << endl;
+//                ttbarCandidate.inspect();
+//                ttbarCandidate.inspectReconstructedEvent();
+//            }
         }
 
     }
@@ -648,6 +648,20 @@ void Analysis::doQCDStudy() {
             if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
                 histMan.H1D_BJetBinned("mttbar_antiIsolated_withAsymJetsCut")->Fill(mttbar, weight);
             }
+
+        } catch (ReconstructionException& e) {
+            cout << "Could not reconstruct event: " << e.what() << endl;
+        }
+    }
+
+    if (ttbarCandidate.passedAntiIDSelection()) {
+        const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron(true);
+        try {
+            ttbarCandidate.reconstructTTbar(electron);
+            const ParticlePointer resonance = ttbarCandidate.getResonance();
+            histMan.H1D_BJetBinned("mttbar_antiID")->Fill(resonance->mass(), weight);
+            if (ttbarCandidate.passesMETCut() && ttbarCandidate.passesAsymmetricJetCuts())
+                histMan.H1D_BJetBinned("mttbar_antiID_withMETAndAsymJets")->Fill(resonance->mass(), weight);
 
         } catch (ReconstructionException& e) {
             cout << "Could not reconstruct event: " << e.what() << endl;
@@ -905,6 +919,7 @@ void Analysis::printSummary() {
     }
 
     cout << "number of events without electrons: " << brokenEvents.size() << endl;
+    cout << "number of events with too high pileup: " << weights.getNumberOfEventsWithTooHighPileUp() << endl;
 }
 
 void Analysis::createHistograms() {
@@ -913,7 +928,8 @@ void Analysis::createHistograms() {
 
     //histograms for Pile-up
     histMan.setCurrentCollection("pileupStudy");
-    histMan.addH1D("nVertex", "number of primary vertices", 31, 0, 30);
+    histMan.addH1D("nVertex", "number of primary vertices", 51, 0, 50);
+    histMan.addH1D("nVertex_reweighted", "number of primary vertices", 51, 0, 50);
     //histograms for Jet study
     histMan.setCurrentCollection("jetStudy");
     histMan.addH1D_BJetBinned("AllJetMass", "AllJetMass", 500, 0, 500);
@@ -959,6 +975,7 @@ void Analysis::createHistograms() {
     histMan.addH1D_BJetBinned("mttbar_antiIsolated", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_QCDEnriched", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_controlRegion", "mttbar", 5000, 0, 5000);
+    histMan.addH1D_BJetBinned("mttbar_antiID", "mttbar", 5000, 0, 5000);
 
     histMan.addH1D_BJetBinned("mttbar_conversions_withMETCut", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_antiIsolated_withMETCut", "mttbar", 5000, 0, 5000);
@@ -967,6 +984,7 @@ void Analysis::createHistograms() {
     histMan.addH1D_BJetBinned("mttbar_conversions_withMETAndAsymJets", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_antiIsolated_withMETAndAsymJets", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_controlRegion_withMETAndAsymJets", "mttbar", 5000, 0, 5000);
+    histMan.addH1D_BJetBinned("mttbar_antiID_withMETAndAsymJets", "mttbar", 5000, 0, 5000);
 
     histMan.addH1D_BJetBinned("mttbar_conversions_withAsymJetsCut", "mttbar", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_antiIsolated_withAsymJetsCut", "mttbar", 5000, 0, 5000);
@@ -995,9 +1013,9 @@ void Analysis::createHistograms() {
     histMan.addH1D_BJetBinned("mttbar_3rdSolution_withAsymJetsCut", "mttbar_3rdSolution", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("mttbar_allSolutions_withAsymJetsCut", "mttbar_allSolutions", 5000, 0, 5000);
 
-    histMan.addH1D_BJetBinned("mLeptonicTop", "mLeptonicTop", 500, 0, 500);
-    histMan.addH1D_BJetBinned("mHadronicTop", "mHadronicTop", 500, 0, 500);
-    histMan.addH1D_BJetBinned("mAllTop", "mAllTop", 500, 0, 500);
+    histMan.addH1D_BJetBinned("mLeptonicTop", "mLeptonicTop", 5000, 0, 5000);
+    histMan.addH1D_BJetBinned("mHadronicTop", "mHadronicTop", 5000, 0, 5000);
+    histMan.addH1D_BJetBinned("mAllTop", "mAllTop", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("m3", "m3", 5000, 0, 5000);
     histMan.addH1D_BJetBinned("ttbar_pt", "ttbar_pt", 1000, 0, 1000);
     histMan.addH1D_BJetBinned("ttbar_pt_withMETCut", "ttbar_pt", 1000, 0, 1000);
@@ -1147,6 +1165,8 @@ void Analysis::createHistograms() {
     histMan.addH2D_BJetBinned("angleTops_vs_mttbar_withMETAndAsymJets", "angleTops_vs_mttbar", 500, 0, 5000, 400, 0, 4);
     histMan.addH2D_BJetBinned("angleTops_vs_mttbar_withAsymJetsCut", "angleTops_vs_mttbar", 500, 0, 5000, 400, 0, 4);
 
+    histMan.setCurrentCollection("HLTStudy");
+
 }
 
 Analysis::Analysis() :
@@ -1162,7 +1182,7 @@ Analysis::Analysis() :
     interestingEvents(),
     brokenEvents(),
     eventCheck(),
-    weights(Analysis::luminosity/*current lumi*/, 7, "pileup_160404-165970.root"),
+    weights(Analysis::luminosity/*current lumi*/, 7, "pileup_160404-166861.root"),
     weight(0),
     cutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
                     JetBin::NUMBER_OF_JET_BINS) {
@@ -1232,5 +1252,9 @@ void Analysis::checkForBrokenEvents(){
 void Analysis::doPileUpStudy(){
     histMan.setCurrentCollection("pileupStudy");
     histMan.H1D("nVertex")->Fill(currentEvent.Vertices().size());
+    histMan.H1D("nVertex_reweighted")->Fill(currentEvent.Vertices().size(), weight);
+}
+
+void Analysis::doTriggerAnalysis(){
 
 }

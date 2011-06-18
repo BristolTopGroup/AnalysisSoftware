@@ -118,6 +118,7 @@ private:
     void checkForBrokenEvents();
     void doJetAnalysis();
     void doPileUpStudy();
+    void doTriggerAnalysis();
 };
 
 #endif /* ANALYSIS_H_ */
