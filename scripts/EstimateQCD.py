@@ -9,8 +9,8 @@ from copy import deepcopy
 from array import array
 
 class QCDEstimator:
-    luminosity = 498.267#349.007#pb-1
-    mc_luminosity = 78.4361#pb-1
+    luminosity = 715#349.007#pb-1
+    mc_luminosity = 715#pb-1
     luminosity_unit = 'pb-1'
     scale = luminosity / mc_luminosity
     jetBins = ['0jet', '0orMoreJets', '1jet', '1orMoreJets', '2jets', '2orMoreJets', '3jets', '3orMoreJets', '4orMoreJets']
@@ -549,23 +549,27 @@ if __name__ == '__main__':
     gROOT.ProcessLine( 'gErrorIgnoreLevel = 3001;' )
 
     path = '/storage/results/2011/'
-    files = {'data': "/storage/results/2011/new/ElectronHad_498.266pb_PFElectron_PF2PATJets_PFMET.root",
-    'ttbar' :  "/storage/results/2011/new/TTJet_Spring11_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'wjets' :  "/storage/results/2011/new/WJetsToLNu_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'zjets' :  "/storage/results/2011/DYJetsToLL_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce1' :  "/storage/results/2011/QCD_Pt-20to30_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce2' :  "/storage/results/2011/QCD_Pt-30to80_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce3' :  "/storage/results/2011/QCD_Pt-80to170_BCtoE_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri1' : "/storage/results/2011/QCD_Pt-20to30_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri2' :  "/storage/results/2011/QCD_Pt-30to80_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri3' :  "/storage/results/2011/QCD_Pt-80to170_EMEnriched_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj1' :  "/storage/results/2011/GJets_TuneD6T_HT-40To100_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj2' :  "/storage/results/2011/GJets_TuneD6T_HT-100To200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj3' :  "/storage/results/2011/GJets_TuneD6T_HT-200_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'tW' :  "/storage/results/2011/TToBLNu_TuneZ2_tW-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root",
-    'tchan' :  "/storage/results/2011/TToBLNu_TuneZ2_t-channel_78.4361pb_PFElectron_PF2PATJets_PFMET.root"}
+    files = {
+             'data':"/storage/results/histogramFiles/ElectronHad_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'ttbar' : "/storage/results/histogramFiles/TTJet_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'wjets' : "/storage/results/histogramFiles/WJetsToLNu_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'zjets' : "/storage/results/histogramFiles/DYJetsToLL_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce1' : "/storage/results/histogramFiles/QCD_Pt-20to30_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce2' : "/storage/results/histogramFiles/QCD_Pt-30to80_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce3' : "/storage/results/histogramFiles/QCD_Pt-80to170_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri1' : "/storage/results/histogramFiles/QCD_Pt-20to30_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri2' : "/storage/results/histogramFiles/QCD_Pt-30to80_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri3' : "/storage/results/histogramFiles/QCD_Pt-80to170_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj1' : "/storage/results/histogramFiles/GJets_TuneD6T_HT-40To100_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj2' : "/storage/results/histogramFiles/GJets_TuneD6T_HT-100To200_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj3' : "/storage/results/histogramFiles/GJets_TuneD6T_HT-200_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'tW' : "/storage/results/histogramFiles/TToBLNu_TuneZ2_tW-channel_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'tchan' : "/storage/results/histogramFiles/TToBLNu_TuneZ2_t-channel_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'ww' : "/storage/results/histogramFiles/WWtoAnything_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'wz' : "/storage/results/histogramFiles/WZtoAnything_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'zz' : "/storage/results/histogramFiles/ZZtoAnything_715.09pb_PFElectron_PF2PATJets_PFMET.root",}
     q = QCDEstimator( files )
-    QCDEstimator.outputFolder = '/storage/results/2011/ElectronHad/Spring11TTJet/'
+    QCDEstimator.outputFolder = '/storage/results/2011/'
     QCDEstimator.outputFormat = 'png'
 
     q.doEstimate( 'gaus' )
