@@ -84,14 +84,14 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
 
     //Spring 11
     numberOfProcessedEvents[DataType::ttbar] = 1286491;
-    numberOfProcessedEvents[DataType::Zjets] = 2543727;
+    numberOfProcessedEvents[DataType::Zjets] = 1948290;
     //hotfix for missing stats!
-    numberOfProcessedEvents[DataType::Wjets] = 12878622;//14805546;
+    numberOfProcessedEvents[DataType::Wjets] = 14023626;//14805546;
 
     numberOfProcessedEvents[DataType::WToENu] = 5334220;
 
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 37169939;
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 71845473;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 32593127;
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 5546413;
 
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2243439;
@@ -199,7 +199,8 @@ float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
 boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pileUpEstimationFile){
     std::cout << "Using pile-up estimation file " << pileUpEstimationFile << std::endl;
     boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
-    boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup"));
+    boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
+    file->Close();
     return pileUp;
 }
 
