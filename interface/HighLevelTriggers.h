@@ -48,7 +48,7 @@ enum value{
 
 
     //SingleElectron PD
-//HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT, //28
+    HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT, //28
     HLT_Ele25_CaloIdL_CaloIsoVL_TrkIdVL_TrkIsoVL,//29
     HLT_Ele32_CaloIdVL_CaloIsoVL_TrkIdVL_TrkIsoVL,//30
     HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT,//31
