@@ -4,7 +4,7 @@ from time import sleep
 from ROOT import *
 
 outputFormat = 'png'
-outputFolder = ''
+outputFolder = '/storage/results/plots/ElectronHad/'
 
 def compareDataControlRegions(dataHists, bJetBins):
     saveAs = HistPlotter.saveAs
@@ -20,17 +20,17 @@ def compareDataControlRegions(dataHists, bJetBins):
         
     for bin in bJetBins:
         normConv = dataHists['topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_' + bin]
-        normContr = dataHists['topReconstruction/backgroundShape/mttbar_controlRegion_withMETAndAsymJets_' + bin]
+#        normContr = dataHists['topReconstruction/backgroundShape/mttbar_controlRegion_withMETAndAsymJets_' + bin]
         normAnti = dataHists['topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets_' + bin]
         normConv.SetYTitle("a.u/50GeV");
     
         normConv.Sumw2()
-        normContr.Sumw2()
+#        normContr.Sumw2()
         normAnti.Sumw2()
         
         
         normConv = HistPlotter.normalise(normConv)
-        normContr = HistPlotter.normalise(normContr)
+#        normContr = HistPlotter.normalise(normContr)
         normAnti = HistPlotter.normalise(normAnti)
     
         diff = normConv.Clone()
@@ -44,85 +44,109 @@ def compareDataControlRegions(dataHists, bJetBins):
         diff.SetYTitle("conversions/non-iso electrons /50GeV");
         diff.Draw('error')
         line.Draw('same')
-        saveAs(c,'shapeRatio_conversions_NonIsolatedElectrons' + '_' + bin , outputFormat)
+        saveAs(c, 'shapeRatio_conversions_NonIsolatedElectrons' + '_' + bin , outputFormat)
         del c
     
-        diff = normConv.Clone()
-        diff.Divide(normContr)
+#        diff = normConv.Clone()
+#        diff.Divide(normContr)
     
-        c = TCanvas("cname2", 'cname2', 1920, 1080)
-        diff.SetYTitle("conversions/fake electrons /50GeV");
-        diff.Draw('error')
-        line.Draw('same')
-        saveAs(c,'shapeRatio_conversions_fakeElectrons' + '_' + bin , outputFormat)
-        del c
+#        c = TCanvas("cname2", 'cname2', 1920, 1080)
+#        diff.SetYTitle("conversions/fake electrons /50GeV");
+#        diff.Draw('error')
+#        line.Draw('same')
+#        saveAs(c, 'shapeRatio_conversions_fakeElectrons' + '_' + bin , outputFormat)
+#        del c
         
         c = TCanvas("cname3", 'cname3', 1920, 1080)
     
         normConv.SetFillColor(kYellow)
-        normConv.SetFillStyle( 1001 )
+        normConv.SetFillStyle(1001)
         
-        normContr.SetFillColor(kAzure - 2)
-        normContr.SetFillStyle( 3005 )
+#        normContr.SetFillColor(kAzure - 2)
+#        normContr.SetFillStyle(3005)
     
         normAnti.SetFillColor(kRed + 1)
-        normAnti.SetFillStyle( 3004 )
+        normAnti.SetFillStyle(3004)
         normConv.GetYaxis().SetRangeUser(0, 0.2);
         normConv.Draw('hist')
-        normContr.Draw('hist same')
+#        normContr.Draw('hist same')
         normAnti.Draw('hist same')
     
         if not alreadyAdded:
             AddLegendEntry(normConv, "conversions", "f");
-            AddLegendEntry(normContr, "fake electrons", "f");
+#            AddLegendEntry(normContr, "fake electrons", "f");
             AddLegendEntry(normAnti, "non isolated electrons", "f");
             alreadyAdded = True
         
         leg.Draw()
-        saveAs(c,'shape_comparison' + '_' + bin , outputFormat)
+        saveAs(c, 'shape_comparison' + '_' + bin , outputFormat)
         del c
         
     del leg
+
+
+def plotQCDEstimationFits(allHists, bJetBins):
+    saveAs = HistPlotter.saveAs
     
+    leg = TLegend(0.696, 0.35, 0.94, 0.92);
+    leg.SetBorderSize(0);
+    leg.SetLineStyle(0);
+    leg.SetTextFont(42);
+    leg.SetFillStyle(0);
+
+    AddLegendEntry = leg.AddEntry 
+    alreadyAdded = False
+    for bin in bJetBins:
+        histname = 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_' + bin
+        data = allHists['data'][histname]
+        allMC = allHists['allMC'][histname]
+        
+
 if __name__ == '__main__':
     gROOT.SetBatch(True)
     gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
     
     files = {
-    'data':"/storage/results/histogramFiles/ElectronHad_715pb-1_PFElectron_PF2PATJets_PFMET.root"
-#    '2011/new/ElectronHad_498.266pb_PFElectron_PF2PATJets_PFMET.root",
-#    'ttbar' : "/storage/results/QCD_Estimate/Preapproval3/ttjet_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'wjets' : "/storage/results/QCD_Estimate/Preapproval3/wj_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'zjets' : "/storage/results/QCD_Estimate/Preapproval3/zj_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce1' : "/storage/results/QCD_Estimate/Preapproval3/bce1_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce2' : "/storage/results/QCD_Estimate/Preapproval3/bce2_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce3' : "/storage/results/QCD_Estimate/Preapproval3/bce3_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri1' : "/storage/results/QCD_Estimate/Preapproval3/enri1_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri2' : "/storage/results/QCD_Estimate/Preapproval3/enri2_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri3' : "/storage/results/QCD_Estimate/Preapproval3/enri3_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj1' : "/storage/results/QCD_Estimate/Preapproval3/pj1_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj2' : "/storage/results/QCD_Estimate/Preapproval3/pj2_36.145pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj3' : "/storage/results/QCD_Estimate/Preapproval3/pj3_36.145pb_PFElectron_PF2PATJets_PFMET.root"
+    'data':"/storage/results/histogramFiles/ElectronHad_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'ttbar' : "/storage/results/histogramFiles/TTJet_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'wjets' : "/storage/results/histogramFiles/WJetsToLNu_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'zjets' : "/storage/results/histogramFiles/DYJetsToLL_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce1' : "/storage/results/histogramFiles/QCD_Pt-20to30_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce2' : "/storage/results/histogramFiles/QCD_Pt-30to80_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce3' : "/storage/results/histogramFiles/QCD_Pt-80to170_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri1' : "/storage/results/histogramFiles/QCD_Pt-20to30_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri2' : "/storage/results/histogramFiles/QCD_Pt-30to80_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri3' : "/storage/results/histogramFiles/QCD_Pt-80to170_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj1' : "/storage/results/histogramFiles/GJets_TuneD6T_HT-40To100_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj2' : "/storage/results/histogramFiles/GJets_TuneD6T_HT-100To200_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj3' : "/storage/results/histogramFiles/GJets_TuneD6T_HT-200_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'tW' : "/storage/results/histogramFiles/TToBLNu_TuneZ2_tW-channel_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'tchan' : "/storage/results/histogramFiles/TToBLNu_TuneZ2_t-channel_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'ww' : "/storage/results/histogramFiles/WWtoAnything_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'wz' : "/storage/results/histogramFiles/WZtoAnything_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'zz' : "/storage/results/histogramFiles/ZZtoAnything_715.09pb_PFElectron_PF2PATJets_PFMET.root",
     }
 
     histsNames = [
                   'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets',
                   'topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets',
                   'topReconstruction/backgroundShape/mttbar_controlRegion_withMETAndAsymJets',
+                  "QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts",
                   ]
 
     HistPlotter.setStyle()
-    hists = HistGetter.getHistsFromFiles( histsNames, files, bJetBins = HistPlotter.allBjetBins )
-#    hists = addSampleSum( hists )
+    hists = HistGetter.getHistsFromFiles(histsNames, files, bJetBins=HistPlotter.allBjetBins)
+    hists = HistGetter.addSampleSum( hists )
+    hists = HistGetter.makeMCStack( hists )
 #    hists = applyDefaultStylesAndColors( hists )
     
-    hists = HistPlotter.rebin( hists, 50, 'mttbar*' )
-    hists = HistPlotter.setXRange( hists, ( 300, 1800 ), 'mttbar*' )
+    hists = HistPlotter.rebin(hists, 50, 'mttbar*')
+    hists = HistPlotter.setXRange(hists, (300, 1800), 'mttbar*')
     
-    hists = HistPlotter.setXTitle( hists, 'm(t#bar{t})/GeV', 'mttbar*' )
-    hists = HistPlotter.setYTitle( hists, 'Events/(50 GeV)', 'mttbar*' )
+    hists = HistPlotter.setXTitle(hists, 'm(t#bar{t})/GeV', 'mttbar*')
+    hists = HistPlotter.setYTitle(hists, 'Events/(50 GeV)', 'mttbar*')
     
-    compareDataControlRegions(dataHists = hists['data'], bJetBins= HistPlotter.inclusiveBjetBins)
+    compareDataControlRegions(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
     
 #    hists = makeDetailedMCStack( hists )
     
