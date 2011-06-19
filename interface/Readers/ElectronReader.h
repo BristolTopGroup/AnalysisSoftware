@@ -54,7 +54,7 @@ private:
 	VariableReader<MultiDoublePointer> vertex_dist_z;
 	VariableReader<MultiDoublePointer> dist;
 	VariableReader<MultiDoublePointer> dCotTheta;
-	boost::scoped_ptr<VariableReader<int> > CiCElectronIDReader;
+	boost::scoped_ptr<VariableReader<MultiIntPointer> > CiCElectronIDReader;
 	ElectronAlgorithm::value algorithm;
 	ElectronCollection electrons;
 	void readElectrons();

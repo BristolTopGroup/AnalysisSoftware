@@ -6,6 +6,7 @@
  */
 
 #include "../../interface/Readers/ElectronReader.h"
+#include <iostream>
 namespace BAT {
 
 //const std::string ElectronReader::algorithmPrefixes[Electron::NUMBER_OF_ELECTRONALGORITHMS] = { "els", "PFElsAll" };
@@ -78,7 +79,7 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
     vertex_dist_z(input, ElectronAlgorithm::prefixes.at(algo) + ".VtxDistZ"),
     dist(input, ElectronAlgorithm::prefixes.at(algo) + ".Dist"),
     dCotTheta(input, ElectronAlgorithm::prefixes.at(algo) + ".DCotTheta"),
-    CiCElectronIDReader(new VariableReader<int>(input, ElectronAlgorithm::prefixes.at(algo) + ".PassID")),
+    CiCElectronIDReader(new VariableReader<MultiIntPointer>(input, ElectronAlgorithm::prefixes.at(algo) + ".PassID")),
     algorithm(algo),
     electrons() {
 
@@ -117,14 +118,12 @@ void ElectronReader::readElectrons() {
         electron->setDPhiIn(dPhiInReader.getVariableAt(index));
         electron->setDEtaIn(dEtaInReader.getVariableAt(index));
         electron->setHadOverEm(hadOverEmReader.getVariableAt(index));
-//        electron->setRobustLooseID(robustLooseIDReader.getVariableAt(index) == 1);
-//        electron->setRobustTightID(robustTightIDReader.getVariableAt(index) == 1);
         electron->setDistToNextTrack(dist.getVariableAt(index));
         electron->setDCotThetaToNextTrack(dCotTheta.getVariableAt(index));
 
         electron->setSharedFractionInnerHits(sharedFractionInnerHits.getVariableAt(index));
         electron->setClosestTrackID(trackIDReader.getIntVariableAt(index));
-        electron->setCompressedCiCElectronID(CiCElectronIDReader->getVariable());
+        electron->setCompressedCiCElectronID(CiCElectronIDReader->getIntVariableAt(index));
         float trackPhi = track_phi.getVariableAt(index);
         float trackEta = track_eta.getVariableAt(index);
         float trackPt = track_pt.getVariableAt(index);
@@ -148,7 +147,6 @@ void ElectronReader::readElectrons() {
 }
 
 void ElectronReader::initialise() {
-//    numberOfElectronsReader.initialise();
     energyReader.initialise();
     pxReader.initialise();
     pyReader.initialise();
@@ -165,8 +163,6 @@ void ElectronReader::initialise() {
     hcalIsolationReader.initialise();
     trackerIsolationReader.initialise();
 
-//    robustLooseIDReader.initialise();
-//    robustTightIDReader.initialise();
     sigmaIEtaIEtaReader.initialise();
     dPhiInReader.initialise();
     dEtaInReader.initialise();
