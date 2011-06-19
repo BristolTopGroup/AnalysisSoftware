@@ -422,13 +422,24 @@ bool TopPairEventCandidate::passesConversionSelection() const {
 }
 
 bool TopPairEventCandidate::passedAntiIDSelection() const{
-    bool passesAntiID = passesRelIsoControlSelection();
+    //no trigger requirement now, later switch to looseID triggers
+    bool passesVertex = hasOneGoodPrimaryVertex();
+    bool passElectrons = allElectrons.size() > 0 && goodPFIsolatedElectrons.size() < 2;
+    bool passesAntiID = false;
+    bool passesConversionVetos = false;
+    if (passElectrons) {
+        const ElectronPointer electron = MostPFIsolatedElectron();
+        passesAntiID = electron->isQCDElectron();
+        passesConversionVetos = electron->isFromConversion() == false && electron->isTaggedAsConversion(
+                0.02, 0.02) == false;
+    }
+
     bool atLeast4Jets = hasAtLeastFourGoodJets();
-    return passesAntiID && atLeast4Jets;
+    return passesVertex && passElectrons && passesAntiID && passesConversionVetos && atLeast4Jets;
 }
 bool TopPairEventCandidate::passesAntiIsolationSelection() const {
     //require at least one good electron and no isolated good electrons
-    if (!(goodElectrons.size() > 0 && goodIsolatedElectrons.size() == 0))
+    if (!(goodElectrons.size() > 0 && goodIsolatedElectrons.size() == 0 && goodPFIsolatedElectrons.size() == 0))
             return false;
 
     bool passesFirst3 = passesSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
