@@ -7,7 +7,7 @@ canvases = []
 scanvases = []
 
 def plotMttbar():
-    log = False
+    log = True
     performRescale = False
     tdrstyle = setTDRStyle();
     gStyle.SetHatchesSpacing(1.0);
@@ -15,27 +15,26 @@ def plotMttbar():
     oldLumi = 715.
     scale = lumi / oldLumi;
 #    wjetScale = 1.56187472
-    wjetScale = 1.5
+    wjetScale = 1.
     topScale = 1#(700-31)/600# from >= 2 btags mttbar
 #    wjetScale = 3
     #wjetScale = 31314/3/7899
     savePath = "/storage/results/plots/ElectronHad/"
     #qcdScale = {'default':0.78, 'withMETAndAsymJets': 1.58};
-    qcdScale = {'default':0.5, 'withMETAndAsymJets': 1.9101712673};
+    qcdScale = {'default':0.5, 'withMETAndAsymJets': 0.98850};
 #    qcdScale = {'default':1, 'withMETAndAsymJets': 1.};
     #    data = TFile.Open("data2.9pb_fullSetOfVars.root");
-    data = TFile.Open("/storage/results/histogramFiles/ElectronHad_715pb-1_PFElectron_PF2PATJets_PFMET.root");
+    data = TFile.Open("/storage/results/histogramFiles/ElectronHad_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     ttbar = TFile.Open("/storage/results/histogramFiles/TTJet_715.09pb_PFElectron_PF2PATJets_PFMET.root");
 #    ttbar = TFile.Open("/storage/results/histogramFiles/TTJet_Summer11_715.09pb_PFElectron_PF2PATJets_PFMET.root");
-#    wjets = TFile.Open("/storage/results/histogramFiles/WJetsToLNu_715.09pb_PFElectron_PF2PATJets_PFMET_fraction.root");
     wjets = TFile.Open("/storage/results/histogramFiles/WJetsToLNu_715.09pb_PFElectron_PF2PATJets_PFMET.root");
 #    wjets = TFile.Open("/storage/results/histogramFiles/WToENu_715.09pb_PFElectron_PF2PATJets_PFMET.root");
-#    zjets = TFile.Open("/storage/results/histogramFiles/DYJetsToLL_715.09pb_PFElectron_PF2PATJets_PFMET.root");
+    zjets = TFile.Open("/storage/results/histogramFiles/DYJetsToLL_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     bce1 = TFile.Open("/storage/results/histogramFiles/QCD_Pt-20to30_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     bce2 = TFile.Open("/storage/results/histogramFiles/QCD_Pt-30to80_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     bce3 = TFile.Open("/storage/results/histogramFiles/QCD_Pt-80to170_BCtoE_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     enri1 = TFile.Open("/storage/results/histogramFiles/QCD_Pt-20to30_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root");
-#    enri2 = TFile.Open("/storage/results/histogramFiles/QCD_Pt-30to80_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root");
+    enri2 = TFile.Open("/storage/results/histogramFiles/QCD_Pt-30to80_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     enri3 = TFile.Open("/storage/results/histogramFiles/QCD_Pt-80to170_EMEnriched_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     pj1 = TFile.Open("/storage/results/histogramFiles/GJets_TuneD6T_HT-40To100_715.09pb_PFElectron_PF2PATJets_PFMET.root");
     pj2 = TFile.Open("/storage/results/histogramFiles/GJets_TuneD6T_HT-100To200_715.09pb_PFElectron_PF2PATJets_PFMET.root");
@@ -56,11 +55,13 @@ def plotMttbar():
     print 'W+jets scale', wjetScale
     hists = [];
 #    hists.append('topReconstruction/backgroundShape/mttbar_QCDEnriched')
+#    hists.append('topReconstruction/backgroundShape/mttbar_antiID')
 #    hists.append('mttbar_conversions')
 #    hists.append('mttbar_conversions_withMETCut')
-#    hists.append('topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets')
+    hists.append('topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets')
 #    hists.append('mttbar_conversions_withAsymJetsCut')
 #    hists.append('topReconstruction/backgroundShape/mttbar_controlRegion')
+    hists.append('topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets')
 #    hists.append("topReconstruction/mttbar");
 #    hists.append("topReconstruction/mttbar_2ndSolution");
 #    hists.append("topReconstruction/mttbar_3rdSolution");
@@ -71,7 +72,7 @@ def plotMttbar():
 #    hists.append("mttbar_3rdSolution_withMETCut");
 #    hists.append("mttbar_allSolutions_withMETCut");
     
-    hists.append("topReconstruction/mttbar_withMETAndAsymJets");
+#    hists.append("topReconstruction/mttbar_withMETAndAsymJets");
 #    hists.append("topReconstruction/mttbar_2ndSolution_withMETAndAsymJets");
 #    hists.append("topReconstruction/mttbar_3rdSolution_withMETAndAsymJets");
 #    hists.append("topReconstruction/mttbar_allSolutions_withMETAndAsymJets");
@@ -91,7 +92,7 @@ def plotMttbar():
 #    hists.append("ttbar_pt_3rdSolution_withMETCut");
 #    hists.append("ttbar_pt_allSolutions_withMETCut");
 #    
-#    hists.append("topReconstruction/ttbar_pt_withMETAndAsymJets");
+    hists.append("topReconstruction/ttbar_pt_withMETAndAsymJets");
 #    hists.append("topReconstruction/ttbar_pt_2ndSolution_withMETAndAsymJets");
 #    hists.append("topReconstruction/ttbar_pt_3rdSolution_withMETAndAsymJets");
 #    hists.append("topReconstruction/ttbar_pt_allSolutions_withMETAndAsymJets");
@@ -102,38 +103,39 @@ def plotMttbar():
 #    hists.append("ttbar_pt_allSolutions_withAsymJetsCut");
 #    hists.append("angleTops");
 #    hists.append("angleTops_withMETCut");
-#    hists.append("topReconstruction/angleTops_withMETAndAsymJets");
+    hists.append("topReconstruction/angleTops_withMETAndAsymJets");
 #    hists.append("angleTops_withAsymJetsCut");
 #    
 #    hists.append("topReconstruction/pt_leadingTop");
 #    hists.append("pt_leadingTop_withMETCut");
-#    hists.append("topReconstruction/pt_leadingTop_withMETAndAsymJets");
+    hists.append("topReconstruction/pt_leadingTop_withMETAndAsymJets");
 #    hists.append("pt_leadingTop_withAsymJetsCut");
 #    
 #    hists.append("topReconstruction/pt_NextToLeadingTop");
 #    hists.append("pt_NextToLeadingTop_withMETCut");
-#    hists.append("topReconstruction/pt_NextToLeadingTop_withMETAndAsymJets");
+    hists.append("topReconstruction/pt_NextToLeadingTop_withMETAndAsymJets");
 #    hists.append("pt_NextToLeadingTop_withAsymJetsCut");
 #    
-#    hists.append("topReconstruction/mLeptonicTop");
-#    hists.append("topReconstruction/mHadronicTop");
-#    hists.append("topReconstruction/mAllTop");
+    hists.append("topReconstruction/mLeptonicTop");
+    hists.append("topReconstruction/mHadronicTop");
+    hists.append("topReconstruction/mAllTop");
 ###    
-#    hists.append("topReconstruction/ttbar_px");
-#    hists.append("topReconstruction/ttbar_py");
-#    hists.append("topReconstruction/ttbar_pz");
+    hists.append("topReconstruction/ttbar_px");
+    hists.append("topReconstruction/ttbar_py");
+    hists.append("topReconstruction/ttbar_pz");
 ####    
-#    hists.append("topReconstruction/m3");
-#    hists.append("topReconstruction/HT");
-#    hists.append("topReconstruction/MET");
-#    hists.append("jetStudy/AllJetMass");
-#    hists.append("jetStudy/AllGoodJetMass");
-#    hists.append("jetStudy/GoodJetMass_atLeastOneJets");
-#    hists.append("jetStudy/GoodJetMass_atLeastTwoJets");
-#    hists.append("jetStudy/GoodJetMass_atLeastThreeJets");
-#    hists.append("jetStudy/GoodJetMass_atLeastFourJets");
-#    hists.append("topReconstruction/mtW");
-#    hists.append("neutrino_pz");
+    hists.append("topReconstruction/m3");
+    hists.append("topReconstruction/HT");
+    hists.append("topReconstruction/MET");
+    hists.append("jetStudy/AllJetMass");
+    hists.append("jetStudy/AllGoodJetMass");
+    hists.append("jetStudy/GoodJetMass_atLeastOneJets");
+    hists.append("jetStudy/GoodJetMass_atLeastTwoJets");
+    hists.append("jetStudy/GoodJetMass_atLeastThreeJets");
+    hists.append("jetStudy/GoodJetMass_atLeastFourJets");
+    hists.append("topReconstruction/mtW");
+    hists.append("topReconstruction/neutrino_pz");
+    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts")
     suffixes = ["0orMoreBtag",'0btag',
         "1orMoreBtag",
         "2orMoreBtags",
@@ -145,7 +147,7 @@ def plotMttbar():
         "2orMoreJets",
         "3orMoreJets" , "4orMoreJets"]
     jetBinnedhists = []
-#    jetBinnedhists.append('diElectronAnalysis/diElectronMass')
+    jetBinnedhists.append('diElectronAnalysis/diElectronMass')
 #    jetBinnedhists.append("QCDest_CombRelIso")
 #    jetBinnedhists.append("QCDest_CombRelIso_1btag")
 #    jetBinnedhists.append("QCDest_CombRelIso_2btag")
@@ -155,7 +157,7 @@ def plotMttbar():
 #    
 #    jetBinnedhists.append("QCDest_PFIsolation")
 #    jetBinnedhists.append("QCDest_PFIsolation_WithMETCut")
-#    jetBinnedhists.append("QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts")
+    jetBinnedhists.append("QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts")
 #    jetBinnedhists.append("QCDest_PFIsolation_WithAsymJetCuts")
 #    
 #    jetBinnedhists.append("QCDest_PFIsolation_1btag")
@@ -173,6 +175,7 @@ def plotMttbar():
     jetBinnedhists = [hist + '_' + suffix for hist in jetBinnedhists for suffix in jetBinned]
     hists.extend(jetBinnedhists)
     hists.append('pileupStudy/nVertex')
+    hists.append('pileupStudy/nVertex_reweighted')
     gcd = gROOT.cd
 
     for histname in hists:
@@ -192,13 +195,13 @@ def plotMttbar():
 #        hist_data2.Sumw2();
         hist_ttbar =  ttbar.Get(histname);
         hist_wjets =  wjets.Get(histname);
-#        hist_zjets =  zjets.Get(histname);
+        hist_zjets =  zjets.Get(histname);
 
         hist_bce1 =  bce1.Get(histname);
         hist_bce2 =  bce2.Get(histname);
         hist_bce3 =  bce3.Get(histname);
         hist_enri1 =  enri1.Get(histname);
-#        hist_enri2 =  enri2.Get(histname);
+        hist_enri2 =  enri2.Get(histname);
         hist_enri3 =  enri3.Get(histname);
         hist_pj1 =  pj1.Get(histname);
         hist_pj2 =  pj2.Get(histname);
@@ -219,7 +222,7 @@ def plotMttbar():
         hist_ttbar.Scale(topScale);
         hist_wjets.Scale(scale);
         hist_wjets.Scale(wjetScale);
-#        hist_zjets.Scale(scale);
+        hist_zjets.Scale(scale);
         hist_singleTop.Scale(scale)
         hist_diboson.Scale(scale)
         hist_bce1.Scale(scale);
@@ -227,7 +230,7 @@ def plotMttbar():
         hist_bce3.Scale(scale);
 
         hist_enri1.Scale(scale);
-#        hist_enri2.Scale(scale);
+        hist_enri2.Scale(scale);
         hist_enri3.Scale(scale);
 
         hist_pj1.Scale(scale);
@@ -244,7 +247,7 @@ def plotMttbar():
         hist_qcd.Add(hist_bce2);
         hist_qcd.Add(hist_bce3);
         hist_qcd.Add(hist_enri1);
-#        hist_qcd.Add(hist_enri2);
+        hist_qcd.Add(hist_enri2);
         hist_qcd.Add(hist_enri3);
         hist_qcd.Add(hist_pj1);
         hist_qcd.Add(hist_pj2);
@@ -269,9 +272,15 @@ def plotMttbar():
             name = histname.replace('mttbar', 'backgroundShape/mttbar_conversions')
 #            name = histname.replace('mttbar', 'backgroundShape/mttbar_controlRegion')
             hist_qcd = data.Get(name)
-            estimate = getQCDEstimate(name)
-            if( hist_qcd.Integral() > 0):
+#        if( hist_qcd.Integral() > 0):
+#                hist_qcd.Scale(nqcd/hist_qcd.Integral())
+                
+        if not 'background' in histname and not 'QCDStudy' in histname:    
+            estimate = getQCDEstimate(histname, data.GetName())
+            if( hist_qcd.Integral() > 0 and estimate > 0):
                 hist_qcd.Scale(estimate/hist_qcd.Integral())
+                
+                
         if performRescale:        
             print '='*100
             print '"best" rescaling for', histname
@@ -289,7 +298,7 @@ def plotMttbar():
         hist_mc = hist_qcd.Clone("all_mc")
         hist_mc.Add(hist_diboson)
         hist_mc.Add(hist_ttbar);
-#        hist_mc.Add(hist_zjets);
+        hist_mc.Add(hist_zjets);
         hist_mc.Add(hist_wjets);
         
         hist_mc.Add(hist_singleTop);
@@ -384,15 +393,15 @@ def plotMttbar():
             hist_data.SetYTitle("Events/(0.1)");
             rebin = 10;
             Urange = (0, 2)
-        elif('QCDest_PFIsolation' in histname):
+        elif('PFIsolation' in histname):
             hist_data.SetXTitle("Relative isolation");
             hist_data.SetYTitle("Events/(0.1)");
             rebin = 10
             Urange = (0, 1.6)
         elif('diElectron' in histname):
             hist_data.SetXTitle("m(ee)");
-            hist_data.SetYTitle("Events/(1 GeV)");
-            rebin = 5
+            hist_data.SetYTitle("Events/(10 GeV)");
+            rebin = 10
             Urange = (50, 2000)
         elif 'JetMass' in histname:
             hist_data.SetXTitle("m(jet)");
@@ -404,7 +413,7 @@ def plotMttbar():
         hist_data.Rebin(rebin);
         hist_ttbar.Rebin(rebin);
         hist_wjets.Rebin(rebin);
-#        hist_zjets.Rebin(rebin);
+        hist_zjets.Rebin(rebin);
         hist_qcd.Rebin(rebin);
         hist_singleTop.Rebin(rebin)
         hist_diboson.Rebin(rebin)
@@ -413,7 +422,7 @@ def plotMttbar():
         hist_data.SetAxisRange(Urange[0], Urange[1]);
         hist_ttbar.SetAxisRange(Urange[0], Urange[1]);
         hist_wjets.SetAxisRange(Urange[0], Urange[1]);
-#        hist_zjets.SetAxisRange(Urange[0], Urange[1]);
+        hist_zjets.SetAxisRange(Urange[0], Urange[1]);
         hist_qcd.SetAxisRange(Urange[0], Urange[1]);
         hist_singleTop.SetAxisRange(Urange[0], Urange[1]);
         hist_diboson.SetAxisRange(Urange[0], Urange[1]);
@@ -424,8 +433,8 @@ def plotMttbar():
         hist_ttbar.SetFillColor(kRed + 1);
         hist_wjets.SetFillStyle(1001);
         hist_wjets.SetFillColor(kGreen - 3);
-#        hist_zjets.SetFillStyle(1001);
-#        hist_zjets.SetFillColor(kAzure - 2);
+        hist_zjets.SetFillStyle(1001);
+        hist_zjets.SetFillColor(kAzure - 2);
         hist_qcd.SetFillStyle(1001);
         hist_qcd.SetFillColor(kYellow);
         hist_singleTop.SetFillStyle(1001);
@@ -457,7 +466,7 @@ def plotMttbar():
 #        qcdUncert.SetFillColor(kGray + 3);
 #        qcdUncert.SetFillStyle(3003);
 
-        leg = TLegend(0.696, 0.95, 0.94, 0.45);
+        leg = TLegend(0.696, 0.95, 0.94, 0.55);
         leg.SetBorderSize(0);
         leg.SetLineStyle(0);
         leg.SetTextFont(42);
@@ -467,7 +476,7 @@ def plotMttbar():
         #        leg.AddEntry(hist_data2, "data(no HLT)", "P");
         leg.AddEntry(hist_ttbar, "t#bar{t}", "f");
         leg.AddEntry(hist_wjets, "W#rightarrowl#nu", "f");
-#        leg.AddEntry(hist_zjets, "Z/#gamma*#rightarrowl^{+}l^{-}", "f");
+        leg.AddEntry(hist_zjets, "Z/#gamma*#rightarrowl^{+}l^{-}", "f");
         leg.AddEntry(hist_qcd, "QCD/#gamma + jets");
         leg.AddEntry(hist_singleTop, "Single-Top")
         leg.AddEntry(hist_diboson, "WZ+ZZ+WZ")
@@ -485,7 +494,7 @@ def plotMttbar():
         hs.Add(hist_diboson);
         hs.Add(hist_ttbar);
         hs.Add(hist_wjets);
-#        hs.Add(hist_zjets);
+        hs.Add(hist_zjets);
         hs.Add(hist_singleTop);
         
         hs.Add(hist_qcd);
@@ -512,25 +521,8 @@ def plotMttbar():
         hist_data.Draw("error same");
         leg.Draw();
         text1 = add_cms_label(lumi, getJetBin(histname),getBJetBin(histname) )
-#        text1 = TLatex(3.570061, 23.08044, "CMS Preliminary");
-#        text1.SetNDC();
-#        text1.SetTextAlign(13);
-#        text1.SetX(0.38);
-#        text1.SetY(0.928);
-#                #text1.SetLineWidth(2);
-#        text1.SetTextFont(42);
-#        text1.SetTextSizePixels(24);# dflt=28
         text1.Draw();
 #
-#        text2 = TLatex(3.570061, 23.08044, "~%.1f pb^{-1} at #sqrt{s} = 7 TeV" % lumi);
-#        text2.SetNDC();
-#        text2.SetTextAlign(13);
-#        text2.SetX(0.38);
-#        text2.SetY(0.88);
-#        #text2.SetLineWidth(2);
-#        text2.SetTextFont(42);
-#        text2.SetTextSizePixels(24);# dflt=28
-#        text2.Draw();
         postfix = ''
         if log:
             canvases[-1].SetLogy(1)
@@ -541,7 +533,7 @@ def plotMttbar():
         cu_hist_data = getCumulativePlot(hist_data, "data");
         cu_hist_ttbar = getCumulativePlot(hist_ttbar, "ttbar");
         cu_hist_wjets = getCumulativePlot(hist_wjets, "wjets");
-#        cu_hist_zjets = getCumulativePlot(hist_zjets, "zjets");
+        cu_hist_zjets = getCumulativePlot(hist_zjets, "zjets");
         cu_hist_qcd = getCumulativePlot(hist_qcd, "qcd");
         cu_hist_singleTop = getCumulativePlot(hist_singleTop, "singleTop");
         cu_hist_diboson = getCumulativePlot(hist_diboson, "di-boson");
@@ -556,7 +548,7 @@ def plotMttbar():
         cu_hist_data.SetAxisRange(Urange[0], Urange[1]);
         cu_hist_ttbar.SetAxisRange(Urange[0], Urange[1]);
         cu_hist_wjets.SetAxisRange(Urange[0], Urange[1]);
-#        cu_hist_zjets.SetAxisRange(Urange[0], Urange[1]);
+        cu_hist_zjets.SetAxisRange(Urange[0], Urange[1]);
         cu_hist_qcd.SetAxisRange(Urange[0], Urange[1]);
         cu_hist_singleTop.SetAxisRange(Urange[0], Urange[1]);
         cu_hist_diboson.SetAxisRange(Urange[0], Urange[1]);
@@ -565,7 +557,7 @@ def plotMttbar():
         cu_hs.Add(cu_hist_diboson);
         cu_hs.Add(cu_hist_ttbar);
         cu_hs.Add(cu_hist_wjets);
-#        cu_hs.Add(cu_hist_zjets);
+        cu_hs.Add(cu_hist_zjets);
         cu_hs.Add(cu_hist_singleTop);
         cu_hs.Add(cu_hist_qcd);
         
@@ -592,13 +584,6 @@ def plotMttbar():
         scanvases[-1].SaveAs(savePath + histname + '_integrated' + postfix + '.png')
     
 
-
-# tdrGrid: Turns the grid lines on (true) or off (false)
-
-#def tdrGrid(bool gridOn):
-#    tdrStyle.SetPadGridX(gridOn);
-#    tdrStyle.SetPadGridY(gridOn);
-#
 
 # fixOverlay: Redraws the axis
 
