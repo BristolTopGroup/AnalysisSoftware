@@ -23,6 +23,7 @@ namespace BAT {
 class Event {
 protected:
     boost::shared_ptr<std::vector<int> > HLTs;
+    boost::shared_ptr<std::vector<int> > HLTPrescales;
     VertexCollection vertices;
     VertexCollection goodVertices;
     TrackCollection tracks;
@@ -74,6 +75,7 @@ public:
     void setMuons(MuonCollection muons);
     void setMET(const METPointer met);
     void setHLTs(const boost::shared_ptr<std::vector<int> >);
+    void setHLTPrescales(const boost::shared_ptr<std::vector<int> >);
     void setRunNumber(unsigned long number);
     void setEventNumber(unsigned long number);
     void setLocalEventNumber(unsigned long number);
@@ -110,6 +112,7 @@ public:
     float weight() const;
     void inspect() const;
     bool HLT(HLTriggers::value trigger) const;
+    int HLTPrescale(HLTriggers::value trigger) const;
     static bool useCustomConversionTagger;
     static bool usePFIsolation;
 
@@ -118,7 +121,7 @@ public:
 private:
     void selectElectronsByQuality();
     void cleanGoodJets();
-    void cleanGoodJetsAgainstIsolatedElectrons();
+    void cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollection& electrons);
     void cleanGoodJetsAgainstMostIsolatedElectron();
     void selectGoodJets();
     void selectMuonsByQuality();

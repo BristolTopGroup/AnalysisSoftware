@@ -14,6 +14,7 @@ bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = false;
 Event::Event() :
     HLTs(new std::vector<int>()),
+    HLTPrescales(new std::vector<int>()),
     vertices(),
     goodVertices(),
     tracks(),
@@ -148,17 +149,26 @@ void Event::selectGoodJets() {
 }
 
 void Event::cleanGoodJets() {
-    if (goodIsolatedElectrons.size() > 0 && goodJets.size() > 0)
-        cleanGoodJetsAgainstIsolatedElectrons();
-    else if (allElectrons.size() > 0 && goodJets.size() > 0)
-        cleanGoodJetsAgainstMostIsolatedElectron();
+
+	if(goodJets.size() > 0){
+		if (goodIsolatedElectrons.size() > 0 && goodPFIsolatedElectrons.size() == 0)
+			cleanGoodJetsAgainstIsolatedElectrons(goodIsolatedElectrons);
+
+		else if (goodPFIsolatedElectrons.size() > 0)
+			cleanGoodJetsAgainstIsolatedElectrons(goodPFIsolatedElectrons);
+
+		else if(allElectrons.size() > 0 && goodPFIsolatedElectrons.size() == 0
+				&& goodIsolatedElectrons.size() == 0)
+			cleanGoodJetsAgainstMostIsolatedElectron();
+	}
+
 }
 
-void Event::cleanGoodJetsAgainstIsolatedElectrons() {
+void Event::cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollection& electrons) {
     unsigned int initialGoodJets = goodJets.size();
     for (unsigned int jetIndex = 0; jetIndex < goodJets.size(); ++jetIndex) {
-        for (unsigned int electronIndex = 0; electronIndex < goodIsolatedElectrons.size(); ++electronIndex) {
-            if (goodJets.at(jetIndex)->isWithinDeltaR(0.3, goodIsolatedElectrons.at(electronIndex))) {
+        for (unsigned int electronIndex = 0; electronIndex < electrons.size(); ++electronIndex) {
+            if (goodJets.at(jetIndex)->isWithinDeltaR(0.3, electrons.at(electronIndex))) {
                 goodJets.erase(goodJets.begin() + jetIndex);
                 --jetIndex;
                 break;
@@ -383,6 +393,14 @@ void Event::setGenNumberOfPileUpVertices(unsigned int pileup){
 
 float Event::numberOfGeneratedPileUpVertices() const{
     return genNumberOfPileUpVertices;
+}
+
+void Event::setHLTPrescales(const boost::shared_ptr<std::vector<int> > prescales){
+	HLTPrescales = prescales;
+}
+
+int Event::HLTPrescale(HLTriggers::value trigger) const {
+	return HLTPrescales->at(trigger);
 }
 
 }
