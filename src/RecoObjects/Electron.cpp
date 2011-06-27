@@ -73,8 +73,36 @@ float Electron::ecalIsolation() const {
     return ecal_Isolation;
 }
 
+/*
+ * Values taken from
+ * https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaRecipesFor2011
+ */
+float Electron::ecalIsolationPUCorrected(float rho) const {
+	float effectiveArea = 0;
+	if(isInBarrelRegion())
+		effectiveArea = 0.101;
+	else if(isInEndCapRegion())
+		effectiveArea = 0.046;
+
+	return ecalIsolation() - rho*effectiveArea;
+}
+
 float Electron::hcalIsolation() const {
     return hcal_Isolation;
+}
+
+/*
+ * Values taken from
+ * https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaRecipesFor2011
+ */
+float Electron::hcalIsolationPUCorrected(float rho) const {
+	float effectiveArea = 0;
+	if(isInBarrelRegion())
+		effectiveArea = 0.021;
+	else if(isInEndCapRegion())
+		effectiveArea = 0.040;
+
+	return hcalIsolation() - rho*effectiveArea;
 }
 
 float Electron::trackerIsolation() const {
@@ -83,6 +111,10 @@ float Electron::trackerIsolation() const {
 
 float Electron::relativeIsolation() const {
     return (ecal_Isolation + hcal_Isolation + tracker_Isolation) / this->et();
+}
+
+float Electron::relativeIsolationPUCorrected(float rho) const {
+	return (ecalIsolationPUCorrected(rho) + hcalIsolationPUCorrected(rho) + tracker_Isolation) / this->et();
 }
 
 bool Electron::isIsolated() const {
@@ -159,7 +191,7 @@ bool Electron::isGood(const float minEt) const {
     bool passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = CiC_ElectronID(CiCElectronID::eidSuperTightMC);
+    bool passesID = VBTF_W70_ElectronID();//CiC_ElectronID(CiCElectronID::eidSuperTightMC);
 
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }
@@ -175,7 +207,7 @@ bool Electron::isQCDElectron(const float minEt) const {
         passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = !CiC_ElectronID(CiCElectronID::eidSuperTightMC);
+    bool passesID = !VBTF_W70_ElectronID();//CiC_ElectronID(CiCElectronID::eidSuperTightMC);
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }
 

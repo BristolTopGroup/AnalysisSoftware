@@ -74,11 +74,14 @@ public:
 
     ElectronAlgorithm::value algorithm() const;
     float ecalIsolation() const;
+    float ecalIsolationPUCorrected(float rho) const;
     float hcalIsolation() const;
+    float hcalIsolationPUCorrected(float rho) const;
     float trackerIsolation() const;
     float PFGammaIsolation() const;
     float PFChargedHadronIsolation() const;
     float PFNeutralHadronIsolation() const;
+
     float superClusterEta() const;
     float sigmaIEtaIEta() const;
     float dPhiIn() const;
@@ -129,6 +132,7 @@ public:
     void setCompressedCiCElectronID(int electronID);
 
     float relativeIsolation() const;
+    float relativeIsolationPUCorrected(float rho) const;
     float pfIsolation() const;
 
     bool isInBarrelRegion() const;
