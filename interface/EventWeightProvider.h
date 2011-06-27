@@ -28,11 +28,11 @@ private:
     bool useSkimEff;
     boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
     boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfProcessedEvents;
-    boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfSkimmedEvents;
+//    boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfSkimmedEvents;
     boost::shared_ptr<TH1D> estimatedPileUp;
     boost::array<double, 25> pileUpWeights;
     unsigned long numberOfEventsWithTooHighPileUp;
-    void defineNumberOfSkimmedEvents();
+//    void defineNumberOfSkimmedEvents();
     void defineNumberOfProducedEvents();
 public:
 
@@ -40,9 +40,9 @@ public:
     EventWeightProvider(float lumiInInversePb, unsigned short tev = 7, std::string pileUpEstimationFile = "pileUp.root");
     ~EventWeightProvider();
 
-    void useSkimEfficiency(bool use);
+//    void useSkimEfficiency(bool use);
 
-    float getExpectedNumberOfEvents(DataType::value type);
+//    float getExpectedNumberOfEvents(DataType::value type);
     float getWeight(DataType::value type);
     float reweightPileUp(unsigned int numberOfVertices);
     boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);

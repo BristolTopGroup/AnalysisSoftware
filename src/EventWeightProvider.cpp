@@ -65,7 +65,7 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
     useSkimEff(true),
     xsection(),
     numberOfProcessedEvents(),
-    numberOfSkimmedEvents(),
+//    numberOfSkimmedEvents(),
     estimatedPileUp(getPileUpHistogram(pileUpEstimationFile)),
     pileUpWeights(),
     numberOfEventsWithTooHighPileUp(0){
@@ -73,7 +73,7 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
     if (tev == 7)
         xsection = sevenTeV::getXSections();
     defineNumberOfProducedEvents();
-    defineNumberOfSkimmedEvents();
+//    defineNumberOfSkimmedEvents();
 }
 
 void EventWeightProvider::defineNumberOfProducedEvents() {
@@ -126,58 +126,58 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::Zprime_M4TeV_W400GeV] = 238142;
 }
 
-void EventWeightProvider::defineNumberOfSkimmedEvents() {
-    numberOfSkimmedEvents[DataType::DATA] = 0;
-    numberOfSkimmedEvents[DataType::ttbar] = 642707.;
-    numberOfSkimmedEvents[DataType::Zjets] = 329061.;
-    numberOfSkimmedEvents[DataType::Wjets] = 1101679.;
-
-    numberOfSkimmedEvents[DataType::QCD_EMEnriched_Pt20to30] = 917274.;
-    numberOfSkimmedEvents[DataType::QCD_EMEnriched_Pt30to80] = 3639776.;
-    numberOfSkimmedEvents[DataType::QCD_EMEnriched_Pt80to170] = 1253958.;
-
-    numberOfSkimmedEvents[DataType::QCD_BCtoE_Pt20to30] = 86392.;
-    numberOfSkimmedEvents[DataType::QCD_BCtoE_Pt30to80] = 441537.;
-    numberOfSkimmedEvents[DataType::QCD_BCtoE_Pt80to170] = 477762.;
-
-    numberOfSkimmedEvents[DataType::PhotonJets_Pt40to100] = 311575;
-    numberOfSkimmedEvents[DataType::PhotonJets_Pt100to200] = 241590;
-    numberOfSkimmedEvents[DataType::PhotonJets_Pt200toInf] = 388407;
-
-    numberOfSkimmedEvents[DataType::singleTop_And_W] = 0;
-    numberOfSkimmedEvents[DataType::singleTopTChannel] = 0;
-    numberOfSkimmedEvents[DataType::singleTopSChannel] = 0;
-    numberOfSkimmedEvents[DataType::VQQ] = 36.;
-    numberOfSkimmedEvents[DataType::Zprime_M500GeV_W5GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M500GeV_W50GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M750GeV_W7500MeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M1TeV_W10GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M1TeV_W100GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M1250GeV_W12500MeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M1500GeV_W15GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M1500GeV_W150GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M2TeV_W20GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M2TeV_W200GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M3TeV_W30GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M3TeV_W300GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M4TeV_W40GeV] = 50;
-    numberOfSkimmedEvents[DataType::Zprime_M4TeV_W400GeV] = 50;
-}
+//void EventWeightProvider::defineNumberOfSkimmedEvents() {
+//    numberOfSkimmedEvents[DataType::DATA] = 0;
+//    numberOfSkimmedEvents[DataType::ttbar] = 642707.;
+//    numberOfSkimmedEvents[DataType::Zjets] = 329061.;
+//    numberOfSkimmedEvents[DataType::Wjets] = 1101679.;
+//
+//    numberOfSkimmedEvents[DataType::QCD_EMEnriched_Pt20to30] = 917274.;
+//    numberOfSkimmedEvents[DataType::QCD_EMEnriched_Pt30to80] = 3639776.;
+//    numberOfSkimmedEvents[DataType::QCD_EMEnriched_Pt80to170] = 1253958.;
+//
+//    numberOfSkimmedEvents[DataType::QCD_BCtoE_Pt20to30] = 86392.;
+//    numberOfSkimmedEvents[DataType::QCD_BCtoE_Pt30to80] = 441537.;
+//    numberOfSkimmedEvents[DataType::QCD_BCtoE_Pt80to170] = 477762.;
+//
+//    numberOfSkimmedEvents[DataType::PhotonJets_Pt40to100] = 311575;
+//    numberOfSkimmedEvents[DataType::PhotonJets_Pt100to200] = 241590;
+//    numberOfSkimmedEvents[DataType::PhotonJets_Pt200toInf] = 388407;
+//
+//    numberOfSkimmedEvents[DataType::singleTop_And_W] = 0;
+//    numberOfSkimmedEvents[DataType::singleTopTChannel] = 0;
+//    numberOfSkimmedEvents[DataType::singleTopSChannel] = 0;
+//    numberOfSkimmedEvents[DataType::VQQ] = 36.;
+//    numberOfSkimmedEvents[DataType::Zprime_M500GeV_W5GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M500GeV_W50GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M750GeV_W7500MeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M1TeV_W10GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M1TeV_W100GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M1250GeV_W12500MeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M1500GeV_W15GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M1500GeV_W150GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M2TeV_W20GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M2TeV_W200GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M3TeV_W30GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M3TeV_W300GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M4TeV_W40GeV] = 50;
+//    numberOfSkimmedEvents[DataType::Zprime_M4TeV_W400GeV] = 50;
+//}
 
 EventWeightProvider::~EventWeightProvider() {
 
 }
 
-void EventWeightProvider::useSkimEfficiency(bool use) {
-    useSkimEff = use;
-}
+//void EventWeightProvider::useSkimEfficiency(bool use) {
+//    useSkimEff = use;
+//}
 
-float EventWeightProvider::getExpectedNumberOfEvents(DataType::value type) {
-    if (useSkimEff)
-        return xsection[type] * lumiInInversePb * numberOfSkimmedEvents[type] / numberOfProcessedEvents[type];
-    else
-        return xsection[type] * lumiInInversePb;
-}
+//float EventWeightProvider::getExpectedNumberOfEvents(DataType::value type) {
+//    if (useSkimEff)
+//        return xsection[type] * lumiInInversePb * numberOfSkimmedEvents[type] / numberOfProcessedEvents[type];
+//    else
+//        return xsection[type] * lumiInInversePb;
+//}
 
 float EventWeightProvider::getWeight(DataType::value type) {
     if (type == DataType::DATA)
@@ -189,7 +189,6 @@ float EventWeightProvider::getWeight(DataType::value type) {
 float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
     if(numberOfVertices >= pileUpWeights.size()){
         ++numberOfEventsWithTooHighPileUp;
-//        std::cout << "numberOfVertices too big" << std::endl;
         return 1.;
     }
 
