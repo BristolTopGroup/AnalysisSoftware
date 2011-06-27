@@ -103,27 +103,32 @@ bool TopPairEventCandidate::passesScrapingFilter() const {
 bool TopPairEventCandidate::passesHighLevelTrigger() const {
     if (isRealData()) {
         if (runNumber < 140041)
-            return HLT(HLTriggers::HLT_Ele10_LW_L1R);
-        else if (runNumber >= 140041 && runNumber <= 143962)
-            return HLT(HLTriggers::HLT_Ele15_SW_L1R);
-        else if (runNumber > 143962 && runNumber <= 146427)
-            return HLT(HLTriggers::HLT_Ele15_SW_CaloEleId_L1R);
-        else if (runNumber > 146427 && runNumber <= 147116)
-            return HLT(HLTriggers::HLT_Ele17_SW_CaloEleId_L1R);
-        else if (runNumber > 147116 && runNumber <= 148818)
-            return HLT(HLTriggers::HLT_Ele17_SW_TightEleId_L1R);
-        else if (runNumber >= 148819 && runNumber < 160000)
-            return HLT(HLTriggers::HLT_Ele22_SW_TighterEleId_L1R);
-//        else if(runNumber >= 149181 && runNumber < 160000)
-//            return HLT(HLTriggers::HLT_Ele22_SW_TighterEleId_L1R_v3);
-        else if(runNumber > 160000)
-            return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_BTagIP) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_BTagIP) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_CentralJet25_PFMHT20);
+			return HLT(HLTriggers::HLT_Ele10_LW_L1R);
+		else if (runNumber >= 140041 && runNumber <= 143962)
+			return HLT(HLTriggers::HLT_Ele15_SW_L1R);
+		else if (runNumber > 143962 && runNumber <= 146427)
+			return HLT(HLTriggers::HLT_Ele15_SW_CaloEleId_L1R);
+		else if (runNumber > 146427 && runNumber <= 147116)
+			return HLT(HLTriggers::HLT_Ele17_SW_CaloEleId_L1R);
+		else if (runNumber > 147116 && runNumber <= 148818)
+			return HLT(HLTriggers::HLT_Ele17_SW_TightEleId_L1R);
+		else if (runNumber >= 148819 && runNumber < 160000)
+			return HLT(HLTriggers::HLT_Ele22_SW_TighterEleId_L1R);
+		else if (runNumber >= 160404 && runNumber <= 163869)
+			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+		else if (runNumber > 163869 && runNumber <= 165633)
+			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+		else if (runNumber > 165633)
+			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+//        else if(runNumber > 160000)
+//            return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30) || HLT(
+//					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || HLT(
+//					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30) || HLT(
+//					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_BTagIP) || HLT(
+//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30) || HLT(
+//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30) || HLT(
+//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_BTagIP) || HLT(
+//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_CentralJet25_PFMHT20);
         else
             return false;
     }
