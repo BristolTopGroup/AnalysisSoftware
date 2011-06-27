@@ -19,6 +19,9 @@ def getHistsFromFiles( histnames = [], files = {}, bJetBins = [], jetBins = [] )
             
         for sample, filename in files.iteritems():
             file = TFileOpen( filename )
+            if not file:
+                print "Could not find file:", filename
+                return
             allHists[sample] = {}
             fg = file.Get
             gcd()
