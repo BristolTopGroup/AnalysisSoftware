@@ -28,6 +28,7 @@ NTupleEventReader::NTupleEventReader() :
     numberOfFiles(0),
     input(new TChain(NTupleEventReader::EVENT_CHAIN)),
     hltReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTResults")),
+    hltPrescaleReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTPrescales")),
     vertexReader(new VertexReader(input)),
     trackReader(new TrackReader(input)),
     electronReader(new ElectronReader(input, NTupleEventReader::electronAlgorithm)),
@@ -65,14 +66,17 @@ const Event& NTupleEventReader::getNextEvent() {
     selectNextNtupleEvent();
 
     boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
+    boost::shared_ptr<std::vector<int> > triggerPrescales(new std::vector<int>());
 
 //    assert(hltReader->size() == HLTriggers::NUMBER_OF_TRIGGERS);
     for(unsigned int i = 0; i < hltReader->size(); i++){
         triggers->push_back(hltReader->getIntVariableAt(i));
+        triggerPrescales->push_back(hltPrescaleReader->getIntVariableAt(i));
     }
 
     currentEvent.setDataType(getDataType(getCurrentFile()));
     currentEvent.setHLTs(triggers);
+    currentEvent.setHLTPrescales(triggerPrescales);
     currentEvent.setVertices(vertexReader->getVertices());
 
     if(NTupleEventReader::loadTracks)
@@ -118,6 +122,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
     if (areReadersSet == false) {
         input->SetBranchStatus("*", 0);
         hltReader->initialise();
+        hltPrescaleReader->initialise();
         vertexReader->initialise();
         if(NTupleEventReader::loadTracks)
             trackReader->initialise();
