@@ -26,6 +26,7 @@
 #include "../interface/HistHelpers/HistogramManager.h"
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
+#include "../interface/HLTriggerAnalyser.h"
 
 struct InterestingEvent {
     InterestingEvent(unsigned long run, unsigned long event, std::string file) :
@@ -58,7 +59,7 @@ private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
     BAT::Event currentEvent;
     BAT::TopPairEventCandidate ttbarCandidate;
-    BAT::HistogramManager histMan;
+    boost::shared_ptr<BAT::HistogramManager> histMan;
     cutarray cutflow;
     cutarray singleCuts;
     cutmap cutflowPerFile;
@@ -68,6 +69,8 @@ private:
     BAT::EventWeightProvider weights;
     float weight;
     BAT::Counter cutflowPerSample;
+    boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
+
 public:
     static float luminosity;
     Analysis();
