@@ -1,5 +1,6 @@
 from tdrStyle import *
 from ROOT import *
+import os
 
 inclusiveJetBins = [
         "0orMoreJets",
@@ -34,6 +35,16 @@ allJetBins.extend(exclusiveJetBins)
 allBjetBins = []
 allBjetBins.extend(inclusiveBjetBins)
 allBjetBins.extend(exclusiveBjetBins)
+
+jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
+                    '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
+                    '4orMoreJets':'#geq 4 jets'}
+
+BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags', 
+                    '1orMoreBtag':'#geq 1 b-tags',
+                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags', 
+                    '3btags':'3 b-tags', '3orMoreBtags':'#geq 3 b-tags',
+                    '4orMoreBtags':'#geq 4 b-tags'}
 
 def setStyle():
         tdrStyle = setTDRStyle();
@@ -150,16 +161,6 @@ def applyDefaultStylesAndColors( hists ):
     return hists
 
 def get_cms_label( lumi, njet = "4orMoreJets", nbjet = "0orMoreBtag" ):
-    jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
-                    '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
-                    '4orMoreJets':'#geq 4 jets'}
-    
-    BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags', 
-                    '1orMoreBtag':'#geq 1 b-tags',
-                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags', 
-                    '3btags':'3 b-tags', '3orMoreBtags':'#geq 3 b-tags',
-                    '4orMoreBtags':'#geq 4 b-tags'}
-
     mytext = TPaveText( 0.35, 0.8, 0.6, 0.93, "NDC" );
     mytext.AddText( "CMS Preliminary" );
     mytext.AddText( "%.1f pb^{-1} at  #sqrt{s} = 7 TeV" % lumi );
@@ -193,5 +194,17 @@ def normalise(histogram):
     return histogram
 
 def saveAs(canvas, name, outputFormat= 'png', outputFolder = ''):
-    canvas.SaveAs(outputFolder + name + '.' + outputFormat)
+    if not outputFolder == '' and not outputFolder.endswith('/'):
+        outputFolder += '/'
+    fullFileName = outputFolder + name + '.' + outputFormat
+    path = fullFileName[:fullFileName.rfind('/')]
+    createFolderIfDoesNotExist(path)
+        
+    canvas.SaveAs(fullFileName)
+    
+def createFolderIfDoesNotExist(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
+    
 
