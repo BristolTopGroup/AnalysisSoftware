@@ -27,9 +27,11 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	//do analysis
 
 	//require tight and isolated electron
-	if ((ttbarEvent.GoodPFIsolatedElectrons().size() > 0 || ttbarEvent.GoodIsolatedElectrons().size())
-			&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT) || ttbarEvent.HLT(
-					HLTriggers::HLT_Ele25_WP80_PFMT40) || ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20))) {
+	if ((ttbarEvent.GoodPFIsolatedElectrons().size() > 0 ||
+			ttbarEvent.GoodIsolatedElectrons().size() > 0)
+			&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT) ||
+					ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40) ||
+					ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20))) {
 		//all jets in the v2 nTuples have the following cuts applied:
 		//pt > 20 & abs(eta) < 2.5 && loose ID
 		const JetCollection& jets = ttbarEvent.Jets();
@@ -131,8 +133,8 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			}
 		}
 
-		if (ttbarEvent.Jets().size() > 3 && ttbarEvent.runnumber() > 165970) {//run 165970, first occurance of the QuadJet trigger
-			const JetPointer jet4(ttbarEvent.Jets().at(3));
+		if (cleanedJets.size() > 3 && ttbarEvent.runnumber() > 165970) {//run 165970, first occurance of the QuadJet trigger
+			const JetPointer jet4(cleanedJets.at(3));
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30";
 			passesPreTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || ttbarEvent.HLT(
 					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
