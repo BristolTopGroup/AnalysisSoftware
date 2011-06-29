@@ -151,14 +151,13 @@ void Event::selectGoodJets() {
 void Event::cleanGoodJets() {
 
 	if(goodJets.size() > 0){
-		if (goodIsolatedElectrons.size() > 0 && goodPFIsolatedElectrons.size() == 0)
-			cleanGoodJetsAgainstIsolatedElectrons(goodIsolatedElectrons);
-
-		else if (goodPFIsolatedElectrons.size() > 0)
-			cleanGoodJetsAgainstIsolatedElectrons(goodPFIsolatedElectrons);
-
-		else if(allElectrons.size() > 0 && goodPFIsolatedElectrons.size() == 0
-				&& goodIsolatedElectrons.size() == 0)
+		if(goodIsolatedElectrons.size() > 0 || goodPFIsolatedElectrons.size() > 0){
+			if (Event::usePFIsolation)
+				cleanGoodJetsAgainstIsolatedElectrons(goodPFIsolatedElectrons);
+			else
+				cleanGoodJetsAgainstIsolatedElectrons(goodIsolatedElectrons);
+		}
+		else if(allElectrons.size() > 0)
 			cleanGoodJetsAgainstMostIsolatedElectron();
 	}
 
