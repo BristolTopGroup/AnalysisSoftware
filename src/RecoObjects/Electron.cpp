@@ -191,7 +191,7 @@ bool Electron::isGood(const float minEt) const {
     bool passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = VBTF_W70_ElectronID();//CiC_ElectronID(CiCElectronID::eidSuperTightMC);
+	bool passesID = VBTF_W70_ElectronID();//CiC_ElectronID(CiCElectronID::eidSuperTightMC);
 
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }
@@ -207,7 +207,8 @@ bool Electron::isQCDElectron(const float minEt) const {
         passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = !VBTF_W70_ElectronID();//CiC_ElectronID(CiCElectronID::eidSuperTightMC);
+	bool passesID = !VBTF_W70_ElectronID();//CiC_ElectronID(CiCElectronID::eidSuperTightMC);
+    
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }
 
@@ -453,8 +454,8 @@ void Electron::setCompressedCiCElectronID(int electronID){
 }
 
 bool Electron::CiC_ElectronID(CiCElectronID::value electronID) const{
-
-    return CiCElectronIDCompressed >> (int) electronID;
+    // compressedId bit-wise and with the mask
+    return CiCElectronIDCompressed & (1 << (int) electronID);
 }
 
 }
