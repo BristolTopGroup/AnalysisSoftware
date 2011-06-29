@@ -17,7 +17,7 @@
 
 using namespace BAT;
 using namespace std;
-float Analysis::luminosity = 715.09;
+float Analysis::luminosity = 882.;
 
 void Analysis::analyze() {
     createHistograms();
@@ -70,6 +70,8 @@ void Analysis::initiateEvent() {
     if(!currentEvent.isRealData()){
         weight *= weights.reweightPileUp(currentEvent.numberOfGeneratedPileUpVertices());
     }
+    currentEvent.setEventWeight(weight);
+
 
     histMan->setCurrentDataType(ttbarCandidate.getDataType());
     histMan->setCurrentJetBin(currentEvent.GoodJets().size());
@@ -210,13 +212,8 @@ void Analysis::doTTBarAnalysis() {
         histMan->H2D_BJetBinned("METvsMttbar")->Fill(mttbar, ttbarCandidate.MET()->et(), weight);
         histMan->H1D_BJetBinned("HT")->Fill(ttbarCandidate.fullHT(), weight);
         histMan->H2D_BJetBinned("HTvsMttbar")->Fill(mttbar, ttbarCandidate.fullHT(), weight);
+        histMan->H1D_BJetBinned("mtW")->Fill(ttbarCandidate.transverseWmass(ttbarCandidate.getElectronFromWDecay()), weight);
 
-        if (Event::usePFIsolation)
-            histMan->H1D_BJetBinned("mtW")->Fill(ttbarCandidate.transverseWmass(
-                    ttbarCandidate.GoodPFIsolatedElectrons().front()), weight);
-        else
-            histMan->H1D_BJetBinned("mtW")->Fill(ttbarCandidate.transverseWmass(
-                    ttbarCandidate.GoodIsolatedElectrons().front()), weight);
         histMan->H1D_BJetBinned("m3")->Fill(ttbarCandidate.M3(), weight);
 
 
@@ -444,9 +441,6 @@ void Analysis::doNotePlots() {
         for (unsigned int index = 0; index < electrons.size(); ++index) {
             const ElectronPointer electron = electrons.at(index);
             if (electron->isFromConversion() == false && electron->isTaggedAsConversion(0.02,0.02) == false) {
-//                ConversionTagger tagger = ConversionTagger();
-//                tagger.calculateConversionVariables(electron, ttbarCandidate.Tracks(), 3.8, 0.45);
-//                if (tagger.isFromConversion(0.02, 0.02) == false)
                     nonConversionElectrons.push_back(electron);
             }
         }
@@ -515,12 +509,6 @@ void Analysis::doQCDStudy() {
             }
         }
 
-//        if (ttbarCandidate.GoodJets().size() >= 2) {
-//            if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
-//                histMan->H1D_JetBinned("QCDest_PFIsolation_WithAsymJetCuts")->Fill(electron->pfIsolation(), weight);
-//
-//            }
-//        }
     }
 
 
@@ -1018,6 +1006,12 @@ void Analysis::createHistograms() {
     histMan->addH1D_BJetBinned("mHadronicTop", "mHadronicTop", 5000, 0, 5000);
     histMan->addH1D_BJetBinned("mAllTop", "mAllTop", 5000, 0, 5000);
     histMan->addH1D_BJetBinned("m3", "m3", 5000, 0, 5000);
+
+    histMan->addH1D_BJetBinned("mLeptonicTop_withMETAndAsymJets", "mLeptonicTop", 5000, 0, 5000);
+    histMan->addH1D_BJetBinned("mHadronicTop_withMETAndAsymJets", "mHadronicTop", 5000, 0, 5000);
+    histMan->addH1D_BJetBinned("mAllTop_withMETAndAsymJets", "mAllTop", 5000, 0, 5000);
+    histMan->addH1D_BJetBinned("m3_withMETAndAsymJets", "m3", 5000, 0, 5000);
+
     histMan->addH1D_BJetBinned("ttbar_pt", "ttbar_pt", 1000, 0, 1000);
     histMan->addH1D_BJetBinned("ttbar_pt_withMETCut", "ttbar_pt", 1000, 0, 1000);
     histMan->addH1D_BJetBinned("ttbar_pt_withMETAndAsymJets", "ttbar_pt", 1000, 0, 1000);
@@ -1076,14 +1070,18 @@ void Analysis::createHistograms() {
     histMan->addH1D_BJetBinned("ttbar_pz", "ttbar_pz", 1000, 0, 1000);
 
     histMan->addH1D_BJetBinned("HT", "HT", 5000, 0, 5000);
-    histMan->addH2D_BJetBinned("HTvsMttbar", "HT vs mttbar", 500, 0, 5000, 500, 0, 5000);
-    histMan->addH1D("numberOfJets", "numberOfJets", 10, 0, 10);
-    histMan->addH1D("numberOfBJets", "numberOfBJets", 10, 0, 10);
-    histMan->addH1D_BJetBinned("MET", "MET", 200, 0, 1000);
-    histMan->addH2D_BJetBinned("METvsMttbar", "MET vs mttbar", 500, 0, 5000, 200, 0, 1000);
-    histMan->addH1D_BJetBinned("mtW", "mtW", 600, 0, 600);
-    histMan->addH1D("electronD0", "electronD0", 1000, 0, 0.2);
-    histMan->addH1D_BJetBinned("neutrino_pz", "neutrino_pz", 1000, -500, 500);
+	histMan->addH1D_BJetBinned("HT_withMETAndAsymJets", "HT", 5000, 0, 5000);
+	histMan->addH2D_BJetBinned("HTvsMttbar", "HT vs mttbar", 500, 0, 5000, 500, 0, 5000);
+	histMan->addH1D("numberOfJets", "numberOfJets", 10, 0, 10);
+	histMan->addH1D("numberOfBJets", "numberOfBJets", 10, 0, 10);
+	histMan->addH1D_BJetBinned("MET", "MET", 200, 0, 1000);
+	histMan->addH1D_BJetBinned("MET_withMETAndAsymJets", "MET", 200, 0, 1000);
+	histMan->addH1D_BJetBinned("MET_withAsymJetsCut", "MET", 200, 0, 1000);
+	histMan->addH2D_BJetBinned("METvsMttbar", "MET vs mttbar", 500, 0, 5000, 200, 0, 1000);
+	histMan->addH1D_BJetBinned("mtW", "mtW", 600, 0, 600);
+	histMan->addH1D_BJetBinned("mtW_withMETAndAsymJets", "mtW", 600, 0, 600);
+	histMan->addH1D("electronD0", "electronD0", 1000, 0, 0.2);
+	histMan->addH1D_BJetBinned("neutrino_pz", "neutrino_pz", 1000, -500, 500);
 
     histMan->setCurrentCollection("QCDStudy");
     histMan->addH1D_JetBinned("MostPFIsolatedElectron_dPhiIn", "MostPFIsolatedElectron_dPhiIn", 50, 0, 0.1);
