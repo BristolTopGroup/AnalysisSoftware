@@ -118,7 +118,7 @@ def plotMttbar():
 def getControlRegionsFor(hist):
     pass        
 
-def plotHLTStudy(hists, suffix = ''):
+def plotHLTStudy(hists, suffix = '', rebin = 1):
     
     plots = ['HLTStudy/' + trigger + '/' + variable for trigger in triggers for variable in triggerVariables]
     saveAs = HistPlotter.saveAs
@@ -129,21 +129,25 @@ def plotHLTStudy(hists, suffix = ''):
         
         fired.Sumw2()
         visited.Sumw2()
+        
+        fired.Rebin(rebin)
+        visited.Rebin(rebin)
+        
         xlimits = [10,100]
         xTitle = 'jet p_{T} (GeV)'
         yTitle = 'efficiency/(GeV)'
         if 'jet_pt' in plot:
             xlimits = [10,100]
             xTitle = 'jet p_{T} (GeV)'
-            yTitle = 'efficiency/(GeV)'
+            yTitle = 'efficiency/(%d GeV)' % (1*rebin)
         elif 'jet_eta' in plot:
             xlimits = [-3,3]
             xTitle = 'jet #eta (GeV)'
-            yTitle = 'efficiency/(0.1)'
+            yTitle = 'efficiency/(%0.1f)' % (0.1*rebin)
         elif 'jet_phi' in plot:
             xlimits = [-4,4]
             xTitle = 'jet #phi (GeV)'
-            yTitle = 'efficiency/(0.1)'
+            yTitle = 'efficiency/(%0.1f)' % (0.1*rebin)
         
         fired.GetXaxis().SetRangeUser(xlimits[0], xlimits[1])
         visited.GetXaxis().SetRangeUser(xlimits[0], xlimits[1])
@@ -186,7 +190,7 @@ if __name__ == '__main__':
     gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
     
     files = {
-    'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_715.09pb_PFElectron_PF2PATJets_PFMET.root",
+    'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_882pb_PFElectron_PF2PATJets_PFMET.root",
     'data2':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_715.09pb_CaloElectron_CaloJets_CaloMET.root",
 #    'ttbar' : "/storage/results/histogramFiles/TTJet_715.09pb_PFElectron_PF2PATJets_PFMET.root",
 #    'wjets' : "/storage/results/histogramFiles/WJetsToLNu_715.09pb_PFElectron_PF2PATJets_PFMET.root",
@@ -232,8 +236,8 @@ if __name__ == '__main__':
 #    hists = makeDetailedMCStack( hists )
     
 #    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
-    plotHLTStudy(hists['data'])
-    plotHLTStudy(hists['data2'], 'Calo')
+    plotHLTStudy(hists['data'], rebin = 2)
+    plotHLTStudy(hists['data2'], 'Calo', rebin = 2)
     
 #    
 #    c = TCanvas("cname4", 'cname4', 1920, 1080)
