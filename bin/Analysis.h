@@ -26,7 +26,7 @@
 #include "../interface/HistHelpers/HistogramManager.h"
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
-#include "../interface/HLTriggerAnalyser.h"
+#include "../interface/Analysers/HLTriggerAnalyser.h"
 
 struct InterestingEvent {
     InterestingEvent(unsigned long run, unsigned long event, std::string file) :

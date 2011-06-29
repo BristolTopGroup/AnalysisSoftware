@@ -5,23 +5,17 @@
  *      Author: lkreczko
  */
 
-#include "../interface/HLTriggerAnalyser.h"
+#include "../../interface/Analysers/HLTriggerAnalyser.h"
 #include <iostream>
 namespace BAT {
 
 HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-	//	triggerCounts(),
 			histMan(histMan) {
-	//	createHistograms();
 }
 
 HLTriggerAnalyser::~HLTriggerAnalyser() {
 
 }
-
-//void HLTriggerAnalyser::increaseTriggerCount(HLTriggers::value trigger) {
-//	triggerCounts.at(trigger)++;
-//}
 
 void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	//do analysis
