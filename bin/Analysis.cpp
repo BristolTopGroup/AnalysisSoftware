@@ -31,9 +31,8 @@ void Analysis::analyze() {
         printNumberOfProccessedEventsEvery(100000);
         inspectEvents();
         //                doSynchExercise();
-//        if (currentEvent.GoodElectrons().size() > 0) {
-//        }
         hltriggerAnalyser->analyse(ttbarCandidate);
+        electronAnalyser->analyse(ttbarCandidate);
         doPileUpStudy();
         doTTbarCutFlow();
         doDiElectronAnalysis();
@@ -1179,6 +1178,7 @@ void Analysis::createHistograms() {
 //    histMan->addH1D("HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_visited_pt",
 //    			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_pt (visited)", 180, 20, 200);
     hltriggerAnalyser->createHistograms();
+    electronAnalyser->createHistograms();
 }
 
 Analysis::Analysis() :
@@ -1194,12 +1194,12 @@ Analysis::Analysis() :
     interestingEvents(),
     brokenEvents(),
     eventCheck(),
-    weights(Analysis::luminosity/*current lumi*/, 7, "pileup_160404-166861.root"),
+    weights(Analysis::luminosity/*current lumi*/, 7, "pileup_160404-167151.root"),
     weight(0),
     cutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
                     JetBin::NUMBER_OF_JET_BINS),
-    hltriggerAnalyser(new HLTriggerAnalyser(histMan)){
-    //    outputfile->SetCompressionLevel(7);
+    hltriggerAnalyser(new HLTriggerAnalyser(histMan)),
+    electronAnalyser(new ElectronAnalyser(histMan)){
     for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
         cutflow[cut] = 0;
         singleCuts[cut] = 0;

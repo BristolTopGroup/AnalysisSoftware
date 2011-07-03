@@ -27,6 +27,7 @@
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
 #include "../interface/Analysers/HLTriggerAnalyser.h"
+#include "../interface/Analysers/ElectronAnalyser.h"
 
 struct InterestingEvent {
     InterestingEvent(unsigned long run, unsigned long event, std::string file) :
@@ -70,6 +71,7 @@ private:
     float weight;
     BAT::Counter cutflowPerSample;
     boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
+    boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
 
 public:
     static float luminosity;
