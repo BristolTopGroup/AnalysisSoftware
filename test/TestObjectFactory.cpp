@@ -101,6 +101,7 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
     electron->setUsedAlgorithm(ElectronAlgorithm::Calo);
     electron->setSuperClusterEta(0);
     electron->setD0_wrtBeamSpot(0);
+    electron->setD0(0);
     VertexPointer pv = TestObjectFactory::goodVertex();
     electron->setZDistanceToPrimaryVertex(0);
 
@@ -112,6 +113,11 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
     electron->setNumberOfMissingInnerLayerHits(0);
     electron->setDCotThetaToNextTrack(0.5);
     electron->setDistToNextTrack(0.5);
+    int passId = 0;
+    CiCElectronID::value IDunderTest = CiCElectronID::eidSuperTightMC;
+    passId = passId | 1 << (int) IDunderTest;
+    electron->setCompressedCiCElectronID(passId);
+
     if (electron->isGood() == false) {
         cout << "Et " << electron->et() << endl;
         cout << "Eta " << electron->eta() << endl;
@@ -257,6 +263,7 @@ ElectronPointer TestObjectFactory::badElectronNoID() {
     badElectronNoID->setEcalIsolation(0.3);
     badElectronNoID->setTrackerIsolation(0.4);
     badElectronNoID->setSigmaIEtaIEta(0.009 + 2);
+    badElectronNoID->setCompressedCiCElectronID(0);
 
     assert(badElectronNoID->VBTF_W70_ElectronID() == false);
 
