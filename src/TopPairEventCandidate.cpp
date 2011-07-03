@@ -12,20 +12,16 @@ using namespace std;
 
 namespace BAT {
 
-//double const TopPairEventCandidate::matched_angle = 0.945666;
-//double const TopPairEventCandidate::matched_angle_sigma = 0.311091;
 double const TopPairEventCandidate::matched_leptonic_top_mass = 169.0;
 double const TopPairEventCandidate::matched_leptonic_top_mass_sigma = 16.3;
 double const TopPairEventCandidate::matched_hadronic_W_mass = 83.;
-double const TopPairEventCandidate::matched_hadronic_W_mass_sigma = 10.8995;
+double const TopPairEventCandidate::matched_hadronic_W_mass_sigma = 10.9;
 double const TopPairEventCandidate::matched_hadronic_top_mass = 174.7;
 double const TopPairEventCandidate::matched_hadronic_top_mass_sigma = 14.6;
-//double const TopPairEventCandidate::matched_ptratio = 0.18552;
-//double const TopPairEventCandidate::matched_ptratio_sigma = 0.401973;
 double const TopPairEventCandidate::matched_pt_ttbarSystem = 0.;
 double const TopPairEventCandidate::matched_pt_ttbarSystem_sigma = 50.;
 double const TopPairEventCandidate::matched_HTSystem = 1;
-double const TopPairEventCandidate::matched_HTSystem_sigma = 0.1;
+double const TopPairEventCandidate::matched_HTSystem_sigma = 0.15;
 double const TopPairEventCandidate::W_mass = 80.389;
 
 NeutrinoSelectionCriterion::value TopPairEventCandidate::usedNeutrinoSelection; // = NeutrinoSelectionCriterion::chi2;
@@ -120,15 +116,6 @@ bool TopPairEventCandidate::passesHighLevelTrigger() const {
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 		else if (runNumber > 165633)
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-//        else if(runNumber > 160000)
-//            return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30) || HLT(
-//					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || HLT(
-//					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30) || HLT(
-//					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30_BTagIP) || HLT(
-//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30) || HLT(
-//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30) || HLT(
-//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_BTagIP) || HLT(
-//					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30_CentralJet25_PFMHT20);
         else
             return false;
     }
@@ -731,18 +718,10 @@ double TopPairEventCandidate::getLeptonicChi2(double topMass, double angle) cons
     double massError = 2 * matched_leptonic_top_mass_sigma * matched_leptonic_top_mass_sigma;
     double massTerm = massDifference / massError;
 
-//    double angleDifference = TMath::Power(angle - matched_angle, 2);
-//    double angleError = 2 * matched_angle_sigma * matched_angle_sigma;
-//    double angleTerm = angleDifference / angleError;
-//    return 1 / sqrt(2) * (angleTerm + massTerm);
     return massTerm;
 }
 
 double TopPairEventCandidate::getHadronicChi2() const {
-//    double ptRatioDifference = TMath::Power(PtRatio() - matched_ptratio, 2);
-//    double ptRatioError = 2 * matched_ptratio_sigma * matched_ptratio_sigma;
-//    double ptRatioTerm = ptRatioDifference / ptRatioError;
-
     double WmassDifference = TMath::Power(hadronicW->mass() - matched_hadronic_W_mass, 2);
     double WmassError = 2 * matched_hadronic_W_mass_sigma * matched_hadronic_W_mass_sigma;
     double WmassTerm = WmassDifference / WmassError;
@@ -750,7 +729,8 @@ double TopPairEventCandidate::getHadronicChi2() const {
     double topMassDifference = TMath::Power(hadronicTop->mass() - matched_hadronic_top_mass, 2);
     double topMassError = 2 * matched_hadronic_top_mass_sigma * matched_hadronic_top_mass_sigma;
     double topMassTerm = topMassDifference / topMassError;
-    return 1 / sqrt(2) * (topMassTerm + WmassTerm);// + ptRatioTerm);
+
+    return 1 / sqrt(2) * (topMassTerm + WmassTerm);
 }
 
 double TopPairEventCandidate::PtRatio() const {
@@ -1073,9 +1053,6 @@ void TopPairEventCandidate::reconstruct(Rule rule, const ElectronPointer electro
     leptonicW1 = solutions.front()->leptonicW;
     leptonicW2 = solutions.front()->leptonicW;
     hadronicW = solutions.front()->hadronicW;
-//    leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
-//    leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
-//    hadronicW = ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
     leptonicTop1 = solutions.front()->leptonicTop;
     leptonicTop2 = solutions.front()->leptonicTop;
     hadronicTop = solutions.front()->hadronicTop;
