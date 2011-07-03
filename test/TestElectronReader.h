@@ -39,11 +39,11 @@ public:
     }
 
     void testReadElectronsSize() {
-        ASSERT_EQUAL(2, electrons.size());
+        ASSERT_EQUAL(1, electrons.size());
     }
 
     void testReadFirstElectronEnergy() {
-        ASSERT_EQUAL_DELTA(36.9815, firstElectron->energy(), 0.001);
+        ASSERT_EQUAL_DELTA(38.5694, firstElectron->energy(), 0.001);
     }
 
     void testReadFirstElectronIsIsolated() {
@@ -51,19 +51,19 @@ public:
     }
 
     void testFirstElectronSigmaEtaEta() {
-        ASSERT_EQUAL_DELTA(0.00915476, firstElectron->sigmaIEtaIEta(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.0120028, firstElectron->sigmaIEtaIEta(), 0.0000001);
     }
 
     void testFirstElectronDPhiIn() {
-        ASSERT_EQUAL_DELTA(0.0165923, firstElectron->dPhiIn(), 0.0000001);
+        ASSERT_EQUAL_DELTA(-0.0468993, firstElectron->dPhiIn(), 0.0000001);
     }
 
     void testFirstElectronDEtaIn() {
-        ASSERT_EQUAL_DELTA(-0.0053733, firstElectron->dEtaIn(), 0.0000001);
+        ASSERT_EQUAL_DELTA(-0.00361139, firstElectron->dEtaIn(), 0.0000001);
     }
 
     void testFirstElectronHadOverEm() {
-        ASSERT_EQUAL_DELTA(0, firstElectron->HadOverEm(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.104942, firstElectron->HadOverEm(), 0.000001);
     }
 
     void testFirstElectronCharge() {
@@ -71,12 +71,9 @@ public:
     }
 
     void testFirstElectronD0() {
-        ASSERT_EQUAL_DELTA(0.0368056, firstElectron->d0(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.048277, firstElectron->d0(), 0.0000001);
     }
 
-//    void testEcalSpikeBranchNumberOfElectrons() {
-//        ASSERT_EQUAL(numberOfElectronsReader->getVariable(), electrons.size());
-//    }
 
     void testShFracInnerHits() {
         ASSERT_EQUAL(1, firstElectron->shFracInnerLayer());
@@ -89,32 +86,77 @@ public:
 
     void testGSFTrackPhi() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(0.716952, track->phi(), 0.00001);
+        ASSERT_EQUAL_DELTA(1.23016, track->phi(), 0.00001);
     }
 
     void testGSFTrackEta() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(-0.649777, track->eta(), 0.00001);
+        ASSERT_EQUAL_DELTA(-0.663634, track->eta(), 0.00001);
     }
 
     void testGSFTrackPt() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(21.3504, track->pt(), 0.0001);
+        ASSERT_EQUAL_DELTA(6.09057, track->pt(), 0.0001);
     }
 
     void testGSFTrackTheta() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(2.17915, track->theta(), 0.00001);
+        ASSERT_EQUAL_DELTA(2.19048, track->theta(), 0.00001);
     }
 
     void testClosestCTFTrackID() {
-        ASSERT_EQUAL(278, firstElectron->closestCTFTrackID());
+        ASSERT_EQUAL(44, firstElectron->closestCTFTrackID());
     }
 
     void testTrackd0(){
         const TrackPointer track = firstElectron->GSFTrack();
         ASSERT_EQUAL(firstElectron->d0_wrtBeamSpot(), track->d0());
     }
+
+    void testCiCElectronIDVeryLooseMC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidVeryLooseMC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDLooseMC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidLooseMC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDMediumMC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidMediumMC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDTightMC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidTightMC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDSuperTightMC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidSuperTightMC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDHyperTight1MC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight1MC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDHyperTight2MC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight2MC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDHyperTight3MC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight3MC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
+
+        void testCiCElectronIDHyperTight4MC() {
+            CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight4MC;
+            ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
+        }
 };
 extern cute::suite make_suite_TestElectronReader() {
     cute::suite s;
@@ -138,6 +180,16 @@ extern cute::suite make_suite_TestElectronReader() {
 
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testClosestCTFTrackID));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testTrackd0));
+
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDVeryLooseMC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDLooseMC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDMediumMC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDTightMC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDSuperTightMC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight1MC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight2MC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight3MC));
+    s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight4MC));
 
     return s;
 }

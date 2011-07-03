@@ -3,7 +3,6 @@
 
 #include "../interface/RecoObjects/Electron.h"
 #include "TestObjectFactory.h"
-
 using namespace BAT;
 
 struct TestElectron {
@@ -744,9 +743,39 @@ public:
         int passId = 0;
         CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight4MC;
         passId = passId | 1 << (int) IDunderTest;
-
         goodElectron->setCompressedCiCElectronID(passId);
         ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
+        ASSERT(!goodElectron->CiC_ElectronID(CiCElectronID::eidHyperTight3MC));
+    }
+
+    void testCiCElectronIDNoID() {
+        int passId = 0;
+        goodElectron->setCompressedCiCElectronID(passId);
+        //if passId = 0 all IDs should be false
+        for(unsigned int id = 0; id < CiCElectronID::NUMBER_OF_CiCIds; ++ id)
+            ASSERT(!goodElectron->CiC_ElectronID((CiCElectronID::value) id));
+    }
+
+
+    void testCiCElectronIDMoreThanOneID() {
+        int passId = 0;
+        goodElectron->setCompressedCiCElectronID(passId);
+        CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight3MC;
+        CiCElectronID::value otherIDunderTest = CiCElectronID::eidHyperTight4MC;
+        passId = passId | 1 << (int) IDunderTest;
+        passId = passId | 1 << (int) otherIDunderTest;
+
+        goodElectron->setCompressedCiCElectronID(passId);
+
+        for (unsigned int id = 0; id < CiCElectronID::NUMBER_OF_CiCIds; ++id) {
+            CiCElectronID::value testId = (CiCElectronID::value) id;
+            if (testId == IDunderTest || testId == otherIDunderTest) {
+                ASSERT(goodElectron->CiC_ElectronID(testId));
+            } else {
+                ASSERT(!goodElectron->CiC_ElectronID(testId));
+            }
+        }
+
     }
 
 
@@ -828,10 +857,9 @@ extern cute::suite make_suite_TestElectron() {
     s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight2MC));
     s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight3MC));
     s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight4MC));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDNoID));
+    s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDMoreThanOneID));
 
-    //    s.push_back(CUTE_SMEMFUN(TestElectron, testSwissCrossBarrel));
-    //    s.push_back(CUTE_SMEMFUN(TestElectron, testSwissCrossEndcap));
-    //    s.push_back(CUTE_SMEMFUN(TestElectron, testSwissCrossNotEcalDriven));
     s.push_back(CUTE_SMEMFUN(TestElectron, testGSFTrack));
     return s;
 }
