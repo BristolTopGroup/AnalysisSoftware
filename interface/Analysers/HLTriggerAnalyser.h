@@ -11,18 +11,17 @@
 #include "../../interface/TopPairEventCandidate.h"
 #include "../../interface/HistHelpers/HistogramManager.h"
 #include "../../interface/HighLevelTriggers.h"
+#include "BasicAnalyser.h"
 
 namespace BAT {
-class HLTriggerAnalyser {
+class HLTriggerAnalyser : public BasicAnalyser {
 private:
-	boost::shared_ptr<HistogramManager> histMan;
-
 	void analyseTrigger(bool passesPreTrigger, bool passesTrigger, std::string histFolder, const JetPointer jet,
 			int prescale);
 
 public:
 	HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan);
-	~HLTriggerAnalyser();
+	virtual ~HLTriggerAnalyser();
 	void analyse(const TopPairEventCandidate& ttbarEvent);
 	void createHistograms();
 

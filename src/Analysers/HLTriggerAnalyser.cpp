@@ -10,7 +10,7 @@
 namespace BAT {
 
 HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-			histMan(histMan) {
+        BasicAnalyser(histMan) {
 }
 
 HLTriggerAnalyser::~HLTriggerAnalyser() {
