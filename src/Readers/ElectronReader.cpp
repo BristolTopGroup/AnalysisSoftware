@@ -6,13 +6,10 @@
  */
 
 #include "../../interface/Readers/ElectronReader.h"
-#include <iostream>
+
 namespace BAT {
 
-//const std::string ElectronReader::algorithmPrefixes[Electron::NUMBER_OF_ELECTRONALGORITHMS] = { "els", "PFElsAll" };
-
 ElectronReader::ElectronReader() :
-//    numberOfElectronsReader(),
     energyReader(),
     pxReader(),
     pyReader(),
@@ -49,7 +46,6 @@ ElectronReader::ElectronReader() :
 }
 
 ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value algo) :
-//    numberOfElectronsReader(input, "N" + ElectronAlgorithm::prefixes.at(algo)),
     energyReader(input, ElectronAlgorithm::prefixes.at(algo) + ".Energy"),
     pxReader(input, ElectronAlgorithm::prefixes.at(algo) + ".Px"),
     pyReader(input, ElectronAlgorithm::prefixes.at(algo) + ".Py"),
@@ -96,7 +92,7 @@ const ElectronCollection& ElectronReader::getElectrons() {
 }
 
 void ElectronReader::readElectrons() {
-//    unsigned int numberOfElectrons = numberOfElectronsReader.getVariable();
+
     for (unsigned int index = 0; index < energyReader.size(); index++) {
         float energy = energyReader.getVariableAt(index);
         float px = pxReader.getVariableAt(index);
