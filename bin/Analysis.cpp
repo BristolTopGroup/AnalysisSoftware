@@ -260,6 +260,19 @@ void Analysis::doTTBarAnalysis() {
                 histMan->H1D_BJetBinned("pt_NextToLeadingTop_withMETAndAsymJets")->Fill(nextToLeadingTop->pt(), weight);
                 histMan->H2D_BJetBinned("pt_leadingTop_vs_mttbar_withMETAndAsymJets")->Fill(mttbar, leadingTop->pt(), weight);
                 histMan->H2D_BJetBinned("pt_NextToLeadingTop_vs_mttbar_withMETAndAsymJets")->Fill(mttbar, nextToLeadingTop->pt(), weight);
+                histMan->H1D_BJetBinned("HT_withMETAndAsymJets")->Fill(ttbarCandidate.fullHT(), weight);
+                histMan->H1D_BJetBinned("mLeptonicTop_withMETAndAsymJets")->Fill(
+                        ttbarCandidate.getLeptonicTop()->mass(), weight);
+                histMan->H1D_BJetBinned("mHadronicTop_withMETAndAsymJets")->Fill(
+                        ttbarCandidate.getHadronicTop()->mass(), weight);
+                histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill(ttbarCandidate.getLeptonicTop()->mass(),
+                        weight);
+                histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill(ttbarCandidate.getHadronicTop()->mass(),
+                        weight);
+                histMan->H1D_BJetBinned("m3_withMETAndAsymJets")->Fill(ttbarCandidate.M3(), weight);
+                histMan->H1D_BJetBinned("MET_withMETAndAsymJets")->Fill(ttbarCandidate.MET()->et(), weight);
+                histMan->H1D_BJetBinned("mtW_withMETAndAsymJets")->Fill(
+                        ttbarCandidate.transverseWmass(ttbarCandidate.getElectronFromWDecay()), weight);
             }
         }
 
@@ -276,17 +289,7 @@ void Analysis::doTTBarAnalysis() {
             histMan->H2D_BJetBinned("pt_leadingTop_vs_mttbar_withAsymJetsCut")->Fill(mttbar, leadingTop->pt(), weight);
             histMan->H2D_BJetBinned("pt_NextToLeadingTop_vs_mttbar_withAsymJetsCut")->Fill(mttbar, nextToLeadingTop->pt(), weight);
 
-            histMan->H1D_BJetBinned("HT_withMETAndAsymJets")->Fill(ttbarCandidate.fullHT(), weight);
-			histMan->H1D_BJetBinned("mLeptonicTop_withMETAndAsymJets")->Fill(ttbarCandidate.getLeptonicTop()->mass(),
-					weight);
-			histMan->H1D_BJetBinned("mHadronicTop_withMETAndAsymJets")->Fill(ttbarCandidate.getHadronicTop()->mass(),
-					weight);
-			histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill(ttbarCandidate.getLeptonicTop()->mass(), weight);
-			histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill(ttbarCandidate.getHadronicTop()->mass(), weight);
-			histMan->H1D_BJetBinned("m3_withMETAndAsymJets")->Fill(ttbarCandidate.M3(), weight);
-			histMan->H1D_BJetBinned("MET_withMETAndAsymJets")->Fill(ttbarCandidate.MET()->et(), weight);
-			histMan->H1D_BJetBinned("mtW_withMETAndAsymJets")->Fill(ttbarCandidate.transverseWmass(
-					ttbarCandidate.getElectronFromWDecay()), weight);
+
         }
 
         for (unsigned int solutionIndex = 0; solutionIndex < solutions.size(); ++solutionIndex) {
