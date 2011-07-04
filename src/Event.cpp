@@ -12,6 +12,7 @@ using namespace std;
 namespace BAT {
 bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = false;
+bool Event::useCiCElectronID = false;
 Event::Event() :
     HLTs(new std::vector<int>()),
     HLTPrescales(new std::vector<int>()),
@@ -101,21 +102,35 @@ void Event::selectElectronsByQuality() {
     for (unsigned int index = 0; index < allElectrons.size(); ++index) {
         ElectronPointer electron = allElectrons.at(index);
 
-        if (electron->isGood())
+        bool isGood(false);
+        bool isGood20(false);
+
+        if(Event::useCiCElectronID){
+            isGood = electron->isGoodCiCElectronID();
+            isGood20 = electron->isGoodCiCElectronID(20);
+        }
+        else{
+            isGood = electron->isGood();
+            isGood20 = electron->isGood(20);
+        }
+
+        if (isGood)
             goodElectrons.push_back(electron);
 
-        if(electron->isGood(20))
+
+
+        if(isGood20)
             qcdElectrons.push_back(electron);
 
-        if (electron->isGood() && electron->isIsolated())
+        if (isGood && electron->isIsolated())
             goodIsolatedElectrons.push_back(electron);
 
         if(electron->algorithm() == ElectronAlgorithm::ParticleFlow){
-            if(electron->isGood() && electron->isPFIsolated())
+            if(isGood && electron->isPFIsolated())
                 goodPFIsolatedElectrons.push_back(electron);
         }
 
-        if (electron->isGood() == false && electron->isLoose())
+        if (isGood == false && electron->isLoose())
             looseElectrons.push_back(electron);
     }
 }

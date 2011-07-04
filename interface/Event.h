@@ -115,6 +115,7 @@ public:
     int HLTPrescale(HLTriggers::value trigger) const;
     static bool useCustomConversionTagger;
     static bool usePFIsolation;
+    static bool useCiCElectronID;
 
     float numberOfGeneratedPileUpVertices() const;
 

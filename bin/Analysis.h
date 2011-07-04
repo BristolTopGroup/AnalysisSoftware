@@ -104,6 +104,10 @@ public:
         //custom conversion tagger needs track information
         BAT::NTupleEventReader::loadTracks = use;
     }
+
+    static void useCiCElectronID(bool use){
+        BAT::Event::useCiCElectronID = use;
+    }
 private:
     void printNumberOfProccessedEventsEvery(unsigned long printEvery);
 //    void doEcalSpikeAnalysis();

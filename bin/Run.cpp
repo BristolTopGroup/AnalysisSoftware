@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
     Analysis::luminosity = 976.;
     Analysis::useCustomConversionTagger(false);
     Analysis::usePFIsolation(true);
+    Analysis::useCiCElectronID(true);
 
     boost::scoped_ptr<Analysis> myAnalysis(new Analysis());
    //         myAnalysis->setMaximalNumberOfEvents(100000);
