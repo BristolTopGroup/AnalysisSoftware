@@ -906,8 +906,8 @@ void Analysis::printInterestingEvents() {
 }
 
 void Analysis::printSummary() {
-    EventTablePrinter::printCutFlowLatexTable(cutflowPerSample);
-    EventTablePrinter::printUnweightedCutFlowLatexTable(cutflowPerSample);
+    EventTablePrinter::printCutFlowLatexTable(cutflowPerSample, Analysis::luminosity);
+    EventTablePrinter::printUnweightedCutFlowLatexTable(cutflowPerSample, Analysis::luminosity);
 
     cout << "total number of processed events: " << eventReader->getNumberOfProccessedEvents() << endl;
     cout << endl;

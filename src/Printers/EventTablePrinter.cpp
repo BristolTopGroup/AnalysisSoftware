@@ -5,7 +5,7 @@
 
 namespace BAT {
 namespace EventTablePrinter {
-extern void printCutFlowLatexTable(const Counter& cutFlow) {
+extern void printCutFlowLatexTable(const Counter& cutFlow, const double lumi) {
     using namespace std;
     cout << "Printing cut flow table" << endl;
 
@@ -17,7 +17,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow) {
     cout << "\\begin{tabular}{|l|rrrrrr|r|}" << endl;
     cout << "\\hline" << endl;
     cout << "\\multicolumn{8}{|l|}";
-    cout << "{Expected number of events for " << "36.145" << "/pb}";
+    cout << "{Expected number of events for " << lumi << "/pb}";
     cout << "\\\\\\hline" << endl;
     cout << " Cut " << setw(40) << left << right;
     //    cout << "Cut" << setw(40);
@@ -79,7 +79,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow) {
     cout << "\\end{tabular}\\\\[5mm]" << endl;
     cout << endl;
 }
-extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow) {
+extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow, const double lumi) {
     using namespace std;
     cout << "Printing cut flow table" << endl;
 
@@ -91,7 +91,7 @@ extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow) {
     cout << "\\begin{tabular}{|l|rrrrrrr|r|}" << endl;
     cout << "\\hline" << endl;
     cout << "\\multicolumn{8}{|l|}";
-    cout << "{Expected number of events for " << "36.145" << "/pb}";
+    cout << "{Expected number of events for " << lumi << "/pb}";
     cout << "\\\\\\hline" << endl;
     cout << " Cut " << setw(40) << left << right;
     //    cout << "Cut" << setw(40);
