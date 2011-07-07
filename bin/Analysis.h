@@ -108,6 +108,9 @@ public:
     static void useCiCElectronID(bool use){
         BAT::Event::useCiCElectronID = use;
     }
+
+    unsigned long getNumberOfProccessedEvents() const;
+
 private:
     void printNumberOfProccessedEventsEvery(unsigned long printEvery);
 //    void doEcalSpikeAnalysis();

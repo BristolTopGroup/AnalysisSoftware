@@ -67,6 +67,8 @@ int main(int argc, char **argv) {
                 "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_17.06.11-24.06.11/4ee1203e97f9a00957561f563636708a/*.root");//166 pb-1
     myAnalysis->addInputFile(
                     "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_24.06.11-01.07.11/4ee1203e97f9a00957561f563636708a/*.root");//94 pb-1
+    myAnalysis->addInputFile(
+                        "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_01.07.11-06.07.11/4ee1203e97f9a00957561f563636708a/*.root");//115 pb-1
 
     //==========================Summer11 samples========================================
 
@@ -109,16 +111,14 @@ int main(int argc, char **argv) {
             "/storage/TopQuarkGroup/mc/TToBLNu_TuneZ2_t-channel_7TeV-madgraph/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/TToBLNu_TuneZ2_tW-channel_7TeV-madgraph/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
-//
-//    //Di-Boson
+    //Di-Boson
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/WWtoAnything_TuneZ2_7TeV-pythia6-tauola/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/WZtoAnything_TuneZ2_7TeV-pythia6-tauola/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/ZZtoAnything_TuneZ2_7TeV-pythia6-tauola/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
-//
-//    //Photon + jets
+    //Photon + jets
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/GJets_TuneD6T_HT-40To100_7TeV-madgraph/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
     myAnalysis->addInputFile(
@@ -129,6 +129,7 @@ int main(int argc, char **argv) {
     cout << "starting analysis" << endl;
     myAnalysis->analyze();
     watch.Stop();
+    cout << "Number of events processed per minute: " << myAnalysis->getNumberOfProccessedEvents()/(watch.CpuTime()/60) << endl;
     watch.Print();
 
     return 0;

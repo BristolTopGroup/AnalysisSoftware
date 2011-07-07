@@ -1186,7 +1186,6 @@ void Analysis::createHistograms() {
 
 Analysis::Analysis() :
     eventReader(new NTupleEventReader()),
-//    eventFilter(Filter::makeTopPairEPlusJetsFilter()),
     currentEvent(),
     ttbarCandidate(),
     histMan(new BAT::HistogramManager()),
@@ -1271,6 +1270,7 @@ void Analysis::doPileUpStudy(){
     histMan->H1D("nVertex_reweighted")->Fill(currentEvent.Vertices().size(), weight);
 }
 
-void Analysis::doTriggerAnalysis(){
-
+unsigned long Analysis::getNumberOfProccessedEvents() const{
+    return eventReader->getNumberOfProccessedEvents();
 }
+
