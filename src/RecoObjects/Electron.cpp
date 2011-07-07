@@ -204,7 +204,7 @@ bool Electron::isGoodCiCElectronID(const float minEt) const {
     bool passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = CiC_ElectronID(CiCElectronID::eidHyperTight4MC);
+    bool passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
 
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }
