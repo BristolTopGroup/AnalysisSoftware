@@ -135,7 +135,7 @@ float EventWeightProvider::getWeight(DataType::value type) {
 float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
     if(numberOfVertices >= pileUpWeights.size()){
         ++numberOfEventsWithTooHighPileUp;
-        return 1.;
+        return 0.;
     }
 
     return pileUpWeights.at(numberOfVertices);
