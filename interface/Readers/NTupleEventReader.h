@@ -51,7 +51,7 @@ public:
 	virtual ~NTupleEventReader();
 	const Event& getNextEvent();
 	bool hasNextEvent();
-	void addInputFile(const char* fileName);
+	void addInputFile(const TString fileName);
 	// without check for unit tests -> faster to start, no difference in long analysis
 	void addInputFileWithoutCheck(const char* fileName);
 	void addInputFile(const char* fileName, DataType::value type);
