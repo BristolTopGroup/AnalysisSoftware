@@ -291,13 +291,14 @@ void Analysis::doTTBarAnalysis() {
 
 
         }
-
+        unsigned int numberOfSolutions(solutions.size());
         for (unsigned int solutionIndex = 0; solutionIndex < solutions.size(); ++solutionIndex) {
-            histMan->H1D_BJetBinned("mttbar_allSolutions")->Fill(solutions.at(solutionIndex)->resonance->mass(), weight);
-            histMan->H1D_BJetBinned("ttbar_pt_allSolutions")->Fill(solutions.at(solutionIndex)->resonance->pt(), weight);
+            histMan->H1D_BJetBinned("mttbar_allSolutions")->Fill(solutions.at(solutionIndex)->resonance->mass(), weight/numberOfSolutions);
+            histMan->H1D_BJetBinned("ttbar_pt_allSolutions")->Fill(solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
             histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions")->Fill(
                     solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
-                    weight);
+                    weight/numberOfSolutions);
+
             if (solutionIndex == 1) {
                 histMan->H1D_BJetBinned("mttbar_2ndSolution")->Fill(solutions.at(solutionIndex)->resonance->mass(),
                         weight);
@@ -324,12 +325,12 @@ void Analysis::doTTBarAnalysis() {
 
             if (ttbarCandidate.MET()->pt() > 20) {
                 histMan->H1D_BJetBinned("mttbar_allSolutions_withMETCut")->Fill(
-                        solutions.at(solutionIndex)->resonance->mass(), weight);
+                        solutions.at(solutionIndex)->resonance->mass(), weight/numberOfSolutions);
                 histMan->H1D_BJetBinned("ttbar_pt_allSolutions_withMETCut")->Fill(
-                        solutions.at(solutionIndex)->resonance->pt(), weight);
+                        solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
                 histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions_withMETCut")->Fill(
                         solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
-                        weight);
+                        weight/numberOfSolutions);
                 if (solutionIndex == 1) {
                     histMan->H1D_BJetBinned("mttbar_2ndSolution_withMETCut")->Fill(
                             solutions.at(solutionIndex)->resonance->mass(), weight);
@@ -349,21 +350,21 @@ void Analysis::doTTBarAnalysis() {
 
                 if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
                     histMan->H1D_BJetBinned("mttbar_allSolutions_withMETAndAsymJets")->Fill(
-                            solutions.at(solutionIndex)->resonance->mass(), weight);
+                            solutions.at(solutionIndex)->resonance->mass(), weight/numberOfSolutions);
                     histMan->H1D_BJetBinned("ttbar_pt_allSolutions_withMETAndAsymJets")->Fill(
-                            solutions.at(solutionIndex)->resonance->pt(), weight);
+                            solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
                     histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions_withMETAndAsymJets")->Fill(solutions.at(
-                            solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
+                            solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
                 }
             }
 
             if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
                 histMan->H1D_BJetBinned("mttbar_allSolutions_withAsymJetsCut")->Fill(
-                        solutions.at(solutionIndex)->resonance->mass(), weight);
+                        solutions.at(solutionIndex)->resonance->mass(), weight/numberOfSolutions);
                 histMan->H1D_BJetBinned("ttbar_pt_allSolutions_withAsymJetsCut")->Fill(
-                        solutions.at(solutionIndex)->resonance->pt(), weight);
+                        solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
                 histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions_withAsymJetsCut")->Fill(solutions.at(
-                        solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
+                        solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
 
                 if (ttbarCandidate.MET()->et() > 20) {
 
