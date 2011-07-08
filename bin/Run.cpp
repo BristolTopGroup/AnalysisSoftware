@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     Analysis::useElectronAlgorithm(ElectronAlgorithm::ParticleFlow);
     Analysis::useMuonAlgorithm(MuonAlgorithm::ParticleFlow);
     Analysis::useMETAlgorithm(METAlgorithm::ParticleFlowMET);
-    Analysis::luminosity = 976.;
+    Analysis::luminosity = 1091.45;
     Analysis::useCustomConversionTagger(false);
     Analysis::usePFIsolation(true);
     Analysis::useCiCElectronID(true);
