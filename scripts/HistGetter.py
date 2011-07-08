@@ -94,7 +94,7 @@ def makeDetailedMCStack( hists ):
 def makeMCStack( hists ):
 
     allMCSamples = ['qcd', 'zjets', 'wjets', 'singleTop', 'ttbar']
-    hists['allMC'] = makeStack( hists, allMCSamples )
+    hists['allMCStack'] = makeStack( hists, allMCSamples )
     return hists
 
 def makeStack( hists, samples ):

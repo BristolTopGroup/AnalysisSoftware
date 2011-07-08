@@ -61,7 +61,7 @@ def setStyle():
 
 def rebin( hists, nbins, histname ):
     for sample in hists.keys():
-        if len( hists[sample].keys() ) == 0:
+        if len( hists[sample].keys() ) == 0 or 'Stack' in sample:
             continue
         if '*' in histname:
             nameToken = histname.replace('*', '')
@@ -75,22 +75,28 @@ def rebin( hists, nbins, histname ):
 
 def setXRange( hists, limits = ( 0, 5000 ), histname = '' ):
     for sample in hists.keys():
-        if len( hists[sample].keys() ) == 0:
+        if len( hists[sample].keys() ) == 0 or 'Stack' in sample:
             continue
         if '*' in histname:
             nameToken = histname.replace('*', '')
             histlist = hists[sample]
             for name in histlist.keys():
                 if nameToken in name:
-                    hists[sample][name].GetXaxis().SetRangeUser( limits[0], limits[1] )
+                    if hists[sample][name] and hists[sample][name].GetXaxis():
+                        hists[sample][name].GetXaxis().SetRangeUser( limits[0], limits[1] )
+                    else:
+                        print "Can't find histogram", sample, name
         elif hists[sample].has_key( histname ):
-            hists[sample][histname].GetXaxis().SetRangeUser( limits[0], limits[1] );
+            if hists[sample][name]:
+                hists[sample][histname].GetXaxis().SetRangeUser( limits[0], limits[1] );
+            else:
+                print "Can't find histogram", sample, name
     return hists
 
 
 def setXTitle( hists, title, histname = '' ):
     for sample in hists.keys():
-        if len( hists[sample].keys() ) == 0:
+        if len( hists[sample].keys() ) == 0 or 'Stack' in sample:
             continue
         if '*' in histname:
             nameToken = histname.replace('*', '')
@@ -104,7 +110,7 @@ def setXTitle( hists, title, histname = '' ):
 
 def setYTitle( hists, title, histname = '' ):
     for sample in hists.keys():
-        if len( hists[sample].keys() ) == 0:
+        if len( hists[sample].keys() ) == 0 or 'Stack' in sample:
             continue
         if '*' in histname:
             nameToken = histname.replace('*', '')
@@ -197,8 +203,9 @@ def saveAs(canvas, name, outputFormat= 'png', outputFolder = ''):
     if not outputFolder == '' and not outputFolder.endswith('/'):
         outputFolder += '/'
     fullFileName = outputFolder + name + '.' + outputFormat
-    path = fullFileName[:fullFileName.rfind('/')]
-    createFolderIfDoesNotExist(path)
+    if '/' in fullFileName:
+        path = fullFileName[:fullFileName.rfind('/')]
+        createFolderIfDoesNotExist(path)
         
     canvas.SaveAs(fullFileName)
     

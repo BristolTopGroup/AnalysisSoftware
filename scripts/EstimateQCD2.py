@@ -9,14 +9,16 @@ from copy import deepcopy
 from array import array
 
 class QCDEstimator:
-    luminosity = 976#pb-1
+    luminosity = 976#349.007#pb-1
     mc_luminosity = 976#pb-1
     luminosity_unit = 'pb-1'
     scale = luminosity / mc_luminosity
     jetBins = ['0jet', '0orMoreJets', '1jet', '1orMoreJets', '2jets', '2orMoreJets', '3jets', '3orMoreJets', '4orMoreJets']
+    jetBins = HistPlotter.allBjetBins
     jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
                     '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
                     '4orMoreJets':'#geq 4 jets'}
+    jetBinsLatex = HistPlotter.BjetBinsLatex
     binWidth = 0.01
     rebin = 10
     fitRangesClosureTest = [ ( 0.1, 0.9 ), ( 0.1, 1.0 ), ( 0.1, 1.1 ),
@@ -27,6 +29,7 @@ class QCDEstimator:
     signalRegion = ( 0, 0.1 )
     maxValue = 1.6
     pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
+    pfIsoHistogramPrefix = 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_'
     pfIsoControlRegionHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_controlRegion2_WithMETCutAndAsymJetCuts_'
     relIsoHistogramPrefix = 'QCDStudy/QCDest_CombRelIso_'
     pfIsoResults = {}
@@ -63,12 +66,13 @@ class QCDEstimator:
                                        'numberOfAllMCEvents':0}
 
     def getHistograms( self ):
-        relIsoHists = [self.relIsoHistogramPrefix + jetbin for jetbin in self.jetBins]
+#        relIsoHists = [self.relIsoHistogramPrefix + jetbin for jetbin in self.jetBins]
         pfIsoHists = [self.pfIsoHistogramPrefix + jetbin for jetbin in self.jetBins]
-        pfIsoControlHists = [self.pfIsoControlRegionHistogramPrefix + jetbin for jetbin in self.jetBins]
-        allHists = relIsoHists
+#        pfIsoControlHists = [self.pfIsoControlRegionHistogramPrefix + jetbin for jetbin in self.jetBins]
+#        allHists = relIsoHists
+        allHists = []
         allHists.extend( pfIsoHists )
-        allHists.extend( pfIsoControlHists )
+#        allHists.extend( pfIsoControlHists )
         #print allHists
 #        HistGetter.hists = allHists
 
@@ -139,11 +143,11 @@ class QCDEstimator:
                 self.currentJetBin = bin
                 self.EstimateJetBin( bin )
                 self.plot( self.pfIsoHistogramPrefix + bin, self.pfIsoResults[bin] )
-                self.plot( self.relIsoHistogramPrefix + bin, self.relIsoResults[bin] )
+#                self.plot( self.relIsoHistogramPrefix + bin, self.relIsoResults[bin] )
                 self.allPfIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.pfIsoResults )
-                self.allRelIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.relIsoResults )
+#                self.allRelIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.relIsoResults )
         self.plotClosureTest( self.pfIsoHistogramPrefix, self.allPfIsoResults )
-        self.plotClosureTest( self.relIsoHistogramPrefix, self.allRelIsoResults )
+#        self.plotClosureTest( self.relIsoHistogramPrefix, self.allRelIsoResults )
 
 
     def doEstimate( self, function = 'gaus' ):
@@ -156,9 +160,9 @@ class QCDEstimator:
                 self.currentJetBin = bin
                 self.EstimateJetBin( bin )
                 self.plot( self.pfIsoHistogramPrefix + bin, self.pfIsoResults[bin] )
-                self.plot( self.relIsoHistogramPrefix + bin, self.relIsoResults[bin] )
+#                self.plot( self.relIsoHistogramPrefix + bin, self.relIsoResults[bin] )
                 self.allPfIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.pfIsoResults )
-                self.allRelIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.relIsoResults )
+#                self.allRelIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.relIsoResults )
 
     def EstimateJetBin( self, jetbin ):
 #        fitRange = self.currentFitRange
@@ -184,16 +188,16 @@ class QCDEstimator:
         self.pfIsoResults[jetbin]['estimatedNumberOfQCDEvents'] = estimate
 
 #---------------------------------------------------------------------------------------------------------------------- 
-        self.relIsoResults[jetbin]['actualNumberOfQCDEvents'] = QCD[relIsoHist].GetBinContent(1)
-        self.relIsoResults[jetbin]['numberOfAllDataEvents'] = data[relIsoHist].GetBinContent(1)
-        self.relIsoResults[jetbin]['numberOfAllMCEvents'] = allMC[relIsoHist].GetBinContent(1)
-
-        relIsoFit = self.doFit( data[relIsoHist] )
-        self.relIsoResults[jetbin]['fitFunction'] = relIsoFit
-        self.relIsoResults[jetbin]['fitParameters'] = self.getFitParameters( relIsoFit )
-
-        estimate = relIsoFit.Integral( self.signalRegion[0], self.signalRegion[1] ) / ( self.binWidth * self.rebin )
-        self.relIsoResults[jetbin]['estimatedNumberOfQCDEvents'] = estimate
+#        self.relIsoResults[jetbin]['actualNumberOfQCDEvents'] = QCD[relIsoHist].GetBinContent(1)
+#        self.relIsoResults[jetbin]['numberOfAllDataEvents'] = data[relIsoHist].GetBinContent(1)
+#        self.relIsoResults[jetbin]['numberOfAllMCEvents'] = allMC[relIsoHist].GetBinContent(1)
+#
+#        relIsoFit = self.doFit( data[relIsoHist] )
+#        self.relIsoResults[jetbin]['fitFunction'] = relIsoFit
+#        self.relIsoResults[jetbin]['fitParameters'] = self.getFitParameters( relIsoFit )
+#
+#        estimate = relIsoFit.Integral( self.signalRegion[0], self.signalRegion[1] ) / ( self.binWidth * self.rebin )
+#        self.relIsoResults[jetbin]['estimatedNumberOfQCDEvents'] = estimate
 
 
 
@@ -274,15 +278,17 @@ class QCDEstimator:
 
     def plotClosureTest( self, histname, results ):
         c2 = TCanvas( "c2", "QCD estimates", 1080, 1080 );
-        x = array( 'd', [2, 3, 4] )
+        x = array( 'd', [1, 2, 3] )
         jetBinsOfInterest = [#'1jet', 
                              '2jets', '3jets', '4orMoreJets']
+        
+        jetBinsOfInterest = HistPlotter.exclusiveBjetBins
         function = self.currentFitFuntion
 
         gStyle.SetMarkerSize( 1.7 );
         gStyle.SetMarkerStyle( 20 );
         c2.SetTopMargin( 0.1 );
-#        c2.SetLeftMargin( 0.12 );
+        c2.SetLeftMargin( 0.12 );
         c2.SetRightMargin( 0.35 );
 
         y = {}
@@ -297,6 +303,7 @@ class QCDEstimator:
                 if not true == 0:
                     variation = ( est - true ) / true
                 y[range].append( variation )
+                print fitRange, bin, variation
         nbins = 3
         gr1 = TGraph( nbins, x, array( 'd', y['%1.1f-%1.1f' % self.fitRangesClosureTest[0]] ) )
         gr2 = TGraph( nbins, x, array( 'd', y['%1.1f-%1.1f' % self.fitRangesClosureTest[1]] ) )
@@ -335,11 +342,11 @@ class QCDEstimator:
         h.Draw();
         h.SetYTitle( "Deviation = (N_{QCD,est}-N_{QCD,true})/N_{QCD,true}" );
         h.GetYaxis().SetRangeUser( -1, 1 );
-        h.GetXaxis().SetRangeUser( 1.5, 5.5 );
-#        h.GetXaxis().SetBinLabel( 1, "1j" );
-        h.GetXaxis().SetBinLabel( 2, "2j" );
-        h.GetXaxis().SetBinLabel( 3, "3j" );
-        h.GetXaxis().SetBinLabel( 4, "#geq4j" );
+        h.GetXaxis().SetRangeUser( 0.5, 2.5 );
+        h.GetXaxis().SetBinLabel( 1, "0btags" );
+        h.GetXaxis().SetBinLabel( 2, "1btags" );
+        h.GetXaxis().SetBinLabel( 3, "2btags" );
+#        h.GetXaxis().SetBinLabel( 4, "3btags" );
         h.GetXaxis().SetLabelSize( 0.07 );
         h.GetYaxis().SetTitleOffset( 1.3 );
 
@@ -463,7 +470,14 @@ class QCDEstimator:
         #print '=' * 60
         #self.printJetBinResults( results, '3orMoreJets' )
         #print '=' * 60
-        self.printJetBinResults( results, '4orMoreJets' )
+#        self.printJetBinResults( results, '4orMoreJets' )
+        self.printJetBinResults( results, '0orMoreBtag' )
+        print '=' * 60
+        self.printJetBinResults( results, '1orMoreBtag' )
+        print '=' * 60
+        self.printJetBinResults( results, '2orMoreBtags' )
+        print '=' * 60
+        self.printJetBinResults( results, '3orMoreBtags' )
         print '=' * 60
 
 
@@ -473,7 +487,7 @@ class QCDEstimator:
         predicted = results[results.keys()[0]][jetBin]['actualNumberOfQCDEvents']
         allData = results[results.keys()[0]][jetBin]['numberOfAllDataEvents']
         allMC = results[results.keys()[0]][jetBin]['numberOfAllMCEvents']
-
+        print jetBin
         if jetBin == '4orMoreJets':
             print 'Estimation for >= 4 jets'
         elif jetBin == '3orMoreJets':
@@ -550,7 +564,7 @@ if __name__ == '__main__':
 
     path = '/storage/results/2011/'
 #    files = {
-#            'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_976pb_PFElectron_PF2PATJets_PFMET.root",
+#       'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_976pb_PFElectron_PF2PATJets_PFMET.root",
 #    'ttbar' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TTJet_976pb_PFElectron_PF2PATJets_PFMET.root",
 #    'wjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WJetsToLNu_976pb_PFElectron_PF2PATJets_PFMET.root",
 #    'zjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/DYJetsToLL_976pb_PFElectron_PF2PATJets_PFMET.root",
@@ -597,7 +611,11 @@ if __name__ == '__main__':
     print '=' * 60
     print 'ParticleFlowIsolation results'
     q.printResults( q.allPfIsoResults )
-    q.plot('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_4orMoreJets', q.allPfIsoResults['0.2-1.1']['4orMoreJets'])
+#    q.plot('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_4orMoreJets', q.allPfIsoResults['0.2-1.1']['4orMoreJets'])
+    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0orMoreBtag', q.allPfIsoResults['0.2-1.1']['0orMoreBtag'])
+    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1orMoreBtag', q.allPfIsoResults['0.2-1.1']['1orMoreBtag'])
+    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_2orMoreBtags', q.allPfIsoResults['0.2-1.1']['2orMoreBtags'])
+    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_3orMoreBtags', q.allPfIsoResults['0.2-1.1']['3orMoreBtags'])
     #q.pfIsoHistogramPrefix = 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts'
 #    print 'Relative isolation results'
 #    q.printResults( q.allRelIsoResults )
@@ -606,5 +624,5 @@ if __name__ == '__main__':
 
     #print 'Starting closure tests'
     q.doClosureTests( 'pol1' )
-    q.plotControlRegionComparison()
+    #q.plotControlRegionComparison()
 
