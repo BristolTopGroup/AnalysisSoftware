@@ -67,7 +67,9 @@ void Analysis::initiateEvent() {
     ttbarCandidate = TopPairEventCandidate(currentEvent);
     weight = weights.getWeight(currentEvent.getDataType());
     if(!currentEvent.isRealData()){
-        weight *= weights.reweightPileUp(currentEvent.numberOfGeneratedPileUpVertices());
+        pileUpWeight = weights.reweightPileUp(currentEvent.numberOfGeneratedPileUpVertices());
+        weight *= pileUpWeight;
+
     }
     currentEvent.setEventWeight(weight);
 
@@ -934,6 +936,8 @@ void Analysis::createHistograms() {
     histMan->setCurrentCollection("pileupStudy");
     histMan->addH1D("nVertex", "number of primary vertices", 51, 0, 50);
     histMan->addH1D("nVertex_reweighted", "number of primary vertices", 51, 0, 50);
+    histMan->addH1D_BJetBinned("nVertex_reweighted_withMETAndAsymJets", "number of primary vertices", 51, 0, 50);
+    histMan->addH1D_BJetBinned("nVertex_withMETAndAsymJets", "number of primary vertices", 51, 0, 50);
     //histograms for Jet study
     histMan->setCurrentCollection("jetStudy");
     histMan->addH1D_BJetBinned("AllJetMass", "AllJetMass", 500, 0, 500);
@@ -1197,8 +1201,9 @@ Analysis::Analysis() :
     interestingEvents(),
     brokenEvents(),
     eventCheck(),
-    weights(Analysis::luminosity/*current lumi*/, 7, "pileup_160404-167151.root"),
+    weights(Analysis::luminosity/*current lumi*/, 7, "Pileup_2011_EPS_8_jul.root"),
     weight(0),
+    pileUpWeight(1),
     cutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
                     JetBin::NUMBER_OF_JET_BINS),
     hltriggerAnalyser(new HLTriggerAnalyser(histMan)),
@@ -1265,10 +1270,20 @@ void Analysis::checkForBrokenEvents(){
     }
 }
 
-void Analysis::doPileUpStudy(){
+void Analysis::doPileUpStudy() {
     histMan->setCurrentCollection("pileupStudy");
-    histMan->H1D("nVertex")->Fill(currentEvent.Vertices().size());
-    histMan->H1D("nVertex_reweighted")->Fill(currentEvent.Vertices().size(), weight);
+    if (pileUpWeight > 0) {
+        histMan->H1D("nVertex")->Fill(currentEvent.Vertices().size(), weight/pileUpWeight);
+        histMan->H1D("nVertex_reweighted")->Fill(currentEvent.Vertices().size(), weight);
+
+        if (ttbarCandidate.passesFullTTbarEPlusJetSelection()) {
+            if (ttbarCandidate.passesMETCut() && ttbarCandidate.passesAsymmetricJetCuts()) {
+                histMan->H1D_BJetBinned("nVertex_withMETAndAsymJets")->Fill(currentEvent.Vertices().size(), weight/pileUpWeight);
+                histMan->H1D_BJetBinned("nVertex_reweighted_withMETAndAsymJets")->Fill(currentEvent.Vertices().size(), weight);
+            }
+        }
+    }
+
 }
 
 unsigned long Analysis::getNumberOfProccessedEvents() const{

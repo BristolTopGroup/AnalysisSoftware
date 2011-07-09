@@ -68,7 +68,7 @@ private:
     std::vector<InterestingEvent> interestingEvents, brokenEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
     BAT::EventWeightProvider weights;
-    float weight;
+    float weight, pileUpWeight;
     BAT::Counter cutflowPerSample;
     boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
