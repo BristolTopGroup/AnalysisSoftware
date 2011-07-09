@@ -27,7 +27,7 @@ def plotMttbar():
     #wjetScale = 31314/3/7899
     savePath = "/storage/results/plots/ElectronHad/"
     #qcdScale = {'default':0.78, 'withMETAndAsymJets': 1.58};
-    qcdScale = {'default':0.5, 'withMETAndAsymJets': 0.98850};
+    qcdScale = {'default':1.0723, 'withMETAndAsymJets': 1.42330566544};
 #    qcdScale = {'default':1, 'withMETAndAsymJets': 1.};
     #    data = TFile.Open("data2.9pb_fullSetOfVars.root");
 #    data = TFile.Open("/storage/results/histogramFiles/SimpleCutBasedElectronID/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root");

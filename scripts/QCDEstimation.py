@@ -52,10 +52,10 @@ def getQCDEstimate(histname, datafile):
             hists = getHistsFromFiles(hists, files)
             histogramForEstimation = hists['data'][histogramForEstimation]
             histogramForEstimation.Rebin(rebin)
-            fit1 = doFit(histogramForEstimation, function, (0.1, 1.1))
+            fit1 = doFit(histogramForEstimation, function, (0.2, 1.1))
             if fit1:
                 fit1 = fit1.Clone()
-            fit2 = doFit(histogramForEstimation, function, (0.2, 1.1))
+            fit2 = doFit(histogramForEstimation, function, (0.3, 1.1))
             if fit2:
                 fit2 = fit2.Clone()
             
@@ -75,45 +75,45 @@ if __name__ == '__main__':
     gROOT.SetBatch(True)
     gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
 #    files = {
-#    'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'ttbar' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TTJet_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'wjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WJetsToLNu_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'zjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/DYJetsToLL_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_BCtoE_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_BCtoE_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_BCtoE_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_EMEnriched_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_EMEnriched_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_EMEnriched_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-40To100_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-100To200_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-200_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'tW' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_tW-channel_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'tchan' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_t-channel_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'ww' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WWtoAnything_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'wz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WZtoAnything_976pb_PFElectron_PF2PATJets_PFMET.root",
-#    'zz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/ZZtoAnything_976pb_PFElectron_PF2PATJets_PFMET.root",
+#    'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'ttbar' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TTJet_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'wjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WJetsToLNu_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'zjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/DYJetsToLL_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'bce1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'bce2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'bce3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'enri1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'enri2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'enri3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'pj1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-40To100_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'pj2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-100To200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'pj3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'tW' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_tW-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'tchan' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_t-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'ww' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WWtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'wz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+#    'zz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/ZZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
 #             }
     
     files = {
-    'data':"/storage/results/histogramFiles/CiCElectron ID/data_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'ttbar' : "/storage/results/histogramFiles/CiCElectron ID/TTJet_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'wjets' : "/storage/results/histogramFiles/CiCElectron ID/WJetsToLNu_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'zjets' : "/storage/results/histogramFiles/CiCElectron ID/DYJetsToLL_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_BCtoE_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_BCtoE_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_BCtoE_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_EMEnriched_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_EMEnriched_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_EMEnriched_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj1' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-40To100_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj2' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-100To200_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj3' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-200_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'tW' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_tW-channel_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'tchan' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_t-channel_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'ww' : "/storage/results/histogramFiles/CiCElectron ID/WWtoAnything_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'wz' : "/storage/results/histogramFiles/CiCElectron ID/WZtoAnything_976pb_PFElectron_PF2PATJets_PFMET.root",
-    'zz' : "/storage/results/histogramFiles/CiCElectron ID/ZZtoAnything_976pb_PFElectron_PF2PATJets_PFMET.root",
+    'data':"/storage/results/histogramFiles/CiCElectron ID/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'ttbar' : "/storage/results/histogramFiles/CiCElectron ID/TTJet_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'wjets' : "/storage/results/histogramFiles/CiCElectron ID/WJetsToLNu_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'zjets' : "/storage/results/histogramFiles/CiCElectron ID/DYJetsToLL_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'bce3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'enri3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj1' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-40To100_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj2' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-100To200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'pj3' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'tW' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_tW-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'tchan' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_t-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'ww' : "/storage/results/histogramFiles/CiCElectron ID/WWtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'wz' : "/storage/results/histogramFiles/CiCElectron ID/WZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
+    'zz' : "/storage/results/histogramFiles/CiCElectron ID/ZZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
              }
 
 
