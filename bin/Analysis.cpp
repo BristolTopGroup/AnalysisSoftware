@@ -152,6 +152,13 @@ void Analysis::doDiElectronAnalysis() {
         ElectronPointer secondElectron = electrons.at(1);
         histMan->H1D_JetBinned("diElectronMass")->Fill(leadingElectron->invariantMass(secondElectron), weight);
     }
+
+    ElectronCollection isolatedElectrons = currentEvent.GoodPFIsolatedElectrons();
+    if (isolatedElectrons.size() == 2) {
+		ElectronPointer leadingElectron = isolatedElectrons.front();
+		ElectronPointer secondElectron = isolatedElectrons.at(1);
+		histMan->H1D_JetBinned("diElectronMass_iso")->Fill(leadingElectron->invariantMass(secondElectron), weight);
+	}
 }
 
 void Analysis::doTTBarAnalysis() {
@@ -504,11 +511,22 @@ void Analysis::doQCDStudy() {
         const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron();
         histMan->H1D_JetBinned("QCDest_PFIsolation")->Fill(electron->pfIsolation(), weight);
 
-        if (ttbarCandidate.GoodBJets().size() >= 1)
-            histMan->H1D_JetBinned("QCDest_PFIsolation_1btag")->Fill(electron->pfIsolation(), weight);
+        if (ttbarCandidate.GoodBJets().size() >= 1){
+        	histMan->H1D_JetBinned("QCDest_PFIsolation_1btag")->Fill(electron->pfIsolation(), weight);
+        	if(ttbarCandidate.passesAsymmetricJetCuts() && ttbarCandidate.passesMETCut()){
+        		histMan->H1D_JetBinned("QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(), weight);
+        	}
+        }
 
-        if (ttbarCandidate.GoodBJets().size() >= 2)
-            histMan->H1D_JetBinned("QCDest_PFIsolation_2btag")->Fill(electron->pfIsolation(), weight);
+
+        if (ttbarCandidate.GoodBJets().size() >= 2) {
+			histMan->H1D_JetBinned("QCDest_PFIsolation_2btag")->Fill(electron->pfIsolation(), weight);
+			if (ttbarCandidate.passesAsymmetricJetCuts() && ttbarCandidate.passesMETCut()) {
+				histMan->H1D_JetBinned("QCDest_PFIsolation_2btag_WithMETCutAndAsymJetCuts")->Fill(
+						electron->pfIsolation(), weight);
+			}
+		}
+
 
         if(ttbarCandidate.GoodJets().size() >= 4)
             histMan->H1D_BJetBinned("PFIsolation")->Fill(electron->pfIsolation(), weight);
@@ -972,7 +990,8 @@ void Analysis::createHistograms() {
 
     //end of MC histograms
     histMan->setCurrentCollection("diElectronAnalysis");
-    histMan->addH1D_JetBinned("diElectronMass", "diElectronMass", 2000, 0, 2000);
+    histMan->addH1D_JetBinned("diElectronMass", "diElectronMass", 7000, 0, 7000);
+    histMan->addH1D_JetBinned("diElectronMass_iso", "diElectronMass (iso)", 7000, 0, 7000);
 
     histMan->setCurrentCollection("topReconstruction");
     histMan->addH1D("electron_et", "electron_et", 500, 0, 500);
@@ -1126,22 +1145,24 @@ void Analysis::createHistograms() {
 
     //histMan->addH1D_JetBinned("QCDest_PFIsolation_WithAsymJetCuts", "PFIso", 1000, 0, 10);
 
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_1btag", "PFIso (>=1 btag)", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_1btag", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_2btag", "PFIso (>=2 btag)", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_2btag", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithMETCut", "PFIso control region", 1000, 0, 10);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_1btag", "PFIso (>=1 btag)", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts", "PFIso (>=1 btag)", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_1btag", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_2btag", "PFIso (>=2 btag)", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_2btag_WithMETCutAndAsymJetCuts", "PFIso (>=2 btag)", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_2btag", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithMETCut", "PFIso control region", 500, 0, 5);
     histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithMETCutAndAsymJetCuts", "PFIso control region",
             1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithAsymJetCuts", "PFIso control region", 1000, 0, 10);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithAsymJetCuts", "PFIso control region", 500, 0, 5);
 
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCut", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCutAndAsymJetCuts", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithAsymJetCuts", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_1btag", "PFIso control region", 1000, 0, 10);
-    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_2btag", "PFIso control region", 1000, 0, 10);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCut", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCutAndAsymJetCuts", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithAsymJetCuts", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_1btag", "PFIso control region", 500, 0, 5);
+    histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_2btag", "PFIso control region", 500, 0, 5);
 
 
     histMan->setCurrentCollection("topReconstruction");
