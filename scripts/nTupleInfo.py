@@ -5,6 +5,8 @@ Created on Mar 5, 2011
 '''
 from __future__ import division
 from ROOT import *
+import sys, os
+from math import sqrt
 
 def getBranchInfo(listOfBranches):
     branches = []
@@ -74,6 +76,8 @@ def printBiggestConsumers(branches, filesize):
         consumers.append(consumer)
     top = 10
     current = 1
+    
+    print '| *Name* | *Compressed size (MB)* | *Fraction of file size* |'
     for consumer in sorted(consumers, reverse=True):
         if current > top:
             break
@@ -81,33 +85,38 @@ def printBiggestConsumers(branches, filesize):
         current += 1
         branch = consumer[consumer.keys()[0]]
         zipSize = branch['zippedBytes'] / 1024 / 1024#MB
-        print '| !%s  |  %.3f |  %.3f |' %(branch['name'], zipSize, zipSize / filesize * 100)#%)
+        print '| !%s  |  %.3f |  %.3f%% |' %(branch['name'], zipSize, zipSize / filesize * 100)#%)
 #        print branch['name'], zipSize, zipSize / filesize * 100#%
         
         
 if __name__ == '__main__':
     gROOT.SetBatch(1);
     chain = TChain("rootTupleTree/tree");
-
-    chain.Add("/storage/TopQuarkGroup/mc/Spring11/TTJets_TuneD6T_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1/LQNTuple_TTJets_merged_1.root");
-    #chain.Add("/storage/TopQuarkGroup/mc/fall10_7TeV_v1_e25skim/TTJets_TuneD6T_7TeV-madgraph-tauola_Fall10-START38_V12-v2/nTuple_ttjet_merged_1.root");
-    filesize = chain.GetFile().GetSize() / 1024 / 1024#MB
+    filesize = 0
     
+    if len(sys.argv) < 2:
+        print 'wrong usage'
+        
+    files = sys.argv[1:]
+    add = chain.Add
+    size = os.path.getsize
+        
+    for file in files:
+        add(file)
+        filesize += size(file)
+
+    filesize = filesize/ 1024 / 1024#MB
+
     branches = getBranchInfo(chain.GetListOfBranches())
     numberOfEvents = chain.GetEntries()
-    print '---++ MC content'
-    print 'Size of event: %.3f KB' % (filesize/numberOfEvents*1024)
+    if '_data_' in files[0]:
+        print '---++ DATA content'
+    else:
+        print '---++ MC content'
+    
+    sizePerEvent = filesize/numberOfEvents*1024
+    print 'Size of event: %.3f KB +- %.3f' % (sizePerEvent, 1/sqrt(numberOfEvents)*sizePerEvent)
     printTwikiTable(branches, filesize)
-    #printBiggestConsumers(branches, filesize)
     
-    chain = TChain("rootTupleTree/tree");
-    chain.Add("/storage/TopQuarkGroup/data/Run2011A-PromptReco-v2/*_1.root");
-    #chain.Add("/storage/TopQuarkGroup/data/Nov4ReReco_JEC_Spring_V8_36.145pb_e25skim/Run2010B/*_1.root");
-    filesize = chain.GetFile().GetSize() / 1024 / 1024#MB
-    
-    branches = getBranchInfo(chain.GetListOfBranches())
-    
-    print '---++ DATA content'
-    print 'Size of event: %.3f KB' % (filesize/numberOfEvents*1024)
-    printTwikiTable(branches, filesize)
-    #printBiggestConsumers(branches, filesize)
+    print '---+++ Biggest consumers'
+    printBiggestConsumers(branches, filesize)

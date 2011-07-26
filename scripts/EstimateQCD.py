@@ -7,13 +7,15 @@ from ROOT import *
 from math import pow, exp, sqrt
 from copy import deepcopy
 from array import array
+import inputFiles
 
 class QCDEstimator:
     luminosity = 1091.45#pb-1
     mc_luminosity = 1091.45#pb-1
     luminosity_unit = 'pb-1'
     scale = luminosity / mc_luminosity
-    jetBins = ['0jet', '0orMoreJets', '1jet', '1orMoreJets', '2jets', '2orMoreJets', '3jets', '3orMoreJets', '4orMoreJets']
+    jetBins = [#'0jet', '0orMoreJets', '1jet', '1orMoreJets', '2jets', '2orMoreJets', 
+               '3jets', '3orMoreJets', '4orMoreJets']
     jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
                     '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
                     '4orMoreJets':'#geq 4 jets'}
@@ -27,7 +29,7 @@ class QCDEstimator:
                            ( 0.2, 1.1 ), ( 0.3, 1.1 )]
     signalRegion = ( 0, 0.1 )
     maxValue = 1.6
-    pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_'#WithMETCutAndAsymJetCuts_'
+    pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
     pfIsoControlRegionHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_controlRegion2_'#WithMETCutAndAsymJetCuts_'
     relIsoHistogramPrefix = 'QCDStudy/QCDest_CombRelIso_'
     pfIsoResults = {}
@@ -140,11 +142,11 @@ class QCDEstimator:
                 self.currentJetBin = bin
                 self.EstimateJetBin( bin )
                 self.plot( self.pfIsoHistogramPrefix + bin, self.pfIsoResults[bin] )
-                self.plot( self.relIsoHistogramPrefix + bin, self.relIsoResults[bin] )
+#                self.plot( self.relIsoHistogramPrefix + bin, self.relIsoResults[bin] )
                 self.allPfIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.pfIsoResults )
-                self.allRelIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.relIsoResults )
+#                self.allRelIsoResults['%1.1f-%1.1f' % fitRange] = deepcopy( self.relIsoResults )
         self.plotClosureTest( self.pfIsoHistogramPrefix, self.allPfIsoResults )
-        self.plotClosureTest( self.relIsoHistogramPrefix, self.allRelIsoResults )
+#        self.plotClosureTest( self.relIsoHistogramPrefix, self.allRelIsoResults )
 
 
     def doEstimate( self, function = 'gaus' ):
@@ -277,7 +279,8 @@ class QCDEstimator:
         c2 = TCanvas( "c2", "QCD estimates", 1080, 1080 );
         x = array( 'd', [3, 4] )
         jetBinsOfInterest = [#'1jet', 
-                             '2jets', '3jets', '4orMoreJets']
+                             #'2jets', 
+                             '3jets', '4orMoreJets']
         function = self.currentFitFuntion
 
         gStyle.SetMarkerSize( 1.7 );
@@ -297,6 +300,9 @@ class QCDEstimator:
                 variation = 0
                 if not true == 0:
                     variation = ( est - true ) / true
+                    if bin == '4orMoreJets':
+                        print bin, fitRange
+                        print est, true, variation
                 y[range].append( variation )
         nbins = 3
         gr1 = TGraph( nbins, x, array( 'd', y['%1.1f-%1.1f' % self.fitRangesClosureTest[0]] ) )
@@ -550,62 +556,24 @@ if __name__ == '__main__':
     gROOT.ProcessLine( 'gErrorIgnoreLevel = 3001;' )
 
     path = '/storage/results/2011/'
-#    files = {
-#            'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'ttbar' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TTJet_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'wjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WJetsToLNu_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'zjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/DYJetsToLL_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-40To100_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-100To200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'tW' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_tW-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'tchan' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_t-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'ww' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WWtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'wz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'zz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/ZZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",}
     
-    files = {
-    'data':"/storage/results/histogramFiles/CiCElectron ID/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'ttbar' : "/storage/results/histogramFiles/CiCElectron ID/TTJet_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'wjets' : "/storage/results/histogramFiles/CiCElectron ID/WJetsToLNu_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'zjets' : "/storage/results/histogramFiles/CiCElectron ID/DYJetsToLL_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj1' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-40To100_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj2' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-100To200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj3' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'tW' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_tW-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'tchan' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_t-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'ww' : "/storage/results/histogramFiles/CiCElectron ID/WWtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'wz' : "/storage/results/histogramFiles/CiCElectron ID/WZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'zz' : "/storage/results/histogramFiles/CiCElectron ID/ZZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-             }
-    q = QCDEstimator( files )
+    q = QCDEstimator( inputFiles.files )
     QCDEstimator.outputFolder = '/storage/results/plots/ElectronHad/'
-    QCDEstimator.outputFormat = 'png'
+    QCDEstimator.outputFormat = 'pdf'
+    function = 'gaus'
 
-    q.doEstimate( 'pol1' )
+    q.doEstimate( function )
     print '=' * 60
     print 'ParticleFlowIsolation results'
     q.printResults( q.allPfIsoResults )
-    q.plot('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_4orMoreJets', q.allPfIsoResults['0.2-1.1']['4orMoreJets'])
+#    q.plot('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_3jets', q.allPfIsoResults['0.2-1.1']['3jets'])
     #q.pfIsoHistogramPrefix = 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts'
 #    print 'Relative isolation results'
 #    q.printResults( q.allRelIsoResults )
 #    print '=' * 60
 
 
-    #print 'Starting closure tests'
-#    q.doClosureTests( 'pol1' )
+    print 'Starting closure tests'
+    q.doClosureTests( function )
 #    q.plotControlRegionComparison()
 

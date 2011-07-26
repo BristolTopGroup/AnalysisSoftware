@@ -1,5 +1,5 @@
 from ROOT import *
-from math import fsum
+#from math import fsum
 
 
 def getHistsFromFiles( histnames = [], files = {}, bJetBins = [], jetBins = [] ):
@@ -136,6 +136,16 @@ def addUpHistograms( dictOfHists, histsToAdd ):
         return hist
 
 
+def joinHistogramDictionaries(listOfDicts):
+    joinedDicts = {}
+    for histDict in listOfDicts:
+        for sample, hists in histDict.iteritems():
+            if not joinedDicts.has_key(sample):
+                joinedDicts[sample] = {}
+            
+            for histname, hist in hists.iteritems():
+                joinedDicts[sample][histname] = hist
+    return joinedDicts
 
 if __name__ == "__main__":
     histnames = ['QCDest_CombRelIso_0jet', 'QCDest_CombRelIso_1jet', 'QCDest_CombRelIso_2jets',
@@ -169,9 +179,9 @@ if __name__ == "__main__":
     nqcd = 0
     nstop = 0
     nmc = 0
-    nqcd = fsum( [hists[sample]['QCDest_CombRelIso_0jet'].Integral() for sample in qcdSamples if hists.has_key( sample )] )
+    nqcd = sum( [hists[sample]['QCDest_CombRelIso_0jet'].Integral() for sample in qcdSamples if hists.has_key( sample )] )
 #    nstop = sum([hists[sample][0].Integral() for sample in singleTopSamples if hists.has_key(sample)])
-    nmc = fsum( [hists[sample]['QCDest_CombRelIso_0jet'].Integral() for sample in allMCSamples if hists.has_key( sample )] )
+    nmc = sum( [hists[sample]['QCDest_CombRelIso_0jet'].Integral() for sample in allMCSamples if hists.has_key( sample )] )
     print hists['qcd']['QCDest_CombRelIso_0jet'].Integral(), nqcd
 #    print hists['singleTop'][0].Integral(), nstop
     print hists['allMC']['QCDest_CombRelIso_0jet'].Integral(), nmc

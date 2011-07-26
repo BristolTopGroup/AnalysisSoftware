@@ -78,6 +78,11 @@ def getElectronCut():
     onlyOnegoodPFIsoElectronCut = TCut("Sum$(%s) == 1" % goodPFIsoElectronCut.GetTitle())
     return onlyOnegoodPFIsoElectronCut
 
+
+def getLooseMuonVeto():
+    muonPt = TCut("selectedPatMuonsLoosePFlow.Pt > 10")
+    muonPt = TCut("selectedPatMuonsLoosePFlow.Pt > 10")
+    muonPt = TCut("selectedPatMuonsLoosePFlow.Pt > 10")
 def enableVariables(chain):
     setStatus = chain.SetBranchStatus
     setStatus("*", 0);
@@ -90,16 +95,27 @@ def enableVariables(chain):
     setStatus("selectedPatElectronsLoosePFlow.PfChargedHadronIso", 1)
     setStatus("selectedPatElectronsLoosePFlow.PfNeutralHadronIso", 1)
     setStatus("selectedPatElectronsLoosePFlow.PassID", 1)
+    setStatus("selectedPatElectronsLoosePFlow.dB", 1)
+    setStatus("selectedPatElectronsLoosePFlow.VtxDistZ", 1)
+    setStatus("selectedPatElectronsLoosePFlow.Eta", 1)
+    setStatus("selectedPatElectronsLoosePFlow.SCEta", 1)
+    
+    
 
 def getCutResult(chain, cut):
     nEvents = chain.Draw("Event.Run", cut)
     return nEvents
 
 def getCutFlow(chain):
-    cutflow = {}
+    cutflow = []
     hltCut = getHLTCut()
+    electronCut = getElectronCut()
+    upToElectronCut = TCut(hltCut)
+    upToElectronCut+= electronCut
     hltResult = getCutResult(chain, hltCut)
-    cutflow['HLT'] = hltResult
+    onlyOneGoodElectron = getCutResult(chain, hltCut + electronCut)
+    cutflow.append( ('HLT',hltResult))
+    cutflow.append( ('== 1 isolated good electron',onlyOneGoodElectron))
     return cutflow
 
 def getCutFlowMulti(listOfChains):
@@ -158,7 +174,7 @@ if __name__ == '__main__':
     watch.Stop()
     watch.Print()
     
-    for name, value in cutflow.iteritems():
+    for name, value in cutflow:
         print name, '  ', value
     
 #    watch.Reset()

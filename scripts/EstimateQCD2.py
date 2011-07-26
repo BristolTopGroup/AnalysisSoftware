@@ -7,6 +7,7 @@ from ROOT import *
 from math import pow, exp, sqrt
 from copy import deepcopy
 from array import array
+import inputFiles
 
 class QCDEstimator:
     luminosity = 1091.45#349.007#pb-1
@@ -25,7 +26,8 @@ class QCDEstimator:
                   ( 0.2, 0.9 ), ( 0.2, 1.0 ), ( 0.2, 1.1 ),
                   ( 0.3, 0.9 ), ( 0.3, 1.0 ), ( 0.3, 1.1 )]
 
-    fitRangesEstimation = [ ( 0.1, 1.1 ), ( 0.2, 1.1 ), ( 0.3, 1.1 )]
+    fitRangesEstimation = [# ( 0.1, 1.1 ), 
+                           ( 0.2, 1.1 ), ( 0.3, 1.1 )]
     signalRegion = ( 0, 0.1 )
     maxValue = 1.6
     pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
@@ -279,8 +281,8 @@ class QCDEstimator:
     def plotClosureTest( self, histname, results ):
         c2 = TCanvas( "c2", "QCD estimates", 1080, 1080 );
         x = array( 'd', [1, 2, 3] )
-        jetBinsOfInterest = [#'1jet', 
-                             '2jets', '3jets', '4orMoreJets']
+#        jetBinsOfInterest = [#'1jet', 
+#                             '2jets', '3jets', '4orMoreJets']
         
         jetBinsOfInterest = HistPlotter.exclusiveBjetBins
         function = self.currentFitFuntion
@@ -303,7 +305,9 @@ class QCDEstimator:
                 if not true == 0:
                     variation = ( est - true ) / true
                 y[range].append( variation )
-                print fitRange, bin, variation
+                if bin == '1btag':
+                    print bin, fitRange
+                    print est, true, variation
         nbins = 3
         gr1 = TGraph( nbins, x, array( 'd', y['%1.1f-%1.1f' % self.fitRangesClosureTest[0]] ) )
         gr2 = TGraph( nbins, x, array( 'd', y['%1.1f-%1.1f' % self.fitRangesClosureTest[1]] ) )
@@ -466,11 +470,15 @@ class QCDEstimator:
         return ( leg, red, blue )
 
     def printResults( self, results ):
-        #self.printJetBinResults( results, '3jets' )
-        #print '=' * 60
-        #self.printJetBinResults( results, '3orMoreJets' )
-        #print '=' * 60
-#        self.printJetBinResults( results, '4orMoreJets' )
+        self.printJetBinResults( results, '0btag' )
+        print '=' * 60
+        self.printJetBinResults( results, '1btag' )
+        print '=' * 60
+        self.printJetBinResults( results, '2btags' )
+        print '=' * 60
+        self.printJetBinResults( results, '3btags' )
+        print '=' * 60
+        
         self.printJetBinResults( results, '0orMoreBtag' )
         print '=' * 60
         self.printJetBinResults( results, '1orMoreBtag' )
@@ -479,8 +487,83 @@ class QCDEstimator:
         print '=' * 60
         self.printJetBinResults( results, '3orMoreBtags' )
         print '=' * 60
+        self.printJetBinResults( results, '4orMoreBtags' )
+        print '=' * 60
+        
+    def printTwikiTable(self, results):
+        
+        summary = self.getSummeryOfAllResults(results)
+        
+        estimates = (summary['0btag'][0], summary['0btag'][1], 
+                     summary['1btag'][0], summary['1btag'][1],
+                     summary['2btags'][0], summary['2btags'][1],
+                     summary['3btags'][0], summary['3btags'][1],
+                     summary['4orMoreBtags'][0], summary['4orMoreBtags'][1])
+        predictions = (summary['0btag'][2], 
+                       summary['1btag'][2],
+                       summary['2btags'][2],
+                       summary['3btags'][2],
+                       summary['4orMoreBtags'][2])
+        print '| * * | *0 b-tag* | *1 b-tag* | *2 b-tags* | *3 b-tags* | *4 b-tags* |'
+        print '| estimate | %.2f +- %.2f | %.2f +- %.2f | %.2f +- %.2f | %.2f +- %.2f | %.2f +- %.2f|' %estimates
+        print '| expected | %.2f | %.2f | %.2f | %.2f | %.2f |' % predictions
+        
+        
+        estimates = (summary['0orMoreBtag'][0], summary['0orMoreBtag'][1], 
+                     summary['1orMoreBtag'][0], summary['1orMoreBtag'][1],
+                     summary['2orMoreBtags'][0], summary['2orMoreBtags'][1],
+                     summary['3orMoreBtags'][0], summary['3orMoreBtags'][1],
+                     summary['4orMoreBtags'][0], summary['4orMoreBtags'][1])
+        predictions = (summary['0orMoreBtag'][2], 
+                       summary['1orMoreBtag'][2],
+                       summary['2orMoreBtags'][2],
+                       summary['3orMoreBtags'][2],
+                       summary['4orMoreBtags'][2])
+        print '| * * | *>=0 b-tag* | *>= 1 b-tag* | *>=2 b-tags* | *>=3 b-tags* | *>=4 b-tags* |'
+        print '| estimate | %.2f +- %.2f | %.2f +- %.2f | %.2f +- %.2f | %.2f +- %.2f | %.2f +- %.2f|' %estimates
+        print '| expected | %.2f | %.2f | %.2f | %.2f | %.2f |' % predictions
 
 
+    def getSummeryOfAllResults(self, results):
+        summary = {}
+        summary['0btag'] = self.getSummaryOfResult(results, '0btag')
+        summary['1btag'] = self.getSummaryOfResult(results, '1btag')
+        summary['2btags'] = self.getSummaryOfResult(results, '2btags')
+        summary['3btags'] = self.getSummaryOfResult(results, '3btags')
+        
+        summary['0orMoreBtag'] = self.getSummaryOfResult(results, '0orMoreBtag')
+        summary['1orMoreBtag'] = self.getSummaryOfResult(results, '1orMoreBtag')
+        summary['2orMoreBtags'] = self.getSummaryOfResult(results, '2orMoreBtags')
+        summary['3orMoreBtags'] = self.getSummaryOfResult(results, '3orMoreBtags')
+        summary['4orMoreBtags'] = self.getSummaryOfResult(results, '4orMoreBtags')
+        return summary
+        
+    def getSummaryOfResult(self, results, bin):
+        estimate = 0
+        estimate2 = 0
+        predicted = results[results.keys()[0]][bin]['actualNumberOfQCDEvents']
+        allData = results[results.keys()[0]][bin]['numberOfAllDataEvents']
+        allMC = results[results.keys()[0]][bin]['numberOfAllMCEvents']
+
+        for fitRange in self.fitRangesEstimation:
+            range = '%1.1f-%1.1f' % fitRange
+            est = results[range][bin]['estimatedNumberOfQCDEvents']
+            true = results[range][bin]['actualNumberOfQCDEvents']
+            variation = est
+            if not true == 0:
+                variation = ( est - true ) / true
+            estimate += est
+            estimate2 += est * est
+
+        mean = estimate / len( self.fitRangesEstimation )
+        mean2 = estimate2 / len( self.fitRangesEstimation )
+        error = sqrt( ( mean2 - mean * mean ) / len( self.fitRangesEstimation ) )
+        weight = 0
+        if not predicted == 0:
+            weight = estimate / len( self.fitRangesEstimation ) / predicted
+        
+        return (mean, error, predicted)
+        
     def printJetBinResults( self, results, jetBin ):
         estimate = 0
         estimate2 = 0
@@ -499,7 +582,9 @@ class QCDEstimator:
             range = '%1.1f-%1.1f' % fitRange
             est = results[range][jetBin]['estimatedNumberOfQCDEvents']
             true = results[range][jetBin]['actualNumberOfQCDEvents']
-            variation = ( est - true ) / true
+            variation = est
+            if not true == 0:
+                variation = ( est - true ) / true
             estimate += est
             estimate2 += est * est
 
@@ -513,7 +598,9 @@ class QCDEstimator:
         mean2 = estimate2 / len( self.fitRangesEstimation )
         error = sqrt( ( mean2 - mean * mean ) / len( self.fitRangesEstimation ) )
         print 'average estimate', mean, '+-', error
-        weight = estimate / len( self.fitRangesEstimation ) / predicted
+        weight = 0
+        if not predicted == 0:
+            weight = estimate / len( self.fitRangesEstimation ) / predicted
         print 'average weight factor', weight
         print 'Total number of data in signal bin(<0.1)', allData
         print 'Total number of MC in signal bin(<0.1) before reweighting QCD', allMC
@@ -563,55 +650,17 @@ if __name__ == '__main__':
     gROOT.ProcessLine( 'gErrorIgnoreLevel = 3001;' )
 
     path = '/storage/results/2011/'
-#    files = {
-#       'data':"/storage/results/histogramFiles/SimpleCutBasedElectronID/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'ttbar' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TTJet_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'wjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WJetsToLNu_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'zjets' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/DYJetsToLL_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'bce3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-20to30_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-30to80_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'enri3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/QCD_Pt-80to170_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj1' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-40To100_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj2' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-100To200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'pj3' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/GJets_TuneD6T_HT-200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'tW' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_tW-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'tchan' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/TToBLNu_TuneZ2_t-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'ww' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WWtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'wz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/WZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-#    'zz' : "/storage/results/histogramFiles/SimpleCutBasedElectronID/ZZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",}
     
-    files = {
-    'data':"/storage/results/histogramFiles/CiCElectron ID/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'ttbar' : "/storage/results/histogramFiles/CiCElectron ID/TTJet_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'wjets' : "/storage/results/histogramFiles/CiCElectron ID/WJetsToLNu_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'zjets' : "/storage/results/histogramFiles/CiCElectron ID/DYJetsToLL_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'bce3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_BCtoE_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri1' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-20to30_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri2' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-30to80_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'enri3' : "/storage/results/histogramFiles/CiCElectron ID/QCD_Pt-80to170_EMEnriched_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj1' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-40To100_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj2' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-100To200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'pj3' : "/storage/results/histogramFiles/CiCElectron ID/GJets_TuneD6T_HT-200_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'tW' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_tW-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'tchan' : "/storage/results/histogramFiles/CiCElectron ID/TToBLNu_TuneZ2_t-channel_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'ww' : "/storage/results/histogramFiles/CiCElectron ID/WWtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'wz' : "/storage/results/histogramFiles/CiCElectron ID/WZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-    'zz' : "/storage/results/histogramFiles/CiCElectron ID/ZZtoAnything_1091.45pb_PFElectron_PF2PATJets_PFMET.root",
-             }
-    q = QCDEstimator( files )
+    q = QCDEstimator( inputFiles.files )
     QCDEstimator.outputFolder = '/storage/results/plots/ElectronHad/'
-    QCDEstimator.outputFormat = 'png'
+    QCDEstimator.outputFormat = 'pdf'
+    function = 'pol1'
 
-    q.doEstimate( 'pol1' )
+    q.doEstimate( function )
     print '=' * 60
     print 'ParticleFlowIsolation results'
-    q.printResults( q.allPfIsoResults )
-#    q.plot('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_4orMoreJets', q.allPfIsoResults['0.2-1.1']['4orMoreJets'])
+    q.printTwikiTable(q.allPfIsoResults)
+#    q.printResults( q.allPfIsoResults )
     q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0orMoreBtag', q.allPfIsoResults['0.2-1.1']['0orMoreBtag'])
     q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1orMoreBtag', q.allPfIsoResults['0.2-1.1']['1orMoreBtag'])
     q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_2orMoreBtags', q.allPfIsoResults['0.2-1.1']['2orMoreBtags'])
@@ -622,7 +671,7 @@ if __name__ == '__main__':
 #    print '=' * 60
 
 
-    #print 'Starting closure tests'
-    q.doClosureTests( 'pol1' )
+    print 'Starting closure tests'
+    q.doClosureTests( function)
 #    q.plotControlRegionComparison()
 
