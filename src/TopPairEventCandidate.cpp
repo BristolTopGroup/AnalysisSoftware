@@ -324,7 +324,7 @@ bool TopPairEventCandidate::passesRelIsoSelection() const{
         bool passesBothIsolationvetos = false;
         if (passGoodElectrons) {
             const ElectronPointer electron = MostIsolatedElectron();
-            if (electron->isGood()) {
+            if (electron->isGood(Event::useCiCElectronID)) {
                 if (useCustomConversionTagger) {
                     conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
                     passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
@@ -348,7 +348,7 @@ bool TopPairEventCandidate::passesRelIsoControlSelection() const{
        bool passesBothIsolationvetos = false;
        if (passGoodElectrons) {
            const ElectronPointer electron = MostIsolatedElectron();
-           if (electron->isQCDElectron()) {
+           if (electron->isQCDElectron(Event::useCiCElectronID)) {
                if (useCustomConversionTagger) {
                    conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
                    passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
@@ -371,7 +371,7 @@ bool TopPairEventCandidate::passesPFIsoSelection() const{
         bool passesBothIsolationvetos = false;
         if (passGoodElectrons) {
             const ElectronPointer electron = MostPFIsolatedElectron();
-            if (electron->isGood()) {
+            if (electron->isGood(Event::useCiCElectronID)) {
                 if (useCustomConversionTagger) {
                     conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
                     passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
@@ -395,7 +395,7 @@ bool TopPairEventCandidate::passesPFIsoControlSelection() const{
        bool passesBothIsolationvetos = false;
        if (passGoodElectrons) {
            const ElectronPointer electron = MostPFIsolatedElectron();
-           if (electron->isQCDElectron()) {
+           if (electron->isQCDElectron(Event::useCiCElectronID)) {
                if (useCustomConversionTagger) {
                    conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
                    passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
@@ -422,19 +422,20 @@ bool TopPairEventCandidate::passesConversionSelection() const {
 
 bool TopPairEventCandidate::passedAntiIDSelection() const{
     //no trigger requirement now, later switch to looseID triggers
-    bool passesVertex = hasOneGoodPrimaryVertex();
+//    bool passesVertex = hasOneGoodPrimaryVertex();
+    bool passesFirst3 = passesSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
     bool passElectrons = allElectrons.size() > 0 && goodPFIsolatedElectrons.size() < 2;
     bool passesAntiID = false;
     bool passesConversionVetos = false;
     if (passElectrons) {
         const ElectronPointer electron = MostPFIsolatedElectron();
-        passesAntiID = electron->isQCDElectron();
+        passesAntiID = electron->isQCDElectron(Event::useCiCElectronID);
         passesConversionVetos = electron->isFromConversion() == false && electron->isTaggedAsConversion(
                 0.02, 0.02) == false;
     }
 
     bool atLeast4Jets = hasAtLeastFourGoodJets();
-    return passesVertex && passElectrons && passesAntiID && passesConversionVetos && atLeast4Jets;
+    return passesFirst3 && passElectrons && passesAntiID && passesConversionVetos && atLeast4Jets;
 }
 bool TopPairEventCandidate::passesAntiIsolationSelection() const {
     //require at least one good electron and no isolated good electrons

@@ -102,25 +102,25 @@ void Event::selectElectronsByQuality() {
     for (unsigned int index = 0; index < allElectrons.size(); ++index) {
         ElectronPointer electron = allElectrons.at(index);
 
-        bool isGood(false);
-        bool isGood20(false);
+        bool isGood(electron->isGood(Event::useCiCElectronID));
+//        bool isGood20(false);
 
-        if(Event::useCiCElectronID){
-            isGood = electron->isGoodCiCElectronID();
-            isGood20 = electron->isGoodCiCElectronID(20);
-        }
-        else{
-            isGood = electron->isGood();
-            isGood20 = electron->isGood(20);
-        }
+//        if(Event::useCiCElectronID){
+//            isGood = electron->isGoodCiCElectronID(Event::useCiCElectronID);
+////            isGood20 = electron->isGoodCiCElectronID(20);
+//        }
+//        else{
+//            isGood = electron->isGood();
+//            isGood20 = electron->isGood(20);
+//        }
 
         if (isGood)
             goodElectrons.push_back(electron);
 
 
 
-        if(isGood20)
-            qcdElectrons.push_back(electron);
+//        if(isGood20)
+//            qcdElectrons.push_back(electron);
 
         if (isGood && electron->isIsolated())
             goodIsolatedElectrons.push_back(electron);

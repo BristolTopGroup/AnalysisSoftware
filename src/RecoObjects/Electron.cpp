@@ -183,44 +183,46 @@ bool Electron::isLoose() const {
 
 }
 
-bool Electron::isGood(const float minEt) const {
-    bool passesEt = et() > minEt;
+bool Electron::isGood(bool useCiCElectronID) const {
+    bool passesEt = et() > 30;
     bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
 
     // use d0 wrt primary vertex for
     bool passesD0 = fabs(d0()) < 0.02;//cm
 
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-	bool passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
-
-    return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
-}
-
-bool Electron::isGoodCiCElectronID(const float minEt) const {
-    bool passesEt = et() > minEt;
-    bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
-
-    // use d0 wrt primary vertex for
-    bool passesD0 = fabs(d0()) < 0.02;//cm
-
-    bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
-
-    return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
-}
-
-bool Electron::isQCDElectron(const float minEt) const {
-    bool passesEt = et() > minEt;
-    bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
-
-    bool passesD0 = false;
-    if (usedAlgorithm == ElectronAlgorithm::Calo)
-        passesD0 = fabs(d0_wrtBeamSpot()) < 0.02;//cm
+    bool passesID = false;
+    if(useCiCElectronID)
+    	passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
     else
-        passesD0 = fabs(d0()) < 0.02;//cm
+    	passesID = VBTF_W70_ElectronID();
 
+    return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
+}
+
+//bool Electron::isGoodCiCElectronID(const float minEt) const {
+//    bool passesEt = et() > minEt;
+//    bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
+//
+//    // use d0 wrt primary vertex for
+//    bool passesD0 = fabs(d0()) < 0.02;//cm
+//
+//    bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
+//    bool passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
+//
+//    return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
+//}
+
+bool Electron::isQCDElectron(bool useCiCElectronID) const {
+    bool passesEt = et() > 30;
+    bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
+    bool passesD0 = fabs(d0()) < 0.02;//cm
     bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-	bool passesID = !CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
+    bool passesID(false);
+    if (useCiCElectronID)
+		passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
+	else
+		passesID = VBTF_W70_ElectronID();
     
     return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
 }

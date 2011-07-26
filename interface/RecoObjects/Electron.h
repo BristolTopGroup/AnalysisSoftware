@@ -63,15 +63,15 @@ public:
     Electron();
     Electron(float energy, float px, float py, float pz);
     virtual ~Electron();
-    bool isGood(const float minEt = 30) const;
-    bool isGoodCiCElectronID(const float minEt = 30) const;
+    bool isGood(bool useCiCElectronID) const;
+//    bool isGoodCiCElectronID(const float minEt = 30) const;
     bool isIsolated() const;
     bool isPFIsolated() const;
     bool isHEEPIsolated() const;
     bool isTaggedAsConversion(float maxDist, float maxDCotTheta) const;
     bool isFromConversion() const;
     bool isLoose() const;
-    bool isQCDElectron(const float minEt = 30) const;
+    bool isQCDElectron(bool useCiCElectronID) const;
 
     ElectronAlgorithm::value algorithm() const;
     float ecalIsolation() const;
