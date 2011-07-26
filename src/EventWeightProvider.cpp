@@ -33,13 +33,15 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::PhotonJets_Pt100to200] = 3476.; //pb
     xsection[DataType::PhotonJets_Pt200toInf] = 485.; //pb
 
-    xsection[DataType::WWtoAnything] = 43.; //pb
-    xsection[DataType::WZtoAnything] = 18.; //pb
-    xsection[DataType::ZZtoAnything] = 5.9; //pb
+    xsection[DataType::WWtoAnything] = 43.; //pb ±1.5
+    xsection[DataType::WZtoAnything] = 18.2; //pb +-0.7pb
+    xsection[DataType::ZZtoAnything] = 5.9; //pb +- 0.15pb
 
-    xsection[DataType::singleTop_And_W] = 10.6; //xs  11 pb (NLO MCFM) inclusive t,W decay
-    xsection[DataType::singleTopTChannel] = 21.53;
-    xsection[DataType::singleTopSChannel] = 1.40; //=4.21/3 15Jul
+	//changed on 14th July due to recommendation from top group
+    //https://hypernews.cern.ch/HyperNews/CMS/get/top/1304/1/1/1/1.html
+    xsection[DataType::singleTop_And_W] = 15.74;//10.6; //xs  11 pb (NLO MCFM) inclusive t,W decay
+    xsection[DataType::singleTopTChannel] = 64.57;//21.53;
+    xsection[DataType::singleTopSChannel] = 4.63;//1.40; //=4.21/3 15Jul
 
     xsection[DataType::VQQ] = 36.;
     xsection[DataType::Zprime_M500GeV_W5GeV] = 50;
