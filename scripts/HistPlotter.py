@@ -199,15 +199,17 @@ def normalise(histogram):
         histogram.Scale(1/histogram.Integral())
     return histogram
 
-def saveAs(canvas, name, outputFormat= 'png', outputFolder = ''):
+def saveAs(canvas, name, outputFormats= ['png'], outputFolder = ''):
+
     if not outputFolder == '' and not outputFolder.endswith('/'):
         outputFolder += '/'
-    fullFileName = outputFolder + name + '.' + outputFormat
-    if '/' in fullFileName:
-        path = fullFileName[:fullFileName.rfind('/')]
-        createFolderIfDoesNotExist(path)
+    for outputFormat in outputFormats:
+        fullFileName = outputFolder + name + '.' + outputFormat
+        if '/' in fullFileName:
+            path = fullFileName[:fullFileName.rfind('/')]
+            createFolderIfDoesNotExist(path)
         
-    canvas.SaveAs(fullFileName)
+        canvas.SaveAs(fullFileName)
     
 def createFolderIfDoesNotExist(path):
     if not os.path.exists(path):

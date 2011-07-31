@@ -1,12 +1,13 @@
+from ROOT import *
 import HistGetter
 import HistPlotter
 from time import sleep
-from ROOT import *
+
 import inputFiles
-
-outputFormat = 'pdf'
+import QCDEstimation
+outputFormats = ['png', 'pdf']
 outputFolder = '/storage/results/plots/ElectronHad/'
-
+saveAs = HistPlotter.saveAs
 triggers = ['HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30','HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30',
                 'HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30', 'HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30',
                 'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30', 'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30',
@@ -16,7 +17,7 @@ triggerVariables = ['jet_pt', 'jet_eta', 'jet_phi']
 triggerModifiers = ['visited', 'fired']
 
 def compareQCDControlRegionsInData(dataHists, bJetBins):
-    saveAs = HistPlotter.saveAs
+#    saveAs = HistPlotter.saveAs
     
     leg = TLegend(0.696, 0.35, 0.94, 0.92);
     leg.SetBorderSize(0);
@@ -53,7 +54,7 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
         diff.SetYTitle("conversions/non-iso electrons /50GeV");
         diff.Draw('error')
         line.Draw('same')
-        saveAs(c, 'shapeRatio_conversions_NonIsolatedElectrons' + '_' + bin , outputFormat)
+        saveAs(c, 'shapeRatio_conversions_NonIsolatedElectrons' + '_' + bin , outputFormats)
         del c
     
 #        diff = normConv.Clone()
@@ -88,14 +89,14 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
             alreadyAdded = True
         
         leg.Draw()
-        saveAs(c, 'shape_comparison' + '_' + bin , outputFormat)
+        saveAs(c, 'shape_comparison' + '_' + bin , outputFormats)
         del c
         
     del leg
 
 
 def plotQCDEstimationFits(allHists, bJetBins):
-    saveAs = HistPlotter.saveAs
+#    saveAs = HistPlotter.saveAs
     
     leg = TLegend(0.696, 0.35, 0.94, 0.92);
     leg.SetBorderSize(0);
@@ -122,7 +123,7 @@ def getControlRegionsFor(hist):
 def plotHLTStudy(hists, suffix = '', rebin = 1):
     
     plots = ['HLTStudy/' + trigger + '/' + variable for trigger in triggers for variable in triggerVariables]
-    saveAs = HistPlotter.saveAs
+#    saveAs = HistPlotter.saveAs
     
     for plot in plots:
         fired = hists[plot + '_' + 'fired']
@@ -182,10 +183,34 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
         lower.DrawLine(xlimits[0],0.,xlimits[1],0.) ;
 #        efficiency.GetXaxis().SetRangeUser(xlimits[0], xlimits[1])
         efficiency.Draw('SAMEP0')
-        saveAs(c, saveName, outputFormat = outputFormat, outputFolder = outputFolder)
+        saveAs(c, saveName, outputFolder = outputFolder)
         del c
     
     
+def makeQCDErrorPlot(files):
+    errors = QCDEstimation.getShapeErrorHistogram('topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_1orMoreBtag', files)
+    systematicEstimationError = QCDEstimation.doClosureTestFor(files, 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag')
+    qcdEstimate = QCDEstimation.estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag')
+    print 'QCD estimation:', qcdEstimate
+    print 'Systematic uncertainty for this b-jet bin:', systematicEstimationError
+    gStyle.SetErrorX(0.5);
+  
+    if errors:
+        errors.GetXaxis().SetRangeUser(250, 3000)
+        
+        c = TCanvas("cname3", 'cname3', 1920, 1080)
+        
+        errors.SetFillColor(kBlue);
+        
+#        errors.DrawCopy("hist");
+        errors.SetFillColor(kBlack)
+        errors.SetMarkerStyle(0)
+#        errors.SetFillStyle(1001)
+        errors.SetFillStyle(3013);
+        errors.DrawCopy('E2')
+        saveAs(c, 'shape_errors_0orMoreBtag' , outputFormats)
+    gStyle.SetErrorX(0.);
+        
 if __name__ == '__main__':
     gROOT.SetBatch(True)
     gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
@@ -218,6 +243,7 @@ if __name__ == '__main__':
 #    hists = makeDetailedMCStack( hists )
     
     compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
+    makeQCDErrorPlot(files)
 #    plotHLTStudy(hists['data'], rebin = 2)
 #    plotHLTStudy(hists['data2'], 'Calo', rebin = 2)
     
