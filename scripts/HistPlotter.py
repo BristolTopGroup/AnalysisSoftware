@@ -200,7 +200,7 @@ def normalise(histogram):
     return histogram
 
 def saveAs(canvas, name, outputFormats= ['png'], outputFolder = ''):
-
+    canvas.RedrawAxis()
     if not outputFolder == '' and not outputFolder.endswith('/'):
         outputFolder += '/'
     for outputFormat in outputFormats:
@@ -214,6 +214,9 @@ def saveAs(canvas, name, outputFormats= ['png'], outputFolder = ''):
 def createFolderIfDoesNotExist(path):
     if not os.path.exists(path):
         os.makedirs(path)
+        
+def plotHistAndFits(data, mcStack, fits):
+    canvas = TCanvas( "c1", "plot with fits", 1920, 1080 )
     
     
 

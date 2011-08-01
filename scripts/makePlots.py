@@ -210,6 +210,7 @@ def makeQCDErrorPlot(files):
         errors.DrawCopy('E2')
         saveAs(c, 'shape_errors_0orMoreBtag' , outputFormats)
     gStyle.SetErrorX(0.);
+
         
 if __name__ == '__main__':
     gROOT.SetBatch(True)
@@ -243,7 +244,7 @@ if __name__ == '__main__':
 #    hists = makeDetailedMCStack( hists )
     
     compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
-    makeQCDErrorPlot(files)
+#    makeQCDErrorPlot(files)
 #    plotHLTStudy(hists['data'], rebin = 2)
 #    plotHLTStudy(hists['data2'], 'Calo', rebin = 2)
     

@@ -27,7 +27,7 @@ class QCDEstimator:
                   ( 0.3, 0.9 ), ( 0.3, 1.0 ), ( 0.3, 1.1 )]
 
     fitRangesEstimation = [# ( 0.1, 1.1 ), 
-                           ( 0.2, 1.1 ), ( 0.3, 1.1 )]
+                           ( 0.2, 1.6 ), ( 0.3, 1.6 )]
     signalRegion = ( 0, 0.1 )
     maxValue = 1.6
     pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
@@ -276,6 +276,77 @@ class QCDEstimator:
         canvas.SaveAs( '%s/%s.%s' % ( self.outputFolder, out, self.outputFormat ) )
 
         canvas.Close(); #crucial!
+        
+    def plotSpecial( self, histname, results, fitRanges ):
+        data = self.histograms[self.useEntryAsData][histname]
+        mcStack = self.histograms['MCStack'][histname]
+        bjetBin = HistPlotter.getBjetBin(histname)
+        fitStart = 0.2
+        fitfunctions = []
+        for fitRange in fitRanges:
+            fitStart = float(fitRange[:3])
+            fitFunction = results[fitRange][bjetBin]['fitFunction']
+        
+            if not fitFunction:
+                print 'no fitfunction found'
+                return;
+            fitFunction.SetLineColor( kRed );
+            fitFunction.SetLineWidth( 2 )
+
+            fitFunction2 = fitFunction.Clone()
+            fitFunction2.SetLineColor( kBlue );
+            fitFunction2.SetRange( self.signalRegion[0], self.signalRegion[1] );
+
+            fitFunction3 = fitFunction.Clone()
+            fitFunction3.SetLineColor( kBlue );
+            fitFunction3.SetLineStyle( kDashed );
+            fitFunction3.SetRange( self.signalRegion[1], fitStart );
+            fitfunctions.append(fitFunction)
+            fitfunctions.append(fitFunction2)
+            fitfunctions.append(fitFunction3)
+
+        data.GetXaxis().SetRangeUser( 0, self.maxValue - 0.01 );
+
+        canvas = TCanvas( "c1", "Iso fit", 1920, 1080 )
+        data.Draw();
+
+        max = 0
+        if mcStack.GetMaximum() > data.GetBinContent( 1 ):
+            max = mcStack.GetMaximum()*1.1
+        else:
+            max = data.GetBinContent( 1 ) * 1.1
+
+        data.GetYaxis().SetRangeUser( 0, max );
+        data.SetXTitle( "Relative Isolation" );
+        data.SetYTitle( "Events/0.1" );
+        # draw mc
+        mcStack.Draw( "hist same" );
+        data.Draw( "ae same" );
+#        data.GetYaxis().Draw('same')
+        
+        for fitFunction in fitfunctions:
+            fitFunction.Draw( "same" );
+        
+        label = self.add_cms_label( bjetBin )
+        label.Draw()
+
+        legend = self.add_legend( histname )
+#        legend.Draw()
+
+        if self.currentFitFuntion == "pol1":
+            out = "%s_fit_linear_%s" % ( histname, self.useEntryAsData );
+        else:
+            out = "%s_fit_%s_%s" % ( histname, self.currentFitFuntion, self.useEntryAsData );
+#        if self.outputFormat == 'pdf':
+#            canvas.SaveAs( '%s.eps' % out );
+#            gROOT.ProcessLine( ".!ps2pdf -dEPSCrop %s.eps" % out );
+#            gROOT.ProcessLine( ".!rm -f %s.eps" % out );
+#        else:
+        
+        HistPlotter.saveAs(canvas, '%s/%s' % (self.outputFolder, out), ['png', 'pdf'] )
+#        canvas.SaveAs( '%s/%s.%s' % ( self.outputFolder, out, self.outputFormat ) )
+
+        canvas.Close(); #crucial!
 
 
     def plotClosureTest( self, histname, results ):
@@ -305,9 +376,9 @@ class QCDEstimator:
                 if not true == 0:
                     variation = ( est - true ) / true
                 y[range].append( variation )
-                if bin == '1btag':
-                    print bin, fitRange
-                    print est, true, variation
+#                if bin == '1btag':
+#                    print bin, fitRange
+#                    print est, true, variation
         nbins = 3
         gr1 = TGraph( nbins, x, array( 'd', y['%1.1f-%1.1f' % self.fitRangesClosureTest[0]] ) )
         gr2 = TGraph( nbins, x, array( 'd', y['%1.1f-%1.1f' % self.fitRangesClosureTest[1]] ) )
@@ -645,6 +716,7 @@ class QCDEstimator:
 
             canvas.SaveAs( '%s/%s_shapeComparison.%s' % ( self.outputFolder, hist, self.outputFormat ) )
 
+
 if __name__ == '__main__':
     gROOT.SetBatch( True )
     gROOT.ProcessLine( 'gErrorIgnoreLevel = 3001;' )
@@ -653,25 +725,26 @@ if __name__ == '__main__':
     
     q = QCDEstimator( inputFiles.files )
     QCDEstimator.outputFolder = '/storage/results/plots/ElectronHad/'
-    QCDEstimator.outputFormat = 'pdf'
-    function = 'pol1'
+    QCDEstimator.outputFormat = 'png'
+    function = 'gaus'
 
     q.doEstimate( function )
     print '=' * 60
     print 'ParticleFlowIsolation results'
     q.printTwikiTable(q.allPfIsoResults)
 #    q.printResults( q.allPfIsoResults )
-    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0orMoreBtag', q.allPfIsoResults['0.2-1.1']['0orMoreBtag'])
-    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1orMoreBtag', q.allPfIsoResults['0.2-1.1']['1orMoreBtag'])
-    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_2orMoreBtags', q.allPfIsoResults['0.2-1.1']['2orMoreBtags'])
-    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_3orMoreBtags', q.allPfIsoResults['0.2-1.1']['3orMoreBtags'])
+    fitRanges = ['0.2-1.6','0.3-1.6']
+    q.plotSpecial('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0btag', q.allPfIsoResults, fitRanges)
+    q.plotSpecial('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag', q.allPfIsoResults, fitRanges)
+    q.plotSpecial('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_2btags', q.allPfIsoResults, fitRanges)
+#    q.plot('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_3orMoreBtags', q.allPfIsoResults['0.2-1.1']['3orMoreBtags'])
     #q.pfIsoHistogramPrefix = 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts'
 #    print 'Relative isolation results'
 #    q.printResults( q.allRelIsoResults )
 #    print '=' * 60
 
 
-    print 'Starting closure tests'
-    q.doClosureTests( function)
+#    print 'Starting closure tests'
+#    q.doClosureTests( function)
 #    q.plotControlRegionComparison()
 
