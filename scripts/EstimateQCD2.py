@@ -27,7 +27,9 @@ class QCDEstimator:
                   ( 0.3, 0.9 ), ( 0.3, 1.0 ), ( 0.3, 1.1 )]
 
     fitRangesEstimation = [# ( 0.1, 1.1 ), 
-                           ( 0.2, 1.6 ), ( 0.3, 1.6 )]
+                           ( 0.2, 1.6 ), 
+                           ( 0.3, 1.6 ),
+                           ( 0.4, 1.6 )]
     signalRegion = ( 0, 0.1 )
     maxValue = 1.6
     pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
@@ -237,7 +239,7 @@ class QCDEstimator:
         fitFunction3.SetLineStyle( kDashed );
         fitFunction3.SetRange( self.signalRegion[1], self.currentFitRange[0] );
 
-        canvas = TCanvas( "c1", "Iso fit", 1920, 1080 )
+        canvas = TCanvas( "c1", "Iso fit", 1200, 900 )
         data.Draw();
 
         max = 0
@@ -307,7 +309,7 @@ class QCDEstimator:
 
         data.GetXaxis().SetRangeUser( 0, self.maxValue - 0.01 );
 
-        canvas = TCanvas( "c1", "Iso fit", 1920, 1080 )
+        canvas = TCanvas( "c1", "Iso fit", 1200, 900 )
         data.Draw();
 
         max = 0
@@ -700,7 +702,7 @@ class QCDEstimator:
 
             QCD.GetYaxis().SetRangeUser( 0., max )
 
-            canvas = TCanvas( "c1", "Shape comparision", 1920, 1080 )
+            canvas = TCanvas( "c1", "Shape comparision", 1200, 900 )
             QCD.Draw()
             QCD_control.Draw( 'same' )
             label = self.add_cms_label( bin )
@@ -733,7 +735,7 @@ if __name__ == '__main__':
     print 'ParticleFlowIsolation results'
     q.printTwikiTable(q.allPfIsoResults)
 #    q.printResults( q.allPfIsoResults )
-    fitRanges = ['0.2-1.6','0.3-1.6']
+    fitRanges = ['0.2-1.6','0.3-1.6','0.4-1.6']
     q.plotSpecial('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0btag', q.allPfIsoResults, fitRanges)
     q.plotSpecial('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag', q.allPfIsoResults, fitRanges)
     q.plotSpecial('QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_2btags', q.allPfIsoResults, fitRanges)

@@ -50,7 +50,7 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
         line.SetLineWidth(4)
     
     
-        c = TCanvas("cname", 'cname', 1920, 1080)
+        c = TCanvas("cname", 'cname', 1200, 900)
         diff.SetYTitle("conversions/non-iso electrons /50GeV");
         diff.Draw('error')
         line.Draw('same')
@@ -60,14 +60,14 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
 #        diff = normConv.Clone()
 #        diff.Divide(normContr)
 #    
-#        c = TCanvas("cname2", 'cname2', 1920, 1080)
+#        c = TCanvas("cname2", 'cname2', 1200, 900)
 #        diff.SetYTitle("conversions/fake electrons /50GeV");
 #        diff.Draw('error')
 #        line.Draw('same')
 #        saveAs(c, 'shapeRatio_conversions_fakeElectrons' + '_' + bin , outputFormat)
 #        del c
 #        
-        c = TCanvas("cname3", 'cname3', 1920, 1080)
+        c = TCanvas("cname3", 'cname3', 1200, 900)
     
         normConv.SetFillColor(kYellow)
         normConv.SetFillStyle(1001)
@@ -170,7 +170,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
 #        elif 'jet_phi' in plot:
 #            efficiency.SetTitle("trigger efficiency;jet #Phi;#epsilon/(0.1)")
         
-        c = TCanvas("cname", 'cname', 1920, 1080)
+        c = TCanvas("cname", 'cname', 1200, 900)
     
         hFrame = (c.cd()).DrawFrame(xlimits[0],-.1,xlimits[1],1.1)
         hFrame.GetXaxis().SetTitle(xTitle)
@@ -198,9 +198,7 @@ def makeQCDErrorPlot(files):
     if errors:
         errors.GetXaxis().SetRangeUser(250, 3000)
         
-        c = TCanvas("cname3", 'cname3', 1920, 1080)
-        
-        errors.SetFillColor(kBlue);
+        c = TCanvas("cname3", 'cname3', 1200, 900)
         
 #        errors.DrawCopy("hist");
         errors.SetFillColor(kBlack)
@@ -243,13 +241,13 @@ if __name__ == '__main__':
 #    hists = HistGetter.makeMCStack( hists )
 #    hists = makeDetailedMCStack( hists )
     
-    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
-#    makeQCDErrorPlot(files)
+#    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
+    makeQCDErrorPlot(files)
 #    plotHLTStudy(hists['data'], rebin = 2)
 #    plotHLTStudy(hists['data2'], 'Calo', rebin = 2)
     
 #    
-#    c = TCanvas("cname4", 'cname4', 1920, 1080)
+#    c = TCanvas("cname4", 'cname4', 1200, 900)
 #    histname = 'mttbar_antiIsolated_withMETAndAsymJets_allBtags'
 #    hist = hists['allMCDetailed'][histname]
 #    hists['enri1'][histname].GetYaxis().SetRangeUser(0, hist.GetMaximum()*1.4);

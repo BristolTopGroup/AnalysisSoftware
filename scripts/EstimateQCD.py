@@ -27,11 +27,13 @@ class QCDEstimator:
                   ( 0.3, 0.9 ), ( 0.3, 1.0 ), ( 0.3, 1.1 )]
 
     fitRangesEstimation = [ #( 0.1, 1.1 ), 
-                           ( 0.2, 1.1 ), ( 0.3, 1.1 )]
+                           ( 0.2, 1.6 ), 
+                           ( 0.3, 1.6 ),
+                           ( 0.4, 1.6 )]
     signalRegion = ( 0, 0.1 )
     maxValue = 1.6
-    pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_'
-    pfIsoControlRegionHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_controlRegion2_'#WithMETCutAndAsymJetCuts_'
+    pfIsoHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_'
+    pfIsoControlRegionHistogramPrefix = 'QCDStudy/QCDest_PFIsolation_controlRegion_'#WithMETCutAndAsymJetCuts_'
     relIsoHistogramPrefix = 'QCDStudy/QCDest_CombRelIso_'
     pfIsoResults = {}
     relIsoResults = {}
@@ -235,7 +237,7 @@ class QCDEstimator:
         fitFunction3.SetLineStyle( kDashed );
         fitFunction3.SetRange( self.signalRegion[1], self.currentFitRange[0] );
 
-        canvas = TCanvas( "c1", "Iso fit", 1920, 1080 )
+        canvas = TCanvas( "c1", "Iso fit", 1200, 900 )
         data.Draw();
 
         max = 0
@@ -536,7 +538,7 @@ class QCDEstimator:
 
             QCD.GetYaxis().SetRangeUser( 0., max )
 
-            canvas = TCanvas( "c1", "Shape comparision", 1920, 1080 )
+            canvas = TCanvas( "c1", "Shape comparision", 1200, 900 )
             QCD.Draw()
             QCD_control.Draw( 'same' )
             label = self.add_cms_label( bin )
@@ -555,12 +557,12 @@ class QCDEstimator:
     def plotSpecial( self, histname, results, fitRanges ):
         data = self.histograms[self.useEntryAsData][histname]
         mcStack = self.histograms['MCStack'][histname]
-        jetBin = HistPlotter.getetBin(histname)
+        jetBin = HistPlotter.getJetBin(histname)
         fitStart = 0.2
         fitfunctions = []
         for fitRange in fitRanges:
             fitStart = float(fitRange[:3])
-            fitFunction = results[fitRange][bjetBin]['fitFunction']
+            fitFunction = results[fitRange][jetBin]['fitFunction']
         
             if not fitFunction:
                 print 'no fitfunction found'
@@ -582,7 +584,7 @@ class QCDEstimator:
 
         data.GetXaxis().SetRangeUser( 0, self.maxValue - 0.01 );
 
-        canvas = TCanvas( "c1", "Iso fit", 1920, 1080 )
+        canvas = TCanvas( "c1", "Iso fit", 1200, 900 )
         data.Draw();
 
         max = 0
@@ -602,7 +604,7 @@ class QCDEstimator:
         for fitFunction in fitfunctions:
             fitFunction.Draw( "same" );
         
-        label = self.add_cms_label( bjetBin )
+        label = self.add_cms_label( jetBin )
         label.Draw()
 
         legend = self.add_legend( histname )
@@ -630,15 +632,16 @@ if __name__ == '__main__':
     
     q = QCDEstimator( inputFiles.files )
     QCDEstimator.outputFolder = '/storage/results/plots/ElectronHad/'
-    QCDEstimator.outputFormat = 'png'
+    QCDEstimator.outputFormat = 'pdf'
     function = 'gaus'
 
     q.doEstimate( function )
     print '=' * 60
     print 'ParticleFlowIsolation results'
     q.printResults( q.allPfIsoResults )
-    q.plot('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_3jets', q.allPfIsoResults['0.2-1.1']['3jets'])
-    EstimateQCD2.plotSpecial('QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_3jets', q.allPfIsoResults,['0.2-1.1'])
+#    q.plot('QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_', q.allPfIsoResults['0.2-1.1']['3jets'])
+    fitRanges = ['0.2-1.6','0.3-1.6','0.4-1.6']
+    q.plotSpecial('QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets',  q.allPfIsoResults, fitRanges)
     #q.pfIsoHistogramPrefix = 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts'
 #    print 'Relative isolation results'
 #    q.printResults( q.allRelIsoResults )
@@ -647,5 +650,5 @@ if __name__ == '__main__':
 
 #    print 'Starting closure tests'
 #    q.doClosureTests( function )
-#    q.plotControlRegionComparison()
+    q.plotControlRegionComparison()
 

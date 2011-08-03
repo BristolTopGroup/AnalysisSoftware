@@ -20,21 +20,20 @@ fitRangesClosureTest = [ (0.1, 0.9), (0.1, 1.0), (0.1, 1.1),
                   (0.3, 0.9), (0.3, 1.0), (0.3, 1.1)]
 
 def doFit(histogram, function, fitRange):#, constrainFit = False):
+    histogram = histogram.Clone('fitting')
     numberOfFreeParameters = -1
     fit = None
     
     histogram.Fit(function, "Q0", "ah", fitRange[0], fitRange[1])
-    #fit = histogram.GetFunction( function )
-        
-    #else:
-     #   ff = TF1( function, function, 0, 1 );
-      #  numberOfFreeParameters = ff.GetNumberFreeParameters();
-    return histogram.GetFunction(function)
-    #return {'fit': fit, 'freeParameters':numberOfFreeParameters}
+    fit = histogram.GetFunction(function)
+    if fit:
+        return fit.Clone()
+    else:
+        return None
 
-def getEstimate(fit, signalRegion=(0., 0.1), binWidthOfOriginalHIstoram=0.1, rebinOfOriginalHistogram=10):
-    estimate = fit.Integral(signalRegion[0], signalRegion[1]) / (binWidthOfOriginalHIstoram * rebinOfOriginalHistogram)
-    return estimate
+#def getEstimate(fit, signalRegion=(0., 0.1), binWidthOfOriginalHIstoram=0.1, rebinOfOriginalHistogram=10):
+#    estimate = fit.Integral(signalRegion[0], signalRegion[1]) / (binWidthOfOriginalHIstoram * rebinOfOriginalHistogram)
+#    return estimate
 
 def getError(estimates):
     numberOfEstimates = len(estimates)
@@ -48,8 +47,8 @@ def getError(estimates):
     error = sqrt((meanSquared - mean * mean) / numberOfEstimates)
     return error
 
-def estimateQCDFor(bjetBin, datafile, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', function='pol1',
-                   fitRanges=[(0.2, 1.1), (0.3, 1.1)]):
+def estimateQCDFor(bjetBin, datafile, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', function='expo',
+                   fitRanges=[(0.2, 1.6), (0.3, 1.6), (0.4, 1.6)]):
     files = {'data': datafile}
 #    fitRanges = [(0.2, 1.1), (0.3, 1.1)]
     
@@ -59,95 +58,78 @@ def estimateQCDFor(bjetBin, datafile, histogramForEstimation='QCDStudy/PFIsolati
     hists = [histogramForEstimation]
     hists = getHistsFromFiles(hists, files)
     histogramForEstimation = hists['data'][histogramForEstimation]
-#    histogramForEstimation.Rebin(rebin)
-    return estimateQCDFrom(histogramForEstimation, function, fitRanges)
+    estimate, error = estimateQCDFrom(histogramForEstimation, function, fitRanges)
+    del histogramForEstimation 
+    del hists
+    del function
+    return estimate, error
 
-def estimateQCDFrom(histogramForEstimation, function='pol1', fitRanges=[(0.2, 1.1), (0.3, 1.1)]):
-    histogramForEstimation = histogramForEstimation.Clone('tmp')
-#    fitRanges = [(0.2, 1.1), (0.3, 1.1)]
+
+def estimateQCDFrom(histogramForEstimation, function='expo',
+                   fitRanges=[(0.2, 1.6), (0.3, 1.6), (0.4, 1.6)]):
     
-    binWidth = 0.01
-    rebin = 10
+    histogramForEstimation = histogramForEstimation.Clone('tmp')
+    
+    binWidthOfOriginalHIstoram = 0.01
+    rebinOfOriginalHistogram = 1
     signalRegion = (0., 0.1)
     estimate = 0
     estimate2 = 0
     relFitError = 0
-    histogramForEstimation.Rebin(rebin)
+    histogramForEstimation.Rebin(rebinOfOriginalHistogram)
     for fitrange in fitRanges:
         fit = None
         fit = doFit(histogramForEstimation, function, fitrange)
-        est = getEstimate(fit, signalRegion, binWidth, rebin)
-#        err = fit.GetParErrors()[0]
-#        fit.Print()
-#        print 'Lenght', len(fit.GetParErrors())
-        
-        for parErr in range(0, fit.GetNumberFreeParameters() - 1):
-            par = fit.GetParameter(parErr)
-            err = fit.GetParError(parErr)
-#            print par, '+-', err
-#            err2 = ufloat((fit.GetParameter(parErr), fit.GetParError(parErr)))
-            relFitError += (err / par) ** 2
-#            print 'ParErrors (',fitrange, ',', parErr, ')', fit.GetParErrors()[parErr]
-#            print err2
-#        est = ufloat((est, err))
-        estimate += est
-        estimate2 += est * est
+        if fit:
+            est = fit.Integral(signalRegion[0], signalRegion[1]) / (binWidthOfOriginalHIstoram * rebinOfOriginalHistogram)
+            for parErr in range(0, fit.GetNumberFreeParameters()):
+                par = fit.GetParameter(parErr)
+                err = fit.GetParError(parErr)
+                if not par == 0:
+                    relFitError += (err / par) ** 2
+#            print par, err
+            estimate += est
+            estimate2 += est * est
+    
 
     mean = estimate / len(fitRanges)
     mean2 = estimate2 / len(fitRanges)
     error = 0
     if not (mean2 - mean * mean) == 0:
         error = sqrt((mean2 - mean * mean) / 2)
-#        error = sqrt(error*error + mean.std_dev()*mean.std_dev())
+    if not mean == 0:
+        return (mean, sqrt(relFitError + (error / mean) ** 2) * mean)
+    else:
+        return (0,0) 
+ 
+def getQCDEstimate(datafile, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', bjetBin = '', function='expo', 
+                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):    
+    estimate, absoluteError = estimateQCDFor(bjetBin, datafile, histogramForEstimation, function, fitRanges=[fitRange])
+    relativeError = 0
+    if not estimate == 0:
+        relativeError = absoluteError/estimate
+    relativeErrorSquared = relativeError**2
     
-#    if ufloatEnabled:
-#        return ufloat((mean, error))
-#    else:
-#    mean = float(mean.nominal_value)
-#    print 'Fit error:', fitError.std_dev()/fitError.nominal_value
-    print 'Rel. fit error:', sqrt(relFitError)
-    print 'Root mean square: ', error/mean
-    print 'TotalError', sqrt(relFitError + (error/mean)**2 )
-    return (mean, sqrt(relFitError + (error / mean) ** 2) * mean) 
+    systematicErrorFromOtherFitRanges = 0
+#    print 'Abs err', absoluteError
+    for currentRange in additionFitRanges:
+        est, err = estimateQCDFor(bjetBin, datafile, histogramForEstimation, function, fitRanges=[currentRange])
+        deviation = est - estimate
+        if not estimate == 0:
+            relativeErrorSquared += (deviation/estimate)**2
+#        print 'Est', est
+    statisticalErrorSquared = 0
+    if not estimate == 0:
+        statisticalErrorSquared = 1/estimate
+    relativeErrorSquared += statisticalErrorSquared
     
-def getQCDEstimate(histname, datafile, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts'):
-    files = {'data': datafile}
+    relativeError = sqrt(relativeErrorSquared)
+    absoluteError = relativeError*estimate
     
     
-    binWidth = 0.01
-    rebin = 10
-    function = 'gaus'
-    signalRegion = (0., 0.1)
-    estimate = -1
     
-    for suffix in allBjetBins:
-        if suffix in histname:
-            histogramForEstimation = histogramForEstimation + '_' + suffix
-            hists = [histogramForEstimation]
-            hists = getHistsFromFiles(hists, files)
-            histogramForEstimation = hists['data'][histogramForEstimation]
-            histogramForEstimation.Rebin(rebin)
-            fit1 = None
-            fit2 = None
-            if histogramForEstimation.Integral() > 0:
-                fit1 = doFit(histogramForEstimation, function, (0.2, 1.1))
-                if fit1:
-                    fit1 = fit1.Clone()
-                fit2 = doFit(histogramForEstimation, function, (0.3, 1.1))
-                if fit2:
-                    fit2 = fit2.Clone()
-            
-                if not fit1 or not fit2:
-                    print 'No fit result, returning 0'
-                    return 0
-            
-            est1 = getEstimate(fit1, signalRegion, binWidth, rebin)
-            est2 = getEstimate(fit2, signalRegion, binWidth, rebin)
-        
-            estimate = (est1 + est2) / 2
-            del hists
-            del fit1, fit2, histogramForEstimation
-    return estimate
+    return estimate, absoluteError
+    
     
 def doClosureTestFor(files, histogram, function='pol1', fitRanges=[(0.2, 1.1), (0.3, 1.1)]):
     hists = [histogram]
@@ -220,30 +202,95 @@ def getShapeErrorHistogram(histname, files):
     
 def combineErrorsFromHistogramList():
     pass
+
+def createErrorHistogram(mcHistograms, qcdHistogram,  relativeQCDEstimationError, shapeErrorHistogram):
+    errorHist = qcdHistogram.Clone("ErrorHist")
+    
+    for bin in range(1, errorHist.GetNbinsX()):
+        nQCD = qcdHistogram.GetBinContent(bin)
+        nMC = 0
+        for hist in mcHistograms:
+            nMC += hist.GetBinContent(bin)
+        err = relativeQCDEstimationError
+        if shapeErrorHistogram:
+            shapeErr= shapeErrorHistogram.GetBinContent(bin)
+            shapeErrStat = shapeErrorHistogram.GetBinError(bin)
+            shapeErr = fabs(shapeErr) + shapeErrStat
+            err = sqrt(err*err + shapeErr*shapeErr)
+        errorHist.SetBinContent(bin, nMC)
+        errorHist.SetBinError(bin, err*nQCD)
+    return errorHist
+    
 if __name__ == '__main__':
     gROOT.SetBatch(True)
     gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
     
     files = inputFiles.files
     function = 'gaus'
-    btag = '0btags'
-    fitRanges = [
-#                 (0.1, 1.1),
-#                 (0.2, 1.1),
-                 (0.3, 1.1)
-                 ]
-    estimate= estimateQCDFor('', files['data'], 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function, fitRanges)
-    est, err = estimate
-    err = err / est
-    print 'Final QCD estimate (3jet, 1btag)', (est, err * est + est / sqrt(est))
-#    estimate= estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0btag')
-    for btag in ['0btag', '1btag', '2btags']:
-        estimate = estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function, fitRanges)
-        est, err = estimate
-        err = err / est
-        print 'Final QCD estimate (>=4jet, %s)' %btag, (est, err * est + est / sqrt(est))
-#    estimate= estimateQCDFor('', files['data'], 'QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts_4orMoreJets')
-#    print 'QCD estimate:', estimate
+#    btag = '0btags'
+#    fitRanges = [
+##                 (0.1, 1.1),
+##                 (0.2, 1.1),
+##                 (0.3, 1.1),
+#                 (0.4, 1.1)
+#                 ]
+
+    print 'QCD estimation in relative isolation using', function, 'function'
+##    est1 = estimateQCDFor('', files['data'], 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function, [(0.2, 1.6)])[0]
+##    est, err = estimateQCDFor('', files['data'], 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function, [(0.3, 1.6)])
+##    est2 = estimateQCDFor('', files['data'], 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets' , function, [(0.4, 1.6)])[0]
+##    print 'Err', err
+##    print 'Est1', est1
+##    print 'Est2', est2
+##    err = err / est
+##    err2 = err*err + ((est - est1)/est)**2 + ((est - est2)/est)**2 +  1/ est
+##    print 'Final QCD estimate (==3jet, %s): %.1f +- %.1f' % ('1 b-tag', est, sqrt(err2)*est)
+#    est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function, 
+#                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+#    print 'Final QCD estimate (==3jet, %s): %.1f +- %.1f' % ('1 b-tag', est, err)
+#    for btag in ['0btag', '1btag', '2btags']:
+#        
+##        est1 = estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function, [(0.2, 1.6)])[0]
+##        est, err = estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function, [(0.3, 1.6)])
+##        est2 = estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function, [(0.4, 1.6)])[0]
+##        print 'Err', err
+##        print 'Est1', est1
+##        print 'Est2', est2
+##        err = err / est
+##        err2 = err*err + ((est - est1)/est)**2 + ((est - est2)/est)**2 +  1/ est
+##        print 'Final QCD estimate (>=4jet, %s): %.1f +- %.1f' % (btag, est, sqrt(err2)*est)
+#        est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function, 
+#                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+#        print 'Final QCD estimate (>=4jet, %s): %.1f +- %.1f' % (btag, est, err)
+        
+    for i in range(0,10):
+        print i, estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % '1btag', function, [(0.2, 1.6)])
+        
+#    print 'performing closure test'
+#    est1 = doClosureTestFor(files, 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function, [(0.2, 1.6)])
+#    estimate = doClosureTestFor(files, 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function, [(0.3, 1.6)])
+#    est2 = doClosureTestFor(files, 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets' , function, [(0.4, 1.6)])
+#    est =1
+#    err = estimate
+#    err = err / est
+#    print '%.3f, %.3f, %.3f' % (err, est1, est2)
+##    err2 = err*err + ((est - est1)/est)**2 + ((est - est2)/est)**2 +  1/ est
+##    print 'Final QCD estimate (>=4jet, %s): %.2f +- %.2f' % (btag, est, sqrt(err2)*est)
+##    print 'Final QCD estimate (3jet, 1btag)', (est, err * est + est / sqrt(est))
+##    estimate= estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0btag')
+#    for btag in ['0btag', '1btag', '2btags']:
+#        est1 = doClosureTestFor(files, 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function, [(0.2, 1.6)])
+#        estimate = doClosureTestFor(files, 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function, [(0.3, 1.6)])
+#        est2 = doClosureTestFor(files, 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function, [(0.4, 1.6)])
+#        est =1
+#        err = estimate
+#        print '%.3f, %.3f, %.3f' % (err, est1, est2)
+#        est, err = estimate
+#        err = err / est
+#        err2 = err*err + ((est - est1)/est)**2 + ((est - est2)/est)**2 +  1/ est
+#        print 'Final QCD estimate (>=4jet, %s): %.2f +- %.2f' % (btag, est, sqrt(err2)*est)
+#        print 'Final QCD estimate (>=4jet, %s)' %btag, (est, err * est + est / sqrt(est))
+        
     
 #    print 'performing closure test'
 #    sysErr = doClosureTestFor(files, 'QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function, fitRanges)

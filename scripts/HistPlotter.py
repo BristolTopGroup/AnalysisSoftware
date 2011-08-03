@@ -167,7 +167,7 @@ def applyDefaultStylesAndColors( hists ):
     return hists
 
 def get_cms_label( lumi, njet = "4orMoreJets", nbjet = "0orMoreBtag" ):
-    mytext = TPaveText( 0.45, 0.8, 0.7, 0.93, "NDC" );
+    mytext = TPaveText( 0.35, 0.7, 0.7, 0.93, "NDC" );
     mytext.AddText( "CMS Preliminary" );
     mytext.AddText( "%.1f pb^{-1} at  #sqrt{s} = 7 TeV" % lumi );
     if njet != "":
