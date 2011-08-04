@@ -97,7 +97,7 @@ private:
                 goodLooseElectron->pt(), goodLooseElectron->theta()));
         track->setD0(goodLooseElectron->d0_wrtBeamSpot());
         track->setCharge(goodLooseElectron->charge());
-        assert(goodLooseElectron->isGood() == false);
+        assert(goodLooseElectron->isGood(false) == false);
         assert(goodLooseElectron->isLoose() && goodLooseElectron->relativeIsolation() < 1.);
     }
 

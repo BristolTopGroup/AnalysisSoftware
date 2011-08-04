@@ -48,15 +48,15 @@ public:
     }
 
     void testBadEtElectron() {
-        ASSERT(badEtElectron->isGood() == false);
+        ASSERT(badEtElectron->isGood(false) == false);
     }
 
     void testBadEtaElectron() {
-        ASSERT(badEtaElectron->isGood() == false);
+        ASSERT(badEtaElectron->isGood(false) == false);
     }
 
     void testBadInCrackElectron() {
-        ASSERT(badInCrackElectron->isGood() == false);
+        ASSERT(badInCrackElectron->isGood(false) == false);
     }
 
     void testElectronFromConversion() {
@@ -68,7 +68,7 @@ public:
     }
 
     void testBadD0Electron() {
-        ASSERT(badD0Electron->isGood() == false);
+        ASSERT(badD0Electron->isGood(false) == false);
     }
 
     void testLooseElectron() {
@@ -84,7 +84,7 @@ public:
     }
 
     void testGoodElectron() {
-        ASSERT(goodElectron->isGood());
+        ASSERT(goodElectron->isGood(false));
     }
 
     void testBadLooseElectronNoID() {
@@ -92,7 +92,7 @@ public:
     }
 
     void testBadElectronNoID() {
-        ASSERT(badElectronNoID->isGood() == false);
+        ASSERT(badElectronNoID->isGood(false) == false);
     }
 
     void testVBTFW70Barrel() {

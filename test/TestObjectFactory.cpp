@@ -118,14 +118,14 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
     passId = passId | 1 << (int) IDunderTest;
     electron->setCompressedCiCElectronID(passId);
 
-    if (electron->isGood() == false) {
+    if (electron->isGood(false) == false) {
         cout << "Et " << electron->et() << endl;
         cout << "Eta " << electron->eta() << endl;
         cout << "VBTF 70 " << electron->VBTF_W70_ElectronID() << endl;
         cout << "d0 " << electron->d0_wrtBeamSpot() << endl;
         cout << "Et " << electron->et() << endl;
     }
-    assert(electron->isGood());
+    assert(electron->isGood(false));
     assert(electron->isFromConversion() == false);
     assert(electron->isIsolated() == false);
     return electron;
@@ -138,7 +138,7 @@ ElectronPointer TestObjectFactory::goodIsolatedElectron() {
     electron->setHcalIsolation(0.5);
 
     assert(electron->isIsolated());
-    assert(electron->isGood());
+    assert(electron->isGood(false));
     assert(electron->isFromConversion() == false);
     assert(electron->isTaggedAsConversion(0.02,0.02) == false);
     return electron;
@@ -156,7 +156,7 @@ ElectronPointer TestObjectFactory::goodIsolatedElectron2() {
     assert(electron->invariantMass(electron2) > 80);
     assert(electron->invariantMass(electron2) < 100);
     assert(electron2->isIsolated());
-    assert(electron2->isGood());
+    assert(electron2->isGood(false));
     return electron2;
 }
 
@@ -239,7 +239,7 @@ ElectronPointer TestObjectFactory::goodLooseElectron() {
     looseElectron->setD0(0);
     looseElectron->setSuperClusterEta(0);
 
-    assert(looseElectron->isGood() == false);
+    assert(looseElectron->isGood(false) == false);
     assert(looseElectron->isLoose());
 
     return looseElectron;
