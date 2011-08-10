@@ -8,7 +8,6 @@ from math import pow, exp, sqrt
 from copy import deepcopy
 from array import array
 import inputFiles
-import EstimateQCD2
 
 class QCDEstimator:
     luminosity = 1091.45#pb-1

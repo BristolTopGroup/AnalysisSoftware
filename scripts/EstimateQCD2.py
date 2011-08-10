@@ -21,7 +21,7 @@ class QCDEstimator:
                     '4orMoreJets':'#geq 4 jets'}
     jetBinsLatex = HistPlotter.BjetBinsLatex
     binWidth = 0.01
-    rebin = 10
+    rebin = 1
     fitRangesClosureTest = [ ( 0.1, 0.9 ), ( 0.1, 1.0 ), ( 0.1, 1.1 ),
                   ( 0.2, 0.9 ), ( 0.2, 1.0 ), ( 0.2, 1.1 ),
                   ( 0.3, 0.9 ), ( 0.3, 1.0 ), ( 0.3, 1.1 )]
@@ -728,7 +728,7 @@ if __name__ == '__main__':
     q = QCDEstimator( inputFiles.files )
     QCDEstimator.outputFolder = '/storage/results/plots/ElectronHad/'
     QCDEstimator.outputFormat = 'png'
-    function = 'gaus'
+    function = 'expo'
 
     q.doEstimate( function )
     print '=' * 60
@@ -747,6 +747,6 @@ if __name__ == '__main__':
 
 
 #    print 'Starting closure tests'
-#    q.doClosureTests( function)
+    q.doClosureTests( function)
 #    q.plotControlRegionComparison()
 
