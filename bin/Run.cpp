@@ -11,21 +11,22 @@
 #include "Analysis.h"
 #include <iostream>
 #include <boost/scoped_ptr.hpp>
+#include <boost/program_options.hpp>
+#include <boost/program_options/options_description.hpp>
 
 using namespace ROOT;
 using namespace std;
 using namespace BAT;
+namespace po = boost::program_options;
 
-void setUpOnce() {
-    //needed to proper link vector<float> etc.
-    gROOT->ProcessLine("#include <vector>");
-    //prevent automatic ownership of ROOT objects
-    TH1F::AddDirectory(false);
-    //ignore ROOT errors (temporaly due to different nTuple content)
-    gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
-}
+void setUpOnce();
+po::variables_map getInputVariables(int argc, char **argv);
 
 int main(int argc, char **argv) {
+    unsigned long maxEvents(-1);
+
+    po::variables_map inputVariables = getInputVariables(argc, argv);
+
     setUpOnce();
     TStopwatch watch;
     watch.Start();
@@ -39,11 +40,15 @@ int main(int argc, char **argv) {
     Analysis::useCiCElectronID(true);
 
     boost::scoped_ptr<Analysis> myAnalysis(new Analysis());
-   //         myAnalysis->setMaximalNumberOfEvents(100000);
+    if (inputVariables.count("maxEvents")) {
+        maxEvents = inputVariables["maxEvents"].as<unsigned long>();
+        cout << "Maximal number of events to be processed: "<< maxEvents << ".\n";
+            myAnalysis->setMaximalNumberOfEvents(maxEvents);
+    }
     myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
 
     //Test samples
-    //        myAnalysis->addInputFile("/storage/TopQuarkGroup/TTJet_nTuple_41x_mc.root");
+//            myAnalysis->addInputFile("/storage/TopQuarkGroup/TTJet_nTuple_41x_mc.root");
 
     //==========================DATA 2010========================================
 
@@ -69,9 +74,9 @@ int main(int argc, char **argv) {
                     "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_24.06.11-01.07.11/4ee1203e97f9a00957561f563636708a/*.root");//94 pb-1
     myAnalysis->addInputFile(
                         "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_01.07.11-06.07.11/4ee1203e97f9a00957561f563636708a/*.root");//115 pb-1
-
-    //==========================Summer11 samples========================================
-
+//
+//    //==========================Summer11 samples========================================
+//
     myAnalysis->addInputFile("/storage/TopQuarkGroup/mc/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v2_Summer11-PU_S4_START42_V11-v1/7c548abbf04de779162e4a2cbdd09438/*.root");
     myAnalysis->addInputFile("/storage/TopQuarkGroup/mc/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/nTuple_v2c_Summer11-PU_S4_START42_V11-v1/3f9a3c05fc482d55208abea66464af16/*.root");
     myAnalysis->addInputFile("/storage/TopQuarkGroup/mc/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v2_Summer11-PU_S4_START42_V11-v1/3f9a3c05fc482d55208abea66464af16/*.root");
@@ -91,19 +96,9 @@ int main(int argc, char **argv) {
                 "/storage/TopQuarkGroup/mc/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v2_Summer11-PU_S4_START42_V11-v1/7c548abbf04de779162e4a2cbdd09438/*.root");
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v2_Summer11-PU_S4_START42_V11-v1/ad7cf59d8abe76df5690594944b778cc/*.root");
-
 //
-//    //==========================Spring11 samples========================================
-    //SM ttbar + jets
-//    myAnalysis->addInputFile(
-//            "/storage/TopQuarkGroup/mc/TTJets_TuneD6T_7TeV-madgraph-tauola/nTuple_v2b_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
-//    // W+jets
-//    myAnalysis->addInputFile(
-//            "/storage/TopQuarkGroup/mc/WJetsToLNu_TuneD6T_7TeV-madgraph-tauola/nTuple_v2b_Spring11-PU_S1_-START311_V1G1-v1/6f7af515f09d5fa510155a389164eaef/*.root");
-    //Z/gamma + jets
-//    myAnalysis->addInputFile(
-//                "/storage/TopQuarkGroup/mc/DYJetsToLL_TuneD6T_M-50_7TeV-madgraph-tauola/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/6f7af515f09d5fa510155a389164eaef/*.root");
-
+////
+////    //==========================Spring11 samples========================================
     //SingleTop
     myAnalysis->addInputFile(
             "/storage/TopQuarkGroup/mc/TToBLNu_TuneZ2_s-channel_7TeV-madgraph/nTuple_v2b_Spring11-PU_S1_-START311_V1G1-v1/d2d68e81009e0568f462b5af5134933a/*.root");
@@ -134,3 +129,30 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
+void setUpOnce() {
+    //needed to proper link vector<float> etc.
+    gROOT->ProcessLine("#include <vector>");
+    //prevent automatic ownership of ROOT objects
+    TH1F::AddDirectory(false);
+    //ignore ROOT errors (temporaly due to different nTuple content)
+    gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
+}
+
+po::variables_map getInputVariables(int argc, char **argv) {
+    // Declare the supported options.
+    po::options_description desc("Allowed options");
+    desc.add_options()("help,h", "produce help message")("maxEvents", po::value<unsigned long>(),
+            "set maximal number of events to be processed");
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+    if (vm.count("help")) {
+        cout << desc << "\n";
+        exit(0);
+    }
+
+    return vm;
+}
+
