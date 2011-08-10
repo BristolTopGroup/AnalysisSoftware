@@ -192,6 +192,10 @@ bool TopPairEventCandidate::hasAtLeastThreeGoodJets() const {
     return goodJets.size() >= 3;
 }
 
+bool TopPairEventCandidate::hasExactlyThreeGoodJets() const {
+    return goodJets.size() == 3;
+}
+
 bool TopPairEventCandidate::hasAtLeastFourGoodJets() const {
     return goodJets.size() >= 4;
 }
@@ -416,8 +420,7 @@ bool TopPairEventCandidate::passesConversionSelection() const {
     bool passesFirst6 = passesSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto);
     bool isConversion1 = isolatedElectronDoesNotComeFromConversion() == false;
     bool isConversion2 = isolatedElectronNotTaggedAsFromConversion() == false;
-    bool atLeast4Jets = hasAtLeastFourGoodJets();
-    return passesFirst6 && (isConversion1 || isConversion2) && atLeast4Jets;
+    return passesFirst6 && (isConversion1 || isConversion2);
 }
 
 bool TopPairEventCandidate::passedAntiIDSelection() const{
@@ -434,8 +437,7 @@ bool TopPairEventCandidate::passedAntiIDSelection() const{
                 0.02, 0.02) == false;
     }
 
-    bool atLeast4Jets = hasAtLeastFourGoodJets();
-    return passesFirst3 && passElectrons && passesAntiID && passesConversionVetos && atLeast4Jets;
+    return passesFirst3 && passElectrons && passesAntiID && passesConversionVetos;
 }
 bool TopPairEventCandidate::passesAntiIsolationSelection() const {
     //require at least one good electron and no isolated good electrons
@@ -449,8 +451,7 @@ bool TopPairEventCandidate::passesAntiIsolationSelection() const {
     bool zveto = passesSelectionStep(TTbarEPlusJetsSelection::Zveto);
     bool conversionVeto = (goodElectrons.front()->isFromConversion() || goodElectrons.front()->isTaggedAsConversion(
             0.2, 0.2)) == false;
-    bool jets = hasAtLeastFourGoodJets();
-    return passesFirst3 && muonVeto && zveto && conversionVeto && jets;
+    return passesFirst3 && muonVeto && zveto && conversionVeto;
 }
 
 void TopPairEventCandidate::reconstructTTbar(ElectronPointer electron) {
@@ -533,6 +534,82 @@ void TopPairEventCandidate::reconstructTTbar(ElectronPointer electron) {
     doneReconstruction = true;
 }
 
+void TopPairEventCandidate::reconstructTTbarFrom3Jets(ElectronPointer electron) {
+    if (goodJets.size() < 3)
+        throw ReconstructionException("Not enough jets available to reconstruct top event using Mass Equality method.");
+    electronFromW = electron;
+    selectedNeutrino = 0;
+    currentSelectedNeutrino = 0;
+    reconstructNeutrinos();
+    double chosen_TopMassDifference(9999999.);
+    double chosen_Chi2Total(9999999.);
+
+    for (unsigned short hadBindex = 0; hadBindex < goodJets.size(); ++hadBindex) {
+        for (unsigned short lepBindex = 0; lepBindex < goodJets.size(); ++lepBindex) {
+            if (lepBindex == hadBindex)
+                continue;
+            for (unsigned short jetFromW = 0; jetFromW < goodJets.size(); ++jetFromW) {
+                if (jetFromW == lepBindex || jetFromW == hadBindex)
+                    continue;
+                    hadronicBJet = goodJets.at(hadBindex);
+                    leptonicBJet = goodJets.at(lepBindex);
+                    jet1FromW = goodJets.at(jetFromW);
+                    jet2FromW = goodJets.at(jetFromW);
+
+                    leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
+                    leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
+                    hadronicW = ParticlePointer(new Particle(*jet1FromW));
+                    leptonicTop1 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW1));
+                    leptonicTop2 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW2));
+                    hadronicTop = ParticlePointer(new Particle(*hadronicBJet + *hadronicW));
+                    fillHypotheses();
+                    selectNeutrinoSolution();
+                    double TopMassDifference = calculateTopMassDifference(currentSelectedNeutrino);
+                    double chi2 = getTotalChi2(currentSelectedNeutrino);
+                    switch (usedTTbarReconstruction) {
+                    case TTbarReconstructionCriterion::TopMassDifference:
+                        if (TopMassDifference < chosen_TopMassDifference) {
+                            hadronicBIndex = hadBindex;
+                            leptonicBIndex = lepBindex;
+                            jet1FromWIndex = jetFromW;
+                            jet2FromWIndex = jetFromW;
+                            chosen_TopMassDifference = TopMassDifference;
+                            selectedNeutrino = currentSelectedNeutrino;
+                        }
+                        break;
+
+                    case TTbarReconstructionCriterion::chi2:
+                        if (chi2 < chosen_Chi2Total) {
+                            hadronicBIndex = hadBindex;
+                            leptonicBIndex = lepBindex;
+                            jet1FromWIndex = jetFromW;
+                            jet2FromWIndex = jetFromW;
+                            chosen_Chi2Total = chi2;
+                            selectedNeutrino = currentSelectedNeutrino;
+                        }
+                        break;
+
+                }
+            }
+        }
+    }
+    std::sort(solutions.begin(), solutions.end(), compareSolutions);
+    hadronicBJet = goodJets.at(hadronicBIndex);
+    leptonicBJet = goodJets.at(leptonicBIndex);
+    jet1FromW = goodJets.at(jet1FromWIndex);
+    jet2FromW = goodJets.at(jet2FromWIndex);
+    leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
+    leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
+    hadronicW = ParticlePointer(new Particle(*jet1FromW));
+    leptonicTop1 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW1));
+    leptonicTop2 = ParticlePointer(new Particle(*leptonicBJet + *leptonicW2));
+    hadronicTop = ParticlePointer(new Particle(*hadronicBJet + *hadronicW));
+    if (selectedNeutrino == 1)
+        ttbarResonance = ParticlePointer(new Particle(*leptonicTop1 + *hadronicTop));
+    else
+        ttbarResonance = ParticlePointer(new Particle(*leptonicTop2 + *hadronicTop));
+    doneReconstruction = true;
+}
 
 void TopPairEventCandidate::reconstructNeutrinos() {
     boost::array<double, 2> neutrinoPzs = computeNeutrinoPz();

@@ -164,6 +164,7 @@ public:
     bool hasAtLeastOneGoodJet() const;
     bool hasAtLeastTwoGoodJets() const;
     bool hasAtLeastThreeGoodJets() const;
+    bool hasExactlyThreeGoodJets() const;
     bool hasAtLeastFourGoodJets() const;
 
     bool isNotAZBosonEvent() const;
@@ -176,6 +177,7 @@ public:
     bool hasAtLeastTwoBtags() const;
 
 	void reconstructTTbar(ElectronPointer electron);
+	void reconstructTTbarFrom3Jets(ElectronPointer electron);
     void reconstructUsingSubjets();
     void reconstructUsingMCTruth();
     void reconstruct(const Rule rule, const ElectronPointer electron);
