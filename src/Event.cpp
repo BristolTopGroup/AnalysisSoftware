@@ -41,7 +41,8 @@ Event::Event() :
     jetCleaningEfficiency(1.),
     numberOfHighPurityTracks(0),
     isBeamScraping(true),
-    genNumberOfPileUpVertices(0){
+    genNumberOfPileUpVertices(0),
+    ptdensityRho(0.){
 }
 
 Event::~Event() {
@@ -415,6 +416,14 @@ void Event::setHLTPrescales(const boost::shared_ptr<std::vector<int> > prescales
 
 int Event::HLTPrescale(HLTriggers::value trigger) const {
 	return HLTPrescales->at(trigger);
+}
+
+void Event::setPtDensityRho(float rho) {
+    ptdensityRho = rho;
+}
+
+float Event::rho() const {
+    return ptdensityRho;
 }
 
 }

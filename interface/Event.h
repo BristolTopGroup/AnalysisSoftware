@@ -60,6 +60,8 @@ protected:
 
     unsigned int genNumberOfPileUpVertices;
 
+    float ptdensityRho;
+
 public:
     Event();
     virtual ~Event();
@@ -83,6 +85,7 @@ public:
     void setEventWeight(float weight);
     void setBeamScrapingVeto(bool isScraping);
     void setGenNumberOfPileUpVertices(unsigned int pileup);
+    void setPtDensityRho(float rho);
 
     const VertexPointer PrimaryVertex() const;
     const VertexCollection& Vertices() const;
@@ -118,6 +121,7 @@ public:
     static bool useCiCElectronID;
 
     float numberOfGeneratedPileUpVertices() const;
+    float rho() const;
 
 private:
     void selectElectronsByQuality();
