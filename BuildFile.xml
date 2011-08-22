@@ -3,9 +3,11 @@
 <use name="boost" />
 <use name="root" />
 <use name="rootcore" />
+<use name="boost_program_options"/>
 
 <export>
 <use name="boost" />
+<use name="boost_program_options" />
 <use name="root" />
 <use name="rootcore" />
 <lib name="BristolAnalysisTools" />
