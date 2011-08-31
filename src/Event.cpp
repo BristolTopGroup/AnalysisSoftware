@@ -7,6 +7,8 @@
 
 #include "../interface/Event.h"
 #include <iostream>
+#include <numeric>
+
 using namespace std;
 
 namespace BAT {
@@ -402,12 +404,13 @@ bool Event::HLT(HLTriggers::value trigger) const{
     return HLTs->at(trigger) > 0;
 }
 
-void Event::setGenNumberOfPileUpVertices(unsigned int pileup){
+void Event::setGenNumberOfPileUpVertices(std::vector<int> pileup){
     genNumberOfPileUpVertices = pileup;
 }
 
-float Event::numberOfGeneratedPileUpVertices() const{
-    return genNumberOfPileUpVertices;
+float Event::numberOfGeneratedPileUpVertices() const {
+	double average = std::accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0)/genNumberOfPileUpVertices.size();
+    return average;
 }
 
 void Event::setHLTPrescales(const boost::shared_ptr<std::vector<int> > prescales){
