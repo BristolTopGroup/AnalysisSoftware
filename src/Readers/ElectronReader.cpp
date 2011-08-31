@@ -94,10 +94,10 @@ const ElectronCollection& ElectronReader::getElectrons() {
 void ElectronReader::readElectrons() {
 
     for (unsigned int index = 0; index < energyReader.size(); index++) {
-        float energy = energyReader.getVariableAt(index);
-        float px = pxReader.getVariableAt(index);
-        float py = pyReader.getVariableAt(index);
-        float pz = pzReader.getVariableAt(index);
+    	double energy = energyReader.getVariableAt(index);
+    	double px = pxReader.getVariableAt(index);
+    	double py = pyReader.getVariableAt(index);
+    	double pz = pzReader.getVariableAt(index);
         ElectronPointer electron(new Electron(energy, px, py, pz));
         electron->setUsedAlgorithm(algorithm);
         electron->setCharge(chargeReader.getIntVariableAt(index));
@@ -120,11 +120,11 @@ void ElectronReader::readElectrons() {
         electron->setSharedFractionInnerHits(sharedFractionInnerHits.getVariableAt(index));
         electron->setClosestTrackID(trackIDReader.getIntVariableAt(index));
         electron->setCompressedCiCElectronID(CiCElectronIDReader->getIntVariableAt(index));
-        float trackPhi = track_phi.getVariableAt(index);
-        float trackEta = track_eta.getVariableAt(index);
-        float trackPt = track_pt.getVariableAt(index);
-        float trackTheta = track_theta.getVariableAt(index);
-        float trackCharge = track_charge.getIntVariableAt(index);
+        double trackPhi = track_phi.getVariableAt(index);
+        double trackEta = track_eta.getVariableAt(index);
+        double trackPt = track_pt.getVariableAt(index);
+        double trackTheta = track_theta.getVariableAt(index);
+        double trackCharge = track_charge.getIntVariableAt(index);
         TrackPointer track = TrackPointer(new Track(trackPhi, trackEta, trackPt, trackTheta));
         track->setCharge(trackCharge);
         if(algorithm == ElectronAlgorithm::Calo)

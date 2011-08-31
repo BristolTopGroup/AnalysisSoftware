@@ -56,10 +56,10 @@ const MuonCollection& MuonReader::getMuons() {
 
 void MuonReader::readMuons() {
     for (unsigned int index = 0; index < energyReader.size(); index++) {
-        float energy = energyReader.getVariableAt(index);
-        float px = pxReader.getVariableAt(index);
-        float py = pyReader.getVariableAt(index);
-        float pz = pzReader.getVariableAt(index);
+    	double energy = energyReader.getVariableAt(index);
+    	double px = pxReader.getVariableAt(index);
+    	double py = pyReader.getVariableAt(index);
+    	double pz = pzReader.getVariableAt(index);
         MuonPointer muon(new Muon(energy, px, py, pz));
         muon->setEcalIsolation(ecalIsolationReader.getVariableAt(index));
         muon->setHcalIsolation(hcalIsolationReader.getVariableAt(index));

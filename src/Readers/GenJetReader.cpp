@@ -43,10 +43,10 @@ const JetCollection& GenJetReader::getGenJets() {
 
 void GenJetReader::readGenJets() {
 	for (unsigned int jetIndex = 0; jetIndex < genEnergyReader.size(); jetIndex++) {
-		float energy = genEnergyReader.getVariableAt(jetIndex);
-		float px = genPxReader.getVariableAt(jetIndex);
-		float py = genPyReader.getVariableAt(jetIndex);
-		float pz = genPzReader.getVariableAt(jetIndex);
+		double energy = genEnergyReader.getVariableAt(jetIndex);
+		double px = genPxReader.getVariableAt(jetIndex);
+		double py = genPyReader.getVariableAt(jetIndex);
+		double pz = genPzReader.getVariableAt(jetIndex);
 		JetPointer jet(new Jet(energy, px, py, pz));
 
 		jet->setUsedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05);

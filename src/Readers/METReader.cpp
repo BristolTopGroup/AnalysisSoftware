@@ -20,7 +20,9 @@ METReader::METReader() :
 
 METReader::METReader(TChainPointer input, METAlgorithm::value algo) :
     exReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"),
-    eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey") {
+    eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"),
+    significanceReader(input, METAlgorithm::prefixes.at(algo) + ".Significance"),
+    sumETReader(input, METAlgorithm::prefixes.at(algo) + ".SumET") {
 
 }
 
@@ -30,6 +32,8 @@ METReader::~METReader() {
 void METReader::initialise() {
     exReader.initialise();
     eyReader.initialise();
+    significanceReader.initialise();
+    sumETReader.initialise();
 }
 
 const METPointer METReader::getMET() {
@@ -39,5 +43,7 @@ const METPointer METReader::getMET() {
 
 void METReader::readMET() {
     met = METPointer(new MET(exReader.getVariableAt(0), eyReader.getVariableAt(0)));
+    met->setSignificance(significanceReader.getVariableAt(0));
+    met->setSumET(sumETReader.getVariableAt(0));
 }
 }

@@ -43,10 +43,10 @@ const MCParticleCollection& GenParticleReader::getGenParticles() {
 
 void GenParticleReader::readGenParticles() {
     for (unsigned int index = 0; index < pxReader.size(); index++) {
-        float energy = energyReader.getVariableAt(index);
-        float px = pxReader.getVariableAt(index);
-        float py = pyReader.getVariableAt(index);
-        float pz = pzReader.getVariableAt(index);
+    	double energy = energyReader.getVariableAt(index);
+    	double px = pxReader.getVariableAt(index);
+    	double py = pyReader.getVariableAt(index);
+    	double pz = pzReader.getVariableAt(index);
 
 
         int pdgId = pdgIdReader.getIntVariableAt(index);

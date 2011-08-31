@@ -40,7 +40,7 @@ NTupleEventReader::NTupleEventReader() :
     runNumberReader(new VariableReader<unsigned int> (input, "Event.Run")),
     eventNumberReader(new VariableReader<unsigned int> (input, "Event.Number")),
     lumiBlockReader(new VariableReader<unsigned int> (input, "Event.LumiSection")),
-    PileupInfoReader(new VariableReader<unsigned int> (input, "Event.PileUpInteractions")),
+    PileupInfoReader(new VariableReader<MultiIntPointer> (input, "Event.PileUpInteractions")),
     areReadersSet(false),
     areDatatypesKnown(false),
     currentEvent(),
@@ -86,7 +86,7 @@ const Event& NTupleEventReader::getNextEvent() {
     if(!currentEvent.isRealData()) {
     	currentEvent.setGenParticles(genParticleReader->getGenParticles());
     	currentEvent.setGenJets(genJetReader->getGenJets());
-    	currentEvent.setGenNumberOfPileUpVertices(PileupInfoReader->getVariable());
+    	currentEvent.setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
     }
 
     currentEvent.setJets(jetReader->getJets());

@@ -42,10 +42,10 @@ const TrackCollection& TrackReader::getTracks() {
 
 void TrackReader::readTracks() {
     for (unsigned int index = 0; index < phiReader.size(); index++) {
-        float phi = phiReader.getVariableAt(index);
-        float eta = etaReader.getVariableAt(index);
-        float pt = ptReader.getVariableAt(index);
-        float theta = thetaReader.getVariableAt(index);
+    	double phi = phiReader.getVariableAt(index);
+    	double eta = etaReader.getVariableAt(index);
+    	double pt = ptReader.getVariableAt(index);
+    	double theta = thetaReader.getVariableAt(index);
         TrackPointer track(new Track(phi, eta, pt, theta));
         track->setCharge(chargeReader.getIntVariableAt(index));
         track->setD0(d0Reader.getVariableAt(index));
