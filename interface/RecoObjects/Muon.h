@@ -34,23 +34,23 @@ const boost::array<std::string, MuonAlgorithm::NUMBER_OF_MUONALGORITHMS> names =
 class Muon: public Particle {
 public:
 	Muon();
-	Muon(float energy, float px, float py, float pz);
+	Muon(double energy, double px, double py, double pz);
 	virtual ~Muon();
 	bool isGood() const;
 	bool isIsolated() const;
 	bool isGlobal() const;
-	float ecalIsolation() const;
-	float hcalIsolation() const;
-	float trackerIsolation() const;
-	float relativeIsolation() const;
+	double ecalIsolation() const;
+	double hcalIsolation() const;
+	double trackerIsolation() const;
+	double relativeIsolation() const;
 
 	void makeGlobal(bool global);
-	void setEcalIsolation(float isolation);
-	void setHcalIsolation(float isolation);
-	void setTrackerIsolation(float isolation);
+	void setEcalIsolation(double isolation);
+	void setHcalIsolation(double isolation);
+	void setTrackerIsolation(double isolation);
 private:
 	bool is_Global;
-	float ecal_Isolation, hcal_Isolation, tracker_Isolation;
+	double ecal_Isolation, hcal_Isolation, tracker_Isolation;
 };
 
 typedef boost::shared_ptr<Muon> MuonPointer;

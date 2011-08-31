@@ -14,7 +14,7 @@ Muon::Muon() :
 
 }
 
-Muon::Muon(float energy, float px, float py, float pz) :
+Muon::Muon(double energy, double px, double py, double pz) :
 	Particle(energy, px, py, pz), is_Global(false), ecal_Isolation(0.), hcal_Isolation(0), tracker_Isolation(0) {
 
 }
@@ -30,31 +30,31 @@ void Muon::makeGlobal(bool global) {
 	is_Global = global;
 }
 
-float Muon::ecalIsolation() const {
+double Muon::ecalIsolation() const {
 	return ecal_Isolation;
 }
 
-void Muon::setEcalIsolation(float isolation) {
+void Muon::setEcalIsolation(double isolation) {
 	ecal_Isolation = isolation;
 }
 
-float Muon::hcalIsolation() const {
+double Muon::hcalIsolation() const {
 	return hcal_Isolation;
 }
 
-void Muon::setHcalIsolation(float isolation) {
+void Muon::setHcalIsolation(double isolation) {
 	hcal_Isolation = isolation;
 }
 
-float Muon::trackerIsolation() const {
+double Muon::trackerIsolation() const {
 	return tracker_Isolation;
 }
 
-void Muon::setTrackerIsolation(float isolation) {
+void Muon::setTrackerIsolation(double isolation) {
 	tracker_Isolation = isolation;
 }
 
-float Muon::relativeIsolation() const {
+double Muon::relativeIsolation() const {
 	return (ecal_Isolation + hcal_Isolation + tracker_Isolation) / pt();
 }
 

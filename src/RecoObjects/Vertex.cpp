@@ -24,11 +24,11 @@ void Vertex::setDegreesOfFreedom(unsigned int ndof) {
 	degreesOfFreedom = ndof;
 }
 
-void Vertex::setZPosition(float z) {
+void Vertex::setZPosition(double z) {
 	z_position = z;
 }
 
-void Vertex::setRho(float rho) {
+void Vertex::setRho(double rho) {
 	this->rho = rho;
 }
 
@@ -40,11 +40,11 @@ unsigned int Vertex::ndof() const {
 	return degreesOfFreedom;
 }
 
-float Vertex::absoluteZPosition() const {
+double Vertex::absoluteZPosition() const {
 	return fabs(z_position);
 }
 
-float Vertex::absoluteRho() const {
+double Vertex::absoluteRho() const {
 	return fabs(rho);
 }
 
@@ -60,7 +60,7 @@ bool Vertex::isGood() const {
 	return passesNDOF && passesZ && passesRho && isNotFake;
 }
 
-float Vertex::z() const{
+double Vertex::z() const{
     return z_position;
 }
 }

@@ -21,8 +21,7 @@ public:
 	int motherIndex() const;
 	int status() const;
 	MCParticle();
-	MCParticle(float energy, float px, float py, float pz);
-	//MCParticle(int pdgId, float phi, float eta, float pt, float energy, int motherIndex, int status);
+	MCParticle(double energy, double px, double py, double pz);
 	virtual ~MCParticle();
 	void setPdgId(int PdgId);
 	void setMotherIndex(int MotherIndex);

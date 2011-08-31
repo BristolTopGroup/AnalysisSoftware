@@ -20,18 +20,18 @@ public:
 	bool isGood() const;
 	bool isFake() const;
 	unsigned int ndof() const;
-	float absoluteZPosition() const;
-	float absoluteRho() const;
-	float z() const;
+	double absoluteZPosition() const;
+	double absoluteRho() const;
+	double z() const;
 	void setFake(bool fake);
 	void setDegreesOfFreedom(unsigned int ndof);
-	void setZPosition(float z);
-	void setRho(float rho);
+	void setZPosition(double z);
+	void setRho(double rho);
 private:
 	bool is_fake;
 	unsigned int degreesOfFreedom;
-	float z_position;
-	float rho;
+	double z_position;
+	double rho;
 
 };
 typedef boost::shared_ptr<Vertex> VertexPointer;

@@ -22,7 +22,7 @@ Particle::Particle(const Particle& particle) :
 
 }
 
-Particle::Particle(float energy, float px, float py, float pz) :
+Particle::Particle(double energy, double px, double py, double pz) :
     particleMass(0),
     particleCharge(0),
     distanceFromInteractionPointInMicron(99999),
@@ -33,74 +33,74 @@ Particle::Particle(float energy, float px, float py, float pz) :
 Particle::~Particle() {
 }
 
-float Particle::mass() const {
+double Particle::mass() const {
     if (particleMass == 0)
         return massFromEnergyAndMomentum();
     else
         return particleMass;
 }
 
-float Particle::d0() const {
+double Particle::d0() const {
     return distanceFromInteractionPointInMicron;
 }
 
-float Particle::d0_wrtBeamSpot() const {
+double Particle::d0_wrtBeamSpot() const {
     return distanceFromInteractionPointInMicron_wrt_to_BeamSpot;
 }
 
-float Particle::energy() const {
+double Particle::energy() const {
     return fourvector.Energy();
 }
 
-float Particle::et() const {
+double Particle::et() const {
     return fourvector.Et();
 }
 
-float Particle::px() const {
+double Particle::px() const {
     return fourvector.Px();
 }
 
-float Particle::py() const {
+double Particle::py() const {
     return fourvector.Py();
 }
 
-float Particle::pz() const {
+double Particle::pz() const {
     return fourvector.Pz();
 }
 
-float Particle::pt() const {
+double Particle::pt() const {
     return fourvector.Pt();
 }
 
-float Particle::eta() const {
+double Particle::eta() const {
     return fourvector.Eta();
 }
 
-float Particle::phi() const {
+double Particle::phi() const {
     return fourvector.Phi();
 }
 
-float Particle::theta() const {
+double Particle::theta() const {
     return fourvector.Theta();
 }
 
-float Particle::massFromEnergyAndMomentum() const {
+double Particle::massFromEnergyAndMomentum() const {
     return fourvector.M();
 }
 
-float Particle::charge() const {
+double Particle::charge() const {
     return particleCharge;
 }
 
-void Particle::setMass(float mass) {
+void Particle::setMass(double mass) {
     particleMass = mass;
 }
 
-void Particle::setD0(float d0) {
+void Particle::setD0(double d0) {
     distanceFromInteractionPointInMicron = d0;
 }
 
-void Particle::setD0_wrtBeamSpot(float d0) {
+void Particle::setD0_wrtBeamSpot(double d0) {
     distanceFromInteractionPointInMicron_wrt_to_BeamSpot = d0;
 }
 
@@ -112,7 +112,7 @@ void Particle::setFourVector(FourVector vector) {
     fourvector = vector;
 }
 
-void Particle::setCharge(float charge) {
+void Particle::setCharge(double charge) {
     particleCharge = charge;
 }
 
@@ -120,18 +120,27 @@ Particle & Particle::operator =(const Particle &rightHandSide) {
     if (this == &rightHandSide)
         return *this;
     fourvector = rightHandSide.getFourVector();
-//    particleMass = rightHandSide.mass();
+    particleCharge = rightHandSide.charge();
     return *this;
 }
 
-const Particle Particle::operator +(const Particle &other) const {
-    Particle result = *this;
+Particle Particle::operator +(const Particle &other) const {
+    Particle result(*this);
     FourVector vector = result.getFourVector() + other.getFourVector();
     result.setFourVector(vector);
     result.setMass(0);
     result.setCharge(result.charge() + other.charge());
     return result;
 }
+
+//ParticlePointer Particle::operator +(const Particle* other) const {
+//    ParticlePointer result(new Particle(*this));
+//    FourVector vector = result->getFourVector() + other->getFourVector();
+//    result->setFourVector(vector);
+//    result->setMass(0);
+//    result->setCharge(result->charge() + other->charge());
+//    return result;
+//}
 
 bool Particle::isInBarrelRegion() const {
     return fabs(eta()) < 1.4442;
@@ -156,37 +165,37 @@ const char* Particle::getEtaRegion() const {
         return "unknown";
 }
 
-float Particle::deltaEta(const ParticlePointer other) const {
+double Particle::deltaEta(const ParticlePointer other) const {
     return eta() - other->eta();
 }
 
-float Particle::deltaPhi(const ParticlePointer other) const {
+double Particle::deltaPhi(const ParticlePointer other) const {
     return fourvector.DeltaPhi(other->getFourVector());
 }
 
-float Particle::deltaR(const ParticlePointer other) const {
+double Particle::deltaR(const ParticlePointer other) const {
     return fourvector.DeltaR(other->getFourVector());
 }
 
-bool Particle::isWithinDeltaR(float delta_R, const ParticlePointer particle) const {
+bool Particle::isWithinDeltaR(double delta_R, const ParticlePointer particle) const {
     return deltaR(particle) < delta_R;
 }
 
-float Particle::invariantMass(const ParticlePointer otherParticle) const {
+double Particle::invariantMass(const ParticlePointer otherParticle) const {
     TLorentzVector combinedParticle(fourvector + otherParticle->getFourVector());
     return combinedParticle.M();
 }
 
-float Particle::relativePtTo(const ParticlePointer otherParticle) const {
-    float relativePt = fourvector.Perp(otherParticle->getFourVector().Vect());
+double Particle::relativePtTo(const ParticlePointer otherParticle) const {
+    double relativePt = fourvector.Perp(otherParticle->getFourVector().Vect());
     return fabs(relativePt);
 }
 
 unsigned short Particle::getClosest(const ParticleCollection& particles) const {
     unsigned short idOfClosest = 999;
-    float closestDR = 999.;
+    double closestDR = 999.;
     for (unsigned short index = 0; index < particles.size(); ++index) {
-        float DR = deltaR(particles.at(index));
+        double DR = deltaR(particles.at(index));
         if (DR < closestDR) {
             closestDR = DR;
             idOfClosest = index;
@@ -195,7 +204,7 @@ unsigned short Particle::getClosest(const ParticleCollection& particles) const {
     return idOfClosest;
 }
 
-float Particle::angle(const ParticlePointer otherParticle) const {
+double Particle::angle(const ParticlePointer otherParticle) const {
     return fourvector.Angle(otherParticle->getFourVector().Vect());
 }
 }

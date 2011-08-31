@@ -28,7 +28,7 @@ Jet::Jet() :
     }
 }
 
-Jet::Jet(float energy, float px, float py, float pz) :
+Jet::Jet(double energy, double px, double py, double pz) :
     Particle(energy, px, py, pz),
     usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05),
     electromagneticFraction(0.),
@@ -53,46 +53,46 @@ JetAlgorithm::value Jet::getUsedAlgorithm() const {
     return usedAlgorithm;
 }
 
-float Jet::emf() const {
+double Jet::emf() const {
     return electromagneticFraction;
 }
 
-float Jet::n90Hits() const {
+double Jet::n90Hits() const {
     return numberOfRecHitsContaining90PercentOfTheJetEnergy;
 }
 
-float Jet::fHPD() const {
+double Jet::fHPD() const {
     return fractionOfEnergyIntheHottestHPDReadout;
 }
 
-float Jet::NOD() const {
+double Jet::NOD() const {
     return numberOfDaughters;
 }
 
-float Jet::CEF() const {
+double Jet::CEF() const {
     return chargedEmEnergyFraction;
 }
 
-float Jet::NHF() const {
+double Jet::NHF() const {
     return neutralHadronEnergyFraction;
 }
 
-float Jet::NEF() const {
+double Jet::NEF() const {
     return neutralEmEnergyFraction;
 }
 
-float Jet::CHF() const {
+double Jet::CHF() const {
     return chargedHadronEnergyFraction;
 }
 
-float Jet::NCH() const {
+double Jet::NCH() const {
     return chargedMultiplicity;
 }
 
 void Jet::setUsedAlgorithm(JetAlgorithm::value algo) {
     usedAlgorithm = algo;
 }
-void Jet::setEMF(float emf) {
+void Jet::setEMF(double emf) {
     electromagneticFraction = emf;
 }
 
@@ -100,30 +100,30 @@ void Jet::setN90Hits(int n90Hits) {
     numberOfRecHitsContaining90PercentOfTheJetEnergy = n90Hits;
 }
 
-void Jet::setFHPD(float fHPD) {
+void Jet::setFHPD(double fHPD) {
     fractionOfEnergyIntheHottestHPDReadout = fHPD;
 }
 
-void Jet::setDiscriminatorForBtagType(float discriminator, BtagAlgorithm::value type) {
+void Jet::setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value type) {
     btag_discriminators[type] = discriminator;
 }
 
 void Jet::setNOD(int nod) {
     numberOfDaughters = nod;
 }
-void Jet::setCEF(float cef) {
+void Jet::setCEF(double cef) {
     chargedEmEnergyFraction = cef;
 }
-void Jet::setNHF(float nhf) {
+void Jet::setNHF(double nhf) {
     neutralHadronEnergyFraction = nhf;
 }
-void Jet::setNEF(float nef) {
+void Jet::setNEF(double nef) {
     neutralEmEnergyFraction = nef;
 }
-void Jet::setCHF(float chf) {
+void Jet::setCHF(double chf) {
     chargedHadronEnergyFraction = chf;
 }
-void Jet::setNCH(float nch) {
+void Jet::setNCH(double nch) {
     chargedMultiplicity = nch;
 }
 
@@ -159,7 +159,7 @@ bool Jet::isGood() const {
  * https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagPerformance
  */
 bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) const {
-    float cut(-9998);
+    double cut(-9998);
     switch (type) {
     case BtagAlgorithm::GenPartonFlavour:
         return abs(partonFlavour) == 5;

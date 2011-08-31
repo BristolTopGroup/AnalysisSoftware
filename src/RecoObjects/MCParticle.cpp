@@ -14,22 +14,10 @@ MCParticle::MCParticle() : Particle(),
 
 }
 
-MCParticle::MCParticle(float energy, float px, float py, float pz): Particle(energy, px, py, pz),
+MCParticle::MCParticle(double energy, double px, double py, double pz): Particle(energy, px, py, pz),
 		particlePdgId(0), particleMotherIndex(0), particleStatus(0){
 
 }
-//MCParticle::Particle(const MCParticle& particle) :
-//	particlePdgId(particle.pdgId()), particleMotherIndex(particle.motherIndex()), particleStatus(particle.status) {
-//
-//}
-
-//MCParticle::Particle(int pdgId, float phi, float eta, float pt, float energy, int motherIndex, int status) {
-//
-//}
-
-//MCParticle::Particle(): Particle() {
-//
-//}
 
 MCParticle::~MCParticle() {
 }
@@ -72,9 +60,9 @@ bool MCParticle::isNeutrino() const {
 
 unsigned short MCParticle::getClosestJetIndex(const JetCollection& jets) const {
     unsigned short idOfClosest = 999;
-    float closestDR = 999.;
+    double closestDR = 999.;
     for (unsigned short index = 0; index < jets.size(); ++index) {
-        float DR = deltaR(jets.at(index));
+        double DR = deltaR(jets.at(index));
         if (DR < closestDR) {
             closestDR = DR;
             idOfClosest = index;

@@ -36,13 +36,20 @@ const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = {
 class MET: public Particle {
 public:
 	MET();
-	MET(float ex, float ey);
+	MET(double ex, double ey);
 	virtual ~MET();
 	bool isGood() const;
-	void setUsedAlgorithm(METAlgorithm::value algo);
+
 	METAlgorithm::value getUsedAlgorithm() const;
+	double significance() const;
+	double sumET() const;
+
+	void setUsedAlgorithm(METAlgorithm::value algo);
+	void setSignificance(double significance);
+	void setSumET(double sumET);
 private:
 	METAlgorithm::value usedAlgorithm;
+	double significance_, sumET_;
 };
 
 typedef boost::shared_ptr<MET> METPointer;

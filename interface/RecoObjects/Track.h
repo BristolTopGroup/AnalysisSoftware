@@ -23,7 +23,7 @@ private:
 public:
     Track();
     Track(const Track& other);
-    Track(float phi, float eta, float pt, float theta);
+    Track(double phi, double eta, double pt, double theta);
     virtual ~Track();
     double curvature(double Bfield = BFIELD) const;
     double distance(const TrackPointer otherTrack, double Bfield = BFIELD) const;

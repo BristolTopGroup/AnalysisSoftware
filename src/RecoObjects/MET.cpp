@@ -15,8 +15,11 @@ MET::MET() :
     usedAlgorithm(METAlgorithm::Calo) {
 }
 
-MET::MET(float ex, float ey) :
-    Particle(sqrt(ex * ex + ey * ey), ex, ey, 0), usedAlgorithm(METAlgorithm::Calo) {
+MET::MET(double ex, double ey) :
+    Particle(sqrt(ex * ex + ey * ey), ex, ey, 0),
+    usedAlgorithm(METAlgorithm::Calo),
+    significance_(0),
+    sumET_(0){
 
 }
 
@@ -33,6 +36,22 @@ void MET::setUsedAlgorithm(METAlgorithm::value algo) {
 
 METAlgorithm::value MET::getUsedAlgorithm() const {
     return usedAlgorithm;
+}
+
+void MET::setSignificance(double significance){
+	significance_ = significance;
+}
+
+void MET::setSumET(double sumET){
+	sumET_ = sumET;
+}
+
+double MET::significance() const{
+	return significance_;
+}
+
+double MET::sumET() const{
+	return sumET_;
 }
 
 }

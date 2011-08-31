@@ -20,7 +20,7 @@ Track::Track(const Track& track) :
 
 }
 
-Track::Track(float phi, float eta, float pt, float theta) :
+Track::Track(double phi, double eta, double pt, double theta) :
     PseudoParticle(phi, eta, pt, theta), highPurity(false) {
 
 }

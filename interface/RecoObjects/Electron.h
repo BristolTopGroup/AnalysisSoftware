@@ -61,37 +61,37 @@ class Electron: public Particle {
 public:
 
     Electron();
-    Electron(float energy, float px, float py, float pz);
+    Electron(double energy, double px, double py, double pz);
     virtual ~Electron();
     bool isGood(bool useCiCElectronID) const;
-//    bool isGoodCiCElectronID(const float minEt = 30) const;
+//    bool isGoodCiCElectronID(const double minEt = 30) const;
     bool isIsolated() const;
     bool isPFIsolated() const;
     bool isHEEPIsolated() const;
-    bool isTaggedAsConversion(float maxDist, float maxDCotTheta) const;
+    bool isTaggedAsConversion(double maxDist, double maxDCotTheta) const;
     bool isFromConversion() const;
     bool isLoose() const;
     bool isQCDElectron(bool useCiCElectronID) const;
 
     ElectronAlgorithm::value algorithm() const;
-    float ecalIsolation() const;
-    float ecalIsolationPUCorrected(float rho) const;
-    float hcalIsolation() const;
-    float hcalIsolationPUCorrected(float rho) const;
-    float trackerIsolation() const;
-    float PFGammaIsolation() const;
-    float PFChargedHadronIsolation() const;
-    float PFNeutralHadronIsolation() const;
+    double ecalIsolation() const;
+    double ecalIsolationPUCorrected(double rho) const;
+    double hcalIsolation() const;
+    double hcalIsolationPUCorrected(double rho) const;
+    double trackerIsolation() const;
+    double PFGammaIsolation() const;
+    double PFChargedHadronIsolation() const;
+    double PFNeutralHadronIsolation() const;
 
-    float superClusterEta() const;
-    float sigmaIEtaIEta() const;
-    float dPhiIn() const;
-    float dEtaIn() const;
-    float HadOverEm() const;
-    float HEEPet() const;
-    float innerLayerMissingHits() const;
-    float dCotThetaToClosestTrack() const;
-    float distToClosestTrack() const;
+    double superClusterEta() const;
+    double sigmaIEtaIEta() const;
+    double dPhiIn() const;
+    double dEtaIn() const;
+    double HadOverEm() const;
+    double HEEPet() const;
+    double innerLayerMissingHits() const;
+    double dCotThetaToClosestTrack() const;
+    double distToClosestTrack() const;
     bool VBTF_W70_ElectronID() const;
     bool VBTF_W95_ElectronID() const;
     bool CiC_ElectronID(CiCElectronID::value id) const;
@@ -104,58 +104,58 @@ public:
     ElectronAlgorithm::value getUsedAlgorithm() const;
     const TrackPointer GSFTrack() const;
     int closestCTFTrackID() const;
-    float shFracInnerLayer() const;
-    float ZDistanceToPrimaryVertex() const;
+    double shFracInnerLayer() const;
+    double ZDistanceToPrimaryVertex() const;
 
     void setRobustLooseID(bool id);
     void setRobustTightID(bool id);
 
-    void setSuperClusterEta(float eta);
-    void setEcalIsolation(float isolation);
-    void setHcalIsolation(float isolation);
-    void setTrackerIsolation(float isolation);
-    void setNumberOfMissingInnerLayerHits(float missingHits);
+    void setSuperClusterEta(double eta);
+    void setEcalIsolation(double isolation);
+    void setHcalIsolation(double isolation);
+    void setTrackerIsolation(double isolation);
+    void setNumberOfMissingInnerLayerHits(double missingHits);
     void setUsedAlgorithm(ElectronAlgorithm::value algo);
-    void setSigmaIEtaIEta(float sigma);
-    void setDPhiIn(float dphi);
-    void setDEtaIn(float deta);
-    void setHadOverEm(float HoverE);
+    void setSigmaIEtaIEta(double sigma);
+    void setDPhiIn(double dphi);
+    void setDEtaIn(double deta);
+    void setHadOverEm(double HoverE);
     void setGSFTrack(const TrackPointer track);
     void setClosestTrackID(const int trackID);
-    void setSharedFractionInnerHits(float hits);
-//    void setElectronVertexZPosition(float z);
-    void setZDistanceToPrimaryVertex(float dist);
-    void setDistToNextTrack(float dist);
-    void setDCotThetaToNextTrack(float dCotTheta);
-    void setPFGammaIsolation(float pfGammaIso);
-    void setPFChargedHadronIsolation(float chargedHadronIso);
-    void setPFNeutralHadronIsolation(float neutralHadronIso);
+    void setSharedFractionInnerHits(double hits);
+//    void setElectronVertexZPosition(double z);
+    void setZDistanceToPrimaryVertex(double dist);
+    void setDistToNextTrack(double dist);
+    void setDCotThetaToNextTrack(double dCotTheta);
+    void setPFGammaIsolation(double pfGammaIso);
+    void setPFChargedHadronIsolation(double chargedHadronIso);
+    void setPFNeutralHadronIsolation(double neutralHadronIso);
     void setCompressedCiCElectronID(int electronID);
 
-    float relativeIsolation() const;
-    float relativeIsolationPUCorrected(float rho) const;
-    float pfIsolation() const;
+    double relativeIsolation() const;
+    double relativeIsolationPUCorrected(double rho) const;
+    double pfIsolation() const;
 
     bool isInBarrelRegion() const;
     bool isInCrack() const;
     bool isInEndCapRegion() const;
 
-//    float vz() const;
+//    double vz() const;
 
 private:
     ElectronAlgorithm::value usedAlgorithm;
     bool robustLooseId, robustTightId;
-    float superCluser_Eta;
-    float ecal_Isolation, hcal_Isolation, tracker_Isolation;
-    float innerLayerMissingHits_;
+    double superCluser_Eta;
+    double ecal_Isolation, hcal_Isolation, tracker_Isolation;
+    double innerLayerMissingHits_;
     //used for electron ID
-    float sigma_IEtaIEta, dPhi_In, dEta_In, hadOverEm;
+    double sigma_IEtaIEta, dPhi_In, dEta_In, hadOverEm;
     int CiCElectronIDCompressed;
     TrackPointer gsfTrack;
     int closesTrackID;
-    float sharedFractionInnerHits;
-    float zDistanceToPrimaryVertex, dCotThetaToNextTrack, distToNextTrack;
-    float PFGamma_Isolation, PFChargedHadron_Isolation, PFNeutralHadron_Isolation;
+    double sharedFractionInnerHits;
+    double zDistanceToPrimaryVertex, dCotThetaToNextTrack, distToNextTrack;
+    double PFGamma_Isolation, PFChargedHadron_Isolation, PFNeutralHadron_Isolation;
 
     bool getVBTF_W70_ElectronID_Barrel() const;
     bool getVBTF_W70_ElectronID_Endcap() const;
