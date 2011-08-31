@@ -45,38 +45,42 @@ public:
         DataReader2(new NTupleEventReader()),
         AllMCReader(new NTupleEventReader()) {
 
-        TTbarReader->addInputFile(InputFile::ttbar);
-        QCDenri1Reader->addInputFile(InputFile::enri1);
-        QCDenri2Reader->addInputFile(InputFile::enri2);
-        QCDenri3Reader->addInputFile(InputFile::enri3);
+        TTbarReader->addInputFile(InputFile::TTJets);
+        QCDenri1Reader->addInputFile(InputFile::QCD_EMEnriched_Pt20to30);
+        QCDenri2Reader->addInputFile(InputFile::QCD_EMEnriched_Pt30to80);
+        QCDenri3Reader->addInputFile(InputFile::QCD_EMEnriched_Pt80to170);
 
-        QCDbce1Reader->addInputFile(InputFile::bce1);
-        QCDbce2Reader->addInputFile(InputFile::bce2);
-        QCDbce3Reader->addInputFile(InputFile::bce3);
+        QCDbce1Reader->addInputFile(InputFile::QCD_BCtoE_Pt20to30);
+        QCDbce2Reader->addInputFile(InputFile::QCD_BCtoE_Pt30to80);
+        QCDbce3Reader->addInputFile(InputFile::QCD_BCtoE_Pt80to170);
 
-        WjetsReader->addInputFile(InputFile::wjets);
-        ZJetsReader->addInputFile(InputFile::zjets);
-        TWReader->addInputFile(InputFile::tW);
-        TChanReader->addInputFile(InputFile::tchan);
+        WjetsReader->addInputFile(InputFile::WJets);
+        ZJetsReader->addInputFile(InputFile::ZJets);
+        TWReader->addInputFile(InputFile::singleTop_And_W);
+        TChanReader->addInputFile(InputFile::singleTopTChannel);
         DataReader->addInputFile(InputFile::data);
         DataReader->addInputFile(InputFile::data2);
         DataReader2->addInputFile(InputFile::data2);
         DataReader2->addInputFile(InputFile::data);
 
-        AllMCReader->addInputFile(InputFile::ttbar);
-        AllMCReader->addInputFile(InputFile::enri1);
-        AllMCReader->addInputFile(InputFile::enri2);
-        AllMCReader->addInputFile(InputFile::enri3);
-        AllMCReader->addInputFile(InputFile::bce1);
-        AllMCReader->addInputFile(InputFile::bce2);
-        AllMCReader->addInputFile(InputFile::bce3);
-        AllMCReader->addInputFile(InputFile::wjets);
-        AllMCReader->addInputFile(InputFile::zjets);
-        AllMCReader->addInputFile(InputFile::tW);
-        AllMCReader->addInputFile(InputFile::tchan);
-        AllMCReader->addInputFile(InputFile::pj1);
-        AllMCReader->addInputFile(InputFile::pj2);
-        AllMCReader->addInputFile(InputFile::pj3);
+        AllMCReader->addInputFile(InputFile::TTJets);
+        AllMCReader->addInputFile(InputFile::QCD_EMEnriched_Pt20to30);
+        AllMCReader->addInputFile(InputFile::QCD_EMEnriched_Pt30to80);
+        AllMCReader->addInputFile(InputFile::QCD_EMEnriched_Pt80to170);
+        AllMCReader->addInputFile(InputFile::QCD_BCtoE_Pt20to30);
+        AllMCReader->addInputFile(InputFile::QCD_BCtoE_Pt30to80);
+        AllMCReader->addInputFile(InputFile::QCD_BCtoE_Pt80to170);
+        AllMCReader->addInputFile(InputFile::WJets);
+        AllMCReader->addInputFile(InputFile::ZJets);
+        AllMCReader->addInputFile(InputFile::singleTop_And_W);
+        AllMCReader->addInputFile(InputFile::singleTopTChannel);
+        AllMCReader->addInputFile(InputFile::singleTopSChannel);
+        AllMCReader->addInputFile(InputFile::singleAntiTop_And_W);
+        AllMCReader->addInputFile(InputFile::singleAntiTopTChannel);
+        AllMCReader->addInputFile(InputFile::singleAntiTopSChannel);
+        AllMCReader->addInputFile(InputFile::GJets_Pt40to100);
+        AllMCReader->addInputFile(InputFile::GJets_Pt100to200);
+        AllMCReader->addInputFile(InputFile::GJets_Pt200toInf);
 
     }
 
@@ -156,17 +160,19 @@ public:
 
     void testNumberOfElectronsInEvent1() {
         Event currentEvent = TTbarReader->getNextEvent();
-        ASSERT_EQUAL(3, currentEvent.Electrons().size());
+        cout << TTbarReader->getCurrentLocalEventNumber() << endl;
+        ASSERT_EQUAL(1, currentEvent.Electrons().size());
     }
 
     void testNumberOfJetsInEvent1() {
         Event currentEvent = TTbarReader->getNextEvent();
-        ASSERT_EQUAL(18, currentEvent.Jets().size());
+        cout << TTbarReader->getCurrentLocalEventNumber() << endl;
+        ASSERT_EQUAL(5, currentEvent.Jets().size());
     }
 
     void testNumberOfMuonsInEvent1() {
         Event currentEvent = TTbarReader->getNextEvent();
-        ASSERT_EQUAL(0, currentEvent.Muons().size());
+        ASSERT_EQUAL(2, currentEvent.Muons().size());
     }
 
     void testHasNextEvent() {
@@ -220,7 +226,7 @@ public:
     }
 
     void testMCLumiBlock() {
-        ASSERT_EQUAL(1, TTbarReader->getNextEvent().lumiblock());
+        ASSERT_EQUAL(5, TTbarReader->getNextEvent().lumiblock());
     }
 
     void testLocalEventNumber() {
@@ -247,7 +253,7 @@ public:
 
     void testTTbarEventMET() {
         Event event = TTbarReader->getNextEvent();
-        ASSERT_EQUAL_DELTA(22.3616,event.MET()->et(), 0.001);
+        ASSERT_EQUAL_DELTA(58.6601,event.MET()->et(), 0.001);
     }
 
     void testSeenTTbar() {
@@ -265,9 +271,12 @@ public:
         const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenTypes = AllMCReader->getSeenDatatypes();
 
         for (unsigned short index = 0; index < DataType::NUMBER_OF_DATA_TYPES; ++index) {
-            if (index == DataType::DATA || index >= DataType::Zprime_M500GeV_W5GeV || index
-                    == DataType::singleTopSChannel || index == DataType::VQQ)
-                ASSERT_EQUAL(false, seenTypes.at(index));
+            if (index == DataType::DATA || index >= DataType::Zprime_M500GeV_W5GeV || index == DataType::VQQ){
+            	if(seenTypes.at(index))
+            		cout << index << endl;
+            	ASSERT_EQUAL(false, seenTypes.at(index));
+            }
+
             else {
                 std::string msg("index ");
                 std::stringstream stream;
@@ -286,7 +295,7 @@ public:
 
     void testGenJetsMC() {
 		Event event = TTbarReader->getNextEvent();
-		ASSERT_EQUAL(26, event.GenJets().size());
+		ASSERT_EQUAL(6, event.GenJets().size());
 	}
 
 	void testGenJetsDATA() {

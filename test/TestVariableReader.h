@@ -15,6 +15,7 @@ using namespace ROOT;
 using namespace BAT;
 using namespace std;
 
+
 struct TestVariableReader {
 private:
 	TString invalidEmptyVariableName, invalidNotAvailableVariableName, runNumber, energyForEachElectron;
@@ -28,15 +29,15 @@ public:
 		invalidEmptyVariableName(""),
 		invalidNotAvailableVariableName("thisIsNotInTheFile"),
 		runNumber("Event.Run"),
-		energyForEachElectron("Electron.Energy"),
+		energyForEachElectron("selectedPatElectrons.Energy"),
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)),
-		singleVariableReader(new VariableReader<unsigned int>::VariableReader(input, runNumber)),
-		multipleVariableReader(new VariableReader<MultiDoublePointer>::VariableReader(input,
+		singleVariableReader(new VariableReader<unsigned int>(input, runNumber)),
+		multipleVariableReader(new VariableReader<MultiDoublePointer>(input,
 						energyForEachElectron)),
-		invalidEmptyVariableVariableReader(new VariableReader<int>::VariableReader(input, invalidEmptyVariableName)),
-		invalidnNotAvailableVariableReader(new VariableReader<int>::VariableReader(input, invalidNotAvailableVariableName)) 
+		invalidEmptyVariableVariableReader(new VariableReader<int>(input, invalidEmptyVariableName)),
+		invalidnNotAvailableVariableReader(new VariableReader<int>(input, invalidNotAvailableVariableName))
 		{
-		input->Add(InputFile::ttbar);
+		input->Add(InputFile::TTJets);
 		input->SetBranchStatus("*", 0);
 		singleVariableReader->initialise();
 		multipleVariableReader->initialise();
@@ -49,7 +50,7 @@ public:
 	}
 
 	void testReadMultipleVariable() {
-		ASSERT_EQUAL_DELTA(36.9815, multipleVariableReader->getVariableAt(0), 0.001);
+		ASSERT_EQUAL_DELTA(37.4185, multipleVariableReader->getVariableAt(0), 0.001);
 	}
 
 	void testInvalidVariableThrowsException() {

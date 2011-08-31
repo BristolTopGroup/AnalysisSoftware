@@ -28,7 +28,7 @@ public:
         firstElectron()
     {
 
-        input->Add(InputFile::ttbar);
+        input->Add(InputFile::TTJets);
 
         input->LoadTree(1);
         input->SetBranchStatus("*", 0);
@@ -39,31 +39,31 @@ public:
     }
 
     void testReadElectronsSize() {
-        ASSERT_EQUAL(1, electrons.size());
+        ASSERT_EQUAL(2, electrons.size());
     }
 
     void testReadFirstElectronEnergy() {
-        ASSERT_EQUAL_DELTA(38.5694, firstElectron->energy(), 0.001);
+        ASSERT_EQUAL_DELTA(37.4185, firstElectron->energy(), 0.001);
     }
 
     void testReadFirstElectronIsIsolated() {
-        ASSERT_EQUAL(false, firstElectron->isIsolated());
+        ASSERT_EQUAL(true, firstElectron->isIsolated());
     }
 
     void testFirstElectronSigmaEtaEta() {
-        ASSERT_EQUAL_DELTA(0.0120028, firstElectron->sigmaIEtaIEta(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.00903927, firstElectron->sigmaIEtaIEta(), 0.0000001);
     }
 
     void testFirstElectronDPhiIn() {
-        ASSERT_EQUAL_DELTA(-0.0468993, firstElectron->dPhiIn(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.0213284, firstElectron->dPhiIn(), 0.0000001);
     }
 
     void testFirstElectronDEtaIn() {
-        ASSERT_EQUAL_DELTA(-0.00361139, firstElectron->dEtaIn(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.00716823, firstElectron->dEtaIn(), 0.0000001);
     }
 
     void testFirstElectronHadOverEm() {
-        ASSERT_EQUAL_DELTA(0.104942, firstElectron->HadOverEm(), 0.000001);
+        ASSERT_EQUAL_DELTA(0., firstElectron->HadOverEm(), 0.000001);
     }
 
     void testFirstElectronCharge() {
@@ -71,7 +71,7 @@ public:
     }
 
     void testFirstElectronD0() {
-        ASSERT_EQUAL_DELTA(0.048277, firstElectron->d0(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.00472199, firstElectron->d0(), 0.0000001);
     }
 
 
@@ -86,26 +86,26 @@ public:
 
     void testGSFTrackPhi() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(1.23016, track->phi(), 0.00001);
+        ASSERT_EQUAL_DELTA(-2.49722, track->phi(), 0.00001);
     }
 
     void testGSFTrackEta() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(-0.663634, track->eta(), 0.00001);
+        ASSERT_EQUAL_DELTA( -0.266772, track->eta(), 0.00001);
     }
 
     void testGSFTrackPt() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(6.09057, track->pt(), 0.0001);
+        ASSERT_EQUAL_DELTA(30.9652, track->pt(), 0.0001);
     }
 
     void testGSFTrackTheta() {
         const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(2.19048, track->theta(), 0.00001);
+        ASSERT_EQUAL_DELTA(1.83446, track->theta(), 0.00001);
     }
 
     void testClosestCTFTrackID() {
-        ASSERT_EQUAL(44, firstElectron->closestCTFTrackID());
+        ASSERT_EQUAL(11, firstElectron->closestCTFTrackID());
     }
 
     void testTrackd0(){

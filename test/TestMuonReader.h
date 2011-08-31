@@ -23,7 +23,7 @@ public:
 		reader(new MuonReader(input)),
 		muons(),
 		leadingMuon() {
-		input->Add(InputFile::ttbar);
+		input->Add(InputFile::TTJets);
 		input->SetBranchStatus("*", 0);
 		reader->initialise();
 		unsigned int counter = 0;
@@ -42,23 +42,23 @@ public:
     }
 
 	void testLeadingMuonEnergy(){
-	    ASSERT_EQUAL_DELTA(14.1981, leadingMuon->energy(), 0.0001);
+	    ASSERT_EQUAL_DELTA(29.9774, leadingMuon->energy(), 0.0001);
 	}
 
 	void testLeadingMuonPx(){
-	    ASSERT_EQUAL_DELTA(11.3069, leadingMuon->px(), 0.0001);
+	    ASSERT_EQUAL_DELTA(-19.2275, leadingMuon->px(), 0.0001);
 	}
 
 	void testLeadingMuonPy(){
-	    ASSERT_EQUAL_DELTA(-5.54134, leadingMuon->py(), 0.0001);
+	    ASSERT_EQUAL_DELTA(-18.2765, leadingMuon->py(), 0.0001);
 	}
 
     void testLeadingMuonPz() {
-        ASSERT_EQUAL_DELTA(6.55911, leadingMuon->pz(), 0.0001);
+        ASSERT_EQUAL_DELTA(13.9609, leadingMuon->pz(), 0.0001);
     }
 
     void testLeadingMuonRelativeIsolation() {
-        ASSERT_EQUAL_DELTA(3.03852, leadingMuon->relativeIsolation(), 0.00001);
+        ASSERT_EQUAL_DELTA(0.51617, leadingMuon->relativeIsolation(), 0.00001);
     }
 
     void testLeadingMuonIsGlobal() {

@@ -14,28 +14,36 @@ namespace BAT {
 
 class DummyTTbarEvent: public TopPairEventCandidate {
 public:
-    DummyTTbarEvent();
-    virtual ~DummyTTbarEvent();
-    void setElectronFromW(const ElectronPointer electron);
-    bool passScraping, passHLT, passPV, passElectronCut, passConversion, passConversionPartnerTrack, passesMuon,
-            passes1JetCut, passes2JetCut, passes3JetCut, passes4JetCut, passesZveto, useCustomReturnValues;
+	DummyTTbarEvent();
+	virtual ~DummyTTbarEvent();
+	void setElectronFromW(const ElectronPointer electron);
+	bool passScraping, passHLT, passPV, passElectronCut, passConversion,
+			passConversionPartnerTrack, passesMuon, passes1JetCut,
+			passes2JetCut, passes3JetCut, passes4JetCut, passesZveto,
+			passesMET, passesAsymJets, atLeastOneBtag,
+			atLeastTwoBtags, useCustomReturnValues;
 
-    bool passesScrapingFilter() const;
-    bool passesHighLevelTrigger() const;
-    bool hasOneGoodPrimaryVertex() const;
-    bool hasOnlyOneGoodIsolatedElectron() const;
-    bool isolatedElectronDoesNotComeFromConversion() const;
-    bool isolatedElectronNotTaggedAsFromConversion() const;
-    bool hasNoIsolatedMuon() const;
+	bool passesScrapingFilter() const;
+	bool passesHighLevelTrigger() const;
+	bool hasOneGoodPrimaryVertex() const;
+	bool hasOnlyOneGoodIsolatedElectron() const;
+	bool isolatedElectronDoesNotComeFromConversion() const;
+	bool isolatedElectronNotTaggedAsFromConversion() const;
+	bool hasNoIsolatedMuon() const;
 
-    bool hasAtLeastOneGoodJet() const;
-    bool hasAtLeastTwoGoodJets() const;
-    bool hasAtLeastThreeGoodJets() const;
-    bool hasAtLeastFourGoodJets() const;
+	bool hasAtLeastOneGoodJet() const;
+	bool hasAtLeastTwoGoodJets() const;
+	bool hasAtLeastThreeGoodJets() const;
+	bool hasAtLeastFourGoodJets() const;
 
-    bool isNotAZBosonEvent() const;
-    bool passesNMinus1(TTbarEPlusJetsSelection::Step omittedStep) const;
-    bool passesSelectionStep(enum TTbarEPlusJetsSelection::Step step) const;
+	bool isNotAZBosonEvent() const;
+	bool passesNMinus1(TTbarEPlusJetsSelection::Step omittedStep) const;
+	bool passesSelectionStep(enum TTbarEPlusJetsSelection::Step step) const;
+
+	bool passesMETCut() const;
+	bool passesAsymmetricJetCuts() const;
+	bool hasAtLeastOneBtag() const;
+	bool hasAtLeastTwoBtags() const;
 };
 
 }

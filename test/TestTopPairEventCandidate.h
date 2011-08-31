@@ -30,6 +30,7 @@ struct TestTopPairEventCandidate {
     TrackCollection moreThan10TracksLowPurity;
     TrackCollection moreThan10TracksMixedPurity_H;
     TrackCollection moreThan10TracksMixedPurity_L;
+    boost::shared_ptr<std::vector<int> > HLTs;
 
     TestTopPairEventCandidate() :
         ttbarEvent(),
@@ -53,7 +54,13 @@ struct TestTopPairEventCandidate {
         badVertex(TestObjectFactory::badFakeVertex()),
         goodIsolatedMuon(new Muon(100., 99., 13., 5.)),
         badMuon(new Muon(100., 99., 13., 5.)),
-        met(new MET(40, 30)) {
+        met(new MET(40, 30)),
+        lessThan10Tracks(),
+        moreThan10TracksHighPurity(),
+        moreThan10TracksLowPurity(),
+        moreThan10TracksMixedPurity_H(),
+        moreThan10TracksMixedPurity_L(),
+        HLTs(new std::vector<int>()){
         setUpGoodLooseElectron();
         setUpBadElectron();
         setUpGoodIsolatedElectronFromConversion();
@@ -64,12 +71,18 @@ struct TestTopPairEventCandidate {
         setUpBadMuon();
         setUpTracks();
 
+        for(unsigned int i = 0; i< HLTriggers::NUMBER_OF_TRIGGERS; ++i){
+                	HLTs->push_back(true);
+                }
+
         setUpTTbarEvent();
         setUpGoodZEvent();
         setUpPoorZEvent();
         setUpDiJetEvent();
         setUpMuonEvent();
         setUpCustomEvent();
+
+
     }
 
 private:
@@ -162,6 +175,8 @@ private:
         ttbarEvent.setDataType(DataType::ttbar);
         ttbarEvent.setTracks(moreThan10TracksHighPurity);
         ttbarEvent.setBeamScrapingVeto(false);
+        ttbarEvent.setHLTs(HLTs);
+
         assert(ttbarEvent.passesScrapingFilter());
         assert(ttbarEvent.passesHighLevelTrigger());
         assert(ttbarEvent.hasOneGoodPrimaryVertex());
@@ -202,7 +217,7 @@ private:
         electrons.push_back(goodLooseElectron);
         electrons.push_back(badElectron);
         poorZEvent.setElectrons(electrons);
-
+        poorZEvent.setHLTs(HLTs);
         JetCollection jets;
         jets.push_back(goodJet);
         jets.push_back(goodJet);
@@ -303,6 +318,11 @@ private:
         customEvent.passes4JetCut = true;
         customEvent.passesMuon = true;
         customEvent.passesZveto = true;
+        customEvent.passesMET = true;
+        customEvent.passesAsymJets = true;
+        customEvent.atLeastOneBtag = true;
+        customEvent.atLeastTwoBtags = true;
+
         customEvent.passConversionPartnerTrack = true;
         assert(customEvent.passesScrapingFilter());
         assert(customEvent.passesSelectionStep(TTbarEPlusJetsSelection::FilterOutScraping));

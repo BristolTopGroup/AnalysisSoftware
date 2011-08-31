@@ -34,7 +34,7 @@ public:
         tracks(),
         firstTrack() {
 
-        input->Add(InputFile::ttbar);
+        input->Add(InputFile::TTJets);
 
         input->LoadTree(1);
         input->SetBranchStatus("*", 0);

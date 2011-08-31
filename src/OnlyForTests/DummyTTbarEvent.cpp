@@ -25,6 +25,10 @@ DummyTTbarEvent::DummyTTbarEvent() :
     passes3JetCut(false),
     passes4JetCut(false),
     passesZveto(false), 
+    passesMET(false),
+    passesAsymJets(false),
+    atLeastOneBtag(false),
+    atLeastTwoBtags(false),
     useCustomReturnValues(false) {
 
 }
@@ -119,6 +123,34 @@ bool DummyTTbarEvent::isNotAZBosonEvent() const {
         return TopPairEventCandidate::isNotAZBosonEvent();
 }
 
+bool DummyTTbarEvent::passesMETCut() const {
+	if (useCustomReturnValues)
+		return passesMET;
+	else
+		return TopPairEventCandidate::passesMETCut();
+}
+
+bool DummyTTbarEvent::passesAsymmetricJetCuts() const {
+	if (useCustomReturnValues)
+		return passesAsymJets;
+	else
+		return TopPairEventCandidate::passesAsymmetricJetCuts();
+}
+
+bool DummyTTbarEvent::hasAtLeastOneBtag() const {
+	if (useCustomReturnValues)
+		return atLeastOneBtag;
+	else
+		return TopPairEventCandidate::hasAtLeastOneBtag();
+}
+
+bool DummyTTbarEvent::hasAtLeastTwoBtags() const {
+	if (useCustomReturnValues)
+		return atLeastTwoBtags;
+	else
+		return TopPairEventCandidate::hasAtLeastTwoBtags();
+}
+
 bool DummyTTbarEvent::passesNMinus1(enum TTbarEPlusJetsSelection::Step omitted) const {
     bool passes(true);
 
@@ -131,34 +163,42 @@ bool DummyTTbarEvent::passesNMinus1(enum TTbarEPlusJetsSelection::Step omitted) 
 }
 
 bool DummyTTbarEvent::passesSelectionStep(enum TTbarEPlusJetsSelection::Step step) const {
-    switch (step) {
-        case TTbarEPlusJetsSelection::FilterOutScraping:
-            return passesScrapingFilter();
-        case TTbarEPlusJetsSelection::HighLevelTrigger:
-            return passesHighLevelTrigger();
-        case TTbarEPlusJetsSelection::GoodPrimaryvertex:
-            return hasOneGoodPrimaryVertex();
-        case TTbarEPlusJetsSelection::OneIsolatedElectron:
-            return hasOnlyOneGoodIsolatedElectron();
-        case TTbarEPlusJetsSelection::ConversionRejection:
-            return isolatedElectronDoesNotComeFromConversion();
-        case TTbarEPlusJetsSelection::ConversionFinder:
-            return isolatedElectronNotTaggedAsFromConversion();
-        case TTbarEPlusJetsSelection::LooseMuonVeto:
-            return hasNoIsolatedMuon();
-        case TTbarEPlusJetsSelection::AtLeastOneGoodJets:
-            return hasAtLeastOneGoodJet();
-        case TTbarEPlusJetsSelection::AtLeastTwoGoodJets:
-            return hasAtLeastTwoGoodJets();
-        case TTbarEPlusJetsSelection::AtLeastThreeGoodJets:
-            return hasAtLeastThreeGoodJets();
-        case TTbarEPlusJetsSelection::AtLeastFourGoodJets:
-            return hasAtLeastFourGoodJets();
-        case TTbarEPlusJetsSelection::Zveto:
-            return isNotAZBosonEvent();
-        default:
-            return false;
-    }
+	switch (step) {
+	    case TTbarEPlusJetsSelection::FilterOutScraping:
+	        return passesScrapingFilter();
+	    case TTbarEPlusJetsSelection::HighLevelTrigger:
+	        return passesHighLevelTrigger();
+	    case TTbarEPlusJetsSelection::GoodPrimaryvertex:
+	        return hasOneGoodPrimaryVertex();
+	    case TTbarEPlusJetsSelection::OneIsolatedElectron:
+	        return hasOnlyOneGoodIsolatedElectron();
+	    case TTbarEPlusJetsSelection::ConversionRejection:
+	        return isolatedElectronDoesNotComeFromConversion();
+	    case TTbarEPlusJetsSelection::ConversionFinder:
+	        return isolatedElectronNotTaggedAsFromConversion();
+	    case TTbarEPlusJetsSelection::LooseMuonVeto:
+	        return hasNoIsolatedMuon();
+	    case TTbarEPlusJetsSelection::AtLeastOneGoodJets:
+	        return hasAtLeastOneGoodJet();
+	    case TTbarEPlusJetsSelection::AtLeastTwoGoodJets:
+	        return hasAtLeastTwoGoodJets();
+	    case TTbarEPlusJetsSelection::AtLeastThreeGoodJets:
+	        return hasAtLeastThreeGoodJets();
+	    case TTbarEPlusJetsSelection::AtLeastFourGoodJets:
+	        return hasAtLeastFourGoodJets();
+	    case TTbarEPlusJetsSelection::Zveto:
+	        return isNotAZBosonEvent();
+	    case TTbarEPlusJetsSelection::MissingTransverseEnergy:
+	        return passesMETCut();
+	    case TTbarEPlusJetsSelection::AsymmetricJetCuts:
+	        return passesAsymmetricJetCuts();
+	    case TTbarEPlusJetsSelection::AtLeastOneBtag:
+	        return hasAtLeastOneBtag();
+	    case TTbarEPlusJetsSelection::AtLeastTwoBtags:
+	        return hasAtLeastTwoBtags();
+	    default:
+	        return false;
+	    }
 }
 
 }

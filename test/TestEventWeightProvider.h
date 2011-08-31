@@ -20,7 +20,7 @@ private:
 public:
     TestEventWeightProvider() :
         lumi(20),
-        xSectionProvider(lumi, 7, "pileup_160404-166502.root") {
+        xSectionProvider(lumi, 7, "Pileup_2011_to_172802_LP_LumiScale.root") {
     }
 
     ~TestEventWeightProvider() {
@@ -32,7 +32,7 @@ public:
     }
 
     void testGetWeightTtbar() {
-        ASSERT_EQUAL_DELTA(157.5 * lumi/1286491, xSectionProvider.getWeight(DataType::ttbar), 0.00000001);
+        ASSERT_EQUAL_DELTA(157.5 * lumi/3634668, xSectionProvider.getWeight(DataType::ttbar), 0.00000001);
     }
 
 };

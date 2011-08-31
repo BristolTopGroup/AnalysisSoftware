@@ -17,7 +17,7 @@ struct TestVertexReader {
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)),
 		reader(new VertexReader(input)),
 		vertex() {
-		input->Add(InputFile::ttbar);
+		input->Add(InputFile::TTJets);
 		input->SetBranchStatus("*", 0);
 		reader->initialise();
 		input->GetEntry(1);
@@ -25,11 +25,11 @@ struct TestVertexReader {
 	}
 
 	void testVertexZPosition() {
-		ASSERT_EQUAL_DELTA(0.192176, vertex->absoluteZPosition(), 0.00001);
+		ASSERT_EQUAL_DELTA(0.156507, vertex->absoluteZPosition(), 0.00001);
 	}
 
 	void testVertexRho(){
-		ASSERT_EQUAL_DELTA(0.456797, vertex->absoluteRho(), 0.000001);
+		ASSERT_EQUAL_DELTA(0.462261, vertex->absoluteRho(), 0.000001);
 	}
 
 	void testVertexIsFake(){
@@ -37,7 +37,7 @@ struct TestVertexReader {
 	}
 
 	void testVertexNDOF(){
-		ASSERT_EQUAL(82, vertex->ndof());
+		ASSERT_EQUAL(179, vertex->ndof());
 	}
 };
 

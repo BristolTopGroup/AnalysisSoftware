@@ -54,6 +54,14 @@ public:
     void testStandardAlgorithm() {
         ASSERT_EQUAL(METAlgorithm::Calo, goodMET->getUsedAlgorithm());
     }
+
+    void testSumET(){
+    	ASSERT_EQUAL(20*goodMET->et(), goodMET->sumET());
+    }
+
+    void testSignificance(){
+    	ASSERT_EQUAL(50, goodMET->significance());
+    }
 };
 
 extern cute::suite make_suite_TestMET() {
@@ -69,6 +77,8 @@ extern cute::suite make_suite_TestMET() {
     s.push_back(CUTE_SMEMFUN(TestMET,testBadMETNoGood));
     s.push_back(CUTE_SMEMFUN(TestMET,testSetAlgorithm));
     s.push_back(CUTE_SMEMFUN(TestMET,testStandardAlgorithm));
+    s.push_back(CUTE_SMEMFUN(TestMET,testSumET));
+    s.push_back(CUTE_SMEMFUN(TestMET,testSignificance));
 
     return s;
 }

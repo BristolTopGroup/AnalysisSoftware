@@ -52,7 +52,6 @@ void runSuite() {
     s += make_suite_TestMETReader();
     s += make_suite_TestMuon();
     s += make_suite_TestMuonReader();
-    s += make_suite_TestNTupleEventReader();
     s += make_suite_TestParticle();
     s += make_suite_ROOTLearnTests();
     s += make_suite_TestStringOperations();
@@ -64,6 +63,7 @@ void runSuite() {
     s += make_suite_TestVariableReader();
     s += make_suite_TestVertex();
     s += make_suite_TestVertexReader();
+    s += make_suite_TestNTupleEventReader();
     cute::ide_listener lis;
     cute::makeRunner(lis)(s, "Testing BristolAnalysis Tools");
 }

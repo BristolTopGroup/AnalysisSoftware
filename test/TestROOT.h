@@ -22,9 +22,9 @@ public:
 	TestROOT() :
 		invalidBranch("this is not in the chain"),
 //		numberOfElectrons("Nels"),
-		energyForEachElectron("Electron.Energy"),
+		energyForEachElectron("selectedPatElectrons.Energy"),
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)) {
-		input->Add(InputFile::ttbar);
+		input->Add(InputFile::TTJets);
 
 		input->GetEntries();
 		input->SetBranchStatus("*", 0);

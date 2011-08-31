@@ -408,7 +408,8 @@ MuonPointer TestObjectFactory::badEtaMuon() {
 
 METPointer TestObjectFactory::goodMET() {
     METPointer goodMET(new MET(40, 30));
-
+    goodMET->setSignificance(50);
+    goodMET->setSumET(goodMET->et() * 20);
     assert(goodMET->isGood());
 
     return goodMET;
@@ -416,7 +417,8 @@ METPointer TestObjectFactory::goodMET() {
 
 METPointer TestObjectFactory::badMET() {
     METPointer badMissingET(new MET(4, 3));
-
+    badMissingET->setSignificance(-1);
+    badMissingET->setSumET(badMissingET->et()*20);
     assert(badMissingET->isGood() == false);
 
     return badMissingET;
