@@ -16,9 +16,9 @@
 #include "Taggers/ConversionTagger.h"
 #include "TtbarHypothesis.h"
 #include "ReconstructionRules/BasicRule.h"
+#include "RecontructionModules/ReconstructionException.h"
 
 namespace BAT {
-
 namespace NeutrinoSelectionCriterion {
 enum value {
     pzClosestToLepton,
@@ -78,19 +78,6 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = {
 
 };
 }
-
-struct ReconstructionException: public std::exception {
-    TString msg;
-    ReconstructionException(TString message) :
-        msg(message) {
-    }
-    ~ReconstructionException() throw () {
-    }
-
-    const char* what() const throw () {
-        return msg;
-    }
-};
 
 class TopPairEventCandidate: public Event {
 
@@ -180,7 +167,7 @@ public:
 	void reconstructTTbarFrom3Jets(ElectronPointer electron);
     void reconstructUsingSubjets();
     void reconstructUsingMCTruth();
-    void reconstruct(const Rule rule, const ElectronPointer electron);
+    void reconstruct(Rule rule, const ElectronPointer electron);
 
 	double calculateTopMassDifference(unsigned short neutrinoSolution) const;
     double getLeptonicChi2(unsigned short neutrinoSolution) const;
