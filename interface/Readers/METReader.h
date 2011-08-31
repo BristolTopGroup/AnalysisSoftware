@@ -24,6 +24,8 @@ public:
 private:
     VariableReader<MultiDoublePointer> exReader;
     VariableReader<MultiDoublePointer> eyReader;
+    VariableReader<MultiDoublePointer> significanceReader;
+    VariableReader<MultiDoublePointer> sumETReader;
     METPointer met;
     METAlgorithm::value usedAlgorithm;
     void readMET();
