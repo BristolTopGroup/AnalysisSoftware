@@ -75,7 +75,7 @@ private:
 
 public:
     static float luminosity;
-    Analysis();
+    Analysis(std::string fileForPileUpReweighting);
     virtual ~Analysis();
     void analyze();
     void addInputFile(const char * fileName);

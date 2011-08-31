@@ -574,8 +574,13 @@ void Analysis::doQCDStudy() {
 
             if (ttbarCandidate.GoodJets().size() >= 2) {
                 if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
-                    histMan->H1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
-                            weight);
+                    histMan->H1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts")->Fill(
+                            electron->pfIsolation(), weight);
+
+                    if(ttbarCandidate.hasExactlyThreeGoodJets())
+                        histMan->H1D_BJetBinned("PFIsolation_3jets_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
+                                weight);
+
                     if (ttbarCandidate.GoodJets().size() >= 4)
                         histMan->H1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
                                 weight);
@@ -1251,6 +1256,7 @@ void Analysis::createHistograms() {
 
     histMan->addH1D_BJetBinned("PFIsolation_controlRegion", "PFIso", 500, 0, 5);
     histMan->addH1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
+    histMan->addH1D_BJetBinned("PFIsolation_3jets_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
 
     histMan->addH1D_BJetBinned("RelativeIsolation_PUCorrected", "PFIso", 500, 0, 5);
     histMan->addH1D_BJetBinned("RelativeIsolation_PUCorrected_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
@@ -1322,7 +1328,7 @@ void Analysis::createHistograms() {
     electronAnalyser->createHistograms();
 }
 
-Analysis::Analysis() :
+Analysis::Analysis(std::string fileForPileUpReweighting) :
     eventReader(new NTupleEventReader()),
     currentEvent(),
     ttbarCandidate(),
@@ -1334,7 +1340,7 @@ Analysis::Analysis() :
     interestingEvents(),
     brokenEvents(),
     eventCheck(),
-    weights(Analysis::luminosity/*current lumi*/, 7, "Pileup_2011_EPS_8_jul.root"),
+    weights(Analysis::luminosity/*current lumi*/, 7, fileForPileUpReweighting),
     weight(0),
     pileUpWeight(1),
     cutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
