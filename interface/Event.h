@@ -58,7 +58,7 @@ protected:
     unsigned int numberOfHighPurityTracks;
     bool isBeamScraping;
 
-    unsigned int genNumberOfPileUpVertices;
+    std::vector<int> genNumberOfPileUpVertices;
 
     float ptdensityRho;
 
@@ -84,7 +84,7 @@ public:
     void setLumiBlock(unsigned long block);
     void setEventWeight(float weight);
     void setBeamScrapingVeto(bool isScraping);
-    void setGenNumberOfPileUpVertices(unsigned int pileup);
+    void setGenNumberOfPileUpVertices(std::vector<int> pileup);
     void setPtDensityRho(float rho);
 
     const VertexPointer PrimaryVertex() const;
