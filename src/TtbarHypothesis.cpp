@@ -6,6 +6,7 @@
  */
 
 #include "../interface/TtbarHypothesis.h"
+#include "../interface/RecontructionModules/ReconstructionException.h"
 
 namespace BAT {
 
@@ -34,12 +35,75 @@ TtbarHypothesis::~TtbarHypothesis() {
 
 }
 
-bool TtbarHypothesis::operator <(const TtbarHypothesis& hyp) const {
-	return totalChi2 < hyp.totalChi2;
+bool TtbarHypothesis::isValid(){
+	bool hasObjects = electronFromW != 0 && neutrinoFromW != 0 && jet1FromW != 0 && jet2FromW != 0 && hadronicBJet != 0 && leptonicBjet;
+	return hasObjects;
+
 }
 
-bool TtbarHypothesis::operator ==(const TtbarHypothesis& hyp) const {
-	return totalChi2 == hyp.totalChi2;
+void TtbarHypothesis::combineReconstructedObjects() {
+	if(isValid()){
+		leptonicW =  ParticlePointer(new Particle(*neutrinoFromW + *electronFromW));
+		if(jet1FromW != jet2FromW)
+			hadronicW =  ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
+		else
+			hadronicW = jet1FromW;
+
+		leptonicTop = ParticlePointer(new Particle(*leptonicBjet + *leptonicW));
+		hadronicTop = ParticlePointer(new Particle(*hadronicBJet + *hadronicW));
+
+		resonance = ParticlePointer(new Particle(*leptonicTop + *hadronicTop));
+
+	}
+	else{
+		throw ReconstructionException("Not all objects filled in TTbar Hypothesis");
+	}
 }
+
+double TtbarHypothesis::M3() const {
+	double m3(0), max_et(0);
+	JetCollection mcJets;
+	mcJets.clear();
+	mcJets.push_back(jet1FromW);
+	mcJets.push_back(jet2FromW);
+	mcJets.push_back(leptonicBjet);
+	mcJets.push_back(hadronicBJet);
+	if (mcJets.size() >= 3) {
+		for (unsigned int index1 = 0; index1 < mcJets.size() - 2; ++index1) {
+			for (unsigned int index2 = index1 + 1; index2 < mcJets.size() - 1;
+					++index2) {
+				for (unsigned int index3 = index2 + 1; index3 < mcJets.size();
+						++index3) {
+					FourVector m3Vector(
+							mcJets.at(index1)->getFourVector()
+									+ mcJets.at(index2)->getFourVector()
+									+ mcJets.at(index3)->getFourVector());
+					double currentEt = m3Vector.Et();
+					if (currentEt > max_et) {
+						max_et = currentEt;
+						m3 = m3Vector.M();
+					}
+				}
+			}
+		}
+	}
+
+	return m3;
+}
+
+double TtbarHypothesis::sumPt() const {
+    return leptonicBjet->pt() + hadronicBJet->pt() + jet1FromW->pt() + jet2FromW->pt();
+}
+
+double TtbarHypothesis::PtTtbarSystem() const {
+    return resonance->pt();
+}
+//bool TtbarHypothesis::operator <(const TtbarHypothesis& hyp) const {
+//	return totalChi2 < hyp.totalChi2;
+//}
+//
+//bool TtbarHypothesis::operator ==(const TtbarHypothesis& hyp) const {
+//	return totalChi2 == hyp.totalChi2;
+//}
 
 } // namespace BAT

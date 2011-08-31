@@ -25,8 +25,15 @@ public:
 
 	double M3() const;
 
-	bool operator==(const TtbarHypothesis& hyp) const;
-	bool operator<(const TtbarHypothesis& hyp) const;
+	double sumPt() const;
+	double PtTtbarSystem() const;
+
+	bool isValid();
+
+	void combineReconstructedObjects();
+
+//	bool operator==(const TtbarHypothesis& hyp) const;
+//	bool operator<(const TtbarHypothesis& hyp) const;
 
 };
 
