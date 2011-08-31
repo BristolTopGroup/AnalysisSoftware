@@ -14,12 +14,12 @@ namespace BAT {
 
 boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
-    //from https://twiki.cern.ch/twiki/bin/view/CMS/CrossSections_3XSeries
+    //https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
     xsection[DataType::DATA] = 0;
     xsection[DataType::ttbar] = 157.5;
-    xsection[DataType::Zjets] = 3048.;
+    xsection[DataType::Zjets] = 3048.;//m(ll)>50GeV
     xsection[DataType::Wjets] = 31314.;
-    xsection[DataType::WToENu] = 7899.;
+//    xsection[DataType::WToENu] = 7899.;
 
     xsection[DataType::QCD_EMEnriched_Pt20to30] = 0.2355e9 * 0.0073;//xs 0.2355 mb (filter efficiency=0.0073)
     xsection[DataType::QCD_EMEnriched_Pt30to80] = 0.0593e9 * 0.059; //xs 0.0593 mb
@@ -33,17 +33,19 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::PhotonJets_Pt100to200] = 3476.; //pb
     xsection[DataType::PhotonJets_Pt200toInf] = 485.; //pb
 
-    xsection[DataType::WWtoAnything] = 43.; //pb ±1.5
+    xsection[DataType::WWtoAnything] = 43.; //pb +-1.5
     xsection[DataType::WZtoAnything] = 18.2; //pb +-0.7pb
     xsection[DataType::ZZtoAnything] = 5.9; //pb +- 0.15pb
 
-	//changed on 14th July due to recommendation from top group
-    //https://hypernews.cern.ch/HyperNews/CMS/get/top/1304/1/1/1/1.html
-    xsection[DataType::singleTop_And_W] = 15.74;//10.6; //xs  11 pb (NLO MCFM) inclusive t,W decay
-    xsection[DataType::singleTopTChannel] = 64.57;//21.53;
-    xsection[DataType::singleTopSChannel] = 4.63;//1.40; //=4.21/3 15Jul
+    xsection[DataType::singleTop_And_W] = 5.3; //pb
+    xsection[DataType::singleTopTChannel] = 42.6; //pb
+    xsection[DataType::singleTopSChannel] = 2.72; //pb
 
-    xsection[DataType::VQQ] = 36.;
+    xsection[DataType::singleAntiTop_And_W] = 5.3; //pb
+	xsection[DataType::singleAntiTopTChannel] = 22.0; //pb
+	xsection[DataType::singleAntiTopSChannel] = 1.49; //pb
+
+    xsection[DataType::VQQ] = 35.3;
     xsection[DataType::Zprime_M500GeV_W5GeV] = 50;
     xsection[DataType::Zprime_M500GeV_W50GeV] = 50;
     xsection[DataType::Zprime_M750GeV_W7500MeV] = 50;
@@ -81,31 +83,36 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
 void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::DATA] = 0;
 
-    numberOfProcessedEvents[DataType::ttbar] = 3570035;
-    numberOfProcessedEvents[DataType::Zjets] = 34016401;
-    numberOfProcessedEvents[DataType::Wjets] = 54895290;
+    numberOfProcessedEvents[DataType::ttbar] = 3634668;
+    numberOfProcessedEvents[DataType::Zjets] = 36277961;
+    numberOfProcessedEvents[DataType::Wjets] = 81149551;
 
-    numberOfProcessedEvents[DataType::WToENu] = 5334220;
+//    numberOfProcessedEvents[DataType::WToENu] = 5334220;
 
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 22529376;
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 36409308;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 35729669;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 70392060;
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8150672;
 
-    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2052287;
+    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2081560;
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt30to80] = 2030033;
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt80to170] = 1082691;
 
     numberOfProcessedEvents[DataType::PhotonJets_Pt40to100] = 2217101;
-    numberOfProcessedEvents[DataType::PhotonJets_Pt100to200] = 1065691;
-    numberOfProcessedEvents[DataType::PhotonJets_Pt200toInf] = 1079950;
+    numberOfProcessedEvents[DataType::PhotonJets_Pt100to200] = 1536287;
+    numberOfProcessedEvents[DataType::PhotonJets_Pt200toInf] = 1124279;
 
-    numberOfProcessedEvents[DataType::WWtoAnything] = 2039440;
-    numberOfProcessedEvents[DataType::WZtoAnything] = 2085696;
-    numberOfProcessedEvents[DataType::ZZtoAnything] = 2108608;
+    numberOfProcessedEvents[DataType::WWtoAnything] = 4225916;
+    numberOfProcessedEvents[DataType::WZtoAnything] = 4106336;
+    numberOfProcessedEvents[DataType::ZZtoAnything] = 4099405;
 
-    numberOfProcessedEvents[DataType::singleTop_And_W] = 489417;
-    numberOfProcessedEvents[DataType::singleTopTChannel] = 484060;
-    numberOfProcessedEvents[DataType::singleTopSChannel] = 494967;
+    numberOfProcessedEvents[DataType::singleTop_And_W] = 814390;
+	numberOfProcessedEvents[DataType::singleTopTChannel] = 3900171;
+	numberOfProcessedEvents[DataType::singleTopSChannel] = 259971;
+
+	numberOfProcessedEvents[DataType::singleAntiTop_And_W] = 809984;
+	numberOfProcessedEvents[DataType::singleAntiTopTChannel] = 1508784;
+	numberOfProcessedEvents[DataType::singleAntiTopSChannel] = 137980;
+
     numberOfProcessedEvents[DataType::VQQ] = 720613;
     numberOfProcessedEvents[DataType::Zprime_M500GeV_W5GeV] = 227068;
     numberOfProcessedEvents[DataType::Zprime_M500GeV_W50GeV] = 238963;
@@ -137,7 +144,7 @@ float EventWeightProvider::getWeight(DataType::value type) {
 float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
     if(numberOfVertices >= pileUpWeights.size()){
         ++numberOfEventsWithTooHighPileUp;
-        return 0.;
+        return 1.;
     }
 
     return pileUpWeights.at(numberOfVertices);
@@ -151,21 +158,30 @@ boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pile
     return pileUp;
 }
 
-void EventWeightProvider::generate_flat10_weights(){
-    // see SimGeneral/MixingModule/python/mix_E7TeV_FlatDist10_2011EarlyData_inTimeOnly_cfi.py; copy and paste from there:
-    const boost::array<double, 25> npu_probs = {{0.0698146584, 0.0698146584, 0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584 /* <-- 10*/,
-           0.0630151648,0.0526654164,0.0402754482,0.0292988928,0.0194384503,0.0122016783,0.007207042,0.004003637,0.0020278322,
-           0.0010739954,0.0004595759,0.0002229748,0.0001028162,4.58337152809607E-05 /* <-- 24 */}};
-    double s = 0.0;
-    for (unsigned int npu = 0; npu < npu_probs.size(); ++npu) {
-        double npu_estimated = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
-        pileUpWeights[npu] = npu_estimated / npu_probs[npu];
-        s += npu_estimated;
-    }
-    // normalize weights such that the total sum of weights over thw whole sample is 1.0, i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
-    for (unsigned int npu = 0; npu < pileUpWeights.size(); ++npu) {
-        pileUpWeights[npu] /= s;
-    }
+void EventWeightProvider::generate_flat10_weights() {
+//	/https://twiki.cern.ch/twiki/bin/view/CMS/PileupInformation
+	//https://twiki.cern.ch/twiki/bin/view/CMS/PileupMCReweightingUtilities
+	// Flat10+Tail distribution taken directly from MixingModule input:  (Can be used for Spring11 and Summer11 if you don't worry about small shifts in the mean)
+//    const boost::array<double, 25> npu_probs = {{0.0698146584, 0.0698146584, 0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584 /* <-- 10*/,
+//           0.0630151648,0.0526654164,0.0402754482,0.0292988928,0.0194384503,0.0122016783,0.007207042,0.004003637,0.0020278322,
+//           0.0010739954,0.0004595759,0.0002229748,0.0001028162,4.58337152809607E-05 /* <-- 24 */}};
+
+	// Summer11 PU_S4, distribution obtained by averaging the number of interactions
+	// in each beam crossing to estimate the true mean.  THIS IS THE RECOMMENDED ONE for reweighting.
+	const boost::array<double, 25> npu_probs =
+			{ { 0.104109, 0.0703573, 0.0698445, 0.0698254, 0.0697054, 0.0697907, 0.0696751, 0.0694486, 0.0680332,
+					0.0651044, 0.0598036, 0.0527395, 0.0439513, 0.0352202, 0.0266714, 0.019411, 0.0133974, 0.00898536,
+					0.0057516, 0.00351493, 0.00212087, 0.00122891, 0.00070592, 0.000384744, 0.000219377 } };
+	double s = 0.0;
+	for (unsigned int npu = 0; npu < npu_probs.size(); ++npu) {
+		double npu_estimated = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
+		pileUpWeights[npu] = npu_estimated / npu_probs[npu];
+		s += npu_estimated;
+	}
+	// normalize weights such that the total sum of weights over thw whole sample is 1.0, i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
+	for (unsigned int npu = 0; npu < pileUpWeights.size(); ++npu) {
+		pileUpWeights[npu] /= s;
+	}
 }
 
 unsigned long EventWeightProvider::getNumberOfEventsWithTooHighPileUp() const{
