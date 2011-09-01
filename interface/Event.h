@@ -52,15 +52,15 @@ protected:
     unsigned long eventNumber;
     unsigned long localEventNumber;
     unsigned long lumiBlock;
-    float eventWeight;
+    double eventWeight;
 
-    float jetCleaningEfficiency;
+    double jetCleaningEfficiency;
     unsigned int numberOfHighPurityTracks;
     bool isBeamScraping;
 
     std::vector<int> genNumberOfPileUpVertices;
 
-    float ptdensityRho;
+    double ptdensityRho;
 
 public:
     Event();
@@ -82,10 +82,10 @@ public:
     void setEventNumber(unsigned long number);
     void setLocalEventNumber(unsigned long number);
     void setLumiBlock(unsigned long block);
-    void setEventWeight(float weight);
+    void setEventWeight(double weight);
     void setBeamScrapingVeto(bool isScraping);
     void setGenNumberOfPileUpVertices(std::vector<int> pileup);
-    void setPtDensityRho(float rho);
+    void setPtDensityRho(double rho);
 
     const VertexPointer PrimaryVertex() const;
     const VertexCollection& Vertices() const;
@@ -112,7 +112,7 @@ public:
     unsigned long eventnumber() const;
     unsigned long localnumber() const;
     unsigned long lumiblock() const;
-    float weight() const;
+    double weight() const;
     void inspect() const;
     bool HLT(HLTriggers::value trigger) const;
     int HLTPrescale(HLTriggers::value trigger) const;
@@ -120,8 +120,8 @@ public:
     static bool usePFIsolation;
     static bool useCiCElectronID;
 
-    float numberOfGeneratedPileUpVertices() const;
-    float rho() const;
+    double numberOfGeneratedPileUpVertices() const;
+    double rho() const;
 
 private:
     void selectElectronsByQuality();

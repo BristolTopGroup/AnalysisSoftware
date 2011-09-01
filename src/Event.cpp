@@ -278,7 +278,7 @@ void Event::setLumiBlock(unsigned long block) {
     lumiBlock = block;
 }
 
-void Event::setEventWeight(float weight) {
+void Event::setEventWeight(double weight) {
     eventWeight = weight;
 }
 
@@ -375,7 +375,7 @@ unsigned long Event::lumiblock() const {
     return lumiBlock;
 }
 
-float Event::weight() const {
+double Event::weight() const {
     return eventWeight;
 }
 
@@ -408,7 +408,7 @@ void Event::setGenNumberOfPileUpVertices(std::vector<int> pileup){
     genNumberOfPileUpVertices = pileup;
 }
 
-float Event::numberOfGeneratedPileUpVertices() const {
+double Event::numberOfGeneratedPileUpVertices() const {
 	double average = std::accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0)/genNumberOfPileUpVertices.size();
     return average;
 }
@@ -421,11 +421,11 @@ int Event::HLTPrescale(HLTriggers::value trigger) const {
 	return HLTPrescales->at(trigger);
 }
 
-void Event::setPtDensityRho(float rho) {
+void Event::setPtDensityRho(double rho) {
     ptdensityRho = rho;
 }
 
-float Event::rho() const {
+double Event::rho() const {
     return ptdensityRho;
 }
 
