@@ -15,7 +15,7 @@ TtbarHypothesis::TtbarHypothesis() :
 	leptonicChi2(99999.), 
 	hadronicChi2(99999.), 
 	globalChi2(99999.), 
-	disc(999999),
+	discriminator(999999),
 	hadronicTop(), 
 	leptonicTop(),
 	leptonicW(), 
@@ -56,8 +56,43 @@ void TtbarHypothesis::combineReconstructedObjects() {
 
 	}
 	else{
-		throw ReconstructionException("Not all objects filled in TTbar Hypothesis");
+		throwDetailedException();
 	}
+}
+
+void TtbarHypothesis::throwDetailedException() const {
+	std::string msg = "TTbar Hypothesis not filled properly: \n";
+	if (electronFromW == 0)
+		msg += "Electron from W: not filled \n";
+	else
+		msg += "Electron from W: filled \n";
+
+	if (neutrinoFromW == 0)
+		msg += "Neutrino from W: not filled \n";
+	else
+		msg += "Neutrino from W: filled \n";
+
+	if (jet1FromW == 0)
+		msg += "Jet 1 from W: not filled \n";
+	else
+		msg += "Jet 1 from W: filled \n";
+
+	if (jet2FromW == 0)
+		msg += "Jet 2 from W: not filled \n";
+	else
+		msg += "Jet 2 from W: filled \n";
+
+	if (leptonicBjet == 0)
+		msg += "Leptonic b-jet: not filled \n";
+	else
+		msg += "Leptonic b-jet: filled \n";
+
+	if (hadronicBJet == 0)
+		msg += "Hadronic b-jet: not filled \n";
+	else
+		msg += "Hadronic b-jet: filled \n";
+
+	throw ReconstructionException(msg);
 }
 
 double TtbarHypothesis::M3() const {

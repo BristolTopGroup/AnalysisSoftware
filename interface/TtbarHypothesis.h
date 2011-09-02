@@ -17,7 +17,7 @@ class TtbarHypothesis {
 public:
 	TtbarHypothesis();
 	virtual ~TtbarHypothesis();
-	double totalChi2, leptonicChi2, hadronicChi2, globalChi2, disc;
+	double totalChi2, leptonicChi2, hadronicChi2, globalChi2, discriminator;
 	ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW, resonance, neutrinoFromW;
 	JetPointer leptonicBjet, hadronicBJet, jet1FromW, jet2FromW;
 	ElectronPointer electronFromW;
@@ -31,6 +31,8 @@ public:
 	bool isValid();
 
 	void combineReconstructedObjects();
+
+	void throwDetailedException() const;
 
 //	bool operator==(const TtbarHypothesis& hyp) const;
 //	bool operator<(const TtbarHypothesis& hyp) const;
@@ -49,13 +51,13 @@ struct compare_totalChi2 {
     }
 };
 
-struct compare_disc {
+struct SmallerDiscriminatorIsBetter {
     bool operator ()(TtbarHypothesisPointer lhs, TtbarHypothesisPointer rhs) {
-        return lhs->disc <= rhs->disc;
+        return lhs->discriminator < rhs->discriminator;
     }
 
     bool operator ()(TtbarHypothesis lhs, TtbarHypothesis rhs) {
-        return lhs.disc <= rhs.disc;
+        return lhs.discriminator < rhs.discriminator;
     }
 };
 } // namespace BAT
