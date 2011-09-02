@@ -14,6 +14,7 @@
 #include <cmath>
 #include <math.h>
 #include "../interface/Printers/EventTablePrinter.h"
+#include "../interface/RecontructionModules/ChiSquaredBasedTopPairReconstruction.h"
 
 using namespace BAT;
 using namespace std;
@@ -185,6 +186,7 @@ void Analysis::doTTBarAnalysis() {
         }
     }
     if (ttbarCandidate.passesFullTTbarEPlusJetSelection()) {
+    	ChiSquaredBasedTopPairReconstruction reco(ttbarCandidate.GoodPFIsolatedElectrons().front(), ttbarCandidate.MET(), ttbarCandidate.GoodJets());
         histMan->H1D("numberOfBJets")->Fill(ttbarCandidate.GoodBJets().size(), weight);
         try {
             if (Event::usePFIsolation)
@@ -198,6 +200,7 @@ void Analysis::doTTBarAnalysis() {
         vector<TtbarHypothesisPointer> solutions = ttbarCandidate.Solutions();
         const ParticlePointer resonance = ttbarCandidate.getResonance();
         double mttbar = ttbarCandidate.mttbar();
+//        mttbar = reco.getBestSolution()->resonance->mass();
 
         ParticlePointer leadingTop, nextToLeadingTop;
 
