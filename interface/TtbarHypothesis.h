@@ -28,7 +28,8 @@ public:
 	double sumPt() const;
 	double PtTtbarSystem() const;
 
-	bool isValid();
+	bool isValid() const;
+	bool isPhysical() const;
 
 	void combineReconstructedObjects();
 

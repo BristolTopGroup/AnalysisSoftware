@@ -35,10 +35,16 @@ TtbarHypothesis::~TtbarHypothesis() {
 
 }
 
-bool TtbarHypothesis::isValid(){
+bool TtbarHypothesis::isValid() const{
 	bool hasObjects = electronFromW != 0 && neutrinoFromW != 0 && jet1FromW != 0 && jet2FromW != 0 && hadronicBJet != 0 && leptonicBjet;
 	return hasObjects;
 
+}
+
+bool TtbarHypothesis::isPhysical() const{
+	bool hasPhysicalSolution = leptonicTop->mass() > 0 && leptonicW->mass() > 0
+				&& hadronicW->mass() > 0 && hadronicTop->mass() > 0;
+	return hasPhysicalSolution;
 }
 
 void TtbarHypothesis::combineReconstructedObjects() {
