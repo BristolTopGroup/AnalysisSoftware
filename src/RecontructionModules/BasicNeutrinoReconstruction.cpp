@@ -34,28 +34,42 @@ boost::array<ParticlePointer, 2> BasicNeutrinoReconstruction::getNeutrinos(Neutr
 	return neutrinos;
 }
 
-void BasicNeutrinoReconstruction::reconstructNeutrinos(){
+void BasicNeutrinoReconstruction::reconstructNeutrinos() {
 	boost::array<double, 2> neutrinoPzs = computeNeutrinoPz();
+	double energy1 = sqrt(met->et() * met->et() + neutrinoPzs.at(0) * neutrinoPzs.at(0));
+	double energy2 = sqrt(met->et() * met->et() + neutrinoPzs.at(1) * neutrinoPzs.at(1));
+	neutrino1 = ParticlePointer(new Particle(energy1, met->px(), met->py(), neutrinoPzs.at(0)));
+	neutrino2 = ParticlePointer(new Particle(energy2, met->px(), met->py(), neutrinoPzs.at(1)));
+
+	if (isnan(neutrino1->energy()) && isnan(neutrino2->energy())
+		)
+		throw ReconstructionException("No physical neutrino solution found");
+	else if (isnan(neutrino1->energy())
+		)
+		neutrino1 = neutrino2;
+	else if (isnan(neutrino2->energy())
+		)
+		neutrino2 = neutrino1;
 }
 
 boost::array<double, 2> BasicNeutrinoReconstruction::computeNeutrinoPz() {
 	boost::array<double, 2> neutrinoZMomenta;
 
 	double pz1(0), pz2(0);
-	double M_e = 0.0005;
-	double ee = electronFromW->energy();
-	double pxe = electronFromW->px();
-	double pye = electronFromW->py();
-	double pze = electronFromW->pz();
-	double pxnu = met->px();
-	double pynu = met->py();
+	double electron_M = 0.0005;
+	double electron_E = electronFromW->energy();
+	double electron_px = electronFromW->px();
+	double electron_py = electronFromW->py();
+	double electron_pz = electronFromW->pz();
+	double neutrino_px = met->px();
+	double neutrino_py = met->py();
 
-	double a = W_mass * W_mass - M_e * M_e + 2.0 * pxe * pxnu
-			+ 2.0 * pye * pynu;
+	double a = W_mass * W_mass - electron_M * electron_M + 2.0 * electron_px * neutrino_px
+			+ 2.0 * electron_py * neutrino_py;
 
-	double A = 4.0 * (ee * ee - pze * pze);
-	double B = -4.0 * a * pze;
-	double C = 4.0 * ee * ee * (pxnu * pxnu + pynu * pynu) - a * a;
+	double A = 4.0 * (electron_E * electron_E - electron_pz * electron_pz);
+	double B = -4.0 * a * electron_pz;
+	double C = 4.0 * electron_E * electron_E * (neutrino_px * neutrino_px + neutrino_py * neutrino_py) - a * a;
 
 	double tmproot = B * B - 4.0 * A * C;
 	if (tmproot < 0) {
