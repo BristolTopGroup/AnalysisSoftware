@@ -21,7 +21,7 @@ BasicTopPairReconstruction::BasicTopPairReconstruction(const ElectronPointer ele
 	}
 }
 
-bool BasicTopPairReconstruction::meetsInitialCriteria() {
+bool BasicTopPairReconstruction::meetsInitialCriteria() const {
 	return met != 0 && electronFromW != 0 && jets.size() >= 4;
 }
 

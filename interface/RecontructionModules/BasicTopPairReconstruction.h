@@ -27,7 +27,7 @@ protected:
 	virtual bool meetsLeptonicBJetRequirement(unsigned short jetIndex);
 	virtual bool meetsJetFromWRequirement(unsigned short jet1Index, unsigned short jet2Index);
 	virtual bool meetsGlobalRequirement(const TtbarHypothesisPointer solution);
-	virtual bool meetsInitialCriteria();
+	virtual bool meetsInitialCriteria() const;
 	virtual boost::array<ParticlePointer, 2> getNeutrinos();
 
 protected:
