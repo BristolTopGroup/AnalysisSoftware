@@ -15,7 +15,6 @@
 #include "RecoObjects/Jet.h"
 #include "Taggers/ConversionTagger.h"
 #include "TtbarHypothesis.h"
-#include "ReconstructionRules/BasicRule.h"
 #include "RecontructionModules/ReconstructionException.h"
 
 namespace BAT {
@@ -167,7 +166,6 @@ public:
 	void reconstructTTbarFrom3Jets(ElectronPointer electron);
     void reconstructUsingSubjets();
     void reconstructUsingMCTruth();
-    void reconstruct(Rule rule, const ElectronPointer electron);
 
 	double calculateTopMassDifference(unsigned short neutrinoSolution) const;
     double getLeptonicChi2(unsigned short neutrinoSolution) const;
