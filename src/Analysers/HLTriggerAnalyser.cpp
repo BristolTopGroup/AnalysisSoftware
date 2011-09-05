@@ -166,7 +166,6 @@ void HLTriggerAnalyser::analyseTrigger(bool passesPreTrigger, bool passesTrigger
 void HLTriggerAnalyser::createHistograms() {
 	//switch to jet binned!!!!!!!!
 
-	std::cout << "creating HLTStudy histograms" << std::endl;
 	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30");
 	// ele tight ID + 1 jet
 	histMan->addH1D("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet pt (visited)", 200, 0, 200);
