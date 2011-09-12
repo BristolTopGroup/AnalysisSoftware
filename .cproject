@@ -151,6 +151,7 @@
 									<listOptionValue builtIn="false" value="boost_filesystem"/>
 									<listOptionValue builtIn="false" value="boost_program_options"/>
 									<listOptionValue builtIn="false" value="TopQuarkAnalysis"/>
+									<listOptionValue builtIn="false" value="CLHEP"/>
 								</option>
 								<option id="gnu.cpp.link.option.other.657783778" name="Other options (-Xlinker [option])" superClass="gnu.cpp.link.option.other" valueType="stringList">
 									<listOptionValue builtIn="false" value="-L/usr/local/lib `${ROOTSYS-DEBUG}/bin/root-config --libs --glibs --cflags --ldflags --auxlibs --auxcflags` -pthread -lm -ldl "/>
@@ -244,6 +245,7 @@
 									<listOptionValue builtIn="false" value="tcmalloc"/>
 									<listOptionValue builtIn="false" value="boost_program_options"/>
 									<listOptionValue builtIn="false" value="TopQuarkAnalysis"/>
+									<listOptionValue builtIn="false" value="CLHEP"/>
 								</option>
 								<option id="gnu.cpp.link.option.other.305749471" name="Other options (-Xlinker [option])" superClass="gnu.cpp.link.option.other" valueType="stringList">
 									<listOptionValue builtIn="false" value="-L/usr/local/lib `${ROOTSYS-DEBUG}/bin/root-config --libs --glibs --cflags --ldflags --auxlibs --auxcflags` -pthread -lm -ldl"/>
