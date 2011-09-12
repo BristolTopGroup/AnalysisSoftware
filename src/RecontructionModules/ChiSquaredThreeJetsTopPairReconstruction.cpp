@@ -6,6 +6,8 @@
  */
 
 #include "../../interface/RecontructionModules/ChiSquaredThreeJetsTopPairReconstruction.h"
+#include <boost/lexical_cast.hpp>
+#include "../../interface/RecontructionModules/ReconstructionException.h"
 
 namespace BAT {
 
@@ -13,10 +15,36 @@ bool ChiSquaredThreeJetsTopPairReconstruction::meetsJetFromWRequirement(unsigned
 	return jet1Index == jet2Index;// two jets from W merged, therefore only 3 jets are needed
 }
 
+bool ChiSquaredThreeJetsTopPairReconstruction::meetsGlobalRequirement(const TtbarHypothesisPointer solution){
+	return solution->isPhysical() && solution->hadronicW->mass() > 40;
+}
+
 bool ChiSquaredThreeJetsTopPairReconstruction::meetsInitialCriteria() const {
 	return met != 0 && electronFromW != 0 && jets.size() == 3;// needs exactly 3 jets
 }
+
+std::string ChiSquaredThreeJetsTopPairReconstruction::getDetailsOnFailure() const {
+	std::string msg = "Initial Criteria not met: \n";
+		if (electronFromW == 0)
+			msg += "Electron from W: not filled \n";
+		else
+			msg += "Electron from W: filled \n";
+
+		if (met == 0)
+			msg += "Missing transverse energy: not filled \n";
+		else
+			msg += "Missing transverse energy: filled \n";
+		std::string nJets(boost::lexical_cast<std::string>(jets.size()));
+		if (jets.size() != 3)
+			msg += "Number of jets is too small:" + nJets +  ", should be == 3 \n";
+		else
+			msg += "Number of jets is OK:" + nJets +  "\n";
+
+		return msg;
+}
+
 ChiSquaredThreeJetsTopPairReconstruction::ChiSquaredThreeJetsTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets):
+		BasicTopPairReconstruction(electron, met, jets),
 		ChiSquaredBasedTopPairReconstruction(electron, met, jets) {
 
 }

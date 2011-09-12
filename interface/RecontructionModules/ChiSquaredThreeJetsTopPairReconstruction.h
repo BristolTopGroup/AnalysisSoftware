@@ -14,10 +14,16 @@ namespace BAT {
 
 class ChiSquaredThreeJetsTopPairReconstruction: public BAT::ChiSquaredBasedTopPairReconstruction {
 public:
-	ChiSquaredThreeJetsTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets);
+	ChiSquaredThreeJetsTopPairReconstruction(const ElectronPointer electron, const METPointer met,
+			const JetCollection jets);
 	virtual ~ChiSquaredThreeJetsTopPairReconstruction();
-	bool meetsJetFromWRequirement(unsigned short jet1Index, unsigned short jet2Index);
-	bool meetsInitialCriteria() const;
+	virtual bool meetsInitialCriteria() const;
+	virtual std::string getDetailsOnFailure() const;
+
+protected:
+	virtual bool meetsJetFromWRequirement(unsigned short jet1Index, unsigned short jet2Index);
+	virtual bool meetsGlobalRequirement(const TtbarHypothesisPointer solution);
+
 };
 
 } /* namespace BAT */
