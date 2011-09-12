@@ -54,4 +54,8 @@ double MET::sumET() const{
 	return sumET_;
 }
 
+double MET::resolution() const {
+	return 0.5 * sqrt(sumET_);
+}
+
 }

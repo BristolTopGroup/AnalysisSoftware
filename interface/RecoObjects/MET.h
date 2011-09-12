@@ -43,6 +43,7 @@ public:
 	METAlgorithm::value getUsedAlgorithm() const;
 	double significance() const;
 	double sumET() const;
+	double resolution() const;
 
 	void setUsedAlgorithm(METAlgorithm::value algo);
 	void setSignificance(double significance);
