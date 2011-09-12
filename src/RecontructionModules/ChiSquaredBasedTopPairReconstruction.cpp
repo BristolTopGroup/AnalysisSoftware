@@ -57,7 +57,10 @@ double ChiSquaredBasedTopPairReconstruction::getDiscriminator(const TtbarHypothe
 	double massTerm = massDifference / massError;
 	chiSquaredTerms.push_back(massTerm);
 
-	double totalChi2 = std::accumulate(chiSquaredTerms.begin(), chiSquaredTerms.end(), 0);
+	double totalChi2(0);
+	for(unsigned short index = 0; index < chiSquaredTerms.size(); ++index){
+		totalChi2 += chiSquaredTerms.at(index);
+	}
 
 	return totalChi2;
 }

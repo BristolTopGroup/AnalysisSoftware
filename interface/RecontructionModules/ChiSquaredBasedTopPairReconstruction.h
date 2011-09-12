@@ -12,7 +12,7 @@
 
 namespace BAT {
 
-class ChiSquaredBasedTopPairReconstruction: public BAT::BasicTopPairReconstruction {
+class ChiSquaredBasedTopPairReconstruction: virtual public BAT::BasicTopPairReconstruction {
 public:
 	ChiSquaredBasedTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets);
 	virtual ~ChiSquaredBasedTopPairReconstruction();
@@ -34,8 +34,8 @@ protected:
 	static double const HTSystem;
 	static double const HTSystem_sigma;
 
-	double HT(unsigned short jetLimit) const;
-	double getDiscriminator(const TtbarHypothesisPointer) const;
+	virtual double HT(unsigned short jetLimit) const;
+	virtual double getDiscriminator(const TtbarHypothesisPointer) const;
 };
 
 } /* namespace BAT */
