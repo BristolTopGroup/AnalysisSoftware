@@ -12,6 +12,9 @@
 #include "RecoObjects/MET.h"
 #include "RecoObjects/Particle.h"
 
+#include <boost/shared_ptr.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
+
 namespace BAT {
 class TtbarHypothesis {
 public:
@@ -41,6 +44,7 @@ public:
 };
 
 typedef boost::shared_ptr<TtbarHypothesis> TtbarHypothesisPointer;
+typedef std::vector<TtbarHypothesisPointer> TtbarHypothesisCollection;
 
 struct compare_totalChi2 {
     bool operator ()(TtbarHypothesisPointer lhs, TtbarHypothesisPointer rhs) {
