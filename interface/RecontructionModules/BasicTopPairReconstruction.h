@@ -18,7 +18,9 @@ public:
 	BasicTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets);
 	virtual ~BasicTopPairReconstruction();
 	virtual const TtbarHypothesisPointer getBestSolution();
-	virtual std::vector<TtbarHypothesisPointer> getAllSolutions();
+	virtual TtbarHypothesisCollection getAllSolutions();
+	virtual bool meetsInitialCriteria() const;
+	virtual std::string getDetailsOnFailure() const;
 
 protected:
 	virtual double getDiscriminator(const TtbarHypothesisPointer) const;
@@ -27,11 +29,11 @@ protected:
 	virtual bool meetsLeptonicBJetRequirement(unsigned short jetIndex);
 	virtual bool meetsJetFromWRequirement(unsigned short jet1Index, unsigned short jet2Index);
 	virtual bool meetsGlobalRequirement(const TtbarHypothesisPointer solution);
-	virtual bool meetsInitialCriteria() const;
 	virtual boost::array<ParticlePointer, 2> getNeutrinos();
+//	virtual void throwDetailedException() const;
 
 protected:
-	std::vector<TtbarHypothesisPointer> solutions;
+	TtbarHypothesisCollection solutions;
 	bool alreadyReconstructed;
 	METPointer met;
 	JetCollection jets;

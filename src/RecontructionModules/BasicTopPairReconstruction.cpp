@@ -7,6 +7,7 @@
 
 #include "../../interface/RecontructionModules/BasicTopPairReconstruction.h"
 #include "../../interface/RecontructionModules/BasicNeutrinoReconstruction.h"
+#include <boost/lexical_cast.hpp>
 
 namespace BAT {
 
@@ -16,19 +17,38 @@ BasicTopPairReconstruction::BasicTopPairReconstruction(const ElectronPointer ele
 		met(met),
 		jets(jets),
 		electronFromW(electron) {
-	if(!meetsInitialCriteria()){
-		throw ReconstructionException("Initial Criteria not met");//replace with detailed msg
-	}
 }
 
 bool BasicTopPairReconstruction::meetsInitialCriteria() const {
 	return met != 0 && electronFromW != 0 && jets.size() >= 4;
 }
 
+std::string BasicTopPairReconstruction::getDetailsOnFailure() const {
+	std::string msg = "Initial Criteria not met: \n";
+	if (electronFromW == 0)
+		msg += "Electron from W: not filled \n";
+	else
+		msg += "Electron from W: filled \n";
+
+	if (met == 0)
+		msg += "Missing transverse energy: not filled \n";
+	else
+		msg += "Missing transverse energy: filled \n";
+	std::string nJets(boost::lexical_cast<std::string>(jets.size()));
+	if (jets.size() < 4)
+		msg += "Number of jets is too small:" + nJets + ", should be >= 4 \n";
+	else
+		msg += "Number of jets is OK:" + nJets + "\n";
+
+	return msg;
+}
+
+
+
 BasicTopPairReconstruction::~BasicTopPairReconstruction() {
 }
 
-std::vector<TtbarHypothesisPointer> BasicTopPairReconstruction::getAllSolutions(){
+TtbarHypothesisCollection BasicTopPairReconstruction::getAllSolutions(){
 	if(!alreadyReconstructed)
 		reconstruct();
 
@@ -38,7 +58,8 @@ std::vector<TtbarHypothesisPointer> BasicTopPairReconstruction::getAllSolutions(
 }
 
 const TtbarHypothesisPointer BasicTopPairReconstruction::getBestSolution() {
-	return getAllSolutions().front();
+	const TtbarHypothesisPointer bestSolution = getAllSolutions().front();//sorted by quality, front == best
+	return bestSolution;
 }
 
 void BasicTopPairReconstruction::reconstruct() {
