@@ -45,7 +45,6 @@ protected:
 
 	ElectronPointer electronFromW;
 	METPointer met;
-	double metResolution;
 	ParticlePointer neutrino1, neutrino2;
 	bool alreadyReconstructed;
 };

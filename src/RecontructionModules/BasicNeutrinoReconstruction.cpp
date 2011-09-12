@@ -14,10 +14,13 @@ double const BasicNeutrinoReconstruction::W_mass = 80.389;
 BasicNeutrinoReconstruction::BasicNeutrinoReconstruction(const ElectronPointer electron, const METPointer missingET):
 		electronFromW(electron),
 		met(missingET),
-		metResolution(0.5 * sqrt(met->sumET()) ),
 		neutrino1(),
 		neutrino2(),
 		alreadyReconstructed(false){
+	if (electronFromW == 0)
+		throw ReconstructionException("Could not reconstruct neutrinos: no electron found!");
+	if (met->energy() == 0)
+		throw ReconstructionException("Could not reconstruct neutrinos: no MET found!");
 }
 
 boost::array<ParticlePointer, 2> BasicNeutrinoReconstruction::getNeutrinos(NeutrinoSelection::value selection) {
