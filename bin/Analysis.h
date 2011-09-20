@@ -29,6 +29,7 @@
 #include "../interface/Analysers/HLTriggerAnalyser.h"
 #include "../interface/Analysers/ElectronAnalyser.h"
 #include "../interface/Analysers/MTtbarAnalyser.h"
+#include "../interface/Analysers/MCAnalyser.h"
 
 struct InterestingEvent {
     InterestingEvent(unsigned long run, unsigned long event, std::string file) :
@@ -74,6 +75,7 @@ private:
     boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
+    boost::scoped_ptr<BAT::MCAnalyser> MonteCarloAnalyser;
 
 public:
     static float luminosity;
@@ -127,7 +129,6 @@ private:
     void createHistograms();
     void doNotePlots();
     void doQCDStudy();
-    void doMCttbarReconstruction();
     void checkForDuplicatedEvents();
     void checkForBrokenEvents();
     void doJetAnalysis();
