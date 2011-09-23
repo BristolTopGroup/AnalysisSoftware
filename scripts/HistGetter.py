@@ -40,9 +40,11 @@ def addSampleSum( hists = {} ):
         singleTopList = {}
 
         qcdSamples = ['bce1', 'bce2', 'bce3', 'enri1', 'enri2', 'enri3', 'pj1', 'pj2', 'pj3']
-        allMCSamples = ['ttbar', 'wjets', 'zjets', 'tW', 'tchan', 'bce1', 'bce2', 'bce3', 'enri1',
-                        'enri2', 'enri3', 'pj1', 'pj2', 'pj3']
-        singleTopSamples = ['tW', 'tchan']
+        allMCSamples = ['ttbar', 'wjets', 'zjets', 'bce1', 'bce2', 'bce3', 'enri1',
+                        'enri2', 'enri3', 'pj1', 'pj2', 'pj3', 'T_TuneZ2_tW-channel', 'T_TuneZ2_t-channel', 'T_TuneZ2_s-channel', 
+                            'Tbar_TuneZ2_tW-channel', 'Tbar_TuneZ2_t-channel', 'Tbar_TuneZ2_s-channel']
+        singleTopSamples = ['T_TuneZ2_tW-channel', 'T_TuneZ2_t-channel', 'T_TuneZ2_s-channel', 
+                            'Tbar_TuneZ2_tW-channel', 'Tbar_TuneZ2_t-channel', 'Tbar_TuneZ2_s-channel']
 
 
         for sample, histlist in hists.iteritems():
@@ -74,7 +76,8 @@ def addSampleSum( hists = {} ):
 def makeDetailedMCStack( hists ):
 
     allMCSamples = ['bce1', 'bce2', 'bce3', 'enri1',
-                        'enri2', 'enri3', 'pj1', 'pj2', 'pj3', 'zjets', 'wjets', 'tW', 'tchan', 'ttbar' ]
+                        'enri2', 'enri3', 'pj1', 'pj2', 'pj3', 'zjets', 'wjets','T_TuneZ2_tW-channel', 'T_TuneZ2_t-channel', 'T_TuneZ2_s-channel', 
+                            'Tbar_TuneZ2_tW-channel', 'Tbar_TuneZ2_t-channel', 'Tbar_TuneZ2_s-channel', 'ttbar' ]
 
     hists['allMCDetailed'] = makeStack( hists, allMCSamples )
     return hists

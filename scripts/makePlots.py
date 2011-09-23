@@ -29,9 +29,12 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
     alreadyAdded = False
         
     for bin in bJetBins:
-        normConv = dataHists['topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_' + bin]
-        normContr = dataHists['topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets_' + bin]
-        normAnti = dataHists['topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets_' + bin]
+#        normConv = dataHists['topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_' + bin]
+#        normContr = dataHists['topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets_' + bin]
+#        normAnti = dataHists['topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets_' + bin]
+        normConv = dataHists['topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets_' + bin]
+        normContr = dataHists['topReconstruction/backgroundShape/mttbar_3jets_antiID_withMETAndAsymJets_' + bin]
+        normAnti = dataHists['topReconstruction/backgroundShape/mttbar_3jets_antiIsolated_withMETAndAsymJets_' + bin]
         normConv.SetYTitle("a.u/50GeV");
     
         normConv.Sumw2()
@@ -89,11 +92,13 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
             alreadyAdded = True
         
         leg.Draw()
-        saveAs(c, 'shape_comparison' + '_' + bin , outputFormats)
+        saveAs(c, 'shape_comparison_3jets' + '_' + bin , outputFormats)
         del c
         
     del leg
 
+def plotControlRegionComparision(normConv, normContr, normAnti):
+    pass
 
 def plotQCDEstimationFits(allHists, bJetBins):
 #    saveAs = HistPlotter.saveAs
@@ -187,14 +192,14 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
         del c
     
     
-def makeQCDErrorPlot(files):
-    errors = QCDEstimation.getShapeErrorHistogram('topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_1orMoreBtag', files)
-    systematicEstimationError = QCDEstimation.doClosureTestFor(files, 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag')
-    qcdEstimate = QCDEstimation.estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag')
-    print 'QCD estimation:', qcdEstimate
-    print 'Systematic uncertainty for this b-jet bin:', systematicEstimationError
+def makeQCDErrorPlot(files, hists):
+    errors = QCDEstimation.getShapeErrorHistogram('topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_0orMoreBtag', files)
+#    systematicEstimationError = QCDEstimation.doClosureTestFor(files, 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag')
+#    qcdEstimate = QCDEstimation.estimateQCDFor('', files['data'], 'QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_1btag')
+#    print 'QCD estimation:', qcdEstimate
+#    print 'Systematic uncertainty for this b-jet bin:', systematicEstimationError
     gStyle.SetErrorX(0.5);
-  
+    
     if errors:
         errors.GetXaxis().SetRangeUser(250, 3000)
         
@@ -207,8 +212,77 @@ def makeQCDErrorPlot(files):
         errors.SetFillStyle(3013);
         errors.DrawCopy('E2')
         saveAs(c, 'shape_errors_0orMoreBtag' , outputFormats)
+        
+        controlHist = hists['data']['topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_0orMoreBtag']
+        nTotalControl = controlHist.Integral()
+        shapeError = 0
+        errorlist = []
+        binlist = []
+        for bin in range(1, errors.GetNbinsX()):
+            err = fabs(errors.GetBinContent(bin) + errors.GetBinError(bin))
+            errorlist.append(err)
+            binValue = errors.GetBinCenter(bin) - errors.GetBinWidth(bin)/2
+            binlist.append(binValue)
+            controlEntries = controlHist.GetBinContent(bin)
+            
+            shapeError += (err*controlEntries/nTotalControl)**2
+#            if binValue >= 200 and binValue <= 2000:
+#                print 'relative error:', err
+#                print 'bin start:', binValue
+        print 'Total shape error: ', sqrt(shapeError)
+        print binlist
+        print errorlist
     gStyle.SetErrorX(0.);
+    
+def compareShapesTwoData(dataOld, dataNew):
+    hists = ['topReconstruction/mttbar_withMETAndAsymJets',
+             'topReconstruction/mttbar_3jets_withMETAndAsymJets',
+             ]
+    histsOld = HistGetter.getHistsFromFiles(hists, {'data': dataOld}, bJetBins=HistPlotter.allBjetBins)
+    histsNew = HistGetter.getHistsFromFiles(hists, {'data': dataNew}, bJetBins=HistPlotter.allBjetBins)
+    
+    
+    leg = TLegend(0.696, 0.35, 0.94, 0.92);
+    leg.SetBorderSize(0);
+    leg.SetLineStyle(0);
+    leg.SetTextFont(42);
+    leg.SetFillStyle(0);
 
+    AddLegendEntry = leg.AddEntry 
+    alreadyAdded = False
+    
+    for bin in HistPlotter.allBjetBins:
+        for hist in hists:
+            current = hist + '_' + bin
+            currentOld = histsOld['data'][current]
+            currentNew = histsNew['data'][current]
+            currentOld.Rebin(50)
+            currentNew.Rebin(50)
+            if currentOld.Integral() > 0:
+                currentOld.Scale(1000/currentOld.Integral())
+            if currentNew.Integral():
+                currentNew.Scale(1000/currentNew.Integral())
+            
+            c = TCanvas("cname3", 'cname3', 1200, 900)
+            c.SetLogy(1)
+            currentOld.SetFillColor(2)
+            currentOld.SetFillStyle(3004)
+        
+            currentNew.SetFillColor(4)
+            currentNew.SetFillStyle(3005)
+    
+            currentOld.GetXaxis().SetRangeUser(250, 3000);
+            currentOld.Draw('hist')
+            currentNew.Draw('hist same')
+    
+            if not alreadyAdded:
+                AddLegendEntry(currentOld, "old JEC", "f");
+                AddLegendEntry(currentNew, "new JEC", "f");
+            alreadyAdded = True
+        
+            leg.Draw()
+            saveAs(c, current + '_shape_comparison' , outputFormats)
+            del c
         
 if __name__ == '__main__':
     gROOT.SetBatch(True)
@@ -218,9 +292,12 @@ if __name__ == '__main__':
 
     histsNames = [
                   'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets',
+                  'topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets',
                   'topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets',
+                  'topReconstruction/backgroundShape/mttbar_3jets_antiIsolated_withMETAndAsymJets',
                   'topReconstruction/backgroundShape/mttbar_controlRegion_withMETAndAsymJets',
-                  'topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets'
+                  'topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets',
+                  'topReconstruction/backgroundShape/mttbar_3jets_antiID_withMETAndAsymJets'
 #                  "QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts",
                   ]
 
@@ -228,31 +305,40 @@ if __name__ == '__main__':
     HistPlotter.setStyle()
     hists = HistGetter.getHistsFromFiles(histsNames, files, bJetBins=HistPlotter.allBjetBins)
 #    hists = HistGetter.getHistsFromFiles(triggerPlots, files)
-#    hists = HistGetter.addSampleSum( hists )
+    hists = HistGetter.addSampleSum( hists )
     
-#    hists = applyDefaultStylesAndColors( hists )
+    hists = HistPlotter.applyDefaultStylesAndColors( hists )
     
     hists = HistPlotter.rebin(hists, 50, 'mttbar*')
     hists = HistPlotter.setXRange(hists, (300, 1800), 'mttbar*')
-#    
+##    
     hists = HistPlotter.setXTitle(hists, 'm(t#bar{t})/GeV', 'mttbar*')
     hists = HistPlotter.setYTitle(hists, 'Events/(50 GeV)', 'mttbar*')
     
-#    hists = HistGetter.makeMCStack( hists )
-#    hists = makeDetailedMCStack( hists )
+    hists = HistGetter.makeMCStack( hists )
+    hists = HistGetter.makeDetailedMCStack( hists )
     
 #    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
-    makeQCDErrorPlot(files)
+    compareShapesTwoData(
+                         '/storage/results/histogramFiles/PAS3/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root',
+                         '/storage/results/histogramFiles/CiCElectron ID/data_1611.95pb_PFElectron_PF2PATJets_PFMET.root'
+                         )
+#    makeQCDErrorPlot(files, hists)
 #    plotHLTStudy(hists['data'], rebin = 2)
 #    plotHLTStudy(hists['data2'], 'Calo', rebin = 2)
     
 #    
 #    c = TCanvas("cname4", 'cname4', 1200, 900)
-#    histname = 'mttbar_antiIsolated_withMETAndAsymJets_allBtags'
+#    histname = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_0orMoreBtag'
 #    hist = hists['allMCDetailed'][histname]
 #    hists['enri1'][histname].GetYaxis().SetRangeUser(0, hist.GetMaximum()*1.4);
 #    hists['enri1'][histname].Draw('hist')
 #    hist.Draw('hist same')
+#    
+#    entries = hists['enri3'][histname].GetEntries()
+#    events = hists['enri3'][histname].Integral()
+#    print entries, events, events/entries
+#    print QCDEstimation.getIntegral(hists['enri3'][histname], (350, 400))
 #    
 #    leg = TLegend(0.696, 0.35, 0.94, 0.92);
 #    leg.SetBorderSize(0);
@@ -270,7 +356,8 @@ if __name__ == '__main__':
 #    leg.AddEntry(hists['pj2'][histname], "QCD #gamma + jets  100to200", "f");
 #    leg.AddEntry(hists['pj3'][histname], "QCD #gamma + jets  200toINF", "f");
 #    leg.Draw()
+#    c.RedrawAxis()
 #    
-#    c.SaveAs('detailed_MC_NonIsoElectrons.png')
+#    c.SaveAs('detailed_MC_conversions.png')
     
     

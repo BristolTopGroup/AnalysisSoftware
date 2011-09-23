@@ -20,7 +20,7 @@ fitRangesClosureTest = [ (0.1, 0.9), (0.1, 1.0), (0.1, 1.1),
                   (0.2, 0.9), (0.2, 1.0), (0.2, 1.1),
                   (0.3, 0.9), (0.3, 1.0), (0.3, 1.1)]
 
-rebinRelIso = 1
+rebinRelIso = 10
 
 
 def doFit(histogram, function, fitRange):#, constrainFit = False):
@@ -70,47 +70,52 @@ def estimateQCDFrom(histogramForEstimation, function='expo',
     if not mean == 0:
         return (mean, sqrt(relFitError + (error / mean) ** 2) * mean)
     else:
-        return (0,0) 
+        return (0, 0) 
  
-def getQCDEstimateFor(histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0orMoreBtag', function='expo', 
-                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):
-    estimate, absoluteError = estimateQCDFrom(histogramForEstimation, function, fitRanges = [fitRange])
+def getQCDEstimateFor(histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0orMoreBtag', function='expo',
+                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):
+    estimate, absoluteError = estimateQCDFrom(histogramForEstimation, function, fitRanges=[fitRange])
     
     relativeError = 0
     if not estimate == 0:
-        relativeError = absoluteError/estimate
-    relativeErrorSquared = relativeError**2
+        relativeError = absoluteError / estimate
+    relativeErrorSquared = relativeError ** 2
     
     systematicErrorFromOtherFitRanges = 0
     for currentRange in additionFitRanges:
         est, err = estimateQCDFrom(histogramForEstimation, function, fitRanges=[currentRange])
         deviation = est - estimate
         if not estimate == 0:
-            relativeErrorSquared += (deviation/estimate)**2
+            relativeErrorSquared += (deviation / estimate) ** 2
             
     statisticalErrorSquared = 0
     if not estimate == 0:
-        statisticalErrorSquared = 1/estimate
+        statisticalErrorSquared = 1 / estimate
     relativeErrorSquared += statisticalErrorSquared
     
     relativeError = sqrt(relativeErrorSquared)
-    absoluteError = relativeError*estimate
+    absoluteError = relativeError * estimate
     
     return estimate, absoluteError
 
-def getQCDEstimate(datafile, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', bjetBin = '', function='expo', 
-                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):  
+def getQCDEstimate(datafile, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', bjetBin='', function='expo',
+                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]): 
+    bias = 0.45
+    reductionFromBias = 1 - bias 
     if bjetBin:
         histogramForEstimation = histogramForEstimation + '_' + bjetBin
     files = {'data': datafile}
     hists = [histogramForEstimation]
     hists = getHistsFromFiles(hists, files)
     histogramForEstimation = hists['data'][histogramForEstimation]  
-    estimate, absoluteError = getQCDEstimateFor(histogramForEstimation, function, fitRange = fitRange, additionFitRanges = additionFitRanges)
+    estimate, absoluteError = getQCDEstimateFor(histogramForEstimation, function, fitRange=fitRange, additionFitRanges=additionFitRanges)
+    estimate = estimate * reductionFromBias
+    absoluteError = absoluteError * reductionFromBias
+    absoluteError = sqrt(absoluteError ** 2 + (estimate * bias) ** 2)
     return estimate, absoluteError
 
     
-def getIntegral(histogram, integralRange = (0, 0.1)):
+def getIntegral(histogram, integralRange=(0, 0.1)):
     firstBin = histogram.GetXaxis().FindBin(integralRange[0])
     lastBin = histogram.GetXaxis().FindBin(integralRange[1])
     
@@ -121,8 +126,8 @@ def getIntegral(histogram, integralRange = (0, 0.1)):
     return integral, absoluteError
     
     
-def getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', bjetBin = '', function='expo', 
-                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):  
+def getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', bjetBin='', function='expo',
+                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):  
     if bjetBin:
         histogramForEstimation = histogramForEstimation + '_' + bjetBin
         
@@ -134,14 +139,14 @@ def getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithM
     histogramForEstimation = hists['allMC'][histogramForEstimation]  
     
     
-    estimate, absoluteError = getQCDEstimateFor(histogramForEstimation, function, fitRange = fitRange, additionFitRanges = additionFitRanges)
+    estimate, absoluteError = getQCDEstimateFor(histogramForEstimation, function, fitRange=fitRange, additionFitRanges=additionFitRanges)
     
     qcdInSignalRegion, qcdError = getIntegral(histogramForComparison, (0, 0.1))
     
     N_est = ufloat((estimate, absoluteError))
     N_qcd = ufloat((qcdInSignalRegion, qcdError))
     
-    relativeDeviation = (N_est - N_qcd)/N_qcd
+    relativeDeviation = N_est/ N_qcd
     
     result = {}
     result['performance'] = (relativeDeviation.nominal_value, relativeDeviation.std_dev())
@@ -192,7 +197,7 @@ def getShapeErrorHistogram(histname, files):
 #def combineErrorsFromHistogramList():
 #    pass
 
-def createErrorHistogram(mcHistograms, qcdHistogram,  relativeQCDEstimationError, shapeErrorHistogram):
+def createErrorHistogram(mcHistograms, qcdHistogram, relativeQCDEstimationError, shapeErrorHistogram):
     errorHist = qcdHistogram.Clone("ErrorHist")
     
     for bin in range(1, errorHist.GetNbinsX()):
@@ -202,16 +207,16 @@ def createErrorHistogram(mcHistograms, qcdHistogram,  relativeQCDEstimationError
             nMC += hist.GetBinContent(bin)
         err = relativeQCDEstimationError
         if shapeErrorHistogram:
-            shapeErr= shapeErrorHistogram.GetBinContent(bin)
+            shapeErr = shapeErrorHistogram.GetBinContent(bin)
             shapeErrStat = shapeErrorHistogram.GetBinError(bin)
             shapeErr = fabs(shapeErr) + shapeErrStat
-            err = sqrt(err*err + shapeErr*shapeErr)
+            err = sqrt(err * err + shapeErr * shapeErr)
         errorHist.SetBinContent(bin, nMC)
-        errorHist.SetBinError(bin, err*nQCD)
+        errorHist.SetBinError(bin, err * nQCD)
     return errorHist
 
 
-def compareFitFunctions(datafile, histogramForEstimation, functions, fitRange = (0.3, 1.6)):   
+def compareFitFunctions(datafile, histogramForEstimation, functions, fitRange=(0.3, 1.6)):   
     files = {'data': datafile}
     hists = [histogramForEstimation]
     hists = getHistsFromFiles(hists, files)
@@ -238,8 +243,8 @@ def doComparisonFitFunctions(files):
         averageNDOF[function] = 0
         
     for fitRange in fitRanges:
-        result = compareFitFunctions(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', functions=functions, 
-                   fitRange = fitRange)
+        result = compareFitFunctions(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', functions=functions,
+                   fitRange=fitRange)
     
         print '| * 3jets, 1 btag* | *fit range (%.1f, %1.f)*|||' % fitRange
         print '| *fit function* | *Chi^2* | *NDoF* | *Chi^2/NDoF* |'
@@ -248,11 +253,11 @@ def doComparisonFitFunctions(files):
             ndof = values['NDOF']
             averageChi2[function] += chi2
             averageNDOF[function] += ndof
-            print '| %s | %.3f | %d | %.3f |' % (function, chi2, ndof, chi2/ndof)
+            print '| %s | %.3f | %d | %.3f |' % (function, chi2, ndof, chi2 / ndof)
         
         for btag in btags:
-            result = compareFitFunctions(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, functions=functions, 
-                   fitRange = fitRange)
+            result = compareFitFunctions(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, functions=functions,
+                   fitRange=fitRange)
             print '| * 4jets, %s* | *fit range (%.1f, %1.f)*|||' % (btag, fitRange[0], fitRange[1])
             print '| *fit function* | *Chi^2* | *NDoF* | *Chi^2/NDoF* |'
             for function, values in result.iteritems():
@@ -260,45 +265,56 @@ def doComparisonFitFunctions(files):
                 ndof = values['NDOF']
                 averageChi2[function] += chi2
                 averageNDOF[function] += ndof
-                print '| %s | %.3f | %d | %.3f |' % (function, chi2, ndof, chi2/ndof)
+                print '| %s | %.3f | %d | %.3f |' % (function, chi2, ndof, chi2 / ndof)
             
     print '| *average over all regions and fit ranges* ||||'
     print '| *fit function* | *Chi^2* | *NDoF* | *Chi^2/NDoF* |'
-    N_measurements = len(fitRanges)*(len(btags) + 1)
+    N_measurements = len(fitRanges) * (len(btags) + 1)
     for function, values in result.iteritems():
-            chi2 = averageChi2[function]/N_measurements
-            ndof = averageNDOF[function]/N_measurements
-            print '| %s | %.3f | %d | %.3f |' % (function, chi2, ndof, chi2/ndof)
+            chi2 = averageChi2[function] / N_measurements
+            ndof = averageNDOF[function] / N_measurements
+            print '| %s | %.3f | %d | %.3f |' % (function, chi2, ndof, chi2 / ndof)
             
     
     
 def doEstimation(files, function):
     print 'QCD estimation in relative isolation using', function, 'function'
-    est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function, 
-                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
-    print 'Final QCD estimate (==3jet, %s): %.1f +- %.1f' % ('1 b-tag', est, err)
+    est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function,
+                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+    print '| *region* | *N_{QCD, exp}* | *N_{est}* | *scale factor* |'
+    print '| 3j1t | --- |  %.1f +- %.1f | --- |' % (est, err)
+#    print 'Final QCD estimate (==3jet, %s): %.1f +- %.1f' % ('1 b-tag', est, err)
     
-    for btag in ['0btag', '1btag', '2btags', '2orMoreBtags']:
-        est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function, 
-                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
-        print 'Final QCD estimate (>=4jet, %s): %.1f +- %.1f' % (btag, est, err)
+    for btag in ['0btag', '1btag', '2orMoreBtags']:
+        tag = 0
+        if '0' in btag:
+            tag= 0
+        elif '1' in btag:
+            tag = 1
+        elif '2' in btag:
+            tag = 2
+        
+        est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function,
+                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+#        print 'Final QCD estimate (>=4jet, %s): %.1f +- %.1f' % (btag, est, err)
+        print '| 4j%dt | --- |  %.1f +- %.1f | --- |' % (tag, est, err)
         
 def doMCPerformance(files, function):
     print 'Performance on MC using', function, 'function'
-    result = getPerformanceOnMC(files, histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function, 
-                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+    result = getPerformanceOnMC(files, histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function,
+                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
     est, err = result['estimate']
     N_qcd, N_qcd_error = result['qcdInSignalRegion']
     performance, performanceError = result['performance']
-    print '| *region* | *N_{QCD, true}* | *N_{est}* | *(N_{est} - N_{QCD, true})/N_{QCD, true}'
-    print '| (==3jet, %s) |  %.1f +- %.1f |  %.1f +- %.1f |  %.3f +- %.3f |' % ('1 b-tag',  N_qcd, N_qcd_error, est, err, performance, performanceError)
-    for btag in ['0btag', '1btag', '2btags', '2orMoreBtags']:
-        result = getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function, 
-                   fitRange = (0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+    print '| *region* | *N_{QCD, true}* | *N_{est}* | *(N_{est} - N_{QCD, true})/N_{QCD, true}* |'
+    print '| (==3jet, %s) |  %.1f +- %.1f |  %.1f +- %.1f |  %.3f +- %.3f |' % ('1 b-tag', N_qcd, N_qcd_error, est, err, performance, performanceError)
+    for btag in ['0btag', '1btag', '2orMoreBtags']:
+        result = getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function,
+                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
         est, err = result['estimate']
         N_qcd, N_qcd_error = result['qcdInSignalRegion']
         performance, performanceError = result['performance']
-        print '| (>=4jet, %s) |  %.1f +- %.1f |  %.1f +- %.1f |  %.3f +- %.3f |' % (btag,  N_qcd, N_qcd_error, est, err, performance, performanceError)
+        print '| (>=4jet, %s) |  %.1f +- %.1f |  %.1f +- %.1f |  %.3f +- %.3f |' % (btag, N_qcd, N_qcd_error, est, err, performance, performanceError)
         
 if __name__ == '__main__':
     gROOT.SetBatch(True)

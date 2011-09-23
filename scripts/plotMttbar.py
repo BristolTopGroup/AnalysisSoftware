@@ -2,7 +2,7 @@ from __future__ import division
 from numpy import arange
 from tdrStyle import *
 from ROOT import *
-from QCDEstimation import getQCDEstimate, estimateQCDFor
+#from QCDEstimation import getQCDEstimate#, estimateQCDFor
 import QCDEstimation
 
 import HistPlotter
@@ -13,6 +13,7 @@ from optparse import OptionParser
 canvases = []
 scanvases = []
 setLogY = False
+normalise = False
 
 def plotMttbar():
     saveAs = HistPlotter.saveAs
@@ -21,8 +22,9 @@ def plotMttbar():
 #    tdrstyle = setTDRStyle();
 #    gStyle.SetHatchesSpacing(1.0);
     HistPlotter.setStyle()
-    lumi = 1091.45
-    oldLumi = 1091.45
+    lumi = 1959.75#1611.95
+#    lumi = 1091.45
+    oldLumi = 1959.75
     scale = lumi / oldLumi;
     prefix = 'CiCID_'
     outputFormats = ['pdf', 'png']
@@ -39,9 +41,11 @@ def plotMttbar():
 #    hists.append('topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets')
 #    hists.append('topReconstruction/backgroundShape/mttbar_controlRegion_withMETAndAsymJets')
 #    hists.append('topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets')
+#    hists.append('topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets')
     
     
-    hists.append("topReconstruction/mttbar_withMETAndAsymJets");
+#    hists.append("topReconstruction/mttbar_withMETAndAsymJets");
+#    hists.append("topReconstruction/mttbar_3jets_withMETAndAsymJets");
 #    hists.append("topReconstruction/mttbar_2ndSolution_withMETAndAsymJets");
 #    hists.append("topReconstruction/mttbar_3rdSolution_withMETAndAsymJets");
 #    hists.append("topReconstruction/mttbar_allSolutions_withMETAndAsymJets");
@@ -73,7 +77,7 @@ def plotMttbar():
 #    hists.append("topReconstruction/m3_withMETAndAsymJets");
 #    hists.append("topReconstruction/HT_withMETAndAsymJets");
 #    hists.append("topReconstruction/MET");
-    hists.append("topReconstruction/MET_withMETAndAsymJets");
+#    hists.append("topReconstruction/MET_withMETAndAsymJets");
 #    hists.append("jetStudy/AllJetMass");
 #    hists.append("jetStudy/AllGoodJetMass");
 #    hists.append("jetStudy/GoodJetMass_atLeastOneJets");
@@ -84,6 +88,8 @@ def plotMttbar():
 #    hists.append("topReconstruction/neutrino_pz");
 #    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts")
 #    hists.append("QCDStudy/PFIsolation_controlRegion")
+    hists.append('pileupStudy/nVertex_withMETAndAsymJets')
+    hists.append('pileupStudy/nVertex_reweighted_withMETAndAsymJets')
 
     files = inputFiles.files
     hists = HistGetter.getHistsFromFiles(hists, files, bJetBins=HistPlotter.allBjetBins)
@@ -105,8 +111,8 @@ def plotMttbar():
     jetBinnedhists = HistGetter.getHistsFromFiles(jetBinnedhists, files, jetBins=HistPlotter.allJetBins)
     
     otherHists = []
-#    otherHists.append('pileupStudy/nVertex')
-#    otherHists.append('pileupStudy/nVertex_reweighted')
+    otherHists.append('pileupStudy/nVertex')
+    otherHists.append('pileupStudy/nVertex_reweighted')
     otherHists = HistGetter.getHistsFromFiles(otherHists, files)
     hists = HistGetter.joinHistogramDictionaries([hists, jetBinnedhists, otherHists])
     gcd = gROOT.cd
@@ -131,8 +137,12 @@ def plotMttbar():
         hist_pj1 = hists['pj1'][histname]
         hist_pj2 = hists['pj2'][histname]
         hist_pj3 = hists['pj3'][histname]
-        hist_singleTop = hists['tW'][histname]
-        hist_singleTop.Add(hists['tchan'][histname])
+        hist_singleTop = hists['T_TuneZ2_tW-channel'][histname]
+        hist_singleTop.Add(hists['T_TuneZ2_t-channel'][histname])
+        hist_singleTop.Add(hists['T_TuneZ2_s-channel'][histname])
+        hist_singleTop.Add(hists['Tbar_TuneZ2_tW-channel'][histname])
+        hist_singleTop.Add(hists['Tbar_TuneZ2_t-channel'][histname])
+        hist_singleTop.Add(hists['Tbar_TuneZ2_s-channel'][histname])
         
         hist_diboson = hists['ww'][histname]
         hist_diboson.Add(hists['wz'][histname])
@@ -175,6 +185,7 @@ def plotMttbar():
         nqcd = hist_qcd.Integral();
         mttbars = ['topReconstruction/mttbar_' + suffix for suffix in suffixes]
         mttbars2 = ['topReconstruction/mttbar_withMETAndAsymJets_' + suffix for suffix in suffixes]
+        mttbars3 = ['topReconstruction/mttbar_3jets_withMETAndAsymJets_' + suffix for suffix in suffixes]
         shapeErrorHist = None 
         relativeQCDEstimationError = 0
         if histname in mttbars or histname in mttbars2:
@@ -182,11 +193,17 @@ def plotMttbar():
             qcdHists = HistGetter.getHistsFromFiles([qcdFromData], {'data':files['data']})
             hist_qcd = qcdHists['data'][qcdFromData]
             shapeErrorHist = QCDEstimation.getShapeErrorHistogram(qcdFromData, files)
+            
+        if histname in mttbars3:
+            qcd3JetsFromData = 'topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets_0orMoreBtag'
+            qcdHists = HistGetter.getHistsFromFiles([qcd3JetsFromData], {'data':files['data']})
+            hist_qcd = qcdHists['data'][qcd3JetsFromData]
+        
                 
         if not 'background' in histname and not 'QCDStudy' in histname and 'withMETAndAsymJets' in histname:  
             currentBin = HistPlotter.getBjetBin(histname)
               
-            estimate, err = getQCDEstimate(files['data'], bjetBin=currentBin)
+            estimate, err = QCDEstimation.getQCDEstimate(files['data'], bjetBin=currentBin)
             if not estimate == 0:
                 relativeQCDEstimationError = err / estimate
                 
@@ -260,8 +277,8 @@ def plotMttbar():
             hist_data.SetYTitle("Events");
         elif ('MET_' in histname):
             hist_data.SetXTitle("MET/GeV");
-            hist_data.SetYTitle("Events/(20 GeV)");
-            rebin = 4;
+            hist_data.SetYTitle("Events/(5 GeV)");
+            rebin = 1;
             Urange = (0, 600)
         elif ("mtW" in histname):
             hist_data.SetXTitle("transverse W-boson mass/GeV");
@@ -297,8 +314,8 @@ def plotMttbar():
             Urange = (0, 2)
         elif('PFIsolation' in histname):
             hist_data.SetXTitle("Relative isolation");
-            hist_data.SetYTitle("Events/(0.1)");
-            rebin = 10
+            hist_data.SetYTitle("Events/(0.01)");
+            rebin = 1
             Urange = (0, 1.6)
         elif('diElectron' in histname):
             hist_data.SetXTitle("m(ee)");
@@ -310,6 +327,8 @@ def plotMttbar():
             hist_data.SetYTitle("Events/(5 GeV)");
             rebin = 5
             Urange = (0, 200)
+        elif 'nVertex' in histname:
+            Urange = (0, 21)
         
         hist_data.Rebin(rebin);
         hist_ttbar.Rebin(rebin);
@@ -382,6 +401,8 @@ def plotMttbar():
 #        leg.AddEntry(hist_Zprime1000, "Z' 1TeV (50pb)");
 #        leg.AddEntry(hist_Zprime1250, "Z' 1.25TeV (50pb)");
 #        leg.AddEntry(hist_Zprime4000, "Z' 4TeV (50pb)");
+        if normalise:
+            normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd, hist_diboson)
 
         
         canvases.append(TCanvas("cname" + histname, histname, 1200, 900))
@@ -431,18 +452,18 @@ def plotMttbar():
 #        hist_Zprime1000.Draw("same");
 #        hist_Zprime1250.Draw("same");
 #        hist_Zprime4000.Draw("same");
-        if errorHist:
+        if not 'background' in histname and not 'QCDStudy' in histname and 'withMETAndAsymJets' in histname and errorHist:
             gStyle.SetErrorX(0.5);
             errorHist.SetFillColor(kGray + 3)
             errorHist.SetMarkerStyle(0)
             errorHist.SetFillStyle(3001);
-            leg.AddEntry(errorHist, "QCD Error")
+            leg.AddEntry(errorHist, "QCD uncertainty")
             errorHist.Draw('E2 same')
             
         hist_data.Draw("error same");
         leg.Draw();
-        text1 = HistPlotter.get_cms_label(lumi, HistPlotter.getJetBin(histname),
-                                          HistPlotter.getBjetBin(histname))
+        text1 = HistPlotter.get_cms_label(lumiInInvPb = lumi, njet = HistPlotter.getJetBin(histname),
+                                          nbjet = HistPlotter.getBjetBin(histname))
         text1.Draw();
 #
         postfix = ''
@@ -532,6 +553,7 @@ def getCumulativePlot(initial, type):
     yaxis = initial.GetYaxis().GetTitle();
     nBins = initial.GetNbinsX();
     cu = TH1F(name, title, nBins, initial.GetXaxis().GetXmin(), initial.GetXaxis().GetXmax());
+#    cu.Sumw2()
     for bin in range(1, nBins + 1):
         cu.SetBinContent(bin, initial.Integral(bin, nBins));
     
@@ -592,7 +614,29 @@ def getBJetBin(histname):
     return '0orMoreBtag'
 
 
-
+def normalisePlotsToUnitArea(data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd, hist_diboson):
+    nData = data.Integral()
+    nTop = hist_ttbar.Integral()
+    nWJ = hist_wjets.Integral()
+    nZJ = hist_zjets.Integral()
+    nST = hist_singleTop.Integral()
+    nQCD= hist_qcd.Integral()
+    nDB = hist_diboson.Integral()
+    data.Sumw2()   
+    nMC = sum([nTop, nWJ, nZJ, nST, nQCD, nDB])
+    print 'nMC', nMC
+    if not nData == 0:
+        data.Scale(1/nData)
+    
+    
+    if not nMC == 0:
+        hist_ttbar.Scale(1/nMC)
+        hist_wjets.Scale(1/nMC)
+        hist_zjets.Scale(1/nMC)
+        hist_singleTop.Scale(1/nMC)
+        hist_qcd.Scale(1/nMC)
+        hist_diboson.Scale(1/nMC)
+    
 def rescaleMC(data, ttbar, wjets, qcd):
     #rescaling
     
