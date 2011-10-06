@@ -3,6 +3,8 @@
  *
  *  Created on: Jun 30, 2010
  *      Author: lkreczko
+ *
+ *      The nTuples in 2011 don't have the necessary information to calculate these things on the fly
  */
 
 #include "../../interface/Taggers/ConversionTagger.h"
