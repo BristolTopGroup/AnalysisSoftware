@@ -15,12 +15,17 @@
 #include <math.h>
 #include "../interface/Printers/EventTablePrinter.h"
 #include "../interface/RecontructionModules/ChiSquaredBasedTopPairReconstruction.h"
+#include "../interface/LumiReWeighting.h"
 
+using namespace reweight;
 using namespace BAT;
 using namespace std;
 float Analysis::luminosity = 882.;
 
 void Analysis::analyze() {
+	PoissonMeanShifter PShiftUp = PoissonMeanShifter(0.6); // PU-systematic
+	PoissonMeanShifter PShiftDown = PoissonMeanShifter(-0.6); // PU-systematic
+
     createHistograms();
     cout << "detected samples:" << endl;
     for (unsigned int sample = 0; sample < DataType::NUMBER_OF_DATA_TYPES; ++sample) {
@@ -44,6 +49,9 @@ void Analysis::analyze() {
         doJetAnalysis();
         if (currentEvent.getDataType() == DataType::ttbar)
         	MonteCarloAnalyser->analyse(ttbarCandidate);
+        if (ttbarCandidate.passesFullTTbarEPlusJetSelection()){
+        	hitfitAnalyser->analyse(ttbarCandidate);
+        }
 
 //        if(currentEvent.getDataType() == DataType::DATA)
 //            eventCheck[currentEvent.runnumber()].push_back(currentEvent.eventnumber());
@@ -1084,6 +1092,7 @@ void Analysis::createHistograms() {
     electronAnalyser->createHistograms();
     mttbarAnalyser->createHistograms();
     MonteCarloAnalyser->createHistograms();
+    hitfitAnalyser->createHistograms();
 }
 
 Analysis::Analysis(std::string fileForPileUpReweighting) :
@@ -1106,7 +1115,8 @@ Analysis::Analysis(std::string fileForPileUpReweighting) :
     hltriggerAnalyser(new HLTriggerAnalyser(histMan)),
     electronAnalyser(new ElectronAnalyser(histMan)),
     mttbarAnalyser(new MTtbarAnalyser(histMan)),
-    MonteCarloAnalyser(new MCAnalyser(histMan)){
+    MonteCarloAnalyser(new MCAnalyser(histMan)),
+    hitfitAnalyser(new HitFitAnalyser(histMan)){
     for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
         cutflow[cut] = 0;
         singleCuts[cut] = 0;

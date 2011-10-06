@@ -30,6 +30,7 @@
 #include "../interface/Analysers/ElectronAnalyser.h"
 #include "../interface/Analysers/MTtbarAnalyser.h"
 #include "../interface/Analysers/MCAnalyser.h"
+#include "../interface/Analysers/HitFitAnalyser.h"
 
 struct InterestingEvent {
     InterestingEvent(unsigned long run, unsigned long event, std::string file) :
@@ -76,6 +77,7 @@ private:
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
     boost::scoped_ptr<BAT::MCAnalyser> MonteCarloAnalyser;
+    boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
 
 public:
     static float luminosity;

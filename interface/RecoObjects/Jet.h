@@ -70,6 +70,7 @@ public:
     double NEF() const;
     double CHF() const;
     double NCH() const;
+    double btagSSVHE() const;
 
     void setUsedAlgorithm(JetAlgorithm::value algo);
     void setEMF(double emf);

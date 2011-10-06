@@ -19,6 +19,11 @@ namespace BAT {
 class TtbarHypothesis {
 public:
 	TtbarHypothesis();
+
+	TtbarHypothesis( const ElectronPointer& elec, const ParticlePointer& neut,
+		const JetPointer& lepBJet,   const JetPointer& hadBJet,
+		const JetPointer& hadWJet1,  const JetPointer& hadWJet2 );
+
 	virtual ~TtbarHypothesis();
 	double totalChi2, leptonicChi2, hadronicChi2, globalChi2, discriminator;
 	ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW, resonance, neutrinoFromW;
