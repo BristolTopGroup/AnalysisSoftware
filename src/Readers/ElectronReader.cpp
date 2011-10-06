@@ -29,13 +29,13 @@ ElectronReader::ElectronReader() :
     dPhiInReader(),
     dEtaInReader(),
     hadOverEmReader(),
-    sharedFractionInnerHits(),
-    trackIDReader(),
-    track_phi(),
-    track_eta(),
-    track_pt(),
-    track_theta(),
-    track_charge(),
+//    sharedFractionInnerHits(),
+//    trackIDReader(),
+//    track_phi(),
+//    track_eta(),
+//    track_pt(),
+//    track_theta(),
+//    track_charge(),
     vertex_dist_z(),
     dist(),
     dCotTheta(),
@@ -65,13 +65,13 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
     dPhiInReader(input, ElectronAlgorithm::prefixes.at(algo) + ".DeltaPhiTrkSC"),
     dEtaInReader(input, ElectronAlgorithm::prefixes.at(algo) + ".DeltaEtaTrkSC"),
     hadOverEmReader(input, ElectronAlgorithm::prefixes.at(algo) + ".HoE"),
-    sharedFractionInnerHits(input, ElectronAlgorithm::prefixes.at(algo) + ".shFracInnerHits"),
-    trackIDReader(input, ElectronAlgorithm::prefixes.at(algo) + ".closestCtfTrackRef"),
-    track_phi(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Phi"),
-    track_eta(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Eta"),
-    track_pt(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Pt"),
-    track_theta(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Theta"),
-    track_charge(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Charge"),
+//    sharedFractionInnerHits(input, ElectronAlgorithm::prefixes.at(algo) + ".shFracInnerHits"),
+//    trackIDReader(input, ElectronAlgorithm::prefixes.at(algo) + ".closestCtfTrackRef"),
+//    track_phi(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Phi"),
+//    track_eta(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Eta"),
+//    track_pt(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Pt"),
+//    track_theta(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Theta"),
+//    track_charge(input, ElectronAlgorithm::prefixes.at(algo) + ".GSFTrack.Charge"),
     vertex_dist_z(input, ElectronAlgorithm::prefixes.at(algo) + ".VtxDistZ"),
     dist(input, ElectronAlgorithm::prefixes.at(algo) + ".Dist"),
     dCotTheta(input, ElectronAlgorithm::prefixes.at(algo) + ".DCotTheta"),
@@ -117,27 +117,27 @@ void ElectronReader::readElectrons() {
         electron->setDistToNextTrack(dist.getVariableAt(index));
         electron->setDCotThetaToNextTrack(dCotTheta.getVariableAt(index));
 
-        electron->setSharedFractionInnerHits(sharedFractionInnerHits.getVariableAt(index));
-        electron->setClosestTrackID(trackIDReader.getIntVariableAt(index));
+//        electron->setSharedFractionInnerHits(sharedFractionInnerHits.getVariableAt(index));
+//        electron->setClosestTrackID(trackIDReader.getIntVariableAt(index));
         electron->setCompressedCiCElectronID(CiCElectronIDReader->getIntVariableAt(index));
-        double trackPhi = track_phi.getVariableAt(index);
-        double trackEta = track_eta.getVariableAt(index);
-        double trackPt = track_pt.getVariableAt(index);
-        double trackTheta = track_theta.getVariableAt(index);
-        double trackCharge = track_charge.getIntVariableAt(index);
-        TrackPointer track = TrackPointer(new Track(trackPhi, trackEta, trackPt, trackTheta));
-        track->setCharge(trackCharge);
-        if(algorithm == ElectronAlgorithm::Calo)
-            track->setD0(electron->d0_wrtBeamSpot());
-        else
-            track->setD0(electron->d0());
+//        double trackPhi = track_phi.getVariableAt(index);
+//        double trackEta = track_eta.getVariableAt(index);
+//        double trackPt = track_pt.getVariableAt(index);
+//        double trackTheta = track_theta.getVariableAt(index);
+//        double trackCharge = track_charge.getIntVariableAt(index);
+//        TrackPointer track = TrackPointer(new Track(trackPhi, trackEta, trackPt, trackTheta));
+//        track->setCharge(trackCharge);
+//        if(algorithm == ElectronAlgorithm::Calo)
+//            track->setD0(electron->d0_wrtBeamSpot());
+//        else
+//            track->setD0(electron->d0());
 
         if(algorithm == ElectronAlgorithm::ParticleFlow){
             electron->setPFGammaIsolation(PFGammaIsolationReader.getVariableAt(index));
             electron->setPFChargedHadronIsolation(PFChargedHadronIsolationReader.getVariableAt(index));
             electron->setPFNeutralHadronIsolation(PFNeutralHadronIsolationReader.getVariableAt(index));
         }
-        electron->setGSFTrack(track);
+//        electron->setGSFTrack(track);
         electrons.push_back(electron);
     }
 }
@@ -164,13 +164,13 @@ void ElectronReader::initialise() {
     dEtaInReader.initialise();
     hadOverEmReader.initialise();
 
-    sharedFractionInnerHits.initialise();
-    trackIDReader.initialise();
-    track_phi.initialise();
-    track_eta.initialise();
-    track_pt.initialise();
-    track_theta.initialise();
-    track_charge.initialise();
+//    sharedFractionInnerHits.initialise();
+//    trackIDReader.initialise();
+//    track_phi.initialise();
+//    track_eta.initialise();
+//    track_pt.initialise();
+//    track_theta.initialise();
+//    track_charge.initialise();
     vertex_dist_z.initialise();
     dist.initialise();
     dCotTheta.initialise();

@@ -43,13 +43,13 @@ private:
 	VariableReader<MultiDoublePointer> dEtaInReader;
 	VariableReader<MultiDoublePointer> hadOverEmReader;
 
-	VariableReader<MultiDoublePointer> sharedFractionInnerHits;
-	VariableReader<MultiIntPointer> trackIDReader;
-	VariableReader<MultiDoublePointer> track_phi;
-	VariableReader<MultiDoublePointer> track_eta;
-	VariableReader<MultiDoublePointer> track_pt;
-	VariableReader<MultiDoublePointer> track_theta;
-	VariableReader<MultiIntPointer> track_charge;
+//	VariableReader<MultiDoublePointer> sharedFractionInnerHits;
+//	VariableReader<MultiIntPointer> trackIDReader;
+//	VariableReader<MultiDoublePointer> track_phi;
+//	VariableReader<MultiDoublePointer> track_eta;
+//	VariableReader<MultiDoublePointer> track_pt;
+//	VariableReader<MultiDoublePointer> track_theta;
+//	VariableReader<MultiIntPointer> track_charge;
 
 	VariableReader<MultiDoublePointer> vertex_dist_z;
 	VariableReader<MultiDoublePointer> dist;
