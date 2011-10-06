@@ -23,7 +23,7 @@ bool NTupleEventReader::loadTracks = false;
 
 NTupleEventReader::NTupleEventReader() :
     processedEvents(0),
-    maximalNumberOfEvents(999999999),
+    maximalNumberOfEvents(999999999999),
     currentEventEntry(0),
     numberOfFiles(0),
     input(new TChain(NTupleEventReader::EVENT_CHAIN)),
