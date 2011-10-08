@@ -67,13 +67,22 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 			analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet1, prescale);
 
-			if (ttbarEvent.runnumber() > 165970) {
+			if (ttbarEvent.runnumber() > 165970 && ttbarEvent.isRealData()) {
 				histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30";
 				passesPreTrigger = true;//no pre-trigger other than the EWK triggers
 				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 				analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet1, prescale);
-
+			}
+			else if(!ttbarEvent.isRealData()){
+				//emulate for MC
+				histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30";
+				passesPreTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+						* ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+				analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet1, prescale);
 			}
 		}
 		if (cleanedJets.size() > 1) {
@@ -90,12 +99,25 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 			analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet2, prescale);
 
-			if (ttbarEvent.runnumber() > 165970) {
+			if (ttbarEvent.runnumber() > 165970 && ttbarEvent.isRealData()) {
 				histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30";
 				passesPreTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
 				prescale
 						= ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+				analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet2, prescale);
+			}
+			else if (!ttbarEvent.isRealData()) {
+				//emulate for MC
+				histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30";
+				passesPreTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+
+				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+						* ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 				analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet2, prescale);
 			}
 		}
@@ -116,13 +138,26 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 			analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet3, prescale);
 
-			if (ttbarEvent.runnumber() > 165970) {
+			if (ttbarEvent.runnumber() > 165970 && ttbarEvent.isRealData()) {
 				histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30";
 				passesPreTrigger
 						= ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
 				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 				prescale = ttbarEvent.HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+				analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet3, prescale);
+			}
+			else if (!ttbarEvent.isRealData()) {
+				//emulate for MC
+				histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30";
+				passesPreTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+
+				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+						* ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 				analyseTrigger(passesPreTrigger, passesTrigger, histFolder, jet3, prescale);
 			}
 		}
