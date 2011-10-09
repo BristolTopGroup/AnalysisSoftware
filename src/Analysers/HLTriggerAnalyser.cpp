@@ -10,7 +10,8 @@
 namespace BAT {
 
 HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-	BasicAnalyser(histMan) {
+	BasicAnalyser(histMan),
+	weight(1.) {
 }
 
 HLTriggerAnalyser::~HLTriggerAnalyser() {
@@ -30,6 +31,7 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	 */
 
 	bool isData(ttbarEvent.isRealData());
+	weight = ttbarEvent.weight();
 
 	ElectronCollection electrons = ttbarEvent.Electrons();
 	ElectronCollection goodElectrons;
@@ -386,14 +388,14 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		if (passesPreCondition) {
 			histMan->setCurrentCollection(histFolder);
 
-			histMan->H1D_JetBinned("jet_pt_visited")->Fill(jet->pt());
-			histMan->H1D_JetBinned("jet_eta_visited")->Fill(jet->eta());
-			histMan->H1D_JetBinned("jet_phi_visited")->Fill(jet->phi());
+			histMan->H1D_JetBinned("jet_pt_visited")->Fill(jet->pt(), weight);
+			histMan->H1D_JetBinned("jet_eta_visited")->Fill(jet->eta(), weight);
+			histMan->H1D_JetBinned("jet_phi_visited")->Fill(jet->phi(), weight);
 
 			if (passesTrigger) {
-				histMan->H1D_JetBinned("jet_pt_fired")->Fill(jet->pt(), prescale);
-				histMan->H1D_JetBinned("jet_eta_fired")->Fill(jet->eta(), prescale);
-				histMan->H1D_JetBinned("jet_phi_fired")->Fill(jet->phi(), prescale);
+				histMan->H1D_JetBinned("jet_pt_fired")->Fill(jet->pt(), prescale*weight);
+				histMan->H1D_JetBinned("jet_eta_fired")->Fill(jet->eta(), prescale*weight);
+				histMan->H1D_JetBinned("jet_phi_fired")->Fill(jet->phi(), prescale*weight);
 			}
 		}
 

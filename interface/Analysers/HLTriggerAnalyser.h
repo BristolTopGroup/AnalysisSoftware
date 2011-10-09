@@ -16,8 +16,9 @@
 namespace BAT {
 class HLTriggerAnalyser : public BasicAnalyser {
 private:
-	void analyseTrigger(bool passesPreTrigger, bool passesTrigger, std::string histFolder, const JetPointer jet,
+	void analyseTrigger(bool passesPreCondition, bool passesTrigger, std::string histFolder, const JetPointer jet,
 			int prescale);
+	double weight;
 
 public:
 	HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan);
