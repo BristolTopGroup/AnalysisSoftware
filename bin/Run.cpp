@@ -18,15 +18,14 @@ using namespace ROOT;
 using namespace std;
 using namespace BAT;
 using namespace boost::program_options;
-namespace po = boost::program_options;
 
 void setUpOnce();
-po::variables_map getInputVariables(int argc, char **argv);
+variables_map getInputVariables(int argc, char **argv);
 
 int main(int argc, char **argv) {
 	unsigned long maxEvents(0);
 
-	po::variables_map inputVariables = getInputVariables(argc, argv);
+	variables_map inputVariables = getInputVariables(argc, argv);
 
 	setUpOnce();
 	TStopwatch watch;
@@ -50,18 +49,21 @@ int main(int argc, char **argv) {
 	if (inputVariables.count("maxEvents")) {
 		maxEvents = inputVariables["maxEvents"].as<unsigned long>();
 	}
-	myAnalysis->setMaximalNumberOfEvents(maxEvents);
-	if (maxEvents > 0)
+
+	if (maxEvents > 0){
+		myAnalysis->setMaximalNumberOfEvents(maxEvents);
 		cout << "Maximal number of events to be processed: " << maxEvents << ".\n";
+	}
+	else
+		cout << "Maximal number of events to be processed: " << "all available" << ".\n";
 
 	if (inputVariables.count("fitter")) {
 		myAnalysis->useHitFit = inputVariables["fitter"].as<bool>();
-	} else myAnalysis->useHitFit = false;
+	}
 
 	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
 
 	//Test samples
-	//            myAnalysis->addInputFile("/storage/TopQuarkGroup/TTJet_nTuple_41x_mc.root");
 //	myAnalysis->addInputFile("/storage/TopQuarkGroup/mc/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/QCD_Pt-30to80_EMEnriched_nTuple_42x_mc_1_1_5x9.root");
 	//==========================DATA 2010========================================
 
@@ -72,21 +74,6 @@ int main(int argc, char **argv) {
 
 	//    myAnalysis->addInputFile("/storage/TopQuarkGroup/data/SingleElectron/nTuple_v1_Run2011-May10ReReco_GoldenJSON_v2/65f10056ea7ba245c10a9a8e7971901a/*.root");//204.21 pb-1
 	//    myAnalysis->addInputFile("/storage/TopQuarkGroup/data/SingleElectron/nTuple_v1_Run2011-PromptReco_GoldenJSON_exclRereco_v2/65f10056ea7ba245c10a9a8e7971901a/*.root");//60.09 pb-1
-
-	//========================== ElectronHad PD 2011 ========================================
-
-	//    myAnalysis->addInputFile(
-	//            "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-May10ReReco_GoldenJSON/db3f92ba514324d173b9a1664acdc31b/*.root");//203.815529928 pb-1
-	//    myAnalysis->addInputFile(
-	//            "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_exclRereco/db3f92ba514324d173b9a1664acdc31b/*.root");//294.450534905 pb-1
-	//    myAnalysis->addInputFile(
-	//            "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_10.06.11-17.06.11/c43a0fd1e74060a8f9608df5f5bafba0/*.root");//216.429549292 pb-1
-	//    myAnalysis->addInputFile(
-	//                "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_17.06.11-24.06.11/4ee1203e97f9a00957561f563636708a/*.root");//166 pb-1
-	//    myAnalysis->addInputFile(
-	//                    "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_24.06.11-01.07.11/4ee1203e97f9a00957561f563636708a/*.root");//94 pb-1
-	//    myAnalysis->addInputFile(
-	//                        "/storage/TopQuarkGroup/data/ElectronHad/nTuple_v2b_Run2011-PromptReco_GoldenJSON_01.07.11-06.07.11/4ee1203e97f9a00957561f563636708a/*.root");//115 pb-1
 
 	//========================== ElectronHad PD 2011 with latest JEC ========================================
 	myAnalysis->addInputFile(
@@ -114,23 +101,23 @@ int main(int argc, char **argv) {
 
 	    //BCToE
 	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v2_Summer11-PU_S3_START42_V11-v2/ad7cf59d8abe76df5690594944b778cc/*.root");
+	            "/storage/TopQuarkGroup/mc/QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v3_Summer11-PU_S3_START42_V11-v2/0b63e6090f671316354e220e2be2a651/*.root");
 	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v2_Summer11-PU_S4_START42_V11-v1/ad7cf59d8abe76df5690594944b778cc/*.root");
+	            "/storage/TopQuarkGroup/mc/QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v2_Summer11-PU_S4_START42_V11-v1/ad7cf59d8abe76df5690594944b778cc/*.root");
+	            "/storage/TopQuarkGroup/mc/QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 
 	    //EMEnriched
 	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v2_Summer11-PU_S4_START42_V11-v1/ad7cf59d8abe76df5690594944b778cc/*.root");
+	            "/storage/TopQuarkGroup/mc/QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 	    myAnalysis->addInputFile(
-	                "/storage/TopQuarkGroup/mc/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v2_Summer11-PU_S4_START42_V11-v1/7c548abbf04de779162e4a2cbdd09438/*.root");
+	                "/storage/TopQuarkGroup/mc/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v2_Summer11-PU_S4_START42_V11-v1/ad7cf59d8abe76df5690594944b778cc/*.root");
+	            "/storage/TopQuarkGroup/mc/QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 
 	// Photon + jets
-	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/GJets_TuneD6T_HT-100To200_7TeV-madgraph/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
+//	    myAnalysis->addInputFile(
+//	            "/storage/TopQuarkGroup/mc/GJets_TuneZ2_100_HT_200_7TeV-madgraph/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 
 	//SingleTop
 	    myAnalysis->addInputFile(
@@ -149,22 +136,22 @@ int main(int argc, char **argv) {
 				"/storage/TopQuarkGroup/mc/Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v3b_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 
 	//di-boson
+	myAnalysis->addInputFile(
+			"/storage/TopQuarkGroup/mc/WW_TuneZ2_7TeV_pythia6_tauola/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
+	myAnalysis->addInputFile(
+			"/storage/TopQuarkGroup/mc/WZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
+	myAnalysis->addInputFile(
+			"/storage/TopQuarkGroup/mc/ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v3_Summer11-PU_S4_START42_V11-v1/0b63e6090f671316354e220e2be2a651/*.root");
 
-	//////
-	//////    //==========================Spring11 samples========================================
-	//    //Di-Boson
-	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/WWtoAnything_TuneZ2_7TeV-pythia6-tauola/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
-	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/WZtoAnything_TuneZ2_7TeV-pythia6-tauola/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
-	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/ZZtoAnything_TuneZ2_7TeV-pythia6-tauola/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/35b1f92254c19716429c19a0cca8c117/*.root");
-	//    //Photon + jets
+	    //==========================Spring11 samples========================================
+	    //Photon + jets
 	    myAnalysis->addInputFile(
 	            "/storage/TopQuarkGroup/mc/GJets_TuneD6T_HT-40To100_7TeV-madgraph/nTuple_v3_Spring11-PU_S1_-START311_V1G1-v1/31d11c15b464cd479887c73ed35f2bf2/*.root");
 
 	    myAnalysis->addInputFile(
-	            "/storage/TopQuarkGroup/mc/GJets_TuneD6T_HT-200_7TeV-madgraph/nTuple_v2c_Spring11-PU_S1_-START311_V1G1-v1/6f7af515f09d5fa510155a389164eaef/*.root");
+	            "/storage/TopQuarkGroup/mc/GJets_TuneD6T_HT-200_7TeV-madgraph/nTuple_v3_Spring11-PU_S1_-START311_V1G1-v1/31d11c15b464cd479887c73ed35f2bf2/*.root");
+
+	//Systematic Samples
 
 	cout << "starting analysis" << endl;
 	myAnalysis->analyze();
@@ -185,19 +172,19 @@ void setUpOnce() {
 	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
 }
 
-po::variables_map getInputVariables(int argc, char **argv) {
+variables_map getInputVariables(int argc, char **argv) {
 	// Declare the supported options.
-	po::options_description desc("Allowed options");
-	desc.add_options()("help,h", "produce help message")("maxEvents", po::value<unsigned long>(),
+	options_description desc("Allowed options");
+	desc.add_options()("help,h", "produce help message")("maxEvents", value<unsigned long>()->default_value(0),
 			"set maximal number of events to be processed");
 
-	desc.add_options()("PUfile", po::value<std::string>(), "set input PU file for PU re-weighting");
+	desc.add_options()("PUfile", value<std::string>(), "set input PU file for PU re-weighting");
 
-	desc.add_options()("fitter", bool_switch(), "turn on the fitter (HitFit)");
+	desc.add_options()("fitter", bool_switch()->default_value(false), "turn on the fitter (HitFit)");
 
-	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-	po::notify(vm);
+	variables_map vm;
+	store(parse_command_line(argc, argv, desc), vm);
+	notify(vm);
 	if (vm.count("help")) {
 		cout << desc << "\n";
 		exit(0);
