@@ -17,6 +17,7 @@
 using namespace ROOT;
 using namespace std;
 using namespace BAT;
+using namespace boost::program_options;
 namespace po = boost::program_options;
 
 void setUpOnce();
@@ -52,6 +53,11 @@ int main(int argc, char **argv) {
 	myAnalysis->setMaximalNumberOfEvents(maxEvents);
 	if (maxEvents > 0)
 		cout << "Maximal number of events to be processed: " << maxEvents << ".\n";
+
+	if (inputVariables.count("fitter")) {
+		myAnalysis->useHitFit = inputVariables["fitter"].as<bool>();
+	} else myAnalysis->useHitFit = false;
+
 	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
 
 	//Test samples
@@ -186,6 +192,8 @@ po::variables_map getInputVariables(int argc, char **argv) {
 			"set maximal number of events to be processed");
 
 	desc.add_options()("PUfile", po::value<std::string>(), "set input PU file for PU re-weighting");
+
+	desc.add_options()("fitter", bool_switch(), "turn on the fitter (HitFit)");
 
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);

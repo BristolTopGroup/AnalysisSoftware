@@ -49,8 +49,11 @@ void Analysis::analyze() {
         doJetAnalysis();
         if (currentEvent.getDataType() == DataType::ttbar)
         	MonteCarloAnalyser->analyse(ttbarCandidate);
-        if (ttbarCandidate.passesFullTTbarEPlusJetSelection()){
-        	hitfitAnalyser->analyse(ttbarCandidate);
+
+        if (useHitFit) {
+            if (ttbarCandidate.passesFullTTbarEPlusJetSelection()){
+            	hitfitAnalyser->analyse(ttbarCandidate);
+            }
         }
 
 //        if(currentEvent.getDataType() == DataType::DATA)

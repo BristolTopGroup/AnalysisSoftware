@@ -88,6 +88,7 @@ public:
     void setMaximalNumberOfEvents(long maxEvents);
     void setUsedNeutrinoSelectionForTopPairReconstruction(BAT::NeutrinoSelectionCriterion::value selection);
     void setUsedTTbarReconstructionCriterion(BAT::TTbarReconstructionCriterion::value selection);
+    bool useHitFit;
     static void useJetAlgorithm(BAT::JetAlgorithm::value algo) {
         BAT::NTupleEventReader::jetAlgorithm = algo;
     }
