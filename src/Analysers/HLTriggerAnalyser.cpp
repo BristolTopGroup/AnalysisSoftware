@@ -10,7 +10,7 @@
 namespace BAT {
 
 HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-	BasicAnalyser(histMan), weight(1.) {
+		BasicAnalyser(histMan), weight(1.) {
 }
 
 HLTriggerAnalyser::~HLTriggerAnalyser() {
@@ -44,7 +44,7 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	}
 
 	if (!goodElectrons.size() > 0)
-		return;//need at least one good electron to continue
+		return; //need at least one good electron to continue
 
 	ElectronPointer mostIsolatedElectron = goodElectrons.front();
 
@@ -61,12 +61,15 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	JetCollection cleanedJets;
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if (!jets.at(index)->isWithinDeltaR(0.3, mostIsolatedElectron))
-			cleanedJets.push_back(jets.at(index));
+		const JetPointer jet = jets.at(index);
+		bool noElectronInVicinity = !jet->isWithinDeltaR(0.3, mostIsolatedElectron);
+		bool passesEta = fabs(jet->eta()) < 2.4;
+		if (noElectronInVicinity && passesEta)
+			cleanedJets.push_back(jet);
 	}
 
 	if (!cleanedJets.size() > 0)
-		return;//need at least one jet to continue
+		return; //need at least one jet to continue
 
 	//set jet binning for HLT analysis
 	histMan->setCurrentJetBin(cleanedJets.size());
@@ -75,47 +78,51 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	std::string histFolder("");
 	int prescale(1);
 
-	if (cleanedJets.size() > 0) {// exactly one jet
+	if (cleanedJets.size() > 0) { // exactly one jet
 		const JetPointer jet1(cleanedJets.front());
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30";
 		if (isData) {
 			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40) || ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20);
-		} else
+					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
+					|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20);
+		} else{
 			//no pre-trigger for MC as triggers here are not prescaled
 			passesPreCondition = true;
+		}
+
 		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 		prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
 
-		//isoEle + 1 jet
+		if(mostIsolatedElectron->relativeIsolation() < 0.1){
+			//isoEle + 1 jet
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30";
 
 		if (isData) {
-			passesPreCondition = ttbarEvent.runnumber() > 165970 && (ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT) || ttbarEvent.HLT(
-					HLTriggers::HLT_Ele25_WP80_PFMT40) || ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+				passesPreCondition = ttbarEvent.runnumber() > 165970
+						&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+								|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
+								|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+			} else {
+				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				//emulating trigger for MC
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				prescale = 1;
+			}
+			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
 		}
 
-		else {
-			passesPreCondition = true;
-			//emulating trigger for MC
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30) && ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-			prescale = 1;
-		}
-		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
 	}
 
 	if (cleanedJets.size() > 1) {
 		const JetPointer jet2(cleanedJets.at(1));
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30";
 		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30) || ttbarEvent.HLT(
-				HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
+				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 
 		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30))
 			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
@@ -125,33 +132,36 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet2, prescale);
 
-		//isoEle + 2 jets
-		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30";
+		if (mostIsolatedElectron->relativeIsolation() < 0.1) {
+			//isoEle + 2 jets
+			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30";
 
-		if (isData) {
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-		} else {
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30) && ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-			prescale = 1;
-			passesTrigger = (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30) || ttbarEvent.HLT(
-					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)) && ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+			if (isData) {
+				passesPreCondition = ttbarEvent.runnumber() > 165970 && ttbarEvent.HLT(
+						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+				prescale = ttbarEvent.HLTPrescale(
+						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+			} else {
+				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				prescale = 1;
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+			}
+			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet2, prescale);
 		}
-		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet2, prescale);
 	}
 
 	if (cleanedJets.size() > 2) {
 		const JetPointer jet3(cleanedJets.at(2));
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30";
 
-		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30) || ttbarEvent.HLT(
-				HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
+				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || ttbarEvent.HLT(
-				HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
+				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 
 		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30))
 			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
@@ -161,25 +171,26 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet3, prescale);
 
-		//isoEle + 3 jets
-		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30";
+		if (mostIsolatedElectron->relativeIsolation() < 0.1) {
+			//isoEle + 3 jets
+			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30";
 
-		if (isData) {
-			passesPreCondition = ttbarEvent.runnumber() > 165970 && ttbarEvent.HLT(
-					HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-		} else {
-			passesPreCondition = (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)) && ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-			prescale = 1;
-			//emulate trigger
-			passesTrigger = (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || ttbarEvent.HLT(
-					HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)) && ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+			if (isData) {
+				passesPreCondition = ttbarEvent.runnumber() > 165970
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+				prescale = ttbarEvent.HLTPrescale(
+						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+			} else {
+				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				prescale = 1;
+				//emulate trigger
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+			}
+			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet3, prescale);
 		}
-		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet3, prescale);
 	}
 
 	if (cleanedJets.size() > 3) {
@@ -193,30 +204,30 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30);
 		} else {
 			prescale = 1;
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 			//no emulation so far
 			passesTrigger = false;
 		}
-
-		//isoEle + 4 jets
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet4, prescale);
 
-		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30";
-		if (isData) {
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
-		} else {
-			prescale = 1;
-			passesPreCondition = (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)) && ttbarEvent.HLT(
-					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-			//no emulation so far
-			passesTrigger = false;
+		if (mostIsolatedElectron->relativeIsolation() < 0.1) {
+			//isoEle + 4 jets
+			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30";
+			if (isData) {
+				passesPreCondition = ttbarEvent.HLT(
+						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
+				prescale = ttbarEvent.HLTPrescale(
+						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
+			} else {
+				prescale = 1;
+				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				//no emulation so far
+				passesTrigger = false;
+			}
+			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet4, prescale);
 		}
-
-		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet4, prescale);
 	}
 	//restore normal jet binning
 	histMan->setCurrentJetBin(ttbarEvent.GoodJets().size());
@@ -282,10 +293,10 @@ void HLTriggerAnalyser::createHistograms() {
 	// ele tight ID + 4 jet
 	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet pt (visited)", 200, 0,
 			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (visited)", 80,
-			-4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (visited)", 80,
-			-4, 4);
+	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (visited)", 80, -4,
+			4);
+	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (visited)", 80, -4,
+			4);
 
 	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet pt (fired)", 200, 0, 200);
 	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (fired)", 80, -4, 4);
