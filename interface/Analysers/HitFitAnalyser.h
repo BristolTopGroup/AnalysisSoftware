@@ -28,11 +28,12 @@ private:
     BAT::TtbarHypothesis truthMatchEvent;
     BAT::JetCollection jetsForFitting;
 
-    std::string CMSSWBase_;
+    std::string FitterPath_;
     std::string hitfitDefault_;
     std::string hitfitElectronResolution_;
     std::string hitfitMuonResolution_;
-    std::string hitfitJetResolution_;
+    std::string hitfitUdscJetResolution_;
+    std::string hitfitBJetResolution_;
     std::string hitfitMETResolution_;
 
     double      hitfitLepWMass_;

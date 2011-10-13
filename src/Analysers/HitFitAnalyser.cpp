@@ -173,12 +173,13 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan) :
     BasicAnalyser(histMan),
     // The following five initializers read the config parameters for the
     // ASCII text files which contains the physics object resolutions.
-    CMSSWBase_               (""),
+    FitterPath_              (""),
     hitfitDefault_           ("TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"),
     hitfitElectronResolution_("TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"),
     hitfitMuonResolution_    ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafMuonResolution.txt"),
-    hitfitJetResolution_     ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafUdscJetResolution.txt"),
-    hitfitMETResolution_     ("TopQuarkAnalysis/TopHitFit/data/exampleMETResolution.txt"),
+    hitfitUdscJetResolution_ ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafUdscJetResolution.txt"),
+    hitfitBJetResolution_    ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafBJetResolution.txt"),
+    hitfitMETResolution_     ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafKtResolution.txt"),
     // The following three initializers read the config parameters for the
     // values to which the leptonic W, hadronic W, and top quark masses are to
     // be constrained to.
@@ -187,10 +188,10 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan) :
     hitfitTopMass_ ( 0.0),
     // The following three initializers instantiate the translator between PAT objects
     // and HitFit objects using the ASCII text files which contains the resolutions.
-    electronTranslator_(CMSSWBase_+hitfitElectronResolution_),
-    muonTranslator_    (CMSSWBase_+hitfitMuonResolution_),
-  	jetTranslator_     (CMSSWBase_+hitfitJetResolution_,CMSSWBase_+hitfitJetResolution_),
-   	metTranslator_     (CMSSWBase_+hitfitMETResolution_)
+    electronTranslator_(FitterPath_+hitfitElectronResolution_),
+    muonTranslator_    (FitterPath_+hitfitMuonResolution_),
+  	jetTranslator_     (FitterPath_+hitfitUdscJetResolution_,FitterPath_+hitfitBJetResolution_),
+   	metTranslator_     (FitterPath_+hitfitMETResolution_)
 
 	{
 

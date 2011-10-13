@@ -28,6 +28,9 @@ JetTranslatorBase<BAT::Jet>::JetTranslatorBase()
         std::string("TopQuarkAnalysis/PatHitFit/data/exampleJetResolution.txt");
     udscResolution_ = EtaDepResolution(resolution_filename);
     bResolution_    = EtaDepResolution(resolution_filename);
+    jetCorrectionLevel_ = "L7Parton";
+    jes_            = 1.0;
+    jesB_           = 1.0;
 
 } // JetTranslatorBase<BAT::Jet>::JetTranslatorBase()
 
@@ -57,9 +60,46 @@ JetTranslatorBase<BAT::Jet>::JetTranslatorBase(const std::string& udscFile,
 
     udscResolution_ = EtaDepResolution(udscResolution_filename);
     bResolution_    = EtaDepResolution(bResolution_filename);
+    jetCorrectionLevel_ = "L7Parton";
+    jes_            = 1.0;
+    jesB_           = 1.0;
 
 } // JetTranslatorBase<BAT::Jet>::JetTranslatorBase(const std::string& ifile)
 
+
+template<>
+JetTranslatorBase<BAT::Jet>::JetTranslatorBase(const std::string& udscFile,
+                                               const std::string& bFile,
+                                               const std::string& jetCorrectionLevel,
+                                               double jes,
+                                               double jesB)
+{
+
+//    std::string CMSSW_BASE(getenv("CMSSW_BASE"));
+    std::string udscResolution_filename;
+    std::string bResolution_filename;
+
+    if (udscFile.empty()) {
+        udscResolution_filename = //CMSSW_BASE +
+        std::string("TopQuarkAnalysis/TopHitFit/data/resolution/tqafUdscJetResolution.txt");
+    } else {
+        udscResolution_filename = udscFile;
+    }
+
+    if (bFile.empty()) {
+        bResolution_filename = //CMSSW_BASE +
+        std::string("TopQuarkAnalysis/TopHitFit/data/resolution/tqafBJetResolution.txt");
+    } else {
+        bResolution_filename = bFile;
+    }
+
+    udscResolution_ = EtaDepResolution(udscResolution_filename);
+    bResolution_    = EtaDepResolution(bResolution_filename);
+    jetCorrectionLevel_ = jetCorrectionLevel;
+    jes_            = jes;
+    jesB_           = jesB;
+
+} // JetTranslatorBase<pat::Jet>::JetTranslatorBase(const std::string& ifile)
 
 template<>
 JetTranslatorBase<BAT::Jet>::~JetTranslatorBase()
