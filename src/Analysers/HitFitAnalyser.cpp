@@ -72,7 +72,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     all_jets_pt = all_jets_pt+ jetsForFitting[i]->pt();
   }
 
-  histMan->H1D("AllJetsPt")->Fill(all_jets_pt);
+  histMan->H1D("AllJetsPt")->Fill(all_jets_pt, ttbarEvent.weight());
 
   // Add missing transverse energy into HitFit
   hhFitter.SetMet(*ttbarEvent.MET());
@@ -112,9 +112,9 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     hitfit::Fit_Result fitResult         = hitfitResult[fit];
 
     if (hitfitResult[fit].chisq()>0.0) {
-      histMan->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt());
-      histMan->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq());
-      histMan->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()));
+      histMan->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), ttbarEvent.weight());
+      histMan->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), ttbarEvent.weight());
+      histMan->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), ttbarEvent.weight());
       const hitfit::Column_Vector &px = fitResult.pullx();
       const hitfit::Column_Vector &py = fitResult.pully();
       double sumPx = 0.0;
@@ -141,9 +141,9 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
   //
 
   if (bestX2pos < nHitFit+1) {
-    histMan->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt());
-    histMan->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq());
-    histMan->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()));
+    histMan->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), ttbarEvent.weight());
+    histMan->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), ttbarEvent.weight());
+    histMan->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), ttbarEvent.weight());
 
     const hitfit::Column_Vector &px = hitfitResult[bestX2pos].pullx();
     const hitfit::Column_Vector &py = hitfitResult[bestX2pos].pully();
@@ -289,7 +289,7 @@ HitFitAnalyser::~HitFitAnalyser() {
 
 void HitFitAnalyser::createHistograms() {
     histMan->setCurrentCollection("hitfitStudy");
-    histMan->addH1D("AllJetsPt", "All jets Pt", 100, 0., 500.);
+    histMan->addH1D("AllJetsPt", "All jets Pt", 100, 0., 600.);
     histMan->addH1D("FittedTopMassAllSolutions", "Fitted top mass all solutions",   100,  0., 400.);
     histMan->addH1D("FitChiSquaredAllSolutions", "Fit chi-squared all solutions",   100,  0., 20.);
     histMan->addH1D("FitLogChiSqdAllSolutions",  "Fit log(chi-sqd) all solutions",  100, -5., 5.);
