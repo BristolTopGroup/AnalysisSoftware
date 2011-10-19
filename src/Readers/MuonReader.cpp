@@ -30,7 +30,7 @@ MuonReader::MuonReader(TChainPointer input, MuonAlgorithm::value algo) :
 	ecalIsolationReader(input, MuonAlgorithm::prefixes.at(algo) + ".EcalIso03"),
 	hcalIsolationReader(input, MuonAlgorithm::prefixes.at(algo) + ".HcalIso03"),
 	trackerIsolationReader(input, MuonAlgorithm::prefixes.at(algo) + ".TrkIso03"),
-	isGlobalReader(input, MuonAlgorithm::prefixes.at(algo) + ".isGoodGlobalMuon") {
+	isGlobalReader(input, MuonAlgorithm::prefixes.at(algo) + ".isGlobalMuon") {
 
 }
 
