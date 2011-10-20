@@ -121,14 +121,11 @@ bool TopPairEventCandidate::passesHighLevelTrigger() const {
         else
             return false;
     }
-    else{
-        if(dataType >= DataType::ttbar && dataType <= DataType::QCD_EMEnriched_Pt80to170){
-            return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || HLT(
-                    HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-        }
-        return true;
-    }
+    else {
+		return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+				|| HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
+				|| HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+	}
 
 }
 
