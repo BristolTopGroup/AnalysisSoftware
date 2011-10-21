@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include "../../interface/Analysers/HitFitAnalyser.h"
+#include "../../interface/GlobalVariables.h"
 
 namespace BAT {
 
@@ -173,7 +174,7 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan) :
     BasicAnalyser(histMan),
     // The following five initializers read the config parameters for the
     // ASCII text files which contains the physics object resolutions.
-    FitterPath_              (""),
+    FitterPath_              (Globals::TQAFPath),
     hitfitDefault_           ("TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"),
     hitfitElectronResolution_("TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"),
     hitfitMuonResolution_    ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafMuonResolution.txt"),
