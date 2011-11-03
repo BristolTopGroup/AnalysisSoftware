@@ -6,7 +6,7 @@
  */
 
 #include "../interface/TtbarHypothesis.h"
-#include "../interface/RecontructionModules/ReconstructionException.h"
+#include "../interface/ReconstructionModules/ReconstructionException.h"
 
 namespace BAT {
 
