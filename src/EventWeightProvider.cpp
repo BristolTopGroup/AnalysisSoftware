@@ -83,34 +83,32 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
 void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::DATA] = 0;
 
-    numberOfProcessedEvents[DataType::ttbar] = 3634668;
-    numberOfProcessedEvents[DataType::Zjets] = 36277961;
-    numberOfProcessedEvents[DataType::Wjets] = 81149551;
-
-//    numberOfProcessedEvents[DataType::WToENu] = 5334220;
+    numberOfProcessedEvents[DataType::ttbar] = 3673321;//3673321;
+    numberOfProcessedEvents[DataType::Zjets] = 33645364;//36277961;
+    numberOfProcessedEvents[DataType::Wjets] = 78982439;
 
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 35729669;
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 70392060;
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8150672;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8090132;
 
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2081560;
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt30to80] = 2030033;
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt80to170] = 1082691;
 
     numberOfProcessedEvents[DataType::PhotonJets_Pt40to100] = 2217101;
-    numberOfProcessedEvents[DataType::PhotonJets_Pt100to200] = 1536287;
-    numberOfProcessedEvents[DataType::PhotonJets_Pt200toInf] = 1124279;
+    numberOfProcessedEvents[DataType::PhotonJets_Pt100to200] = 1508384;
+    numberOfProcessedEvents[DataType::PhotonJets_Pt200toInf] = 8339186;
 
-    numberOfProcessedEvents[DataType::WWtoAnything] = 4225916;
-    numberOfProcessedEvents[DataType::WZtoAnything] = 4106336;
-    numberOfProcessedEvents[DataType::ZZtoAnything] = 4099405;
+    numberOfProcessedEvents[DataType::WWtoAnything] = 3490064;
+    numberOfProcessedEvents[DataType::WZtoAnything] = 2368019;
+    numberOfProcessedEvents[DataType::ZZtoAnything] = 3145780;
 
-    numberOfProcessedEvents[DataType::singleTop_And_W] = 814390;
-	numberOfProcessedEvents[DataType::singleTopTChannel] = 3900171;
+    numberOfProcessedEvents[DataType::singleTop_And_W] = 556519;
+	numberOfProcessedEvents[DataType::singleTopTChannel] = 2867419;
 	numberOfProcessedEvents[DataType::singleTopSChannel] = 259971;
 
-	numberOfProcessedEvents[DataType::singleAntiTop_And_W] = 809984;
-	numberOfProcessedEvents[DataType::singleAntiTopTChannel] = 1508784;
+	numberOfProcessedEvents[DataType::singleAntiTop_And_W] = 375192;
+	numberOfProcessedEvents[DataType::singleAntiTopTChannel] = 1944826;
 	numberOfProcessedEvents[DataType::singleAntiTopSChannel] = 137980;
 
     numberOfProcessedEvents[DataType::VQQ] = 720613;
