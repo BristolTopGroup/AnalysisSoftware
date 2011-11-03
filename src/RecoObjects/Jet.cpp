@@ -131,27 +131,33 @@ bool Jet::isGood() const {
     bool passesPt = pt() > 30;
     bool passesEta = fabs(eta()) < 2.4;
     bool jetID = false;
-    if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
-        bool passNOD = NOD() > 1;
-        bool passCEF = CEF() < 0.99;
-        bool passNHF = NHF() < 0.99;
-        bool passNEF = NEF() < 0.99;
-        bool passCHF = true;
-        bool passNCH = true;
-        if (fabs(eta()) < 2.4) {
-            passCHF = CHF() > 0;
-            passNCH = NCH() > 0;
-        }
-        jetID = passNOD && passCEF && passNHF && passNEF && passCHF && passNCH;
-    }
-    else{
-        bool passesEMF = emf() > 0.01;
-        bool passesN90Hits = n90Hits() > 1;
-        bool passesFHPD = fHPD() < 0.98;
-        jetID = passesEMF && passesN90Hits && passesFHPD;
-    }
+    if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT)
+        jetID = FirstDataLoosePFJetID();
+    else
+        jetID = FirstDataLooseCaloJetID();
 
     return passesPt && passesEta && jetID;
+}
+
+bool Jet::FirstDataLoosePFJetID() const {
+	bool passNOD = NOD() > 1;
+	bool passCEF = CEF() < 0.99;
+	bool passNHF = NHF() < 0.99;
+	bool passNEF = NEF() < 0.99;
+	bool passCHF = true;
+	bool passNCH = true;
+	if (fabs(eta()) < 2.4) {
+		passCHF = CHF() > 0;
+		passNCH = NCH() > 0;
+	}
+	return passNOD && passCEF && passNHF && passNEF && passCHF && passNCH;;
+}
+
+bool Jet::FirstDataLooseCaloJetID() const {
+	bool passesEMF = emf() > 0.01;
+	bool passesN90Hits = n90Hits() > 1;
+	bool passesFHPD = fHPD() < 0.98;
+	return passesEMF && passesN90Hits && passesFHPD;
 }
 
 /*
@@ -159,14 +165,14 @@ bool Jet::isGood() const {
  * https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagPerformance
  */
 bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) const {
-    double cut(-9998);
+    double cut(9998);
     switch (type) {
     case BtagAlgorithm::GenPartonFlavour:
         return abs(partonFlavour) == 5;
 
     case BtagAlgorithm::SimpleSecondaryVertexHighEffBTag:
         if (wp == BtagAlgorithm::LOOSE)
-            cut = -9998;//no input found
+            cut = 9998;//no input found
         else if (wp == BtagAlgorithm::MEDIUM)
             cut = 1.74;
         else if (wp == BtagAlgorithm::TIGHT)
@@ -175,9 +181,9 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 
     case BtagAlgorithm::SimpleSecondaryVertexHighPurBTag:
         if (wp == BtagAlgorithm::LOOSE)
-            cut = -9998;//no input found
+            cut = 9998;//no input found
         else if (wp == BtagAlgorithm::MEDIUM)
-            cut = -9998;//no input found
+            cut = 9998;//no input found
         else if (wp == BtagAlgorithm::TIGHT)
             cut = 2.;
         break;

@@ -77,7 +77,6 @@ public:
     void setN90Hits(int n90Hits);
     void setFHPD(double fHPD);
     void setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value type);
-    //	void setBtagForData(double btag);
     void setNOD(int nod);
     void setCEF(double cef);
     void setNHF(double nhf);
@@ -85,6 +84,9 @@ public:
     void setCHF(double chf);
     void setNCH(double nch);
     void setRho(double rho);
+
+    bool FirstDataLoosePFJetID() const;
+    bool FirstDataLooseCaloJetID() const;
 private:
     JetAlgorithm::value usedAlgorithm;
     double electromagneticFraction;
