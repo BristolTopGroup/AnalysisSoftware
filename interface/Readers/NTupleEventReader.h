@@ -41,10 +41,10 @@ class NTupleEventReader {
 public:
 	static const char * EVENT_CHAIN;
 
-	static JetAlgorithm::value jetAlgorithm;
-	static ElectronAlgorithm::value electronAlgorithm;
-	static METAlgorithm::value metAlgorithm;
-	static MuonAlgorithm::value muonAlgorithm;
+//	static JetAlgorithm::value jetAlgorithm;
+//	static ElectronAlgorithm::value electronAlgorithm;
+//	static METAlgorithm::value metAlgorithm;
+//	static MuonAlgorithm::value muonAlgorithm;
 	static bool loadTracks;
 
 	NTupleEventReader();

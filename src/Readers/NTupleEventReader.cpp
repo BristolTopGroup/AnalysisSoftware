@@ -6,6 +6,7 @@
  */
 
 #include "../../interface/Readers/NTupleEventReader.h"
+#include "../../interface/GlobalVariables.h"
 #include "TFile.h"
 #include "TChainElement.h"
 #include <iostream>
@@ -15,10 +16,6 @@ namespace BAT {
 
 const char * NTupleEventReader::EVENT_CHAIN = "rootTupleTree/tree";
 
-JetAlgorithm::value NTupleEventReader::jetAlgorithm = JetAlgorithm::Calo_AntiKT_Cone05;
-ElectronAlgorithm::value NTupleEventReader::electronAlgorithm = ElectronAlgorithm::Calo;
-METAlgorithm::value NTupleEventReader::metAlgorithm = METAlgorithm::Calo;
-MuonAlgorithm::value NTupleEventReader::muonAlgorithm = MuonAlgorithm::Default;
 bool NTupleEventReader::loadTracks = false;
 
 NTupleEventReader::NTupleEventReader() :
@@ -31,12 +28,12 @@ NTupleEventReader::NTupleEventReader() :
     hltPrescaleReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTPrescales")),
     vertexReader(new VertexReader(input)),
     trackReader(new TrackReader(input)),
-    electronReader(new ElectronReader(input, NTupleEventReader::electronAlgorithm)),
+    electronReader(new ElectronReader(input, Globals::electronAlgorithm)),
     genParticleReader(new GenParticleReader(input)),
-    jetReader(new JetReader(input, NTupleEventReader::jetAlgorithm)),
+    jetReader(new JetReader(input, Globals::jetAlgorithm)),
     genJetReader(new GenJetReader(input)),
-    muonReader(new MuonReader(input, NTupleEventReader::muonAlgorithm)),
-    metReader(new METReader(input, NTupleEventReader::metAlgorithm)),
+    muonReader(new MuonReader(input, Globals::muonAlgorithm)),
+    metReader(new METReader(input, Globals::metAlgorithm)),
     runNumberReader(new VariableReader<unsigned int> (input, "Event.Run")),
     eventNumberReader(new VariableReader<unsigned int> (input, "Event.Number")),
     lumiBlockReader(new VariableReader<unsigned int> (input, "Event.LumiSection")),
@@ -81,7 +78,9 @@ const Event& NTupleEventReader::getNextEvent() {
 
     if(NTupleEventReader::loadTracks)
         currentEvent.setTracks(trackReader->getTracks());
+    //fill leptons BEFORE jets for jet cleaning
     currentEvent.setElectrons(electronReader->getElectrons());
+    currentEvent.setMuons(muonReader->getMuons());
 
     if(!currentEvent.isRealData()) {
     	currentEvent.setGenParticles(genParticleReader->getGenParticles());
@@ -90,7 +89,6 @@ const Event& NTupleEventReader::getNextEvent() {
     }
 
     currentEvent.setJets(jetReader->getJets());
-    currentEvent.setMuons(muonReader->getMuons());
     currentEvent.setMET(metReader->getMET());
     currentEvent.setRunNumber(runNumberReader->getVariable());
     currentEvent.setEventNumber(eventNumberReader->getVariable());
