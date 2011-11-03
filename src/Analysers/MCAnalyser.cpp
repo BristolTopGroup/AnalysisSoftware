@@ -191,7 +191,7 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			MCttbarEvent.jet2FromW = jet2fromW;
 			MCttbarEvent.neutrinoFromW = (ParticlePointer) neutrino;
 			ElectronPointer e(new Electron(electron->energy(), electron->px(), electron->py(), electron->pz()));
-			MCttbarEvent.electronFromW = e;
+			MCttbarEvent.leptonFromW = e;
 		}
 		else if (hadronic_Wplus_found) {
 			MCttbarEvent.leptonicTop = (ParticlePointer) antitop;
@@ -204,7 +204,7 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			MCttbarEvent.jet2FromW = jet2fromW;
 			MCttbarEvent.neutrinoFromW = (ParticlePointer) neutrino;
 			ElectronPointer e(new Electron(electron->energy(), electron->px(), electron->py(), electron->pz()));
-			MCttbarEvent.electronFromW = e;
+			MCttbarEvent.leptonFromW = e;
 		}
 		else cout << "ERROR: no hadronic or leptonic W's in semileptonic event (nonsense).\n";
 
@@ -223,7 +223,7 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		if (ttbarEvent.passesFullTTbarEPlusJetSelection()) {
 			histMan->H1D("m3_diff")->Fill(fabs(MCttbarEvent.M3()-ttbarEvent.M3()));
 
-			double deltaRElectron = MCttbarEvent.electronFromW->deltaR(ttbarEvent.getElectronFromWDecay());
+			double deltaRElectron = MCttbarEvent.leptonFromW->deltaR(ttbarEvent.getElectronFromWDecay());
 			double deltaRLeptonicBjet = MCttbarEvent.leptonicBjet->deltaR(ttbarEvent.getLeptonicBJet());
 			double deltaRHadronicBjet = MCttbarEvent.hadronicBJet->deltaR(ttbarEvent.getHadronicBJet());
 			double deltaRjet11fromW = MCttbarEvent.jet1FromW->deltaR(ttbarEvent.getJet1FromHadronicW());

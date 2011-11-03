@@ -5,6 +5,7 @@
  *      Author: kreczko
  */
 #include "../../interface/Analysers/ElectronAnalyser.h"
+#include "../../interface/GlobalVariables.h"
 
 namespace BAT {
 
@@ -36,17 +37,17 @@ void ElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
             if (electron->CiC_ElectronID((CiCElectronID::value) id)) {
                 histMan->H1D("nEventsPassingCiCId")->Fill(id + 1, weight);
 
-                if (electron->getUsedAlgorithm() == ElectronAlgorithm::ParticleFlow && electron->isPFIsolated())
+                if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)
                     histMan->H1D("nEventsPassingCiCIdIso")->Fill(id + 1, weight);
 
-                if (electron->getUsedAlgorithm() == ElectronAlgorithm::Calo && electron->isIsolated())
+                if (!electron->isPFLepton() && electron->relativeIsolation() < Globals::maxElectronRelativeIsolation)
                     histMan->H1D("nEventsPassingCiCIdIso")->Fill(id + 1, weight);
 
             } else {
                 histMan->H1D("nEventsPassingCiCId")->Fill(0., weight);
-                if (electron->getUsedAlgorithm() == ElectronAlgorithm::ParticleFlow && electron->isPFIsolated())
+                if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)
                     histMan->H1D("nEventsPassingCiCIdIso")->Fill(0., weight);
-                if (electron->getUsedAlgorithm() == ElectronAlgorithm::Calo && electron->isIsolated())
+                if (!electron->isPFLepton() && electron->relativeIsolation() < Globals::maxElectronRelativeIsolation)
                     histMan->H1D("nEventsPassingCiCIdIso")->Fill(0., weight);
             }
         }
@@ -60,10 +61,10 @@ void ElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
                 if (electron->CiC_ElectronID((CiCElectronID::value) id)) {
                     ++goodElectrons;
 
-                    if (electron->getUsedAlgorithm() == ElectronAlgorithm::ParticleFlow && electron->isPFIsolated())
+                    if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)
                         ++goodIsoElectrons;
 
-                    if (electron->getUsedAlgorithm() == ElectronAlgorithm::Calo && electron->isIsolated())
+                    if (!electron->isPFLepton() && electron->relativeIsolation() < Globals::maxElectronRelativeIsolation)
                         ++goodIsoElectrons;
                 }
 
@@ -82,10 +83,10 @@ void ElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
         if (electron->VBTF_W70_ElectronID()) {
             ++goodElectrons;
 
-            if (electron->getUsedAlgorithm() == ElectronAlgorithm::ParticleFlow && electron->isPFIsolated())
+            if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)
                 ++goodIsoElectrons;
 
-            if (electron->getUsedAlgorithm() == ElectronAlgorithm::Calo && electron->isIsolated())
+            if (!electron->isPFLepton() && electron->relativeIsolation() < Globals::maxElectronRelativeIsolation)
                 ++goodIsoElectrons;
         }
 

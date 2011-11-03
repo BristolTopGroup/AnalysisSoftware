@@ -22,9 +22,10 @@ void MTtbarAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 }
 
 void MTtbarAnalyser::analyseFourJetChi2(const TopPairEventCandidate& ttbarEvent) {
+	string type("ElectronPlusJets");
 
-	if (ttbarEvent.passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
-		ElectronPointer selectedElectron = ttbarEvent.GoodPFIsolatedElectrons().front();
+	if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
+		LeptonPointer selectedElectron = ttbarEvent.GoodPFIsolatedElectrons().front();
 		METPointer met = ttbarEvent.MET();
 		JetCollection jets = ttbarEvent.GoodJets();
 
@@ -35,16 +36,18 @@ void MTtbarAnalyser::analyseFourJetChi2(const TopPairEventCandidate& ttbarEvent)
 			return;
 		}
 		allSolutions = chi2Reco->getAllSolutions();
-		fillHistograms("FourJetChi2");
-		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricJetCuts())
-			fillHistograms("FourJetChi2", "_withMETAndAsymJets");
+		fillHistograms(type + "/FourJetChi2");
+		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricElectronCleanedJetCuts())
+			fillHistograms(type + "/FourJetChi2", "_withMETAndAsymJets");
 	}
 }
 
 void MTtbarAnalyser::analyseThreeJetChi2(const TopPairEventCandidate& ttbarEvent) {
-	if (ttbarEvent.passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets)
+	string type("ElectronPlusJets");
+
+	if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets)
 			&& ttbarEvent.hasExactlyThreeGoodJets()) {
-		ElectronPointer selectedElectron = ttbarEvent.GoodPFIsolatedElectrons().front();
+		LeptonPointer selectedElectron = ttbarEvent.GoodPFIsolatedElectrons().front();
 		METPointer met = ttbarEvent.MET();
 		JetCollection jets = ttbarEvent.GoodJets();
 
@@ -55,15 +58,16 @@ void MTtbarAnalyser::analyseThreeJetChi2(const TopPairEventCandidate& ttbarEvent
 			return;
 		}
 		allSolutions = chi2Reco->getAllSolutions();
-		fillHistograms("ThreeJetChi2");
-		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricJetCuts())
-			fillHistograms("ThreeJetChi2", "_withMETAndAsymJets");
+		fillHistograms(type + "/ThreeJetChi2");
+		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricElectronCleanedJetCuts())
+			fillHistograms(type + "/ThreeJetChi2", "_withMETAndAsymJets");
 	}
 }
 
 void MTtbarAnalyser::analyseFourJetTopMassDifference(const TopPairEventCandidate& ttbarEvent) {
-	if (ttbarEvent.passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
-		ElectronPointer selectedElectron = ttbarEvent.GoodPFIsolatedElectrons().front();
+	string type("ElectronPlusJets");
+	if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
+		LeptonPointer selectedElectron = ttbarEvent.GoodPFIsolatedElectrons().front();
 		METPointer met = ttbarEvent.MET();
 		JetCollection jets = ttbarEvent.GoodJets();
 
@@ -74,15 +78,15 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const TopPairEventCandidate
 			return;
 		}
 		allSolutions = topMassDiffReco->getAllSolutions();
-		fillHistograms("FourJetTopMassDifference");
-		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricJetCuts())
-			fillHistograms("FourJetTopMassDifference", "_withMETAndAsymJets");
+		fillHistograms(type + "/FourJetTopMassDifference");
+		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricElectronCleanedJetCuts())
+			fillHistograms(type + "/FourJetTopMassDifference", "_withMETAndAsymJets");
 	}
 }
 
 void MTtbarAnalyser::analyseFourJetChi2QCDConversionBackground(const TopPairEventCandidate& ttbarEvent) {
 	if (ttbarEvent.passesConversionSelection() && ttbarEvent.hasAtLeastFourGoodJets()) {
-		ElectronPointer selectedElectron = ttbarEvent.MostPFIsolatedElectron();
+		LeptonPointer selectedElectron = ttbarEvent.MostPFIsolatedElectron(ttbarEvent.Electrons());
 		METPointer met = ttbarEvent.MET();
 		JetCollection jets = ttbarEvent.GoodJets();
 
@@ -93,9 +97,9 @@ void MTtbarAnalyser::analyseFourJetChi2QCDConversionBackground(const TopPairEven
 			return;
 		}
 		allSolutions = chi2Reco->getAllSolutions();
-		fillHistograms("QCDConversionsBackground");
-		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricJetCuts())
-			fillHistograms("QCDConversionsBackground", "_withMETAndAsymJets");
+		fillHistograms("ElectronPlusJets/QCDConversionsBackground");
+		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricElectronCleanedJetCuts())
+			fillHistograms("ElectronPlusJets/QCDConversionsBackground", "_withMETAndAsymJets");
 	}
 }
 
@@ -150,30 +154,38 @@ void MTtbarAnalyser::fillHistograms(std::string subcollection, std::string suffi
 void MTtbarAnalyser::createHistograms() {
 	histMan->setCurrentCollection("MttbarAnalysis");
 
-	createHistogramsFor("FourJetChi2");
-	createHistogramsFor("ThreeJetChi2");
-	createHistogramsFor("FourJetTopMassDifference");
-//	createHistogramsFor("FourJetChi2MC"); //for input values!
-	createHistogramsFor("QCDConversionsBackground");
+	createHistogramsFor("MuonPlusJets/FourJetChi2");
+	createHistogramsFor("MuonPlusJets/ThreeJetChi2");
+	createHistogramsFor("MuonPlusJets/FourJetTopMassDifference");
+//	createHistogramsFor("MuonPlusJets/FourJetChi2MC"); //for input values!
+//	createHistogramsFor("MuonPlusJets/QCDConversionsBackground");
+
+	createHistogramsFor("ElectronPlusJets/FourJetChi2");
+	createHistogramsFor("ElectronPlusJets/ThreeJetChi2");
+	createHistogramsFor("ElectronPlusJets/FourJetTopMassDifference");
+	//	createHistogramsFor("ElectronPlusJets/FourJetChi2MC"); //for input values!
+	createHistogramsFor("ElectronPlusJets/QCDConversionsBackground");
 
 }
 
 void MTtbarAnalyser::createHistogramsFor(std::string collection) {
 	boost::array<std::string, 4> histTypes = {{"", "_withMETAndAsymJets", "_allSolutions", "_allSolutions_withMETAndAsymJets"}};
+
 	histMan->setCurrentCollection("MttbarAnalysis/" + collection);
+
 
 	for(unsigned short index = 0; index < histTypes.size(); ++index){
 		std::string suffix = histTypes.at(index);
-		histMan->addH1D_BJetBinned("mttbar" + suffix, "mttbar", 5000, 0, 5000);
+		histMan->addH1D_BJetBinned("mttbar" + suffix, "m(t#bar{t});m(t#bar{t}) [GeV]; events/1 GeV", 5000, 0, 5000);
 
-			histMan->addH1D_BJetBinned("leptonicTopMass" + suffix, "leptonicTopMass", 1000, 0, 1000);
-			histMan->addH1D_BJetBinned("hadronicTopMass" + suffix, "hadronicTopMass", 1000, 0, 1000);
-			histMan->addH1D_BJetBinned("allTopMasses" + suffix, "allTopMasses", 1000, 0, 1000);
-			histMan->addH1D_BJetBinned("m3" + suffix, "m3", 5000, 0, 5000);
-			histMan->addH1D_BJetBinned("ttbar_pt" + suffix, "ttbar_pt", 1000, 0, 1000);
-			histMan->addH1D_BJetBinned("leptonicWMass" + suffix, "leptonicWMass", 500, 0, 500);
-			histMan->addH1D_BJetBinned("hadronicWMass" + suffix, "hadronicWMass", 500, 0, 500);
-			histMan->addH1D_BJetBinned("discriminant" + suffix, "discriminant", 1000, 0, 100);
+			histMan->addH1D_BJetBinned("leptonicTopMass" + suffix, "leptonic Top Mass; m(t_{lep}) [GeV]; events/1 GeV", 1000, 0, 1000);
+			histMan->addH1D_BJetBinned("hadronicTopMass" + suffix, "hadronic Top Mass; m(t_{had}) [GeV]; events/1 GeV", 1000, 0, 1000);
+			histMan->addH1D_BJetBinned("allTopMasses" + suffix, "all Top Masses;m(t) [GeV]; events'1 GeV", 1000, 0, 1000);
+			histMan->addH1D_BJetBinned("m3" + suffix, "m3;m(jjj) [GeV]; events/1 GeV", 5000, 0, 5000);
+			histMan->addH1D_BJetBinned("ttbar_pt" + suffix, "p_{T,t#bar{t}};p_{T,t#bar{t}} [GeV]; events/1 GeV", 1000, 0, 1000);
+			histMan->addH1D_BJetBinned("leptonicWMass" + suffix, "leptonic W mass; m(W_{lep}) [GeV]; events'1 GeV", 500, 0, 500);
+			histMan->addH1D_BJetBinned("hadronicWMass" + suffix, "hadronic W mass; m(W_{had}) [GeV]; events'1 GeV", 500, 0, 500);
+			histMan->addH1D_BJetBinned("discriminant" + suffix, "discriminant;discriminant; events/0.1", 1000, 0, 100);
 
 	}
 
@@ -182,6 +194,7 @@ void MTtbarAnalyser::createHistogramsFor(std::string collection) {
 MTtbarAnalyser::MTtbarAnalyser(boost::shared_ptr<HistogramManager> histMan) :
     	    BasicAnalyser(histMan),
     	    weight(0),
+    	    currentType("ElectronPlusJets"),
     	    allSolutions() {
 	histMan->setCurrentCollection("MttbarAnalysis");
 

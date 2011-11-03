@@ -9,8 +9,14 @@
 #define MTTBARANALYSER_H_
 
 #include "BasicAnalyser.h"
-
+#include <string>
 namespace BAT {
+
+namespace MttbarAnalysis {
+enum type {
+	ElectronPlusJets, MuonPlusJets
+};
+}
 
 class MTtbarAnalyser: public BAT::BasicAnalyser {
 public:
@@ -31,8 +37,8 @@ protected:
 
 protected:
 	double weight;
+	std::string currentType;
 	TtbarHypothesisCollection allSolutions;
-
 
 };
 

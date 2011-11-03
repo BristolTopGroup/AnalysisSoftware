@@ -36,7 +36,7 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	ElectronCollection goodElectrons;
 
 	for (unsigned int index = 0; index < electrons.size(); ++index) {
-		if (electrons.at(index)->isGood(false) && electrons.at(index)->et() > 35) {
+		if (electrons.at(index)->isGood(ElectronID::SimpleCutBasedWP70) && electrons.at(index)->et() > 35) {
 			//Et > 35GeV, d0 < 0.02cm, |z-vertex.z} < 1cm, Electron ID WP 70 (no isolation)
 			// get on the plateau of the electron turn-on curve
 			goodElectrons.push_back(electrons.at(index));
