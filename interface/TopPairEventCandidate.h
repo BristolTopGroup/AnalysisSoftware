@@ -15,7 +15,7 @@
 #include "RecoObjects/Jet.h"
 #include "Taggers/ConversionTagger.h"
 #include "TtbarHypothesis.h"
-#include "RecontructionModules/ReconstructionException.h"
+#include "ReconstructionModules/ReconstructionException.h"
 
 namespace BAT {
 namespace NeutrinoSelectionCriterion {
