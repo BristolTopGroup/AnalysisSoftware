@@ -1,6 +1,8 @@
 <Flags ADD_SUBDIR="yes" />
 <FLAGS CXXFLAGS="-O3" />
 <use name="boost" />
+<use name="boost_python" />
+<use name="python2.6" />
 <use name="root" />
 <use name="rootcore" />
 <use name="boost_program_options"/>
@@ -9,6 +11,8 @@
 <export>
 <use name="boost" />
 <use name="boost_program_options" />
+<use name="boost_python" />
+<use name="python2.6" />
 <use name="root" />
 <use name="rootcore" />
 <use name="TopQuarkAnalysis/TopHitFit" />
