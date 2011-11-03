@@ -55,8 +55,9 @@ struct InterestingEvent {
         std::cout << "located in: " << fileName << std::endl << std::endl;
     }
 };
-typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> cutarray;
-typedef boost::unordered_map<std::string, cutarray> cutmap;
+typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
+typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
+typedef boost::unordered_map<std::string, ePlusJetscutarray> cutmap;
 
 class Analysis {
 private:
@@ -64,15 +65,18 @@ private:
     BAT::Event currentEvent;
     BAT::TopPairEventCandidate ttbarCandidate;
     boost::shared_ptr<BAT::HistogramManager> histMan;
-    cutarray cutflow;
-    cutarray singleCuts;
-    cutmap cutflowPerFile;
-    cutmap singleCutsPerFile;
+    ePlusJetscutarray ePlusJetsCutflow;
+    ePlusJetscutarray ePlusJetsSingleCuts;
+    cutmap ePlusJetsCutflowPerFile;
+    cutmap ePlusJetsSingleCutsPerFile;
+
+    muPlusJetscutarray muPlusJetsCutFlow;
+    muPlusJetscutarray muPlusJetsSingleCuts;
     std::vector<InterestingEvent> interestingEvents, brokenEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
     BAT::EventWeightProvider weights;
     float weight, pileUpWeight;
-    BAT::Counter cutflowPerSample;
+    BAT::Counter ePlusJetsCutflowPerSample, muPlusJetsCutflowPerSample;
     boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
@@ -80,7 +84,7 @@ private:
     boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
 
 public:
-    static float luminosity;
+//    static float luminosity;
     Analysis(std::string fileForPileUpReweighting);
     virtual ~Analysis();
     void analyze();
@@ -89,18 +93,6 @@ public:
     void setUsedNeutrinoSelectionForTopPairReconstruction(BAT::NeutrinoSelectionCriterion::value selection);
     void setUsedTTbarReconstructionCriterion(BAT::TTbarReconstructionCriterion::value selection);
     bool useHitFit;
-    static void useJetAlgorithm(BAT::JetAlgorithm::value algo) {
-        BAT::NTupleEventReader::jetAlgorithm = algo;
-    }
-    static void useElectronAlgorithm(BAT::ElectronAlgorithm::value algo) {
-        BAT::NTupleEventReader::electronAlgorithm = algo;
-    }
-    static void useMETAlgorithm(BAT::METAlgorithm::value algo) {
-        BAT::NTupleEventReader::metAlgorithm = algo;
-    }
-    static void useMuonAlgorithm(BAT::MuonAlgorithm::value algo){
-        BAT::NTupleEventReader::muonAlgorithm = algo;
-    }
 
     static void usePFIsolation(bool use){
         BAT::Event::usePFIsolation = use;
@@ -112,15 +104,10 @@ public:
         BAT::NTupleEventReader::loadTracks = use;
     }
 
-    static void useCiCElectronID(bool use){
-        BAT::Event::useCiCElectronID = use;
-    }
-
     unsigned long getNumberOfProccessedEvents() const;
 
 private:
     void printNumberOfProccessedEventsEvery(unsigned long printEvery);
-//    void doEcalSpikeAnalysis();
     void initiateEvent();
     void doDiElectronAnalysis();
     void doTTBarAnalysis();
