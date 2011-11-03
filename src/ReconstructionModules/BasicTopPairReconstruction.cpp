@@ -5,8 +5,8 @@
  *      Author: kreczko
  */
 
-#include "../../interface/RecontructionModules/BasicTopPairReconstruction.h"
-#include "../../interface/RecontructionModules/BasicNeutrinoReconstruction.h"
+#include "../../interface/ReconstructionModules/BasicTopPairReconstruction.h"
+#include "../../interface/ReconstructionModules/BasicNeutrinoReconstruction.h"
 #include <boost/lexical_cast.hpp>
 
 namespace BAT {

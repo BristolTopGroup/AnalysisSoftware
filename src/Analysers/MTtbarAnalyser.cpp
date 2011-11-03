@@ -6,9 +6,9 @@
  */
 
 #include "../../interface/Analysers/MTtbarAnalyser.h"
-#include "../../interface/RecontructionModules/ChiSquaredBasedTopPairReconstruction.h"
-#include "../../interface/RecontructionModules/ChiSquaredThreeJetsTopPairReconstruction.h"
-#include "../../interface/RecontructionModules/TopMassDifferenceTTbarReco.h"
+#include "../../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
+#include "../../interface/ReconstructionModules/ChiSquaredThreeJetsTopPairReconstruction.h"
+#include "../../interface/ReconstructionModules/TopMassDifferenceTTbarReco.h"
 #include <boost/scoped_ptr.hpp>
 
 namespace BAT {

@@ -5,7 +5,7 @@
  *      Author: kreczko
  */
 
-#include "../../interface/RecontructionModules/BasicNeutrinoReconstruction.h"
+#include "../../interface/ReconstructionModules/BasicNeutrinoReconstruction.h"
 #include "TVector3.h"
 
 namespace BAT {

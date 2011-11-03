@@ -5,7 +5,7 @@
  *      Author: kreczko
  */
 
-#include "../../interface/RecontructionModules/TopMassDifferenceTTbarReco.h"
+#include "../../interface/ReconstructionModules/TopMassDifferenceTTbarReco.h"
 
 namespace BAT {
 

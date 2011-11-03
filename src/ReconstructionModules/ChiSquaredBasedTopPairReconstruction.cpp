@@ -5,7 +5,7 @@
  *      Author: kreczko
  */
 
-#include "../../interface/RecontructionModules/ChiSquaredBasedTopPairReconstruction.h"
+#include "../../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 #include <vector>
 #include <numeric>
 

@@ -5,9 +5,9 @@
  *      Author: kreczko
  */
 
-#include "../../interface/RecontructionModules/ChiSquaredThreeJetsTopPairReconstruction.h"
+#include "../../interface/ReconstructionModules/ChiSquaredThreeJetsTopPairReconstruction.h"
 #include <boost/lexical_cast.hpp>
-#include "../../interface/RecontructionModules/ReconstructionException.h"
+#include "../../interface/ReconstructionModules/ReconstructionException.h"
 
 namespace BAT {
 
