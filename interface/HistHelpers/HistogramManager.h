@@ -120,7 +120,7 @@ public:
     void setCurrentDataType(DataType::value type);
     void setCurrentJetBin(unsigned int jetbin);
     void setCurrentBJetBin(unsigned int jetbin);
-    void setCurrentLumi(float lumi);
+//    void setCurrentLumi(float lumi);
     void prepareForSeenDataTypes(const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& seenDataTypes);
 
     void add1DCollection(std::string collection);
@@ -164,7 +164,7 @@ private:
     DataType::value currentDataType;
     unsigned int currentJetbin;
     unsigned int currentBJetbin;
-    float currentIntegratedLumi;
+//    float currentIntegratedLumi;
     std::string current1DCollection, current1DJetCollection, current1DBJetCollection;
     std::string current2DCollection, current2DJetCollection, current2DBJetCollection;
 

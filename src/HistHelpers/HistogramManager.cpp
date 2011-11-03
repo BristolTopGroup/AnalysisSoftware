@@ -7,6 +7,7 @@
 
 #include "../../interface/HistHelpers/HistogramManager.h"
 #include "../../interface/Readers/NTupleEventReader.h"
+#include "../../interface/GlobalVariables.h"
 
 namespace BAT {
 
@@ -16,7 +17,7 @@ HistogramManager::HistogramManager() :
     currentDataType(DataType::DATA),
     currentJetbin(0),
     currentBJetbin(0),
-    currentIntegratedLumi(0),
+//    currentIntegratedLumi(0),
     current1DCollection(""),
     current1DJetCollection(""),
     current1DBJetCollection(""),
@@ -148,9 +149,9 @@ void HistogramManager::setCurrentBJetBin(unsigned int jetbin) {
         currentBJetbin = jetbin;
 }
 
-void HistogramManager::setCurrentLumi(float lumi) {
-    currentIntegratedLumi = lumi;
-}
+//void HistogramManager::setCurrentLumi(float lumi) {
+//    currentIntegratedLumi = lumi;
+//}
 
 boost::shared_ptr<TH1> HistogramManager::operator [](std::string histname) {
     return H1D(histname);
@@ -269,11 +270,12 @@ void HistogramManager::prepareForSeenDataTypes(const boost::array<bool, DataType
 const std::string HistogramManager::assembleFilename(DataType::value type) const {
     const std::string name = DataType::names[type];
     std::stringstream str;
-    std::string electronAlgo = ElectronAlgorithm::names[NTupleEventReader::electronAlgorithm];
-    std::string jetAlgo = JetAlgorithm::names[NTupleEventReader::jetAlgorithm];
-    std::string metAlgo = METAlgorithm::names[NTupleEventReader::metAlgorithm];
-    str << name << "_" << currentIntegratedLumi << "pb";
-    str << "_" << electronAlgo << "_" << jetAlgo << "_" << metAlgo << ".root";
+    std::string electronAlgo = ElectronAlgorithm::names[Globals::electronAlgorithm];
+    std::string jetAlgo = JetAlgorithm::names[Globals::jetAlgorithm];
+    std::string metAlgo = METAlgorithm::names[Globals::metAlgorithm];
+    std::string muonAlgo = MuonAlgorithm::names[Globals::muonAlgorithm];
+    str << name << "_" << Globals::luminosity << "pb";
+    str << "_" << electronAlgo << "_" << muonAlgo << "_" << jetAlgo << "_" << metAlgo << ".root";
     return str.str();
 
 }
