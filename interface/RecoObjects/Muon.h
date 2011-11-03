@@ -7,7 +7,7 @@
 
 #ifndef MUON_H_
 #define MUON_H_
-#include "Particle.h"
+#include "Lepton.h"
 #include <vector>
 #include <string>
 #include <boost/array.hpp>
@@ -31,26 +31,32 @@ const boost::array<std::string, MuonAlgorithm::NUMBER_OF_MUONALGORITHMS> names =
 }
 
 
-class Muon: public Particle {
+class Muon: public Lepton {
 public:
 	Muon();
 	Muon(double energy, double px, double py, double pz);
 	virtual ~Muon();
-	bool isGood() const;
-	bool isIsolated() const;
+	bool isGood(short leptonID = 0) const;
+	bool isLoose() const;
 	bool isGlobal() const;
-	double ecalIsolation() const;
-	double hcalIsolation() const;
-	double trackerIsolation() const;
-	double relativeIsolation() const;
+	void setUsedAlgorithm(MuonAlgorithm::value algorithm);
+	bool isPFLepton() const;
 
 	void makeGlobal(bool global);
-	void setEcalIsolation(double isolation);
-	void setHcalIsolation(double isolation);
-	void setTrackerIsolation(double isolation);
+	void setTrackerMuon(bool isTrackerMuon);
+	void setNormalisedChi2(double normChi2);
+	void setNumberOfValidHits(int nValidHits);
+	void setNumberOfValidMuonHits(int nValidHits);
+	void setPixelLayersWithMeasurement(int pixelLayers);
+	void setNumberOfMatchedStations(int nMatchedStations);
+	void setNumberOfMatches(int nMatches);
+
 private:
-	bool is_Global;
-	double ecal_Isolation, hcal_Isolation, tracker_Isolation;
+	MuonAlgorithm::value usedAlgorithm;
+	bool is_GlobalMuon, is_TrackerMuon;
+	double normalisedChi2;
+	int numberOfValidMuonHits, numberOfValidHits, pixelLayersWithMeasurement;
+	int numberOfMatches, numberOfMatchedStations;
 };
 
 typedef boost::shared_ptr<Muon> MuonPointer;

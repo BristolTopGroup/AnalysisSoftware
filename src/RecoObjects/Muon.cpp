@@ -6,16 +6,35 @@
  */
 
 #include "../../interface/RecoObjects/Muon.h"
+#include "../../interface/GlobalVariables.h"
 
 namespace BAT {
+const double initialBigValue = 123456789;
 
 Muon::Muon() :
-	Particle(), is_Global(false), ecal_Isolation(0.), hcal_Isolation(0), tracker_Isolation(0) {
+	Lepton(),
+	usedAlgorithm(MuonAlgorithm::Default),
+	is_GlobalMuon(false),
+	is_TrackerMuon(false),
+	normalisedChi2(initialBigValue),
+	numberOfValidMuonHits(0),
+	numberOfValidHits(0),
+	pixelLayersWithMeasurement(0),
+	numberOfMatches(0),
+	numberOfMatchedStations(0) {
 
 }
 
 Muon::Muon(double energy, double px, double py, double pz) :
-	Particle(energy, px, py, pz), is_Global(false), ecal_Isolation(0.), hcal_Isolation(0), tracker_Isolation(0) {
+		Lepton(energy, px, py, pz),
+		is_GlobalMuon(false),
+		is_TrackerMuon(false),
+		normalisedChi2(initialBigValue),
+		numberOfValidMuonHits(0),
+		numberOfValidHits(0),
+		pixelLayersWithMeasurement(0),
+		numberOfMatches(0),
+		numberOfMatchedStations(0) {
 
 }
 
@@ -23,48 +42,73 @@ Muon::~Muon() {
 }
 
 bool Muon::isGlobal() const {
-	return is_Global;
+	return is_GlobalMuon;
 }
 
 void Muon::makeGlobal(bool global) {
-	is_Global = global;
+	is_GlobalMuon = global;
 }
 
-double Muon::ecalIsolation() const {
-	return ecal_Isolation;
+void Muon::setTrackerMuon(bool isTrackerMuon) {
+	is_TrackerMuon = isTrackerMuon;
 }
 
-void Muon::setEcalIsolation(double isolation) {
-	ecal_Isolation = isolation;
+void Muon::setNormalisedChi2(double normChi2){
+	normalisedChi2 = normChi2;
 }
 
-double Muon::hcalIsolation() const {
-	return hcal_Isolation;
+void Muon::setNumberOfValidHits(int nValidHits){
+	numberOfValidHits = nValidHits;
 }
 
-void Muon::setHcalIsolation(double isolation) {
-	hcal_Isolation = isolation;
+void Muon::setNumberOfValidMuonHits(int nValidHits){
+	numberOfValidMuonHits = nValidHits;
 }
 
-double Muon::trackerIsolation() const {
-	return tracker_Isolation;
+void Muon::setPixelLayersWithMeasurement(int pixelLayers){
+	pixelLayersWithMeasurement = pixelLayers;
 }
 
-void Muon::setTrackerIsolation(double isolation) {
-	tracker_Isolation = isolation;
+void Muon::setNumberOfMatchedStations(int nMatchedStations){
+	numberOfMatchedStations = nMatchedStations;
 }
 
-double Muon::relativeIsolation() const {
-	return (ecal_Isolation + hcal_Isolation + tracker_Isolation) / pt();
+void Muon::setNumberOfMatches(int nMatches){
+	numberOfMatches = nMatches;
 }
 
-bool Muon::isIsolated() const{
-	return relativeIsolation() < 0.2;
+bool Muon::isGood(short leptonID) const {
+	bool passesPt = pt() > Globals::minMuonPt;
+	bool passesEta = fabs(eta()) < Globals::maxAbsoluteMuonEta;
+	bool passesMuonID = is_GlobalMuon && is_TrackerMuon;
+	bool passesNormChi2 = normalisedChi2 < 10;
+
+	bool passesD0 = d0() < 0.02;
+	bool passesDistanceToVertex = fabs(zDistanceToPrimaryVertex) < 1;
+
+	bool passesNTrackerHits = numberOfValidHits > 10;
+	bool passesNMuonHit = numberOfValidMuonHits > 0;
+	bool passesNPixelLayersWithMeasurement = pixelLayersWithMeasurement >= 1;
+	//are these two identical?
+	bool passesNumberOfMatchedStations = numberOfMatchedStations > 1;
+	bool passesNumberOfMatches = numberOfMatches > 1;
+
+	return passesPt && passesEta && passesMuonID && passesNormChi2 && passesD0 && passesDistanceToVertex
+			&& passesNTrackerHits && passesNMuonHit && passesNMuonHit && passesNPixelLayersWithMeasurement
+			&& passesNumberOfMatchedStations && passesNumberOfMatches;
 }
 
-bool Muon::isGood() const{
+bool Muon::isLoose() const {
 	bool passesPt = pt() > 10;
 	bool passesEta = fabs(eta()) < 2.5;
-	return passesPt && passesEta && is_Global;
+	return passesPt && passesEta && is_GlobalMuon;
+}
+
+bool Muon::isPFLepton() const {
+	return usedAlgorithm == MuonAlgorithm::ParticleFlow;
+}
+
+void Muon::setUsedAlgorithm(MuonAlgorithm::value algorithm){
+	usedAlgorithm = algorithm;
 }
 }
