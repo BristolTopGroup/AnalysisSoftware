@@ -15,7 +15,7 @@ namespace BAT {
 
 class BasicTopPairReconstruction {
 public:
-	BasicTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets);
+	BasicTopPairReconstruction(const LeptonPointer lepton, const METPointer met, const JetCollection jets);
 	virtual ~BasicTopPairReconstruction();
 	virtual const TtbarHypothesisPointer getBestSolution();
 	virtual TtbarHypothesisCollection getAllSolutions();
@@ -37,7 +37,7 @@ protected:
 	bool alreadyReconstructed;
 	METPointer met;
 	JetCollection jets;
-	ElectronPointer electronFromW;
+	LeptonPointer leptonFromW;
 };
 
 typedef boost::shared_ptr<BasicTopPairReconstruction> TopPairReconstruction;

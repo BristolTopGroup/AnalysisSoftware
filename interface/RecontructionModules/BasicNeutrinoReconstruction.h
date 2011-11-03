@@ -28,7 +28,7 @@ enum value {
 
 class BasicNeutrinoReconstruction {
 public:
-	BasicNeutrinoReconstruction(const ElectronPointer electron, const METPointer met);
+	BasicNeutrinoReconstruction(const LeptonPointer lepton, const METPointer met);
 	virtual ~BasicNeutrinoReconstruction();
 	void setMETResolution(double resolution);
 	boost::array<ParticlePointer, 2> getNeutrinos(NeutrinoSelection::value selection = NeutrinoSelection::None);
@@ -43,7 +43,7 @@ protected:
 protected:
 	static double const W_mass;
 
-	ElectronPointer electronFromW;
+	LeptonPointer leptonFromW;
 	METPointer met;
 	ParticlePointer neutrino1, neutrino2;
 	bool alreadyReconstructed;

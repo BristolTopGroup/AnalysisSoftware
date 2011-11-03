@@ -14,7 +14,7 @@ namespace BAT {
 
 class TopMassDifferenceTTbarReco: public BAT::BasicTopPairReconstruction {
 public:
-	TopMassDifferenceTTbarReco(const ElectronPointer electron, const METPointer met, const JetCollection jets);
+	TopMassDifferenceTTbarReco(const LeptonPointer lepton, const METPointer met, const JetCollection jets);
 	virtual ~TopMassDifferenceTTbarReco();
 
 	double getDiscriminator(const TtbarHypothesisPointer) const;

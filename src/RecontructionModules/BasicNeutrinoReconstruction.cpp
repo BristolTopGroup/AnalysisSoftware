@@ -11,13 +11,13 @@
 namespace BAT {
 double const BasicNeutrinoReconstruction::W_mass = 80.389;
 
-BasicNeutrinoReconstruction::BasicNeutrinoReconstruction(const ElectronPointer electron, const METPointer missingET):
-		electronFromW(electron),
+BasicNeutrinoReconstruction::BasicNeutrinoReconstruction(const LeptonPointer lepton, const METPointer missingET):
+		leptonFromW(lepton),
 		met(missingET),
 		neutrino1(),
 		neutrino2(),
 		alreadyReconstructed(false){
-	if (electronFromW == 0)
+	if (leptonFromW == 0)
 		throw ReconstructionException("Could not reconstruct neutrinos: no electron found!");
 	if (met->energy() == 0)
 		throw ReconstructionException("Could not reconstruct neutrinos: no MET found!");
@@ -59,20 +59,20 @@ boost::array<double, 2> BasicNeutrinoReconstruction::computeNeutrinoPz() {
 	boost::array<double, 2> neutrinoZMomenta;
 
 	double pz1(0), pz2(0);
-	double electron_M = 0.0005;
-	double electron_E = electronFromW->energy();
-	double electron_px = electronFromW->px();
-	double electron_py = electronFromW->py();
-	double electron_pz = electronFromW->pz();
+	double lepton_M = 0.0005;
+	double lepton_E = leptonFromW->energy();
+	double lepton_px = leptonFromW->px();
+	double lepton_py = leptonFromW->py();
+	double lepton_pz = leptonFromW->pz();
 	double neutrino_px = met->px();
 	double neutrino_py = met->py();
 
-	double a = W_mass * W_mass - electron_M * electron_M + 2.0 * electron_px * neutrino_px
-			+ 2.0 * electron_py * neutrino_py;
+	double a = W_mass * W_mass - lepton_M * lepton_M + 2.0 * lepton_px * neutrino_px
+			+ 2.0 * lepton_py * neutrino_py;
 
-	double A = 4.0 * (electron_E * electron_E - electron_pz * electron_pz);
-	double B = -4.0 * a * electron_pz;
-	double C = 4.0 * electron_E * electron_E * (neutrino_px * neutrino_px + neutrino_py * neutrino_py) - a * a;
+	double A = 4.0 * (lepton_E * lepton_E - lepton_pz * lepton_pz);
+	double B = -4.0 * a * lepton_pz;
+	double C = 4.0 * lepton_E * lepton_E * (neutrino_px * neutrino_px + neutrino_py * neutrino_py) - a * a;
 
 	double tmproot = B * B - 4.0 * A * C;
 	if (tmproot < 0) {
@@ -106,8 +106,8 @@ void BasicNeutrinoReconstruction::selectNeutrinos(NeutrinoSelection::value selec
 	case NeutrinoSelection::None:
 		return;
 	case NeutrinoSelection::pzClosestToLepton:
-		fabs(neutrino1->pz() - electronFromW->pz())
-				< fabs(neutrino2->pz() - electronFromW->pz()) ?
+		fabs(neutrino1->pz() - leptonFromW->pz())
+				< fabs(neutrino2->pz() - leptonFromW->pz()) ?
 				currentSelection = 1 : currentSelection = 2;
 		break;
 
@@ -117,8 +117,8 @@ void BasicNeutrinoReconstruction::selectNeutrinos(NeutrinoSelection::value selec
 		break;
 
 	case NeutrinoSelection::pzClosestToLeptonOrMostcentralIfAbove300:
-		fabs(neutrino1->pz() - electronFromW->pz())
-				< fabs(neutrino2->pz() - electronFromW->pz()) ?
+		fabs(neutrino1->pz() - leptonFromW->pz())
+				< fabs(neutrino2->pz() - leptonFromW->pz()) ?
 						currentSelection = 1 : currentSelection = 2;
 
 		if (fabs(neutrino1->pz()) > 300 || fabs(neutrino2->pz()) > 300)
@@ -128,10 +128,10 @@ void BasicNeutrinoReconstruction::selectNeutrinos(NeutrinoSelection::value selec
 
 	case NeutrinoSelection::largestValueOfCosine:
 		TVector3 p3W, p3e;
-		ParticlePointer leptonicW1(new Particle(*neutrino1 + *electronFromW));
-		ParticlePointer leptonicW2(new Particle(*neutrino2 + *electronFromW));
+		ParticlePointer leptonicW1(new Particle(*neutrino1 + *leptonFromW));
+		ParticlePointer leptonicW2(new Particle(*neutrino2 + *leptonFromW));
 
-		p3e = electronFromW->getFourVector().Vect();
+		p3e = leptonFromW->getFourVector().Vect();
 
 		p3W = leptonicW1->getFourVector().Vect();
 		double sinthcm1 = 2. * (p3e.Perp(p3W)) / W_mass;

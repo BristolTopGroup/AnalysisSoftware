@@ -79,7 +79,7 @@ double ChiSquaredBasedTopPairReconstruction::HT(unsigned short jetLimit) const {
 }
 
 ChiSquaredBasedTopPairReconstruction::ChiSquaredBasedTopPairReconstruction(
-		const ElectronPointer electron, const METPointer met,
+		const LeptonPointer electron, const METPointer met,
 		const JetCollection jets) :
 		BasicTopPairReconstruction(electron, met, jets) {
 

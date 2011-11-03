@@ -11,21 +11,21 @@
 
 namespace BAT {
 
-BasicTopPairReconstruction::BasicTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets):
+BasicTopPairReconstruction::BasicTopPairReconstruction(const LeptonPointer lepton, const METPointer met, const JetCollection jets):
 		solutions(),
 		alreadyReconstructed(false),
 		met(met),
 		jets(jets),
-		electronFromW(electron) {
+		leptonFromW(lepton) {
 }
 
 bool BasicTopPairReconstruction::meetsInitialCriteria() const {
-	return met != 0 && electronFromW != 0 && jets.size() >= 4;
+	return met != 0 && leptonFromW != 0 && jets.size() >= 4;
 }
 
 std::string BasicTopPairReconstruction::getDetailsOnFailure() const {
 	std::string msg = "Initial Criteria not met: \n";
-	if (electronFromW == 0)
+	if (leptonFromW == 0)
 		msg += "Electron from W: not filled \n";
 	else
 		msg += "Electron from W: filled \n";
@@ -86,7 +86,7 @@ void BasicTopPairReconstruction::reconstruct() {
 							continue;
 						TtbarHypothesisPointer solution(new TtbarHypothesis());
 						//leptons
-						solution->electronFromW = electronFromW;
+						solution->leptonFromW = leptonFromW;
 						solution->neutrinoFromW = neutrino;
 						//jets
 						solution->hadronicBJet = jets.at(hadBindex);
@@ -115,7 +115,7 @@ void BasicTopPairReconstruction::reconstruct() {
 
 
 boost::array<ParticlePointer, 2> BasicTopPairReconstruction::getNeutrinos() {
-	BasicNeutrinoReconstruction neutrinoReconstruction(electronFromW, met);
+	BasicNeutrinoReconstruction neutrinoReconstruction(leptonFromW, met);
 	return neutrinoReconstruction.getNeutrinos(NeutrinoSelection::None);
 }
 

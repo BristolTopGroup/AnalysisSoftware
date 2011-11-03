@@ -15,8 +15,8 @@ double TopMassDifferenceTTbarReco::getDiscriminator(const TtbarHypothesisPointer
 	return absoluteDeltaTopMass;
 }
 
-TopMassDifferenceTTbarReco::TopMassDifferenceTTbarReco(const ElectronPointer electron, const METPointer met, const JetCollection jets) :
-				BasicTopPairReconstruction(electron, met, jets) {
+TopMassDifferenceTTbarReco::TopMassDifferenceTTbarReco(const LeptonPointer lepton, const METPointer met, const JetCollection jets) :
+				BasicTopPairReconstruction(lepton, met, jets) {
 
 }
 

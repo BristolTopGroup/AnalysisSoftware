@@ -20,12 +20,12 @@ bool ChiSquaredThreeJetsTopPairReconstruction::meetsGlobalRequirement(const Ttba
 }
 
 bool ChiSquaredThreeJetsTopPairReconstruction::meetsInitialCriteria() const {
-	return met != 0 && electronFromW != 0 && jets.size() == 3;// needs exactly 3 jets
+	return met != 0 && leptonFromW != 0 && jets.size() == 3;// needs exactly 3 jets
 }
 
 std::string ChiSquaredThreeJetsTopPairReconstruction::getDetailsOnFailure() const {
 	std::string msg = "Initial Criteria not met: \n";
-		if (electronFromW == 0)
+		if (leptonFromW == 0)
 			msg += "Electron from W: not filled \n";
 		else
 			msg += "Electron from W: filled \n";
@@ -43,9 +43,9 @@ std::string ChiSquaredThreeJetsTopPairReconstruction::getDetailsOnFailure() cons
 		return msg;
 }
 
-ChiSquaredThreeJetsTopPairReconstruction::ChiSquaredThreeJetsTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets):
-		BasicTopPairReconstruction(electron, met, jets),
-		ChiSquaredBasedTopPairReconstruction(electron, met, jets) {
+ChiSquaredThreeJetsTopPairReconstruction::ChiSquaredThreeJetsTopPairReconstruction(const LeptonPointer lepton, const METPointer met, const JetCollection jets):
+		BasicTopPairReconstruction(lepton, met, jets),
+		ChiSquaredBasedTopPairReconstruction(lepton, met, jets) {
 
 }
 

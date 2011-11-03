@@ -14,7 +14,7 @@ namespace BAT {
 
 class ChiSquaredBasedTopPairReconstruction: virtual public BAT::BasicTopPairReconstruction {
 public:
-	ChiSquaredBasedTopPairReconstruction(const ElectronPointer electron, const METPointer met, const JetCollection jets);
+	ChiSquaredBasedTopPairReconstruction(const LeptonPointer lepton, const METPointer met, const JetCollection jets);
 	virtual ~ChiSquaredBasedTopPairReconstruction();
 
 protected:
