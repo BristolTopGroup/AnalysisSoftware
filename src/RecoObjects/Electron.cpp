@@ -6,20 +6,18 @@
  */
 
 #include "../../interface/RecoObjects/Electron.h"
-#include <assert.h>
+#include "../../interface/GlobalVariables.h"
+#include <exception>
 
 namespace BAT {
 
 const double initialBigValue = 123456789;
 Electron::Electron() :
-    Particle(),
+    Lepton(),
     usedAlgorithm(ElectronAlgorithm::Calo),
     robustLooseId(false),
     robustTightId(false),
     superCluser_Eta(initialBigValue),
-    ecal_Isolation(initialBigValue),
-    hcal_Isolation(initialBigValue),
-    tracker_Isolation(initialBigValue),
     innerLayerMissingHits_(initialBigValue),
     sigma_IEtaIEta(0),
     dPhi_In(0),
@@ -29,23 +27,16 @@ Electron::Electron() :
     gsfTrack(),
     closesTrackID(-1),
     sharedFractionInnerHits(0),
-    zDistanceToPrimaryVertex(initialBigValue),
     dCotThetaToNextTrack(0),
-    distToNextTrack(0),
-    PFGamma_Isolation(initialBigValue),
-    PFChargedHadron_Isolation(initialBigValue),
-    PFNeutralHadron_Isolation(initialBigValue){
+    distToNextTrack(0) {
 }
 
 Electron::Electron(double energy, double px, double py, double pz) :
-    Particle(energy, px, py, pz),
+    Lepton(energy, px, py, pz),
     usedAlgorithm(ElectronAlgorithm::Calo),
     robustLooseId(false),
     robustTightId(false),
     superCluser_Eta(initialBigValue),
-    ecal_Isolation(initialBigValue),
-    hcal_Isolation(initialBigValue),
-    tracker_Isolation(initialBigValue),
     innerLayerMissingHits_(initialBigValue),
     sigma_IEtaIEta(0),
     dPhi_In(0),
@@ -55,12 +46,9 @@ Electron::Electron(double energy, double px, double py, double pz) :
     gsfTrack(),
     closesTrackID(-1),
     sharedFractionInnerHits(0),
-    zDistanceToPrimaryVertex(initialBigValue),
     dCotThetaToNextTrack(0),
-    distToNextTrack(0),
-    PFGamma_Isolation(initialBigValue),
-    PFChargedHadron_Isolation(initialBigValue),
-    PFNeutralHadron_Isolation(initialBigValue){
+    distToNextTrack(0) {
+
 }
 
 Electron::~Electron() {
@@ -68,9 +56,6 @@ Electron::~Electron() {
 
 double Electron::superClusterEta() const {
     return superCluser_Eta;
-}
-double Electron::ecalIsolation() const {
-    return ecal_Isolation;
 }
 
 /*
@@ -87,9 +72,6 @@ double Electron::ecalIsolationPUCorrected(double rho) const {
 	return ecalIsolation() - rho*effectiveArea;
 }
 
-double Electron::hcalIsolation() const {
-    return hcal_Isolation;
-}
 
 /*
  * Values taken from
@@ -105,9 +87,6 @@ double Electron::hcalIsolationPUCorrected(double rho) const {
 	return hcalIsolation() - rho*effectiveArea;
 }
 
-double Electron::trackerIsolation() const {
-    return tracker_Isolation;
-}
 
 double Electron::relativeIsolation() const {
     return (ecal_Isolation + hcal_Isolation + tracker_Isolation) / this->et();
@@ -117,9 +96,6 @@ double Electron::relativeIsolationPUCorrected(double rho) const {
 	return (ecalIsolationPUCorrected(rho) + hcalIsolationPUCorrected(rho) + tracker_Isolation) / this->et();
 }
 
-bool Electron::isIsolated() const {
-    return relativeIsolation() < 0.1;
-}
 
 bool Electron::isHEEPIsolated() const {
     if (isInBarrelRegion())
@@ -134,18 +110,6 @@ bool Electron::isHEEPIsolated() const {
 
 ElectronAlgorithm::value Electron::getUsedAlgorithm() const {
     return usedAlgorithm;
-}
-
-void Electron::setEcalIsolation(double isolation) {
-    ecal_Isolation = isolation;
-}
-
-void Electron::setHcalIsolation(double isolation) {
-    hcal_Isolation = isolation;
-}
-
-void Electron::setTrackerIsolation(double isolation) {
-    tracker_Isolation = isolation;
 }
 
 void Electron::setSuperClusterEta(double eta) {
@@ -183,38 +147,53 @@ bool Electron::isLoose() const {
 
 }
 
-bool Electron::isGood(bool useCiCElectronID) const {
-    bool passesEt = et() > 30;
-    bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
+bool Electron::isGood(short leptonID) const {
+	bool passesID = passesElectronID(leptonID);
+	bool passesEt = et() > Globals::minElectronET;
+	bool passesEta = fabs(eta()) < Globals::MaxAbsoluteElectronEta && !isInCrack();
 
-    // use d0 wrt primary vertex for
-    bool passesD0 = fabs(d0()) < 0.02;//cm
-
-    bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID = false;
-    if(useCiCElectronID)
-    	passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
-    else
-    	passesID = VBTF_W70_ElectronID();
-
-    //since H/E is used at trigger level, use the same cut here:
-    bool passesHOverE = hadOverEm < 0.05;// same for EE and EB
-
-    return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV && passesHOverE;
+	// use d0 wrt primary vertex for
+	bool passesD0 = fabs(d0()) < 0.02; //cm
+	bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
+	//since H/E is used at trigger level, use the same cut here:
+	bool passesHOverE = hadOverEm < 0.05; // same for EE and EB
+	return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV && passesHOverE;
 }
 
-bool Electron::isQCDElectron(bool useCiCElectronID) const {
-    bool passesEt = et() > 30;
-    bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
-    bool passesD0 = fabs(d0()) < 0.02;//cm
-    bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
-    bool passesID(false);
-    if (useCiCElectronID)
-		passesID = CiC_ElectronID(CiCElectronID::eidHyperTight1MC);
-	else
-		passesID = VBTF_W70_ElectronID();
-    
-    return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV;
+bool Electron::passesElectronID(short leptonID) const {
+	using namespace std;
+
+	ElectronID::value electronID = Globals::electronID;
+	try {
+		electronID = (ElectronID::value) leptonID;
+	} catch (exception& e) {
+		cerr << "Electron ID with index '" << leptonID << "' not known." << endl;
+	}
+
+	switch (electronID) {
+	case ElectronID::SimpleCutBasedWP70:
+		return VBTF_W70_ElectronID();
+	case ElectronID::SimpleCutBasedWP95:
+		return VBTF_W95_ElectronID();
+	default:
+		if (electronID >= ElectronID::CiCVeryLooseMC)
+			return CiC_ElectronID((CiCElectronID::value) electronID);
+		else
+			return false;
+	}
+}
+
+bool Electron::isQCDElectron(short leptonID) const {
+	bool passesID = passesElectronID(leptonID);
+	bool passesEt = et() > Globals::minElectronET;
+	bool passesEta = fabs(eta()) < Globals::MaxAbsoluteElectronEta && !isInCrack();
+
+	// use d0 wrt primary vertex for
+	bool passesD0 = fabs(d0()) < 0.02; //cm
+	bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex) < 1;
+	//since H/E is used at trigger level, use the same cut here:
+	bool passesHOverE = hadOverEm < 0.05; // same for EE and EB
+	return passesEt && passesEta && passesD0 && !passesID && passesDistanceToPV && passesHOverE;
 }
 
 bool Electron::isInBarrelRegion() const {
@@ -390,9 +369,6 @@ double Electron::shFracInnerLayer() const {
     return sharedFractionInnerHits;
 }
 
-void Electron::setZDistanceToPrimaryVertex(double dist) {
-    zDistanceToPrimaryVertex = dist;
-}
 
 void Electron::setDistToNextTrack(double dist) {
     distToNextTrack = dist;
@@ -402,36 +378,9 @@ void Electron::setDCotThetaToNextTrack(double dCotTheta) {
     dCotThetaToNextTrack = dCotTheta;
 }
 
-void Electron::setPFGammaIsolation(double pfGammaIso) {
-    PFGamma_Isolation = pfGammaIso;
-}
-
-void Electron::setPFChargedHadronIsolation(double chargedHadronIso) {
-    PFChargedHadron_Isolation = chargedHadronIso;
-}
-
-void Electron::setPFNeutralHadronIsolation(double neutralHadronIso) {
-    PFNeutralHadron_Isolation = neutralHadronIso;
-}
-
-double Electron::PFGammaIsolation() const {
-    return PFGamma_Isolation;
-}
-
-double Electron::PFChargedHadronIsolation() const {
-    return PFChargedHadron_Isolation;
-}
-
-double Electron::PFNeutralHadronIsolation() const {
-    return PFNeutralHadron_Isolation;
-}
 
 double Electron::pfIsolation() const {
     return (PFGamma_Isolation + PFChargedHadron_Isolation + PFNeutralHadron_Isolation) / et();
-}
-
-bool Electron::isPFIsolated() const {
-    return pfIsolation() < 0.1;
 }
 
 double Electron::ZDistanceToPrimaryVertex() const {
@@ -461,6 +410,10 @@ void Electron::setCompressedCiCElectronID(int electronID){
 bool Electron::CiC_ElectronID(CiCElectronID::value electronID) const{
     // compressedId bit-wise and with the mask
     return CiCElectronIDCompressed & (1 << (int) electronID);
+}
+
+bool Electron::isPFLepton() const {
+	return usedAlgorithm == ElectronAlgorithm::ParticleFlow;
 }
 
 }
