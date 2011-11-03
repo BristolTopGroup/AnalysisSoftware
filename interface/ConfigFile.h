@@ -26,6 +26,8 @@ public:
 	const std::vector<std::string>& inputFiles() const;
 	std::string configPath() const;
 	std::string TQAFPath() const;
+	double lumi() const;
+
 private:
 	boost::program_options::variables_map programOptions;
 	boost::python::object config;
@@ -34,6 +36,7 @@ private:
 	bool useHitFit_;
 	std::vector<std::string> inputFiles_;
 	std::string tqafPath_;
+	double lumi_;
 
 	boost::python::object parse_config(const std::string configPath);
 	std::string parse_python_exception();

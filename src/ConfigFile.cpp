@@ -20,7 +20,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		pileUpFile_(get<string>("PUFile")),
 		useHitFit_(get<bool>("useHitFit")),
 		inputFiles_(getVector("inputFiles")),
-		tqafPath_(get<string>("TQAFPath")){
+		tqafPath_(get<string>("TQAFPath")),
+		lumi_(get<double>("lumi")){
 
 }
 
@@ -38,6 +39,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("PUfile", value<std::string>(), "set input PU file for PU re-weighting");
 	desc.add_options()("fitter", bool_switch(), "turn on the fitter (HitFit)");
 	desc.add_options()("TQAFPath", value<std::string>(), "path to TopQuarkAnalysis folder (the folder itself not included).");
+	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to.");
 
 	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	notify(vm);
@@ -153,6 +155,13 @@ bool ConfigFile::useHitFit() const{
 
 const vector<string>& ConfigFile::inputFiles() const{
 	return inputFiles_;
+}
+
+double ConfigFile::lumi() const {
+	if(programOptions.count("lumi"))
+		return programOptions["lumi"].as<double>();
+	else
+		return lumi_;
 }
 
 ConfigFile::~ConfigFile() {
