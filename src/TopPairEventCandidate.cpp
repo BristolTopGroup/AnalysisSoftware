@@ -6,6 +6,7 @@
  */
 
 #include "../interface/TopPairEventCandidate.h"
+#include "../interface/GlobalVariables.h"
 #include <iostream>
 #include <iomanip>
 using namespace std;
@@ -98,7 +99,7 @@ bool TopPairEventCandidate::passesScrapingFilter() const {
         return isBeamScraping == false;
 }
 
-bool TopPairEventCandidate::passesHighLevelTrigger() const {
+bool TopPairEventCandidate::passesElectronHighLevelTrigger() const {
     if (isRealData()) {
 //        if (runNumber < 140041)
 //			return HLT(HLTriggers::HLT_Ele10_LW_L1R);
@@ -175,8 +176,8 @@ bool TopPairEventCandidate::isolatedElectronNotTaggedAsFromConversion() const {
     return passConversion;
 }
 
-bool TopPairEventCandidate::hasNoIsolatedMuon() const {
-    return goodIsolatedMuons.size() == 0;
+bool TopPairEventCandidate::looseMuonVeto() const {
+    return looseMuons.size() == 0;
 }
 
 bool TopPairEventCandidate::hasAtLeastOneGoodJet() const {
@@ -199,7 +200,7 @@ bool TopPairEventCandidate::hasAtLeastFourGoodJets() const {
     return goodJets.size() >= 4;
 }
 
-bool TopPairEventCandidate::isNotAZBosonEvent() const {
+bool TopPairEventCandidate::electronPlusJetsZVeto() const {
     double invariantMass = 0;
     bool isZEvent = false;
     ElectronPointer isoElectron;
@@ -237,14 +238,23 @@ bool TopPairEventCandidate::isNotAZBosonEvent() const {
 }
 
 bool TopPairEventCandidate::passesMETCut() const{
-    return met->et() > 20.;
+    return met->et() > Globals::METCut;
 }
 
-bool TopPairEventCandidate::passesAsymmetricJetCuts() const {
-    if(goodJets.size() < 2)// good jets have a cut of 30 GeV!
+bool TopPairEventCandidate::passesAsymmetricElectronCleanedJetCuts() const {
+    if(goodElectronCleanedJets.size() < 2)// good jets have a cut of 30 GeV!
         return false;
-    JetPointer leadingJet = goodJets.front();
-    JetPointer secondLeadingJet = goodJets.at(1);
+    JetPointer leadingJet = goodElectronCleanedJets.front();
+    JetPointer secondLeadingJet = goodElectronCleanedJets.at(1);
+    return leadingJet->pt() > 70 && secondLeadingJet->pt() > 50;
+
+}
+
+bool TopPairEventCandidate::passesAsymmetricMuonCleanedJetCuts() const {
+    if(goodMuonCleanedJets.size() < 2)// good jets have a cut of 30 GeV!
+        return false;
+    JetPointer leadingJet = goodMuonCleanedJets.front();
+    JetPointer secondLeadingJet = goodMuonCleanedJets.at(1);
     return leadingJet->pt() > 70 && secondLeadingJet->pt() > 50;
 
 }
@@ -259,15 +269,15 @@ bool TopPairEventCandidate::hasAtLeastTwoBtags() const{
 
 bool TopPairEventCandidate::passesFullTTbarEPlusJetSelection() const {
 //    unsigned int newstep = (int) TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS - 1;
-    return passesSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+    return passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 }
 
-bool TopPairEventCandidate::passesSelectionStepUpTo(enum TTbarEPlusJetsSelection::Step step) const {
+bool TopPairEventCandidate::passesEPlusJetsSelectionStepUpTo(enum TTbarEPlusJetsSelection::Step step) const {
     if (step == TTbarEPlusJetsSelection::FilterOutScraping)
-        return passesSelectionStep(step);
+        return passesEPlusJetsSelectionStep(step);
     else {
         unsigned int newstep = (int) step - 1;
-        return passesSelectionStep(step) && passesSelectionStepUpTo((TTbarEPlusJetsSelection::Step) newstep);
+        return passesEPlusJetsSelectionStep(step) && passesEPlusJetsSelectionStepUpTo((TTbarEPlusJetsSelection::Step) newstep);
     }
 }
 
@@ -277,17 +287,85 @@ bool TopPairEventCandidate::passesNMinus1(enum TTbarEPlusJetsSelection::Step omi
     for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
         if (cut == (unsigned int) omitted)
             continue;
-        passes = passes && passesSelectionStep((TTbarEPlusJetsSelection::Step) cut);
+        passes = passes && passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut);
     }
     return passes;
 }
 
-bool TopPairEventCandidate::passesSelectionStep(enum TTbarEPlusJetsSelection::Step step) const {
+bool TopPairEventCandidate::passesMuPlusJetsSelectionStep(enum TTbarMuPlusJetsSelection::Step step) const {
+    switch (step) {
+    case TTbarMuPlusJetsSelection::EventCleaning://done on skim level!
+    	return hasOneGoodPrimaryVertex();
+    case TTbarMuPlusJetsSelection::HighLevelTrigger:
+        return passesMuonHighLevelTrigger();
+    case TTbarMuPlusJetsSelection::OneIsolatedMuon:
+        return hasOnlyOneGoodIsolatedMuon();
+    case TTbarMuPlusJetsSelection::LooseMuonVeto:
+        return looseMuonVeto();
+    case TTbarMuPlusJetsSelection::LooseElectronVeto:
+    	return true;
+    case TTbarMuPlusJetsSelection::AtLeastOneGoodJets:
+        return goodMuonCleanedJets.size() > 0;
+    case TTbarMuPlusJetsSelection::AtLeastTwoGoodJets:
+        return goodMuonCleanedJets.size() > 1;
+    case TTbarMuPlusJetsSelection::AtLeastThreeGoodJets:
+        return goodMuonCleanedJets.size() > 2;
+    case TTbarMuPlusJetsSelection::AtLeastFourGoodJets:
+        return goodMuonCleanedJets.size() > 3;
+    case TTbarMuPlusJetsSelection::MissingTransverseEnergy:
+        return passesMETCut();
+    case TTbarMuPlusJetsSelection::AsymmetricJetCuts:
+        return passesAsymmetricMuonCleanedJetCuts();
+    case TTbarMuPlusJetsSelection::AtLeastOneBtag:
+        return goodMuonCleanedBJets.size() > 0;
+    case TTbarMuPlusJetsSelection::AtLeastTwoBtags:
+        return goodMuonCleanedBJets.size() > 1;
+    default:
+        return false;
+    }
+}
+
+bool TopPairEventCandidate::passesMuonHighLevelTrigger() const{
+	return true;
+}
+
+bool TopPairEventCandidate::hasOnlyOneGoodIsolatedMuon() const{
+	if (Event::usePFIsolation)
+		return goodPFIsolatedMuons.size() == 1;
+	else
+		return goodIsolatedMuons.size() == 1;
+}
+
+bool TopPairEventCandidate::passesFullTTbarMuPlusJetSelection() const {
+    return passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::AtLeastFourGoodJets);
+}
+
+bool TopPairEventCandidate::passesMuPlusJetsSelectionStepUpTo(enum TTbarMuPlusJetsSelection::Step step) const {
+    if (step == TTbarMuPlusJetsSelection::EventCleaning)
+        return passesMuPlusJetsSelectionStep(step);
+    else {
+        unsigned int newstep = (int) step - 1;
+        return passesMuPlusJetsSelectionStep(step) && passesMuPlusJetsSelectionStepUpTo((TTbarMuPlusJetsSelection::Step) newstep);
+    }
+}
+
+//bool TopPairEventCandidate::passesNMinus1(enum TTbarMuPlusJetsSelection::Step omitted) const {
+//    bool passes(true);
+//
+//    for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
+//        if (cut == (unsigned int) omitted)
+//            continue;
+//        passes = passes && passesMuPlusJetsSelectionStep((TTbarMuPlusJetsSelection::Step) cut);
+//    }
+//    return passes;
+//}
+
+bool TopPairEventCandidate::passesEPlusJetsSelectionStep(enum TTbarEPlusJetsSelection::Step step) const {
     switch (step) {
     case TTbarEPlusJetsSelection::FilterOutScraping:
         return passesScrapingFilter();
     case TTbarEPlusJetsSelection::HighLevelTrigger:
-        return passesHighLevelTrigger();
+        return passesElectronHighLevelTrigger();
     case TTbarEPlusJetsSelection::GoodPrimaryvertex:
         return hasOneGoodPrimaryVertex();
     case TTbarEPlusJetsSelection::OneIsolatedElectron:
@@ -297,61 +375,61 @@ bool TopPairEventCandidate::passesSelectionStep(enum TTbarEPlusJetsSelection::St
     case TTbarEPlusJetsSelection::ConversionFinder:
         return isolatedElectronNotTaggedAsFromConversion();
     case TTbarEPlusJetsSelection::LooseMuonVeto:
-        return hasNoIsolatedMuon();
+        return looseMuonVeto();
     case TTbarEPlusJetsSelection::AtLeastOneGoodJets:
-        return hasAtLeastOneGoodJet();
+        return goodElectronCleanedJets.size() > 0;
     case TTbarEPlusJetsSelection::AtLeastTwoGoodJets:
-        return hasAtLeastTwoGoodJets();
+        return goodElectronCleanedJets.size() > 1;
     case TTbarEPlusJetsSelection::AtLeastThreeGoodJets:
-        return hasAtLeastThreeGoodJets();
+        return goodElectronCleanedJets.size() > 2;
     case TTbarEPlusJetsSelection::AtLeastFourGoodJets:
-        return hasAtLeastFourGoodJets();
+        return goodElectronCleanedJets.size() > 3;
     case TTbarEPlusJetsSelection::Zveto:
-        return isNotAZBosonEvent();
+        return electronPlusJetsZVeto();
     case TTbarEPlusJetsSelection::MissingTransverseEnergy:
         return passesMETCut();
     case TTbarEPlusJetsSelection::AsymmetricJetCuts:
-        return passesAsymmetricJetCuts();
+        return passesAsymmetricElectronCleanedJetCuts();
     case TTbarEPlusJetsSelection::AtLeastOneBtag:
-        return hasAtLeastOneBtag();
+        return goodElectronCleanedBJets.size() > 0;
     case TTbarEPlusJetsSelection::AtLeastTwoBtags:
-        return hasAtLeastTwoBtags();
+        return goodElectronCleanedBJets.size() > 1;
     default:
         return false;
     }
 }
 
-bool TopPairEventCandidate::passesRelIsoSelection() const{
-    bool passesFirst3 = passesSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
+bool TopPairEventCandidate::passesEPlusJetsRelIsoSelection() const{
+    bool passesFirst3 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
         bool passGoodElectrons = goodElectrons.size() > 0 && goodIsolatedElectrons.size() < 2;
-        bool passesBothIsolationvetos = false;
+        bool passesBothconversionvetos = false;
         if (passGoodElectrons) {
-            const ElectronPointer electron = MostIsolatedElectron();
-            if (electron->isGood(Event::useCiCElectronID)) {
+            const ElectronPointer electron = MostIsolatedElectron(allElectrons);
+            if (electron->isGood(Globals::electronID)) {
                 if (useCustomConversionTagger) {
                     conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
-                    passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
+                    passesBothconversionvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
                             0.02, 0.02) == false;
                 }
                 else{
-                    passesBothIsolationvetos = electron->isFromConversion() == false && electron->isTaggedAsConversion(
+                    passesBothconversionvetos = electron->isFromConversion() == false && electron->isTaggedAsConversion(
                             0.02, 0.02) == false;
                 }
             }
 
         }
-        bool muonVeto = hasNoIsolatedMuon();
-        bool Zveto = isNotAZBosonEvent();
-        return passesFirst3 && passGoodElectrons && passesBothIsolationvetos && muonVeto && Zveto;
+        bool muonVeto = looseMuonVeto();
+        bool Zveto = electronPlusJetsZVeto();
+        return passesFirst3 && passGoodElectrons && passesBothconversionvetos && muonVeto && Zveto;
 }
 
-bool TopPairEventCandidate::passesRelIsoControlSelection() const{
-    bool passesFirst3 = passesSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
+bool TopPairEventCandidate::passesEPlusJetsRelIsoControlSelection() const{
+    bool passesFirst3 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
        bool passGoodElectrons = allElectrons.size() > 0 && goodIsolatedElectrons.size() < 2;
        bool passesBothIsolationvetos = false;
        if (passGoodElectrons) {
-           const ElectronPointer electron = MostIsolatedElectron();
-           if (electron->isQCDElectron(Event::useCiCElectronID)) {
+           const ElectronPointer electron = MostIsolatedElectron(allElectrons);
+           if (electron->isQCDElectron(Globals::electronID)) {
                if (useCustomConversionTagger) {
                    conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
                    passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
@@ -363,18 +441,18 @@ bool TopPairEventCandidate::passesRelIsoControlSelection() const{
            }
 
        }
-       bool muonVeto = hasNoIsolatedMuon();
-       bool Zveto = isNotAZBosonEvent();
+       bool muonVeto = looseMuonVeto();
+       bool Zveto = electronPlusJetsZVeto();
        return passesFirst3 && passGoodElectrons && passesBothIsolationvetos && muonVeto && Zveto;
 }
 
-bool TopPairEventCandidate::passesPFIsoSelection() const{
-    bool passesFirst3 = passesSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
+bool TopPairEventCandidate::passesEPlusJetsPFIsoSelection() const{
+    bool passesFirst3 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
         bool passGoodElectrons = goodElectrons.size() > 0 && goodPFIsolatedElectrons.size() < 2;
         bool passesBothIsolationvetos = false;
         if (passGoodElectrons) {
-            const ElectronPointer electron = MostPFIsolatedElectron();
-            if (electron->isGood(Event::useCiCElectronID)) {
+            const ElectronPointer electron = MostPFIsolatedElectron(allElectrons);
+            if (electron->isGood(Globals::electronID)) {
                 if (useCustomConversionTagger) {
                     conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
                     passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
@@ -387,18 +465,18 @@ bool TopPairEventCandidate::passesPFIsoSelection() const{
             }
 
         }
-        bool muonVeto = hasNoIsolatedMuon();
-        bool Zveto = isNotAZBosonEvent();
+        bool muonVeto = looseMuonVeto();
+        bool Zveto = electronPlusJetsZVeto();
         return passesFirst3 && passGoodElectrons && passesBothIsolationvetos && muonVeto && Zveto;
 }
 
-bool TopPairEventCandidate::passesPFIsoControlSelection() const{
-    bool passesFirst3 = passesSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
+bool TopPairEventCandidate::passesEPlusJEtsPFIsoControlSelection() const{
+    bool passesFirst3 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
        bool passGoodElectrons = allElectrons.size() > 0 && goodPFIsolatedElectrons.size() < 2;
        bool passesBothIsolationvetos = false;
        if (passGoodElectrons) {
-           const ElectronPointer electron = MostPFIsolatedElectron();
-           if (electron->isQCDElectron(Event::useCiCElectronID)) {
+           const ElectronPointer electron = MostPFIsolatedElectron(allElectrons);
+           if (electron->isQCDElectron(Globals::electronID)) {
                if (useCustomConversionTagger) {
                    conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
                    passesBothIsolationvetos = electron->isFromConversion() == false && conversionTagger->isFromConversion(
@@ -410,44 +488,44 @@ bool TopPairEventCandidate::passesPFIsoControlSelection() const{
            }
 
        }
-       bool muonVeto = hasNoIsolatedMuon();
-       bool Zveto = isNotAZBosonEvent();
+       bool muonVeto = looseMuonVeto();
+       bool Zveto = electronPlusJetsZVeto();
        return passesFirst3 && passGoodElectrons && passesBothIsolationvetos && muonVeto && Zveto;
 }
 
 bool TopPairEventCandidate::passesConversionSelection() const {
-    bool passesFirst6 = passesSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto);
+    bool passesFirst6 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto);
     bool isConversion1 = isolatedElectronDoesNotComeFromConversion() == false;
     bool isConversion2 = isolatedElectronNotTaggedAsFromConversion() == false;
     return passesFirst6 && (isConversion1 || isConversion2);
 }
 
-bool TopPairEventCandidate::passedAntiIDSelection() const{
+bool TopPairEventCandidate::passedEPlusJetsAntiIDSelection() const{
     //no trigger requirement now, later switch to looseID triggers
 //    bool passesVertex = hasOneGoodPrimaryVertex();
-    bool passesFirst3 = passesSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
+    bool passesFirst3 = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
     bool passElectrons = allElectrons.size() > 0 && goodPFIsolatedElectrons.size() < 2;
     bool passesAntiID = false;
     bool passesConversionVetos = false;
     if (passElectrons) {
-        const ElectronPointer electron = MostPFIsolatedElectron();
-        passesAntiID = electron->isQCDElectron(Event::useCiCElectronID);
+        const ElectronPointer electron = MostPFIsolatedElectron(allElectrons);
+        passesAntiID = electron->isQCDElectron(Globals::electronID);
         passesConversionVetos = electron->isFromConversion() == false && electron->isTaggedAsConversion(
                 0.02, 0.02) == false;
     }
 
     return passesFirst3 && passElectrons && passesAntiID && passesConversionVetos;
 }
-bool TopPairEventCandidate::passesAntiIsolationSelection() const {
+bool TopPairEventCandidate::passesEPlusJetsAntiIsolationSelection() const {
     //require at least one good electron and no isolated good electrons
     if (!(goodElectrons.size() > 0 && goodIsolatedElectrons.size() == 0 && goodPFIsolatedElectrons.size() == 0))
             return false;
 
-    bool passesFirst3 = passesSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
+    bool passesFirst3 = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
 
 
-    bool muonVeto = passesSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
-    bool zveto = passesSelectionStep(TTbarEPlusJetsSelection::Zveto);
+    bool muonVeto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
+    bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::Zveto);
     bool conversionVeto = (goodElectrons.front()->isFromConversion() || goodElectrons.front()->isTaggedAsConversion(
             0.2, 0.2)) == false;
     return passesFirst3 && muonVeto && zveto && conversionVeto;
@@ -671,7 +749,7 @@ void TopPairEventCandidate::fillHypotheses() {
 
 const TtbarHypothesisPointer TopPairEventCandidate::fillHypothesis(unsigned short int neutrinoSolution) {
 	TtbarHypothesisPointer hypothesis(new TtbarHypothesis());
-	hypothesis->electronFromW = electronFromW;
+	hypothesis->leptonFromW = electronFromW;
 	hypothesis->leptonicBjet = leptonicBJet;
 	hypothesis->hadronicBJet = hadronicBJet;
 	hypothesis->jet1FromW = jet1FromW;

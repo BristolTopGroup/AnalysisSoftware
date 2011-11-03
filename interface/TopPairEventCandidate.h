@@ -36,7 +36,7 @@ enum value {
 };
 }
 
-namespace TTbarEPlusJetsSelection {
+namespace TTbarEPlusJetsSelection {//TODO: change to new counting
 enum Step {
     FilterOutScraping,
     HighLevelTrigger,
@@ -75,6 +75,41 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = {
         ">=1 SSV b-tag",
         ">=2 SSV b-tag"
 
+};
+}
+
+namespace TTbarMuPlusJetsSelection {
+enum Step {
+    EventCleaning,
+    HighLevelTrigger,
+    OneIsolatedMuon,
+    LooseMuonVeto,
+    LooseElectronVeto,
+    AtLeastOneGoodJets,
+    AtLeastTwoGoodJets,
+    AtLeastThreeGoodJets,
+    AtLeastFourGoodJets,
+    MissingTransverseEnergy,
+    AsymmetricJetCuts,
+    AtLeastOneBtag,
+    AtLeastTwoBtags,
+    NUMBER_OF_SELECTION_STEPS
+};
+
+const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = {
+        "Event cleaning",
+        "High Level Trigger",
+        "exactly one isolated muon",
+        "loose muon veto",
+        "electron veto",
+        ">= 1 jets",
+        ">= 2 jets",
+        ">= 3 jets",
+        ">= 4 jets",
+        "MET > 20GeV",
+        "jet pT: 1st > 70 GeV, 2nd > 50 GeV",
+        ">=1 SSV b-tag",
+        ">=2 SSV b-tag"
 };
 }
 
@@ -127,25 +162,34 @@ public:
     const ParticlePointer getHadronicTop() const;
     const ParticlePointer getResonance() const;
 
-    bool passesSelectionStep(TTbarEPlusJetsSelection::Step step) const;
-    bool passesSelectionStepUpTo(TTbarEPlusJetsSelection::Step upToStep) const;
+    bool passesFullTTbarEPlusJetSelection() const;
+    bool passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::Step step) const;
+    bool passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::Step upToStep) const;
+
+    bool passesFullTTbarMuPlusJetSelection() const;
+	bool passesMuPlusJetsSelectionStep(TTbarMuPlusJetsSelection::Step step) const;
+	bool passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::Step upToStep) const;
+
+
     bool passesNMinus1(TTbarEPlusJetsSelection::Step omittedStep) const;
-    bool passesRelIsoSelection() const;
-    bool passesRelIsoControlSelection() const;
-    bool passesPFIsoSelection() const;
-    bool passesPFIsoControlSelection() const;
-    bool passesAntiIsolationSelection() const;
+    bool passesEPlusJetsRelIsoSelection() const;
+    bool passesEPlusJetsRelIsoControlSelection() const;
+    bool passesEPlusJetsPFIsoSelection() const;
+    bool passesEPlusJEtsPFIsoControlSelection() const;
+    bool passesEPlusJetsAntiIsolationSelection() const;
 
     bool passesConversionSelection() const;
-    bool passedAntiIDSelection() const;
+    bool passedEPlusJetsAntiIDSelection() const;
 
     bool passesScrapingFilter() const;
-    bool passesHighLevelTrigger() const;
+    bool passesElectronHighLevelTrigger() const;
+    bool passesMuonHighLevelTrigger() const;
     bool hasOneGoodPrimaryVertex() const;
     bool hasOnlyOneGoodIsolatedElectron() const;
+    bool hasOnlyOneGoodIsolatedMuon() const;
     bool isolatedElectronDoesNotComeFromConversion() const;
     bool isolatedElectronNotTaggedAsFromConversion() const;
-    bool hasNoIsolatedMuon() const;
+    bool looseMuonVeto() const;
 
     bool hasAtLeastOneGoodJet() const;
     bool hasAtLeastTwoGoodJets() const;
@@ -153,12 +197,13 @@ public:
     bool hasExactlyThreeGoodJets() const;
     bool hasAtLeastFourGoodJets() const;
 
-    bool isNotAZBosonEvent() const;
-    bool passesFullTTbarEPlusJetSelection() const;
+    bool electronPlusJetsZVeto() const;
+
     bool hasIsolatedElectronInBarrelRegion() const;
 
     bool passesMETCut() const;
-    bool passesAsymmetricJetCuts() const;
+    bool passesAsymmetricElectronCleanedJetCuts() const;
+    bool passesAsymmetricMuonCleanedJetCuts() const;
     bool hasAtLeastOneBtag() const;
     bool hasAtLeastTwoBtags() const;
 

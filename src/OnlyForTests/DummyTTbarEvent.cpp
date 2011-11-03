@@ -51,7 +51,7 @@ bool DummyTTbarEvent::passesHighLevelTrigger() const {
     if (useCustomReturnValues)
         return passHLT;
     else
-        return TopPairEventCandidate::passesHighLevelTrigger();
+        return TopPairEventCandidate::passesElectronHighLevelTrigger();
 }
 
 bool DummyTTbarEvent::hasOneGoodPrimaryVertex() const {
@@ -86,7 +86,7 @@ bool DummyTTbarEvent::hasNoIsolatedMuon() const {
     if (useCustomReturnValues)
         return passesMuon;
     else
-        return TopPairEventCandidate::hasNoIsolatedMuon();
+        return TopPairEventCandidate::looseMuonVeto();
 }
 bool DummyTTbarEvent::hasAtLeastOneGoodJet() const {
     if (useCustomReturnValues)
@@ -120,7 +120,7 @@ bool DummyTTbarEvent::isNotAZBosonEvent() const {
     if (useCustomReturnValues)
         return passesZveto;
     else
-        return TopPairEventCandidate::isNotAZBosonEvent();
+        return TopPairEventCandidate::electronPlusJetsZVeto();
 }
 
 bool DummyTTbarEvent::passesMETCut() const {
@@ -134,7 +134,7 @@ bool DummyTTbarEvent::passesAsymmetricJetCuts() const {
 	if (useCustomReturnValues)
 		return passesAsymJets;
 	else
-		return TopPairEventCandidate::passesAsymmetricJetCuts();
+		return TopPairEventCandidate::passesAsymmetricElectronCleanedJetCuts();
 }
 
 bool DummyTTbarEvent::hasAtLeastOneBtag() const {
