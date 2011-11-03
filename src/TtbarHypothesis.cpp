@@ -26,12 +26,12 @@ TtbarHypothesis::TtbarHypothesis() :
 	hadronicBJet(), 
 	jet1FromW(),
 	jet2FromW(), 
-	electronFromW(), 
+	leptonFromW(), 
 	met() {
 
 }
 
-TtbarHypothesis::TtbarHypothesis( const ElectronPointer& elec, const ParticlePointer& neut,
+TtbarHypothesis::TtbarHypothesis( const LeptonPointer& elec, const ParticlePointer& neut,
 				    const JetPointer& lepBJet,   const JetPointer& hadBJet,
 				    const JetPointer& hadWJet1,  const JetPointer& hadWJet2 ) :
     totalChi2(99999.),
@@ -48,7 +48,7 @@ TtbarHypothesis::TtbarHypothesis( const ElectronPointer& elec, const ParticlePoi
     hadronicBJet(hadBJet),
     jet1FromW(hadWJet1),
     jet2FromW(hadWJet2),
-    electronFromW(elec),
+    leptonFromW(elec),
     met(new MET(neut->px(), neut->py()))
   {
 
@@ -59,7 +59,7 @@ TtbarHypothesis::~TtbarHypothesis() {
 }
 
 bool TtbarHypothesis::isValid() const{
-	bool hasObjects = electronFromW != 0 && neutrinoFromW != 0 && jet1FromW != 0 && jet2FromW != 0 && hadronicBJet != 0 && leptonicBjet;
+	bool hasObjects = leptonFromW != 0 && neutrinoFromW != 0 && jet1FromW != 0 && jet2FromW != 0 && hadronicBJet != 0 && leptonicBjet;
 	return hasObjects;
 
 }
@@ -72,7 +72,7 @@ bool TtbarHypothesis::isPhysical() const{
 
 void TtbarHypothesis::combineReconstructedObjects() {
 	if(isValid()){
-		leptonicW =  ParticlePointer(new Particle(*neutrinoFromW + *electronFromW));
+		leptonicW =  ParticlePointer(new Particle(*neutrinoFromW + *leptonFromW));
 		if(jet1FromW != jet2FromW)
 			hadronicW =  ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
 		else
@@ -91,7 +91,7 @@ void TtbarHypothesis::combineReconstructedObjects() {
 
 void TtbarHypothesis::throwDetailedException() const {
 	std::string msg = "TTbar Hypothesis not filled properly: \n";
-	if (electronFromW == 0)
+	if (leptonFromW == 0)
 		msg += "Electron from W: not filled \n";
 	else
 		msg += "Electron from W: filled \n";

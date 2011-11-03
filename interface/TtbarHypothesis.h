@@ -20,7 +20,7 @@ class TtbarHypothesis {
 public:
 	TtbarHypothesis();
 
-	TtbarHypothesis( const ElectronPointer& elec, const ParticlePointer& neut,
+	TtbarHypothesis( const LeptonPointer& elec, const ParticlePointer& neut,
 		const JetPointer& lepBJet,   const JetPointer& hadBJet,
 		const JetPointer& hadWJet1,  const JetPointer& hadWJet2 );
 
@@ -28,7 +28,7 @@ public:
 	double totalChi2, leptonicChi2, hadronicChi2, globalChi2, discriminator;
 	ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW, resonance, neutrinoFromW;
 	JetPointer leptonicBjet, hadronicBJet, jet1FromW, jet2FromW;
-	ElectronPointer electronFromW;
+	LeptonPointer leptonFromW;
 	METPointer met;
 
 	double M3() const;
