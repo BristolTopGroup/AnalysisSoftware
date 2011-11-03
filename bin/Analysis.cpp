@@ -14,7 +14,7 @@
 #include <cmath>
 #include <math.h>
 #include "../interface/Printers/EventTablePrinter.h"
-#include "../interface/RecontructionModules/ChiSquaredBasedTopPairReconstruction.h"
+#include "../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 #include "../interface/LumiReWeighting.h"
 #include "../interface/GlobalVariables.h"
 
