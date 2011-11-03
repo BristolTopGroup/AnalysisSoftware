@@ -8,6 +8,7 @@
 #include "../../interface/RecoObjects/Electron.h"
 #include "../../interface/GlobalVariables.h"
 #include <exception>
+#include <iostream>
 
 namespace BAT {
 
