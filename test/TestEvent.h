@@ -206,7 +206,7 @@ public:
 
     void testGetMostIsolatedElectron() {
         ASSERT_EQUAL_DELTA(goodIsolatedElectron2->relativeIsolation(),
-                goodZEvent.MostIsolatedElectron()->relativeIsolation(), 0.001);
+                goodZEvent.MostIsolatedElectron(goodZEvent.Electrons())->relativeIsolation(), 0.001);
     }
 
     void testGoodJetCleaning() {

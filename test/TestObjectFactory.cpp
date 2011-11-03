@@ -127,7 +127,7 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
     }
     assert(electron->isGood(false));
     assert(electron->isFromConversion() == false);
-    assert(electron->isIsolated() == false);
+    assert(electron->relativeIsolation() > 0.1);
     return electron;
 }
 
@@ -137,7 +137,7 @@ ElectronPointer TestObjectFactory::goodIsolatedElectron() {
     electron->setEcalIsolation(0.3);
     electron->setHcalIsolation(0.5);
 
-    assert(electron->isIsolated());
+    assert(electron->relativeIsolation() < 0.1);
     assert(electron->isGood(false));
     assert(electron->isFromConversion() == false);
     assert(electron->isTaggedAsConversion(0.02,0.02) == false);
@@ -155,7 +155,7 @@ ElectronPointer TestObjectFactory::goodIsolatedElectron2() {
     //Z mass requirement
     assert(electron->invariantMass(electron2) > 80);
     assert(electron->invariantMass(electron2) < 100);
-    assert(electron2->isIsolated());
+    assert(electron2->relativeIsolation() < 0.1);
     assert(electron2->isGood(false));
     return electron2;
 }
@@ -362,7 +362,7 @@ MuonPointer TestObjectFactory::goodIsolatedMuon() {
     goodIsolatedMuon->setTrackerIsolation(1);
 
     assert(goodIsolatedMuon->isGood());
-    assert(goodIsolatedMuon->isIsolated());
+    assert(goodIsolatedMuon->relativeIsolation() < 0.1);
 
     return goodIsolatedMuon;
 }
@@ -375,7 +375,7 @@ MuonPointer TestObjectFactory::goodNonIsolatedMuon() {
     goodNonIsoMuon->setTrackerIsolation(200);
 
     assert(goodNonIsoMuon->isGood());
-    assert(goodNonIsoMuon->isIsolated() == false);
+    assert(goodNonIsoMuon->relativeIsolation() > 0.1);
 
     return goodNonIsoMuon;
 }

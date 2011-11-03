@@ -498,7 +498,7 @@ public:
     }
 
     void testTTbarEventPassesNStep() {
-        ASSERT_EQUAL(true, ttbarEvent.passesSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto));
+        ASSERT_EQUAL(true, ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto));
     }
 
     void testPoorZEventPassesUpToStep() {
@@ -509,11 +509,11 @@ public:
         cout << poorZEvent.GoodIsolatedElectrons().size() << endl;
         assert(poorZEvent.hasOnlyOneGoodIsolatedElectron());
         assert(poorZEvent.isolatedElectronDoesNotComeFromConversion());
-        ASSERT_EQUAL(true, poorZEvent.passesSelectionStepUpTo(TTbarEPlusJetsSelection::LooseMuonVeto));
+        ASSERT_EQUAL(true, poorZEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::LooseMuonVeto));
     }
 
     void testPoorZEventDoesntPassUpToStep() {
-        ASSERT_EQUAL(false, poorZEvent.passesSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto));
+        ASSERT_EQUAL(false, poorZEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto));
     }
 
     void testPassesFullTTbarSelection() {

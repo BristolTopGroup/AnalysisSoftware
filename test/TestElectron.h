@@ -80,7 +80,7 @@ public:
         float isoSum = isolatedElectron->trackerIsolation() + isolatedElectron->ecalIsolation()
                 + isolatedElectron->hcalIsolation();
         ASSERT_EQUAL_DELTA(isoSum / isolatedElectron->et(), isolatedElectron->relativeIsolation(), 0.01);
-        ASSERT(isolatedElectron->isIsolated());
+        ASSERT(isolatedElectron->relativeIsolation() < 0.1);
     }
 
     void testGoodElectron() {

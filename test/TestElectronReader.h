@@ -47,7 +47,7 @@ public:
     }
 
     void testReadFirstElectronIsIsolated() {
-        ASSERT_EQUAL(true, firstElectron->isIsolated());
+        ASSERT_EQUAL(true, firstElectron->relativeIsolation() < 0.1);
     }
 
     void testFirstElectronSigmaEtaEta() {

@@ -244,7 +244,7 @@ public:
 
     void testHLTTrigger() {
         TopPairEventCandidate candidate = TopPairEventCandidate(TTbarReader->getNextEvent());
-        ASSERT_EQUAL(true, candidate.passesHighLevelTrigger());
+        ASSERT_EQUAL(true, candidate.passesElectronHighLevelTrigger());
     }
 
     void testEventChainConstant() {

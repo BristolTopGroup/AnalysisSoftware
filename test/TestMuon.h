@@ -52,11 +52,11 @@ public:
 	}
 
 	void testIsIsolated() {
-		ASSERT_EQUAL(true, goodIsolatedMuon->isIsolated());
+		ASSERT_EQUAL(true, goodIsolatedMuon->relativeIsolation() < 0.1);
 	}
 
 	void testIsNotIsolated() {
-		ASSERT_EQUAL(false, goodNonIsolatedMuon->isIsolated());
+		ASSERT_EQUAL(false, goodNonIsolatedMuon->relativeIsolation() < 0.1);
 	}
 
 	void testIsGoodMuon() {

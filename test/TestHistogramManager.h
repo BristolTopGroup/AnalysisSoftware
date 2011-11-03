@@ -32,7 +32,7 @@ public:
         seenDataTypes[DataType::DATA] = true;
         seenDataTypes[DataType::ttbar] = true;
 
-        man.setCurrentLumi(lumi);
+//        man.setCurrentLumi(lumi);
         man.prepareForSeenDataTypes(seenDataTypes);
     }
 
