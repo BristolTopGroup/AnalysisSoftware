@@ -5,7 +5,7 @@
 
 namespace BAT {
 namespace EventTablePrinter {
-extern void printCutFlowLatexTable(const Counter& cutFlow, const double lumi) {
+extern void printCutFlowLatexTable(const Counter& cutFlow, const std::string StringSteps[], const double lumi) {
     using namespace std;
     cout << "Printing cut flow table" << endl;
 
@@ -46,7 +46,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow, const double lumi) {
         for (unsigned int type = 0; type < cutFlow.getSizeOfFirstDimension(); ++type) {
             if (type == 0) {
                 cout << " Stage " << setw(2) << cut << " " << setw(40) << left
-                        << TTbarEPlusJetsSelection::StringSteps[cut] << right;
+                        << StringSteps[cut] << right;
             }
             if (type >= DataType::QCD_BCtoE_Pt20to30 && type <= DataType::PhotonJets_Pt200toInf)
                 nQCD += cutFlow.sumThirdDimension(type, cut);
@@ -79,7 +79,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow, const double lumi) {
     cout << "\\end{tabular}\\\\[5mm]" << endl;
     cout << endl;
 }
-extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow, const double lumi) {
+extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow, const std::string StringSteps[], const double lumi) {
     using namespace std;
     cout << "Printing cut flow table" << endl;
 
@@ -120,7 +120,7 @@ extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow, const doubl
         for (unsigned int type = 0; type < cutFlow.getSizeOfFirstDimension(); ++type) {
             if (type == 0) {
                 cout << " Stage " << setw(2) << cut << " " << setw(40) << left
-                        << TTbarEPlusJetsSelection::StringSteps[cut] << right;
+                        << StringSteps[cut] << right;
             }
             if (type >= DataType::QCD_BCtoE_Pt20to30 && type <= DataType::PhotonJets_Pt200toInf)
                 nQCD += cutFlow.sumThirdDimensionUnweighted(type, cut);
