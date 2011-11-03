@@ -70,7 +70,7 @@ enum value {
 	CiCHyperTight1MC = 5,
 	CiCHyperTight2MC = 6,
 	CiCHyperTight3MC = 7,
-	CiCHyperTight4MC = 8,
+	CiCHyperTight4MC = 8
 };
 
 
