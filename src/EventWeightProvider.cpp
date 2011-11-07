@@ -151,7 +151,8 @@ float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
 }
 
 boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pileUpEstimationFile){
-    std::cout << "Using pile-up estimation file " << pileUpEstimationFile << std::endl;
+	using namespace std;
+    cout << "Using pile-up estimation file " << pileUpEstimationFile << endl;
     boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
     boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
     file->Close();
