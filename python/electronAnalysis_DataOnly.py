@@ -1,5 +1,5 @@
 #File for pile-up re-weighting
-PUFile = "../PileUp2011_v2.root"
+PUFile = "BristolAnalysis/Tools/PileUp2011_v2.root"
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis

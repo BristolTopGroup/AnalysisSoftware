@@ -1,5 +1,5 @@
 #File for pile-up re-weighting
-PUFile = "../PileUp2011_v2.root"
+PUFile = "BristolAnalysis/Tools/PileUp2011_v2.root"
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis
@@ -23,7 +23,7 @@ dataFiles = [data_path + path + '/' + filetype for path in dataFiles]
 inputFiles.extend(dataFiles)
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
-TQAFPath = "../../"
+TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
 lumi = 4692.363
