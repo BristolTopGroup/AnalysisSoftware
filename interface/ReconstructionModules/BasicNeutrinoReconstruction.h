@@ -30,18 +30,26 @@ class BasicNeutrinoReconstruction {
 public:
 	BasicNeutrinoReconstruction(const LeptonPointer lepton, const METPointer met);
 	virtual ~BasicNeutrinoReconstruction();
-	void setMETResolution(double resolution);
+//	void setMETResolution(double resolution);
 	boost::array<ParticlePointer, 2> getNeutrinos(NeutrinoSelection::value selection = NeutrinoSelection::None);
-
+	static double const W_mass;
 protected:
 	boost::array<double, 2> resolveComplexROOT(double root, double A, double B);
+	boost::array<double, 2> resolveComplexROOT(bool, bool);
+	boost::array<double, 2> resolveComplexROOT();
 	boost::array<double, 2> computeNeutrinoPz();
 	void reconstructNeutrinos();
 	void selectNeutrinos(NeutrinoSelection::value selection = NeutrinoSelection::None);
 	bool isValidSolution(const ParticlePointer neutrino);
 
+	//functions for MET_x and MET_y which satisfy the W-> l nu condition
+	boost::array<double, 2> getMETX(double mety) const;
+	boost::array<double, 2> getMETY(double metx) const;
+	double getMET(double metx, double mety) const;
+
+
 protected:
-	static double const W_mass;
+
 
 	LeptonPointer leptonFromW;
 	METPointer met;
