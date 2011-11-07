@@ -14,7 +14,7 @@ namespace BAT {
 HistogramManager::HistogramManager() :
     seenDataTypes(),
     histFiles(),
-    currentDataType(DataType::DATA),
+    currentDataType(DataType::ElectronHad),
     currentJetbin(0),
     currentBJetbin(0),
 //    currentIntegratedLumi(0),
@@ -40,7 +40,7 @@ void HistogramManager::addH1D(std::string name, std::string title, unsigned int 
     if(collection1D.find(current1DCollection) == collection1D.end())
         add1DCollection(current1DCollection);
 
-    for (unsigned short type = DataType::DATA; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+    for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
         if (seenDataTypes.at(type)) {
             collection1D[current1DCollection][type]->add(name, title, numberOfBins, xmin, xmax);
         }
@@ -54,7 +54,7 @@ void HistogramManager::addH1D_JetBinned(std::string name, std::string title, uns
         add1DJetCollection(current1DJetCollection);
 
     for (unsigned short jetbin = 0; jetbin < JetBin::NUMBER_OF_JET_BINS; ++jetbin) {
-        for (unsigned short type = DataType::DATA; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+        for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
             if (seenDataTypes.at(type)) {
                 std::stringstream tmp_name, tmp_title;
                 tmp_title << title << " (" << JetBin::names[jetbin] << ")";
@@ -71,7 +71,7 @@ void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, un
         add1DBJetCollection(current1DBJetCollection);
 
     for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
-        for (unsigned short type = DataType::DATA; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+        for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
             if (seenDataTypes.at(type)) {
                 std::stringstream tmp_title;
                 tmp_title << title << " (" << BJetBin::names[jetbin] << ")";
@@ -89,7 +89,7 @@ void HistogramManager::addH2D_BJetBinned(std::string name, std::string title, un
                 add2DBJetCollection(current2DBJetCollection);
 
     for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
-            for (unsigned short type = DataType::DATA; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+            for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
                 if (seenDataTypes.at(type)) {
                     std::stringstream tmp_title;
                     tmp_title << title << " (" << BJetBin::names[jetbin] << ")";
@@ -106,7 +106,7 @@ void HistogramManager::addH2D_JetBinned(std::string name, std::string title, uns
             add2DJetCollection(current2DJetCollection);
 
     for (unsigned short jetbin = 0; jetbin < JetBin::NUMBER_OF_JET_BINS; ++jetbin) {
-        for (unsigned short type = DataType::DATA; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+        for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
             if (seenDataTypes.at(type)) {
                 std::stringstream tmp_title;
                 tmp_title << title << " (" << JetBin::names[jetbin] << ")";
@@ -123,7 +123,7 @@ void HistogramManager::addH2D(std::string name, std::string title, unsigned int 
     if (collection2D.find(current2DCollection) == collection2D.end())
         add2DCollection(current2DCollection);
 
-    for (unsigned short type = DataType::DATA; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+    for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
         if (seenDataTypes.at(type)) {
             collection2D[current2DCollection][type]->add(name, title, nXBins, xmin, xmax, nYBins, ymin, ymax);
         }
@@ -148,10 +148,6 @@ void HistogramManager::setCurrentBJetBin(unsigned int jetbin) {
     } else
         currentBJetbin = jetbin;
 }
-
-//void HistogramManager::setCurrentLumi(float lumi) {
-//    currentIntegratedLumi = lumi;
-//}
 
 boost::shared_ptr<TH1> HistogramManager::operator [](std::string histname) {
     return H1D(histname);
