@@ -117,8 +117,10 @@ bool TopPairEventCandidate::passesElectronHighLevelTrigger() const {
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 		else if (runNumber > 163869 && runNumber <= 165633)
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-		else if (runNumber > 165633)
+		else if (runNumber > 165633 && runNumber <= 178380)
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		else if (runNumber > 178380)
+			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
         else
             return false;
     }
@@ -176,29 +178,73 @@ bool TopPairEventCandidate::isolatedElectronNotTaggedAsFromConversion() const {
     return passConversion;
 }
 
-bool TopPairEventCandidate::looseMuonVeto() const {
-    return looseMuons.size() == 0;
+bool TopPairEventCandidate::ePlusJetsLooseMuonVeto() const {
+	bool hasNoLooseMuon = true;
+
+	for (unsigned int index = 0; index < looseMuons.size(); ++index) {
+		const MuonPointer looseMuon = looseMuons.at(index);
+		bool passLooseIso = false;
+
+		if (Event::usePFIsolation)
+			passLooseIso = looseMuon->pfIsolation() < 0.2;
+		else
+			passLooseIso = looseMuon->relativeIsolation() < 0.2;
+
+		if (passLooseIso) {
+			hasNoLooseMuon = false;
+			break;
+		}
+	}
+
+	return hasNoLooseMuon;
 }
 
-bool TopPairEventCandidate::hasAtLeastOneGoodJet() const {
-    return goodJets.size() >= 1;
+bool TopPairEventCandidate::muPlusJetsLooseMuonVeto() const {
+	bool hasNoLooseMuon = true;
+	MuonPointer signalMuon;
+	if(Event::usePFIsolation && goodPFIsolatedMuons.size() > 0)
+		signalMuon = goodPFIsolatedMuons.front();
+
+	if(!Event::usePFIsolation && goodIsolatedMuons.size() > 0)
+		signalMuon = goodIsolatedMuons.front();
+
+	for (unsigned int index = 0; index < looseMuons.size(); ++index) {
+		const MuonPointer looseMuon = looseMuons.at(index);
+		bool passLooseIso = false;
+
+		if (Event::usePFIsolation)
+			passLooseIso = looseMuon->pfIsolation() < 0.2;
+		else
+			passLooseIso = looseMuon->relativeIsolation() < 0.2;
+
+		if (passLooseIso && (looseMuon != signalMuon)) {
+			hasNoLooseMuon = false;
+			break;
+		}
+	}
+
+	return hasNoLooseMuon;
 }
 
-bool TopPairEventCandidate::hasAtLeastTwoGoodJets() const {
-    return goodJets.size() >= 2;
-}
-
-bool TopPairEventCandidate::hasAtLeastThreeGoodJets() const {
-    return goodJets.size() >= 3;
-}
-
-bool TopPairEventCandidate::hasExactlyThreeGoodJets() const {
-    return goodJets.size() == 3;
-}
-
-bool TopPairEventCandidate::hasAtLeastFourGoodJets() const {
-    return goodJets.size() >= 4;
-}
+//bool TopPairEventCandidate::hasAtLeastOneGoodJet() const {
+//    return goodElectronCleanedJets.size() >= 1;
+//}
+//
+//bool TopPairEventCandidate::hasAtLeastTwoGoodJets() const {
+//    return goodElectronCleanedJets.size() >= 2;
+//}
+//
+//bool TopPairEventCandidate::hasAtLeastThreeGoodJets() const {
+//    return goodElectronCleanedJets.size() >= 3;
+//}
+//
+//bool TopPairEventCandidate::hasExactlyThreeGoodJets() const {
+//    return goodElectronCleanedJets.size() == 3;
+//}
+//
+//bool TopPairEventCandidate::hasAtLeastFourGoodJets() const {
+//    return goodElectronCleanedJets.size() >= 4;
+//}
 
 bool TopPairEventCandidate::electronPlusJetsZVeto() const {
     double invariantMass = 0;
@@ -210,15 +256,15 @@ bool TopPairEventCandidate::electronPlusJetsZVeto() const {
     else if (goodIsolatedElectrons.size() > 0)
         isoElectron = goodIsolatedElectrons.front();
 
-    if (isoElectron != NULL && allElectrons.size() > 1) {
-        for (unsigned int index = 0; index < allElectrons.size(); ++index) {
-            const ElectronPointer looseElectron = allElectrons.at(index);
+    if (isoElectron != NULL && looseElectrons.size() > 1) {
+        for (unsigned int index = 0; index < looseElectrons.size(); ++index) {
+            const ElectronPointer looseElectron = looseElectrons.at(index);
             bool passLooseIso = false;
 
             if (Event::usePFIsolation)
-                passLooseIso = looseElectron->isLoose() && looseElectron->pfIsolation() < 1.;
+                passLooseIso = looseElectron->pfIsolation() < 1.;
             else
-                passLooseIso = looseElectron->isLoose() && looseElectron->relativeIsolation() < 1.;
+                passLooseIso = looseElectron->relativeIsolation() < 1.;
 
             if (passLooseIso)
                 invariantMass = isoElectron->invariantMass(looseElectron);
@@ -235,6 +281,27 @@ bool TopPairEventCandidate::electronPlusJetsZVeto() const {
 
 
     return isZEvent == false;
+}
+
+bool TopPairEventCandidate::muonPlusJetsLooseElectronVeto() const {
+	bool hasNoLooseElectron = true;
+
+	for(unsigned int index = 0; index < looseElectrons.size(); ++ index){
+		const ElectronPointer looseElectron = looseElectrons.at(index);
+		bool passLooseIso = false;
+
+		if (Event::usePFIsolation)
+			passLooseIso = looseElectron->pfIsolation() < 0.2;
+		else
+			passLooseIso = looseElectron->relativeIsolation() < 0.2;
+
+		if(passLooseIso){
+			hasNoLooseElectron = false;
+			break;
+		}
+	}
+
+	return hasNoLooseElectron;
 }
 
 bool TopPairEventCandidate::passesMETCut() const{
@@ -259,13 +326,13 @@ bool TopPairEventCandidate::passesAsymmetricMuonCleanedJetCuts() const {
 
 }
 
-bool TopPairEventCandidate::hasAtLeastOneBtag() const {
-    return goodBJets.size() >= 1;
-}
-
-bool TopPairEventCandidate::hasAtLeastTwoBtags() const{
-    return goodBJets.size() >= 2;
-}
+//bool TopPairEventCandidate::hasAtLeastOneBtag() const {
+//    return goodBJets.size() >= 1;
+//}
+//
+//bool TopPairEventCandidate::hasAtLeastTwoBtags() const{
+//    return goodBJets.size() >= 2;
+//}
 
 bool TopPairEventCandidate::passesFullTTbarEPlusJetSelection() const {
 //    unsigned int newstep = (int) TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS - 1;
@@ -301,9 +368,9 @@ bool TopPairEventCandidate::passesMuPlusJetsSelectionStep(enum TTbarMuPlusJetsSe
     case TTbarMuPlusJetsSelection::OneIsolatedMuon:
         return hasOnlyOneGoodIsolatedMuon();
     case TTbarMuPlusJetsSelection::LooseMuonVeto:
-        return looseMuonVeto();
+        return muPlusJetsLooseMuonVeto();
     case TTbarMuPlusJetsSelection::LooseElectronVeto:
-    	return true;
+    	return muonPlusJetsLooseElectronVeto();
     case TTbarMuPlusJetsSelection::AtLeastOneGoodJets:
         return goodMuonCleanedJets.size() > 0;
     case TTbarMuPlusJetsSelection::AtLeastTwoGoodJets:
@@ -326,7 +393,20 @@ bool TopPairEventCandidate::passesMuPlusJetsSelectionStep(enum TTbarMuPlusJetsSe
 }
 
 bool TopPairEventCandidate::passesMuonHighLevelTrigger() const{
-	return true;
+	if (isRealData()) {
+		if (runNumber >= 160404 && runNumber <= 165633)
+			return HLT(HLTriggers::HLT_Mu17_TriCentralJet30);
+		else if (runNumber > 165633 && runNumber <= 173198)
+			return HLT(HLTriggers::HLT_IsoMu17_TriCentralJet30);
+		else if (runNumber > 173198 && runNumber <= 178380)
+			return HLT(HLTriggers::HLT_IsoMu17_eta2p1_TriCentralJet30);
+		else if (runNumber > 173198)
+			return HLT(HLTriggers::HLT_IsoMu17_eta2p1_TriCentralPFJet30);
+		else
+			return false;
+	} else {
+		return HLT(HLTriggers::HLT_Mu17_TriCentralJet30);
+	}
 }
 
 bool TopPairEventCandidate::hasOnlyOneGoodIsolatedMuon() const{
@@ -375,7 +455,7 @@ bool TopPairEventCandidate::passesEPlusJetsSelectionStep(enum TTbarEPlusJetsSele
     case TTbarEPlusJetsSelection::ConversionFinder:
         return isolatedElectronNotTaggedAsFromConversion();
     case TTbarEPlusJetsSelection::LooseMuonVeto:
-        return looseMuonVeto();
+        return ePlusJetsLooseMuonVeto();
     case TTbarEPlusJetsSelection::AtLeastOneGoodJets:
         return goodElectronCleanedJets.size() > 0;
     case TTbarEPlusJetsSelection::AtLeastTwoGoodJets:
@@ -418,7 +498,7 @@ bool TopPairEventCandidate::passesEPlusJetsRelIsoSelection() const{
             }
 
         }
-        bool muonVeto = looseMuonVeto();
+        bool muonVeto = ePlusJetsLooseMuonVeto();
         bool Zveto = electronPlusJetsZVeto();
         return passesFirst3 && passGoodElectrons && passesBothconversionvetos && muonVeto && Zveto;
 }
@@ -441,7 +521,7 @@ bool TopPairEventCandidate::passesEPlusJetsRelIsoControlSelection() const{
            }
 
        }
-       bool muonVeto = looseMuonVeto();
+       bool muonVeto = ePlusJetsLooseMuonVeto();
        bool Zveto = electronPlusJetsZVeto();
        return passesFirst3 && passGoodElectrons && passesBothIsolationvetos && muonVeto && Zveto;
 }
@@ -465,7 +545,7 @@ bool TopPairEventCandidate::passesEPlusJetsPFIsoSelection() const{
             }
 
         }
-        bool muonVeto = looseMuonVeto();
+        bool muonVeto = ePlusJetsLooseMuonVeto();
         bool Zveto = electronPlusJetsZVeto();
         return passesFirst3 && passGoodElectrons && passesBothIsolationvetos && muonVeto && Zveto;
 }
@@ -488,7 +568,7 @@ bool TopPairEventCandidate::passesEPlusJEtsPFIsoControlSelection() const{
            }
 
        }
-       bool muonVeto = looseMuonVeto();
+       bool muonVeto = ePlusJetsLooseMuonVeto();
        bool Zveto = electronPlusJetsZVeto();
        return passesFirst3 && passGoodElectrons && passesBothIsolationvetos && muonVeto && Zveto;
 }
@@ -531,8 +611,8 @@ bool TopPairEventCandidate::passesEPlusJetsAntiIsolationSelection() const {
     return passesFirst3 && muonVeto && zveto && conversionVeto;
 }
 
-void TopPairEventCandidate::reconstructTTbar(ElectronPointer electron) {
-    if (goodJets.size() < 4)
+void TopPairEventCandidate::reconstructTTbarToEPlusJets(ElectronPointer electron) {
+    if (goodElectronCleanedJets.size() < 4)
         throw ReconstructionException("Not enough jets available to reconstruct top event using Mass Equality method.");
     electronFromW = electron;
     selectedNeutrino = 0;
@@ -541,20 +621,20 @@ void TopPairEventCandidate::reconstructTTbar(ElectronPointer electron) {
     double chosen_TopMassDifference(9999999.);
     double chosen_Chi2Total(9999999.);
 
-    for (unsigned short hadBindex = 0; hadBindex < goodJets.size(); ++hadBindex) {
-        for (unsigned short lepBindex = 0; lepBindex < goodJets.size(); ++lepBindex) {
+    for (unsigned short hadBindex = 0; hadBindex < goodElectronCleanedJets.size(); ++hadBindex) {
+        for (unsigned short lepBindex = 0; lepBindex < goodElectronCleanedJets.size(); ++lepBindex) {
             if (lepBindex == hadBindex)
                 continue;
-            for (unsigned short jet1Index = 0; jet1Index < goodJets.size(); ++jet1Index) {
+            for (unsigned short jet1Index = 0; jet1Index < goodElectronCleanedJets.size(); ++jet1Index) {
                 if (jet1Index == lepBindex || jet1Index == hadBindex)
                     continue;
-                for (unsigned short jet2Index = 0; jet2Index < goodJets.size(); ++jet2Index) {
+                for (unsigned short jet2Index = 0; jet2Index < goodElectronCleanedJets.size(); ++jet2Index) {
                     if (jet2Index == jet1Index || jet2Index == lepBindex || jet2Index == hadBindex)
                         continue;
-                    hadronicBJet = goodJets.at(hadBindex);
-                    leptonicBJet = goodJets.at(lepBindex);
-                    jet1FromW = goodJets.at(jet1Index);
-                    jet2FromW = goodJets.at(jet2Index);
+                    hadronicBJet = goodElectronCleanedJets.at(hadBindex);
+                    leptonicBJet = goodElectronCleanedJets.at(lepBindex);
+                    jet1FromW = goodElectronCleanedJets.at(jet1Index);
+                    jet2FromW = goodElectronCleanedJets.at(jet2Index);
 
                     leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
                     leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
@@ -594,10 +674,10 @@ void TopPairEventCandidate::reconstructTTbar(ElectronPointer electron) {
         }
     }
     std::sort(solutions.begin(), solutions.end(), compareSolutions);
-    hadronicBJet = goodJets.at(hadronicBIndex);
-    leptonicBJet = goodJets.at(leptonicBIndex);
-    jet1FromW = goodJets.at(jet1FromWIndex);
-    jet2FromW = goodJets.at(jet2FromWIndex);
+    hadronicBJet = goodElectronCleanedJets.at(hadronicBIndex);
+    leptonicBJet = goodElectronCleanedJets.at(leptonicBIndex);
+    jet1FromW = goodElectronCleanedJets.at(jet1FromWIndex);
+    jet2FromW = goodElectronCleanedJets.at(jet2FromWIndex);
     leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
     leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
     hadronicW = ParticlePointer(new Particle(*jet1FromW + *jet2FromW));
@@ -611,8 +691,8 @@ void TopPairEventCandidate::reconstructTTbar(ElectronPointer electron) {
     doneReconstruction = true;
 }
 
-void TopPairEventCandidate::reconstructTTbarFrom3Jets(ElectronPointer electron) {
-    if (goodJets.size() < 3)
+void TopPairEventCandidate::reconstructTTbarToEPlusJetsFrom3Jets(ElectronPointer electron) {
+    if (goodElectronCleanedJets.size() < 3)
         throw ReconstructionException("Not enough jets available to reconstruct top event using Mass Equality method.");
     electronFromW = electron;
     selectedNeutrino = 0;
@@ -621,17 +701,17 @@ void TopPairEventCandidate::reconstructTTbarFrom3Jets(ElectronPointer electron) 
     double chosen_TopMassDifference(9999999.);
     double chosen_Chi2Total(9999999.);
 
-    for (unsigned short hadBindex = 0; hadBindex < goodJets.size(); ++hadBindex) {
-        for (unsigned short lepBindex = 0; lepBindex < goodJets.size(); ++lepBindex) {
+    for (unsigned short hadBindex = 0; hadBindex < goodElectronCleanedJets.size(); ++hadBindex) {
+        for (unsigned short lepBindex = 0; lepBindex < goodElectronCleanedJets.size(); ++lepBindex) {
             if (lepBindex == hadBindex)
                 continue;
-            for (unsigned short jetFromW = 0; jetFromW < goodJets.size(); ++jetFromW) {
+            for (unsigned short jetFromW = 0; jetFromW < goodElectronCleanedJets.size(); ++jetFromW) {
                 if (jetFromW == lepBindex || jetFromW == hadBindex)
                     continue;
-                    hadronicBJet = goodJets.at(hadBindex);
-                    leptonicBJet = goodJets.at(lepBindex);
-                    jet1FromW = goodJets.at(jetFromW);
-                    jet2FromW = goodJets.at(jetFromW);
+                    hadronicBJet = goodElectronCleanedJets.at(hadBindex);
+                    leptonicBJet = goodElectronCleanedJets.at(lepBindex);
+                    jet1FromW = goodElectronCleanedJets.at(jetFromW);
+                    jet2FromW = goodElectronCleanedJets.at(jetFromW);
 
                     leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
                     leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
@@ -671,10 +751,10 @@ void TopPairEventCandidate::reconstructTTbarFrom3Jets(ElectronPointer electron) 
         }
     }
     std::sort(solutions.begin(), solutions.end(), compareSolutions);
-    hadronicBJet = goodJets.at(hadronicBIndex);
-    leptonicBJet = goodJets.at(leptonicBIndex);
-    jet1FromW = goodJets.at(jet1FromWIndex);
-    jet2FromW = goodJets.at(jet2FromWIndex);
+    hadronicBJet = goodElectronCleanedJets.at(hadronicBIndex);
+    leptonicBJet = goodElectronCleanedJets.at(leptonicBIndex);
+    jet1FromW = goodElectronCleanedJets.at(jet1FromWIndex);
+    jet2FromW = goodElectronCleanedJets.at(jet2FromWIndex);
     leptonicW1 = ParticlePointer(new Particle(*neutrino1 + *electronFromW));
     leptonicW2 = ParticlePointer(new Particle(*neutrino2 + *electronFromW));
     hadronicW = ParticlePointer(new Particle(*jet1FromW));
@@ -921,12 +1001,12 @@ double TopPairEventCandidate::PtTtbarSystem(unsigned short neutrinoSolution) con
 
 double TopPairEventCandidate::HT(unsigned short jetLimit) const {
     double HT(0);
-    unsigned short limit = goodJets.size();
+    unsigned short limit = goodElectronCleanedJets.size();
     if (limit > jetLimit + 1)
         limit = jetLimit + 1;
 
     for (unsigned short index = 0; index < limit; ++index)
-        HT += goodJets.at(index)->pt();
+        HT += goodElectronCleanedJets.at(index)->pt();
 
     return HT;
 }
@@ -996,12 +1076,12 @@ const ParticlePointer TopPairEventCandidate::getResonance() const {
 
 double TopPairEventCandidate::M3() const {
     double m3(0), max_pt(0);
-    if (goodJets.size() >= 3) {
-        for (unsigned int index1 = 0; index1 < goodJets.size() - 2; ++index1) {
-            for (unsigned int index2 = index1 + 1; index2 < goodJets.size() - 1; ++index2) {
-                for (unsigned int index3 = index2 + 1; index3 < goodJets.size(); ++index3) {
-                    FourVector m3Vector(goodJets.at(index1)->getFourVector() + goodJets.at(index2)->getFourVector()
-                            + goodJets.at(index3)->getFourVector());
+    if (goodElectronCleanedJets.size() >= 3) {
+        for (unsigned int index1 = 0; index1 < goodElectronCleanedJets.size() - 2; ++index1) {
+            for (unsigned int index2 = index1 + 1; index2 < goodElectronCleanedJets.size() - 1; ++index2) {
+                for (unsigned int index3 = index2 + 1; index3 < goodElectronCleanedJets.size(); ++index3) {
+                    FourVector m3Vector(goodElectronCleanedJets.at(index1)->getFourVector() + goodElectronCleanedJets.at(index2)->getFourVector()
+                            + goodElectronCleanedJets.at(index3)->getFourVector());
                     double currentPt = m3Vector.Pt();
                     if (currentPt > max_pt) {
                         max_pt = currentPt;
@@ -1089,8 +1169,8 @@ double TopPairEventCandidate::fullHT() const {
         ht += goodIsolatedMuons.at(index)->pt();
     }
 
-    for (unsigned int index = 0; index < goodJets.size(); ++index) {
-        ht += goodJets.at(index)->pt();
+    for (unsigned int index = 0; index < goodElectronCleanedJets.size(); ++index) {
+        ht += goodElectronCleanedJets.at(index)->pt();
     }
     return ht;
 }

@@ -43,7 +43,7 @@ Event::Event() :
     looseMuons(),
     genParticles(),
     met(),
-    dataType(DataType::DATA),
+    dataType(DataType::ElectronHad),
     runNumber(0),
     eventNumber(0),
     lumiBlock(0),
@@ -58,7 +58,7 @@ Event::~Event() {
 }
 
 bool Event::isRealData() const {
-    return dataType == DataType::DATA;
+    return dataType == DataType::ElectronHad || dataType == DataType::MuHad;
 }
 
 const DataType::value Event::getDataType() const {
@@ -128,7 +128,7 @@ void Event::selectElectronsByQuality() {
             if(isGood && isPFIsolated)
                 goodPFIsolatedElectrons.push_back(electron);
 
-        if (electron->isLoose() && !(isGood && isIsolatedUnderSignalSelection))
+        if (electron->isLoose())
             looseElectrons.push_back(electron);
     }
 }
@@ -177,7 +177,7 @@ JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm:
 	JetCollection bjets;
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet = jets.at(index);
-		if (jet->isBJet(btagAlgorithm, WP));
+		if (jet->isBJet(btagAlgorithm, WP))
 			bjets.push_back(jet);
 	}
 
@@ -343,7 +343,7 @@ void Event::selectMuonsByQuality() {
 		if (isGood && isPFIsolated)
 			goodPFIsolatedMuons.push_back(muon);
 
-		if (muon->isLoose() && !(isGood && isIsolatedUnderSignalSelection))
+		if (muon->isLoose())
 			looseMuons.push_back(muon);
 
 	}
@@ -459,6 +459,10 @@ const MuonCollection& Event::GoodMuons() const {
 
 const MuonCollection& Event::GoodIsolatedMuons() const {
     return goodIsolatedMuons;
+}
+
+const MuonCollection& Event::GoodPFIsolatedMuons() const {
+    return goodPFIsolatedMuons;
 }
 
 const MCParticleCollection& Event::GenParticles() const {

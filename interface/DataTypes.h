@@ -13,10 +13,10 @@
 namespace BAT {
 namespace DataType {
 enum value {
-    DATA,
+    ElectronHad,
+    MuHad,
     ttbar,
     Wjets,
-//    WToENu,
     Zjets,
     QCD_BCtoE_Pt20to30,
     QCD_BCtoE_Pt30to80,
@@ -55,10 +55,10 @@ enum value {
 };
 
 const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
-        "data",
+        "ElectronHad",
+        "MuHad",
         "TTJet",
         "WJetsToLNu",
-//        "WToENu",
         "DYJetsToLL",
         "QCD_Pt-20to30_BCtoE",
         "QCD_Pt-30to80_BCtoE",

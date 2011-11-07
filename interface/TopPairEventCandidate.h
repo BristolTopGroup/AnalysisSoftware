@@ -189,26 +189,28 @@ public:
     bool hasOnlyOneGoodIsolatedMuon() const;
     bool isolatedElectronDoesNotComeFromConversion() const;
     bool isolatedElectronNotTaggedAsFromConversion() const;
-    bool looseMuonVeto() const;
+    bool ePlusJetsLooseMuonVeto() const;
+    bool muPlusJetsLooseMuonVeto() const;
 
-    bool hasAtLeastOneGoodJet() const;
-    bool hasAtLeastTwoGoodJets() const;
-    bool hasAtLeastThreeGoodJets() const;
-    bool hasExactlyThreeGoodJets() const;
-    bool hasAtLeastFourGoodJets() const;
+//    bool hasAtLeastOneGoodJet() const;
+//    bool hasAtLeastTwoGoodJets() const;
+//    bool hasAtLeastThreeGoodJets() const;
+//    bool hasExactlyThreeGoodJets() const;
+//    bool hasAtLeastFourGoodJets() const;
 
     bool electronPlusJetsZVeto() const;
+    bool muonPlusJetsLooseElectronVeto() const;
 
     bool hasIsolatedElectronInBarrelRegion() const;
 
     bool passesMETCut() const;
     bool passesAsymmetricElectronCleanedJetCuts() const;
     bool passesAsymmetricMuonCleanedJetCuts() const;
-    bool hasAtLeastOneBtag() const;
-    bool hasAtLeastTwoBtags() const;
+//    bool hasAtLeastOneBtag() const;
+//    bool hasAtLeastTwoBtags() const;
 
-	void reconstructTTbar(ElectronPointer electron);
-	void reconstructTTbarFrom3Jets(ElectronPointer electron);
+	void reconstructTTbarToEPlusJets(ElectronPointer electron);
+	void reconstructTTbarToEPlusJetsFrom3Jets(ElectronPointer electron);
     void reconstructUsingSubjets();
     void reconstructUsingMCTruth();
 
@@ -243,8 +245,6 @@ protected:
     const TtbarHypothesisPointer fillHypothesis(unsigned short int neutrinoSolution);
 
 };
-
-//typedef TopEventPointer;
 
 }
 

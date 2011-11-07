@@ -113,6 +113,7 @@ public:
 	const MuonCollection& Muons() const;
 	const MuonCollection& GoodMuons() const;
 	const MuonCollection& GoodIsolatedMuons() const;
+	const MuonCollection& GoodPFIsolatedMuons() const;
 	const METPointer MET() const;
 
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&, bool usePFIso) const;

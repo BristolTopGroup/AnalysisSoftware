@@ -15,7 +15,8 @@ namespace BAT {
 boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
     //https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
-    xsection[DataType::DATA] = 0;
+    xsection[DataType::ElectronHad] = 0;
+    xsection[DataType::MuHad] = 0;
     xsection[DataType::ttbar] = 157.5;
     xsection[DataType::Zjets] = 3048.;//m(ll)>50GeV
     xsection[DataType::Wjets] = 31314.;
@@ -81,7 +82,8 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
 }
 
 void EventWeightProvider::defineNumberOfProducedEvents() {
-    numberOfProcessedEvents[DataType::DATA] = 0;
+    numberOfProcessedEvents[DataType::ElectronHad] = 0;
+    numberOfProcessedEvents[DataType::MuHad] = 0;
 
     numberOfProcessedEvents[DataType::ttbar] = 3673321;//3673321;
     numberOfProcessedEvents[DataType::Zjets] = 33645364;//36277961;
@@ -133,7 +135,7 @@ EventWeightProvider::~EventWeightProvider() {
 }
 
 float EventWeightProvider::getWeight(DataType::value type) {
-    if (type == DataType::DATA)
+    if (type == DataType::ElectronHad || type == DataType::MuHad)
         return 1.;
     else
         return xsection[type] * lumiInInversePb / numberOfProcessedEvents[type];
