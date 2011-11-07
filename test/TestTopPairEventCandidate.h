@@ -587,7 +587,7 @@ public:
         cand.setVertices(vertices);
         cand.setMET(met);
         cand.setElectrons(eCollection);
-        ASSERT_THROWS(cand.reconstructTTbar(goodIsolatedElectron),ReconstructionException);
+        ASSERT_THROWS(cand.reconstructTTbarToEPlusJets(goodIsolatedElectron),ReconstructionException);
     }
 
     void testNMinus1CutsPositive() {
