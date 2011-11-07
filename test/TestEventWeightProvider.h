@@ -28,7 +28,8 @@ public:
     }
 
     void testGetWeightData() {
-        ASSERT_EQUAL(1, xSectionProvider.getWeight(DataType::DATA));
+        ASSERT_EQUAL(1, xSectionProvider.getWeight(DataType::ElectronHad));
+        ASSERT_EQUAL(1, xSectionProvider.getWeight(DataType::MuHad));
     }
 
     void testGetWeightTtbar() {

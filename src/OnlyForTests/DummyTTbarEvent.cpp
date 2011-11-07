@@ -86,34 +86,34 @@ bool DummyTTbarEvent::hasNoIsolatedMuon() const {
     if (useCustomReturnValues)
         return passesMuon;
     else
-        return TopPairEventCandidate::looseMuonVeto();
+        return TopPairEventCandidate::ePlusJetsLooseMuonVeto();
 }
 bool DummyTTbarEvent::hasAtLeastOneGoodJet() const {
     if (useCustomReturnValues)
         return passes1JetCut;
     else
-        return TopPairEventCandidate::hasAtLeastOneGoodJet();
+        return TopPairEventCandidate::GoodElectronCleanedJets().size() >=1;
 }
 
 bool DummyTTbarEvent::hasAtLeastTwoGoodJets() const {
     if (useCustomReturnValues)
         return passes2JetCut;
     else
-        return TopPairEventCandidate::hasAtLeastTwoGoodJets();
+        return TopPairEventCandidate::GoodElectronCleanedJets().size() >=2;
 }
 
 bool DummyTTbarEvent::hasAtLeastThreeGoodJets() const {
     if (useCustomReturnValues)
         return passes3JetCut;
     else
-        return TopPairEventCandidate::hasAtLeastThreeGoodJets();
+        return TopPairEventCandidate::GoodElectronCleanedJets().size() >=3;
 }
 
 bool DummyTTbarEvent::hasAtLeastFourGoodJets() const {
     if (useCustomReturnValues)
         return passes4JetCut;
     else
-        return TopPairEventCandidate::hasAtLeastFourGoodJets();
+        return TopPairEventCandidate::GoodElectronCleanedJets().size() >=4;
 }
 
 bool DummyTTbarEvent::isNotAZBosonEvent() const {
@@ -141,14 +141,14 @@ bool DummyTTbarEvent::hasAtLeastOneBtag() const {
 	if (useCustomReturnValues)
 		return atLeastOneBtag;
 	else
-		return TopPairEventCandidate::hasAtLeastOneBtag();
+		return TopPairEventCandidate::GoodElectronCleanedBJets().size() > 0;
 }
 
 bool DummyTTbarEvent::hasAtLeastTwoBtags() const {
 	if (useCustomReturnValues)
 		return atLeastTwoBtags;
 	else
-		return TopPairEventCandidate::hasAtLeastTwoBtags();
+		return TopPairEventCandidate::GoodElectronCleanedBJets().size() > 1;
 }
 
 bool DummyTTbarEvent::passesNMinus1(enum TTbarEPlusJetsSelection::Step omitted) const {

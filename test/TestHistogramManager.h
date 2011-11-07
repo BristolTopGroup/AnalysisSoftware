@@ -24,12 +24,12 @@ public:
         man(),
         lumi(1.5),
         expectedTtbarFile("ttjet_1.5pb_CaloElectron_CaloJets_CaloMET.root"),
-        expectedDataFile("data_1.5pb_CaloElectron_CaloJets_CaloMET.root") {
+        expectedDataFile("ElectronHad_1.5pb_CaloElectron_CaloJets_CaloMET.root") {
         man.enableDebugMode(true);
         boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes = boost::array<bool,
                 DataType::NUMBER_OF_DATA_TYPES>();
 
-        seenDataTypes[DataType::DATA] = true;
+        seenDataTypes[DataType::ElectronHad] = true;
         seenDataTypes[DataType::ttbar] = true;
 
 //        man.setCurrentLumi(lumi);
@@ -45,7 +45,7 @@ public:
 
     void testPreparationData() {
         man.addH1D("myHist", "Testing", 10, 0., 1);
-        man.setCurrentDataType(DataType::DATA);
+        man.setCurrentDataType(DataType::ElectronHad);
         man.setCurrentCollection("");
         ASSERT(man.H1D("myHist") != 0);
     }
@@ -64,14 +64,14 @@ public:
 
     void testPreparationData2D() {
         man.addH2D("myHist2D", "Testing", 10, 0., 1, 10, 0., 1);
-        man.setCurrentDataType(DataType::DATA);
+        man.setCurrentDataType(DataType::ElectronHad);
         man.setCurrentCollection("");
         ASSERT(man.H2D("myHist2D") != 0);
     }
 
     void testPreparationDatajetBinned() {
         man.addH1D_JetBinned("myHistJeted", "Testing", 10, 0., 1);
-        man.setCurrentDataType(DataType::DATA);
+        man.setCurrentDataType(DataType::ElectronHad);
         man.setCurrentJetBin(0);
         man.setCurrentCollection("");
         ASSERT(man.H1D_JetBinned("myHistJeted") != 0);

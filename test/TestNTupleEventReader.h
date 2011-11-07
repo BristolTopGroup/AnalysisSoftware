@@ -143,7 +143,7 @@ public:
 
     void testDataType() {
         Event currentEvent = DataReader->getNextEvent();
-        ASSERT_EQUAL(short(DataType::DATA), short(currentEvent.getDataType()));
+        ASSERT_EQUAL(short(DataType::ElectronHad), short(currentEvent.getDataType()));
     }
 
     void testReadDataType() {
@@ -271,7 +271,7 @@ public:
         const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenTypes = AllMCReader->getSeenDatatypes();
 
         for (unsigned short index = 0; index < DataType::NUMBER_OF_DATA_TYPES; ++index) {
-            if (index == DataType::DATA || index >= DataType::Zprime_M500GeV_W5GeV || index == DataType::VQQ){
+            if (index == DataType::ElectronHad || index >= DataType::Zprime_M500GeV_W5GeV || index == DataType::VQQ){
             	if(seenTypes.at(index))
             		cout << index << endl;
             	ASSERT_EQUAL(false, seenTypes.at(index));
