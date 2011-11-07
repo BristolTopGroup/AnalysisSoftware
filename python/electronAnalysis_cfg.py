@@ -22,10 +22,6 @@ mc_path = '/storage/TopQuarkGroup/mc/'
 
 
 mcFolders = ['DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v4d_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
-           'QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v4c_Summer11-PU_S3_START42_V11-v2/320e12f5112fc77647c2bcc27037229f',
-           'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
-           'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
-           'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            'Tbar_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            'Tbar_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            'Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
@@ -36,7 +32,18 @@ mcFolders = ['DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v4d_Summer11-PU
            'WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            'WW_TuneZ2_7TeV_pythia6_tauola/nTuple_v4d_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            'WZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v4d_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
-           'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f']
+           'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
+           #b-quark -> X e nu enriched samples
+           'QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v4c_Summer11-PU_S3_START42_V11-v2/320e12f5112fc77647c2bcc27037229f',
+           'QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v4d_Summer11-PU_S4_START42_V11-v1',
+           'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
+           #EM enriched samples
+           'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
+           'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
+           #photon + jets
+           'GJets_TuneZ2_40_HT_100_7TeV-madgraph/nTuple_v4e_Summer11-PU_S4_START42_V11-v1',
+           'GJets_TuneZ2_100_HT_200_7TeV-madgraph/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
+           'GJets_TuneZ2_200_HT_inf_7TeV-madgraph/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f']
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
 
