@@ -80,8 +80,8 @@ boost::array<double, 2> BasicNeutrinoReconstruction::computeNeutrinoPz() {
 
 	double tmproot = B * B - 4.0 * A * C;
 	if (tmproot < 0) {
-//		boost::array<double, 2> solutions = resolveComplexROOT(tmproot, A, B);
-		boost::array<double, 2> solutions = resolveComplexROOT(true, true);
+		boost::array<double, 2> solutions = resolveComplexROOT(tmproot, A, B);
+//		boost::array<double, 2> solutions = resolveComplexROOT(true, true);
 //		cout << "complex ROOT" << endl;
 		pz1 = solutions[0];
 		pz2 = solutions[1];
@@ -97,23 +97,23 @@ boost::array<double, 2> BasicNeutrinoReconstruction::computeNeutrinoPz() {
 	return neutrinoZMomenta;
 }
 
-boost::array<double, 2> BasicNeutrinoReconstruction::resolveComplexROOT(){
-	boost::array<double, 2> solutions;
-	double metResolution = met->resolution();
-	double met_et = met->et();
-	METPointer newMET(met);
-
-	for(double x = -metResolution; x < metResolution; x+0.1){
-		double newScale = (met_et + x)/met_et;
-		double metx = met->px()*(1+newScale);
-		boost::array<double, 2> mety = getMETY(metx);
-
-	}
-
-	solutions[0] = 0;
-	solutions[1] = 0;
-	return solutions;
-}
+//boost::array<double, 2> BasicNeutrinoReconstruction::resolveComplexROOT(){
+//	boost::array<double, 2> solutions;
+//	double metResolution = met->resolution();
+//	double met_et = met->et();
+//	METPointer newMET(met);
+//
+//	for(double x = -metResolution; x < metResolution; x=+0.1){
+//		double newScale = (met_et + x)/met_et;
+//		double metx = met->px()*(1+newScale);
+//		boost::array<double, 2> mety = getMETY(metx);
+//
+//	}
+//
+//	solutions[0] = 0;
+//	solutions[1] = 0;
+//	return solutions;
+//}
 
 boost::array<double, 2> BasicNeutrinoReconstruction::resolveComplexROOT(double root, double A, double B){
 	boost::array<double, 2> solutions;
