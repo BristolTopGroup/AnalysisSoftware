@@ -23,7 +23,7 @@ dataFiles = [data_path + path + '/' + filetype for path in dataFiles]
 inputFiles.extend(dataFiles)
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
-TQAFPath = "../../"
+TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
 lumi = 4692.363
