@@ -90,8 +90,8 @@ void Analysis::initiateEvent() {
 
 
     histMan->setCurrentDataType(ttbarCandidate.getDataType());
-    histMan->setCurrentJetBin(currentEvent.GoodJets().size());
-    histMan->setCurrentBJetBin(currentEvent.GoodBJets().size());
+    histMan->setCurrentJetBin(currentEvent.GoodElectronCleanedJets().size());
+    histMan->setCurrentBJetBin(currentEvent.GoodElectronCleanedBJets().size());
 }
 
 void Analysis::inspectEvents() {
@@ -199,8 +199,8 @@ void Analysis::doTTBarAnalysis() {
     }
 
     if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)
-            && ttbarCandidate.looseMuonVeto() && ttbarCandidate.electronPlusJetsZVeto()
-            && ttbarCandidate.hasAtLeastFourGoodJets()) {
+            && ttbarCandidate.ePlusJetsLooseMuonVeto() && ttbarCandidate.electronPlusJetsZVeto()
+            && ttbarCandidate.GoodElectronCleanedJets().size() >=4) {
         const ElectronCollection coll = ttbarCandidate.Electrons();
         for (unsigned int index = 0; index < coll.size(); ++index) {
             const ElectronPointer electron = coll.at(index);
@@ -208,7 +208,6 @@ void Analysis::doTTBarAnalysis() {
             bool passesEta = fabs(electron->superClusterEta()) < 2.5
                     && electron->isInCrack() == false;
             bool passesID = electron->VBTF_W70_ElectronID();
-            //            bool isNotEcalSpike = electron->isEcalSpike() == false;
             bool noConversion = electron->isFromConversion() == false;
             if (passesEt && passesEta && passesID && noConversion) {
                 histMan->H1D("electronD0")->Fill(electron->d0(), weight);
@@ -216,13 +215,14 @@ void Analysis::doTTBarAnalysis() {
         }
     }
     if (ttbarCandidate.passesFullTTbarEPlusJetSelection()) {
-    	ChiSquaredBasedTopPairReconstruction reco(ttbarCandidate.GoodPFIsolatedElectrons().front(), ttbarCandidate.MET(), ttbarCandidate.GoodJets());
-        histMan->H1D("numberOfBJets")->Fill(ttbarCandidate.GoodBJets().size(), weight);
+    	ChiSquaredBasedTopPairReconstruction reco(ttbarCandidate.GoodPFIsolatedElectrons().front(),
+				ttbarCandidate.MET(), ttbarCandidate.GoodElectronCleanedJets());
+        histMan->H1D("numberOfBJets")->Fill(ttbarCandidate.GoodElectronCleanedBJets().size(), weight);
         try {
             if (Event::usePFIsolation)
-                ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodPFIsolatedElectrons().front());
+                ttbarCandidate.reconstructTTbarToEPlusJets(ttbarCandidate.GoodPFIsolatedElectrons().front());
             else
-                ttbarCandidate.reconstructTTbar(ttbarCandidate.GoodIsolatedElectrons().front());
+                ttbarCandidate.reconstructTTbarToEPlusJets(ttbarCandidate.GoodIsolatedElectrons().front());
         } catch (ReconstructionException &e) {
             cout << e.what() << endl;
             return;
@@ -230,7 +230,6 @@ void Analysis::doTTBarAnalysis() {
         vector<TtbarHypothesisPointer> solutions = ttbarCandidate.Solutions();
         const ParticlePointer resonance = ttbarCandidate.getResonance();
         double mttbar = ttbarCandidate.mttbar();
-//        mttbar = reco.getBestSolution()->resonance->mass();
 
         ParticlePointer leadingTop, nextToLeadingTop;
 
@@ -258,7 +257,6 @@ void Analysis::doTTBarAnalysis() {
         histMan->H1D_BJetBinned("m3")->Fill(ttbarCandidate.M3(), weight);
 
 
-//        histMan->H1D("mttbar")->Fill(mttbar, weight);
         histMan->H1D_BJetBinned("mttbar")->Fill(mttbar, weight);
 
         histMan->H1D_BJetBinned("ttbar_pt")->Fill(resonance->pt(), weight);
@@ -341,30 +339,6 @@ void Analysis::doTTBarAnalysis() {
                     solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
                     weight/numberOfSolutions);
 
-//            if (solutionIndex == 1) {
-//                histMan->H1D_BJetBinned("mttbar_2ndSolution")->Fill(solutions.at(solutionIndex)->resonance->mass(),
-//                        weight);
-//
-//                histMan->H1D_BJetBinned("ttbar_pt_2ndSolution")->Fill(solutions.at(solutionIndex)->resonance->pt(),
-//                        weight);
-//
-//                histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_2ndSolution")->Fill(
-//                        solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
-//                        weight);
-//
-//            }
-//            if (solutionIndex == 2) {
-//                histMan->H1D_BJetBinned("mttbar_3rdSolution")->Fill(solutions.at(solutionIndex)->resonance->mass(),
-//                        weight);
-//
-//                histMan->H1D_BJetBinned("ttbar_pt_3rdSolution")->Fill(solutions.at(solutionIndex)->resonance->pt(),
-//                        weight);
-//
-//                histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_3rdSolution")->Fill(
-//                        solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
-//                        weight);
-//            }
-
             if (ttbarCandidate.passesMETCut()) {
                 histMan->H1D_BJetBinned("mttbar_allSolutions_withMETCut")->Fill(
                         solutions.at(solutionIndex)->resonance->mass(), weight/numberOfSolutions);
@@ -373,22 +347,6 @@ void Analysis::doTTBarAnalysis() {
                 histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions_withMETCut")->Fill(
                         solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
                         weight/numberOfSolutions);
-//                if (solutionIndex == 1) {
-//                    histMan->H1D_BJetBinned("mttbar_2ndSolution_withMETCut")->Fill(
-//                            solutions.at(solutionIndex)->resonance->mass(), weight);
-//                    histMan->H1D_BJetBinned("ttbar_pt_2ndSolution_withMETCut")->Fill(
-//                            solutions.at(solutionIndex)->resonance->pt(), weight);
-//                    histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_2ndSolution_withMETCut")->Fill(solutions.at(
-//                            solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
-//                }
-//                if (solutionIndex == 2) {
-//                    histMan->H1D_BJetBinned("mttbar_3rdSolution_withMETCut")->Fill(
-//                            solutions.at(solutionIndex)->resonance->mass(), weight);
-//                    histMan->H1D_BJetBinned("ttbar_pt_3rdSolution_withMETCut")->Fill(
-//                            solutions.at(solutionIndex)->resonance->pt(), weight);
-//                    histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_3rdSolution_withMETCut")->Fill(solutions.at(
-//                            solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
-//                }
 
                 if (ttbarCandidate.passesAsymmetricElectronCleanedJetCuts()) {
                     histMan->H1D_BJetBinned("mttbar_allSolutions_withMETAndAsymJets")->Fill(
@@ -400,61 +358,6 @@ void Analysis::doTTBarAnalysis() {
                 }
             }
 
-//            if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
-//                histMan->H1D_BJetBinned("mttbar_allSolutions_withAsymJetsCut")->Fill(
-//                        solutions.at(solutionIndex)->resonance->mass(), weight/numberOfSolutions);
-//                histMan->H1D_BJetBinned("ttbar_pt_allSolutions_withAsymJetsCut")->Fill(
-//                        solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
-//                histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_allSolutions_withAsymJetsCut")->Fill(solutions.at(
-//                        solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight/numberOfSolutions);
-//
-////                if (ttbarCandidate.MET()->et() > 20) {
-////
-////                    if (solutionIndex == 1) {
-////                        histMan->H1D_BJetBinned("mttbar_2ndSolution_withMETAndAsymJets")->Fill(solutions.at(
-////                                solutionIndex)->resonance->mass(), weight);
-////
-////                        histMan->H1D_BJetBinned("ttbar_pt_2ndSolution_withMETAndAsymJets")->Fill(solutions.at(
-////                                solutionIndex)->resonance->pt(), weight);
-////                        histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_2ndSolution_withMETAndAsymJets")->Fill(solutions.at(
-////                                solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
-////                    }
-////
-////                    if (solutionIndex == 2) {
-////                        histMan->H1D_BJetBinned("mttbar_3rdSolution_withMETAndAsymJets")->Fill(solutions.at(
-////                                solutionIndex)->resonance->mass(), weight);
-////
-////                        histMan->H1D_BJetBinned("ttbar_pt_3rdSolution_withMETAndAsymJets")->Fill(solutions.at(
-////                                solutionIndex)->resonance->pt(), weight);
-////                        histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_3rdSolution_withMETAndAsymJets")->Fill(solutions.at(
-////                                solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
-////                    }
-////                }
-//
-////                if (solutionIndex == 1) {
-////                    histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_2ndSolution_withAsymJetsCut")->Fill(solutions.at(
-////                            solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
-////
-//////                    histMan->H1D_BJetBinned("mttbar_2ndSolution_withAsymJetsCut")->Fill(
-//////                            solutions.at(solutionIndex)->resonance->mass(), weight);
-//////                    histMan->H1D_BJetBinned("mttbar_2ndSolution_withAsymJetsCut")->Fill(
-//////                            solutions.at(solutionIndex)->resonance->mass(), weight);
-////                }
-////
-////                if (solutionIndex == 2) {
-////                    histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar_3rdSolution_withAsymJetsCut")->Fill(solutions.at(
-////                            solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(), weight);
-////                    histMan->H1D_BJetBinned("ttbar_pt_3rdSolution_withAsymJetsCut")->Fill(
-////                            solutions.at(solutionIndex)->resonance->pt(), weight);
-////
-////                    histMan->H1D_BJetBinned("ttbar_pt_3rdSolution_withAsymJetsCut")->Fill(
-////                            solutions.at(solutionIndex)->resonance->pt(), weight);
-////                }
-//
-//            }
-
-            //            cout << "total Chi2 = " << solutions.at(solutionIndex)->totalChi2;
-            //            cout << ", mass = " << solutions.at(solutionIndex)->resonance->mass() << endl;
         }
 
         histMan->setCurrentCollection("topReconstruction/backgroundShape");
@@ -463,28 +366,12 @@ void Analysis::doTTBarAnalysis() {
             histMan->H1D_BJetBinned("ttbar_pt_QCDEnriched")->Fill(resonance->pt());
         }
 
-
-
-//        cout << "Number of solutions: " << solutions.size() << " (" << ttbarCandidate.GoodJets().size() << " jets)"
-//                << endl;
-//        cout << "First solution, compare to chosen one" << endl;
-//        cout << solutions.front()->totalChi2 << ", " << ttbarCandidate.getTotalChi2() << endl;
-
-//        if (mttbar != mttbar) {//isnan
-//            ttbarCandidate.inspectReconstructedEvent();
-//        }
-        if (ttbarCandidate.isRealData() && mttbar > 800 && ttbarCandidate.passesEPlusJetsSelectionStepUpTo(
+        if (ttbarCandidate.isRealData() && mttbar > 600 && ttbarCandidate.passesEPlusJetsSelectionStepUpTo(
                 TTbarEPlusJetsSelection::AsymmetricJetCuts)) {
             cout << "run " << ttbarCandidate.runnumber() << ", event " << ttbarCandidate.eventnumber() << ", lumi "
                     << ttbarCandidate.lumiblock();
             cout << ", top pair invariant mass = " << mttbar << " GeV" << endl;
             interestingEvents.push_back(InterestingEvent(ttbarCandidate, eventReader->getCurrentFile()));
-
-//            if (resonance->pt() > 200) {
-//                cout << "top pair pt = " << resonance->pt() << " GeV" << endl;
-//                ttbarCandidate.inspect();
-//                ttbarCandidate.inspectReconstructedEvent();
-//            }
         }
 
     }
@@ -492,12 +379,12 @@ void Analysis::doTTBarAnalysis() {
     //for 3 jets only
     histMan->setCurrentCollection("topReconstruction");
     if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets)
-            && ttbarCandidate.hasExactlyThreeGoodJets()) {
+            && ttbarCandidate.GoodElectronCleanedJets().size() ==3) {
         try {
             if (Event::usePFIsolation)
-                ttbarCandidate.reconstructTTbarFrom3Jets(ttbarCandidate.GoodPFIsolatedElectrons().front());
+                ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(ttbarCandidate.GoodPFIsolatedElectrons().front());
             else
-                ttbarCandidate.reconstructTTbarFrom3Jets(ttbarCandidate.GoodIsolatedElectrons().front());
+                ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(ttbarCandidate.GoodIsolatedElectrons().front());
         } catch (ReconstructionException &e) {
             cout << e.what() << endl;
             return;
@@ -610,7 +497,7 @@ void Analysis::doQCDStudy() {
                     histMan->H1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts")->Fill(
                             electron->pfIsolation(), weight);
 
-                    if(ttbarCandidate.hasExactlyThreeGoodJets())
+                    if(ttbarCandidate.GoodElectronCleanedJets().size() ==3)
                         histMan->H1D_BJetBinned("PFIsolation_3jets_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
                                 weight);
 
@@ -679,18 +566,18 @@ void Analysis::doQCDStudy() {
     }
 
     if (ttbarCandidate.passesEPlusJEtsPFIsoControlSelection() && Globals::electronAlgorithm
-            == ElectronAlgorithm::ParticleFlow && ttbarCandidate.hasAtLeastFourGoodJets()) {
+            == ElectronAlgorithm::ParticleFlow && ttbarCandidate.GoodElectronCleanedJets().size() >=4) {
         const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
         histMan->H1D_BJetBinned("PFIsolation_controlRegion")->Fill(electron->pfIsolation(), weight);
     }
 
     histMan->setCurrentCollection("topReconstruction/backgroundShape");
-    if (ttbarCandidate.passesEPlusJetsRelIsoSelection() && ttbarCandidate.hasAtLeastFourGoodJets()) {
+    if (ttbarCandidate.passesEPlusJetsRelIsoSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >=4) {
         const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron(ttbarCandidate.Electrons());
         if (electron->relativeIsolation() > Globals::maxElectronRelativeIsolation && !isnan(electron->relativeIsolation()) && !isinf(
                 electron->relativeIsolation())) {
             try {
-                ttbarCandidate.reconstructTTbar(electron);
+                ttbarCandidate.reconstructTTbarToEPlusJets(electron);
                 const ParticlePointer resonance = ttbarCandidate.getResonance();
                 histMan->H1D_BJetBinned("mttbar_controlRegion")->Fill(resonance->mass(), weight);
                 if (ttbarCandidate.MET()->pt() > 20) {
@@ -709,14 +596,14 @@ void Analysis::doQCDStudy() {
         }
     }
 
-    if (ttbarCandidate.passesConversionSelection() && ttbarCandidate.hasAtLeastFourGoodJets()) {
+    if (ttbarCandidate.passesConversionSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >=4) {
         ElectronPointer electron;
         if (Event::usePFIsolation)
             electron = currentEvent.GoodPFIsolatedElectrons().front();
         else
             electron = currentEvent.GoodIsolatedElectrons().front();
         try {
-            ttbarCandidate.reconstructTTbar(electron);
+            ttbarCandidate.reconstructTTbarToEPlusJets(electron);
             const ParticlePointer resonance = ttbarCandidate.getResonance();
             histMan->H1D_BJetBinned("mttbar_conversions")->Fill(resonance->mass(), weight);
             if (ttbarCandidate.MET()->pt() > 20) {
@@ -732,7 +619,7 @@ void Analysis::doQCDStudy() {
 
     }
 
-    if(ttbarCandidate.passesConversionSelection() && ttbarCandidate.hasExactlyThreeGoodJets()){
+    if(ttbarCandidate.passesConversionSelection() && ttbarCandidate.GoodElectronCleanedJets().size() ==3){
         ElectronPointer electron;
         if (Event::usePFIsolation)
             electron = currentEvent.GoodPFIsolatedElectrons().front();
@@ -740,7 +627,7 @@ void Analysis::doQCDStudy() {
             electron = currentEvent.GoodIsolatedElectrons().front();
 
         try {
-            ttbarCandidate.reconstructTTbarFrom3Jets(electron);
+            ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(electron);
             const ParticlePointer resonance = ttbarCandidate.getResonance();
             histMan->H1D_BJetBinned("mttbar_3jets_conversions")->Fill(resonance->mass(), weight);
             if (ttbarCandidate.MET()->pt() > 20) {
@@ -761,10 +648,10 @@ void Analysis::doQCDStudy() {
     }
 
     histMan->setCurrentCollection("topReconstruction/backgroundShape");
-    if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection() && ttbarCandidate.hasAtLeastFourGoodJets()) {
+    if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >=4) {
         ElectronPointer electron = ttbarCandidate.GoodElectrons().front();
         try {
-            ttbarCandidate.reconstructTTbar(electron);
+            ttbarCandidate.reconstructTTbarToEPlusJets(electron);
             float mttbar = ttbarCandidate.mttbar();
             histMan->H1D_BJetBinned("mttbar_antiIsolated")->Fill(mttbar, weight);
             if (ttbarCandidate.MET()->pt() > 20) {
@@ -782,10 +669,10 @@ void Analysis::doQCDStudy() {
         }
     }
 
-    if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection() && ttbarCandidate.hasExactlyThreeGoodJets()) {
+    if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection() && ttbarCandidate.GoodElectronCleanedJets().size() ==3) {
         ElectronPointer electron = ttbarCandidate.GoodElectrons().front();
         try {
-            ttbarCandidate.reconstructTTbarFrom3Jets(electron);
+            ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(electron);
             float mttbar = ttbarCandidate.mttbar();
             histMan->H1D_BJetBinned("mttbar_3jets_antiIsolated")->Fill(mttbar, weight);
             if (ttbarCandidate.MET()->pt() > 20) {
@@ -798,10 +685,10 @@ void Analysis::doQCDStudy() {
         }
     }
 
-    if (ttbarCandidate.passedEPlusJetsAntiIDSelection() && ttbarCandidate.hasAtLeastFourGoodJets()) {
+    if (ttbarCandidate.passedEPlusJetsAntiIDSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >=4) {
         const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
         try {
-            ttbarCandidate.reconstructTTbar(electron);
+            ttbarCandidate.reconstructTTbarToEPlusJets(electron);
             const ParticlePointer resonance = ttbarCandidate.getResonance();
             histMan->H1D_BJetBinned("mttbar_antiID")->Fill(resonance->mass(), weight);
             if (ttbarCandidate.passesMETCut() && ttbarCandidate.passesAsymmetricElectronCleanedJetCuts())
@@ -812,10 +699,10 @@ void Analysis::doQCDStudy() {
         }
     }
 
-    if (ttbarCandidate.passedEPlusJetsAntiIDSelection() && ttbarCandidate.hasExactlyThreeGoodJets()) {
+    if (ttbarCandidate.passedEPlusJetsAntiIDSelection() && ttbarCandidate.GoodElectronCleanedJets().size() ==3) {
         const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
         try {
-            ttbarCandidate.reconstructTTbarFrom3Jets(electron);
+            ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(electron);
             const ParticlePointer resonance = ttbarCandidate.getResonance();
             histMan->H1D_BJetBinned("mttbar_3jets_antiID")->Fill(resonance->mass(), weight);
             if (ttbarCandidate.passesMETCut() && ttbarCandidate.passesAsymmetricElectronCleanedJetCuts())
