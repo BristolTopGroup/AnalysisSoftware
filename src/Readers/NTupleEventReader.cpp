@@ -140,7 +140,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 }
 
 DataType::value NTupleEventReader::getDataType(const std::string filename) {
-    DataType::value filetype = DataType::DATA;
+    DataType::value filetype = DataType::ElectronHad;
 
     for (unsigned int index = 0; index < DataType::names.size(); ++index) {
         const std::string searchString(DataType::names.at(index));

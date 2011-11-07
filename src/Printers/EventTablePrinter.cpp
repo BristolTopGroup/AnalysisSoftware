@@ -60,7 +60,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow, const std::string Str
             if (type == DataType::singleTopSChannel)
                 cout << " & " << setw(12) << fixed << nSingleTop;
 
-            if (type > DataType::DATA)
+            if (type != DataType::ElectronHad && type != DataType::MuHad)
                 nTotalMC += cutFlow.sumThirdDimension(type, cut);
 
             if (type >= DataType::singleTop_And_W && type <= DataType::singleTopSChannel)
@@ -134,7 +134,7 @@ extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow, const std::
             if (type == DataType::singleTopSChannel)
                 cout << " & " << setw(12) << fixed << nSingleTop;
 
-            if (type > DataType::DATA)
+            if (type != DataType::ElectronHad && type != DataType::MuHad)
                 nTotalMC += cutFlow.sumThirdDimensionUnweighted(type, cut);
 
             if (type >= DataType::singleTop_And_W && type <= DataType::singleTopSChannel)
