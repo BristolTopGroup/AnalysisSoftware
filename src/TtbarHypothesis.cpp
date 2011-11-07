@@ -7,6 +7,9 @@
 
 #include "../interface/TtbarHypothesis.h"
 #include "../interface/ReconstructionModules/ReconstructionException.h"
+//#include "../interface/ReconstructionModules/BasicNeutrinoReconstruction.h"
+//#include <iostream>
+//using namespace std;
 
 namespace BAT {
 
@@ -82,6 +85,8 @@ void TtbarHypothesis::combineReconstructedObjects() {
 		hadronicTop = ParticlePointer(new Particle(*hadronicBJet + *hadronicW));
 
 		resonance = ParticlePointer(new Particle(*leptonicTop + *hadronicTop));
+//		if(fabs(leptonicW->mass() - BasicNeutrinoReconstruction::W_mass) > 0.1)
+//			cout << "Unexpected mass difference " << fabs(leptonicW->mass() - BasicNeutrinoReconstruction::W_mass) << endl;
 
 	}
 	else{
