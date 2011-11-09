@@ -60,7 +60,7 @@ void MTtbarAnalyser::analyseFourJetChi2(const TopPairEventCandidate& ttbarEvent)
 		}
 		allSolutions = chi2Reco->getAllSolutions();
 		fillHistograms(type + "/FourJetChi2");
-		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricElectronCleanedJetCuts())
+		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricMuonCleanedJetCuts())
 			fillHistograms(type + "/FourJetChi2", "_withMETAndAsymJets");
 	}
 	//soon to be removed
@@ -157,7 +157,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const TopPairEventCandidate
 		}
 		allSolutions = topMassDiffReco->getAllSolutions();
 		fillHistograms(type + "/FourJetTopMassDifference");
-		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricElectronCleanedJetCuts())
+		if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricMuonCleanedJetCuts())
 			fillHistograms(type + "/FourJetTopMassDifference", "_withMETAndAsymJets");
 	}
 
