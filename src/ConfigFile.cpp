@@ -37,7 +37,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("maxEvents", value<unsigned long>(), "set maximal number of events to be processed");
 	desc.add_options()("config-file", value<std::string>(), "Configuration file for BAT");
 	desc.add_options()("PUfile", value<std::string>(), "set input PU file for PU re-weighting");
-	desc.add_options()("fitter", bool_switch(), "turn on the fitter (HitFit)");
+	desc.add_options()("fitter", value<bool>(), "turn on the fitter (HitFit)");
 	desc.add_options()("TQAFPath", value<std::string>(), "path to TopQuarkAnalysis folder (the folder itself not included).");
 	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to.");
 
