@@ -6,6 +6,7 @@
  */
 
 #include "../../interface/RecoObjects/Jet.h"
+#include "../../interface/GlobalVariables.h"
 
 namespace BAT {
 
@@ -232,6 +233,26 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 
 double Jet::btagSSVHE() const {
 	return btag_discriminators[BtagAlgorithm::SimpleSecondaryVertexHighEffBTag];
+}
+
+double Jet::getBJetL7EtCorrection() const {
+    Float_t towerBinning[] = {0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5};
+    unsigned int nEtaBins_ = 11;
+    double res = -1;
+    for(UInt_t iEta = 0; iEta < nEtaBins_; iEta++)
+    if(fabs(eta()) >= towerBinning[iEta] && fabs(eta()) < towerBinning[iEta+1])
+        res = Globals::bL7Corrections[iEta]->Eval( pt() );
+    return res;
+}
+
+double Jet::getLightJetL7EtCorrection() const {
+    Float_t towerBinning[] = {0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5};
+    unsigned int nEtaBins_ = 11;
+    double res = -1;
+    for(UInt_t iEta = 0; iEta < nEtaBins_; iEta++)
+      if(fabs(eta()) >= towerBinning[iEta] && fabs(eta()) < towerBinning[iEta+1])
+        res = Globals::lightL7Corrections[iEta]->Eval( pt() );
+    return res;
 }
 
 }

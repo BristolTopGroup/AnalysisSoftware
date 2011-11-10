@@ -8,6 +8,7 @@
 #ifndef JET_H_
 #define JET_H_
 #include "Particle.h"
+#include "TF1.h"
 #include <vector>
 #include <string>
 #include <boost/array.hpp>
@@ -71,6 +72,8 @@ public:
     double CHF() const;
     double NCH() const;
     double btagSSVHE() const;
+    double getBJetL7EtCorrection() const;
+    double getLightJetL7EtCorrection() const;
 
     void setUsedAlgorithm(JetAlgorithm::value algo);
     void setEMF(double emf);

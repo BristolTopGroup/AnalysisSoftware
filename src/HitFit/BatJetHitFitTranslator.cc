@@ -120,27 +120,15 @@ JetTranslatorBase<BAT::Jet>::operator()(const BAT::Jet& jet,
 
     Vector_Resolution jet_resolution;
 
-//     if (type == hitfit::hadb_label || type == hitfit::lepb_label || type == hitfit::higgs_label) {
-//         jet_resolution = bResolution_.GetResolution(jet_eta);
-//         pat::Jet bPartonCorrJet(jet.correctedJet("L7Parton","BOTTOM"));
-//         p = Fourvec(bPartonCorrJet.px(),bPartonCorrJet.py(),bPartonCorrJet.pz(),bPartonCorrJet.energy());
-
-//     } else {
-//         jet_resolution = udscResolution_.GetResolution(jet_eta);
-//         pat::Jet udsPartonCorrJet(jet.correctedJet("L7Parton","UDS"));
-//         p = Fourvec(udsPartonCorrJet.px(),udsPartonCorrJet.py(),udsPartonCorrJet.pz(),udsPartonCorrJet.energy());
-//     }
-
-// Need to understand how to implement flavour-dependent jet corrections!
-// But for now, no corrections ...
-
     if (type == hitfit::hadb_label || type == hitfit::lepb_label || type == hitfit::higgs_label) {
         jet_resolution = bResolution_.GetResolution(jet_eta);
+        double bCorr = 1 - jet.getBJetL7EtCorrection();
+        p = Fourvec(bCorr*jet.px(), bCorr*jet.py(), bCorr*jet.pz(), bCorr*jet.energy());
     } else {
         jet_resolution = udscResolution_.GetResolution(jet_eta);
+        double lightCorr = 1 - jet.getLightJetL7EtCorrection();
+        p = Fourvec(lightCorr*jet.px(), lightCorr*jet.py(), lightCorr*jet.pz(), lightCorr*jet.energy());
     }
-    p = Fourvec(jet.px(), jet.py(), jet.pz(), jet.energy());
-
 
     Lepjets_Event_Jet retjet(p,
                              type,

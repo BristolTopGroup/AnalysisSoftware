@@ -11,6 +11,7 @@
 #include "RecoObjects/Electron.h"
 #include "RecoObjects/Muon.h"
 #include "RecoObjects/MET.h"
+#include "TF1.h"
 
 namespace BAT {
 struct Globals {
@@ -40,6 +41,8 @@ static double minMuonPt;
 static JetAlgorithm::value jetAlgorithm;
 static BtagAlgorithm::value btagAlgorithm;
 static BtagAlgorithm::workingPoint btagWorkingPoint;
+static boost::array< boost::shared_ptr<TF1>, 12 > bL7Corrections;
+static boost::array< boost::shared_ptr<TF1>, 12 > lightL7Corrections;
 
 //good jet definition
 static double maxAbsoluteJetEta;

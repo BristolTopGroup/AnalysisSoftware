@@ -1,5 +1,8 @@
 #File for pile-up re-weighting
 PUFile = "BristolAnalysis/Tools/Pileup_2011_to_173692_LPLumiScale_68mb.root"
+#Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
+bJetResoFile = "BristolAnalysis/Tools/bJetReso.root"
+lightJetResoFile = "BristolAnalysis/Tools/lightJetReso.root"
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis

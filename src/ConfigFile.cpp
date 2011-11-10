@@ -6,6 +6,9 @@
  */
 
 #include "../interface/ConfigFile.h"
+#include "../interface/GlobalVariables.h"
+#include "TF1.h"
+#include "TFile.h"
 #include <iostream>
 
 using namespace std;
@@ -18,6 +21,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		config(parse_config(configPath())),
 		maxEvents_(get<unsigned long>("maxEvents")),
 		pileUpFile_(get<string>("PUFile")),
+        bJetResoFile_(get<string>("bJetResoFile")),
+        lightJetResoFile_(get<string>("lightJetResoFile")),
 		useHitFit_(get<bool>("useHitFit")),
 		inputFiles_(getVector("inputFiles")),
 		tqafPath_(get<string>("TQAFPath")),
@@ -37,6 +42,8 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("maxEvents", value<unsigned long>(), "set maximal number of events to be processed");
 	desc.add_options()("config-file", value<std::string>(), "Configuration file for BAT");
 	desc.add_options()("PUfile", value<std::string>(), "set input PU file for PU re-weighting");
+    desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
+    desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
 	desc.add_options()("fitter", value<bool>(), "turn on the fitter (HitFit)");
 	desc.add_options()("TQAFPath", value<std::string>(), "path to TopQuarkAnalysis folder (the folder itself not included).");
 	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to.");
@@ -81,7 +88,7 @@ boost::python::object ConfigFile::parse_config(const string configPath) {
 	} catch (boost::python::error_already_set const &) {
 		string perror_str = parse_python_exception();
 		cout << "Error during configuration parsing: " << perror_str << endl;
-		throw "ConfigParser: Terminating. Could not initilise configuration.";
+		throw "ConfigParser: Terminating. Could not initialise configuration.";
 	}
 	return configuration;
 }
@@ -116,6 +123,44 @@ const vector<string> ConfigFile::getVector(const string attribute) {
 		throw "Configparser: error when parsing '" + attribute + "'.";
 	}
 	return ret;
+}
+
+void ConfigFile::LoadJetL7Resolutions(std::string bJetResoFile, std::string lightJetResoFile){
+    unsigned int nEtaBins_ = 11;
+    Float_t towerBinning[] = {0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5};
+    TFile *bFile = new TFile (bJetResoFile.c_str(), "READ");
+    TFile *lFile = new TFile (lightJetResoFile.c_str(), "READ");
+
+    bFile->cd();
+    lFile->cd();
+
+    for(UInt_t iEta = 0; iEta < nEtaBins_; iEta++) {
+        TString loweretastrg;
+        TString upperetastrg;
+        Char_t etachar[10];
+        sprintf(etachar,"%1.3f",towerBinning[iEta]);
+        loweretastrg = etachar;
+        sprintf(etachar,"%1.3f",towerBinning[iEta+1]);
+        upperetastrg = etachar;
+        Globals::bL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) bFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
+        Globals::lightL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) lFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
+    }
+    bFile->Close();
+    lFile->Close();
+}
+
+string ConfigFile::bJetResoFile() const {
+	if(programOptions.count("bJetResoFile"))
+		return programOptions["bJetResoFile"].as<std::string>();
+        else
+	        return bJetResoFile_;
+}
+
+string ConfigFile::lightJetResoFile() const {
+        if(programOptions.count("lightJetResoFile"))
+                return programOptions["lightJetResoFile"].as<std::string>();
+        else
+                return lightJetResoFile_;
 }
 
 string ConfigFile::TQAFPath() const{

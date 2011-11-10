@@ -30,6 +30,8 @@ int main(int argc, char **argv) {
 	cout << "Using config-file '" << config.configPath() << endl;
 	unsigned long maxEvents(config.maxEvents());
 	std::string pileUpFile = config.PUFile();
+    std::string bJetResoFile = config.bJetResoFile();
+    std::string lightJetResoFile = config.lightJetResoFile();
 	setUpOnce();
 	TStopwatch watch;
 	watch.Start();
@@ -54,13 +56,15 @@ int main(int argc, char **argv) {
 	Globals::metAlgorithm = METAlgorithm::ParticleFlowMET;
 	Globals::METCut = 20.;
 
+	//Loading l7 JEC
+	config.LoadJetL7Resolutions(bJetResoFile, lightJetResoFile);
 
 	Analysis::useCustomConversionTagger(false);
 	Analysis::usePFIsolation(true);
 //	Analysis::useCiCElectronID(true);
 
 	cout << "From Config file: " << config.PUFile() << endl;
-
+	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", " << config.lightJetResoFile() << endl;
 
 	boost::scoped_ptr<Analysis> myAnalysis(new Analysis(pileUpFile));
 
@@ -71,6 +75,7 @@ int main(int argc, char **argv) {
 	else
 		cout << "Maximal number of events to be processed: " << "all available" << ".\n";
 
+    if (config.useHitFit()) cout << "Using HitFit.\n";
 	myAnalysis->useHitFit = config.useHitFit();
 
 	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);

@@ -22,6 +22,9 @@ public:
 
 	unsigned long maxEvents() const;
 	std::string PUFile() const;
+    std::string bJetResoFile() const;
+    std::string lightJetResoFile() const;
+    void LoadJetL7Resolutions(std::string bJetResoFile, std::string lightJetResoFile);
 	bool useHitFit() const;
 	const std::vector<std::string>& inputFiles() const;
 	std::string configPath() const;
@@ -33,6 +36,8 @@ private:
 	boost::python::object config;
 	unsigned long maxEvents_;
 	std::string pileUpFile_;
+    std::string bJetResoFile_;
+    std::string lightJetResoFile_;
 	bool useHitFit_;
 	std::vector<std::string> inputFiles_;
 	std::string tqafPath_;

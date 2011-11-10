@@ -6,6 +6,7 @@
  */
 
 #include "../interface/GlobalVariables.h"
+#define boosted_TF1 boost::shared_ptr<TF1>(new TF1())
 
 namespace BAT {
 
@@ -34,6 +35,16 @@ BtagAlgorithm::value Globals::btagAlgorithm = BtagAlgorithm::SimpleSecondaryVert
 BtagAlgorithm::workingPoint Globals::btagWorkingPoint = BtagAlgorithm::MEDIUM;
 double Globals::maxAbsoluteJetEta = 2.4;
 double Globals::minJetPt = 30.;//GeV
+
+//Level7 JEC arrays
+boost::array< boost::shared_ptr<TF1>, 12 > Globals::bL7Corrections = {{
+		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1,
+		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1}};
+
+boost::array< boost::shared_ptr<TF1>, 12 > Globals::lightL7Corrections = {{
+		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1,
+		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1}};
+
 //MET
 METAlgorithm::value Globals::metAlgorithm = METAlgorithm::ParticleFlowMET;
 double Globals::METCut = 20.; //GeV
