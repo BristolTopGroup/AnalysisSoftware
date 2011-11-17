@@ -44,10 +44,10 @@ const VertexCollection& VertexReader::getVertices() {
 void VertexReader::readVertices() {
     for (unsigned int index = 0; index < ndofReader.size(); index++) {
         VertexPointer vertex(new Vertex());
-        vertex->setDegreesOfFreedom(ndofReader.getVariableAt(0));
-        vertex->setFake(isfakeReader.getBoolVariableAt(0));
-        vertex->setRho(rhoReader.getVariableAt(0));
-        vertex->setZPosition(zReader.getVariableAt(0));
+        vertex->setDegreesOfFreedom(ndofReader.getVariableAt(index));
+        vertex->setFake(isfakeReader.getBoolVariableAt(index));
+        vertex->setRho(rhoReader.getVariableAt(index));
+        vertex->setZPosition(zReader.getVariableAt(index));
         vertices.push_back(vertex);
     }
 }
