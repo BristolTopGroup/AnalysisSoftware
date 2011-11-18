@@ -22,6 +22,15 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::Wjets] = 31314.;
 //    xsection[DataType::WToENu] = 7899.;
 
+    xsection[DataType::ttbar161] = 136.4;
+    xsection[DataType::ttbar163] = 127.1;
+    xsection[DataType::ttbar166] = 114.3;
+    xsection[DataType::ttbar169] = 106.2;
+    xsection[DataType::ttbar175] = 87.87;
+    xsection[DataType::ttbar178] = 79.77;
+    xsection[DataType::ttbar181] = 72.0;
+    xsection[DataType::ttbar184] = 66.14;
+
     xsection[DataType::QCD_EMEnriched_Pt20to30] = 0.2355e9 * 0.0073;//xs 0.2355 mb (filter efficiency=0.0073)
     xsection[DataType::QCD_EMEnriched_Pt30to80] = 0.0593e9 * 0.059; //xs 0.0593 mb
     xsection[DataType::QCD_EMEnriched_Pt80to170] = 0.906e6 * 0.148; //xs 0.906e-3 mb
@@ -88,6 +97,15 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::ttbar] = 3673321;//3673321;
     numberOfProcessedEvents[DataType::Zjets] = 33645364;//36277961;
     numberOfProcessedEvents[DataType::Wjets] = 78982439;
+
+    numberOfProcessedEvents[DataType::ttbar161] = 1620072;
+    numberOfProcessedEvents[DataType::ttbar163] = 1633197;
+    numberOfProcessedEvents[DataType::ttbar166] = 1669034;
+    numberOfProcessedEvents[DataType::ttbar169] = 1606570;
+    numberOfProcessedEvents[DataType::ttbar175] = 1538301;
+    numberOfProcessedEvents[DataType::ttbar178] = 1648519;
+    numberOfProcessedEvents[DataType::ttbar181] = 1665350;
+    numberOfProcessedEvents[DataType::ttbar184] = 1671859;
 
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 35729669;
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 70392060;

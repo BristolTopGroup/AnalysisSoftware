@@ -51,6 +51,14 @@ enum value {
     WWtoAnything,
     WZtoAnything,
     ZZtoAnything,
+    ttbar161,
+    ttbar163,
+    ttbar166,
+    ttbar169,
+    ttbar175,
+    ttbar178,
+    ttbar181,
+    ttbar184,
     NUMBER_OF_DATA_TYPES
 };
 
@@ -92,7 +100,15 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
         "Zprime_M4000GeV_W400GeV",
         "WWtoAnything",
         "WZtoAnything",
-        "ZZtoAnything"
+        "ZZtoAnything",
+        "TTJets161",
+        "TTJets163",
+        "TTJets166",
+        "TTJets169",
+        "TTJets175",
+        "TTJets178",
+        "TTJets181",
+        "TTJets184"
 } };
 }
 
