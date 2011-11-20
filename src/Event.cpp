@@ -377,6 +377,10 @@ void Event::setEventWeight(double weight) {
     eventWeight = weight;
 }
 
+void Event::setPileUpWeight(double weight) {
+	pileUpWeight = weight;
+}
+
 void Event::setBeamScrapingVeto(bool isScraping){
     isBeamScraping = isScraping;
 }
@@ -491,6 +495,10 @@ unsigned long Event::lumiblock() const {
 
 double Event::weight() const {
     return eventWeight;
+}
+
+double Event::PileUpWeight() const {
+	return pileUpWeight;
 }
 
 void Event::inspect() const {

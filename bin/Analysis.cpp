@@ -24,10 +24,7 @@ using namespace std;
 //float Analysis::luminosity = 882.;
 
 void Analysis::analyze() {
-	PoissonMeanShifter PShiftUp = PoissonMeanShifter(0.6); // PU-systematic
-	PoissonMeanShifter PShiftDown = PoissonMeanShifter(-0.6); // PU-systematic
-
-    createHistograms();
+	createHistograms();
     cout << "detected samples:" << endl;
     for (unsigned int sample = 0; sample < DataType::NUMBER_OF_DATA_TYPES; ++sample) {
         if (eventReader->getSeenDatatypes()[sample])
@@ -51,10 +48,8 @@ void Analysis::analyze() {
         if (currentEvent.getDataType() == DataType::ttbar)
         	MonteCarloAnalyser->analyse(ttbarCandidate);
 
-        if (useHitFit) {
-            if (ttbarCandidate.passesFullTTbarEPlusJetSelection()){
-            	hitfitAnalyser->analyse(ttbarCandidate);
-            }
+        if (Globals::useHitFit) {
+        	hitfitAnalyser->analyse(ttbarCandidate);
         }
 
 //        if(currentEvent.getDataType() == DataType::DATA)
@@ -86,7 +81,9 @@ void Analysis::initiateEvent() {
 
     }
     currentEvent.setEventWeight(weight);
+    currentEvent.setPileUpWeight(pileUpWeight);
     ttbarCandidate.setEventWeight(weight);
+    ttbarCandidate.setPileUpWeight(pileUpWeight);
 
 
     histMan->setCurrentDataType(ttbarCandidate.getDataType());

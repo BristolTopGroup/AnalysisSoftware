@@ -58,6 +58,7 @@ protected:
 	unsigned long localEventNumber;
 	unsigned long lumiBlock;
 	double eventWeight;
+	double pileUpWeight;
 
 //    double jetCleaningEfficiency;
 	unsigned int numberOfHighPurityTracks;
@@ -88,6 +89,7 @@ public:
 	void setLocalEventNumber(unsigned long number);
 	void setLumiBlock(unsigned long block);
 	void setEventWeight(double weight);
+	void setPileUpWeight(double weight);
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
 	void setPtDensityRho(double rho);
@@ -131,6 +133,7 @@ public:
 	unsigned long localnumber() const;
 	unsigned long lumiblock() const;
 	double weight() const;
+	double PileUpWeight() const;
 	void inspect() const;
 	bool HLT(HLTriggers::value trigger) const;
 	int HLTPrescale(HLTriggers::value trigger) const;
