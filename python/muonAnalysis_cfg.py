@@ -7,6 +7,7 @@ lightJetResoFile = "BristolAnalysis/Tools/lightJetReso.root"
 maxEvents = 0
 #use HitFit for analysis
 useHitFit = False
+produceFitterASCIIoutput = False
 
 inputFiles = []
 data_path = '/storage/TopQuarkGroup/data/MuHad/'

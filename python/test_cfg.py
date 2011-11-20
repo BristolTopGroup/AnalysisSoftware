@@ -7,6 +7,7 @@ lightJetResoFile = "BristolAnalysis/Tools/lightJetReso.root"
 maxEvents = 5000
 #use HitFit for analysis
 useHitFit = False
+produceFitterASCIIoutput = False
 inputFiles = [
 #              '/scratch/TopQuarkGroup/data/ElectronHad/nTuple_v4a_Run2011A-05Aug2011-v1_GoldenJSON_electronSkim/919e07a072adba25d339f168e288c1b2/*.root',
               '/storage/TopQuarkGroup/data/MuHad/nTuple_v4c_Run2011A-05Aug2011-v1_GoldenJSON_muonSkim/*.root',

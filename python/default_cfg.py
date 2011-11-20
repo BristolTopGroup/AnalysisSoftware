@@ -1,5 +1,5 @@
 #File for pile-up re-weighting
-PUFile = "BristolAnalysis/Tools/Pileup_2011_to_173692_LPLumiScale_68mb.root"
+PUFile = "BristolAnalysis/Tools/PileUp2011_v2.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = "BristolAnalysis/Tools/bJetReso.root"
 lightJetResoFile = "BristolAnalysis/Tools/lightJetReso.root"
@@ -7,6 +7,7 @@ lightJetResoFile = "BristolAnalysis/Tools/lightJetReso.root"
 maxEvents = 0
 #use HitFit for analysis
 useHitFit = False
+produceFitterASCIIoutput = False
 
 #input files for analysis
 inputFiles = ['/scratch/TopQuarkGroup/data/ElectronHad/nTuple_v4a_Run2011A-05Aug2011-v1_GoldenJSON_electronSkim/919e07a072adba25d339f168e288c1b2/ElectronHad_nTuple_42x_data_1_1_8Iz.root']
