@@ -24,6 +24,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
         bJetResoFile_(get<string>("bJetResoFile")),
         lightJetResoFile_(get<string>("lightJetResoFile")),
 		useHitFit_(get<bool>("useHitFit")),
+		fitterOutputFlag_(get<bool>("produceFitterASCIIoutput")),
 		inputFiles_(getVector("inputFiles")),
 		tqafPath_(get<string>("TQAFPath")),
 		lumi_(get<double>("lumi")){
@@ -45,6 +46,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
     desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
     desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
 	desc.add_options()("fitter", value<bool>(), "turn on the fitter (HitFit)");
+	desc.add_options()("fitterASCIIoutput", value<bool>(), "produce full kinematic fit output in ASCII format");
 	desc.add_options()("TQAFPath", value<std::string>(), "path to TopQuarkAnalysis folder (the folder itself not included).");
 	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to.");
 
@@ -196,6 +198,13 @@ bool ConfigFile::useHitFit() const{
 		return programOptions["fitter"].as<bool>();
 	else
 		return useHitFit_;
+}
+
+bool ConfigFile::fitterOutputFlag() const{
+	if(programOptions.count("fitterASCIIoutput"))
+		return programOptions["fitterASCIIoutput"].as<bool>();
+	else
+		return fitterOutputFlag_;
 }
 
 const vector<string>& ConfigFile::inputFiles() const{

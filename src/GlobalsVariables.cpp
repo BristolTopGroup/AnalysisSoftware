@@ -13,6 +13,8 @@ namespace BAT {
 //general
 std::string Globals::TQAFPath = "";
 double Globals::luminosity = 3934.085;
+bool Globals::useHitFit = false;
+bool Globals::produceFitterASCIIoutput = false;
 
 //electrons
 double Globals::maxElectronPFIsolation = 0.1;

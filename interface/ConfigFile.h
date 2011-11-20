@@ -26,6 +26,7 @@ public:
     std::string lightJetResoFile() const;
     void LoadJetL7Resolutions(std::string bJetResoFile, std::string lightJetResoFile);
 	bool useHitFit() const;
+	bool fitterOutputFlag() const;
 	const std::vector<std::string>& inputFiles() const;
 	std::string configPath() const;
 	std::string TQAFPath() const;
@@ -39,6 +40,7 @@ private:
     std::string bJetResoFile_;
     std::string lightJetResoFile_;
 	bool useHitFit_;
+	bool fitterOutputFlag_;
 	std::vector<std::string> inputFiles_;
 	std::string tqafPath_;
 	double lumi_;

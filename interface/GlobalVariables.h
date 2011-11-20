@@ -19,7 +19,8 @@ struct Globals {
 //general
 static std::string TQAFPath;
 static double luminosity;
-
+static bool useHitFit;
+static bool produceFitterASCIIoutput;
 
 //electrons
 static double maxElectronPFIsolation;
@@ -28,7 +29,6 @@ static ElectronAlgorithm::value electronAlgorithm;
 static ElectronID::value electronID;
 static double minElectronET;
 static double MaxAbsoluteElectronEta;
-
 
 //muons
 static double maxMuonPFIsolation;

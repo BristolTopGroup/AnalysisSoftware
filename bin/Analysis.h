@@ -92,7 +92,6 @@ public:
     void setMaximalNumberOfEvents(long maxEvents);
     void setUsedNeutrinoSelectionForTopPairReconstruction(BAT::NeutrinoSelectionCriterion::value selection);
     void setUsedTTbarReconstructionCriterion(BAT::TTbarReconstructionCriterion::value selection);
-    bool useHitFit;
 
     static void usePFIsolation(bool use){
         BAT::Event::usePFIsolation = use;

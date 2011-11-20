@@ -39,6 +39,8 @@ int main(int argc, char **argv) {
 	//general
 	Globals::TQAFPath = config.TQAFPath();
 	Globals::luminosity = config.lumi();
+	Globals::useHitFit =  config.useHitFit();
+	Globals::produceFitterASCIIoutput = config.fitterOutputFlag();
 	//jets
 	Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
 	Globals::minJetPt = 30.;
@@ -76,7 +78,6 @@ int main(int argc, char **argv) {
 		cout << "Maximal number of events to be processed: " << "all available" << ".\n";
 
     if (config.useHitFit()) cout << "Using HitFit.\n";
-	myAnalysis->useHitFit = config.useHitFit();
 
 	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
 
