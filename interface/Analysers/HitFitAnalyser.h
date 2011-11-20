@@ -7,6 +7,8 @@
 
 #ifndef HITFITANALYSER_H_
 #define HITFITANALYSER_H_
+#include <fstream>
+#include <iostream>
 #include <boost/shared_ptr.hpp>
 #include "../../interface/TopPairEventCandidate.h"
 #include "../../interface/HistHelpers/HistogramManager.h"
@@ -24,6 +26,9 @@ namespace BAT {
 
 class HitFitAnalyser : public BasicAnalyser{
 private:
+	std::string outFileName;
+	ofstream outFile;
+
 //    BAT::TtbarHypothesis trueFourVectors;
     BAT::TtbarHypothesis truthMatchEvent;
     BAT::JetCollection jetsForFitting;

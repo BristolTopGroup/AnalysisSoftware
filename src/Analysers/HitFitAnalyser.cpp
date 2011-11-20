@@ -4,35 +4,69 @@
  *  Created on: Jul 5, 2011
  *      Author: senkin
  */
-#include <fstream>
-#include <iostream>
 #include "../../interface/Analysers/HitFitAnalyser.h"
+#include "../../interface/LumiReWeighting.h"
 #include "../../interface/GlobalVariables.h"
 
-namespace BAT {
+using namespace reweight;
+using namespace BAT;
 
 void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+	//fit only the events that pass full ttbar selection
+	if (!ttbarEvent.passesFullTTbarEPlusJetSelection()) return;
+
+	//initialise pile-up shifters
+	PoissonMeanShifter PShiftUp = PoissonMeanShifter(0.6); // PU-systematic
+	PoissonMeanShifter PShiftDown = PoissonMeanShifter(-0.6); // PU-systematic
+
+	//temporary file for jet fit info (ugly but works)
+	string tempFileName = "temp.txt";
+	ofstream tempFile(tempFileName.c_str());
 
     histMan->setCurrentCollection("hitfitStudy");
+
+    if (Globals::produceFitterASCIIoutput) {
+        //write the event info into ASCII file
+    	outFile << "------------------------------------------" << endl;
+    	outFile << "BeginEvent" << endl;
+    	outFile << "RunNr: " << ttbarEvent.runnumber()  << endl;
+    	outFile << "LumiSection: " << ttbarEvent.lumiblock() << endl;
+    	outFile << "EventNr: " << ttbarEvent.eventnumber() << endl;
+    	outFile << "EventWeight: " << ttbarEvent.weight() << "  ";
+        if(!ttbarEvent.isRealData()){
+        	float lumiWeight = ttbarEvent.PileUpWeight();
+            float lumiWeightUp = lumiWeight * PShiftUp.ShiftWeight( (float) ttbarEvent.numberOfGeneratedPileUpVertices() );
+            float lumiWeightDown = lumiWeight * PShiftDown.ShiftWeight( (float) ttbarEvent.numberOfGeneratedPileUpVertices() );
+            outFile << lumiWeight << "  " << lumiWeightUp << "  " << lumiWeightDown;
+
+        } else outFile << "1  1  1";
+
+        outFile << endl;
+
+        outFile << ttbarEvent.GoodJets().size() << "  " << ttbarEvent.Vertices().size() << "  ";
+        if(!ttbarEvent.isRealData()){
+        	outFile << ttbarEvent.numberOfGeneratedPileUpVertices();
+        } else outFile << "9999";
+
+        outFile << "  ";
+        if ((ttbarEvent.getDataType() == DataType::ttbar) or (ttbarEvent.getDataType() == DataType::ttbar161) or
+        		(ttbarEvent.getDataType() == DataType::ttbar163) or (ttbarEvent.getDataType() == DataType::ttbar166) or
+        		(ttbarEvent.getDataType() == DataType::ttbar169) or (ttbarEvent.getDataType() == DataType::ttbar175) or
+        		(ttbarEvent.getDataType() == DataType::ttbar178) or (ttbarEvent.getDataType() == DataType::ttbar181) or
+        		(ttbarEvent.getDataType() == DataType::ttbar184)) {
+        	outFile << "9999  9999  9999" << endl; //needs to be fixed
+//        	outFile << ttbarEvent.MCtruthAntiTopMass() << "  " << ttbarEvent.MCtruthAntiTopMass() << "  "
+//        			<< ttbarEvent.topDecayedLeptonically() << endl;
+        } else outFile << "9999  9999  9999" << endl;
+    }
+
   	//prepare the jets collection
 	// Copy jets into an array
 	JetCollection jetCopy;
-	for (JetCollection::const_iterator j=ttbarEvent.Jets().begin();
-			j!=ttbarEvent.Jets().end(); ++j) {
+	for (JetCollection::const_iterator j=ttbarEvent.GoodElectronCleanedJets().begin();
+			j!=ttbarEvent.GoodElectronCleanedJets().end(); ++j) {
 	    jetCopy.push_back(*j);
 	    //if ((*j)->getBTagDiscriminators().back() > 0.5) ++nBTags;
-	}
-
-	float ptCut = 30.;
-	float etaCut = 2.5;
-
-	  // Apply cuts on jets here
-	for (JetCollection::iterator j=jetCopy.begin(); j != jetCopy.end(); ++j) {
-		if (((*j)->pt() < ptCut) || ((etaCut > 0.0) && (abs((*j)->eta()) > etaCut))) {
-	      // Remove this jet from the list
-	      // Point the iterator at the previous jet so the loop works correctly
-	      j = jetCopy.erase(j)-1;
-	    }
 	}
 
 	std::sort(jetCopy.begin(), jetCopy.end(), jetPtComp);
@@ -47,7 +81,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		jetsForFitting.insert(jetsForFitting.begin(), jetCopy.begin(), jetCopy.begin()+numJetsToFit);
 	}
 
-  BatHitFit hhFitter(electronTranslator_,
+	BatHitFit hhFitter(electronTranslator_,
 		     muonTranslator_,
 		     jetTranslator_,
 		     metTranslator_,
@@ -56,7 +90,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		     hitfitHadWMass_,
 		     hitfitTopMass_);
 
-  // Clear the internal state
+	// Clear the internal state
   hhFitter.clear();
 
   // Add the lepton into HitFit
@@ -129,6 +163,24 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
         histMan->H1D("PullDistYVarsAllSolutions")->Fill(py[i]);
       }
 
+      if (Globals::produceFitterASCIIoutput) {
+    	  if (fitResult.chisq()<20) {
+    		  tempFile << fitResult.mt() << "  " << fitResult.sigmt() << "  " << fitResult.chisq() << "  ";
+    		  for (unsigned int i = 0; i != jetsForFitting.size(); ++i) {
+    			  if (fitResult.jet_types()[i] == 13) tempFile << i;
+    		  }
+    		  tempFile << "  ";
+    		  for (unsigned int i = 0; i != jetsForFitting.size(); ++i) {
+    			  if (fitResult.jet_types()[i] == 14) tempFile << i;
+    		  }
+    		  tempFile << "  ";
+    		  for (unsigned int i = 0; i != jetsForFitting.size(); ++i) {
+    			  if (fitResult.jet_types()[i] == 12) tempFile << i;
+    		  }
+    		  tempFile << endl;
+    	  }
+	}
+
     }
     if (fitResult.chisq()>0.0 && fitResult.chisq()<bestChi2) {
       bestChi2 = fitResult.chisq();
@@ -163,24 +215,56 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     lepton_charge = ttbarEvent.getElectronFromWDecay()->charge();
     BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev());
 
+    if (Globals::produceFitterASCIIoutput) {
+        //outFile << "goodCombi: " << hitfitResult[bestX2pos].mt() << "  ";
+    	outFile << "goodCombi: ";
+
+        for (unsigned int i = 0; i != jetsForFitting.size(); ++i) {
+      		if (hitfitResult[bestX2pos].jet_types()[i] == 13) outFile << i;
+      	}
+        outFile << "  ";
+      	for (unsigned int i = 0; i != jetsForFitting.size(); ++i) {
+      		if (hitfitResult[bestX2pos].jet_types()[i] == 14) outFile << i;
+      	}
+      	outFile << "  ";
+    	for (unsigned int i = 0; i != jetsForFitting.size(); ++i) {
+	        if (hitfitResult[bestX2pos].jet_types()[i] == 12) outFile << i;
+    	}
+    	outFile << "  index: " << bestX2pos << endl;
+
+    	//copy temp file to outfile
+    	ifstream tempCopy (tempFileName.c_str());
+        if (tempCopy.is_open())
+         {
+           char c;
+           while ( tempCopy.get(c).good() ) outFile << c;
+           tempCopy.close();
+         }
+
+    	outFile << "FinishedEvent" << endl;
+    	outFile << "------------------------------------------" << endl;
+    }
+    tempFile.close();
 
   } else {
-    std::cout << "No solutions found by HitFit for this event" << std::endl;
+	  if (Globals::produceFitterASCIIoutput) outFile << "No solutions found by HitFit for this event" << std::endl;
   }
 
 }
 
 HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan) :
     BasicAnalyser(histMan),
+    outFileName("FitResults.txt"),
+    outFile(outFileName.c_str()),
     // The following five initializers read the config parameters for the
     // ASCII text files which contains the physics object resolutions.
     FitterPath_              (Globals::TQAFPath),
-    hitfitDefault_           ("TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"),
-    hitfitElectronResolution_("TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"),
-    hitfitMuonResolution_    ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafMuonResolution.txt"),
-    hitfitUdscJetResolution_ ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafUdscJetResolution.txt"),
-    hitfitBJetResolution_    ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafBJetResolution.txt"),
-    hitfitMETResolution_     ("TopQuarkAnalysis/TopHitFit/data/resolution/tqafKtResolution.txt"),
+    hitfitDefault_           (FitterPath_+"TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"),
+    hitfitElectronResolution_(FitterPath_+"TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"),
+    hitfitMuonResolution_    (FitterPath_+"TopQuarkAnalysis/TopHitFit/data/resolution/tqafMuonResolution.txt"),
+    hitfitUdscJetResolution_ (FitterPath_+"TopQuarkAnalysis/TopHitFit/data/resolution/tqafUdscJetResolution.txt"),
+    hitfitBJetResolution_    (FitterPath_+"TopQuarkAnalysis/TopHitFit/data/resolution/tqafBJetResolution.txt"),
+    hitfitMETResolution_     (FitterPath_+"TopQuarkAnalysis/TopHitFit/data/resolution/tqafKtResolution.txt"),
     // The following three initializers read the config parameters for the
     // values to which the leptonic W, hadronic W, and top quark masses are to
     // be constrained to.
@@ -189,10 +273,10 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan) :
     hitfitTopMass_ ( 0.0),
     // The following three initializers instantiate the translator between PAT objects
     // and HitFit objects using the ASCII text files which contains the resolutions.
-    electronTranslator_(FitterPath_+hitfitElectronResolution_),
-    muonTranslator_    (FitterPath_+hitfitMuonResolution_),
-  	jetTranslator_     (FitterPath_+hitfitUdscJetResolution_,FitterPath_+hitfitBJetResolution_),
-   	metTranslator_     (FitterPath_+hitfitMETResolution_)
+    electronTranslator_(hitfitElectronResolution_),
+    muonTranslator_    (hitfitMuonResolution_),
+  	jetTranslator_     (hitfitUdscJetResolution_,hitfitBJetResolution_),
+   	metTranslator_     (hitfitMETResolution_)
 
 	{
 
@@ -251,6 +335,13 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 			   newLep, newHad,
 			   newWj1, newWj2);
 
+  if (Globals::produceFitterASCIIoutput) {
+	  outFile << newEle->phi() << "  " << newEle->eta() << "  " << newEle->pt() << "  " << lepton_charge << "  " << newMet->px() << "  " << newMet->py() << endl;
+	  outFile << jetsForFitting[0]->pt() << "  " << jetsForFitting[0]->eta() << "  " << jetsForFitting[0]->phi() << "  " << jetsForFitting[0]->btagSSVHE() << "  ";
+	  outFile << jetsForFitting[1]->pt() << "  " << jetsForFitting[1]->eta() << "  " << jetsForFitting[1]->phi() << "  " << jetsForFitting[1]->btagSSVHE() << "  ";
+	  outFile << jetsForFitting[2]->pt() << "  " << jetsForFitting[2]->eta() << "  " << jetsForFitting[2]->phi() << "  " << jetsForFitting[2]->btagSSVHE() << "  ";
+	  outFile << jetsForFitting[3]->pt() << "  " << jetsForFitting[3]->eta() << "  " << jetsForFitting[3]->phi() << "  " << jetsForFitting[3]->btagSSVHE() << endl;
+  }
   return hyp;
 }
 
@@ -286,6 +377,7 @@ void HitFitAnalyser::printFile(const string filename) {
 }
 
 HitFitAnalyser::~HitFitAnalyser() {
+    outFile.close();
 }
 
 void HitFitAnalyser::createHistograms() {
@@ -306,7 +398,5 @@ void HitFitAnalyser::createHistograms() {
     histMan->addH1D("PullSumSquaredBestSolution",  "Sum-squared pulls best solution",     100,   0,  500.);
     histMan->addH2D("PullDistPerVarBestSolution",  "Pulls well measured vs varno best",   100, -10.,  10.,   25, 0., 25.);
     histMan->addH1D("PullDistYVarsBestSolution",   "Pulls poorly measured best",          100, -10.,  10.);
-
-}
 
 }
