@@ -11,8 +11,12 @@
 #include "../../interface/TopPairEventCandidate.h"
 #include "../../interface/HistHelpers/HistogramManager.h"
 #include "BasicAnalyser.h"
+#include "../../interface/TtbarHypothesis.h"
 
 namespace BAT {
+
+
+
 
 class MCAnalyser : public BasicAnalyser{
 public:
@@ -21,6 +25,12 @@ public:
 
     void analyse(const TopPairEventCandidate& ttbarEvent);
     void createHistograms();
+
+    double topMass() const;
+    Decay::value decay() const;
+
+private:
+    TtbarHypothesis MCttbarEvent;
 };
 
 }

@@ -30,7 +30,8 @@ TtbarHypothesis::TtbarHypothesis() :
 	jet1FromW(),
 	jet2FromW(), 
 	leptonFromW(), 
-	met() {
+	met(),
+	decayChannel(Decay::unknown){
 
 }
 

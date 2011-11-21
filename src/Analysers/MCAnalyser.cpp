@@ -14,7 +14,7 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	MCParticlePointer top, antitop, b_from_top, b_from_antitop, W_plus, W_minus, electron, neutrino, quark_from_W, antiquark_from_W;
 	JetCollection genJets = ttbarEvent.GenJets();
 	JetPointer topBjet, antitopBjet, jet1fromW, jet2fromW;
-	TtbarHypothesis MCttbarEvent;
+//	TtbarHypothesis MCttbarEvent;
 	bool ejets_event = false;
 	bool leptonic_Wplus_found = false, leptonic_Wminus_found = false;
 	bool hadronic_Wplus_found = false, hadronic_Wminus_found = false;
@@ -143,11 +143,18 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 	//classify the event
 	if (((leptonic_Wplus_found) || (leptonic_Wminus_found)) && ((hadronic_Wplus_found) || (hadronic_Wminus_found))
-			&& (!non_electron_leptonic_channel)) { ejets_event = true; }
-	if (((leptonic_Wplus_found) || (leptonic_Wminus_found)) && (!hadronic_Wplus_found)
-			&& (!hadronic_Wminus_found)) { fully_leptonic_event = true; }
-	if (((hadronic_Wplus_found) || (hadronic_Wminus_found)) && (!leptonic_Wplus_found)
-			&& (!leptonic_Wminus_found)) { fully_hadronic_event = true; }
+			&& (!non_electron_leptonic_channel)) {
+		ejets_event = true;
+		MCttbarEvent.decayChannel = Decay::electronPlusJets;
+	}
+	if (((leptonic_Wplus_found) || (leptonic_Wminus_found)) && (!hadronic_Wplus_found) && (!hadronic_Wminus_found)) {
+		fully_leptonic_event = true;
+		MCttbarEvent.decayChannel = Decay::fullyLeptonic;
+	}
+	if (((hadronic_Wplus_found) || (hadronic_Wminus_found)) && (!leptonic_Wplus_found) && (!leptonic_Wminus_found)) {
+		fully_hadronic_event = true;
+		MCttbarEvent.decayChannel = Decay::fullyHadronic;
+	}
 
 	if (ejets_event) {
 		//matching genJets and partons
@@ -287,6 +294,17 @@ void MCAnalyser::createHistograms() {
     histMan->addH1D("top_hadronic_inv_mass_from_truth", "Haronic top inv. mass from truth partons", 100, 100, 220);
     histMan->addH1D("m3_mc", "M3 for truth event", 500, 0, 500);
     histMan->addH1D("m3_diff", "M3 difference between truth and reco", 500, 0, 500);
+}
+
+double MCAnalyser::topMass() const {
+	if(MCttbarEvent.leptonicTop != 0)
+		return MCttbarEvent.leptonicTop->mass();
+	else
+		return 0;
+}
+
+Decay::value MCAnalyser::decay() const {
+	return MCttbarEvent.decayChannel;
 }
 
 }

@@ -16,6 +16,16 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 namespace BAT {
+namespace Decay{
+enum value{
+	unknown,
+	electronPlusJets,
+	LeptonPlusJets,
+	fullyHadronic,
+	fullyLeptonic
+};
+}
+
 class TtbarHypothesis {
 public:
 	TtbarHypothesis();
@@ -30,6 +40,7 @@ public:
 	JetPointer leptonicBjet, hadronicBJet, jet1FromW, jet2FromW;
 	LeptonPointer leptonFromW;
 	METPointer met;
+	Decay::value decayChannel;
 
 	double M3() const;
 
