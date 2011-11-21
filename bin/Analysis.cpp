@@ -32,7 +32,7 @@ void Analysis::analyze() {
     }
     while (eventReader->hasNextEvent()) {
         initiateEvent();
-        printNumberOfProccessedEventsEvery(100000);
+        printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
         inspectEvents();
         //                doSynchExercise();
         hltriggerAnalyser->analyse(ttbarCandidate);
@@ -76,10 +76,11 @@ void Analysis::initiateEvent() {
     ttbarCandidate = TopPairEventCandidate(currentEvent);
     weight = weights.getWeight(currentEvent.getDataType());
     if(!currentEvent.isRealData()){
-        pileUpWeight = weights.reweightPileUp(currentEvent.numberOfGeneratedPileUpVertices());
+        pileUpWeight = weights.reweightPileUp(currentEvent.numberOfGeneratedPileUpVertices(
+				Globals::pileUpReweightingMethod));
         weight *= pileUpWeight;
-
     }
+
     currentEvent.setEventWeight(weight);
     currentEvent.setPileUpWeight(pileUpWeight);
     ttbarCandidate.setEventWeight(weight);
@@ -761,6 +762,11 @@ void Analysis::printSummary() {
 
 void Analysis::createHistograms() {
     histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
+    hltriggerAnalyser->createHistograms();
+	electronAnalyser->createHistograms();
+	mttbarAnalyser->createHistograms();
+	MonteCarloAnalyser->createHistograms();
+	hitfitAnalyser->createHistograms();
 
     //histograms for Pile-up
     histMan->setCurrentCollection("pileupStudy");
@@ -971,11 +977,6 @@ void Analysis::createHistograms() {
     histMan->addH2D_BJetBinned("angleTops_vs_mttbar_withMETAndAsymJets", "angleTops_vs_mttbar", 100, 0, 5000, 40, 0, 4);
     histMan->addH2D_BJetBinned("angleTops_vs_mttbar_withAsymJetsCut", "angleTops_vs_mttbar", 100, 0, 5000, 40, 0, 4);
 
-    hltriggerAnalyser->createHistograms();
-    electronAnalyser->createHistograms();
-    mttbarAnalyser->createHistograms();
-    MonteCarloAnalyser->createHistograms();
-    hitfitAnalyser->createHistograms();
 }
 
 Analysis::Analysis(std::string fileForPileUpReweighting) :

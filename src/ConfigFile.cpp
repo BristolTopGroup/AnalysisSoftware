@@ -10,6 +10,9 @@
 #include "TF1.h"
 #include "TFile.h"
 #include <iostream>
+#include <boost/scoped_ptr.hpp>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -19,7 +22,7 @@ const string DEFAULT_CONFIG_PATH = "python/default_cfg.py";
 ConfigFile::ConfigFile(int argc, char **argv) :
 		programOptions(getParameters(argc, argv)),
 		config(parse_config(configPath())),
-		maxEvents_(get<unsigned long>("maxEvents")),
+		maxEvents_(get<long>("maxEvents")),
 		pileUpFile_(get<string>("PUFile")),
         bJetResoFile_(get<string>("bJetResoFile")),
         lightJetResoFile_(get<string>("lightJetResoFile")),
@@ -27,7 +30,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		fitterOutputFlag_(get<bool>("produceFitterASCIIoutput")),
 		inputFiles_(getVector("inputFiles")),
 		tqafPath_(get<string>("TQAFPath")),
-		lumi_(get<double>("lumi")){
+		lumi_(get<double>("lumi")),
+		pileUpReweightingMethod_(Globals::pileUpReweightingMethod){
 
 }
 
@@ -96,7 +100,7 @@ boost::python::object ConfigFile::parse_config(const string configPath) {
 }
 
 template<typename T>
-const T ConfigFile::get(const string attribute) {
+const T ConfigFile::get(const string attribute) const {
 	using namespace boost::python;
 	T ret;
 	try {
@@ -126,29 +130,47 @@ const vector<string> ConfigFile::getVector(const string attribute) {
 	}
 	return ret;
 }
+//
+//void ConfigFile::LoadJetL7Resolutions(std::string bJetResoFile, std::string lightJetResoFile){
+//    unsigned int nEtaBins_ = 11;
+//    Float_t towerBinning[] = {0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5};
+//    TFile *bFile = new TFile (bJetResoFile.c_str(), "READ");
+//    TFile *lFile = new TFile (lightJetResoFile.c_str(), "READ");
+//
+//    bFile->cd();
+//    lFile->cd();
+//
+//    for(UInt_t iEta = 0; iEta < nEtaBins_; iEta++) {
+//        TString loweretastrg;
+//        TString upperetastrg;
+//        Char_t etachar[10];
+//        sprintf(etachar,"%1.3f",towerBinning[iEta]);
+//        loweretastrg = etachar;
+//        sprintf(etachar,"%1.3f",towerBinning[iEta+1]);
+//        upperetastrg = etachar;
+//        Globals::bL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) bFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
+//        Globals::lightL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) lFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
+//    }
+//    bFile->Close();
+//    lFile->Close();
+//}
 
-void ConfigFile::LoadJetL7Resolutions(std::string bJetResoFile, std::string lightJetResoFile){
-    unsigned int nEtaBins_ = 11;
-    Float_t towerBinning[] = {0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5};
-    TFile *bFile = new TFile (bJetResoFile.c_str(), "READ");
-    TFile *lFile = new TFile (lightJetResoFile.c_str(), "READ");
+boost::array<boost::shared_ptr<TF1>, 12> ConfigFile::getL7Correction(std::string correctionFile) {
+	boost::array<boost::shared_ptr<TF1>, 12> correctionsArray;
 
-    bFile->cd();
-    lFile->cd();
+	boost::array<double, 12> towerBinning = {{0., 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5}};
+	boost::scoped_ptr<TFile> inputFile(TFile::Open(correctionFile.c_str()));
 
-    for(UInt_t iEta = 0; iEta < nEtaBins_; iEta++) {
-        TString loweretastrg;
-        TString upperetastrg;
-        Char_t etachar[10];
-        sprintf(etachar,"%1.3f",towerBinning[iEta]);
-        loweretastrg = etachar;
-        sprintf(etachar,"%1.3f",towerBinning[iEta+1]);
-        upperetastrg = etachar;
-        Globals::bL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) bFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
-        Globals::lightL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) lFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
-    }
-    bFile->Close();
-    lFile->Close();
+	for(unsigned int etaBin = 0; etaBin < towerBinning.size() - 1; ++ etaBin){
+		stringstream graphname;
+		graphname << "mean_relative_et_" << fixed << setprecision(3) << towerBinning[etaBin];
+		graphname << "_" << fixed << setprecision(3) << towerBinning[etaBin + 1];
+		boost::shared_ptr<TF1> corrections((TF1*) inputFile->Get(graphname.str().c_str()));
+		correctionsArray[etaBin] = corrections;
+	}
+
+	inputFile->Close();
+	return correctionsArray;
 }
 
 string ConfigFile::bJetResoFile() const {
@@ -186,9 +208,9 @@ string ConfigFile::PUFile() const {
 		return pileUpFile_;
 }
 
-unsigned long ConfigFile::maxEvents() const{
+long ConfigFile::maxEvents() const{
 	if(programOptions.count("maxEvents"))
-		return programOptions["maxEvents"].as<unsigned long>();
+		return programOptions["maxEvents"].as<long>();
 	else
 		return maxEvents_;
 }
@@ -221,7 +243,7 @@ double ConfigFile::lumi() const {
 ConfigFile::~ConfigFile() {
 }
 
-string ConfigFile::parse_python_exception() {
+string ConfigFile::parse_python_exception() const {
 	PyObject *type_ptr = NULL, *value_ptr = NULL, *traceback_ptr = NULL;
 	PyErr_Fetch(&type_ptr, &value_ptr, &traceback_ptr);
 	string ret("Unfetchable Python error");
@@ -259,5 +281,72 @@ string ConfigFile::parse_python_exception() {
 			ret += string(": Unparseable Python traceback");
 	}
 	return ret;
+}
+
+PileUpReweightingMethod::value ConfigFile::PileUpReweightingMethod() const {
+	std::string option = "";
+
+	if (isOptionSetInConsole("pileUpReweightingMethod")) {
+		option = programOptions["pileUpReweightingMethod"].as<std::string> ();
+	} else if (isOptionSetInConfig(option)) {
+		option = get<std::string> ("pileUpReweightingMethod");
+	} else
+		return Globals::pileUpReweightingMethod;
+
+	if (option == "averagePileUp")
+		return PileUpReweightingMethod::averagePileUp;
+	else if (option == "inTimePileUpOnly")
+		return PileUpReweightingMethod::inTimePileUpOnly;
+	else if (option == "threeDReweighting")
+		return PileUpReweightingMethod::threeDReweighting;
+	else {
+		cout << "WARNING: Unknown or empty pile up reweighting option '" << option << "', using default" << endl;
+		return Globals::pileUpReweightingMethod;
+	}
+}
+
+bool ConfigFile::isOptionSet(std::string option) const{
+	bool isInProgramOptions(isOptionSetInConsole(option));
+	bool isInConfigFile(isOptionSetInConfig(option));
+
+	return isInProgramOptions || isInConfigFile;
+}
+
+bool ConfigFile::isOptionSetInConsole(std::string option) const {
+	return programOptions.count(option);
+}
+
+bool ConfigFile::isOptionSetInConfig(std::string option) const {
+	return PyObject_HasAttrString(config.ptr(), option.c_str());
+}
+
+void ConfigFile::loadIntoMemory() {
+	//always use function to access the variables
+	//general
+	Globals::luminosity = lumi();
+	Globals::maxEvents = maxEvents();
+
+	//kinematic fit
+	Globals::TQAFPath = TQAFPath();
+	Globals::useHitFit = useHitFit();
+	Globals::produceFitterASCIIoutput = fitterOutputFlag();
+
+	//Loading l7 JEC
+//	LoadJetL7Resolutions(bJetResoFile(), lightJetResoFile());
+
+	Globals::estimatedPileup = getPileUpHistogram(PUFile());
+
+	//Loading l7 JEC
+	Globals::bL7Corrections = getL7Correction(bJetResoFile());
+	Globals::lightL7Corrections = getL7Correction(lightJetResoFile());
+}
+
+boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
+	using namespace std;
+	boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
+	boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
+	file->Close();
+
+	return pileUp;
 }
 } /* namespace BAT */

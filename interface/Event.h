@@ -16,6 +16,8 @@
 #include "DataTypes.h"
 #include "Printers/EventContentPrinter.h"
 #include "HighLevelTriggers.h"
+#include "EventWeightProvider.h"
+#include "GlobalVariables.h"
 
 namespace BAT {
 
@@ -141,7 +143,10 @@ public:
 	static bool usePFIsolation;
 	static bool useCiCElectronID;
 
-	double numberOfGeneratedPileUpVertices() const;
+//	double averageNumberOfGeneratedPileUpVertices() const;
+	const std::vector<int> GeneratedPileUpVertices() const;
+	double numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method =
+			Globals::pileUpReweightingMethod) const;
 	double rho() const;
 
 private:

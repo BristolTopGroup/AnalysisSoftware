@@ -115,7 +115,6 @@ void Event::selectElectronsByQuality() {
         bool isGood(electron->isGood((short) Globals::electronID));
         bool isIsolated = electron->relativeIsolation() < Globals::maxElectronRelativeIsolation;
         bool isPFIsolated = electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation;
-        bool isIsolatedUnderSignalSelection = (Event::usePFIsolation && isPFIsolated) || (!Event::usePFIsolation && isIsolated);
 
         if (isGood)
             goodElectrons.push_back(electron);
@@ -329,11 +328,7 @@ void Event::selectMuonsByQuality() {
 		MuonPointer muon = allMuons.at(index);
 
 		bool isGood(muon->isGood());
-		bool isIsolated = muon->relativeIsolation() < Globals::maxMuonRelativeIsolation;
 		bool isPFIsolated = muon->isPFLepton() && muon->pfIsolation() < Globals::maxMuonPFIsolation;
-		bool isIsolatedUnderSignalSelection = (Event::usePFIsolation && isPFIsolated)
-				|| (!Event::usePFIsolation && isIsolated);
-
 		if (isGood)
 			goodMuons.push_back(muon);
 
@@ -530,11 +525,37 @@ void Event::setGenNumberOfPileUpVertices(std::vector<int> pileup){
     genNumberOfPileUpVertices = pileup;
 }
 
-double Event::numberOfGeneratedPileUpVertices() const {
-	double average = std::accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0)/genNumberOfPileUpVertices.size();
-    return average;
+//double Event::averageNumberOfGeneratedPileUpVertices() const {
+//	double average = std::accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0)/genNumberOfPileUpVertices.size();
+//    return average;
+//}
+
+const std::vector<int> Event::GeneratedPileUpVertices() const {
+	return genNumberOfPileUpVertices;
 }
 
+double Event::numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method) const {
+	using namespace std;
+
+	double numberOfVertices(0);
+	double average(0);
+
+	switch (method) {
+	case PileUpReweightingMethod::averagePileUp:
+		average = accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0);
+		average = average / genNumberOfPileUpVertices.size();
+		numberOfVertices = average;
+		break;
+	case PileUpReweightingMethod::inTimePileUpOnly:
+		numberOfVertices = genNumberOfPileUpVertices.at(1);
+		break;
+	case PileUpReweightingMethod::threeDReweighting:
+		cout << "Pile-up reweighting method '3D-reweighting' not implemented" << endl;
+		return 0;
+	}
+
+	return numberOfVertices;
+}
 void Event::setHLTPrescales(const boost::shared_ptr<std::vector<int> > prescales){
 	HLTPrescales = prescales;
 }

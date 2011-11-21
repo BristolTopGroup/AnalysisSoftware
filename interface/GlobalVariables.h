@@ -12,45 +12,56 @@
 #include "RecoObjects/Muon.h"
 #include "RecoObjects/MET.h"
 #include "TF1.h"
+#include "TH1D.h"
+#include <string>
+#include "EventWeightProvider.h"
 
 namespace BAT {
 struct Globals {
 
-//general
-static std::string TQAFPath;
-static double luminosity;
-static bool useHitFit;
-static bool produceFitterASCIIoutput;
+	//general
+	static unsigned long maxEvents;
+	static double luminosity;
+	static unsigned long printEveryXEvents;
+	static std::string selectedEventsOutputfile;
+	static std::string selectedEventsWithMetaDataOutputfile;
+	static PileUpReweightingMethod::value pileUpReweightingMethod;
+	static boost::shared_ptr<TH1D> estimatedPileup;
 
-//electrons
-static double maxElectronPFIsolation;
-static double maxElectronRelativeIsolation;
-static ElectronAlgorithm::value electronAlgorithm;
-static ElectronID::value electronID;
-static double minElectronET;
-static double MaxAbsoluteElectronEta;
+	//Kinematic fit
+	static std::string TQAFPath;
+	static bool useHitFit;
+	static bool produceFitterASCIIoutput;
 
-//muons
-static double maxMuonPFIsolation;
-static double maxMuonRelativeIsolation;
-static MuonAlgorithm::value muonAlgorithm;
-static double maxAbsoluteMuonEta;
-static double minMuonPt;
+	//electrons
+	static double maxElectronPFIsolation;
+	static double maxElectronRelativeIsolation;
+	static ElectronAlgorithm::value electronAlgorithm;
+	static ElectronID::value electronID;
+	static double minElectronET;
+	static double MaxAbsoluteElectronEta;
 
-//jets
-static JetAlgorithm::value jetAlgorithm;
-static BtagAlgorithm::value btagAlgorithm;
-static BtagAlgorithm::workingPoint btagWorkingPoint;
-static boost::array< boost::shared_ptr<TF1>, 12 > bL7Corrections;
-static boost::array< boost::shared_ptr<TF1>, 12 > lightL7Corrections;
+	//muons
+	static double maxMuonPFIsolation;
+	static double maxMuonRelativeIsolation;
+	static MuonAlgorithm::value muonAlgorithm;
+	static double maxAbsoluteMuonEta;
+	static double minMuonPt;
 
-//good jet definition
-static double maxAbsoluteJetEta;
-static double minJetPt;
+	//jets
+	static JetAlgorithm::value jetAlgorithm;
+	static BtagAlgorithm::value btagAlgorithm;
+	static BtagAlgorithm::workingPoint btagWorkingPoint;
+	static boost::array<boost::shared_ptr<TF1>, 12> bL7Corrections;
+	static boost::array<boost::shared_ptr<TF1>, 12> lightL7Corrections;
 
-//MET
-static METAlgorithm::value metAlgorithm;
-static double METCut;
+	//good jet definition
+	static double maxAbsoluteJetEta;
+	static double minJetPt;
+
+	//MET
+	static METAlgorithm::value metAlgorithm;
+	static double METCut;
 };
 
 }

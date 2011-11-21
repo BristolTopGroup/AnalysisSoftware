@@ -4,7 +4,6 @@
  *  Created on: Mar 11, 2010
  *      Author: lkreczko
  */
-//#include "cms_bristol_ana_v3.hh"
 #include "TSystem.h"
 #include "TStopwatch.h"
 #include "TROOT.h"
@@ -23,24 +22,85 @@ using namespace BAT;
 using namespace boost::program_options;
 
 void setUpOnce();
+void setConfiguration(const ConfigFile);
 
 int main(int argc, char **argv) {
-
-	ConfigFile config(argc, argv);
-	cout << "Using config-file '" << config.configPath() << endl;
-	unsigned long maxEvents(config.maxEvents());
-	std::string pileUpFile = config.PUFile();
-    std::string bJetResoFile = config.bJetResoFile();
-    std::string lightJetResoFile = config.lightJetResoFile();
 	setUpOnce();
 	TStopwatch watch;
-	watch.Start();
 
-	//general
-	Globals::TQAFPath = config.TQAFPath();
-	Globals::luminosity = config.lumi();
-	Globals::useHitFit =  config.useHitFit();
+	watch.Start();
+	ConfigFile config(argc, argv);
+	setConfiguration(config);
+	watch.Stop();
+
+	cout << "Time to read configuration: " << watch.CpuTime() << "s" << endl;
+	watch.Reset();
+
+	watch.Start();
+	Analysis::useCustomConversionTagger(false);
+	Analysis::usePFIsolation(true);
+
+	boost::scoped_ptr<Analysis> myAnalysis(new Analysis(config.PUFile()));
+
+	myAnalysis->setMaximalNumberOfEvents(Globals::maxEvents);
+
+	//@DEPRECATED
+//	myAnalysis->useHitFit = Globals::useHitFit;
+
+	//@DEPRECATED
+	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
+
+	vector<string> inputFiles = config.inputFiles();
+
+	for (unsigned int index = 0; index < inputFiles.size(); ++index) {
+		myAnalysis->addInputFile(inputFiles.at(index).c_str());
+	}
+
+	watch.Stop();
+	cout << "Time to prepare analysis: " << watch.CpuTime() << "s" << endl;
+	watch.Reset();
+
+	cout << "starting analysis" << endl;
+	watch.Start();
+	//	ProfilerStart("BATProfile");
+	myAnalysis->analyze();
+	//	ProfilerStop();
+	watch.Stop();
+	double eventsPerMinute = myAnalysis->getNumberOfProccessedEvents() / (watch.CpuTime() / 60);
+	cout << "Number of events processed per minute: " << eventsPerMinute << endl;
+	watch.Print();
+
+	return 0;
+}
+
+void setUpOnce() {
+	//needed to proper link vector<float> etc.
+	gROOT->ProcessLine("#include <vector>");
+	//prevent automatic ownership of ROOT objects
+	TH1F::AddDirectory(false);
+	//ignore ROOT errors (temporaly due to different nTuple content)
+	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
+}
+
+void setConfiguration(ConfigFile config) {
+	cout << "Loading configuration..." << endl;
+	cout << "Using config-file '" << config.configPath() << endl;
+	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
+	cout << config.lightJetResoFile() << endl;
+	long maxEvents(config.maxEvents());
+	cout << "Maximal number of events to be processed: ";
+	if (maxEvents > 0)
+		cout << maxEvents << ".\n";
+	else
+		cout << "all available" << ".\n";
+
+	if (config.useHitFit())
+		cout << "Using HitFit.\n";
+
+	config.loadIntoMemory();
+	
 	Globals::produceFitterASCIIoutput = config.fitterOutputFlag();
+
 	//jets
 	Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
 	Globals::minJetPt = 30.;
@@ -58,53 +118,9 @@ int main(int argc, char **argv) {
 	Globals::metAlgorithm = METAlgorithm::ParticleFlowMET;
 	Globals::METCut = 20.;
 
-	//Loading l7 JEC
-	config.LoadJetL7Resolutions(bJetResoFile, lightJetResoFile);
+//	//Loading l7 JEC
+//	config.LoadJetL7Resolutions(bJetResoFile, lightJetResoFile);
 
-	Analysis::useCustomConversionTagger(false);
-	Analysis::usePFIsolation(true);
-//	Analysis::useCiCElectronID(true);
-
-	cout << "From Config file: " << config.PUFile() << endl;
-	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", " << config.lightJetResoFile() << endl;
-
-	boost::scoped_ptr<Analysis> myAnalysis(new Analysis(pileUpFile));
-
-	if (maxEvents > 0){
-		myAnalysis->setMaximalNumberOfEvents(maxEvents);
-		cout << "Maximal number of events to be processed: " << maxEvents << ".\n";
-	}
-	else
-		cout << "Maximal number of events to be processed: " << "all available" << ".\n";
-
-    if (config.useHitFit()) cout << "Using HitFit.\n";
-
-	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
-
-	vector<string> inputFiles = config.inputFiles();
-
-	for(unsigned int index = 0; index < inputFiles.size(); ++ index){
-		myAnalysis->addInputFile(inputFiles.at(index).c_str());
-	}
-
-
-//	ProfilerStart("BATProfile");
-	cout << "starting analysis" << endl;
-	myAnalysis->analyze();
-//	ProfilerStop();
-	watch.Stop();
-	cout << "Number of events processed per minute: "
-			<< myAnalysis->getNumberOfProccessedEvents() / (watch.CpuTime() / 60) << endl;
-	watch.Print();
-
-	return 0;
-}
-
-void setUpOnce() {
-	//needed to proper link vector<float> etc.
-	gROOT->ProcessLine("#include <vector>");
-	//prevent automatic ownership of ROOT objects
-	TH1F::AddDirectory(false);
-	//ignore ROOT errors (temporaly due to different nTuple content)
-	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
+//	cout << "From Config file: " << pileUpFile << endl;
+//	cout << "Using L7 jet energy corrections: " << bJetResoFile << ", " << lightJetResoFile << endl;
 }

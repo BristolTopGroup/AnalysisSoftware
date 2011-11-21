@@ -58,13 +58,13 @@ public:
 	void skipNumberOfEvents(unsigned long skipNextNEvents);
 	unsigned long getNumberOfProccessedEvents() const;
 	unsigned long getCurrentLocalEventNumber() const;
-	void setMaximumNumberOfEvents(unsigned long maxNumberOfEvents);
+	void setMaximumNumberOfEvents(long maxNumberOfEvents);
 	const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& getSeenDatatypes();
 	const char* getCurrentFile() const;
 private:
 	unsigned long processedEvents;
-	unsigned long maximalNumberOfEvents;
-	unsigned long currentEventEntry;
+	long maximalNumberOfEvents;
+	long currentEventEntry;
 	unsigned long numberOfFiles;
 	boost::shared_ptr<TChain> input;
 	boost::shared_ptr<VariableReader<MultiIntPointer> > hltReader;

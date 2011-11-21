@@ -95,6 +95,8 @@ void ElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     histMan->H1D("nElectronsWP70")->Fill(goodElectrons, weight);
     histMan->H1D("nElectronsWP70Iso")->Fill(goodIsoElectrons, weight);
 
+    //TODO:Add H/E for electrons which pass the id
+
 
 }
 
