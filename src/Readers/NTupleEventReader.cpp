@@ -112,7 +112,7 @@ bool NTupleEventReader::hasNextEvent() {
     if (numberOfFiles == 0)
         throw NoFileFoundException("No input file found!");
     bool hasNextInNTuple = input->LoadTree(currentEventEntry) >= 0;
-    bool isWithinEventRange = currentEventEntry < maximalNumberOfEvents;
+    bool isWithinEventRange = currentEventEntry < maximalNumberOfEvents || maximalNumberOfEvents <= 0;
     return hasNextInNTuple && isWithinEventRange;
 }
 
@@ -164,7 +164,7 @@ void NTupleEventReader::skipNumberOfEvents(unsigned long skipNextNEvents) {
     currentEventEntry += skipNextNEvents;
 }
 
-void NTupleEventReader::setMaximumNumberOfEvents(unsigned long maxNumberOfEvents) {
+void NTupleEventReader::setMaximumNumberOfEvents(long maxNumberOfEvents) {
     maximalNumberOfEvents = maxNumberOfEvents;
 }
 
