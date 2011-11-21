@@ -43,7 +43,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
         outFile << endl;
 
-        outFile << ttbarEvent.GoodJets().size() << "  " << ttbarEvent.Vertices().size() << "  ";
+        outFile << ttbarEvent.GoodElectronCleanedJets().size() << "  " << ttbarEvent.Vertices().size() << "  ";
         if(!ttbarEvent.isRealData()){
         	outFile << ttbarEvent.numberOfGeneratedPileUpVertices();
         } else outFile << "9999";
