@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 	cout << "starting analysis" << endl;
 	watch.Start();
 	//	ProfilerStart("BATProfile");
-	myAnalysis->analyze();
+	myAnalysis->analyse();
 	//	ProfilerStop();
 	watch.Stop();
 	double eventsPerMinute = myAnalysis->getNumberOfProccessedEvents() / (watch.CpuTime() / 60);

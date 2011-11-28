@@ -30,7 +30,7 @@ public:
     Decay::value decay() const;
 
 private:
-    TtbarHypothesis MCttbarEvent;
+    TtbarHypothesis mcEvent;
 };
 
 }

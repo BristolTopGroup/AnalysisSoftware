@@ -18,7 +18,7 @@ public:
 	QCDAnalyser(boost::shared_ptr<HistogramManager> histMan);
 	~QCDAnalyser();
 
-	void analyse(TopPairEventCandidate& Event);
+	void analyse(const TopPairEventCandidate& Event);
 	void createHistograms();
 
 private:

@@ -138,7 +138,7 @@ protected:
             ttbarResonance;
     unsigned short selectedNeutrino, currentSelectedNeutrino, hadronicBIndex, leptonicBIndex, jet1FromWIndex,
             jet2FromWIndex;
-    bool doneReconstruction;
+    bool doneReconstruction_;
     ConversionTaggerPointer conversionTagger;
     bool doneConversionTagging;
     std::vector<TtbarHypothesisPointer> solutions;
@@ -238,12 +238,40 @@ public:
     void inspectReconstructedEvent() const;
     unsigned int NJet() const;
     const std::vector<TtbarHypothesisPointer>& Solutions() const;
+    bool hasBeenReconstructed() const;
 protected:
     void throwExpeptionIfNotReconstructed() const;
     void selectNeutrinoSolution();
     void fillHypotheses();
     const TtbarHypothesisPointer fillHypothesis(unsigned short int neutrinoSolution);
 
+};
+
+//TODO: make this class simpler
+struct InterestingEvent {
+public:
+	BAT::TopPairEventCandidate candidate;
+	unsigned long runNumber, eventNumber;
+	std::string fileName;
+
+    InterestingEvent(unsigned long run, unsigned long event, std::string file) :
+        candidate(), runNumber(run), eventNumber(event), fileName(file) {
+
+    }
+
+    InterestingEvent(BAT::TopPairEventCandidate cand, std::string file) :
+        candidate(cand), runNumber(cand.runnumber()), eventNumber(cand.eventnumber()), fileName(file) {
+
+    }
+    ~InterestingEvent() {
+
+    }
+
+    void print() {
+        std::cout << "run " << candidate.runnumber() << ", event " << candidate.eventnumber() << " (Mttbar: "
+                << candidate.mttbar() << ")" << std::endl;
+        std::cout << "located in: " << fileName << std::endl << std::endl;
+    }
 };
 
 }

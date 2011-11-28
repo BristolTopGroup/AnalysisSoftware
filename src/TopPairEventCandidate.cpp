@@ -50,7 +50,7 @@ TopPairEventCandidate::TopPairEventCandidate() :
     leptonicBIndex(0),
     jet1FromWIndex(0),
     jet2FromWIndex(0),
-    doneReconstruction(false),
+    doneReconstruction_(false),
     conversionTagger(new ConversionTagger()),
     doneConversionTagging(false),
     solutions(),
@@ -78,7 +78,7 @@ TopPairEventCandidate::TopPairEventCandidate(const Event& event) :
     leptonicBIndex(0),
     jet1FromWIndex(0),
     jet2FromWIndex(0),
-    doneReconstruction(false),
+    doneReconstruction_(false),
     conversionTagger(new ConversionTagger()),
     doneConversionTagging(false),
     solutions(),
@@ -688,7 +688,7 @@ void TopPairEventCandidate::reconstructTTbarToEPlusJets(ElectronPointer electron
         ttbarResonance = ParticlePointer(new Particle(*leptonicTop1 + *hadronicTop));
     else
         ttbarResonance = ParticlePointer(new Particle(*leptonicTop2 + *hadronicTop));
-    doneReconstruction = true;
+    doneReconstruction_ = true;
 }
 
 void TopPairEventCandidate::reconstructTTbarToEPlusJetsFrom3Jets(ElectronPointer electron) {
@@ -765,7 +765,7 @@ void TopPairEventCandidate::reconstructTTbarToEPlusJetsFrom3Jets(ElectronPointer
         ttbarResonance = ParticlePointer(new Particle(*leptonicTop1 + *hadronicTop));
     else
         ttbarResonance = ParticlePointer(new Particle(*leptonicTop2 + *hadronicTop));
-    doneReconstruction = true;
+    doneReconstruction_ = true;
 }
 
 void TopPairEventCandidate::reconstructNeutrinos() {
@@ -1020,11 +1020,12 @@ double TopPairEventCandidate::sumPt() const {
 }
 
 void TopPairEventCandidate::throwExpeptionIfNotReconstructed() const {
-    if (doneReconstruction == false)
+    if (doneReconstruction_ == false)
         throw ReconstructionException("Can't access reconstructed particles before reconstruction.");
 }
 
 const ElectronPointer TopPairEventCandidate::getElectronFromWDecay() const {
+	throwExpeptionIfNotReconstructed();
     return electronFromW;
 }
 
@@ -1184,6 +1185,10 @@ double TopPairEventCandidate::transverseWmass(const ElectronPointer electron) co
         return sqrt(tMassSquared);
     else
         return -1;
+}
+
+bool TopPairEventCandidate::hasBeenReconstructed() const{
+	return doneReconstruction_;
 }
 
 

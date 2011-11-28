@@ -658,4 +658,6 @@ extern cute::suite make_suite_TestTopPairEventCandidate() {
             CUTE_SMEMFUN(TestTopPairEventCandidate, testReconstructTopEventUsingChiWithNotEnoughJetsThrowsException));
 
     return s;
+
+    //TODO: test hasBeenReconstructed function
 }

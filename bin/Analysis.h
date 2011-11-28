@@ -26,35 +26,22 @@
 #include "../interface/HistHelpers/HistogramManager.h"
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
-#include "../interface/Analysers/HLTriggerAnalyser.h"
+//Analysers
+#include "../interface/Analysers/DiElectronAnalyser.h"
 #include "../interface/Analysers/ElectronAnalyser.h"
-#include "../interface/Analysers/MTtbarAnalyser.h"
-#include "../interface/Analysers/MCAnalyser.h"
 #include "../interface/Analysers/HitFitAnalyser.h"
+#include "../interface/Analysers/HLTriggerAnalyser.h"
+#include "../interface/Analysers/JetAnalyser.h"
+#include "../interface/Analysers/MCAnalyser.h"
+#include "../interface/Analysers/METAnalyser.h"
+#include "../interface/Analysers/MTtbarAnalyser.h"
+#include "../interface/Analysers/MuonAnalyser.h"
+#include "../interface/Analysers/QCDAnalyser.h"
+#include "../interface/Analysers/TopReconstructionAnalyser.h"
+#include "../interface/Analysers/VertexAnalyser.h"
 
-struct InterestingEvent {
-    InterestingEvent(unsigned long run, unsigned long event, std::string file) :
-        candidate(), runNumber(run), eventNumber(event), fileName(file) {
 
-    }
 
-    InterestingEvent(BAT::TopPairEventCandidate cand, std::string file) :
-        candidate(cand), runNumber(cand.runnumber()), eventNumber(cand.eventnumber()), fileName(file) {
-
-    }
-    ~InterestingEvent() {
-
-    }
-    BAT::TopPairEventCandidate candidate;
-    unsigned long runNumber, eventNumber;
-    std::string fileName;
-
-    void print() {
-        std::cout << "run " << candidate.runnumber() << ", event " << candidate.eventnumber() << " (Mttbar: "
-                << candidate.mttbar() << ")" << std::endl;
-        std::cout << "located in: " << fileName << std::endl << std::endl;
-    }
-};
 typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
 typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
 typedef boost::unordered_map<std::string, ePlusJetscutarray> cutmap;
@@ -72,22 +59,31 @@ private:
 
     muPlusJetscutarray muPlusJetsCutFlow;
     muPlusJetscutarray muPlusJetsSingleCuts;
-    std::vector<InterestingEvent> interestingEvents, brokenEvents;
+    std::vector<BAT::InterestingEvent> interestingEvents, brokenEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
-    BAT::EventWeightProvider weights;
+    boost::shared_ptr<BAT::EventWeightProvider> weights;
     float weight, pileUpWeight;
     BAT::Counter ePlusJetsCutflowPerSample, muPlusJetsCutflowPerSample;
-    boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
+
+    boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
-    boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
-    boost::scoped_ptr<BAT::MCAnalyser> MonteCarloAnalyser;
     boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
+    boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
+    boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;
+    boost::scoped_ptr<BAT::MCAnalyser> mcAnalyser;
+    boost::scoped_ptr<BAT::METAnalyser> metAnalyser;
+    boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
+    boost::scoped_ptr<BAT::MuonAnalyser> muonAnalyser;
+    boost::scoped_ptr<BAT::QCDAnalyser> qcdAnalyser;
+    boost::scoped_ptr<BAT::TopReconstructionAnalyser> topRecoAnalyser;
+    boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
+
 
 public:
 //    static float luminosity;
     Analysis(std::string fileForPileUpReweighting);
     virtual ~Analysis();
-    void analyze();
+    void analyse();
     void addInputFile(const char * fileName);
     void setMaximalNumberOfEvents(long maxEvents);
     void setUsedNeutrinoSelectionForTopPairReconstruction(BAT::NeutrinoSelectionCriterion::value selection);
@@ -108,21 +104,21 @@ public:
 private:
     void printNumberOfProccessedEventsEvery(unsigned long printEvery);
     void initiateEvent();
-    void doDiElectronAnalysis();
-    void doTTBarAnalysis();
+//    void doDiElectronAnalysis();
+//    void doTTBarAnalysis();
     void doTTbarCutFlow();
     void doSynchExercise();
     void printInterestingEvents();
     void printSummary();
     void inspectEvents();
     void createHistograms();
-    void doNotePlots();
-    void doQCDStudy();
+//    void doNotePlots();
+//    void doQCDStudy();
     void checkForDuplicatedEvents();
     void checkForBrokenEvents();
-    void doJetAnalysis();
-    void doPileUpStudy();
-    void doTriggerAnalysis();
+//    void doJetAnalysis();
+//    void doPileUpStudy();
+//    void doTriggerAnalysis();
 };
 
 #endif /* ANALYSIS_H_ */

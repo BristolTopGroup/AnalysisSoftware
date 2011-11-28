@@ -7,9 +7,6 @@
 
 #ifndef ELECTRONANALYSER_H_
 #define ELECTRONANALYSER_H_
-#include <boost/shared_ptr.hpp>
-#include "../../interface/TopPairEventCandidate.h"
-#include "../../interface/HistHelpers/HistogramManager.h"
 #include "BasicAnalyser.h"
 
 namespace BAT {

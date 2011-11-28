@@ -16,6 +16,9 @@ class JetAnalyser: public BAT::BasicAnalyser {
 public:
 	JetAnalyser(boost::shared_ptr<HistogramManager> histMan);
 	virtual ~JetAnalyser();
+
+	void analyse(const TopPairEventCandidate& ttbarEvent);
+	void createHistograms();
 };
 
 } /* namespace BAT */

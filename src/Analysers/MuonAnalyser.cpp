@@ -9,6 +9,14 @@
 
 namespace BAT {
 
+void MuonAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+
+}
+
+void MuonAnalyser::createHistograms() {
+
+}
+
 MuonAnalyser::MuonAnalyser(boost::shared_ptr<HistogramManager> histMan) :
 	BasicAnalyser(histMan) {
 

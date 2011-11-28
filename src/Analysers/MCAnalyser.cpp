@@ -6,15 +6,23 @@
  */
 
 #include "../../interface/Analysers/MCAnalyser.h"
+#include <boost/scoped_ptr.hpp>
+
+#include <iostream>
+using namespace std;
 
 namespace BAT {
 
 void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+	boost::scoped_ptr<TopPairEventCandidate> ttbarCandidate(new TopPairEventCandidate(ttbarEvent));
+//	if(ttbarCandidate->passesFullTTbarEPlusJetSelection())
+//		ttbarCandidate->reconstructTTbarToEPlusJets(ttbarCandidate->GoodPFIsolatedElectrons().front());
+
+
     histMan->setCurrentCollection("MCStudy");
 	MCParticlePointer top, antitop, b_from_top, b_from_antitop, W_plus, W_minus, electron, neutrino, quark_from_W, antiquark_from_W;
-	JetCollection genJets = ttbarEvent.GenJets();
+	JetCollection genJets = ttbarCandidate->GenJets();
 	JetPointer topBjet, antitopBjet, jet1fromW, jet2fromW;
-//	TtbarHypothesis MCttbarEvent;
 	bool ejets_event = false;
 	bool leptonic_Wplus_found = false, leptonic_Wminus_found = false;
 	bool hadronic_Wplus_found = false, hadronic_Wminus_found = false;
@@ -24,8 +32,9 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	int top_index = -100, antitop_index = -100, W_plus_index = -100, W_minus_index = -100, electron_index = -100, neutrino_index = -100,
 			b_from_top_index = -100, b_from_antitop_index = -100, quark_from_W_index = -100, antiquark_from_W_index = -100;
 
+	//TODO: change from iterator to index: std::vectors have constant time for index = no gain using iterators
 	// MC ttbar reconstruction
-	for (MCParticleCollection::const_iterator mc_particle = ttbarEvent.GenParticles().begin(); mc_particle != ttbarEvent.GenParticles().end(); ++mc_particle, ++index) {
+	for (MCParticleCollection::const_iterator mc_particle = ttbarCandidate->GenParticles().begin(); mc_particle != ttbarCandidate->GenParticles().end(); ++mc_particle, ++index) {
 
 		if ((*mc_particle)->status() != 3) continue;
 		//top quark
@@ -145,15 +154,15 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	if (((leptonic_Wplus_found) || (leptonic_Wminus_found)) && ((hadronic_Wplus_found) || (hadronic_Wminus_found))
 			&& (!non_electron_leptonic_channel)) {
 		ejets_event = true;
-		MCttbarEvent.decayChannel = Decay::electronPlusJets;
+		mcEvent.decayChannel = Decay::electronPlusJets;
 	}
 	if (((leptonic_Wplus_found) || (leptonic_Wminus_found)) && (!hadronic_Wplus_found) && (!hadronic_Wminus_found)) {
 		fully_leptonic_event = true;
-		MCttbarEvent.decayChannel = Decay::fullyLeptonic;
+		mcEvent.decayChannel = Decay::fullyLeptonic;
 	}
 	if (((hadronic_Wplus_found) || (hadronic_Wminus_found)) && (!leptonic_Wplus_found) && (!leptonic_Wminus_found)) {
 		fully_hadronic_event = true;
-		MCttbarEvent.decayChannel = Decay::fullyHadronic;
+		mcEvent.decayChannel = Decay::fullyHadronic;
 	}
 
 	if (ejets_event) {
@@ -188,55 +197,67 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		}
 
 		if (leptonic_Wplus_found) {
-			MCttbarEvent.leptonicTop = (ParticlePointer) top;
-			MCttbarEvent.hadronicTop = (ParticlePointer) antitop;
-			MCttbarEvent.leptonicW = (ParticlePointer) W_plus;
-			MCttbarEvent.hadronicW = (ParticlePointer) W_minus;
-			MCttbarEvent.leptonicBjet = topBjet;
-			MCttbarEvent.hadronicBJet = antitopBjet;
-			MCttbarEvent.jet1FromW = jet1fromW;
-			MCttbarEvent.jet2FromW = jet2fromW;
-			MCttbarEvent.neutrinoFromW = (ParticlePointer) neutrino;
+			mcEvent.leptonicTop = (ParticlePointer) top;
+			mcEvent.hadronicTop = (ParticlePointer) antitop;
+			mcEvent.leptonicW = (ParticlePointer) W_plus;
+			mcEvent.hadronicW = (ParticlePointer) W_minus;
+			mcEvent.leptonicBjet = topBjet;
+			mcEvent.hadronicBJet = antitopBjet;
+			mcEvent.jet1FromW = jet1fromW;
+			mcEvent.jet2FromW = jet2fromW;
+			mcEvent.neutrinoFromW = (ParticlePointer) neutrino;
 			ElectronPointer e(new Electron(electron->energy(), electron->px(), electron->py(), electron->pz()));
-			MCttbarEvent.leptonFromW = e;
+			mcEvent.leptonFromW = e;
 		}
 		else if (hadronic_Wplus_found) {
-			MCttbarEvent.leptonicTop = (ParticlePointer) antitop;
-			MCttbarEvent.hadronicTop = (ParticlePointer) top;
-			MCttbarEvent.leptonicW = (ParticlePointer) W_minus;
-			MCttbarEvent.hadronicW = (ParticlePointer) W_plus;
-			MCttbarEvent.leptonicBjet = antitopBjet;
-			MCttbarEvent.hadronicBJet = topBjet;
-			MCttbarEvent.jet1FromW = jet1fromW;
-			MCttbarEvent.jet2FromW = jet2fromW;
-			MCttbarEvent.neutrinoFromW = (ParticlePointer) neutrino;
+			mcEvent.leptonicTop = (ParticlePointer) antitop;
+			mcEvent.hadronicTop = (ParticlePointer) top;
+			mcEvent.leptonicW = (ParticlePointer) W_minus;
+			mcEvent.hadronicW = (ParticlePointer) W_plus;
+			mcEvent.leptonicBjet = antitopBjet;
+			mcEvent.hadronicBJet = topBjet;
+			mcEvent.jet1FromW = jet1fromW;
+			mcEvent.jet2FromW = jet2fromW;
+			mcEvent.neutrinoFromW = (ParticlePointer) neutrino;
 			ElectronPointer e(new Electron(electron->energy(), electron->px(), electron->py(), electron->pz()));
-			MCttbarEvent.leptonFromW = e;
+			mcEvent.leptonFromW = e;
 		}
 		else cout << "ERROR: no hadronic or leptonic W's in semileptonic event (nonsense).\n";
 
 		//comparing deltaR between genJets from W and closest partons
-		histMan->H2D("deltaR_genJets_partons")->Fill(MCttbarEvent.jet1FromW->deltaR(MCttbarEvent.jet2FromW),quark_from_W->deltaR(antiquark_from_W));
+		histMan->H2D("deltaR_genJets_partons")->Fill(mcEvent.jet1FromW->deltaR(mcEvent.jet2FromW),quark_from_W->deltaR(antiquark_from_W));
 
 		//invariant mass histograms
 		histMan->H1D("W_inv_mass_from_truth_partons")->Fill(quark_from_W->invariantMass(antiquark_from_W));
-		histMan->H1D("W_inv_mass_from_genJets")->Fill(MCttbarEvent.jet1FromW->invariantMass(MCttbarEvent.jet2FromW));
-		histMan->H1D("top_leptonic_inv_mass_from_truth")->Fill(MCttbarEvent.leptonicW->invariantMass(MCttbarEvent.leptonicBjet));
-		histMan->H1D("top_hadronic_inv_mass_from_truth")->Fill(MCttbarEvent.hadronicW->invariantMass(MCttbarEvent.hadronicBJet));
+		histMan->H1D("W_inv_mass_from_genJets")->Fill(mcEvent.jet1FromW->invariantMass(mcEvent.jet2FromW));
+		histMan->H1D("top_leptonic_inv_mass_from_truth")->Fill(mcEvent.leptonicW->invariantMass(mcEvent.leptonicBjet));
+		histMan->H1D("top_hadronic_inv_mass_from_truth")->Fill(mcEvent.hadronicW->invariantMass(mcEvent.hadronicBJet));
 
-		histMan->H1D("m3_mc")->Fill(MCttbarEvent.M3());
+		histMan->H1D("m3_mc")->Fill(mcEvent.M3());
 
 		// comparing truth and reco objects
-		if (ttbarEvent.passesFullTTbarEPlusJetSelection()) {
-			histMan->H1D("m3_diff")->Fill(fabs(MCttbarEvent.M3()-ttbarEvent.M3()));
+		if (ttbarCandidate->passesFullTTbarEPlusJetSelection()) {
+			histMan->H1D("m3_diff")->Fill(fabs(mcEvent.M3()-ttbarCandidate->M3()));
 
-			double deltaRElectron = MCttbarEvent.leptonFromW->deltaR(ttbarEvent.getElectronFromWDecay());
-			double deltaRLeptonicBjet = MCttbarEvent.leptonicBjet->deltaR(ttbarEvent.getLeptonicBJet());
-			double deltaRHadronicBjet = MCttbarEvent.hadronicBJet->deltaR(ttbarEvent.getHadronicBJet());
-			double deltaRjet11fromW = MCttbarEvent.jet1FromW->deltaR(ttbarEvent.getJet1FromHadronicW());
-			double deltaRjet12fromW = MCttbarEvent.jet1FromW->deltaR(ttbarEvent.getJet2FromHadronicW());
-			double deltaRjet21fromW = MCttbarEvent.jet2FromW->deltaR(ttbarEvent.getJet1FromHadronicW());
-			double deltaRjet22fromW = MCttbarEvent.jet2FromW->deltaR(ttbarEvent.getJet2FromHadronicW());
+			try {
+				if (Event::usePFIsolation)
+					ttbarCandidate->reconstructTTbarToEPlusJets(ttbarCandidate->GoodPFIsolatedElectrons().front());
+				else
+					ttbarCandidate->reconstructTTbarToEPlusJets(ttbarCandidate->GoodIsolatedElectrons().front());
+			} catch (ReconstructionException &e) {
+				cout << e.what() << endl;
+				return;
+			}
+
+			if(!ttbarCandidate->hasBeenReconstructed())
+				cout << "WRONG" << endl;
+			double deltaRElectron = mcEvent.leptonFromW->deltaR(ttbarCandidate->getElectronFromWDecay());
+			double deltaRLeptonicBjet = mcEvent.leptonicBjet->deltaR(ttbarCandidate->getLeptonicBJet());
+			double deltaRHadronicBjet = mcEvent.hadronicBJet->deltaR(ttbarCandidate->getHadronicBJet());
+			double deltaRjet11fromW = mcEvent.jet1FromW->deltaR(ttbarCandidate->getJet1FromHadronicW());
+			double deltaRjet12fromW = mcEvent.jet1FromW->deltaR(ttbarCandidate->getJet2FromHadronicW());
+			double deltaRjet21fromW = mcEvent.jet2FromW->deltaR(ttbarCandidate->getJet1FromHadronicW());
+			double deltaRjet22fromW = mcEvent.jet2FromW->deltaR(ttbarCandidate->getJet2FromHadronicW());
 
 			double deltaRjet1fromW = 0;
 			double deltaRjet2fromW = 0;
@@ -244,8 +265,8 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			if (deltaRjet11fromW < deltaRjet12fromW) deltaRjet1fromW = deltaRjet11fromW; else deltaRjet1fromW = deltaRjet12fromW;
 			if (deltaRjet21fromW < deltaRjet22fromW) deltaRjet2fromW = deltaRjet21fromW; else deltaRjet2fromW = deltaRjet22fromW;
 
-			double deltaEtaNeutrino = MCttbarEvent.neutrinoFromW->deltaEta(ttbarEvent.getNeutrinoFromWDecay());
-			double deltaPhiNeutrino = MCttbarEvent.neutrinoFromW->deltaPhi(ttbarEvent.getNeutrinoFromWDecay());
+			double deltaEtaNeutrino = mcEvent.neutrinoFromW->deltaEta(ttbarCandidate->getNeutrinoFromWDecay());
+			double deltaPhiNeutrino = mcEvent.neutrinoFromW->deltaPhi(ttbarCandidate->getNeutrinoFromWDecay());
 			histMan->H1D("deltaEtaNeutrino")->Fill(deltaEtaNeutrino);
 			histMan->H1D("deltaPhiNeutrino")->Fill(deltaPhiNeutrino);
 
@@ -297,14 +318,14 @@ void MCAnalyser::createHistograms() {
 }
 
 double MCAnalyser::topMass() const {
-	if(MCttbarEvent.leptonicTop != 0)
-		return MCttbarEvent.leptonicTop->mass();
+	if(mcEvent.leptonicTop != 0)
+		return mcEvent.leptonicTop->mass();
 	else
 		return 0;
 }
 
 Decay::value MCAnalyser::decay() const {
-	return MCttbarEvent.decayChannel;
+	return mcEvent.decayChannel;
 }
 
 }
