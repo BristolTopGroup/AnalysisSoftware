@@ -114,9 +114,9 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TTJets181",//
 		"TTJets184",//
 		"TTJets-matchingdown",//
-		"TTJets_matchingup",//
-		"TTJets_scaledown",//
-		"TTJets_scaleup"
+		"TTJets-matchingup",//
+		"TTJets-scaledown",//
+		"TTJets-scaleup"
 } };
 }
 
