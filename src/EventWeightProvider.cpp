@@ -70,6 +70,11 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::Zprime_M3TeV_W300GeV] = 50;
     xsection[DataType::Zprime_M4TeV_W40GeV] = 50;
     xsection[DataType::Zprime_M4TeV_W400GeV] = 50;
+
+    xsection[DataType::TTJets_matchingdown] = 764;
+    xsection[DataType::TTJets_matchingup] = 172;
+    xsection[DataType::TTJets_scaledown] = 552;
+    xsection[DataType::TTJets_scaleup] = 200;
     return xsection;
 }
 
@@ -146,6 +151,11 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::Zprime_M3TeV_W300GeV] = 229034;
     numberOfProcessedEvents[DataType::Zprime_M4TeV_W40GeV] = 183920;
     numberOfProcessedEvents[DataType::Zprime_M4TeV_W400GeV] = 238142;
+
+    numberOfProcessedEvents[DataType::TTJets_matchingdown] = 1065323;
+    numberOfProcessedEvents[DataType::TTJets_matchingup] = 1062792;
+    numberOfProcessedEvents[DataType::TTJets_scaledown] = 967055;
+    numberOfProcessedEvents[DataType::TTJets_scaleup] = 930483;
 }
 
 EventWeightProvider::~EventWeightProvider() {

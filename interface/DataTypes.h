@@ -59,13 +59,17 @@ enum value {
     ttbar178,
     ttbar181,
     ttbar184,
-    NUMBER_OF_DATA_TYPES
+	TTJets_matchingdown,
+	TTJets_matchingup,
+	TTJets_scaledown,
+	TTJets_scaleup,
+	NUMBER_OF_DATA_TYPES
 };
 
 const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
         "ElectronHad",
-        "MuHad",
-        "TTJet",
+		"MuHad",
+		"TTJet",
         "WJetsToLNu",
         "DYJetsToLL",
         "QCD_Pt-20to30_BCtoE",
@@ -98,17 +102,21 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
         "Zprime_M3000GeV_W300GeV",
         "Zprime_M4000GeV_W40GeV",//30
         "Zprime_M4000GeV_W400GeV",
-        "WWtoAnything",
-        "WZtoAnything",
-        "ZZtoAnything",
-        "TTJets161",
-        "TTJets163",
-        "TTJets166",
-        "TTJets169",
-        "TTJets175",
-        "TTJets178",
-        "TTJets181",
-        "TTJets184"
+        "WWtoAnything",//
+        "WZtoAnything",//
+        "ZZtoAnything",//
+        "TTJets161",//
+		"TTJets163",//
+		"TTJets166",//
+		"TTJets169",//
+		"TTJets175",//
+		"TTJets178",//
+		"TTJets181",//
+		"TTJets184",//
+		"TTJets-matchingdown",//
+		"TTJets_matchingup",//
+		"TTJets_scaledown",//
+		"TTJets_scaleup"
 } };
 }
 
