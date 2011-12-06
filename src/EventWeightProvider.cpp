@@ -34,6 +34,7 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::QCD_EMEnriched_Pt20to30] = 0.2355e9 * 0.0073;//xs 0.2355 mb (filter efficiency=0.0073)
     xsection[DataType::QCD_EMEnriched_Pt30to80] = 0.0593e9 * 0.059; //xs 0.0593 mb
     xsection[DataType::QCD_EMEnriched_Pt80to170] = 0.906e6 * 0.148; //xs 0.906e-3 mb
+    xsection[DataType::QCD_MuEnrichedPt15_Pt20] = 84679.3; //xs 0.906e-3 mb
 
     xsection[DataType::QCD_BCtoE_Pt20to30] = 0.2355e9 * 0.00046; //xs 0.2355 mb (filter efficiency=0.00046)
     xsection[DataType::QCD_BCtoE_Pt30to80] = 0.0593e9 * 0.00234; //xs 0.0593 mb
@@ -86,13 +87,15 @@ EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short t
     numberOfProcessedEvents(),
 //    numberOfSkimmedEvents(),
     estimatedPileUp(getPileUpHistogram(pileUpEstimationFile)),
+    DATAdistribution(),
     pileUpWeights(),
     numberOfEventsWithTooHighPileUp(0){
-    generate_flat10_weights();
+
+
+    generate_weights();
     if (tev == 7)
         xsection = sevenTeV::getXSections();
     defineNumberOfProducedEvents();
-//    defineNumberOfSkimmedEvents();
 }
 
 void EventWeightProvider::defineNumberOfProducedEvents() {
@@ -115,6 +118,8 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 35729669;
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 70392060;
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8090132;
+
+    numberOfProcessedEvents[DataType::QCD_MuEnrichedPt15_Pt20] = 24661584;
 
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2081560;
     numberOfProcessedEvents[DataType::QCD_BCtoE_Pt30to80] = 2030033;
@@ -187,30 +192,53 @@ boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pile
     return pileUp;
 }
 
-void EventWeightProvider::generate_flat10_weights() {
-//	/https://twiki.cern.ch/twiki/bin/view/CMS/PileupInformation
-	//https://twiki.cern.ch/twiki/bin/view/CMS/PileupMCReweightingUtilities
-	// Flat10+Tail distribution taken directly from MixingModule input:  (Can be used for Spring11 and Summer11 if you don't worry about small shifts in the mean)
-//    const boost::array<double, 25> npu_probs = {{0.0698146584, 0.0698146584, 0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584,0.0698146584 /* <-- 10*/,
-//           0.0630151648,0.0526654164,0.0402754482,0.0292988928,0.0194384503,0.0122016783,0.007207042,0.004003637,0.0020278322,
-//           0.0010739954,0.0004595759,0.0002229748,0.0001028162,4.58337152809607E-05 /* <-- 24 */}};
+void EventWeightProvider::generate_weights() {
 
-	// Summer11 PU_S4, distribution obtained by averaging the number of interactions
-	// in each beam crossing to estimate the true mean.  THIS IS THE RECOMMENDED ONE for reweighting.
-	const boost::array<double, 25> npu_probs =
-			{ { 0.104109, 0.0703573, 0.0698445, 0.0698254, 0.0697054, 0.0697907, 0.0696751, 0.0694486, 0.0680332,
-					0.0651044, 0.0598036, 0.0527395, 0.0439513, 0.0352202, 0.0266714, 0.019411, 0.0133974, 0.00898536,
-					0.0057516, 0.00351493, 0.00212087, 0.00122891, 0.00070592, 0.000384744, 0.000219377 } };
+	/*
+	 * TODO:
+	 * Summer11 PU_S3 and PU_S4 in-time PU only: PoissonOneXDist
+	 * if Summer11 OOT average PU, use PoissonIntDist
+	 * If Spring11 or Summer11 3D reweighting, use probdistFlat10 (compare to true)
+	 * Fall11, use Fall2011
+	 */
+	pileUpWeights = generateWeights(PoissonIntDist);
+//	double s = 0.0;
+//
+//	for (unsigned int npu = 0; npu < PoissonIntDist.size(); ++npu) {
+//		if (npu >= (unsigned int) estimatedPileUp->GetNbinsX())
+//			break;
+//		DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
+//		pileUpWeights[npu] = DATAdistribution[npu] / PoissonIntDist[npu];
+//		s += DATAdistribution[npu];
+//	}
+//	// normalize weights such that the total sum of weights over thw whole sample is 1.0, i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
+//	for (unsigned int npu = 0; npu < pileUpWeights.size(); ++npu) {
+//		pileUpWeights[npu] /= s;
+//	}
+}
+
+boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
+		const boost::array<double, NWEIGHTSSIZE> inputMC) {
+	boost::array<double, NWEIGHTSSIZE> weights;
+
 	double s = 0.0;
-	for (unsigned int npu = 0; npu < npu_probs.size(); ++npu) {
-		double npu_estimated = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
-		pileUpWeights[npu] = npu_estimated / npu_probs[npu];
-		s += npu_estimated;
+
+	for (unsigned int npu = 0; npu < inputMC.size(); ++npu) {
+		if (npu >= (unsigned int) estimatedPileUp->GetNbinsX())
+			break;
+		DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
+		weights[npu] = DATAdistribution[npu] / inputMC[npu];
+		s += DATAdistribution[npu];
 	}
-	// normalize weights such that the total sum of weights over thw whole sample is 1.0, i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
+	/**
+	 * normalize weights such that the total sum of weights over thw whole sample is 1.0,
+	 * i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
+	 */
 	for (unsigned int npu = 0; npu < pileUpWeights.size(); ++npu) {
-		pileUpWeights[npu] /= s;
+		weights[npu] /= s;
 	}
+
+	return weights;
 }
 
 unsigned long EventWeightProvider::getNumberOfEventsWithTooHighPileUp() const{
