@@ -76,11 +76,11 @@ public:
     }
 
     void testPositiveBtag() {
-        ASSERT(goodBJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEffBTag));
+        ASSERT(goodBJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEfficiency));
     }
 
     void testNegativeBtag() {
-        ASSERT(goodJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEffBTag) == false);
+        ASSERT(goodJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEfficiency) == false);
     }
 
 };

@@ -334,10 +334,10 @@ JetPointer TestObjectFactory::badEtaCaloJet() {
 JetPointer TestObjectFactory::goodCaloBJetSSVHEM() {
     JetPointer goodBJet(TestObjectFactory::goodCaloJet());
 
-    goodBJet->setDiscriminatorForBtagType(1.7 + 0.1, BtagAlgorithm::SimpleSecondaryVertexHighEffBTag);
+    goodBJet->setDiscriminatorForBtagType(1.7 + 0.1, BtagAlgorithm::SimpleSecondaryVertexHighEfficiency);
 
     assert(goodBJet->isGood());
-    assert(goodBJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEffBTag));
+    assert(goodBJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEfficiency));
 
     return goodBJet;
 }

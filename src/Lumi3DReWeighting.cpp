@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <iostream>
 
 namespace BAT {
 
