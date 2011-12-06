@@ -17,13 +17,19 @@ namespace BAT {
 
 namespace BtagAlgorithm {
 enum value {
-    GenPartonFlavour,
-    JetBProbabilityBTag,
-    JetProbabilityBTag,
-    SimpleSecondaryVertexHighEffBTag,
-    SimpleSecondaryVertexHighPurBTag,
-    TrackCountingHighEffBTag,
-    TrackCountingHighPurBTag,
+	CombinedSecondaryVertex,
+	CombinedSecondaryVertexMVA,
+    JetBProbability,
+    JetProbability,
+    SimpleSecondaryVertexHighEfficiency,
+    SimpleSecondaryVertexHighPurity,
+    SoftElectronByIP3d,
+    SoftElectronByPt,
+    SoftMuon,
+    SoftMuonByIP3d,
+    SoftMuonByPt,
+    TrackCountingHighEfficiency,
+    TrackCountingHighPurity,
     NUMBER_OF_BTAGALGORITHMS
 };
 
@@ -59,7 +65,7 @@ public:
     Jet(double energy, double px, double py, double pz);
     virtual ~Jet();
     bool isGood() const;
-    bool isBJet(BtagAlgorithm::value type = BtagAlgorithm::SimpleSecondaryVertexHighEffBTag,
+    bool isBJet(BtagAlgorithm::value type = BtagAlgorithm::SimpleSecondaryVertexHighEfficiency,
             BtagAlgorithm::workingPoint wp = BtagAlgorithm::MEDIUM) const;
     JetAlgorithm::value getUsedAlgorithm() const;
     double emf() const;
@@ -74,6 +80,7 @@ public:
     double btagSSVHE() const;
     double getBJetL7EtCorrection() const;
     double getLightJetL7EtCorrection() const;
+    int partonFlavour() const;
 
     void setUsedAlgorithm(JetAlgorithm::value algo);
     void setEMF(double emf);
@@ -86,7 +93,8 @@ public:
     void setNEF(double nef);
     void setCHF(double chf);
     void setNCH(double nch);
-    void setRho(double rho);
+//    void setRho(double rho);
+    void setPartonFlavour(int);
 
     bool FirstDataLoosePFJetID() const;
     bool FirstDataLooseCaloJetID() const;
@@ -100,7 +108,7 @@ private:
     int numberOfDaughters;
     double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;
     double chargedHadronEnergyFraction, chargedMultiplicity;
-    int partonFlavour;
+    int partonFlavour_;
 };
 
 typedef boost::shared_ptr<Jet> JetPointer;

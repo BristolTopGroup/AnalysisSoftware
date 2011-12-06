@@ -42,7 +42,7 @@ double Globals::minMuonPt = 20.;
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
-BtagAlgorithm::value Globals::btagAlgorithm = BtagAlgorithm::SimpleSecondaryVertexHighEffBTag;
+BtagAlgorithm::value Globals::btagAlgorithm = BtagAlgorithm::SimpleSecondaryVertexHighEfficiency;
 BtagAlgorithm::workingPoint Globals::btagWorkingPoint = BtagAlgorithm::MEDIUM;
 double Globals::maxAbsoluteJetEta = 2.4;
 double Globals::minJetPt = 30.;//GeV

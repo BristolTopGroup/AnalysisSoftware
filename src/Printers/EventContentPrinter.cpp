@@ -25,7 +25,7 @@ extern void printJet(const JetPointer jet) {
     printParticle(jet);
     cout << setw(30) << "emf" << setw(30) << "n90Hits" << setw(30) << "fHPD" << setw(30) << "B tag(SSV)" << endl;
     cout << setw(30) << jet->emf() << setw(30) << jet->n90Hits() << setw(30) << jet->fHPD() << setw(30)
-            << jet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEffBTag) << endl << endl;
+            << jet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEfficiency) << endl << endl;
     if(jet->getUsedAlgorithm() == JetAlgorithm::CA08PF || jet->getUsedAlgorithm() == JetAlgorithm::PF2PAT){
         printPFJetExtra(jet);
     }
