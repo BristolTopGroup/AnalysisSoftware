@@ -21,6 +21,7 @@ mcFolders = [
            'QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v4d_Summer11-PU_S4_START42_V11-v1',
            'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            #EM enriched samples
+           'QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v4e_Summer11-PU_S4_START42_V11-v1',
            'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v4c_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v4a_Summer11-PU_S4_START42_V11-v1/320e12f5112fc77647c2bcc27037229f',
            #photon + jets

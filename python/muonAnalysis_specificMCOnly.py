@@ -17,6 +17,7 @@ mc_path = '/storage/TopQuarkGroup/mc/'
 
 mcFolders = [
                      #insert QCD MC here
+                     'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v4d_Summer11-PU_S3_START42_V11-v2'
              ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
