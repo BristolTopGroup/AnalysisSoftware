@@ -14,10 +14,22 @@
 #include "BasicAnalyser.h"
 
 namespace BAT {
+
+namespace AnalysisReference{
+enum value{
+	Ele30_TriPFJet30,
+	Ele30_QuadPFJet30,
+	Ele30_PFJet70_PFJet50_PFJet30,
+	Ele30_PFJet70_PFJet50_PFJet30_PFJet30,
+	NUMBER_OF_TRIGGEREFFICIENCY_CASES
+};
+}
 class HLTriggerAnalyser : public BasicAnalyser {
 private:
 	void analyseTrigger(bool passesPreCondition, bool passesTrigger, std::string histFolder, const JetPointer jet,
 			int prescale);
+
+	void analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName, bool passesTrigger, const TopPairEventCandidate& ttbarEvent);
 	double weight;
 
 public:
