@@ -331,7 +331,7 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.runnumber() > 165970 && ttbarEvent.runnumber() <= 178380
+				passesPreCondition = ttbarEvent.runnumber() > 178380
 						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
 				prescale = ttbarEvent.HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
