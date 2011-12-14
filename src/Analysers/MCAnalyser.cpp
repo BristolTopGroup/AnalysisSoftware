@@ -328,4 +328,8 @@ Decay::value MCAnalyser::decay() const {
 	return mcEvent.decayChannel;
 }
 
+TtbarHypothesis MCAnalyser::GetMCTTbarHypothesis() const {
+	return mcEvent;
+}
+
 }

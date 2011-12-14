@@ -18,6 +18,12 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	//fit only the events that pass full ttbar selection
 	if (!ttbarCandidate->passesFullTTbarEPlusJetSelection()) return;
 
+	//set MC matching flag
+	if (ttbarCandidate->getDataType() == DataType::ttbar)
+		do_MC_matching = true;
+	else
+		do_MC_matching = false;
+
 	//initialise pile-up shifters
 	PoissonMeanShifter PShiftUp = PoissonMeanShifter(0.6); // PU-systematic
 	PoissonMeanShifter PShiftDown = PoissonMeanShifter(-0.6); // PU-systematic
@@ -329,7 +335,7 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
   for (BAT::JetCollection::const_iterator j = jetsForFitting.begin(); j != jetsForFitting.end(); ++i, ++j) {
     FourVector hfJet   = fourVectorFromHitFit(ev.jet(i).p());
     int        hfJType = ev.jet(i).type();
-    if ((*j)->getFourVector().DeltaR(hfJet) < 0.005) {
+//    if ((*j)->getFourVector().DeltaR(hfJet) < 0.005) {
       if (hfJType != hitfit::unknown_label) {
 	BAT::Jet newJet(**j);
 	newJet.setFourVector(hfJet);
@@ -339,10 +345,10 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 	if (hfJType == hitfit::hadw1_label) *newWj1 = newJet;
 	if (hfJType == hitfit::hadw2_label) *newWj2 = newJet;
       }
-    } else {
+//    } else {
 //      std::cout << "Distance to corresponding jet " << (*j)->getFourVector().DeltaR(hfJet) << " too large; not matching" << std::endl;
-      if (hfJType != hitfit::unknown_label) evOk = false;
-    }
+//      if (hfJType != hitfit::unknown_label) evOk = false;
+//    }
   }
 
   //  if (!evOk) std::cout << "Solution is not Ok" << std::endl;
@@ -350,6 +356,67 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
   BAT::TtbarHypothesis hyp(newEle, newMet,
 			   newLep, newHad,
 			   newWj1, newWj2);
+			   
+  // do MC matching study
+  if (do_MC_matching) {
+	  //Particle Pointers for best fitted hypothesis
+	  BAT::ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW;
+	  leptonicW =  ParticlePointer(new Particle(*newMet + *newEle));
+	  if(newWj1 != newWj2)
+	    hadronicW =  ParticlePointer(new Particle(*newWj1 + *newWj2));
+	  else
+	    hadronicW = newWj1;
+	  leptonicTop = ParticlePointer(new Particle(*newLep + *leptonicW));
+	  hadronicTop = ParticlePointer(new Particle(*newHad + *hadronicW));
+
+	  double deltaRelectron, deltaRhadronicBjet, deltaRleptonicBjet, deltaRWjet1, deltaRWjet2, sumDeltaR;
+	  deltaRelectron = truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW);
+	  deltaRhadronicBjet = truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet);
+	  deltaRleptonicBjet = truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet);
+
+	  histMan->H1D("deltaPtElectron")->Fill((truthMatchEvent.leptonFromW->pt()-hyp.leptonFromW->pt())/truthMatchEvent.leptonFromW->pt());
+	  histMan->H1D("deltaRelectron")->Fill(truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW));
+	  histMan->H1D("deltaPtHadronicBjet")->Fill((truthMatchEvent.hadronicBJet->pt()-hyp.hadronicBJet->pt())/truthMatchEvent.hadronicBJet->pt());
+	  histMan->H1D("deltaRhadronicBjet")->Fill(truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet));
+	  histMan->H1D("deltaPtLeptonicBjet")->Fill((truthMatchEvent.leptonicBjet->pt()-hyp.leptonicBjet->pt())/truthMatchEvent.leptonicBjet->pt());
+	  histMan->H1D("deltaRleptonicBjet")->Fill(truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet));
+	  if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW)<truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
+	    deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW);
+	    deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW);
+	    histMan->H1D("deltaPtWjet1")->Fill((truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt())/truthMatchEvent.jet1FromW->pt());
+	    histMan->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW));
+	    histMan->H1D("deltaPtWjet2")->Fill((truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt())/truthMatchEvent.jet2FromW->pt());
+	    histMan->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW));
+	  } else {
+	    deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW);
+	    deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW);
+	    histMan->H1D("deltaPtWjet1")->Fill((truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt())/truthMatchEvent.jet1FromW->pt());
+	    histMan->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW));
+	    histMan->H1D("deltaPtWjet2")->Fill((truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt())/truthMatchEvent.jet2FromW->pt());
+	    histMan->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW));
+	  }
+
+	  sumDeltaR = deltaRelectron+deltaRhadronicBjet+deltaRleptonicBjet+deltaRWjet1+deltaRWjet2;
+	  histMan->H1D("SumDeltaR")->Fill(sumDeltaR);
+
+	  histMan->H1D("deltaLeptonicTopMass")->Fill((truthMatchEvent.leptonicTop->mass()-leptonicTop->mass())/truthMatchEvent.leptonicTop->mass());
+	  histMan->H1D("deltaHadronicTopMass")->Fill((truthMatchEvent.hadronicTop->mass()-hadronicTop->mass())/truthMatchEvent.hadronicTop->mass());
+
+	  if (sumDeltaR<0.4) {
+	    if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW)<truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
+	      histMan->H1D("deltaPtWjet1Best")->Fill((truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt())/truthMatchEvent.jet1FromW->pt());
+	      histMan->H1D("deltaPtWjet2Best")->Fill((truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt())/truthMatchEvent.jet2FromW->pt());
+	    } else {
+	      histMan->H1D("deltaPtWjet1")->Fill((truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt())/truthMatchEvent.jet1FromW->pt());
+	      histMan->H1D("deltaPtWjet2")->Fill((truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt())/truthMatchEvent.jet2FromW->pt());
+	    }
+	    histMan->H1D("deltaPtElectronBest")->Fill((truthMatchEvent.leptonFromW->pt()-hyp.leptonFromW->pt())/truthMatchEvent.leptonFromW->pt());
+	    histMan->H1D("deltaPtHadronicBjetBest")->Fill((truthMatchEvent.hadronicBJet->pt()-hyp.hadronicBJet->pt())/truthMatchEvent.hadronicBJet->pt());
+	    histMan->H1D("deltaPtLeptonicBjetBest")->Fill((truthMatchEvent.leptonicBjet->pt()-hyp.leptonicBjet->pt())/truthMatchEvent.leptonicBjet->pt());
+	    histMan->H1D("deltaLeptonicTopMassBest")->Fill((truthMatchEvent.leptonicTop->mass()-leptonicTop->mass())/truthMatchEvent.leptonicTop->mass());
+	    histMan->H1D("deltaHadronicTopMassBest")->Fill((truthMatchEvent.hadronicTop->mass()-hadronicTop->mass())/truthMatchEvent.hadronicTop->mass());
+	  }
+  }
 
   if (Globals::produceFitterASCIIoutput) {
 	  outFile << newEle->phi() << "  " << newEle->eta() << "  " << newEle->pt() << "  " << lepton_charge << "  " << newMet->px() << "  " << newMet->py() << endl;
@@ -364,6 +431,10 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 FourVector HitFitAnalyser::fourVectorFromHitFit(const hitfit::Fourvec& v) {
   FourVector result(v.x(), v.y(), v.z(), v.t());
   return result;
+}
+
+void HitFitAnalyser::setMCTTbarHypothesis(const TtbarHypothesis& mcEvent){
+	truthMatchEvent = mcEvent;
 }
 
 void HitFitAnalyser::printFile(const string filename) {
@@ -414,5 +485,29 @@ void HitFitAnalyser::createHistograms() {
     histMan->addH1D("PullSumSquaredBestSolution",  "Sum-squared pulls best solution",     100,   0,  500.);
     histMan->addH2D("PullDistPerVarBestSolution",  "Pulls well measured vs varno best",   100, -10.,  10.,   25, 0., 25.);
     histMan->addH1D("PullDistYVarsBestSolution",   "Pulls poorly measured best",          100, -10.,  10.);
+
+	// MC matching study histograms
+    histMan->addH1D("deltaPtElectron", "Pt difference between truth and fitted electrons", 100, -1.5, 1.5);
+    histMan->addH1D("deltaRelectron", "DeltaR between truth and fitted electrons", 100, 0., 2.);
+    histMan->addH1D("deltaPtHadronicBjet","Pt difference between truth and fitted b-jets from hadronic top", 100, -1.5, 1.5);
+    histMan->addH1D("deltaRhadronicBjet", "DeltaR between truth and fitted b-jets from hadronic top", 100, 0., 5.);
+    histMan->addH1D("deltaPtLeptonicBjet","Pt difference between truth and fitted b-jets from leptonic top", 100, -1.5, 1.5);
+    histMan->addH1D("deltaRleptonicBjet", "DeltaR between truth and fitted b-jets from leptonic top", 100, 0., 5.);
+    histMan->addH1D("deltaPtWjet1","Pt difference between truth and fitted W jets 1", 100, -1.5, 1.5);
+    histMan->addH1D("deltaRWjet1", "DeltaR between truth and fitted W jets 1", 100, 0., 5.);
+    histMan->addH1D("deltaPtWjet2","Pt difference between truth and fitted W jets 2", 100, -1.5, 1.5);
+    histMan->addH1D("deltaRWjet2", "DeltaR between truth and fitted W jets 2", 100, 0., 5.);
+    histMan->addH1D("SumDeltaR", "Summarised deltaR of all e+jets", 100, 0., 25.);
+    histMan->addH1D("deltaPtElectronBest", "Pt difference between truth and fitted electrons for matched solutions", 100, -1.5, 1.5);
+    histMan->addH1D("deltaPtHadronicBjetBest","Pt difference between truth and fitted b-jets from hadronic top for matched solutions", 100, -1.5, 1.5);
+    histMan->addH1D("deltaPtLeptonicBjetBest","Pt difference between truth and fitted b-jets from leptonic top for matched solutions", 100, -1.5, 1.5);
+    histMan->addH1D("deltaPtWjet1Best","Pt difference between truth and fitted W jets 1 for matched solutions", 100, -1.5, 1.5);
+    histMan->addH1D("deltaPtWjet2Best","Pt difference between truth and fitted W jets 2 for matched solutions", 100, -1.5, 1.5);
+    histMan->addH1D("deltaMET", "Delta MET between truth and fitted solutions", 100, -50., 50.);
+    histMan->addH1D("deltaMETbest", "Delta MET between truth and fitted matched solutions", 100, -50., 50.);
+    histMan->addH1D("deltaLeptonicTopMass", "Difference between truth and fitted leptonic top masses", 100, -1.5, 1.5);
+    histMan->addH1D("deltaHadronicTopMass", "Difference between truth and fitted hadronic top masses", 100, -1.5, 1.5);
+    histMan->addH1D("deltaLeptonicTopMassBest", "Difference between truth and fitted leptonic top masses for matched solutions", 100, -1.5, 1.5);
+    histMan->addH1D("deltaHadronicTopMassBest", "Difference between truth and fitted hadronic top masses for matched solutions", 100, -1.5, 1.5);
 
 }

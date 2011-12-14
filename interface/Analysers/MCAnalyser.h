@@ -28,6 +28,7 @@ public:
 
     double topMass() const;
     Decay::value decay() const;
+    TtbarHypothesis GetMCTTbarHypothesis() const;
 
 private:
     TtbarHypothesis mcEvent;

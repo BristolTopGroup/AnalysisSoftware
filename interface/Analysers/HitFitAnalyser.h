@@ -45,6 +45,7 @@ private:
     double      hitfitHadWMass_;
     double      hitfitTopMass_;
     double      lepton_charge;
+    bool        do_MC_matching;
 
     hitfit::LeptonTranslatorBase<BAT::Electron> electronTranslator_;
     hitfit::LeptonTranslatorBase<BAT::Muon>     muonTranslator_;
@@ -65,6 +66,7 @@ public:
     virtual ~HitFitAnalyser();
 
     void analyse(const TopPairEventCandidate& ttbarEvent);
+    void setMCTTbarHypothesis(const TtbarHypothesis& mcEvent);
     void createHistograms();
     void printFile(const string filename);
 };
