@@ -37,6 +37,8 @@ void Analysis::analyse() {
         diElectronAnalyser->analyse(ttbarCandidate);
         electronAnalyser->analyse(ttbarCandidate);
         if (Globals::useHitFit) {
+        	if (currentEvent.getDataType() == DataType::ttbar)
+        		hitfitAnalyser->setMCTTbarHypothesis(mcAnalyser->GetMCTTbarHypothesis());
         	hitfitAnalyser->analyse(ttbarCandidate);
         }
         hltriggerAnalyser->analyse(ttbarCandidate);
