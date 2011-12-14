@@ -7,13 +7,16 @@
 #include "../../interface/Analysers/HitFitAnalyser.h"
 #include "../../interface/LumiReWeighting.h"
 #include "../../interface/GlobalVariables.h"
+#include <boost/scoped_ptr.hpp>
 
 using namespace reweight;
 using namespace BAT;
 
 void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+	boost::scoped_ptr<TopPairEventCandidate> ttbarCandidate(new TopPairEventCandidate(ttbarEvent));
+
 	//fit only the events that pass full ttbar selection
-	if (!ttbarEvent.passesFullTTbarEPlusJetSelection()) return;
+	if (!ttbarCandidate->passesFullTTbarEPlusJetSelection()) return;
 
 	//initialise pile-up shifters
 	PoissonMeanShifter PShiftUp = PoissonMeanShifter(0.6); // PU-systematic
@@ -29,42 +32,42 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
         //write the event info into ASCII file
     	outFile << "------------------------------------------" << endl;
     	outFile << "BeginEvent" << endl;
-    	outFile << "RunNr: " << ttbarEvent.runnumber()  << endl;
-    	outFile << "LumiSection: " << ttbarEvent.lumiblock() << endl;
-    	outFile << "EventNr: " << ttbarEvent.eventnumber() << endl;
-    	outFile << "EventWeight: " << ttbarEvent.weight() << "  ";
-        if(!ttbarEvent.isRealData()){
-        	float lumiWeight = ttbarEvent.PileUpWeight();
-            float lumiWeightUp = lumiWeight * PShiftUp.ShiftWeight( (float) ttbarEvent.numberOfGeneratedPileUpVertices() );
-            float lumiWeightDown = lumiWeight * PShiftDown.ShiftWeight( (float) ttbarEvent.numberOfGeneratedPileUpVertices() );
+    	outFile << "RunNr: " << ttbarCandidate->runnumber()  << endl;
+    	outFile << "LumiSection: " << ttbarCandidate->lumiblock() << endl;
+    	outFile << "EventNr: " << ttbarCandidate->eventnumber() << endl;
+    	outFile << "EventWeight: " << ttbarCandidate->weight() << "  ";
+        if(!ttbarCandidate->isRealData()){
+        	float lumiWeight = ttbarCandidate->PileUpWeight();
+            float lumiWeightUp = lumiWeight * PShiftUp.ShiftWeight( (float) ttbarCandidate->numberOfGeneratedPileUpVertices() );
+            float lumiWeightDown = lumiWeight * PShiftDown.ShiftWeight( (float) ttbarCandidate->numberOfGeneratedPileUpVertices() );
             outFile << lumiWeight << "  " << lumiWeightUp << "  " << lumiWeightDown;
 
         } else outFile << "1  1  1";
 
         outFile << endl;
 
-        outFile << ttbarEvent.GoodElectronCleanedJets().size() << "  " << ttbarEvent.Vertices().size() << "  ";
-        if(!ttbarEvent.isRealData()){
-        	outFile << ttbarEvent.numberOfGeneratedPileUpVertices();
+        outFile << ttbarCandidate->GoodElectronCleanedJets().size() << "  " << ttbarCandidate->Vertices().size() << "  ";
+        if(!ttbarCandidate->isRealData()){
+        	outFile << ttbarCandidate->numberOfGeneratedPileUpVertices();
         } else outFile << "9999";
 
         outFile << "  ";
-        if ((ttbarEvent.getDataType() == DataType::ttbar) or (ttbarEvent.getDataType() == DataType::ttbar161) or
-        		(ttbarEvent.getDataType() == DataType::ttbar163) or (ttbarEvent.getDataType() == DataType::ttbar166) or
-        		(ttbarEvent.getDataType() == DataType::ttbar169) or (ttbarEvent.getDataType() == DataType::ttbar175) or
-        		(ttbarEvent.getDataType() == DataType::ttbar178) or (ttbarEvent.getDataType() == DataType::ttbar181) or
-        		(ttbarEvent.getDataType() == DataType::ttbar184)) {
+        if ((ttbarCandidate->getDataType() == DataType::ttbar) or (ttbarCandidate->getDataType() == DataType::ttbar161) or
+        		(ttbarCandidate->getDataType() == DataType::ttbar163) or (ttbarCandidate->getDataType() == DataType::ttbar166) or
+        		(ttbarCandidate->getDataType() == DataType::ttbar169) or (ttbarCandidate->getDataType() == DataType::ttbar175) or
+        		(ttbarCandidate->getDataType() == DataType::ttbar178) or (ttbarCandidate->getDataType() == DataType::ttbar181) or
+        		(ttbarCandidate->getDataType() == DataType::ttbar184)) {
         	outFile << "9999  9999  9999" << endl; //needs to be fixed
-//        	outFile << ttbarEvent.MCtruthAntiTopMass() << "  " << ttbarEvent.MCtruthAntiTopMass() << "  "
-//        			<< ttbarEvent.topDecayedLeptonically() << endl;
+//        	outFile << ttbarCandidate->MCtruthAntiTopMass() << "  " << ttbarCandidate->MCtruthAntiTopMass() << "  "
+//        			<< ttbarCandidate->topDecayedLeptonically() << endl;
         } else outFile << "9999  9999  9999" << endl;
     }
 
   	//prepare the jets collection
 	// Copy jets into an array
 	JetCollection jetCopy;
-	for (JetCollection::const_iterator j=ttbarEvent.GoodElectronCleanedJets().begin();
-			j!=ttbarEvent.GoodElectronCleanedJets().end(); ++j) {
+	for (JetCollection::const_iterator j=ttbarCandidate->GoodElectronCleanedJets().begin();
+			j!=ttbarCandidate->GoodElectronCleanedJets().end(); ++j) {
 	    jetCopy.push_back(*j);
 	    //if ((*j)->getBTagDiscriminators().back() > 0.5) ++nBTags;
 	}
@@ -91,10 +94,23 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		     hitfitTopMass_);
 
 	// Clear the internal state
-  hhFitter.clear();
+    hhFitter.clear();
 
-  // Add the lepton into HitFit
-  hhFitter.AddLepton(*ttbarEvent.getElectronFromWDecay());
+    // Add the lepton into HitFit
+	try {
+		if (Event::usePFIsolation)
+			ttbarCandidate->reconstructTTbarToEPlusJets(ttbarCandidate->GoodPFIsolatedElectrons().front());
+		else
+			ttbarCandidate->reconstructTTbarToEPlusJets(ttbarCandidate->GoodIsolatedElectrons().front());
+	} catch (ReconstructionException &e) {
+		cout << e.what() << endl;
+		return;
+	}
+
+	if(!ttbarCandidate->hasBeenReconstructed())
+		cout << "WRONG" << endl;
+
+    hhFitter.AddLepton(*ttbarCandidate->getElectronFromWDecay());
 
   // Add jets into HitFit
   for (size_t jet = 0 ; jet != jetsForFitting.size() ; ++jet) {
@@ -107,10 +123,10 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     all_jets_pt = all_jets_pt+ jetsForFitting[i]->pt();
   }
 
-  histMan->H1D("AllJetsPt")->Fill(all_jets_pt, ttbarEvent.weight());
+  histMan->H1D("AllJetsPt")->Fill(all_jets_pt, ttbarCandidate->weight());
 
   // Add missing transverse energy into HitFit
-  hhFitter.SetMet(*ttbarEvent.MET());
+  hhFitter.SetMet(*ttbarCandidate->MET());
 
   // Results of the fit for all jet permutation of the event
   std::vector<hitfit::Lepjets_Event>  hitfitEventsInput;
@@ -147,9 +163,9 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     hitfit::Fit_Result fitResult         = hitfitResult[fit];
 
     if (hitfitResult[fit].chisq()>0.0) {
-      histMan->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), ttbarEvent.weight());
-      histMan->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), ttbarEvent.weight());
-      histMan->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), ttbarEvent.weight());
+      histMan->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), ttbarCandidate->weight());
+      histMan->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), ttbarCandidate->weight());
+      histMan->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), ttbarCandidate->weight());
       const hitfit::Column_Vector &px = fitResult.pullx();
       const hitfit::Column_Vector &py = fitResult.pully();
       double sumPx = 0.0;
@@ -194,9 +210,9 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
   //
 
   if (bestX2pos < nHitFit+1) {
-    histMan->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), ttbarEvent.weight());
-    histMan->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), ttbarEvent.weight());
-    histMan->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), ttbarEvent.weight());
+    histMan->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), ttbarCandidate->weight());
+    histMan->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), ttbarCandidate->weight());
+    histMan->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), ttbarCandidate->weight());
 
     const hitfit::Column_Vector &px = hitfitResult[bestX2pos].pullx();
     const hitfit::Column_Vector &py = hitfitResult[bestX2pos].pully();
@@ -212,7 +228,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     }
 
     //pass hitfit event into BAT format
-    lepton_charge = ttbarEvent.getElectronFromWDecay()->charge();
+    lepton_charge = ttbarCandidate->getElectronFromWDecay()->charge();
     BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev());
 
     if (Globals::produceFitterASCIIoutput) {
