@@ -23,6 +23,8 @@ public:
 
 private:
 	boost::shared_ptr<HistogramManager> histMan;
+
+	void ABCDMethod(const TopPairEventCandidate& Event);
 };
 
 }
