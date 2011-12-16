@@ -43,7 +43,7 @@ public:
     }
 
     void testReadFirstElectronEnergy() {
-        ASSERT_EQUAL_DELTA(37.4185, firstElectron->energy(), 0.001);
+        ASSERT_EQUAL_DELTA(389.423, firstElectron->energy(), 0.001);
     }
 
     void testReadFirstElectronIsIsolated() {
@@ -51,19 +51,19 @@ public:
     }
 
     void testFirstElectronSigmaEtaEta() {
-        ASSERT_EQUAL_DELTA(0.00903927, firstElectron->sigmaIEtaIEta(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.026204, firstElectron->sigmaIEtaIEta(), 0.0000001);
     }
 
     void testFirstElectronDPhiIn() {
-        ASSERT_EQUAL_DELTA(0.0213284, firstElectron->dPhiIn(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.0124243, firstElectron->dPhiIn(), 0.0000001);
     }
 
     void testFirstElectronDEtaIn() {
-        ASSERT_EQUAL_DELTA(0.00716823, firstElectron->dEtaIn(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.0116329, firstElectron->dEtaIn(), 0.0000001);
     }
 
     void testFirstElectronHadOverEm() {
-        ASSERT_EQUAL_DELTA(0., firstElectron->HadOverEm(), 0.000001);
+        ASSERT_EQUAL_DELTA(0.027168, firstElectron->HadOverEm(), 0.000001);
     }
 
     void testFirstElectronCharge() {
@@ -71,47 +71,47 @@ public:
     }
 
     void testFirstElectronD0() {
-        ASSERT_EQUAL_DELTA(0.00472199, firstElectron->d0(), 0.0000001);
+        ASSERT_EQUAL_DELTA(0.00598953, firstElectron->d0(), 0.0000001);
     }
 
 
     void testShFracInnerHits() {
-        ASSERT_EQUAL(1, firstElectron->shFracInnerLayer());
+        ASSERT_EQUAL(0, firstElectron->shFracInnerLayer());
     }
 
-    void testGSFTrack() {
-        const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL(track->charge(), firstElectron->charge());
-    }
+//    void testGSFTrack() {
+//        const TrackPointer track = firstElectron->GSFTrack();
+//        ASSERT_EQUAL(track->charge(), firstElectron->charge());
+//    }
+//
+//    void testGSFTrackPhi() {
+//        const TrackPointer track = firstElectron->GSFTrack();
+//        ASSERT_EQUAL_DELTA(-2.49722, track->phi(), 0.00001);
+//    }
+//
+//    void testGSFTrackEta() {
+//        const TrackPointer track = firstElectron->GSFTrack();
+//        ASSERT_EQUAL_DELTA( -0.266772, track->eta(), 0.00001);
+//    }
+//
+//    void testGSFTrackPt() {
+//        const TrackPointer track = firstElectron->GSFTrack();
+//        ASSERT_EQUAL_DELTA(30.9652, track->pt(), 0.0001);
+//    }
+//
+//    void testGSFTrackTheta() {
+//        const TrackPointer track = firstElectron->GSFTrack();
+//        ASSERT_EQUAL_DELTA(1.83446, track->theta(), 0.00001);
+//    }
 
-    void testGSFTrackPhi() {
-        const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(-2.49722, track->phi(), 0.00001);
-    }
-
-    void testGSFTrackEta() {
-        const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA( -0.266772, track->eta(), 0.00001);
-    }
-
-    void testGSFTrackPt() {
-        const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(30.9652, track->pt(), 0.0001);
-    }
-
-    void testGSFTrackTheta() {
-        const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL_DELTA(1.83446, track->theta(), 0.00001);
-    }
-
-    void testClosestCTFTrackID() {
-        ASSERT_EQUAL(11, firstElectron->closestCTFTrackID());
-    }
-
-    void testTrackd0(){
-        const TrackPointer track = firstElectron->GSFTrack();
-        ASSERT_EQUAL(firstElectron->d0_wrtBeamSpot(), track->d0());
-    }
+//    void testClosestCTFTrackID() {
+//        ASSERT_EQUAL(11, firstElectron->closestCTFTrackID());
+//    }
+//
+//    void testTrackd0(){
+//        const TrackPointer track = firstElectron->GSFTrack();
+//        ASSERT_EQUAL(firstElectron->d0_wrtBeamSpot(), track->d0());
+//    }
 
     void testCiCElectronIDVeryLooseMC() {
             CiCElectronID::value IDunderTest = CiCElectronID::eidVeryLooseMC;
@@ -172,14 +172,14 @@ extern cute::suite make_suite_TestElectronReader() {
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testFirstElectronD0));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testShFracInnerHits));
 
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrack));
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPhi));
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackEta));
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPt));
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackTheta));
+//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrack));
+//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPhi));
+//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackEta));
+//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPt));
+//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackTheta));
 
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testClosestCTFTrackID));
-    s.push_back(CUTE_SMEMFUN(TestElectronReader, testTrackd0));
+//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testClosestCTFTrackID));
+//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testTrackd0));
 
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDVeryLooseMC));
     s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDLooseMC));

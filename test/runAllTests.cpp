@@ -58,7 +58,6 @@ void runSuite() {
     s += make_suite_TestTHCollection();
     s += make_suite_TestTopPairEventCandidate();
     s += make_suite_TestTrack();
-//    s += make_suite_TestTrackReader();
     s += make_suite_TestTTbarSolution();
     s += make_suite_TestVariableReader();
     s += make_suite_TestVertex();

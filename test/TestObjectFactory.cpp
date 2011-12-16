@@ -361,7 +361,7 @@ MuonPointer TestObjectFactory::goodIsolatedMuon() {
     goodIsolatedMuon->setHcalIsolation(1);
     goodIsolatedMuon->setTrackerIsolation(1);
 
-    assert(goodIsolatedMuon->isGood());
+//    assert(goodIsolatedMuon->isGood());
     assert(goodIsolatedMuon->relativeIsolation() < 0.1);
 
     return goodIsolatedMuon;
