@@ -11,7 +11,8 @@ namespace BAT {
 
 HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
 		BasicAnalyser(histMan), //
-		weight(1.) //
+		weight(1.), //
+		triggerEfficiencies()//
 {
 }
 
@@ -164,7 +165,7 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
 				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 		if (isData)
-			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() <= 178380;
+			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() <= 165633;
 
 		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
 				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
@@ -473,6 +474,8 @@ void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigg
 void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName,
 		bool passesTrigger, const TopPairEventCandidate& ttbarEvent) {
 
+
+	double triggerResult = (double) passesTrigger;
 	histMan->setCurrentCollection("HLTStudy/" + triggerName + "/TriggerEfficiency");
 	bool passesCuts = true;
 	//all common cuts except HLT
@@ -487,12 +490,12 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		//require == 3 jets
 		passesRequired = !ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_TriPFJet30")->Fill(passesTrigger, weight);
+			histMan->H1D("Ele30_TriPFJet30")->Fill(triggerResult, weight);
 		break;
 	case AnalysisReference::Ele30_QuadPFJet30:
 		passesRequired = ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_QuadPFJet30")->Fill(passesTrigger, weight);
+			histMan->H1D("Ele30_QuadPFJet30")->Fill(triggerResult, weight);
 		break;
 
 	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30:
@@ -502,7 +505,7 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		passesRequired = passesRequired
 				&& ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(passesTrigger, weight);
+			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(triggerResult, weight);
 		break;
 
 	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30_PFJet30:
@@ -511,7 +514,7 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		passesRequired = passesRequired
 				&& ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(passesTrigger, weight);
+			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(triggerResult, weight);
 		break;
 
 	default:
