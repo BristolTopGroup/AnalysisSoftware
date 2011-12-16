@@ -2,6 +2,7 @@ from ROOT import *
 import HistGetter
 import HistPlotter
 from time import sleep
+from math import isnan
 
 import inputFiles
 import QCDEstimation
@@ -9,19 +10,22 @@ outputFormats = ['png', 'pdf']
 outputFolder = '/storage/results/plots/ElectronHad/'
 saveAs = HistPlotter.saveAs
 triggers = [
-            'HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30',
-            'HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30',
+#            'HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30',
+#            'HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30',
                 'HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30', 
 #                'HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30',
-                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30', 
-                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30',
-                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30', 
+#                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30', 
+#                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30',
+                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30',
+                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30',  
 #                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30'
                 ]
     
 triggerVariables = ['jet_pt', 
                     'jet_eta', 
-                    'jet_phi']
+                    'jet_phi',
+                    'jet_eta_PtGT45',
+                    'jet_phi_PtGT45']
 triggerModifiers = ['visited', 'fired']
 
 def compareQCDControlRegionsInData(dataHists, bJetBins):
@@ -149,7 +153,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                     continue
             
             elif 'Tri' in plot:
-                if not '3' in jetbin:
+                if not '3' in jetbin and not '4' in jetbin:
                     continue
             elif 'Di' in plot:
                 if not '2' in jetbin:
@@ -167,6 +171,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             visited.Sumw2()
             mc_fired.Sumw2()
             mc_visited.Sumw2()
+            
         
 #            print fired.GetNbinsX()
 #            print visited.GetNbinsX()
@@ -195,7 +200,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                 fitfunction = 'pol2'
                 fitRange = [-3,3]
             elif 'jet_phi' in plot:
-                xlimits = [-3.2,3.2]
+                xlimits = [-4.,4.]
                 xTitle = 'jet #phi (GeV)'
                 yTitle = 'efficiency/(%0.1f)' % (0.1*rebin)
                 fitfunction = 'pol0'
@@ -253,16 +258,42 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             
             efficiency[plot + jetbin].Fit(f1);
             mc_efficiency[plot + jetbin].Fit(f2);
+            axis = mceff.GetTotalHistogram().GetXaxis()
+            scaleFactor = TH1D("sf", "sf",axis.GetNbins(), axis.GetXmin(), axis.GetXmax())
+            print plot + '_' + jetbin
+            for bin in range(1, axis.GetNbins()):
+                effMC = mceff.GetEfficiency(bin)
+                effData = eff.GetEfficiency(bin)
+                print effMC, effData
+                sf = 0
+                if not effData == 0 and not isnan(effData) and not isnan(effMC):
+                    sf = effMC/effData
+                    
+                scaleFactor.SetBinContent(bin, sf)
+            
+#            scaleFactor = mc_hist.Clone("SF")
+#            scaleFactor.Divide(data_hist);
             
             mceff.SetLineColor(2)
             mceff.SetMarkerColor(2)
+            mceff.SetMarkerStyle(22)
         
             saveName = plot + '_' + 'efficiency'
             if not suffix == '':
                 saveName += '_' + suffix
             saveName = saveName.replace('Jet30/', 'Jet30_')
         
-            c = TCanvas("cname" + plot + jetbin, 'cname', 1200, 900)
+#            c = TCanvas("cname" + plot + jetbin, 'cname', 900, 900)
+            c = TCanvas("cname" + plot + jetbin, 'cname', 1080, 1080)
+            
+#            pad1 = TPad("pad1", "The pad with the function",0.03,0.2,0.98,0.98);
+#            pad2 = TPad("pad2","The pad with the histogram",0.03,0.02,0.98,0.19);
+            pad1 = TPad("pad1", "The pad with the function",0.0,0.2,1.0,1.0);
+            pad2 = TPad("pad2","The pad with the histogram",0.0,0.0,1.0,0.2);
+            pad1.Draw()
+            pad2.Draw()
+            
+            pad1.cd()
             leg = TLegend(0.7, 0.2, 0.8, 0.3)
             leg.SetBorderSize(0);
             leg.SetLineStyle(0);
@@ -271,9 +302,10 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             leg.AddEntry(eff, 'data', 'P')
             leg.AddEntry(mceff, 'MC', 'P')
     
-            hFrame = (c.cd()).DrawFrame(xlimits[0],-.1,xlimits[1],1.1)
+            hFrame = (pad1.cd()).DrawFrame(xlimits[0],-.1,xlimits[1],1.1)
             hFrame.GetXaxis().SetTitle(xTitle)
             hFrame.GetYaxis().SetTitle(yTitle)
+            hFrame.Draw()
             upper = TLine(xlimits[0],1.,xlimits[1],1.)
             lower = TLine(xlimits[0],0.,xlimits[1],0.)
             cut = TLine(30., 0., 30., 1.)
@@ -284,13 +316,14 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             lower.DrawLine(xlimits[0],0.,xlimits[1],0.) ;
             cut.DrawLine(30., 0., 30., 1.)
             
+            
             eff.Draw('SAMEP0')
             mceff.Draw('SAMEP0')
             leg.Draw('same')
-            f1.Draw('same')
-            f2.Draw('same')
-            
-            tex = TLatex(0.18,1,"CMS Preliminary 2011,  #sqrt{s} = 7 TeV, L = 1.96 fb^{-1}");
+            f1.DrawCopy('same')
+            f2.DrawCopy('same')
+#            
+            tex = TLatex(0.18,1,"CMS Preliminary 2011,  #sqrt{s} = 7 TeV, L = 4.69 fb^{-1}");
             tex.SetNDC();
             tex.SetTextAlign(13);
             tex.SetTextFont(42);
@@ -298,21 +331,35 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             tex.SetLineWidth(2);
             tex.Draw();
             
+            pad2.cd()
+            hFrame = (pad2.cd()).DrawFrame(xlimits[0],0,xlimits[1],2)
+            hFrame.GetXaxis().SetTitle(xTitle)
+            hFrame.GetYaxis().SetTitle(yTitle)
+            hFrame.Draw()
+            upper = TLine(xlimits[0],1.,xlimits[1],1.)
+#            lower = TLine(xlimits[0],0.,xlimits[1],0.)
+            cut = TLine(30., 0., 30., 2.)
+            cut.SetLineColor(1)
+            upper.SetLineColor(1)
+            lower.SetLineColor(4)
+            upper.DrawLine(xlimits[0],1.,xlimits[1],1.) ;
+#            lower.DrawLine(xlimits[0],0.,xlimits[1],0.) ;
+            cut.DrawLine(30., 0., 30., 2.)
             
+            
+            scaleFactor.SetLineColor(4)
+            scaleFactor.SetMarkerColor(4)
+            scaleFactor.Draw('SAMEP0')
+            
+            
+#            eff.DrawClone('P0')
 #            f1.Draw("SAME");
             
-            
-            saveAs(c, saveName + '_' + jetbin, outputFolder = outputFolder)
+            saveAs(c, saveName + '_' + jetbin, outputFolder = outputFolder,outputFormats= ['png', 'pdf'])
             del hFrame
             del c
             del f1
             del f2
-#            del efficiency
-#            del mc_efficiency
-#            del fired
-#            del visited
-#            del mc_fired
-#            del mc_visited
     del efficiency
     del mc_efficiency
     
@@ -418,6 +465,9 @@ if __name__ == '__main__':
     hltFiles = {}
     hltFiles['data'] = '/storage/results/histogramFiles/data_1959.75pb_PFElectron_PF2PATJets_PFMET.root'
     hltFiles['ttbar'] = '/storage/results/histogramFiles/TTJet_1959.75pb_PFElectron_PF2PATJets_PFMET.root'
+    
+    hltFiles['data'] = inputFiles.files['data']
+    hltFiles['ttbar'] = inputFiles.files['ttbar']
 
     histsNames = [
                   'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets',
@@ -453,7 +503,7 @@ if __name__ == '__main__':
 #                         '/storage/results/histogramFiles/CiCElectron ID/data_1611.95pb_PFElectron_PF2PATJets_PFMET.root'
 #                         )
 #    makeQCDErrorPlot(files, hists)
-    plotHLTStudy(hists, rebin = 5)
+    plotHLTStudy(hists, rebin = 1)
     
 #    
 #    c = TCanvas("cname4", 'cname4', 1200, 900)

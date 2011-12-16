@@ -4,8 +4,8 @@ folder = '/storage/results/histogramfiles'
 identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET'
 
 files = {
-    'data':"%s/MuHad_%.2fpb_%s.root" % (folder, lumi, identifier),
-#    'data':"%s/ElectronHad_%.2fpb_%s.root" % (folder, lumi, identifier),
+#    'data':"%s/MuHad_%.2fpb_%s.root" % (folder, lumi, identifier),
+    'data':"%s/ElectronHad_%.2fpb_%s.root" % (folder, lumi, identifier),
     'ttbar' : "%s/TTJet_%.2fpb_%s.root" %(folder, lumi, identifier),
     'wjets' : "%s/WJetsToLNu_%.2fpb_%s.root" %(folder, lumi, identifier),
     'zjets' : "%s/DYJetsToLL_%.2fpb_%s.root" %(folder, lumi, identifier),

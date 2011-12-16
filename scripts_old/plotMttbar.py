@@ -27,7 +27,7 @@ def plotMttbar():
     oldLumi = 4692.36
     scale = lumi / oldLumi;
     prefix = 'CiCID_'
-    prefix = 'MuPlusJets_'
+    prefix = 'EPlusJets_'
     outputFormats = ['pdf', 'png']
     reverseMCOrder = True
     qcdFromData = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_0orMoreBtag'
@@ -87,14 +87,15 @@ def plotMttbar():
 #    hists.append("jetStudy/GoodJetMass_atLeastFourJets");
 #    hists.append("topReconstruction/mtW_withMETAndAsymJets");
 #    hists.append("topReconstruction/neutrino_pz");
-#    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts")
+    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts")
+    hists.append("QCDStudy/PFIsolation_3jets_WithMETCutAndAsymJetCuts")
 #    hists.append("QCDStudy/PFIsolation_controlRegion")
 #    hists.append('pileupStudy/nVertex_withMETAndAsymJets')
 #    hists.append('pileupStudy/nVertex_reweighted_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/MuonPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
-    hists.append('MttbarAnalysis/MuonPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
+#    hists.append('MttbarAnalysis/MuonPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
 
     files = inputFiles.files
     hists = HistGetter.getHistsFromFiles(hists, files, bJetBins=HistPlotter.allBjetBins)
@@ -116,8 +117,9 @@ def plotMttbar():
     jetBinnedhists = HistGetter.getHistsFromFiles(jetBinnedhists, files, jetBins=HistPlotter.allJetBins)
     
     otherHists = []
-    otherHists.append('pileupStudy/nVertex')
-    otherHists.append('pileupStudy/nVertex_reweighted')
+#    otherHists.append('pileupStudy/nVertex')
+#    otherHists.append('pileupStudy/nVertex_reweighted')
+#    otherHists.append('QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets')
     otherHists = HistGetter.getHistsFromFiles(otherHists, files)
     hists = HistGetter.joinHistogramDictionaries([hists, jetBinnedhists, otherHists])
     gcd = gROOT.cd

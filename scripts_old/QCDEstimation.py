@@ -281,8 +281,8 @@ def doEstimation(files, function):
     print 'QCD estimation in relative isolation using', function, 'function'
     est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function,
                    fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
-    print '| *region* | *N_{QCD, exp}* | *N_{est}* | *scale factor* |'
-    print '| 3j1t | --- |  %.1f +- %.1f | --- |' % (est, err)
+    print '| *region* | *N<sub>QCD, exp</sub>* | *N<sub>est</sub>* | *scale factor* |'
+    print '| 3j1t | --- |  %.1f &pm; %.1f | --- |' % (est, err)
 #    print 'Final QCD estimate (==3jet, %s): %.1f +- %.1f' % ('1 b-tag', est, err)
     
     for btag in ['0btag', '1btag', '2orMoreBtags']:
@@ -306,7 +306,7 @@ def doMCPerformance(files, function):
     est, err = result['estimate']
     N_qcd, N_qcd_error = result['qcdInSignalRegion']
     performance, performanceError = result['performance']
-    print '| *region* | *N_{QCD, true}* | *N_{est}* | *(N_{est} - N_{QCD, true})/N_{QCD, true}* |'
+    print '| *region* | *N<sub>QCD, true</sub>* | *N<sub>est</sub>* | *(N<sub>est</sub> - N<sub>QCD, true</sub>)/N<sub>QCD, true</sub>* |'
     print '| (==3jet, %s) |  %.1f +- %.1f |  %.1f +- %.1f |  %.3f +- %.3f |' % ('1 b-tag', N_qcd, N_qcd_error, est, err, performance, performanceError)
     for btag in ['0btag', '1btag', '2orMoreBtags']:
         result = getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function,
