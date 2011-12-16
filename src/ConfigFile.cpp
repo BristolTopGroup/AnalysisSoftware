@@ -156,6 +156,7 @@ const vector<string> ConfigFile::getVector(const string attribute) {
 //}
 
 boost::array<boost::shared_ptr<TF1>, 12> ConfigFile::getL7Correction(std::string correctionFile) {
+	//TODO: add check if file exists (boost::filesystem)
 	boost::array<boost::shared_ptr<TF1>, 12> correctionsArray;
 
 	boost::array<double, 12> towerBinning = {{0., 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5}};
