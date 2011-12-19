@@ -7,6 +7,7 @@
 
 #include "../../interface/Analysers/HLTriggerAnalyser.h"
 #include <iostream>
+#include <math.h>
 namespace BAT {
 
 HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
@@ -475,7 +476,15 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		bool passesTrigger, const TopPairEventCandidate& ttbarEvent) {
 
 
-	double triggerResult = (double) passesTrigger;
+	double triggerResult = passesTrigger? 1.0: 0.;
+
+	if (isnan(triggerResult) || isinf(triggerResult))
+		cout << "Trigger result is infinite or not a number" << endl;
+
+	if (isnan(weight) || isinf(weight))
+		cout << "Weight is infinite or not a number" << endl;
+
+
 	histMan->setCurrentCollection("HLTStudy/" + triggerName + "/TriggerEfficiency");
 	bool passesCuts = true;
 	//all common cuts except HLT
