@@ -346,7 +346,7 @@ void QCDAnalyser::ABCDMethod(const TopPairEventCandidate& event) {
 
 	//signal region >= 4 jets
 	if (event.passesFullTTbarEPlusJetSelection()) {
-		double pfIso = event.GoodIsolatedElectrons().front()->pfIsolation();
+		double pfIso = event.GoodPFIsolatedElectrons().front()->pfIsolation();
 		histMan->H2D_BJetBinned("ABCD_Method")->Fill(pfIso, 0., weight);
 		if (event.passesMETCut() && event.passesAsymmetricElectronCleanedJetCuts()) {
 			histMan->H2D_BJetBinned("ABCD_Method_WithMETCutAndAsymJetCuts")->Fill(pfIso, 0., weight);
@@ -356,7 +356,7 @@ void QCDAnalyser::ABCDMethod(const TopPairEventCandidate& event) {
 	//signal region ==3 jets
 	if (event.GoodElectronCleanedJets().size() == 3
 			&& event.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastThreeGoodJets)) {
-		double pfIso = event.GoodIsolatedElectrons().front()->pfIsolation();
+		double pfIso = event.GoodPFIsolatedElectrons().front()->pfIsolation();
 		histMan->H2D_BJetBinned("ABCD_Method_3jets")->Fill(pfIso, 0., weight);
 		if (event.passesMETCut() && event.passesAsymmetricElectronCleanedJetCuts()) {
 			histMan->H2D_BJetBinned("ABCD_Method_3jets_WithMETCutAndAsymJetCuts")->Fill(pfIso, 0., weight);
