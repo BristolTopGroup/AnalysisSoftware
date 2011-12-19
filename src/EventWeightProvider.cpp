@@ -227,7 +227,10 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		if (npu >= (unsigned int) estimatedPileUp->GetNbinsX())
 			break;
 		DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
-		weights[npu] = DATAdistribution[npu] / inputMC[npu];
+		if(inputMC != 0)
+			weights[npu] = DATAdistribution[npu] / inputMC[npu];
+		else
+			weights[npu] = 0;
 		s += DATAdistribution[npu];
 	}
 	/**
