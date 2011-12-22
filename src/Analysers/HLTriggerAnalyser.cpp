@@ -453,6 +453,20 @@ void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigg
 		histMan->H1D_JetBinned("jet_eta_visited")->Fill(jet->eta(), weight);
 		histMan->H1D_JetBinned("jet_phi_visited")->Fill(jet->phi(), weight);
 
+		if (jet->pt() > 30.) {
+			histMan->H1D_JetBinned("jet_eta_PtGT30_visited")->Fill(jet->eta(), weight);
+			histMan->H1D_JetBinned("jet_phi_PtGT30_visited")->Fill(jet->phi(), weight);
+		}
+
+		if (jet->pt() > 35.) {
+			histMan->H1D_JetBinned("jet_eta_PtGT35_visited")->Fill(jet->eta(), weight);
+			histMan->H1D_JetBinned("jet_phi_PtGT35_visited")->Fill(jet->phi(), weight);
+		}
+
+		if (jet->pt() > 40.) {
+			histMan->H1D_JetBinned("jet_eta_PtGT40_visited")->Fill(jet->eta(), weight);
+			histMan->H1D_JetBinned("jet_phi_PtGT40_visited")->Fill(jet->phi(), weight);
+		}
 		if (jet->pt() > 45.) {
 			histMan->H1D_JetBinned("jet_eta_PtGT45_visited")->Fill(jet->eta(), weight);
 			histMan->H1D_JetBinned("jet_phi_PtGT45_visited")->Fill(jet->phi(), weight);
@@ -462,6 +476,19 @@ void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigg
 			histMan->H1D_JetBinned("jet_pt_fired")->Fill(jet->pt(), prescale * weight);
 			histMan->H1D_JetBinned("jet_eta_fired")->Fill(jet->eta(), prescale * weight);
 			histMan->H1D_JetBinned("jet_phi_fired")->Fill(jet->phi(), prescale * weight);
+
+			if (jet->pt() > 30.) {
+				histMan->H1D_JetBinned("jet_eta_PtGT30_fired")->Fill(jet->eta(), weight);
+				histMan->H1D_JetBinned("jet_phi_PtGT30_fired")->Fill(jet->phi(), weight);
+			}
+			if (jet->pt() > 35.) {
+				histMan->H1D_JetBinned("jet_eta_PtGT35_fired")->Fill(jet->eta(), weight);
+				histMan->H1D_JetBinned("jet_phi_PtGT35_fired")->Fill(jet->phi(), weight);
+			}
+			if (jet->pt() > 40.) {
+				histMan->H1D_JetBinned("jet_eta_PtGT40_fired")->Fill(jet->eta(), weight);
+				histMan->H1D_JetBinned("jet_phi_PtGT40_fired")->Fill(jet->phi(), weight);
+			}
 
 			if (jet->pt() > 45.) {
 				histMan->H1D_JetBinned("jet_eta_PtGT45_fired")->Fill(jet->eta(), weight);
@@ -1421,60 +1448,60 @@ void HLTriggerAnalyser::createHistograms() {
 	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
 	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
 
-//	histMan->setCurrentCollection(
-//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30/TriggerEfficiency");
-//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-//			-0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
-//
-//	histMan->setCurrentCollection(
-//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30/TriggerEfficiency");
-//
-//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-//			-0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
-//
-//	//signal PF trigger efficiencies
-//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30/TriggerEfficiency");
-//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-//			-0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
-//
-//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30/TriggerEfficiency");
-//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-//			-0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
-//
-//	histMan->setCurrentCollection(
-//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30/TriggerEfficiency");
-//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-//			-0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
-//
-//	histMan->setCurrentCollection(
-//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30/TriggerEfficiency");
-//
-//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-//			-0.5, 1.5);
-//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//	histMan->setCurrentCollection(
+	//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30/TriggerEfficiency");
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//
+	//	histMan->setCurrentCollection(
+	//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30/TriggerEfficiency");
+	//
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//
+	//	//signal PF trigger efficiencies
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30/TriggerEfficiency");
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30/TriggerEfficiency");
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//
+	//	histMan->setCurrentCollection(
+	//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30/TriggerEfficiency");
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//
+	//	histMan->setCurrentCollection(
+	//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30/TriggerEfficiency");
+	//
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
 }
 
 void HLTriggerAnalyser::createHistograms(std::string trigger) {
