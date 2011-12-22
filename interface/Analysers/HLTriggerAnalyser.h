@@ -39,10 +39,11 @@ private:
 	boost::array<Efficiency, AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES> triggerEfficiencies;
 
 public:
-	HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan);
+	HLTriggerAnalyser(HistogramManagerPtr histMan);
 	virtual ~HLTriggerAnalyser();
 	void analyse(const TopPairEventCandidate& ttbarEvent);
 	void createHistograms();
+	void createHistograms(std::string trigger);
 
 };
 

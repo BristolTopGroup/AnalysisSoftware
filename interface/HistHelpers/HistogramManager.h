@@ -183,6 +183,8 @@ private:
     void createBJetSummedHistograms(DataType::value);
 };
 
+typedef boost::shared_ptr<HistogramManager> HistogramManagerPtr;
+
 }
 
 #endif /* HISTOGRAMMANAGER_H_ */

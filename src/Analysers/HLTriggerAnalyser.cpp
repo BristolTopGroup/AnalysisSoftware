@@ -11,9 +11,9 @@
 namespace BAT {
 
 HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-		BasicAnalyser(histMan), //
-		weight(1.), //
-		triggerEfficiencies()//
+	BasicAnalyser(histMan), //
+			weight(1.), //
+			triggerEfficiencies()//
 {
 }
 
@@ -87,8 +87,8 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30";
 		if (isData) {
 			passesPreCondition = (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && ttbarEvent.runnumber() <= 178380;
+					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40) || ttbarEvent.HLT(
+					HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && ttbarEvent.runnumber() <= 178380;
 		} else {
 			//no pre-trigger for MC as triggers here are not prescaled
 			passesPreCondition = true;
@@ -104,16 +104,16 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 			if (isData) {
 				passesPreCondition = ttbarEvent.runnumber() > 165970
-						&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
+						&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT) || ttbarEvent.HLT(
+								HLTriggers::HLT_Ele25_WP80_PFMT40) || ttbarEvent.HLT(
+								HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
 				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 			} else {
 				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				//emulating trigger for MC
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30) && ttbarEvent.HLT(
+						HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				prescale = 1;
 			}
 			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
@@ -127,8 +127,8 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 		if (isData)
 			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() <= 178380;
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
-				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30) || ttbarEvent.HLT(
+				HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 
 		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30))
 			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
@@ -145,15 +145,15 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			if (isData) {
 				passesPreCondition = ttbarEvent.runnumber() > 165970 && ttbarEvent.runnumber() <= 178380
 						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-				prescale = ttbarEvent.HLTPrescale(
-						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+				prescale
+						= ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
 				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
 			} else {
 				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
 						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				prescale = 1;
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30) && ttbarEvent.HLT(
+						HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 			}
 			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet2, prescale);
 		}
@@ -163,13 +163,13 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		const JetPointer jet3(cleanedJets.at(2));
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30";
 
-		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
-				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30) || ttbarEvent.HLT(
+				HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 		if (isData)
 			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() <= 165633;
 
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || ttbarEvent.HLT(
+				HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 
 		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30))
 			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
@@ -244,8 +244,8 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30";
 		if (isData) {
 			passesPreCondition = (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && ttbarEvent.runnumber() > 178380;
+					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40) || ttbarEvent.HLT(
+					HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && ttbarEvent.runnumber() > 178380;
 		} else {
 			//no pre-trigger for MC as triggers here are not prescaled
 			passesPreCondition = true;
@@ -261,17 +261,17 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 			if (isData) {
 				passesPreCondition = ttbarEvent.runnumber() > 178380
-						&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
+						&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT) || ttbarEvent.HLT(
+								HLTriggers::HLT_Ele25_WP80_PFMT40) || ttbarEvent.HLT(
+								HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
 				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
-				prescale = ttbarEvent.HLTPrescale(
-						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
+				prescale
+						= ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
 			} else {
 				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				//emulating trigger for MC
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30) && ttbarEvent.HLT(
+						HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				prescale = 1;
 			}
 			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
@@ -297,8 +297,8 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.runnumber() > 178380
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
+				passesPreCondition = ttbarEvent.runnumber() > 178380 && ttbarEvent.HLT(
+						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
 				prescale = ttbarEvent.HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
 				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
@@ -306,8 +306,8 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30)
 						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				prescale = 1;
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30) && ttbarEvent.HLT(
+						HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 			}
 			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet2, prescale);
 		}
@@ -333,12 +333,12 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.runnumber() > 178380
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
+				passesPreCondition = ttbarEvent.runnumber() > 178380 && ttbarEvent.HLT(
+						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
 				prescale = ttbarEvent.HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-				passesTrigger = ttbarEvent.HLT(
-						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+				passesTrigger
+						= ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
 			} else {
 				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
 						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
@@ -394,12 +394,12 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	passesTrigger = false;
 
 	//same trigger for MC and data
-	passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-			|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+	passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) || ttbarEvent.HLT(
+			HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 
 	if ((isData && ttbarEvent.runnumber() <= 178380) || !isData) {
-		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
-				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
+		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30; analysis
+				< AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			//only in the range it was used as a signal trigger
 			if ((isData && ttbarEvent.runnumber() > 160404 && ttbarEvent.runnumber() <= 165633) || !isData)
 				analyseTriggerEfficiency((AnalysisReference::value) analysis,
@@ -409,11 +409,11 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		if (isData)
 			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 		else
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-					&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30) && ttbarEvent.HLT(
+					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 
-		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
-				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
+		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30; analysis
+				< AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			if ((isData && ttbarEvent.runnumber() > 165633 && ttbarEvent.runnumber() <= 178380) || !isData)
 				analyseTriggerEfficiency((AnalysisReference::value) analysis,
 						"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30", passesTrigger, ttbarEvent);
@@ -423,20 +423,20 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		//PF jet triggers
 		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
 
-		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
-				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
-			analyseTriggerEfficiency((AnalysisReference::value) analysis, "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30",
-					passesTrigger, ttbarEvent);
+		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30; analysis
+				< AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
+			analyseTriggerEfficiency((AnalysisReference::value) analysis,
+					"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30", passesTrigger, ttbarEvent);
 		}
 
 		if (isData)
 			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
 		else
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30)
-					&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30) && ttbarEvent.HLT(
+					HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 
-		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
-				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
+		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30; analysis
+				< AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			analyseTriggerEfficiency((AnalysisReference::value) analysis,
 					"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30", passesTrigger, ttbarEvent);
 		}
@@ -475,8 +475,7 @@ void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigg
 void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName,
 		bool passesTrigger, const TopPairEventCandidate& ttbarEvent) {
 
-
-	double triggerResult = passesTrigger? 1.0: 0.;
+	double triggerResult = passesTrigger ? 1.0 : 0.;
 
 	if (isnan(triggerResult) || isinf(triggerResult))
 		cout << "Trigger result is infinite or not a number" << endl;
@@ -484,12 +483,11 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 	if (isnan(weight) || isinf(weight))
 		cout << "Weight is infinite or not a number" << endl;
 
-
 	histMan->setCurrentCollection("HLTStudy/" + triggerName + "/TriggerEfficiency");
 	bool passesCuts = true;
 	//all common cuts except HLT
-	for (unsigned int cut = TTbarEPlusJetsSelection::GoodPrimaryvertex;
-			cut <= TTbarEPlusJetsSelection::AtLeastThreeGoodJets; cut++) {
+	for (unsigned int cut = TTbarEPlusJetsSelection::GoodPrimaryvertex; cut
+			<= TTbarEPlusJetsSelection::AtLeastThreeGoodJets; cut++) {
 		passesCuts = passesCuts && ttbarEvent.passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut);
 	}
 	bool passesRequired = false;
@@ -511,8 +509,8 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		//require == 3 jets
 		passesRequired = !ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
-		passesRequired = passesRequired
-				&& ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
+		passesRequired = passesRequired && ttbarEvent.passesEPlusJetsSelectionStep(
+				TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
 			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(triggerResult, weight);
 		break;
@@ -520,8 +518,8 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30_PFJet30:
 		passesRequired = ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
-		passesRequired = passesRequired
-				&& ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
+		passesRequired = passesRequired && ttbarEvent.passesEPlusJetsSelectionStep(
+				TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
 			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(triggerResult, weight);
 		break;
@@ -534,481 +532,1001 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 
 void HLTriggerAnalyser::createHistograms() {
 
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30");
-	// ele tight ID + 1 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (visited)", 80, -4, 4);
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30");
 
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (fired)", 80, -4, 4);
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30");
 
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30");
 
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30");
-	// ele tight ID + 2 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet pt (visited)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (visited)", 80, -4,
-			4);
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30");
+	createHistograms("HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30");
 
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (fired)", 80, -4, 4);
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30");
+	//	// ele tight ID + 1 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
 
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30");
-	// ele tight ID + 3 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet pt (visited)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (visited)", 80, -4,
-			4);
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30");
+	//	// ele tight ID + 2 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet pt (visited)", 200, 0,
+	//			200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (visited)", 80, -4,
+	//			4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30");
+	//	// ele tight ID + 3 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet pt (visited)", 200, 0,
+	//			200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (visited)", 80, -4,
+	//			4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30");
+	//	// ele tight ID + 4 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet pt (visited)", 200, 0,
+	//			200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (visited)", 80,
+	//			-4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (visited)", 80,
+	//			-4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
 
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (fired)", 80, -4, 4);
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30");
+	//	// ele tight ID + 1 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet pt (fired)",
+	//			200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30");
+	//	// ele tight ID + 2 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30");
+	//	// ele tight ID + 3 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30");
+	//	// ele tight ID + 4 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
 
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30");
-	// ele tight ID + 4 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet pt (visited)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (visited)", 80, -4,
-			4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30");
-	// ele tight ID + 1 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet pt (fired)",
-			200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30");
-	// ele tight ID + 2 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30");
-	// ele tight ID + 3 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30");
-	// ele tight ID + 4 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	//PF Jet triggers
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30");
-	// ele tight ID + 1 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet pt (visited)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (visited)", 80, -4,
-			4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30");
-	// ele tight ID + 2 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet pt (visited)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (visited)", 80, -4,
-			4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (fired)", 80, -4, 4);
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30");
-	// ele tight ID + 3 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet pt (visited)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (visited)", 80,
-			-4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (visited)", 80,
-			-4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet pt (fired)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (fired)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (fired)", 80, -4,
-			4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30");
-	// ele tight ID + 4 jet
-	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet pt (visited)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (visited)", 80,
-			-4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (visited)", 80,
-			-4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet pt (fired)", 200, 0,
-			200);
-	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (fired)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (fired)", 80, -4,
-			4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30");
-	// ele tight ID + 1 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30");
-	// ele tight ID + 2 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30");
-	// ele tight ID + 3 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
-
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30");
-	// ele tight ID + 4 jet
-	histMan->addH1D_JetBinned("jet_pt_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (visited)", 80, -4, 4);
-
-	histMan->addH1D_JetBinned("jet_pt_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (fired)", 80, -4, 4);
-
-	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4,
-			4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
-			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4,
-			4);
+	//	//PF Jet triggers
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30");
+	//	// ele tight ID + 1 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet pt (visited)", 200, 0,
+	//			200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (visited)", 80, -4,
+	//			4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30");
+	//	// ele tight ID + 2 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet pt (visited)", 200, 0,
+	//			200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (visited)", 80,
+	//			-4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (visited)", 80,
+	//			-4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30");
+	//	// ele tight ID + 3 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet pt (visited)", 200, 0,
+	//			200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (visited)", 80,
+	//			-4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (visited)", 80,
+	//			-4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30");
+	//	// ele tight ID + 4 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet pt (visited)", 200,
+	//			0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (visited)", 80,
+	//			-4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (visited)", 80,
+	//			-4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet pt (fired)", 200, 0,
+	//			200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (fired)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired", "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (fired)", 80, -4,
+	//			4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30");
+	//	// ele tight ID + 1 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30");
+	//	// ele tight ID + 2 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30");
+	//	// ele tight ID + 3 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30");
+	//	// ele tight ID + 4 jet
+	//	histMan->addH1D_JetBinned("jet_pt_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet pt (visited)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (visited)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (visited)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_pt_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet pt (fired)", 200, 0, 200);
+	//	histMan->addH1D_JetBinned("jet_eta_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (fired)", 80, -4, 4);
+	//
+	//	//pre-plateau regions
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 30 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 30 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 35 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 35 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	//
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 40 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 40 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	//	//plateau region
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, visited)", 80, -4,
+	//			4);
+	//	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	//	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired",
+	//			"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30 jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
 
 	//signal trigger efficiencies
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30/TriggerEfficiency");
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30/TriggerEfficiency");
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
 
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30/TriggerEfficiency");
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30/TriggerEfficiency");
+	//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+	//			-0.5, 1.5);
+	//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+	//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
 
-	histMan->setCurrentCollection(
-			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30/TriggerEfficiency");
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+//	histMan->setCurrentCollection(
+//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30/TriggerEfficiency");
+//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+//			-0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+//
+//	histMan->setCurrentCollection(
+//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30/TriggerEfficiency");
+//
+//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+//			-0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+//
+//	//signal PF trigger efficiencies
+//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30/TriggerEfficiency");
+//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+//			-0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+//
+//	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30/TriggerEfficiency");
+//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+//			-0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+//
+//	histMan->setCurrentCollection(
+//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30/TriggerEfficiency");
+//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+//			-0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+//
+//	histMan->setCurrentCollection(
+//			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30/TriggerEfficiency");
+//
+//	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+//			-0.5, 1.5);
+//	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+//			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+}
 
-	histMan->setCurrentCollection(
-			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30/TriggerEfficiency");
+void HLTriggerAnalyser::createHistograms(std::string trigger) {
+	histMan->setCurrentCollection("HLTStudy/" + trigger);
 
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//kinematic distributions for HLT path when visited
+	histMan->addH1D_JetBinned("jet_pt_visited", trigger + " jet pt (visited)", 200, 0, 200);
+	histMan->addH1D_JetBinned("jet_eta_visited", trigger + " jet eta (visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_visited", trigger + " jet phi (visited)", 80, -4, 4);
+	//kinematic distributions for HLT path when visited and fired
+	histMan->addH1D_JetBinned("jet_pt_fired", trigger + " jet pt (fired)", 200, 0, 200);
+	histMan->addH1D_JetBinned("jet_eta_fired", trigger + " jet eta (fired)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_fired", trigger + " jet phi (fired)", 80, -4, 4);
 
-	//signal PF trigger efficiencies
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30/TriggerEfficiency");
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//pre-plateau regions in 5 GeV steps
+	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited", trigger + " jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited", trigger + " jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired", trigger + " jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired", trigger + " jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
 
-	histMan->setCurrentCollection("HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30/TriggerEfficiency");
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited", trigger + " jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited", trigger + " jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired", trigger + " jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired", trigger + " jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
 
-	histMan->setCurrentCollection(
-			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30/TriggerEfficiency");
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited", trigger + " jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited", trigger + " jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired", trigger + " jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired", trigger + " jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
 
-	histMan->setCurrentCollection(
-			"HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30/TriggerEfficiency");
+	//plateau region
+	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited", trigger + " jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited", trigger + " jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired", trigger + " jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired", trigger + " jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
 
-	histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
-			-0.5, 1.5);
-	histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
-			"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	//signal trigger efficiencies
+	if (trigger == "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30" || trigger
+			== "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30" || trigger
+			== "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30" || trigger
+			== "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30" || trigger
+			== "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30" || trigger
+			== "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30") {
+
+		histMan->setCurrentCollection("HLTStudy/" + trigger + "/TriggerEfficiency");
+		histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+		histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+		histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30",
+				2, -0.5, 1.5);
+		histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+				"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
+	}
 }
 
 }
