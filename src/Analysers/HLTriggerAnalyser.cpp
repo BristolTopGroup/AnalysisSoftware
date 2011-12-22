@@ -1516,7 +1516,7 @@ void HLTriggerAnalyser::createHistograms(std::string trigger) {
 			== "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30" || trigger
 			== "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30" || trigger
 			== "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30" || trigger
-			== "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30" || trigger
+			== "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30" || trigger
 			== "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30") {
 
 		histMan->setCurrentCollection("HLTStudy/" + trigger + "/TriggerEfficiency");
