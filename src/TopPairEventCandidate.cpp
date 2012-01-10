@@ -531,6 +531,7 @@ bool TopPairEventCandidate::passesEPlusJetsPFIsoSelection() const{
         bool passGoodElectrons = goodElectrons.size() > 0 && goodPFIsolatedElectrons.size() < 2;
         bool passesBothIsolationvetos = false;
         if (passGoodElectrons) {
+        	//TODO: shoudn't this be goodElectrons?
             const ElectronPointer electron = MostPFIsolatedElectron(allElectrons);
             if (electron->isGood(Globals::electronID)) {
                 if (useCustomConversionTagger) {
