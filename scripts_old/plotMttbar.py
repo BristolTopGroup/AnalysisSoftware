@@ -199,28 +199,28 @@ def plotMttbar():
         shapeErrorHist = None 
         relativeQCDEstimationError = 0
         #TODO: fix this for muon+jets
-#        if histname in mttbars or histname in mttbars2:
+        if histname in mttbars or histname in mttbars2:
 ##            print "Taking QCD shape from DATA (%s)" % qcdFromData
-#            qcdHists = HistGetter.getHistsFromFiles([qcdFromData], {'data':files['data']})
-#            hist_qcd = qcdHists['data'][qcdFromData]
-#            shapeErrorHist = QCDEstimation.getShapeErrorHistogram(qcdFromData, files)
-#            
-#        if histname in mttbars3:
-#            qcd3JetsFromData = 'topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets_0orMoreBtag'
-#            qcdHists = HistGetter.getHistsFromFiles([qcd3JetsFromData], {'data':files['data']})
-#            hist_qcd = qcdHists['data'][qcd3JetsFromData]
-#        
-#                
-#        if not 'background' in histname and not 'QCDStudy' in histname and 'withMETAndAsymJets' in histname:  
-#            currentBin = HistPlotter.getBjetBin(histname)
-#              
-#            estimate, err = QCDEstimation.getQCDEstimate(files['data'], bjetBin=currentBin)
-#            if not estimate == 0:
-#                relativeQCDEstimationError = err / estimate
-#                
-#            print 'Estimated QCD background: %.1f +- %.1f' % (estimate, err)
-#            if(hist_qcd.Integral() > 0 and estimate >= 0):
-#                hist_qcd.Scale(estimate / hist_qcd.Integral())
+            #qcdHists = HistGetter.getHistsFromFiles([qcdFromData], {'data':files['data']})
+            hist_qcd = qcdHists['data'][qcdFromData]
+            shapeErrorHist = QCDEstimation.getShapeErrorHistogram(qcdFromData, files)
+            
+        if histname in mttbars3:
+            qcd3JetsFromData = 'topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets_0orMoreBtag'
+            qcdHists = HistGetter.getHistsFromFiles([qcd3JetsFromData], {'data':files['data']})
+            hist_qcd = qcdHists['data'][qcd3JetsFromData]
+        
+                
+        if not 'background' in histname and not 'QCDStudy' in histname and 'withMETAndAsymJets' in histname:  
+            currentBin = HistPlotter.getBjetBin(histname)
+              
+            estimate, err = QCDEstimation.getQCDEstimate(files['data'], bjetBin=currentBin)
+            if not estimate == 0:
+                relativeQCDEstimationError = err / estimate
+                
+            print 'Estimated QCD background: %.1f +- %.1f' % (estimate, err)
+            if(hist_qcd.Integral() > 0 and estimate >= 0):
+                hist_qcd.Scale(estimate / hist_qcd.Integral())
                 
                 
         if performRescale:        

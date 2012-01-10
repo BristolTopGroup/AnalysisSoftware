@@ -1,3 +1,4 @@
+from __future__ import division
 from ROOT import *
 import HistGetter
 import HistPlotter
@@ -12,18 +13,25 @@ saveAs = HistPlotter.saveAs
 triggers = [
 #            'HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30',
 #            'HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30',
-                'HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30', 
+#              'HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30', 
 #                'HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30',
 #                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30', 
 #                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30',
                 'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30',
-                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30',  
+ #              'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30',  
+#               'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30',
 #                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30'
                 ]
     
 triggerVariables = ['jet_pt', 
                     'jet_eta', 
                     'jet_phi',
+                    'jet_eta_PtGT30',
+                    'jet_phi_PtGT30',
+                    'jet_eta_PtGT35',
+                    'jet_phi_PtGT35',
+                    'jet_eta_PtGT40',
+                    'jet_phi_PtGT40',
                     'jet_eta_PtGT45',
                     'jet_phi_PtGT45']
 triggerModifiers = ['visited', 'fired']
@@ -141,10 +149,15 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
     data = hists['data']
     ttbar = hists['ttbar']
     
+    #create a dictionary for each sample
+    # dic[trigger] = {'fitfunction':'', 'parameters':[(param, error), ...], 'sfFunction':'', sfParams}
+    
     plots = ['HLTStudy/' + trigger + '/' + variable for trigger in triggers for variable in triggerVariables]
 #    saveAs = HistPlotter.saveAs
     efficiency = {}
     mc_efficiency = {}
+    infos = {}
+    mcInfos = {}
     gStyle.SetOptFit( 112 );
     for jetbin in HistPlotter.allJetBins:
         for plot in plots:
@@ -153,13 +166,13 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                     continue
             
             elif 'Tri' in plot:
-                if not '3' in jetbin and not '4' in jetbin:
+                if not '3jets' in jetbin and not '4' in jetbin:
                     continue
             elif 'Di' in plot:
-                if not '2' in jetbin:
+                if not '2jet' in jetbin:
                     continue
             else:
-                if not '1' in jetbin:
+                if not '1jet' in jetbin:
                     continue 
             print plot + '_' + jetbin
             fired = data[plot + '_' + 'fired_' + jetbin]
@@ -172,7 +185,9 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             mc_fired.Sumw2()
             mc_visited.Sumw2()
             
-        
+            if not infos.has_key(plot + '_' + jetbin):
+                infos[plot + '_' + jetbin] = {}
+                mcInfos[plot + '_' + jetbin] = {}
 #            print fired.GetNbinsX()
 #            print visited.GetNbinsX()
 #            print mc_fired.GetNbinsX()
@@ -192,18 +207,21 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                 xTitle = 'jet p_{T} (GeV)'
                 yTitle = 'efficiency/(%d GeV)' % (1*rebin)
                 fitfunction = "[0]*exp([1]*exp([2]*x))"
+                scaleFactorFitFunction = "[0]*exp([1]*exp([2]*x) - [3]*exp([4]*x))"
                 fitRange = [20,200]
             elif 'jet_eta' in plot:
                 xlimits = [-3,3]
                 xTitle = 'jet #eta (GeV)'
                 yTitle = 'efficiency/(%0.1f)' % (0.1*rebin)
                 fitfunction = 'pol2'
+                scaleFactorFitFunction = fitfunction
                 fitRange = [-3,3]
             elif 'jet_phi' in plot:
                 xlimits = [-4.,4.]
                 xTitle = 'jet #phi (GeV)'
                 yTitle = 'efficiency/(%0.1f)' % (0.1*rebin)
                 fitfunction = 'pol0'
+                scaleFactorFitFunction = fitfunction
                 fitRange = [-3.1,3.1]
         
             fired.GetXaxis().SetRangeUser(xlimits[0], xlimits[1])
@@ -228,6 +246,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
 #            mc_efficiency.Rebin(rebin)
             f1= TF1("f1",fitfunction,fitRange[0],fitRange[1]);
             f2= TF1("f2",fitfunction,fitRange[0],fitRange[1]);
+            f3= TF1("f3",scaleFactorFitFunction,fitRange[0],fitRange[1]);
 
             if 'jet_pt' in plot:
                 f1.SetParLimits(0,0.8,1.0);
@@ -237,6 +256,8 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                 f2.SetParLimits(0,0.8,1.0);
                 f2.SetParLimits(1,-100,-1);
                 f2.SetParLimits(2,-1,-0.01);
+                
+                f3.SetParLimits(2,-1,-0.01);
                 
                 if "_CentralJet" in plot:
                     f1.SetParLimits(0,0,1.0);
@@ -255,21 +276,28 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             f1.SetLineColor(1);
             f2.SetLineWidth(2);
             f2.SetLineColor(2);
+            f3.SetLineWidth(2);
+            f3.SetLineColor(2);
             
             efficiency[plot + jetbin].Fit(f1);
             mc_efficiency[plot + jetbin].Fit(f2);
             axis = mceff.GetTotalHistogram().GetXaxis()
-            scaleFactor = TH1D("sf", "sf",axis.GetNbins(), axis.GetXmin(), axis.GetXmax())
-            print plot + '_' + jetbin
-            for bin in range(1, axis.GetNbins()):
-                effMC = mceff.GetEfficiency(bin)
-                effData = eff.GetEfficiency(bin)
-                print effMC, effData
-                sf = 0
-                if not effData == 0 and not isnan(effData) and not isnan(effMC):
-                    sf = effMC/effData
-                    
-                scaleFactor.SetBinContent(bin, sf)
+            
+            scaleFactor = TH1F(fired.Clone("MCfired"))
+            scaleFactor.Multiply(mc_visited)
+            scaleFactor.Divide(visited)
+            scaleFactor.Divide(mc_fired)
+#            scaleFactor = TH1D("sf", "sf",axis.GetNbins(), axis.GetXmin(), axis.GetXmax())
+#            print plot + '_' + jetbin
+#            for bin in range(1, axis.GetNbins()):
+#                effMC = mceff.GetEfficiency(bin)
+#                effData = eff.GetEfficiency(bin)
+#                #print effMC, effData
+#                sf = 0
+#                if not effData == 0 and not isnan(effData) and not isnan(effMC):
+#                    sf = effMC/effData
+#                    
+#                scaleFactor.SetBinContent(bin, sf)
             
 #            scaleFactor = mc_hist.Clone("SF")
 #            scaleFactor.Divide(data_hist);
@@ -331,6 +359,38 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             tex.SetLineWidth(2);
             tex.Draw();
             
+            #f1.GetFunction? If yes, color-code the functions
+            strFit = fitfunction
+            strFit = strFit.replace('[0]', str(round(f1.GetParameter(0), 2)))
+            strFit = strFit.replace('[1]', str(round(f1.GetParameter(1), 2)))
+            strFit = strFit.replace('[2]', str(round(f1.GetParameter(2), 2)))
+                                         
+                                         
+            #replace parameters
+            tex2 = TLatex(0.18,0.18,strFit);
+            tex2.SetNDC();
+            tex2.SetTextAlign(13);
+            tex2.SetTextFont(42);
+            tex2.SetTextSize(0.04);
+            tex2.SetLineWidth(2);
+            tex2.Draw();
+            
+            strFit = fitfunction
+            strFit = strFit.replace('[0]', str(round(f2.GetParameter(0), 2)))
+            strFit = strFit.replace('[1]', str(round(f2.GetParameter(1), 2)))
+            strFit = strFit.replace('[2]', str(round(f2.GetParameter(2), 2)))
+                                         
+                                         
+            #replace parameters
+            tex3 = TLatex(0.57,0.18,strFit);
+            tex3.SetNDC();
+            tex3.SetTextAlign(13);
+            tex3.SetTextFont(42);
+            tex3.SetTextSize(0.04);
+            tex3.SetLineWidth(2);
+            tex3.SetTextColor(2)
+            tex3.Draw();
+            
             pad2.cd()
             hFrame = (pad2.cd()).DrawFrame(xlimits[0],0,xlimits[1],2)
             hFrame.GetXaxis().SetTitle(xTitle)
@@ -346,22 +406,55 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
 #            lower.DrawLine(xlimits[0],0.,xlimits[1],0.) ;
             cut.DrawLine(30., 0., 30., 2.)
             
-            
+            #replace this fit with results from the data and MC fit
+#            sfitfunction = f1/f2
+            #scaleFactor.Fit(f3)
+            scaleFactor.Fit(f3)
+#            print 'here', f3.GetParameter(0), f3.GetParameter(1), f3.GetParameter(2)
+            scaleFactor.GetYaxis().SetRangeUser(0., 3.);
             scaleFactor.SetLineColor(4)
             scaleFactor.SetMarkerColor(4)
             scaleFactor.Draw('SAMEP0')
+            f3.DrawCopy("same")
             
+            #infos
+            infos[plot + '_' + jetbin]['fitFunction'] = fitfunction
+            infos[plot + '_' + jetbin]['sfFitFunction'] = scaleFactorFitFunction
+            mcInfos[plot + '_' + jetbin]['fitFunction'] = fitfunction
+            infos[plot + '_' + jetbin]['chi2'] = f1.GetChisquare()
+            infos[plot + '_' + jetbin]['ndof'] = f1.GetNumberFreeParameters()
+            infos[plot + '_' + jetbin]['sfchi2'] = f1.GetChisquare()
+            infos[plot + '_' + jetbin]['sfndof'] = f1.GetNumberFreeParameters()
+            infos[plot + '_' + jetbin]['params'] = []
+            infos[plot + '_' + jetbin]['sfParams'] = []
+            mcInfos[plot + '_' + jetbin]['params'] = []
+            mcInfos[plot + '_' + jetbin]['chi2'] = f1.GetChisquare()
+            mcInfos[plot + '_' + jetbin]['ndof'] = f1.GetNumberFreeParameters()
+            
+            for i in range(f1.GetNpar()):
+                par, err = f1.GetParameter(i), f1.GetParError(i)
+                infos[plot + '_' + jetbin]['params'].append((par, err))
+                
+            for i in range(f2.GetNpar()):
+                par, err = f2.GetParameter(i), f2.GetParError(i)
+                mcInfos[plot + '_' + jetbin]['params'].append((par, err))
+                
+            for i in range(f3.GetNpar()):
+                par, err = f3.GetParameter(i), f3.GetParError(i)
+                infos[plot + '_' + jetbin]['sfParams'].append((par, err))
             
 #            eff.DrawClone('P0')
 #            f1.Draw("SAME");
             
-            saveAs(c, saveName + '_' + jetbin, outputFolder = outputFolder,outputFormats= ['png', 'pdf'])
+            saveAs(c, saveName + '_' + jetbin, outputFolder = outputFolder,outputFormats= ['png'])
             del hFrame
             del c
             del f1
             del f2
+            del f3
     del efficiency
     del mc_efficiency
+    return infos, mcInfos
     
     
 def makeQCDErrorPlot(files, hists):
@@ -456,9 +549,81 @@ def compareShapesTwoData(dataOld, dataNew):
             saveAs(c, current + '_shape_comparison' , outputFormats)
             del c
         
+def printHLTOutput(infos, mcInfos):
+    keys = infos.keys()
+    sorted(keys)
+    previous = ''
+    for hlt in keys:
+        trigger = hlt.split('/')[1]
+        suffix = hlt.split('/')[-1]
+        jetbin = suffix.split('_')[-1]
+        variable = suffix.split('_')[1]
+        ptThreshold = ''
+        if 'PtGT' in suffix:
+            ptThreshold = '(' + suffix.split('_')[2] + ')'
+        if not trigger == previous:
+            print '='*10, trigger, '='*10
+        previous = trigger
+        print 'Fit functions for jet bin', jetbin, 'and variable', variable, ptThreshold
+        print 'Fit function for data'
+        fitfunction = infos[hlt]['sfFitFunction']
+        params = infos[hlt]['sfParams']
+        function = fitfunction
+        if function == 'pol0':
+            function = '[0]'
+        if function == 'pol1':
+            function = '[0]*x + ([1])'
+        if function == 'pol2':
+            function = '[2]*x*x + ([1])*x + ([0])'
+        upperFunction = function
+        lowerFunction = function
+        for i in range(len(params)):
+            param = params[i][0]
+            err = params[i][1]
+            upper = param + err
+            lower = param - err
+            if not 'pol' in function:
+                function = function.replace('[%d]'%i, str(param))
+                upperFunction = upperFunction.replace('[%d]'%i, str(upper))
+                lowerFunction = lowerFunction.replace('[%d]'%i, str(lower))
+                
+        print 'Upper boundary'
+        print upperFunction
+        chi2 = infos[hlt]['sfchi2']
+        ndof = infos[hlt]['sfndof']
+        print 'central fit, chi2:', chi2, 'ndof:', ndof, 'chi2/ndof', chi2/ndof
+        print function
+        print 'Lower boundary'
+        print lowerFunction
+        
+        fitRange = [-3.1,3.1]
+        if variable == 'pt':
+            fitRange = [20,200]
+        elif variable == 'eta':
+            fitRange = [-3,3]
+            
+        
+        c = TCanvas("cname", 'cname', 1200, 900)
+        f1 = TF1('f1', upperFunction, fitRange[0], fitRange[1])
+        f2 = TF1('f2', function, fitRange[0], fitRange[1])
+        f3 = TF1('f3', lowerFunction, fitRange[0], fitRange[1])
+        f1.SetLineColor(2)
+        f2.SetLineColor(1)
+        f3.SetLineColor(4)
+        
+        f1.Draw()
+        f2.Draw('same')
+        f3.Draw('same')
+        
+        saveAs(c, hlt + '_scaleFactor', 
+               outputFolder = outputFolder,outputFormats= ['png'])
+        
+        
+        
+        
 if __name__ == '__main__':
     gROOT.SetBatch(True)
-    gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
+    gROOT.ProcessLine('gErrorIgnoreLevel = 5001;')
     
     files = inputFiles.files
     
@@ -503,7 +668,8 @@ if __name__ == '__main__':
 #                         '/storage/results/histogramFiles/CiCElectron ID/data_1611.95pb_PFElectron_PF2PATJets_PFMET.root'
 #                         )
 #    makeQCDErrorPlot(files, hists)
-    plotHLTStudy(hists, rebin = 1)
+    infos, mcInfos =  plotHLTStudy(hists, rebin = 5)
+    printHLTOutput(infos, mcInfos)
     
 #    
 #    c = TCanvas("cname4", 'cname4', 1200, 900)
