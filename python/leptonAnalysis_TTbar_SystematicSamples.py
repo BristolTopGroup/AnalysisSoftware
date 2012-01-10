@@ -20,7 +20,7 @@ mcFolders = [
            'TTjets_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
            'TTjets_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
            'TTjets_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
-           'TTjets_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
+           'TTjets_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
