@@ -53,7 +53,7 @@ extern void printElectron(const ElectronPointer electron) {
     printParticle(electron);
     cout << setw(30) << "VBTF70" << setw(30) << "VBTF95" << setw(30) << "robust loose" << setw(30) << "robust tight"
             << endl;
-    cout << setw(30) << electron->VBTF_W70_ElectronID() << setw(30) << electron->VBTF_W95_ElectronID() << setw(30)
+    cout << setw(30) << electron->VBTF_WP70_ElectronID() << setw(30) << electron->VBTF_WP95_ElectronID() << setw(30)
             << electron->RobustLooseID() << setw(30) << electron->RobustTightID() << endl;
 
     cout << setw(30) << "sigma_{ieta ieta}" << setw(30) << "|Delta phi_{in}|" << setw(30) << "|Delta eta_{in}|"

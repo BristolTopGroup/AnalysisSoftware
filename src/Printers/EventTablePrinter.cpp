@@ -29,7 +29,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow, const std::string Str
         if (type == DataType::singleTop_And_W)
             cout << " &" << setw(13) << "singeTop";
 
-        if (type >= DataType::singleTop_And_W && type <= DataType::singleTopSChannel)
+        if (type >= DataType::singleTop_And_W && type <= DataType::singleAntiTopSChannel)
             continue;
 
         if (type >= DataType::QCD_BCtoE_Pt20to30 && type <= DataType::PhotonJets_Pt200toInf)
@@ -51,7 +51,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow, const std::string Str
             if (type >= DataType::QCD_BCtoE_Pt20to30 && type <= DataType::PhotonJets_Pt200toInf)
                 nQCD += cutFlow.sumThirdDimension(type, cut);
 
-            if (type >= DataType::singleTop_And_W && type <= DataType::singleTopSChannel)
+            if (type >= DataType::singleTop_And_W && type <= DataType::singleAntiTopSChannel)
                 nSingleTop += cutFlow.sumThirdDimension(type, cut);
 
             if (type == DataType::PhotonJets_Pt200toInf)
@@ -63,7 +63,7 @@ extern void printCutFlowLatexTable(const Counter& cutFlow, const std::string Str
             if (type != DataType::ElectronHad && type != DataType::MuHad)
                 nTotalMC += cutFlow.sumThirdDimension(type, cut);
 
-            if (type >= DataType::singleTop_And_W && type <= DataType::singleTopSChannel)
+            if (type >= DataType::singleTop_And_W && type <= DataType::singleAntiTopSChannel)
                 continue;
             if (type >= DataType::QCD_BCtoE_Pt20to30 && type <= DataType::PhotonJets_Pt200toInf)
                 continue;
@@ -103,7 +103,7 @@ extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow, const std::
         if (type == DataType::singleTop_And_W)
             cout << " &" << setw(13) << "singeTop";
 
-        if (type >= DataType::singleTop_And_W && type <= DataType::singleTopSChannel)
+        if (type >= DataType::singleTop_And_W && type <= DataType::singleAntiTopSChannel)
             continue;
 
         if (type >= DataType::QCD_BCtoE_Pt20to30 && type <= DataType::PhotonJets_Pt200toInf)
@@ -125,7 +125,7 @@ extern void printUnweightedCutFlowLatexTable(const Counter& cutFlow, const std::
             if (type >= DataType::QCD_BCtoE_Pt20to30 && type <= DataType::PhotonJets_Pt200toInf)
                 nQCD += cutFlow.sumThirdDimensionUnweighted(type, cut);
 
-            if (type >= DataType::singleTop_And_W && type <= DataType::singleTopSChannel)
+            if (type >= DataType::singleTop_And_W && type <= DataType::singleAntiTopSChannel)
                 nSingleTop += cutFlow.sumThirdDimensionUnweighted(type, cut);
 
             if (type == DataType::PhotonJets_Pt200toInf)

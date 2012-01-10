@@ -26,7 +26,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 			const ElectronPointer electron = coll.at(index);
 			bool passesEt = electron->et() > 30;
 			bool passesEta = fabs(electron->superClusterEta()) < 2.5 && electron->isInCrack() == false;
-			bool passesID = electron->VBTF_W70_ElectronID();
+			bool passesID = electron->VBTF_WP70_ElectronID();
 			bool noConversion = electron->isFromConversion() == false;
 			if (passesEt && passesEta && passesID && noConversion) {
 				histMan->H1D("electronD0")->Fill(electron->d0(), weight);
