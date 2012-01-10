@@ -15,7 +15,7 @@ namespace BAT {
 
 class QCDAnalyser {
 public:
-	QCDAnalyser(boost::shared_ptr<HistogramManager> histMan);
+	QCDAnalyser(HistogramManagerPtr histMan);
 	~QCDAnalyser();
 
 	void analyse(const TopPairEventCandidate& Event);
@@ -25,6 +25,7 @@ private:
 	boost::shared_ptr<HistogramManager> histMan;
 
 	void ABCDMethod(const TopPairEventCandidate& Event);
+	bool passesSelectionWithoutIsolationOrConversionVeto(const TopPairEventCandidate& Event);
 };
 
 }
