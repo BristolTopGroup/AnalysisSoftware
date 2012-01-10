@@ -17,7 +17,7 @@ namespace BAT {
 
 class DiElectronAnalyser: public BAT::BasicAnalyser {
 public:
-	DiElectronAnalyser(boost::shared_ptr<HistogramManager> histMan);
+	DiElectronAnalyser(HistogramManagerPtr histMan);
 	virtual ~DiElectronAnalyser();
 
     void analyse(const TopPairEventCandidate& ttbarEvent);

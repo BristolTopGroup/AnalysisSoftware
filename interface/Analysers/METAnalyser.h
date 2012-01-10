@@ -14,7 +14,7 @@ namespace BAT {
 
 class METAnalyser: public BAT::BasicAnalyser {
 public:
-	METAnalyser(boost::shared_ptr<HistogramManager> histMan);
+	METAnalyser(HistogramManagerPtr histMan);
 	virtual ~METAnalyser();
 
 	void analyse(const TopPairEventCandidate& ttbarEvent);

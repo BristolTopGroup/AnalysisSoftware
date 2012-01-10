@@ -20,7 +20,7 @@ enum type {
 
 class MTtbarAnalyser: public BAT::BasicAnalyser {
 public:
-	MTtbarAnalyser(boost::shared_ptr<HistogramManager> histMan);
+	MTtbarAnalyser(HistogramManagerPtr histMan);
 	virtual ~MTtbarAnalyser();
 	void analyse(const TopPairEventCandidate& ttbarEvent);
 

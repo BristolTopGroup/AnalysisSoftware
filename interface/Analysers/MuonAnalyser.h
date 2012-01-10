@@ -14,7 +14,7 @@ namespace BAT {
 
 class MuonAnalyser: public BAT::BasicAnalyser {
 public:
-	MuonAnalyser(boost::shared_ptr<HistogramManager> histMan);
+	MuonAnalyser(HistogramManagerPtr histMan);
 	virtual ~MuonAnalyser();
 
 	void analyse(const TopPairEventCandidate& ttbarEvent);

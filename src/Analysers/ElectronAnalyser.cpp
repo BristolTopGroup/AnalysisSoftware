@@ -80,7 +80,7 @@ void ElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
     for (unsigned int index = 0; index < goodElectronsNoID.size(); ++index) {
         const ElectronPointer electron = goodElectronsNoID.at(index);
-        if (electron->VBTF_W70_ElectronID()) {
+        if (electron->VBTF_WP70_ElectronID()) {
             ++goodElectrons;
 
             if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)

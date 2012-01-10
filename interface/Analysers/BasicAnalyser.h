@@ -15,9 +15,11 @@ namespace BAT{
 class BasicAnalyser{
 protected:
     boost::shared_ptr<HistogramManager> histMan;
+    //TODO:
+//    double weight;
 
 public:
-    BasicAnalyser(boost::shared_ptr<HistogramManager> histMan);
+    BasicAnalyser(HistogramManagerPtr histMan);
     virtual ~BasicAnalyser();
     virtual void analyse(const TopPairEventCandidate& ttbarEvent) = 0;
     virtual void createHistograms() = 0;

@@ -20,7 +20,7 @@ namespace BAT {
 
 class MCAnalyser : public BasicAnalyser{
 public:
-    MCAnalyser(boost::shared_ptr<HistogramManager> histMan);
+    MCAnalyser(HistogramManagerPtr histMan);
     virtual ~MCAnalyser();
 
     void analyse(const TopPairEventCandidate& ttbarEvent);

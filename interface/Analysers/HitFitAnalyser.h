@@ -62,7 +62,7 @@ private:
     BAT::TtbarHypothesis BatEvent(const hitfit::Lepjets_Event& ev);
 
 public:
-    HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan);
+    HitFitAnalyser(HistogramManagerPtr histMan);
     virtual ~HitFitAnalyser();
 
     void analyse(const TopPairEventCandidate& ttbarEvent);

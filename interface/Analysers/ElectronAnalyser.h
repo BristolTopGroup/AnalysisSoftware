@@ -13,7 +13,7 @@ namespace BAT {
 
 class ElectronAnalyser : public BasicAnalyser{
 public:
-    ElectronAnalyser(boost::shared_ptr<HistogramManager> histMan);
+    ElectronAnalyser(HistogramManagerPtr histMan);
     virtual ~ElectronAnalyser();
 
     void analyse(const TopPairEventCandidate& ttbarEvent);
