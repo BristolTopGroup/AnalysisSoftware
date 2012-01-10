@@ -85,7 +85,7 @@ public:
     virtual ~Electron();
     bool isGood(short leptonID) const;
     bool isHEEPIsolated() const;
-    bool isTaggedAsConversion(double maxDist, double maxDCotTheta) const;
+    bool isTaggedAsConversion(double maxDist = 0.02, double maxDCotTheta = 0.02) const;
     bool isFromConversion() const;
     bool isLoose() const;
     bool isQCDElectron(short) const;
@@ -103,12 +103,12 @@ public:
     double innerLayerMissingHits() const;
     double dCotThetaToClosestTrack() const;
     double distToClosestTrack() const;
-    bool VBTF_W70_ElectronID() const;
-    bool VBTF_W95_ElectronID() const;
+    bool VBTF_WP70_ElectronID() const;
+    bool VBTF_WP95_ElectronID() const;
     bool CiC_ElectronID(CiCElectronID::value id) const;
-    bool QCD_AntiID_W70() const;
-    bool QCD_AntiID_W70_Barrel() const;
-    bool QCD_AntiID_W70_Endcap() const;
+    bool QCD_AntiID_WP70() const;
+    bool QCD_AntiID_WP70_Barrel() const;
+    bool QCD_AntiID_WP70_Endcap() const;
     bool RobustLooseID() const;
     bool RobustTightID() const;
     bool passesElectronID(short leptonID) const;
@@ -160,10 +160,10 @@ private:
     double sharedFractionInnerHits;
     double dCotThetaToNextTrack, distToNextTrack;
 
-    bool getVBTF_W70_ElectronID_Barrel() const;
-    bool getVBTF_W70_ElectronID_Endcap() const;
-    bool getVBTF_W95_ElectronID_Barrel() const;
-    bool getVBTF_W95_ElectronID_Endcap() const;
+    bool getVBTF_WP70_ElectronID_Barrel() const;
+    bool getVBTF_WP70_ElectronID_Endcap() const;
+    bool getVBTF_WP95_ElectronID_Barrel() const;
+    bool getVBTF_WP95_ElectronID_Endcap() const;
 
 };
 

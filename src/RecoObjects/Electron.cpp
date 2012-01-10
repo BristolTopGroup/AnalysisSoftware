@@ -144,7 +144,7 @@ void Electron::setHadOverEm(double HoverE) {
 bool Electron::isLoose() const {
     bool passesEt = et() > 20;
     bool passesEta = fabs(eta()) < 2.5;
-    return passesEt && passesEta && VBTF_W95_ElectronID();
+    return passesEt && passesEta && VBTF_WP95_ElectronID();
 
 }
 
@@ -173,9 +173,9 @@ bool Electron::passesElectronID(short leptonID) const {
 
 	switch (electronID) {
 	case ElectronID::SimpleCutBasedWP70:
-		return VBTF_W70_ElectronID();
+		return VBTF_WP70_ElectronID();
 	case ElectronID::SimpleCutBasedWP95:
-		return VBTF_W95_ElectronID();
+		return VBTF_WP95_ElectronID();
 	default:
 		if (electronID >= ElectronID::CiCVeryLooseMC)
 			return CiC_ElectronID((CiCElectronID::value) electronID);
@@ -220,17 +220,17 @@ bool Electron::isTaggedAsConversion(double maxDist, double maxDCotTheta) const {
 /* Electron ID cuts (without isolation) from:
  * https://twiki.cern.ch/twiki/bin/view/CMS/SimpleCutBasedEleID#Cuts_for_use_on_2010_data
  */
-bool Electron::VBTF_W70_ElectronID() const {
+bool Electron::VBTF_WP70_ElectronID() const {
     if (isInBarrelRegion())
-        return getVBTF_W70_ElectronID_Barrel();
+        return getVBTF_WP70_ElectronID_Barrel();
     else if (isInEndCapRegion())
-        return getVBTF_W70_ElectronID_Endcap();
+        return getVBTF_WP70_ElectronID_Endcap();
     else
         // in crack
         return false;
 }
 
-bool Electron::getVBTF_W70_ElectronID_Barrel() const {
+bool Electron::getVBTF_WP70_ElectronID_Barrel() const {
     bool passesSigmaIEta = sigma_IEtaIEta < 0.01;
     bool passesDPhiIn = fabs(dPhi_In) < 0.03;
     bool passesDEtaIn = fabs(dEta_In) < 0.004;
@@ -238,7 +238,7 @@ bool Electron::getVBTF_W70_ElectronID_Barrel() const {
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
-bool Electron::getVBTF_W70_ElectronID_Endcap() const {
+bool Electron::getVBTF_WP70_ElectronID_Endcap() const {
     bool passesSigmaIEta = sigma_IEtaIEta < 0.03;
     bool passesDPhiIn = fabs(dPhi_In) < 0.02;
     bool passesDEtaIn = fabs(dEta_In) < 0.005;
@@ -246,17 +246,17 @@ bool Electron::getVBTF_W70_ElectronID_Endcap() const {
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
-bool Electron::VBTF_W95_ElectronID() const {
+bool Electron::VBTF_WP95_ElectronID() const {
     if (isInBarrelRegion())
-        return getVBTF_W95_ElectronID_Barrel();
+        return getVBTF_WP95_ElectronID_Barrel();
     else if (isInEndCapRegion())
-        return getVBTF_W95_ElectronID_Endcap();
+        return getVBTF_WP95_ElectronID_Endcap();
     else
         // in crack
         return false;
 }
 
-bool Electron::getVBTF_W95_ElectronID_Barrel() const {
+bool Electron::getVBTF_WP95_ElectronID_Barrel() const {
     bool passesSigmaIEta = sigma_IEtaIEta < 0.01;
     bool passesDPhiIn = fabs(dPhi_In) < 0.8;
     bool passesDEtaIn = fabs(dEta_In) < 0.007;
@@ -264,7 +264,7 @@ bool Electron::getVBTF_W95_ElectronID_Barrel() const {
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
-bool Electron::getVBTF_W95_ElectronID_Endcap() const {
+bool Electron::getVBTF_WP95_ElectronID_Endcap() const {
     bool passesSigmaIEta = sigma_IEtaIEta < 0.03;
     bool passesDPhiIn = fabs(dPhi_In) < 0.7;
     bool passesDEtaIn = fabs(dEta_In) < 0.01;
@@ -272,16 +272,16 @@ bool Electron::getVBTF_W95_ElectronID_Endcap() const {
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
-bool Electron::QCD_AntiID_W70() const {
+bool Electron::QCD_AntiID_WP70() const {
     if (isInBarrelRegion())
-        return QCD_AntiID_W70_Barrel();
+        return QCD_AntiID_WP70_Barrel();
     else if (isInEndCapRegion())
-        return QCD_AntiID_W70_Endcap();
+        return QCD_AntiID_WP70_Endcap();
     else
         return false;
 }
 
-bool Electron::QCD_AntiID_W70_Barrel() const {
+bool Electron::QCD_AntiID_WP70_Barrel() const {
     bool passesSigmaIEta = sigma_IEtaIEta < 0.01;
     bool passesDPhiIn = fabs(dPhi_In) > 0.03;
     bool passesDEtaIn = fabs(dEta_In) > 0.004;
@@ -289,7 +289,7 @@ bool Electron::QCD_AntiID_W70_Barrel() const {
     return passesSigmaIEta && passesDPhiIn && passesDEtaIn && passesHadOverEm;
 }
 
-bool Electron::QCD_AntiID_W70_Endcap() const {
+bool Electron::QCD_AntiID_WP70_Endcap() const {
     bool passesSigmaIEta = sigma_IEtaIEta < 0.03;
     bool passesDPhiIn = fabs(dPhi_In) > 0.02;
     bool passesDEtaIn = fabs(dEta_In) > 0.005;
