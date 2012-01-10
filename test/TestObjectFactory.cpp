@@ -121,7 +121,7 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
     if (electron->isGood(CiCElectronID::eidSuperTightMC) == false) {
         cout << "Et " << electron->et() << endl;
         cout << "Eta " << electron->eta() << endl;
-        cout << "VBTF 70 " << electron->VBTF_W70_ElectronID() << endl;
+        cout << "VBTF 70 " << electron->VBTF_WP70_ElectronID() << endl;
         cout << "d0 " << electron->d0_wrtBeamSpot() << endl;
         cout << "Et " << electron->et() << endl;
     }
@@ -252,7 +252,7 @@ ElectronPointer TestObjectFactory::badLooseElectronNoID() {
     badLooseElectronNoID->setTrackerIsolation(0.4);
     badLooseElectronNoID->setSigmaIEtaIEta(0.009 + 2);
 
-    assert(badLooseElectronNoID->VBTF_W95_ElectronID() == false);
+    assert(badLooseElectronNoID->VBTF_WP95_ElectronID() == false);
 
     return badLooseElectronNoID;
 }
@@ -265,7 +265,7 @@ ElectronPointer TestObjectFactory::badElectronNoID() {
     badElectronNoID->setSigmaIEtaIEta(0.009 + 2);
     badElectronNoID->setCompressedCiCElectronID(0);
 
-    assert(badElectronNoID->VBTF_W70_ElectronID() == false);
+    assert(badElectronNoID->VBTF_WP70_ElectronID() == false);
 
     return badElectronNoID;
 }
