@@ -13,12 +13,12 @@ saveAs = HistPlotter.saveAs
 triggers = [
 #            'HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30',
 #            'HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30',
-#              'HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30', 
+              'HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30', 
 #                'HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30',
 #                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30', 
 #                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30',
                 'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30',
- #              'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30',  
+               'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30',  
 #               'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30',
 #                'HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30'
                 ]
@@ -202,6 +202,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             xTitle = 'jet p_{T} (GeV)'
             yTitle = 'efficiency/(GeV)'
             fitfunction = ''
+            decimals = 2
             if 'jet_pt' in plot:
                 xlimits = [10,200]
                 xTitle = 'jet p_{T} (GeV)'
@@ -213,14 +214,15 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                 xlimits = [-3,3]
                 xTitle = 'jet #eta (GeV)'
                 yTitle = 'efficiency/(%0.1f)' % (0.1*rebin)
-                fitfunction = 'pol2'
+                fitfunction = '[0]*x*x + [1]*x + [2]'
                 scaleFactorFitFunction = fitfunction
                 fitRange = [-3,3]
             elif 'jet_phi' in plot:
                 xlimits = [-4.,4.]
                 xTitle = 'jet #phi (GeV)'
                 yTitle = 'efficiency/(%0.1f)' % (0.1*rebin)
-                fitfunction = 'pol0'
+                fitfunction = '[0]'
+                decimals = 4
                 scaleFactorFitFunction = fitfunction
                 fitRange = [-3.1,3.1]
         
@@ -263,12 +265,12 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                     f1.SetParLimits(0,0,1.0);
                     f2.SetParLimits(0,0,1.0);
                 
-            if 'jet_eta' in plot:
-                f1.SetParLimits(0,0.2,1.0);
+#            if 'jet_eta' in plot:
+#                f1.SetParLimits(0,0.2,1.0);
 #                f1.SetParLimits(1,-100,-1);
 #                f1.SetParLimits(2,-1,-0.01);
             
-                f2.SetParLimits(0,0.2,1.0);
+#                f2.SetParLimits(0,0.2,1.0);
 #                f2.SetParLimits(1,-100,-1);
 #                f2.SetParLimits(2,-1,-0.01);
             
@@ -361,9 +363,9 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             
             #f1.GetFunction? If yes, color-code the functions
             strFit = fitfunction
-            strFit = strFit.replace('[0]', str(round(f1.GetParameter(0), 2)))
-            strFit = strFit.replace('[1]', str(round(f1.GetParameter(1), 2)))
-            strFit = strFit.replace('[2]', str(round(f1.GetParameter(2), 2)))
+            strFit = strFit.replace('[0]', str(round(f1.GetParameter(0), decimals)))
+            strFit = strFit.replace('[1]', str(round(f1.GetParameter(1), decimals)))
+            strFit = strFit.replace('[2]', str(round(f1.GetParameter(2), decimals)))
                                          
                                          
             #replace parameters
@@ -376,9 +378,9 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             tex2.Draw();
             
             strFit = fitfunction
-            strFit = strFit.replace('[0]', str(round(f2.GetParameter(0), 2)))
-            strFit = strFit.replace('[1]', str(round(f2.GetParameter(1), 2)))
-            strFit = strFit.replace('[2]', str(round(f2.GetParameter(2), 2)))
+            strFit = strFit.replace('[0]', str(round(f2.GetParameter(0), decimals)))
+            strFit = strFit.replace('[1]', str(round(f2.GetParameter(1), decimals)))
+            strFit = strFit.replace('[2]', str(round(f2.GetParameter(2), decimals)))
                                          
                                          
             #replace parameters
@@ -415,6 +417,19 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             scaleFactor.SetLineColor(4)
             scaleFactor.SetMarkerColor(4)
             scaleFactor.Draw('SAMEP0')
+            strFit = fitfunction
+            strFit = strFit.replace('[0]', str(round(f3.GetParameter(0), decimals)))
+            strFit = strFit.replace('[1]', str(round(f3.GetParameter(1), decimals)))
+            strFit = strFit.replace('[2]', str(round(f3.GetParameter(2), decimals)))
+            #replace parameters
+            tex4 = TLatex(0.18,0.78,strFit);
+            tex4.SetNDC();
+            tex4.SetTextAlign(13);
+            tex4.SetTextFont(42);
+            tex4.SetTextSize(0.2);
+            tex4.SetLineWidth(2);
+            tex4.SetTextColor(2)
+            tex4.Draw();
             f3.DrawCopy("same")
             
             #infos
@@ -446,7 +461,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
 #            eff.DrawClone('P0')
 #            f1.Draw("SAME");
             
-            saveAs(c, saveName + '_' + jetbin, outputFolder = outputFolder,outputFormats= ['png'])
+            saveAs(c, saveName + '_' + jetbin + '_Summer11', outputFolder = outputFolder,outputFormats= ['png'])
             del hFrame
             del c
             del f1
@@ -550,10 +565,10 @@ def compareShapesTwoData(dataOld, dataNew):
             del c
         
 def printHLTOutput(infos, mcInfos):
+#    TODO: create dictionary scaleFunction[trigger][ptThreshold][function|error]
     keys = infos.keys()
-    sorted(keys)
     previous = ''
-    for hlt in keys:
+    for hlt in sorted(keys):
         trigger = hlt.split('/')[1]
         suffix = hlt.split('/')[-1]
         jetbin = suffix.split('_')[-1]
@@ -564,19 +579,15 @@ def printHLTOutput(infos, mcInfos):
         if not trigger == previous:
             print '='*10, trigger, '='*10
         previous = trigger
+        print '='*30
         print 'Fit functions for jet bin', jetbin, 'and variable', variable, ptThreshold
-        print 'Fit function for data'
+#        print 'Fit function for data'
         fitfunction = infos[hlt]['sfFitFunction']
         params = infos[hlt]['sfParams']
         function = fitfunction
-        if function == 'pol0':
-            function = '[0]'
-        if function == 'pol1':
-            function = '[0]*x + ([1])'
-        if function == 'pol2':
-            function = '[2]*x*x + ([1])*x + ([0])'
         upperFunction = function
         lowerFunction = function
+        errorFunction = function
         for i in range(len(params)):
             param = params[i][0]
             err = params[i][1]
@@ -586,21 +597,25 @@ def printHLTOutput(infos, mcInfos):
                 function = function.replace('[%d]'%i, str(param))
                 upperFunction = upperFunction.replace('[%d]'%i, str(upper))
                 lowerFunction = lowerFunction.replace('[%d]'%i, str(lower))
+                errorFunction = errorFunction.replace('[%d]'%i, '&pm;' + str(err))
                 
-        print 'Upper boundary'
-        print upperFunction
-        chi2 = infos[hlt]['sfchi2']
-        ndof = infos[hlt]['sfndof']
-        print 'central fit, chi2:', chi2, 'ndof:', ndof, 'chi2/ndof', chi2/ndof
-        print function
-        print 'Lower boundary'
-        print lowerFunction
+#        print 'Upper boundary'
+#        print upperFunction
+#        chi2 = infos[hlt]['sfchi2']
+#        ndof = infos[hlt]['sfndof']
+#        print 'central fit, chi2:', chi2, 'ndof:', ndof, 'chi2/ndof', chi2/ndof
+#        print function
+#        print 'Lower boundary'
+#        print lowerFunction
         
         fitRange = [-3.1,3.1]
         if variable == 'pt':
             fitRange = [20,200]
         elif variable == 'eta':
             fitRange = [-3,3]
+            
+        print 'variable', variable
+        print '| =%s= | %s | %s |' % (trigger, function, errorFunction) 
             
         
         c = TCanvas("cname", 'cname', 1200, 900)
