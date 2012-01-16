@@ -211,7 +211,7 @@ string ConfigFile::PUFile() const {
 
 long ConfigFile::maxEvents() const{
 	if(programOptions.count("maxEvents"))
-		return programOptions["maxEvents"].as<long>();
+		return programOptions["maxEvents"].as<unsigned long>();
 	else
 		return maxEvents_;
 }
