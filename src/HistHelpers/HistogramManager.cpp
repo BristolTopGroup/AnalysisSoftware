@@ -149,6 +149,14 @@ void HistogramManager::setCurrentBJetBin(unsigned int jetbin) {
         currentBJetbin = jetbin;
 }
 
+unsigned int HistogramManager::getCurrentJetBin() const {
+	return currentJetbin;
+}
+
+unsigned int HistogramManager::getCurrentBJetBin() const {
+	return currentBJetbin;
+}
+
 boost::shared_ptr<TH1> HistogramManager::operator [](std::string histname) {
     return H1D(histname);
 }

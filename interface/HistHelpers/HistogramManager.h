@@ -120,6 +120,8 @@ public:
     void setCurrentDataType(DataType::value type);
     void setCurrentJetBin(unsigned int jetbin);
     void setCurrentBJetBin(unsigned int jetbin);
+    unsigned int getCurrentJetBin() const;
+    unsigned int getCurrentBJetBin() const;
 //    void setCurrentLumi(float lumi);
     void prepareForSeenDataTypes(const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& seenDataTypes);
 

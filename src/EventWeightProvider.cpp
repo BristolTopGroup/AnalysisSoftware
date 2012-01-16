@@ -18,6 +18,7 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::ElectronHad] = 0;
     xsection[DataType::MuHad] = 0;
     xsection[DataType::ttbar] = 157.5;
+    xsection[DataType::TTJetsFall11] = 157.5;
     xsection[DataType::Zjets] = 3048.;//m(ll)>50GeV
     xsection[DataType::Wjets] = 31314.;
 //    xsection[DataType::WToENu] = 7899.;
@@ -103,6 +104,7 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::MuHad] = 0;
 
     numberOfProcessedEvents[DataType::ttbar] = 3673321;//3673321;
+    numberOfProcessedEvents[DataType::TTJetsFall11] = 59613991;
     numberOfProcessedEvents[DataType::Zjets] = 33645364;//36277961;
     numberOfProcessedEvents[DataType::Wjets] = 78982439;
 
