@@ -104,7 +104,7 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::MuHad] = 0;
 
     numberOfProcessedEvents[DataType::ttbar] = 3673321;//3673321;
-    numberOfProcessedEvents[DataType::TTJetsFall11] = 59613991;
+    numberOfProcessedEvents[DataType::TTJetsFall11] = 58599824;//59613991;
     numberOfProcessedEvents[DataType::Zjets] = 33645364;//36277961;
     numberOfProcessedEvents[DataType::Wjets] = 78982439;
 
