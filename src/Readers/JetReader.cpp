@@ -11,9 +11,13 @@ namespace BAT {
 
 JetReader::JetReader() : //
 		energyReader(), ////
+		JECUncReader(),
 		pxReader(), ////
 		pyReader(), ////
 		pzReader(), ////
+		pxRawReader(),
+		pyRawReader(),
+		pzRawReader(),
 		massReader(), ////
 		chargeReader(), ////
 		emfReader(), ////
@@ -45,9 +49,13 @@ JetReader::JetReader() : //
 }
 JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		energyReader(input, JetAlgorithm::prefixes.at(algo) + ".Energy"), //
+		JECUncReader(input, JetAlgorithm::prefixes.at(algo) + ".JECUnc"), //
 		pxReader(input, JetAlgorithm::prefixes.at(algo) + ".Px"), //
 		pyReader(input, JetAlgorithm::prefixes.at(algo) + ".Py"), //
 		pzReader(input, JetAlgorithm::prefixes.at(algo) + ".Pz"), //
+		pxRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PxRAW"), //
+		pyRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PyRAW"), //
+		pzRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PzRAW"), //
 		massReader(input, JetAlgorithm::prefixes.at(algo) + ".Mass"), //
 		chargeReader(input, JetAlgorithm::prefixes.at(algo) + ".Charge"), //
 		emfReader(input, JetAlgorithm::prefixes.at(algo) + ".EMF"), //
@@ -98,6 +106,10 @@ void JetReader::readJets() {
 		jet->setUsedAlgorithm(usedAlgorithm);
 		jet->setMass(massReader.getVariableAt(jetIndex));
 		jet->setCharge(chargeReader.getVariableAt(jetIndex));
+		jet->setPxRaw(pxRawReader.getVariableAt(jetIndex));
+		jet->setPyRaw(pyRawReader.getVariableAt(jetIndex));
+		jet->setPzRaw(pzRawReader.getVariableAt(jetIndex));
+		jet->setJECUnc(JECUncReader.getVariableAt(jetIndex));
 
 		if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 			jet->setEMF(emfReader.getVariableAt(jetIndex));
@@ -158,9 +170,13 @@ void JetReader::readJets() {
 
 void JetReader::initialise() {
 	energyReader.initialise();
+	JECUncReader.initialise();
 	pxReader.initialise();
 	pyReader.initialise();
 	pzReader.initialise();
+	pxRawReader.initialise();
+	pyRawReader.initialise();
+	pzRawReader.initialise();
 	massReader.initialise();
 	chargeReader.initialise();
 	if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {

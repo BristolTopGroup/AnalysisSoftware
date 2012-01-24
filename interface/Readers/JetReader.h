@@ -23,9 +23,13 @@ public:
 
 protected:
 	VariableReader<MultiDoublePointer> energyReader;
+	VariableReader<MultiDoublePointer> JECUncReader;
 	VariableReader<MultiDoublePointer> pxReader;
 	VariableReader<MultiDoublePointer> pyReader;
 	VariableReader<MultiDoublePointer> pzReader;
+	VariableReader<MultiDoublePointer> pxRawReader;
+	VariableReader<MultiDoublePointer> pyRawReader;
+	VariableReader<MultiDoublePointer> pzRawReader;
 	VariableReader<MultiDoublePointer> massReader;
 	VariableReader<MultiDoublePointer> chargeReader;
 

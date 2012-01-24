@@ -81,7 +81,15 @@ public:
     double getBJetL7EtCorrection() const;
     double getLightJetL7EtCorrection() const;
     int partonFlavour() const;
+    double PxRaw() const;
+    double PyRaw() const;
+    double PzRaw() const;
+    double JECUnc() const;
 
+    void setPxRaw(double px);
+    void setPyRaw(double py);
+    void setPzRaw(double pz);
+    void setJECUnc(double JECUnc);
     void setUsedAlgorithm(JetAlgorithm::value algo);
     void setEMF(double emf);
     void setN90Hits(int n90Hits);
@@ -108,6 +116,7 @@ private:
     int numberOfDaughters;
     double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;
     double chargedHadronEnergyFraction, chargedMultiplicity;
+    double pxRaw, pyRaw, pzRaw, JECUncertainty;
     int partonFlavour_;
 };
 

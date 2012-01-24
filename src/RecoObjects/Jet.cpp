@@ -92,6 +92,38 @@ double Jet::NCH() const {
 	return chargedMultiplicity;
 }
 
+double Jet::PxRaw() const {
+	return pxRaw;
+}
+
+double Jet::PyRaw() const {
+	return pyRaw;
+}
+
+double Jet::PzRaw() const {
+	return pzRaw;
+}
+
+double Jet::JECUnc() const {
+	return JECUncertainty;
+}
+
+void Jet::setPxRaw(double px) {
+	pxRaw = px;
+}
+
+void Jet::setPyRaw(double py) {
+	pyRaw = py;
+}
+
+void Jet::setPzRaw(double pz) {
+	pzRaw = pz;
+}
+
+void Jet::setJECUnc(double JECUnc) {
+	JECUncertainty = JECUnc;
+}
+
 void Jet::setUsedAlgorithm(JetAlgorithm::value algo) {
 	usedAlgorithm = algo;
 }
