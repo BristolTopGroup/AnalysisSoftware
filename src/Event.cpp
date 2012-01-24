@@ -27,6 +27,7 @@ Event::Event() ://
 			goodElectrons(),//
 			goodIsolatedElectrons(),//
 			goodPFIsolatedElectrons(),//
+			goodPFNonIsolatedElectrons(),//
 			looseElectrons(),//
 			qcdElectrons(),//
 			allJets(),//
@@ -109,12 +110,14 @@ void Event::selectElectronsByQuality() {
 	goodElectrons.clear();
 	goodIsolatedElectrons.clear();
 	goodPFIsolatedElectrons.clear();
+	goodPFNonIsolatedElectrons.clear();
 	for (unsigned int index = 0; index < allElectrons.size(); ++index) {
 		ElectronPointer electron = allElectrons.at(index);
 
 		bool isGood(electron->isGood((short) Globals::electronID));
 		bool isIsolated = electron->relativeIsolation() < Globals::maxElectronRelativeIsolation;
 		bool isPFIsolated = electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation;
+		bool isPFNonIsolated = electron->isPFLepton() && electron->pfIsolation() > Globals::maxElectronLoosePFIsolation;
 
 		if (isGood)
 			goodElectrons.push_back(electron);
@@ -124,6 +127,9 @@ void Event::selectElectronsByQuality() {
 
 		if (isGood && isPFIsolated)
 			goodPFIsolatedElectrons.push_back(electron);
+
+		if(isGood && isPFNonIsolated)
+			goodPFNonIsolatedElectrons.push_back(electron);
 
 		if (electron->isLoose())
 			looseElectrons.push_back(electron);
@@ -404,6 +410,10 @@ const ElectronCollection& Event::GoodIsolatedElectrons() const {
 
 const ElectronCollection& Event::GoodPFIsolatedElectrons() const {
 	return goodPFIsolatedElectrons;
+}
+
+const ElectronCollection& Event::GoodPFNonIsolatedElectrons() const {
+	return goodPFNonIsolatedElectrons;
 }
 
 const ElectronCollection& Event::QCDElectrons() const {
