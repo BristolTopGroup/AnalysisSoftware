@@ -27,6 +27,7 @@ bool Globals::produceFitterASCIIoutput = false;
 
 //electrons
 double Globals::maxElectronPFIsolation = 0.1;
+double Globals::maxElectronLoosePFIsolation = 0.2;
 double Globals::maxElectronRelativeIsolation = 0.1;
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
 ElectronID::value Globals::electronID = ElectronID::CiCHyperTight1MC;

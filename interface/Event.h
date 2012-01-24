@@ -32,6 +32,7 @@ protected:
 	ElectronCollection goodElectrons;
 	ElectronCollection goodIsolatedElectrons;
 	ElectronCollection goodPFIsolatedElectrons;
+	ElectronCollection goodPFNonIsolatedElectrons;
 	ElectronCollection looseElectrons;
 	ElectronCollection qcdElectrons;
 
@@ -105,6 +106,7 @@ public:
 	const ElectronCollection& GoodElectrons() const;
 	const ElectronCollection& GoodIsolatedElectrons() const;
 	const ElectronCollection& GoodPFIsolatedElectrons() const;
+	const ElectronCollection& GoodPFNonIsolatedElectrons() const;
 	const ElectronCollection& QCDElectrons() const;
 	const JetCollection& Jets() const;
 	const JetCollection& GenJets() const;

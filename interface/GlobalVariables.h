@@ -35,6 +35,7 @@ struct Globals {
 
 	//electrons
 	static double maxElectronPFIsolation;
+	static double maxElectronLoosePFIsolation;
 	static double maxElectronRelativeIsolation;
 	static ElectronAlgorithm::value electronAlgorithm;
 	static ElectronID::value electronID;
