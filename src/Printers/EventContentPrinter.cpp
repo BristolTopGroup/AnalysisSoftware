@@ -22,6 +22,11 @@ extern void printJets(const JetCollection jets) {
 }
 
 extern void printJet(const JetPointer jet) {
+	cout << setw(30) << "JECUnc" << endl;
+	cout << setw(30) << jet->JECUnc() <<  endl;
+    cout << setw(30) << "ptRaw" << setw(30) << "pxRaw" << setw(30) << "pyRaw" << setw(30) << "pzRaw" << endl;
+    cout << setw(30) << sqrt(jet->PxRaw()*jet->PxRaw()+jet->PyRaw()*jet->PyRaw()) << setw(30) << jet->PxRaw() << setw(30) << jet->PyRaw() << setw(30)
+            << jet->PzRaw() << endl;
     printParticle(jet);
     cout << setw(30) << "emf" << setw(30) << "n90Hits" << setw(30) << "fHPD" << setw(30) << "B tag(SSV)" << endl;
     cout << setw(30) << jet->emf() << setw(30) << jet->n90Hits() << setw(30) << jet->fHPD() << setw(30)
