@@ -153,6 +153,29 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 		const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
 		histMan->H1D_BJetBinned("PFIsolation_controlRegion")->Fill(electron->pfIsolation(), weight);
 	}
+	
+	if (ttbarCandidate.passesEPlusJetsQCDselection() && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
+		const ElectronPointer electron = ttbarCandidate.GoodPFNonIsolatedElectrons().front();
+		histMan->H1D("QCD_electronEta")->Fill(electron->eta(), weight);
+		histMan->H1D("QCD_electronAbsEta")->Fill(abs(electron->eta()), weight);
+		histMan->H1D("QCD_electronPt")->Fill(electron->pt(), weight);
+		histMan->H1D("QCD_electronPFIsolation")->Fill(electron->pfIsolation(), weight);
+		histMan->H1D("QCD_electronRelIso")->Fill(electron->relativeIsolation(), weight);
+
+		histMan->H1D("QCD_goodJetsMultiplicity")->Fill(ttbarCandidate.GoodElectronCleanedJets().size(), weight);
+		histMan->H1D("QCD_jetsMultiplicity")->Fill(ttbarCandidate.Jets().size(), weight);
+		histMan->H1D("QCD_btaggedJetsMultiplicity")->Fill(ttbarCandidate.GoodElectronCleanedBJets().size(), weight);
+		for (unsigned index = 0; index < ttbarCandidate.GoodElectronCleanedJets().size(); ++index) {
+			histMan->H1D("QCD_jetPt")->Fill(ttbarCandidate.GoodElectronCleanedJets().at(index)->pt(), weight);
+			histMan->H1D("QCD_jetEta")->Fill(ttbarCandidate.GoodElectronCleanedJets().at(index)->eta(), weight);
+			histMan->H1D("QCD_jetPhi")->Fill(ttbarCandidate.GoodElectronCleanedJets().at(index)->phi(), weight);
+			histMan->H1D("QCD_jetMass")->Fill(ttbarCandidate.GoodElectronCleanedJets().at(index)->mass(), weight);
+		}
+		histMan->H1D("QCD_1stJetPt")->Fill(ttbarCandidate.GoodElectronCleanedJets().front()->pt(), weight);
+		histMan->H1D("QCD_1stJetEta")->Fill(ttbarCandidate.GoodElectronCleanedJets().front()->eta(), weight);
+		histMan->H1D("QCD_1stJetPhi")->Fill(ttbarCandidate.GoodElectronCleanedJets().front()->phi(), weight);
+		histMan->H1D("QCD_1stJetMass")->Fill(ttbarCandidate.GoodElectronCleanedJets().front()->mass(), weight);
+	}
 
 	histMan->setCurrentCollection("topReconstruction/backgroundShape");
 	if (ttbarCandidate.passesEPlusJetsRelIsoSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
@@ -410,6 +433,25 @@ void QCDAnalyser::createHistograms() {
 	histMan->addH1D_JetBinned("QCDest_PFIsolation", "PFIso", 500, 0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_WithMETCut", "PFIso", 500, 0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
+
+	histMan->addH1D("QCD_electronEta", "Electron eta", 100, -2.4, 2.4);
+	histMan->addH1D("QCD_electronAbsEta", "Electron abs(eta)", 100, 0, 2.6);
+	histMan->addH1D("QCD_electronPt", "Electron Pt", 100, 0, 200);
+	histMan->addH1D("QCD_electronPFIsolation", "Electron PFIso", 100, 0, 5);
+	histMan->addH1D("QCD_electronRelIso", "Electron RelIso", 100, 0, 5);
+
+	histMan->addH1D("QCD_goodJetsMultiplicity", "Good jets multiplicity", 4, 3.5, 7.5);
+	histMan->addH1D("QCD_jetsMultiplicity", "All jets multiplicity", 4, 3.5, 7.5);
+	histMan->addH1D("QCD_btaggedJetsMultiplicity", "b-tagged jets multiplicity", 4, -0.5, 3.5);
+	histMan->addH1D("QCD_jetPt", "Jet Pt", 100, 0, 200);
+	histMan->addH1D("QCD_jetEta", "Jet Eta", 100, -2.5, 2.5);
+	histMan->addH1D("QCD_jetPhi", "Jet Phi", 100, -2.5, 2.5);
+	histMan->addH1D("QCD_jetMass", "Jet Mass", 100, 0, 40);
+
+	histMan->addH1D("QCD_1stJetPt", "Leading Jet Pt", 100, 0, 200);
+	histMan->addH1D("QCD_1stJetEta", "Leading Jet Eta", 100, -2.5, 2.5);
+	histMan->addH1D("QCD_1stJetPhi", "Leading Jet Phi", 100, -2.5, 2.5);
+	histMan->addH1D("QCD_1stJetMass", "Leading Jet Mass", 100, 0, 40);
 
 	histMan->addH1D_BJetBinned("PFIsolation", "PFIso", 500, 0, 5);
 

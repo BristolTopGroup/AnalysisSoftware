@@ -16,6 +16,15 @@ void ElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
     float weight = ttbarEvent.weight();
     ElectronCollection goodElectronsNoID;
 
+    if (ttbarEvent.passesFullTTbarEPlusJetSelection()) {
+    	const ElectronPointer electron = ttbarEvent.MostPFIsolatedElectron(ttbarEvent.GoodElectrons());
+		histMan->H1D("electronEta")->Fill(electron->eta(), weight);
+		histMan->H1D("electronAbsEta")->Fill(abs(electron->eta()), weight);
+		histMan->H1D("electronPt")->Fill(electron->pt(), weight);
+		histMan->H1D("electronPFIsolation")->Fill(electron->pfIsolation(), weight);
+		histMan->H1D("electronRelIso")->Fill(electron->relativeIsolation(), weight);
+    }
+
     for (unsigned index = 0; index < electrons.size(); ++index) {
         const ElectronPointer electron = electrons.at(index);
         bool passesEt = electron->et() > 30;
@@ -119,6 +128,11 @@ void ElectronAnalyser::createHistograms() {
     histMan->addH1D("nElectronsCiCHyperTight4MCIso", "nElectronsCiCHyperTight4MCIso", 6, 0, 5);
     histMan->addH1D("nElectronsWP70", "nElectronsWP70", 6, 0, 5);
     histMan->addH1D("nElectronsWP70Iso", "nElectronsWP70Iso", 6, 0, 5);
+	histMan->addH1D("electronEta", "Electron eta", 100, -2.4, 2.4);
+	histMan->addH1D("electronAbsEta", "Electron abs(eta)", 100, 0, 2.6);
+	histMan->addH1D("electronPt", "Electron Pt", 100, 0, 200);
+	histMan->addH1D("electronPFIsolation", "Electron PFIso", 100, 0, 5);
+	histMan->addH1D("electronRelIso", "Electron RelIso", 100, 0, 5);
 }
 
 }
