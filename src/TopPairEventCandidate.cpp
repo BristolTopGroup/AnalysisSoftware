@@ -612,6 +612,20 @@ bool TopPairEventCandidate::passesEPlusJetsAntiIsolationSelection() const {
     return passesFirst3 && muonVeto && zveto && conversionVeto;
 }
 
+bool TopPairEventCandidate::passesEPlusJetsQCDselection() const {
+	//require at least one good electron and no good electrons with isolation less than 0.1 and exactly 1 non-isolated electron with PFRelIso>0.2
+    if (!(goodElectrons.size() > 0 && goodPFIsolatedElectrons.size() == 0 && goodPFNonIsolatedElectrons.size() == 1))
+            return false;
+
+    bool passesFirst3 = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
+
+    bool muonVeto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
+    bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::Zveto);
+    bool conversionVeto = (goodElectrons.front()->isFromConversion() || goodElectrons.front()->isTaggedAsConversion(
+            0.2, 0.2)) == false;
+    return passesFirst3 && muonVeto && zveto && conversionVeto;
+}
+
 void TopPairEventCandidate::reconstructTTbarToEPlusJets(ElectronPointer electron) {
     if (goodElectronCleanedJets.size() < 4)
         throw ReconstructionException("Not enough jets available to reconstruct top event using Mass Equality method.");

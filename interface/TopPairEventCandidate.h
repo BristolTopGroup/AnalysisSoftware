@@ -177,6 +177,7 @@ public:
     bool passesEPlusJetsPFIsoSelection() const;
     bool passesEPlusJEtsPFIsoControlSelection() const;
     bool passesEPlusJetsAntiIsolationSelection() const;
+    bool passesEPlusJetsQCDselection() const;
 
     bool passesConversionSelection() const;
     bool passedEPlusJetsAntiIDSelection() const;
