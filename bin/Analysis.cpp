@@ -129,7 +129,7 @@ void Analysis::doTTbarCutFlow() {
         if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo((TTbarEPlusJetsSelection::Step) cut)) {
             ePlusJetsCutflow[cut] += 1;
             ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-            unsigned int njet = ttbarCandidate.GoodJets().size();
+            unsigned int njet = ttbarCandidate.GoodElectronCleanedJets().size();
             if (njet >= JetBin::NUMBER_OF_JET_BINS)
                 njet = JetBin::NUMBER_OF_JET_BINS - 1;
             ePlusJetsCutflowPerSample.increase(ttbarCandidate.getDataType(), cut, njet, weight);
@@ -145,7 +145,7 @@ void Analysis::doTTbarCutFlow() {
 		if (ttbarCandidate.passesMuPlusJetsSelectionStepUpTo((TTbarMuPlusJetsSelection::Step) cut)) {
 			muPlusJetsCutFlow[cut] += 1;
 //			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-			unsigned int njet = ttbarCandidate.GoodJets().size();
+			unsigned int njet = ttbarCandidate.GoodMuonCleanedJets().size();
 			if (njet >= JetBin::NUMBER_OF_JET_BINS)
 				njet = JetBin::NUMBER_OF_JET_BINS - 1;
 			muPlusJetsCutflowPerSample.increase(ttbarCandidate.getDataType(), cut, njet, weight);
