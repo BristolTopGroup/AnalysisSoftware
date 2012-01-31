@@ -65,6 +65,10 @@ enum value {
 	TTJets_scaledown,
 	TTJets_scaleup,
 	TTJetsFall11,
+	WJets_matchingdown,
+	WJets_matchingup,
+	WJets_scaledown,
+	WJets_scaleup,
 	NUMBER_OF_DATA_TYPES
 };
 
@@ -121,7 +125,11 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TTJets-matchingup", //
 		"TTJets-scaledown", //
 		"TTJets-scaleup", //
-		"TTJetsFall11" //
+		"TTJetsFall11", //
+		"WJetsToLNu-matchingdown", //
+		"WJetsToLNu-matchingup", //
+		"WJetsToLNu-scaledown", //
+		"WJetsToLNu-scaleup" //
 		} };
 }
 

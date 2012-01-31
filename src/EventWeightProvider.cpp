@@ -23,14 +23,14 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::Wjets] = 31314.;
 //    xsection[DataType::WToENu] = 7899.;
 
-    xsection[DataType::ttbar161] = 136.4;
-    xsection[DataType::ttbar163] = 127.1;
-    xsection[DataType::ttbar166] = 114.3;
-    xsection[DataType::ttbar169] = 106.2;
-    xsection[DataType::ttbar175] = 87.87;
-    xsection[DataType::ttbar178] = 79.77;
-    xsection[DataType::ttbar181] = 72.0;
-    xsection[DataType::ttbar184] = 66.14;
+    xsection[DataType::ttbar161] = 157.5;//136.4;
+    xsection[DataType::ttbar163] = 157.5;//127.1;
+    xsection[DataType::ttbar166] = 157.5;//114.3;
+    xsection[DataType::ttbar169] = 157.5;//106.2;
+    xsection[DataType::ttbar175] = 157.5;//87.87;
+    xsection[DataType::ttbar178] = 157.5;//79.77;
+    xsection[DataType::ttbar181] = 157.5;//72.0;
+    xsection[DataType::ttbar184] = 157.5;//66.14;
 
     xsection[DataType::QCD_EMEnriched_Pt20to30] = 0.2355e9 * 0.0073;//xs 0.2355 mb (filter efficiency=0.0073)
     xsection[DataType::QCD_EMEnriched_Pt30to80] = 0.0593e9 * 0.059; //xs 0.0593 mb
@@ -73,10 +73,16 @@ boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
     xsection[DataType::Zprime_M4TeV_W40GeV] = 50;
     xsection[DataType::Zprime_M4TeV_W400GeV] = 50;
 
+    //https://twiki.cern.ch/twiki/bin/view/CMS/MadGraphSummer11Production
     xsection[DataType::TTJets_matchingdown] = 764;
     xsection[DataType::TTJets_matchingup] = 172;
     xsection[DataType::TTJets_scaledown] = 552;
     xsection[DataType::TTJets_scaleup] = 200;
+
+    xsection[DataType::WJets_matchingdown] = 42352;
+    xsection[DataType::WJets_matchingup] = 11439;
+    xsection[DataType::WJets_scaledown] = 20137;
+    xsection[DataType::WJets_scaleup] = 17859;
     return xsection;
 }
 
@@ -103,10 +109,10 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::ElectronHad] = 0;
     numberOfProcessedEvents[DataType::MuHad] = 0;
 
-    numberOfProcessedEvents[DataType::ttbar] = 3673321;//3673321;
+    numberOfProcessedEvents[DataType::ttbar] = 3701947;//3673321;
     numberOfProcessedEvents[DataType::TTJetsFall11] = 58599824;//59613991;
-    numberOfProcessedEvents[DataType::Zjets] = 33645364;//36277961;
-    numberOfProcessedEvents[DataType::Wjets] = 78982439;
+    numberOfProcessedEvents[DataType::Zjets] = 36277961;//36277961;
+    numberOfProcessedEvents[DataType::Wjets] = 81268812;//78982439;
 
     numberOfProcessedEvents[DataType::ttbar161] = 1620072;
     numberOfProcessedEvents[DataType::ttbar163] = 1633197;
@@ -118,8 +124,8 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::ttbar184] = 1671859;
 
     numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 35729669;
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 70392060;
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8090132;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 69578129;//70392060;
+    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8150672;//8090132;
 
     numberOfProcessedEvents[DataType::QCD_MuEnrichedPt15_Pt20] = 24661584;
 
@@ -135,11 +141,11 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::WZtoAnything] = 2368019;
     numberOfProcessedEvents[DataType::ZZtoAnything] = 3145780;
 
-    numberOfProcessedEvents[DataType::singleTop_And_W] = 556519;
-	numberOfProcessedEvents[DataType::singleTopTChannel] = 2867419;
+    numberOfProcessedEvents[DataType::singleTop_And_W] = 814390;//556519;
+	numberOfProcessedEvents[DataType::singleTopTChannel] = 3900171;//2867419;
 	numberOfProcessedEvents[DataType::singleTopSChannel] = 259971;
 
-	numberOfProcessedEvents[DataType::singleAntiTop_And_W] = 375192;
+	numberOfProcessedEvents[DataType::singleAntiTop_And_W] = 809984;//375192;
 	numberOfProcessedEvents[DataType::singleAntiTopTChannel] = 1944826;
 	numberOfProcessedEvents[DataType::singleAntiTopSChannel] = 137980;
 
@@ -163,6 +169,11 @@ void EventWeightProvider::defineNumberOfProducedEvents() {
     numberOfProcessedEvents[DataType::TTJets_matchingup] = 1062792;
     numberOfProcessedEvents[DataType::TTJets_scaledown] = 967055;
     numberOfProcessedEvents[DataType::TTJets_scaleup] = 930483;
+
+    numberOfProcessedEvents[DataType::WJets_matchingdown] = 9956679;
+    numberOfProcessedEvents[DataType::WJets_matchingup] = 10461655;
+    numberOfProcessedEvents[DataType::WJets_scaledown] = 10092532;
+    numberOfProcessedEvents[DataType::WJets_scaleup] = 9756359;
 }
 
 EventWeightProvider::~EventWeightProvider() {
