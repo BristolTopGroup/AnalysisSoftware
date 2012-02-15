@@ -37,6 +37,7 @@ NTupleEventReader::NTupleEventReader() :
     runNumberReader(new VariableReader<unsigned int> (input, "Event.Run")),
     eventNumberReader(new VariableReader<unsigned int> (input, "Event.Number")),
     lumiBlockReader(new VariableReader<unsigned int> (input, "Event.LumiSection")),
+    PDFWeightsReader(new VariableReader<MultiDoublePointer> (input, "Event.PDFWeights")),
     PileupInfoReader(new VariableReader<MultiIntPointer> (input, "Event.PileUpInteractions")),
     areReadersSet(false),
     areDatatypesKnown(false),
@@ -86,6 +87,7 @@ const Event& NTupleEventReader::getNextEvent() {
     	currentEvent.setGenParticles(genParticleReader->getGenParticles());
     	currentEvent.setGenJets(genJetReader->getGenJets());
     	currentEvent.setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
+    	currentEvent.setPDFWeights(*PDFWeightsReader->getVariable());
     }
 
     currentEvent.setJets(jetReader->getJets());
@@ -133,6 +135,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
         runNumberReader->initialise();
         eventNumberReader->initialise();
         lumiBlockReader->initialise();
+        PDFWeightsReader->initialiseBlindly();
         PileupInfoReader->initialiseBlindly();
         areReadersSet = true;
     }

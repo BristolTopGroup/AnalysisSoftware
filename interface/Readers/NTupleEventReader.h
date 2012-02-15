@@ -81,6 +81,7 @@ private:
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > lumiBlockReader;
+	boost::scoped_ptr<VariableReader<MultiDoublePointer> > PDFWeightsReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	bool areReadersSet, areDatatypesKnown;
 	Event currentEvent;

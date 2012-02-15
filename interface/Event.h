@@ -68,6 +68,7 @@ protected:
 	bool isBeamScraping;
 
 	std::vector<int> genNumberOfPileUpVertices;
+	std::vector<double> pdfWeights;
 
 	double ptdensityRho;
 
@@ -95,6 +96,7 @@ public:
 	void setPileUpWeight(double weight);
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
+	void setPDFWeights(std::vector<double> pdfWeights);
 	void setPtDensityRho(double rho);
 
 	const VertexPointer PrimaryVertex() const;
@@ -147,6 +149,7 @@ public:
 
 //	double averageNumberOfGeneratedPileUpVertices() const;
 	const std::vector<int> GeneratedPileUpVertices() const;
+	const std::vector<double> PDFWeights() const;
 	double numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method =
 			Globals::pileUpReweightingMethod) const;
 	double rho() const;

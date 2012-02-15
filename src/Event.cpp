@@ -529,6 +529,14 @@ void Event::setGenNumberOfPileUpVertices(std::vector<int> pileup) {
 	genNumberOfPileUpVertices = pileup;
 }
 
+void Event::setPDFWeights(std::vector<double> pdfWeights){
+	this->pdfWeights = pdfWeights;
+}
+
+const std::vector<double> Event::PDFWeights() const {
+	return pdfWeights;
+}
+
 //double Event::averageNumberOfGeneratedPileUpVertices() const {
 //	double average = std::accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0)/genNumberOfPileUpVertices.size();
 //    return average;
