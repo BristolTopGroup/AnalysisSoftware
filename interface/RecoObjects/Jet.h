@@ -80,11 +80,14 @@ public:
     double btagSSVHE() const;
     double getBJetL7EtCorrection() const;
     double getLightJetL7EtCorrection() const;
+    //Quarks: d=1, u=2, s=3, c=4, b=5 (antimatter with flipped sign)
+    // gluons = 21
     int partonFlavour() const;
     double PxRaw() const;
     double PyRaw() const;
     double PzRaw() const;
     double JECUnc() const;
+    double getBTagDiscriminator(BtagAlgorithm::value type) const;
 
     void setPxRaw(double px);
     void setPyRaw(double py);

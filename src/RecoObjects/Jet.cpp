@@ -23,6 +23,10 @@ Jet::Jet() :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
+		pxRaw(-9999),//
+		pyRaw(-9999),// 
+		pzRaw(-9999),// 
+		JECUncertainty(-9999),//
 		partonFlavour_(0) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
@@ -41,6 +45,10 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
+		pxRaw(-9999),//
+		pyRaw(-9999),// 
+		pzRaw(-9999),// 
+		JECUncertainty(-9999),//
 		partonFlavour_(0) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
@@ -334,6 +342,10 @@ double Jet::getLightJetL7EtCorrection() const {
 
 int Jet::partonFlavour() const {
 	return partonFlavour_;
+}
+
+double Jet::getBTagDiscriminator(BtagAlgorithm::value type) const{
+	return btag_discriminators.at((unsigned int) type);
 }
 
 }
