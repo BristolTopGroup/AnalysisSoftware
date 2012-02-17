@@ -28,6 +28,7 @@
 #include "../interface/RecoObjects/Particle.h"
 //Analysers
 #include "../interface/Analysers/DiElectronAnalyser.h"
+#include "../interface/Analysers/BJetAnalyser.h"
 #include "../interface/Analysers/ElectronAnalyser.h"
 #include "../interface/Analysers/HitFitAnalyser.h"
 #include "../interface/Analysers/HLTriggerAnalyser.h"
@@ -65,6 +66,7 @@ private:
     float weight, pileUpWeight;
     BAT::Counter ePlusJetsCutflowPerSample, muPlusJetsCutflowPerSample;
 
+    BAT::BJetAnalyserLocalPtr bjetAnalyser;
     boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
