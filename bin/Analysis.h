@@ -37,6 +37,7 @@
 #include "../interface/Analysers/METAnalyser.h"
 #include "../interface/Analysers/MTtbarAnalyser.h"
 #include "../interface/Analysers/MuonAnalyser.h"
+#include "../interface/Analysers/MVAnalyser.h"
 #include "../interface/Analysers/QCDAnalyser.h"
 #include "../interface/Analysers/TopReconstructionAnalyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
@@ -76,6 +77,7 @@ private:
     boost::scoped_ptr<BAT::METAnalyser> metAnalyser;
     boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
     boost::scoped_ptr<BAT::MuonAnalyser> muonAnalyser;
+    BAT::MVAnalyserPtr mvAnalyser;
     boost::scoped_ptr<BAT::QCDAnalyser> qcdAnalyser;
     boost::scoped_ptr<BAT::TopReconstructionAnalyser> topRecoAnalyser;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;

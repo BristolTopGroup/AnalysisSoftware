@@ -17,11 +17,15 @@ MVAnalyser::~MVAnalyser() {
 
 void MVAnalyser::analyse(const TopPairEventCandidate& event)
 {
-
+	histMan->setCurrentCollection("MVAnalysis");
+	histMan->H3D("Test")->FillRandom("gaus", 10);
 }
 
 void MVAnalyser::createHistograms() {
+	histMan->setCurrentCollection("MVAnalysis");
+	histMan->addH3D("Test", "Test", 10, 0., 10., 10, 0., 10., 10, 0., 10.);
+}
+}
 
-}
-}
+
 

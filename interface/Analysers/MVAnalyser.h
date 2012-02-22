@@ -9,6 +9,7 @@
 #define MVANALYSER_H_
 
 #include "BasicAnalyser.h"
+#include <boost/shared_ptr.hpp>
 
 namespace BAT {
 
@@ -20,6 +21,8 @@ public:
 	void analyse(const TopPairEventCandidate& event);
 	void createHistograms();
 };
+
+typedef boost::shared_ptr<MVAnalyser> MVAnalyserPtr;
 
 }
 

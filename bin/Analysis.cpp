@@ -49,6 +49,7 @@ void Analysis::analyse() {
 		metAnalyser->analyse(ttbarCandidate);
 		mttbarAnalyser->analyse(ttbarCandidate);
 		muonAnalyser->analyse(ttbarCandidate);
+		mvAnalyser->analyse(ttbarCandidate);
 		qcdAnalyser->analyse(ttbarCandidate);
 		topRecoAnalyser->analyse(ttbarCandidate);
 		vertexAnalyser->analyse(ttbarCandidate);
@@ -213,6 +214,7 @@ void Analysis::createHistograms() {
 	metAnalyser->createHistograms();
 	mttbarAnalyser->createHistograms();
 	muonAnalyser->createHistograms();
+	mvAnalyser->createHistograms();
 	qcdAnalyser->createHistograms();
 	topRecoAnalyser->createHistograms();
 	vertexAnalyser->createHistograms();
@@ -250,6 +252,7 @@ Analysis::Analysis(std::string fileForPileUpReweighting) : //
 		metAnalyser(new METAnalyser(histMan)), //
 		mttbarAnalyser(new MTtbarAnalyser(histMan)), //
 		muonAnalyser(new MuonAnalyser(histMan)), //
+		mvAnalyser(new MVAnalyser(histMan)), //
 		qcdAnalyser(new QCDAnalyser(histMan)), //
 		topRecoAnalyser(new TopReconstructionAnalyser(histMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan, weights)) //
