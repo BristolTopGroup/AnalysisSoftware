@@ -10,6 +10,7 @@
 #include "THCollection.h"
 #include "TH1D.h"
 #include "TH2D.h"
+#include "TH3D.h"
 #include "../../interface/DataTypes.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
@@ -20,8 +21,14 @@
 namespace BAT {
 typedef boost::array<TH1CollectionRef, DataType::NUMBER_OF_DATA_TYPES> TH1Array;
 typedef boost::array<TH2CollectionRef, DataType::NUMBER_OF_DATA_TYPES> TH2Array;
+typedef boost::array<TH3CollectionRef, DataType::NUMBER_OF_DATA_TYPES> TH3Array;
 typedef boost::multi_array<TH1CollectionRef, 2> TH1MultiArray;
 typedef boost::multi_array<TH2CollectionRef, 2> TH2MultiArray;
+typedef boost::multi_array<TH3CollectionRef, 2> TH3MultiArray;
+
+typedef boost::shared_ptr<TH1> TH1Ptr;
+typedef boost::shared_ptr<TH2> TH2Ptr;
+typedef boost::shared_ptr<TH3> TH3Ptr;
 
 namespace JetBin {
 enum value {
@@ -109,13 +116,22 @@ public:
     void addH1D(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
     void addH1D_JetBinned(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
     void addH1D_BJetBinned(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
+
+    void addH2D(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax, unsigned int nYBins,
+                float ymin, float ymax);
     void addH2D_BJetBinned(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax,
             unsigned int nYBins, float ymin, float ymax);
     void addH2D_JetBinned(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax,
                 unsigned int nYBins, float ymin, float ymax);
 
-    void addH2D(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax, unsigned int nYBins,
-            float ymin, float ymax);
+    void addH3D(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax, unsigned int nYBins,
+			float ymin, float ymax, unsigned int nZBins, float zmin, float zmax);
+	void addH3D_BJetBinned(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax,
+			unsigned int nYBins, float ymin, float ymax, unsigned int nZBins, float zmin, float zmax);
+	void addH3D_JetBinned(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax,
+			unsigned int nYBins, float ymin, float ymax, unsigned int nZBins, float zmin, float zmax);
+
+
 
     void setCurrentDataType(DataType::value type);
     void setCurrentJetBin(unsigned int jetbin);
@@ -125,40 +141,41 @@ public:
 //    void setCurrentLumi(float lumi);
     void prepareForSeenDataTypes(const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& seenDataTypes);
 
-    void add1DCollection(std::string collection);
-    void add1DJetCollection(std::string collection);
-    void add1DBJetCollection(std::string collection);
 
-    void add2DCollection(std::string collection);
-    void add2DJetCollection(std::string collection);
-    void add2DBJetCollection(std::string collection);
 
     void addCollection(std::string collection);
 
-
-
-    void setCurrent1DCollection(std::string collection);
-    void setCurrent1DJetCollection(std::string collection);
-    void setCurrent1DBJetCollection(std::string collection);
-    void setCurrent2DCollection(std::string collection);
-    void setCurrent2DJetCollection(std::string collection);
-    void setCurrent2DBJetCollection(std::string collection);
-
     void setCurrentCollection(std::string collection);
 
-    boost::shared_ptr<TH1> operator[](std::string);
-    boost::shared_ptr<TH1> H1D(std::string);
-    boost::shared_ptr<TH1> H1D_JetBinned(std::string);
-    boost::shared_ptr<TH1> H1D_BJetBinned(std::string);
-    boost::shared_ptr<TH2> operator()(std::string);
-    boost::shared_ptr<TH2> H2D(std::string);
-    boost::shared_ptr<TH2> H2D_JetBinned(std::string);
-    boost::shared_ptr<TH2> H2D_BJetBinned(std::string);
+    TH1Ptr operator[](std::string);
+    TH1Ptr H1D(std::string);
+    TH1Ptr H1D_JetBinned(std::string);
+    TH1Ptr H1D_BJetBinned(std::string);
+    TH2Ptr operator()(std::string);
+    TH2Ptr H2D(std::string);
+    TH2Ptr H2D_JetBinned(std::string);
+    TH2Ptr H2D_BJetBinned(std::string);
+
+    TH3Ptr H3D(std::string);
+    TH3Ptr H3D_JetBinned(std::string);
+    TH3Ptr H3D_BJetBinned(std::string);
 
     void writeToDisk();
 
     void enableDebugMode(bool enable);
 private:
+
+    void add1DCollection(std::string collection);
+	void add1DJetCollection(std::string collection);
+	void add1DBJetCollection(std::string collection);
+
+	void add2DCollection(std::string collection);
+	void add2DJetCollection(std::string collection);
+	void add2DBJetCollection(std::string collection);
+
+	void add3DCollection(std::string collection);
+	void add3DJetCollection(std::string collection);
+	void add3DBJetCollection(std::string collection);
 
     boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
     boost::array<boost::shared_ptr<TFile>, DataType::NUMBER_OF_DATA_TYPES> histFiles;
@@ -167,20 +184,23 @@ private:
     unsigned int currentJetbin;
     unsigned int currentBJetbin;
 //    float currentIntegratedLumi;
-    std::string current1DCollection, current1DJetCollection, current1DBJetCollection;
-    std::string current2DCollection, current2DJetCollection, current2DBJetCollection;
+    std::string currentCollection;
+//    std::string current1DCollection, current1DJetCollection, current1DBJetCollection;
+//    std::string current2DCollection, current2DJetCollection, current2DBJetCollection;
 
     unordered_map<std::string, TH1Array> collection1D;
     unordered_map<std::string, TH2Array> collection2D;
+    unordered_map<std::string, TH3Array> collection3D;
     unordered_map<std::string, TH1MultiArray> jetCollection1D;
     unordered_map<std::string, TH2MultiArray> jetCollection2D;
+    unordered_map<std::string, TH3MultiArray> jetCollection3D;
     unordered_map<std::string, TH1MultiArray> bJetCollection1D;
     unordered_map<std::string, TH2MultiArray> bJetCollection2D;
+    unordered_map<std::string, TH3MultiArray> bJetCollection3D;
 
     bool debugMode;
 
     const std::string assembleFilename(DataType::value) const;
-    void createSummedHistograms(DataType::value);
     void createJetSummedHistograms(DataType::value);
     void createBJetSummedHistograms(DataType::value);
 };

@@ -13,6 +13,7 @@
 #include "TDirectory.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TH3.h"
 
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
@@ -53,6 +54,8 @@ public:
     void add(std::string name, std::string title, unsigned int numberOfBins, float xmin, float xmax);
     void add(std::string name, std::string title, unsigned int numberOfXBins, float xmin, float xmax,
             unsigned int numberOfYBins, float ymin, float ymax);
+    void add(std::string name, std::string title, unsigned int numberOfXBins, float xmin, float xmax,
+			unsigned int numberOfYBins, float ymin, float ymax, unsigned int numberOfZBins, float zmin, float zmax);
 
     void add(std::string name, boost::shared_ptr<histType> hist){
         histMap[name] = hist;
@@ -128,8 +131,10 @@ private:
 
 typedef THCollection<TH1> TH1Collection;
 typedef THCollection<TH2> TH2Collection;
+typedef THCollection<TH3> TH3Collection;
 typedef boost::shared_ptr<THCollection<TH1> > TH1CollectionRef;
 typedef boost::shared_ptr<THCollection<TH2> > TH2CollectionRef;
+typedef boost::shared_ptr<THCollection<TH3> > TH3CollectionRef;
 
 }
 
