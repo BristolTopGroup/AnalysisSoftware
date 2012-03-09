@@ -18,8 +18,17 @@
 #include "HighLevelTriggers.h"
 #include "EventWeightProvider.h"
 #include "GlobalVariables.h"
+#include <boost/shared_ptr.hpp>
 
+//forward definition of event needed before BasicSelection inclusion.
 namespace BAT {
+class Event;
+typedef boost::shared_ptr<Event> EventPointer;
+}
+//include BasicSelection to have access to the selections.
+#include "Selections/BasicSelection.h"
+namespace BAT {
+
 
 class Event {
 protected:
