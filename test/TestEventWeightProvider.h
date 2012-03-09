@@ -5,6 +5,8 @@
  *      Author: kreczko
  */
 
+#ifndef TESTEVENTWEIGHTPROVIDER_h
+#define  TESTEVENTWEIGHTPROVIDER_h
 #include "cute/cute.h"
 #include "cute/cute_suite.h"
 #include "../interface/EventWeightProvider.h"
@@ -18,32 +20,13 @@ private:
     EventWeightProvider xSectionProvider;
 
 public:
-    TestEventWeightProvider() :
-        lumi(20),
-        xSectionProvider(lumi, 7, "Pileup_2011_to_172802_LP_LumiScale.root") {
-    }
+    TestEventWeightProvider();
+    ~TestEventWeightProvider();
 
-    ~TestEventWeightProvider() {
-
-    }
-
-    void testGetWeightData() {
-        ASSERT_EQUAL(1, xSectionProvider.getWeight(DataType::ElectronHad));
-        ASSERT_EQUAL(1, xSectionProvider.getWeight(DataType::MuHad));
-    }
-
-    void testGetWeightTtbar() {
-        ASSERT_EQUAL_DELTA(157.5 * lumi/3673321, xSectionProvider.getWeight(DataType::ttbar), 0.00000001);
-    }
-
+    void testGetWeightData();
+    void testGetWeightTtbar();
 };
 
-extern cute::suite make_suite_TestEventWeightProvider() {
-    cute::suite s;
+extern cute::suite make_suite_TestEventWeightProvider();
 
-    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetWeightData));
-    s.push_back(CUTE_SMEMFUN(TestEventWeightProvider, testGetWeightTtbar));
-
-    return s;
-}
-
+#endif

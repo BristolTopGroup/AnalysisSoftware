@@ -65,6 +65,7 @@ void runSuite() {
     s += make_suite_TestNTupleEventReader();
     cute::ide_listener lis;
     cute::makeRunner(lis)(s, "Testing BristolAnalysis Tools");
+
 }
 
 int main() {

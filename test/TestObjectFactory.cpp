@@ -7,18 +7,19 @@
 
 #include "TestObjectFactory.h"
 #include <iostream>
+#include "../interface/GlobalVariables.h"
 
 using namespace std;
 using namespace BAT;
 
 double const TestObjectFactory::goodVertexMaximalAbsoluteRho = 2.0;
 double const TestObjectFactory::goodVertexMinimalNumberOfDegreesOfFreedom = 4;
-double const TestObjectFactory::goodVertexMaximalAbsoluteZPosition = 24.;//cm
+double const TestObjectFactory::goodVertexMaximalAbsoluteZPosition = 24.; //cm
 
 double const TestObjectFactory::isolatedElectronMaximalRelativeIsolation = 0.1;
 double const TestObjectFactory::goodElectronMaximalAbsoluteEta = 2.1;
 double const TestObjectFactory::goodElectronMinimalEt = 30.;
-double const TestObjectFactory::goodElectronMaximalDistanceFromInteractionPoint = 0.02;//cm
+double const TestObjectFactory::goodElectronMaximalDistanceFromInteractionPoint = 0.02; //cm
 double const TestObjectFactory::MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion = 0;
 double const TestObjectFactory::MinimalDistanceToNextTrackBeforeCalledConversion = 0.2;
 double const TestObjectFactory::MinimalDCotToNextTrackBeforeCalledConversion = 0.2;
@@ -32,9 +33,9 @@ double const TestObjectFactory::goodJetMinimalElectromagneticFraction = 0.01;
 double const TestObjectFactory::goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy = 1;
 double const TestObjectFactory::goodJetMaximalFractionOfEnergyIntheHottestHPDReadout = 0.98;
 
-double const TestObjectFactory::goodMuonMinimalPt = 15.;
-double const TestObjectFactory::goodMuonMaximalAbsoluteEta = 2.5;
-double const TestObjectFactory::isolatedMuonMaximalRelativeIsolation = 0.2;
+double const TestObjectFactory::goodMuonMinimalPt = 20.;
+double const TestObjectFactory::goodMuonMaximalAbsoluteEta = 2.1;
+double const TestObjectFactory::isolatedMuonMaximalRelativeIsolation = 0.1;
 
 TestObjectFactory::TestObjectFactory() {
 
@@ -44,383 +45,405 @@ TestObjectFactory::~TestObjectFactory() {
 }
 
 VertexPointer TestObjectFactory::goodVertex() {
-    VertexPointer pv = VertexPointer(new Vertex());
+	VertexPointer pv = VertexPointer(new Vertex());
 
-    pv->setFake(false);
-    pv->setDegreesOfFreedom(TestObjectFactory::goodVertexMinimalNumberOfDegreesOfFreedom);
-    pv->setRho(TestObjectFactory::goodVertexMaximalAbsoluteRho * 0.9);
-    pv->setZPosition(TestObjectFactory::goodVertexMaximalAbsoluteZPosition);
+	pv->setFake(false);
+	pv->setDegreesOfFreedom(TestObjectFactory::goodVertexMinimalNumberOfDegreesOfFreedom);
+	pv->setRho(TestObjectFactory::goodVertexMaximalAbsoluteRho * 0.9);
+	pv->setZPosition(TestObjectFactory::goodVertexMaximalAbsoluteZPosition);
 
-    assert(pv->isGood());
+	assert(pv->isGood());
 
-    return pv;
+	return pv;
 }
 
 VertexPointer TestObjectFactory::badFakeVertex() {
-    VertexPointer pv(TestObjectFactory::goodVertex());
+	VertexPointer pv(TestObjectFactory::goodVertex());
 
-    pv->setFake(true);
+	pv->setFake(true);
 
-    assert(pv->isGood() == false);
+	assert(pv->isGood() == false);
 
-    return pv;
+	return pv;
 }
 
 VertexPointer TestObjectFactory::badNDOFVertex() {
-    VertexPointer pv(TestObjectFactory::goodVertex());
+	VertexPointer pv(TestObjectFactory::goodVertex());
 
-    pv->setDegreesOfFreedom(TestObjectFactory::goodVertexMinimalNumberOfDegreesOfFreedom - 1);
+	pv->setDegreesOfFreedom(TestObjectFactory::goodVertexMinimalNumberOfDegreesOfFreedom - 1);
 
-    assert(pv->isGood() == false);
+	assert(pv->isGood() == false);
 
-    return pv;
+	return pv;
 }
 
 VertexPointer TestObjectFactory::badRhoVertex() {
-    VertexPointer pv(TestObjectFactory::goodVertex());
+	VertexPointer pv(TestObjectFactory::goodVertex());
 
-    pv->setRho(TestObjectFactory::goodVertexMaximalAbsoluteRho * 1.1);
+	pv->setRho(TestObjectFactory::goodVertexMaximalAbsoluteRho * 1.1);
 
-    assert(pv->isGood() == false);
+	assert(pv->isGood() == false);
 
-    return pv;
+	return pv;
 }
 
 VertexPointer TestObjectFactory::badZPositionVertex() {
-    VertexPointer pv(TestObjectFactory::goodVertex());
+	VertexPointer pv(TestObjectFactory::goodVertex());
 
-    pv->setZPosition(TestObjectFactory::goodVertexMaximalAbsoluteZPosition * 1.1);
+	pv->setZPosition(TestObjectFactory::goodVertexMaximalAbsoluteZPosition * 1.1);
 
-    assert(pv->isGood() == false);
+	assert(pv->isGood() == false);
 
-    return pv;
+	return pv;
 }
 
 ElectronPointer TestObjectFactory::goodCaloElectron() {
-    ElectronPointer electron = ElectronPointer(new Electron(100., 99., 13., 5.));
-    electron->setUsedAlgorithm(ElectronAlgorithm::Calo);
-    electron->setSuperClusterEta(0);
-    electron->setD0_wrtBeamSpot(0);
-    electron->setD0(0);
-    VertexPointer pv = TestObjectFactory::goodVertex();
-    electron->setZDistanceToPrimaryVertex(0);
+	ElectronPointer electron = ElectronPointer(new Electron(100., 99., 13., 5.));
+	electron->setUsedAlgorithm(ElectronAlgorithm::Calo);
+	electron->setSuperClusterEta(0);
+	electron->setD0_wrtBeamSpot(0);
+	electron->setD0(0);
+	VertexPointer pv = TestObjectFactory::goodVertex();
+	electron->setZDistanceToPrimaryVertex(0);
 
-    electron->setDEtaIn(0);
-    electron->setDPhiIn(0);
-    electron->setHadOverEm(0);
-    electron->setSigmaIEtaIEta(0);
+	electron->setDEtaIn(0);
+	electron->setDPhiIn(0);
+	electron->setHadOverEm(0);
+	electron->setSigmaIEtaIEta(0);
 
-    electron->setNumberOfMissingInnerLayerHits(0);
-    electron->setDCotThetaToNextTrack(0.5);
-    electron->setDistToNextTrack(0.5);
-    int passId = 0;
-    CiCElectronID::value IDunderTest = CiCElectronID::eidSuperTightMC;
-    passId = passId | 1 << (int) IDunderTest;
-    electron->setCompressedCiCElectronID(passId);
+	electron->setNumberOfMissingInnerLayerHits(0);
+	electron->setDCotThetaToNextTrack(0.5);
+	electron->setDistToNextTrack(0.5);
+	int passId = 0;
+	CiCElectronID::value IDunderTest = (CiCElectronID::value) Globals::electronID; //CiCElectronID::eidHyperTight4MC;
+	passId = passId | 1 << (int) IDunderTest;
+	electron->setCompressedCiCElectronID(passId);
 
-    if (electron->isGood(CiCElectronID::eidSuperTightMC) == false) {
-        cout << "Et " << electron->et() << endl;
-        cout << "Eta " << electron->eta() << endl;
-        cout << "VBTF 70 " << electron->VBTF_WP70_ElectronID() << endl;
-        cout << "d0 " << electron->d0_wrtBeamSpot() << endl;
-        cout << "Et " << electron->et() << endl;
-    }
-    assert(electron->isGood(CiCElectronID::eidSuperTightMC));
-    assert(electron->isFromConversion() == false);
-    assert(electron->relativeIsolation() > 0.1);
-    return electron;
+	if (electron->isGood(Globals::electronID) == false) {
+		cout << "Et " << electron->et() << endl;
+		cout << "Eta " << electron->eta() << endl;
+		cout << "VBTF 70 " << electron->VBTF_WP70_ElectronID() << endl;
+		cout << "d0 " << electron->d0_wrtBeamSpot() << endl;
+		cout << "Et " << electron->et() << endl;
+	}
+	assert(electron->isGood(Globals::electronID));
+	assert(electron->isFromConversion() == false);
+	assert(electron->relativeIsolation() > 0.1);
+	return electron;
 }
 
 ElectronPointer TestObjectFactory::goodIsolatedElectron() {
-    ElectronPointer electron = TestObjectFactory::goodCaloElectron();
-    electron->setTrackerIsolation(0.4);
-    electron->setEcalIsolation(0.3);
-    electron->setHcalIsolation(0.5);
+	ElectronPointer electron = TestObjectFactory::goodCaloElectron();
+	electron->setTrackerIsolation(0.4);
+	electron->setEcalIsolation(0.3);
+	electron->setHcalIsolation(0.5);
+	electron->setPFChargedHadronIsolation(0.4);
+	electron->setPFGammaIsolation(0.3);
+	electron->setPFNeutralHadronIsolation(0.5);
+	electron->setUsedAlgorithm(ElectronAlgorithm::ParticleFlow);
 
-    assert(electron->relativeIsolation() < 0.1);
-    assert(electron->isGood(CiCElectronID::eidSuperTightMC));
-    assert(electron->isFromConversion() == false);
-    assert(electron->isTaggedAsConversion(0.02,0.02) == false);
-    return electron;
+	assert(electron->relativeIsolation() < Globals::maxElectronRelativeIsolation);
+	assert(electron->pfIsolation() < Globals::maxElectronPFIsolation);
+	assert(electron->isGood((short) Globals::electronID));
+	assert(electron->isFromConversion() == false);
+	assert(electron->isTaggedAsConversion(0.02,0.02) == false);
+
+	return electron;
 }
 
 ElectronPointer TestObjectFactory::goodIsolatedElectron2() {
-    ElectronPointer electron = TestObjectFactory::goodIsolatedElectron();
-    ElectronPointer electron2 = TestObjectFactory::goodIsolatedElectron();
-    FourVector vec = electron->getFourVector();
-    vec.SetPx(vec.Px() - 20);
-    vec.SetPy(-vec.Py());
-    vec.SetPz(-vec.Pz());
-    electron2->setFourVector(vec);
-    //Z mass requirement
-    assert(electron->invariantMass(electron2) > 80);
-    assert(electron->invariantMass(electron2) < 100);
-    assert(electron2->relativeIsolation() < 0.1);
-    assert(electron2->isGood(CiCElectronID::eidSuperTightMC));
-    return electron2;
+	ElectronPointer electron = TestObjectFactory::goodIsolatedElectron();
+	ElectronPointer electron2 = TestObjectFactory::goodIsolatedElectron();
+	FourVector vec = electron->getFourVector();
+	vec.SetPx(vec.Px() - 20);
+	vec.SetPy(-vec.Py());
+	vec.SetPz(-vec.Pz());
+	electron2->setFourVector(vec);
+	//Z mass requirement
+	assert(electron->invariantMass(electron2) > 80);
+	assert(electron->invariantMass(electron2) < 100);
+	assert(electron2->relativeIsolation() < 0.1);
+	assert(electron2->isGood(Globals::electronID));
+	return electron2;
 }
 
 ElectronPointer TestObjectFactory::badEtElectron() {
-    ElectronPointer badEtElectron(new Electron(20., 10., 0., 5.));
-    badEtElectron->setD0(0.01);
-    badEtElectron->setSuperClusterEta(1);
+	ElectronPointer badEtElectron(new Electron(20., 10., 0., 5.));
+	badEtElectron->setD0(0.01);
+	badEtElectron->setSuperClusterEta(1);
 
-    assert(fabs(badEtElectron->eta()) < TestObjectFactory::goodElectronMaximalAbsoluteEta);
-    assert(fabs(badEtElectron->d0()) < TestObjectFactory::goodElectronMaximalDistanceFromInteractionPoint);
-    //and fails the selected
-    assert(badEtElectron->et() < TestObjectFactory::goodElectronMinimalEt);
-    return badEtElectron;
+	assert(fabs(badEtElectron->eta()) < TestObjectFactory::goodElectronMaximalAbsoluteEta);
+	assert(fabs(badEtElectron->d0()) < TestObjectFactory::goodElectronMaximalDistanceFromInteractionPoint);
+	//and fails the selected
+	assert(badEtElectron->et() < TestObjectFactory::goodElectronMinimalEt);
+	return badEtElectron;
 }
 
 ElectronPointer TestObjectFactory::badEtaElectron() {
-    ElectronPointer badEtaElectron(new Electron(400., 50., 50., 380));
-    badEtaElectron->setD0(0.01);
-    badEtaElectron->setSuperClusterEta(1);
+	ElectronPointer badEtaElectron(new Electron(400., 50., 50., 380));
+	badEtaElectron->setD0(0.01);
+	badEtaElectron->setSuperClusterEta(1);
 
-    assert(fabs(badEtaElectron->eta()) > TestObjectFactory::goodElectronMaximalAbsoluteEta);
-    assert(fabs(badEtaElectron->d0()) < TestObjectFactory::goodElectronMaximalDistanceFromInteractionPoint);
-    assert(badEtaElectron->et() > TestObjectFactory::goodElectronMinimalEt);
+	assert(fabs(badEtaElectron->eta()) > TestObjectFactory::goodElectronMaximalAbsoluteEta);
+	assert(fabs(badEtaElectron->d0()) < TestObjectFactory::goodElectronMaximalDistanceFromInteractionPoint);
+	assert(badEtaElectron->et() > TestObjectFactory::goodElectronMinimalEt);
 
-    return badEtaElectron;
+	return badEtaElectron;
 }
 
 ElectronPointer TestObjectFactory::badInCrackElectron() {
-    ElectronPointer badInCrackElectron(TestObjectFactory::goodCaloElectron());
-    badInCrackElectron->setSuperClusterEta(1.5);
+	ElectronPointer badInCrackElectron(TestObjectFactory::goodCaloElectron());
+	badInCrackElectron->setSuperClusterEta(1.5);
 
-    assert(badInCrackElectron->isInCrack());
+	assert(badInCrackElectron->isInCrack());
 
-    return badInCrackElectron;
+	return badInCrackElectron;
 }
 
 ElectronPointer TestObjectFactory::badD0Electron() {
-    ElectronPointer badD0Electron(TestObjectFactory::goodCaloElectron());
-    badD0Electron->setD0_wrtBeamSpot(300.);
-    badD0Electron->setD0(300.);
+	ElectronPointer badD0Electron(TestObjectFactory::goodCaloElectron());
+	badD0Electron->setD0_wrtBeamSpot(300.);
+	badD0Electron->setD0(300.);
 
-    assert(fabs(badD0Electron->d0()) > goodElectronMaximalDistanceFromInteractionPoint);
-    assert(fabs(badD0Electron->d0_wrtBeamSpot()) > goodElectronMaximalDistanceFromInteractionPoint);
+	assert(fabs(badD0Electron->d0()) > goodElectronMaximalDistanceFromInteractionPoint);
+	assert(fabs(badD0Electron->d0_wrtBeamSpot()) > goodElectronMaximalDistanceFromInteractionPoint);
 
-    return badD0Electron;
+	return badD0Electron;
 }
 
 ElectronPointer TestObjectFactory::electronWithMissingInnerLayerHit() {
-    ElectronPointer electronWithMissingInnerLayerHit(TestObjectFactory::goodCaloElectron());
-    electronWithMissingInnerLayerHit->setNumberOfMissingInnerLayerHits(1);
+	ElectronPointer electronWithMissingInnerLayerHit(TestObjectFactory::goodIsolatedElectron());
+	electronWithMissingInnerLayerHit->setNumberOfMissingInnerLayerHits(1);
 
-    assert(electronWithMissingInnerLayerHit->innerLayerMissingHits() > MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion);
-    return electronWithMissingInnerLayerHit;
+	assert(
+			electronWithMissingInnerLayerHit->innerLayerMissingHits() > MaximalNumberOfMissingInnerLayerHitsBeforeCalledConversion);
+	return electronWithMissingInnerLayerHit;
 
 }
 
 ElectronPointer TestObjectFactory::electronWithMatchingPartnerTrack() {
-    ElectronPointer electronWithMatchingPartnerTrack(TestObjectFactory::goodCaloElectron());
-    electronWithMatchingPartnerTrack->setDCotThetaToNextTrack(0.1);
-    electronWithMatchingPartnerTrack->setDistToNextTrack(0.01);
+	ElectronPointer electronWithMatchingPartnerTrack(TestObjectFactory::goodCaloElectron());
+	electronWithMatchingPartnerTrack->setDCotThetaToNextTrack(0.1);
+	electronWithMatchingPartnerTrack->setDistToNextTrack(0.01);
 
-    assert(electronWithMatchingPartnerTrack->distToClosestTrack() < TestObjectFactory::MinimalDistanceToNextTrackBeforeCalledConversion);
-    assert(electronWithMatchingPartnerTrack->dCotThetaToClosestTrack() < TestObjectFactory::MinimalDCotToNextTrackBeforeCalledConversion);
+	assert(
+			electronWithMatchingPartnerTrack->distToClosestTrack() < TestObjectFactory::MinimalDistanceToNextTrackBeforeCalledConversion);
+	assert(
+			electronWithMatchingPartnerTrack->dCotThetaToClosestTrack() < TestObjectFactory::MinimalDCotToNextTrackBeforeCalledConversion);
 
-    return electronWithMatchingPartnerTrack;
+	return electronWithMatchingPartnerTrack;
 }
 
 ElectronPointer TestObjectFactory::goodLooseElectron() {
-    ElectronPointer looseElectron(new Electron(100., 79., -13., -5.));
-    looseElectron->setSigmaIEtaIEta(0.009);
-    looseElectron->setDPhiIn(0.7);
-    looseElectron->setDEtaIn(0.006);
-    looseElectron->setHadOverEm(0.14);
-    looseElectron->setSuperClusterEta(1);
-    looseElectron->setEcalIsolation(0);
-    looseElectron->setTrackerIsolation(0);
-    looseElectron->setHcalIsolation(0);
+	ElectronPointer looseElectron(new Electron(100., 79., -13., -5.));
+	looseElectron->setSigmaIEtaIEta(0.009);
+	looseElectron->setDPhiIn(0.7);
+	looseElectron->setDEtaIn(0.006);
+	looseElectron->setHadOverEm(0.14);
+	looseElectron->setSuperClusterEta(1);
+	looseElectron->setEcalIsolation(0);
+	looseElectron->setTrackerIsolation(0);
+	looseElectron->setHcalIsolation(0);
 
-    looseElectron->setNumberOfMissingInnerLayerHits(0);
-    looseElectron->setD0(0);
-    looseElectron->setSuperClusterEta(0);
+	looseElectron->setNumberOfMissingInnerLayerHits(0);
+	looseElectron->setD0(0);
+	looseElectron->setSuperClusterEta(0);
 
-    assert(looseElectron->isGood(false) == false);
-    assert(looseElectron->isLoose());
+	assert(looseElectron->isGood(false) == false);
+	assert(looseElectron->isLoose());
 
-    return looseElectron;
+	return looseElectron;
 }
 
 ElectronPointer TestObjectFactory::badLooseElectronNoID() {
-    ElectronPointer badLooseElectronNoID(goodLooseElectron());
-    badLooseElectronNoID->setHcalIsolation(0.5);
-    badLooseElectronNoID->setEcalIsolation(0.3);
-    badLooseElectronNoID->setTrackerIsolation(0.4);
-    badLooseElectronNoID->setSigmaIEtaIEta(0.009 + 2);
+	ElectronPointer badLooseElectronNoID(goodLooseElectron());
+	badLooseElectronNoID->setHcalIsolation(0.5);
+	badLooseElectronNoID->setEcalIsolation(0.3);
+	badLooseElectronNoID->setTrackerIsolation(0.4);
+	badLooseElectronNoID->setSigmaIEtaIEta(0.009 + 2);
 
-    assert(badLooseElectronNoID->VBTF_WP95_ElectronID() == false);
+	assert(badLooseElectronNoID->VBTF_WP95_ElectronID() == false);
 
-    return badLooseElectronNoID;
+	return badLooseElectronNoID;
 }
 
 ElectronPointer TestObjectFactory::badElectronNoID() {
-    ElectronPointer badElectronNoID(TestObjectFactory::goodCaloElectron());
-    badElectronNoID->setHcalIsolation(0.5);
-    badElectronNoID->setEcalIsolation(0.3);
-    badElectronNoID->setTrackerIsolation(0.4);
-    badElectronNoID->setSigmaIEtaIEta(0.009 + 2);
-    badElectronNoID->setCompressedCiCElectronID(0);
+	ElectronPointer badElectronNoID(TestObjectFactory::goodCaloElectron());
+	badElectronNoID->setHcalIsolation(0.5);
+	badElectronNoID->setEcalIsolation(0.3);
+	badElectronNoID->setTrackerIsolation(0.4);
+	badElectronNoID->setSigmaIEtaIEta(0.009 + 2);
+	badElectronNoID->setCompressedCiCElectronID(0);
 
-    assert(badElectronNoID->VBTF_WP70_ElectronID() == false);
+	assert(badElectronNoID->VBTF_WP70_ElectronID() == false);
 
-    return badElectronNoID;
+	return badElectronNoID;
 }
 
 JetPointer TestObjectFactory::goodCaloJet() {
-    JetPointer goodJet(new Jet(290., 200., 200., 0.));
-    goodJet->setEMF(0.1);
-    goodJet->setN90Hits(2.);
-    goodJet->setFHPD(0.5);
+	JetPointer goodJet(new Jet(290., 200., 200., 0.));
+	goodJet->setEMF(0.1);
+	goodJet->setN90Hits(2.);
+	goodJet->setFHPD(0.5);
 
-    assert(goodJet->isGood());
+	assert(goodJet->isGood());
 
-    return goodJet;
+	return goodJet;
 }
 
 JetPointer TestObjectFactory::badEMFCaloJet() {
-    JetPointer badEMFJet(TestObjectFactory::goodCaloJet());
+	JetPointer badEMFJet(TestObjectFactory::goodCaloJet());
 
-    badEMFJet->setEMF(goodJetMinimalElectromagneticFraction - 0.1);
+	badEMFJet->setEMF(goodJetMinimalElectromagneticFraction - 0.1);
 
-    assert(badEMFJet->isGood() == false);
+	assert(badEMFJet->isGood() == false);
 
-    return badEMFJet;
+	return badEMFJet;
 }
 
 JetPointer TestObjectFactory::badN90CaloJet() {
-    JetPointer badN90Jet(TestObjectFactory::goodCaloJet());
+	JetPointer badN90Jet(TestObjectFactory::goodCaloJet());
 
-    badN90Jet->setN90Hits(TestObjectFactory::goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy - 1);
+	badN90Jet->setN90Hits(TestObjectFactory::goodJetMinimalNumberOfRecHitsContaining90PercentOfTheJetEnergy - 1);
 
-    assert(badN90Jet->isGood() == false);
+	assert(badN90Jet->isGood() == false);
 
-    return badN90Jet;
+	return badN90Jet;
 }
 
 JetPointer TestObjectFactory::badfHPDCaloJet() {
-    JetPointer badfHPDJet(TestObjectFactory::goodCaloJet());
+	JetPointer badfHPDJet(TestObjectFactory::goodCaloJet());
 
-    badfHPDJet->setFHPD(TestObjectFactory::goodJetMaximalFractionOfEnergyIntheHottestHPDReadout + 0.01);
+	badfHPDJet->setFHPD(TestObjectFactory::goodJetMaximalFractionOfEnergyIntheHottestHPDReadout + 0.01);
 
-    assert(badfHPDJet->isGood() == false);
+	assert(badfHPDJet->isGood() == false);
 
-    return badfHPDJet;
+	return badfHPDJet;
 }
 
 JetPointer TestObjectFactory::badEtCaloJet() {
-    JetPointer badEtJet(TestObjectFactory::goodCaloJet());
+	JetPointer badEtJet(TestObjectFactory::goodCaloJet());
 
-    badEtJet->setFourVector(FourVector(20., 20., 0., 20));
+	badEtJet->setFourVector(FourVector(20., 20., 0., 20));
 
-    assert(badEtJet->isGood() == false);
+	assert(badEtJet->isGood() == false);
 
-    return badEtJet;
+	return badEtJet;
 }
 
 JetPointer TestObjectFactory::badEtaCaloJet() {
-    JetPointer badEtJet(TestObjectFactory::goodCaloJet());
+	JetPointer badEtJet(TestObjectFactory::goodCaloJet());
 
-    badEtJet->setFourVector(FourVector(200., 0., 2000., 2900.));
+	badEtJet->setFourVector(FourVector(200., 0., 2000., 2900.));
 
-    assert(badEtJet->isGood() == false);
+	assert(badEtJet->isGood() == false);
 
-    return badEtJet;
+	return badEtJet;
 }
 
 JetPointer TestObjectFactory::goodCaloBJetSSVHEM() {
-    JetPointer goodBJet(TestObjectFactory::goodCaloJet());
+	JetPointer goodBJet(TestObjectFactory::goodCaloJet());
 
-    goodBJet->setDiscriminatorForBtagType(1.7 + 0.1, BtagAlgorithm::SimpleSecondaryVertexHighEfficiency);
+	goodBJet->setDiscriminatorForBtagType(1.7 + 0.1, BtagAlgorithm::SimpleSecondaryVertexHighEfficiency);
 
-    assert(goodBJet->isGood());
-    assert(goodBJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEfficiency));
+	assert(goodBJet->isGood());
+	assert(goodBJet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEfficiency));
 
-    return goodBJet;
+	return goodBJet;
 }
 
 /**
  * This depends on TestObjectFactory::goodCaloElectron()!!
  */
 JetPointer TestObjectFactory::goodCaloJetCloseToCaloElectron() {
-    JetPointer goodJet(TestObjectFactory::goodCaloJet());
+	JetPointer goodJet(TestObjectFactory::goodCaloJet());
 
-    goodJet->setFourVector(FourVector(98., 13., 5., 100.));
+	goodJet->setFourVector(FourVector(98., 13., 5., 100.));
 
-    return goodJet;
+	return goodJet;
 }
 
 MuonPointer TestObjectFactory::goodIsolatedMuon() {
-    MuonPointer goodIsolatedMuon(new Muon(100., 99., 13., 5.));
+	MuonPointer goodIsolatedMuon(new Muon(100., 99., 13., 5.));
 
-    goodIsolatedMuon->makeGlobal(true);
-    goodIsolatedMuon->setEcalIsolation(1);
-    goodIsolatedMuon->setHcalIsolation(1);
-    goodIsolatedMuon->setTrackerIsolation(1);
+	goodIsolatedMuon->makeGlobal(true);
+	goodIsolatedMuon->setTrackerMuon(true);
+	goodIsolatedMuon->setD0(0.01);
+	goodIsolatedMuon->setZDistanceToPrimaryVertex(0.1);
+	goodIsolatedMuon->setNumberOfValidHits(100);
+	goodIsolatedMuon->setNumberOfValidMuonHits(2);
+	goodIsolatedMuon->setPixelLayersWithMeasurement(2);
+	goodIsolatedMuon->setNumberOfMatchedStations(2);
+	goodIsolatedMuon->setNumberOfMatches(3);
+	goodIsolatedMuon->setNormalisedChi2(5);
 
-//    assert(goodIsolatedMuon->isGood());
-    assert(goodIsolatedMuon->relativeIsolation() < 0.1);
+	goodIsolatedMuon->setEcalIsolation(1);
+	goodIsolatedMuon->setHcalIsolation(1);
+	goodIsolatedMuon->setTrackerIsolation(1);
+	goodIsolatedMuon->setPFChargedHadronIsolation(1);
+	goodIsolatedMuon->setPFGammaIsolation(1);
+	goodIsolatedMuon->setPFNeutralHadronIsolation(1);
+	assert(fabs(goodIsolatedMuon->eta()) < 2.1);
+	assert(goodIsolatedMuon->isGood());
+	assert(goodIsolatedMuon->pfIsolation() < 0.1);
 
-    return goodIsolatedMuon;
+	return goodIsolatedMuon;
 }
 
 MuonPointer TestObjectFactory::goodNonIsolatedMuon() {
-    MuonPointer goodNonIsoMuon(TestObjectFactory::goodIsolatedMuon());
+	MuonPointer goodNonIsoMuon(TestObjectFactory::goodIsolatedMuon());
 
-    goodNonIsoMuon->setEcalIsolation(200);
-    goodNonIsoMuon->setHcalIsolation(200);
-    goodNonIsoMuon->setTrackerIsolation(200);
+	goodNonIsoMuon->setEcalIsolation(200);
+	goodNonIsoMuon->setHcalIsolation(200);
+	goodNonIsoMuon->setTrackerIsolation(200);
 
-    assert(goodNonIsoMuon->isGood());
-    assert(goodNonIsoMuon->relativeIsolation() > 0.1);
+	assert(goodNonIsoMuon->isGood());
+	assert(goodNonIsoMuon->relativeIsolation() > 0.1);
 
-    return goodNonIsoMuon;
+	return goodNonIsoMuon;
 }
 
 MuonPointer TestObjectFactory::badNonGlobalMuon() {
-    MuonPointer nonGlobalMuon(TestObjectFactory::goodIsolatedMuon());
+	MuonPointer nonGlobalMuon(TestObjectFactory::goodIsolatedMuon());
 
-    nonGlobalMuon->makeGlobal(false);
+	nonGlobalMuon->makeGlobal(false);
 
-    assert(nonGlobalMuon->isGood() == false);
+	assert(nonGlobalMuon->isGood() == false);
 
-    return nonGlobalMuon;
+	return nonGlobalMuon;
 }
 
 MuonPointer TestObjectFactory::badPtMuon() {
-    MuonPointer badMuonLowPt(new Muon(5., 4., 1., 1.));
+	MuonPointer badMuonLowPt(new Muon(5., 4., 1., 1.));
 
-    assert(badMuonLowPt->isGood() == false);
+	assert(badMuonLowPt->isGood() == false);
 
-    return badMuonLowPt;
+	return badMuonLowPt;
 }
 
 MuonPointer TestObjectFactory::badEtaMuon() {
-    MuonPointer badEtaMu(new Muon(450., 50., 50., 444.));
+	MuonPointer badEtaMu(new Muon(450., 50., 50., 444.));
 
-    assert(badEtaMu->isGood() == false);
+	assert(badEtaMu->isGood() == false);
 
-    return badEtaMu;
+	return badEtaMu;
 }
 
 METPointer TestObjectFactory::goodMET() {
-    METPointer goodMET(new MET(40, 30));
-    goodMET->setSignificance(50);
-    goodMET->setSumET(goodMET->et() * 20);
-    assert(goodMET->isGood());
+	METPointer goodMET(new MET(40, 30));
+	goodMET->setSignificance(50);
+	goodMET->setSumET(goodMET->et() * 20);
+	assert(goodMET->isGood());
 
-    return goodMET;
+	return goodMET;
 }
 
 METPointer TestObjectFactory::badMET() {
-    METPointer badMissingET(new MET(4, 3));
-    badMissingET->setSignificance(-1);
-    badMissingET->setSumET(badMissingET->et()*20);
-    assert(badMissingET->isGood() == false);
+	METPointer badMissingET(new MET(4, 3));
+	badMissingET->setSignificance(-1);
+	badMissingET->setSumET(badMissingET->et() * 20);
+	assert(badMissingET->isGood() == false);
 
-    return badMissingET;
+	return badMissingET;
 }
 

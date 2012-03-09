@@ -20,7 +20,7 @@ private:
 public:
 	TestMETReader();
 	void testPFMET();
-	void testIsMETGood();
+	void testPFMETRAW();
 	void testPFSignificance();
 	void testPFSumET();
 };

@@ -1,3 +1,5 @@
+#ifndef TESTVERTEXREADER_h
+#define TESTVERTEXREADER_h
 #include "cute/cute.h"
 #include "cute/cute_suite.h"
 
@@ -6,48 +8,19 @@
 #include "../interface/Readers/VertexReader.h"
 #include "TChain.h"
 
-using namespace BAT;
 
 struct TestVertexReader {
 	boost::shared_ptr<TChain> input;
-	boost::shared_ptr<VertexReader> reader;
-	VertexPointer vertex;
+	boost::shared_ptr<BAT::VertexReader> reader;
+	BAT::VertexPointer vertex;
 
-	TestVertexReader() :
-		input(new TChain(NTupleEventReader::EVENT_CHAIN)),
-		reader(new VertexReader(input)),
-		vertex() {
-		input->Add(InputFile::TTJets);
-		input->SetBranchStatus("*", 0);
-		reader->initialise();
-		input->GetEntry(1);
-		vertex = reader->getVertices().front();
-	}
-
-	void testVertexZPosition() {
-		ASSERT_EQUAL_DELTA(0.156507, vertex->absoluteZPosition(), 0.00001);
-	}
-
-	void testVertexRho(){
-		ASSERT_EQUAL_DELTA(0.462261, vertex->absoluteRho(), 0.000001);
-	}
-
-	void testVertexIsFake(){
-		ASSERT(vertex->isFake() == false);
-	}
-
-	void testVertexNDOF(){
-		ASSERT_EQUAL(179, vertex->ndof());
-	}
+	TestVertexReader();
+	void testVertexZPosition();
+	void testVertexRho();
+	void testVertexIsFake();
+	void testVertexNDOF();
 };
 
-cute::suite make_suite_TestVertexReader() {
-	cute::suite s;
+extern cute::suite make_suite_TestVertexReader();
 
-	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexZPosition));
-	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexRho));
-	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexIsFake));
-	s.push_back(CUTE_SMEMFUN(TestVertexReader, testVertexNDOF));
-
-	return s;
-}
+#endif

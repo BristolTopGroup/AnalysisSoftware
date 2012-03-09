@@ -1,3 +1,5 @@
+#ifndef TESTGENJETREADER_h
+#define TESTGENJETREADER_h
 #include "cute/cute.h"
 #include "cute/cute_suite.h"
 
@@ -5,7 +7,6 @@
 #include <boost/shared_ptr.hpp>
 
 #include "../interface/Readers/GenJetReader.h"
-#include "InputFiles.h"
 
 using namespace BAT;
 
@@ -17,38 +18,10 @@ private:
 	JetPointer firstJet;
 
 public:
-	TestGenJetReader() :
-		input(new TChain(NTupleEventReader::EVENT_CHAIN)),
-		reader(new GenJetReader(input)),
-		genJets(),
-		firstJet() {
-		input->Add(InputFile::TTJets);
-		input->SetBranchStatus("*", 0);
-		reader->initialise();
-		input->GetEntry(1);
-		genJets = reader->getGenJets();
-		firstJet = genJets.front();
-	}
-
-	void testReadJetsSize() {
-		ASSERT_EQUAL(4, genJets.size());
-	}
-
-	void testReadFirstJetEnergy() {
-		ASSERT_EQUAL_DELTA(161.474, firstJet->energy(), 0.001);
-	}
-
-	void testReadFirstJetEMF() {
-		ASSERT_EQUAL_DELTA(0.292997, firstJet->emf(), 0.00001);
-	}
-
+	TestGenJetReader();
+	void testReadJetsSize();
+	void testReadFirstJetEnergy();
+	void testReadFirstJetEMF();
 };
-extern cute::suite make_suite_TestGenJetReader() {
-	cute::suite s;
-
-	s.push_back(CUTE_SMEMFUN(TestGenJetReader, testReadJetsSize));
-	s.push_back(CUTE_SMEMFUN(TestGenJetReader, testReadFirstJetEnergy));
-	s.push_back(CUTE_SMEMFUN(TestGenJetReader, testReadFirstJetEMF));
-
-	return s;
-}
+extern cute::suite make_suite_TestGenJetReader();
+#endif
