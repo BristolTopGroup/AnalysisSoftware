@@ -32,7 +32,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	string tempFileName = "temp.txt";
 	ofstream tempFile(tempFileName.c_str());
 
-    histMan->setCurrentCollection("hitfitStudy");
+    histMan->setCurrentHistogramFolder("hitfitStudy");
 
     if (Globals::produceFitterASCIIoutput) {
         //write the event info into ASCII file
@@ -305,7 +305,7 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan) :
 }
 
 BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
-
+	//TODO: Sergey, this variable is set but not used!!
   bool evOk=true;
 
   // Do the electron
@@ -468,7 +468,7 @@ HitFitAnalyser::~HitFitAnalyser() {
 }
 
 void HitFitAnalyser::createHistograms() {
-    histMan->setCurrentCollection("hitfitStudy");
+    histMan->setCurrentHistogramFolder("hitfitStudy");
     histMan->addH1D("AllJetsPt", "All jets Pt", 100, 0., 600.);
     histMan->addH1D("FittedTopMassAllSolutions", "Fitted top mass all solutions",   100,  0., 400.);
     histMan->addH1D("FitChiSquaredAllSolutions", "Fit chi-squared all solutions",   100,  0., 20.);

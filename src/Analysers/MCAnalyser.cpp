@@ -19,7 +19,7 @@ void MCAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 //		ttbarCandidate->reconstructTTbarToEPlusJets(ttbarCandidate->GoodPFIsolatedElectrons().front());
 
 
-    histMan->setCurrentCollection("MCStudy");
+    histMan->setCurrentHistogramFolder("MCStudy");
 	MCParticlePointer top, antitop, b_from_top, b_from_antitop, W_plus, W_minus, electron, neutrino, quark_from_W, antiquark_from_W;
 	JetCollection genJets = ttbarCandidate->GenJets();
 	JetPointer topBjet, antitopBjet, jet1fromW, jet2fromW;
@@ -290,7 +290,7 @@ MCAnalyser::~MCAnalyser() {
 }
 
 void MCAnalyser::createHistograms() {
-    histMan->setCurrentCollection("MCStudy");
+    histMan->setCurrentHistogramFolder("MCStudy");
     histMan->addH1D("deltaRElectron", "delta R between truth and reco electron", 100, 0, 0.3);
     histMan->addH1D("deltaRLeptonicBjet", "delta R between truth and reco b-jet on leptonic side", 100, 0, 5.0);
     histMan->addH1D("deltaRHadronicBjet", "delta R between truth and reco b-jet on hadronic side", 100, 0, 5.0);

@@ -190,7 +190,7 @@ void MTtbarAnalyser::analyseFourJetChi2QCDConversionBackground(const TopPairEven
 }
 
 void MTtbarAnalyser::fillHistograms(std::string subcollection, std::string suffix) {
-	histMan->setCurrentCollection("MttbarAnalysis/" + subcollection);
+	histMan->setCurrentHistogramFolder("MttbarAnalysis/" + subcollection);
 
 	unsigned short numberOfSolutions = allSolutions.size();
 	for (unsigned short index = 0; index < numberOfSolutions; ++index) {
@@ -237,7 +237,7 @@ void MTtbarAnalyser::fillHistograms(std::string subcollection, std::string suffi
 }
 
 void MTtbarAnalyser::createHistograms() {
-	histMan->setCurrentCollection("MttbarAnalysis");
+	histMan->setCurrentHistogramFolder("MttbarAnalysis");
 
 	createHistogramsFor("MuonPlusJets/FourJetChi2");
 	createHistogramsFor("MuonPlusJets/ThreeJetChi2");
@@ -257,7 +257,7 @@ void MTtbarAnalyser::createHistogramsFor(std::string collection) {
 	boost::array<std::string, 4> histTypes = { { "", "_withMETAndAsymJets", "_allSolutions",
 			"_allSolutions_withMETAndAsymJets" } };
 
-	histMan->setCurrentCollection("MttbarAnalysis/" + collection);
+	histMan->setCurrentHistogramFolder("MttbarAnalysis/" + collection);
 
 	for (unsigned short index = 0; index < histTypes.size(); ++index) {
 		std::string suffix = histTypes.at(index);
@@ -286,7 +286,7 @@ MTtbarAnalyser::MTtbarAnalyser(boost::shared_ptr<HistogramManager> histMan) :
 		weight(0),
 		currentType("ElectronPlusJets"),
 		allSolutions() {
-	histMan->setCurrentCollection("MttbarAnalysis");
+	histMan->setCurrentHistogramFolder("MttbarAnalysis");
 
 }
 

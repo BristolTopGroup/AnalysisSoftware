@@ -177,7 +177,7 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		}
 	}
 
-	if (cleanedJets.size() > 2) {
+	if (cleanedJets.size() > 2) {//TODO: if nJets > 3, 4th jet > 30 GeV?
 		const JetPointer jet3(cleanedJets.at(2));
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30";
 
@@ -535,11 +535,14 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	histMan->setCurrentBJetBin(currentBJetBin);
 
 }
-
+//TODO: JetPointer -> JetCollection, add uint nthJet
+// remove passesPreCondition and add it before the execution of the function
+//Create trigger object (not here) containing
+// triggerResult, trigger prescale
 void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigger, std::string histFolder,
 		const JetPointer jet, int prescale) {
 	if (passesPreCondition) {
-		histMan->setCurrentCollection(histFolder);
+		histMan->setCurrentHistogramFolder(histFolder);
 
 		histMan->H1D_JetBinned("jet_pt_visited")->Fill(jet->pt(), weight);
 		histMan->H1D_JetBinned("jet_eta_visited")->Fill(jet->eta(), weight);
@@ -622,7 +625,7 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 	if (isnan(weight) || isinf(weight))
 		cout << "Weight is infinite or not a number" << endl;
 
-	histMan->setCurrentCollection("HLTStudy/" + triggerName + "/TriggerEfficiency");
+	histMan->setCurrentHistogramFolder("HLTStudy/" + triggerName + "/TriggerEfficiency");
 	bool passesCuts = true;
 	//all common cuts except HLT
 	for (unsigned int cut = TTbarEPlusJetsSelection::GoodPrimaryvertex;
@@ -694,7 +697,7 @@ void HLTriggerAnalyser::createHistograms() {
 }
 
 void HLTriggerAnalyser::createHistograms(std::string trigger) {
-	histMan->setCurrentCollection("HLTStudy/" + trigger);
+	histMan->setCurrentHistogramFolder("HLTStudy/" + trigger);
 
 	//kinematic distributions for HLT path when visited
 	histMan->addH1D_JetBinned("jet_pt_visited", trigger + " jet pt (visited)", 200, 0, 200);
@@ -754,7 +757,7 @@ void HLTriggerAnalyser::createHistograms(std::string trigger) {
 			|| trigger == "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30"
 			|| trigger == "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30") {
 
-		histMan->setCurrentCollection("HLTStudy/" + trigger + "/TriggerEfficiency");
+		histMan->setCurrentHistogramFolder("HLTStudy/" + trigger + "/TriggerEfficiency");
 		histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
 		histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
 		histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,

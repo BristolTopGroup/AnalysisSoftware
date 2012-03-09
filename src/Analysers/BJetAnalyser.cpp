@@ -11,7 +11,7 @@ namespace BAT {
 
 void BJetAnalyser::analyse(const TopPairEventCandidate& event) {
 	double weight = event.weight();
-    histMan->setCurrentCollection("BJetAnalysis");
+    histMan->setCurrentHistogramFolder("BJetAnalysis");
     const JetCollection allJets = event.Jets();
 
     for(unsigned int jetIndex = 0; jetIndex < allJets.size(); ++jetIndex){
@@ -25,7 +25,7 @@ void BJetAnalyser::analyse(const TopPairEventCandidate& event) {
 
 
 void BJetAnalyser::createHistograms() {
-    histMan->setCurrentCollection("BJetAnalysis");
+    histMan->setCurrentHistogramFolder("BJetAnalysis");
 
     histMan->addH1D("ssv_HE_disc", "ssv_HE_disc", 1000, -1., 10.);
     histMan->addH1D("ssv_HE_disc_bjets", "ssv_HE_disc_bjets", 1000, -1., 10.);

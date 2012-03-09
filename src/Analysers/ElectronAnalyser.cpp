@@ -10,7 +10,7 @@
 namespace BAT {
 
 void ElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
-    histMan->setCurrentCollection("ElectronAnalysis");
+    histMan->setCurrentHistogramFolder("ElectronAnalysis");
 
     const ElectronCollection electrons = ttbarEvent.Electrons();
     float weight = ttbarEvent.weight();
@@ -118,7 +118,7 @@ ElectronAnalyser::~ElectronAnalyser() {
 }
 
 void ElectronAnalyser::createHistograms() {
-    histMan->setCurrentCollection("ElectronAnalysis");
+    histMan->setCurrentHistogramFolder("ElectronAnalysis");
 
     histMan->addH1D("nEventsPassingCiCId", "nEventsPassingCiCId", CiCElectronID::NUMBER_OF_CiCIds + 1, 0,
             CiCElectronID::NUMBER_OF_CiCIds);

@@ -10,7 +10,7 @@
 namespace BAT {
 
 void VertexAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
-	histMan->setCurrentCollection("pileupStudy");
+	histMan->setCurrentHistogramFolder("pileupStudy");
 
 	double weight = ttbarEvent.weight();
 	double pileUpWeight = ttbarEvent.PileUpWeight();
@@ -33,7 +33,7 @@ void VertexAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 void VertexAnalyser::createHistograms() {
 	//create folder/collection name for the histograms
 	// titles are in the format: histogram title; x-axis title; y-axis title
-	histMan->setCurrentCollection("pileupStudy");
+	histMan->setCurrentHistogramFolder("pileupStudy");
 	histMan->addH1D("nVertex", "number of primary vertices; N(PV); events", 51, 0, 50);
 	histMan->addH1D("nVertex_reweighted", "number of primary vertices; N(PV); events", 51, 0, 50);
 	histMan->addH1D_BJetBinned("nVertex_reweighted_withMETAndAsymJets", "number of primary vertices; N(PV); events",

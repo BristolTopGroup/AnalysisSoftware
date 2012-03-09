@@ -10,7 +10,7 @@
 namespace BAT {
 
 void JetAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
-	histMan->setCurrentCollection("jetStudy");
+	histMan->setCurrentHistogramFolder("jetStudy");
 	double weight = ttbarEvent.weight();
 	if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)) {
 		for (unsigned short jetIndex = 0; jetIndex < ttbarEvent.Jets().size(); ++jetIndex)
@@ -48,10 +48,12 @@ void JetAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		histMan->H1D("1stJetPhi")->Fill(ttbarEvent.GoodElectronCleanedJets().front()->phi(), weight);
 		histMan->H1D("1stJetMass")->Fill(ttbarEvent.GoodElectronCleanedJets().front()->mass(), weight);
 	}
+
+	//Add NJets for TTbar selection
 }
 
 void JetAnalyser::createHistograms() {
-	histMan->setCurrentCollection("jetStudy");
+	histMan->setCurrentHistogramFolder("jetStudy");
 	histMan->addH1D_BJetBinned("AllJetMass", "all jet mass; m(j) [GeV]; events", 500, 0, 500);
 	histMan->addH1D_BJetBinned("AllGoodJetMass", "all jet mass; m(j) [GeV]; events", 500, 0, 500);
 	histMan->addH1D_BJetBinned("GoodJetMass_atLeastOneJets", "good jet mass (>= 1 jets; m(j) [GeV]; events", 500, 0,

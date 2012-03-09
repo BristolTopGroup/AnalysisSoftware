@@ -13,7 +13,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 	TopPairEventCandidate ttbarCandidate(ttbarEvent);
 	double weight = ttbarCandidate.weight();
 
-	histMan->setCurrentCollection("topReconstruction");
+	histMan->setCurrentHistogramFolder("topReconstruction");
 	if (ttbarCandidate.passesNMinus1(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
 		histMan->H1D("numberOfJets")->Fill(ttbarCandidate.GoodJets().size());
 	}
@@ -184,7 +184,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 
 		}
 
-		histMan->setCurrentCollection("topReconstruction/backgroundShape");
+		histMan->setCurrentHistogramFolder("topReconstruction/backgroundShape");
 		if (ttbarCandidate.MET()->et() < 20) {
 			histMan->H1D_BJetBinned("mttbar_QCDEnriched")->Fill(mttbar, weight);
 			histMan->H1D_BJetBinned("ttbar_pt_QCDEnriched")->Fill(resonance->pt());
@@ -201,7 +201,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 	}
 
 	//for 3 jets only
-	histMan->setCurrentCollection("topReconstruction");
+	histMan->setCurrentHistogramFolder("topReconstruction");
 	if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets)
 			&& ttbarCandidate.GoodElectronCleanedJets().size() == 3) {
 		try {
@@ -227,10 +227,10 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 }
 
 void TopReconstructionAnalyser::createHistograms() {
-	histMan->setCurrentCollection("topReconstruction");
+	histMan->setCurrentHistogramFolder("topReconstruction");
 	histMan->addH1D("electron_et", "electron_et", 500, 0, 500);
 
-	histMan->setCurrentCollection("topReconstruction/backgroundShape");
+	histMan->setCurrentHistogramFolder("topReconstruction/backgroundShape");
 	histMan->addH1D_BJetBinned("mttbar_conversions", "mttbar", 5000, 0, 5000);
 	histMan->addH1D_BJetBinned("mttbar_antiIsolated", "mttbar", 5000, 0, 5000);
 	histMan->addH1D_BJetBinned("mttbar_QCDEnriched", "mttbar", 5000, 0, 5000);
@@ -259,7 +259,7 @@ void TopReconstructionAnalyser::createHistograms() {
 	histMan->addH1D_BJetBinned("mttbar_controlRegion_withAsymJetsCut", "mttbar", 5000, 0, 5000);
 	histMan->addH1D_BJetBinned("ttbar_pt_QCDEnriched", "ttbar_pt", 1000, 0, 1000);
 
-	histMan->setCurrentCollection("topReconstruction");
+	histMan->setCurrentHistogramFolder("topReconstruction");
 	histMan->addH1D_BJetBinned("mttbar", "mttbar", 5000, 0, 5000);
 	histMan->addH1D_BJetBinned("mttbar_withMETCut", "mttbar_withMETCut", 5000, 0, 5000);
 	histMan->addH1D_BJetBinned("mttbar_withMETAndAsymJets", "mttbar_withMETAndAsymJets", 5000, 0, 5000);

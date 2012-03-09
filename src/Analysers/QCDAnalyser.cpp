@@ -22,7 +22,7 @@ QCDAnalyser::~QCDAnalyser() {
 void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 	double weight = Event.weight();
 	TopPairEventCandidate ttbarCandidate(Event);
-	histMan->setCurrentCollection("QCDStudy");
+	histMan->setCurrentHistogramFolder("QCDStudy");
 	if (ttbarCandidate.passesEPlusJetsRelIsoSelection()) {
 		const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron(ttbarCandidate.Electrons());
 		histMan->H1D_JetBinned("QCDest_CombRelIso")->Fill(electron->relativeIsolation(), weight);
@@ -177,7 +177,7 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 		histMan->H1D("QCD_1stJetMass")->Fill(ttbarCandidate.GoodElectronCleanedJets().front()->mass(), weight);
 	}
 
-	histMan->setCurrentCollection("topReconstruction/backgroundShape");
+	histMan->setCurrentHistogramFolder("topReconstruction/backgroundShape");
 	if (ttbarCandidate.passesEPlusJetsRelIsoSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
 		const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron(ttbarCandidate.Electrons());
 		if (electron->relativeIsolation() > Globals::maxElectronRelativeIsolation && !isnan(
@@ -251,7 +251,7 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 		}
 	}
 
-	histMan->setCurrentCollection("QCDStudy");
+	histMan->setCurrentHistogramFolder("QCDStudy");
 	if (ttbarCandidate.Electrons().size() > 0 && ttbarCandidate.GoodPFIsolatedElectrons().size() < 2
 			&& Globals::electronAlgorithm == ElectronAlgorithm::ParticleFlow) {
 		const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
@@ -259,7 +259,7 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 		histMan->H1D_JetBinned("MostPFIsolatedElectron_dEtaIn")->Fill(electron->dEtaIn(), weight);
 	}
 
-	histMan->setCurrentCollection("topReconstruction/backgroundShape");
+	histMan->setCurrentHistogramFolder("topReconstruction/backgroundShape");
 	if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
 		ElectronPointer electron = ttbarCandidate.GoodElectrons().front();
 		try {
@@ -329,7 +329,7 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 	}
 
 	//moved from doNotePlots, do be revised
-	histMan->setCurrentCollection("QCDStudy");
+	histMan->setCurrentHistogramFolder("QCDStudy");
 	if (ttbarCandidate.GoodElectrons().size() >= 1 && ttbarCandidate.Jets().size() >= 2) {
 		const ElectronCollection electrons = ttbarCandidate.GoodElectrons();
 		ElectronCollection nonConversionElectrons;
@@ -415,7 +415,7 @@ bool QCDAnalyser::passesSelectionWithoutIsolationOrConversionVeto(const TopPairE
 
 
 void QCDAnalyser::createHistograms() {
-	histMan->setCurrentCollection("QCDStudy");
+	histMan->setCurrentHistogramFolder("QCDStudy");
 	histMan->addH1D_JetBinned("MostPFIsolatedElectron_dPhiIn", "MostPFIsolatedElectron_dPhiIn", 50, 0, 0.1);
 	histMan->addH1D_JetBinned("MostPFIsolatedElectron_dEtaIn", "MostPFIsolatedElectron_dEtaIn", 50, 0, 0.02);
 	histMan->addH2D("ptRel_vs_DRmin", "ptRel_vs_DRmin", 100, 0, 1, 300, 0, 300);

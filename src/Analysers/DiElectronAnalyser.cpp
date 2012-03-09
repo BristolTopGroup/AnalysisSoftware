@@ -10,7 +10,7 @@
 namespace BAT {
 
 void DiElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
-	histMan->setCurrentCollection("DiElectronAnalysis");
+	histMan->setCurrentHistogramFolder("DiElectronAnalysis");
 	ElectronCollection electrons = ttbarEvent.GoodElectrons();
 	double weight = ttbarEvent.weight();
 	if (electrons.size() == 2) {
@@ -29,7 +29,7 @@ void DiElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 void DiElectronAnalyser::createHistograms() {
 	//create folder/collection name for the histograms
-	histMan->setCurrentCollection("DiElectronAnalysis");
+	histMan->setCurrentHistogramFolder("DiElectronAnalysis");
 	// titles are in the format: histogram title; x-axis title; y-axis title
 	histMan->addH1D_JetBinned("diElectronMass", "di-electron mass; m(ee) [GeV] events;", 7000, 0, 7000);
 	histMan->addH1D_JetBinned("diElectronMass_iso", "di-is0-electron mass; m(ee) [GeV]; events", 7000, 0, 7000);
