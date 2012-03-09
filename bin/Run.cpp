@@ -44,8 +44,6 @@ int main(int argc, char **argv) {
 
 	myAnalysis->setMaximalNumberOfEvents(Globals::maxEvents);
 
-	//@DEPRECATED
-//	myAnalysis->useHitFit = Globals::useHitFit;
 
 	//@DEPRECATED
 	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
@@ -79,10 +77,12 @@ void setUpOnce() {
 	//prevent automatic ownership of ROOT objects
 	TH1F::AddDirectory(false);
 	//ignore ROOT errors (temporaly due to different nTuple content)
-	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
+//	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
 }
 
 void setConfiguration(ConfigFile config) {
+	Globals::NTupleVersion = 6;
+	cout << "Using set-up for nTuple version " << Globals::NTupleVersion << endl;
 	cout << "Loading configuration..." << endl;
 	cout << "Using config-file '" << config.configPath() << endl;
 	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
@@ -101,6 +101,7 @@ void setConfiguration(ConfigFile config) {
 	
 	Globals::produceFitterASCIIoutput = config.fitterOutputFlag();
 
+	//@Deprecated: move to selections
 	//jets
 	Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
 	Globals::minJetPt = 30.;
