@@ -143,9 +143,9 @@ public:
 
 
 
-    void addCollection(std::string collection);
+    void addHistogramFolder(std::string folder);
 
-    void setCurrentCollection(std::string collection);
+    void setCurrentHistogramFolder(std::string folder);
 
     TH1Ptr operator[](std::string);
     TH1Ptr H1D(std::string);
@@ -165,17 +165,17 @@ public:
     void enableDebugMode(bool enable);
 private:
 
-    void add1DCollection(std::string collection);
-	void add1DJetCollection(std::string collection);
-	void add1DBJetCollection(std::string collection);
+    void add1DHistogramFolder(std::string folder);
+	void add1DJetBinnedHistogramFolder(std::string folder);
+	void add1DBJetBinnedHistogramFolder(std::string folder);
 
-	void add2DCollection(std::string collection);
-	void add2DJetCollection(std::string collection);
-	void add2DBJetCollection(std::string collection);
+	void add2DHistogramFolder(std::string folder);
+	void add2DJetBinnedHistogramFolder(std::string folder);
+	void add2DBJetBinnedHistogramFolder(std::string folder);
 
-	void add3DCollection(std::string collection);
-	void add3DJetCollection(std::string collection);
-	void add3DBJetCollection(std::string collection);
+	void add3DHistogramFolder(std::string folder);
+	void add3DJetBinnedHistogramFolder(std::string folder);
+	void add3DBJetBinnedHistogramFolder(std::string folder);
 
     boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
     boost::array<boost::shared_ptr<TFile>, DataType::NUMBER_OF_DATA_TYPES> histFiles;
@@ -184,7 +184,7 @@ private:
     unsigned int currentJetbin;
     unsigned int currentBJetbin;
 //    float currentIntegratedLumi;
-    std::string currentCollection;
+    std::string currentHistogramFolder;
 //    std::string current1DCollection, current1DJetCollection, current1DBJetCollection;
 //    std::string current2DCollection, current2DJetCollection, current2DBJetCollection;
 
