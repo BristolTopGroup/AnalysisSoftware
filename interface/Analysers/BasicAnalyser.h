@@ -15,8 +15,6 @@ namespace BAT{
 class BasicAnalyser{
 protected:
     boost::shared_ptr<HistogramManager> histMan;
-    //TODO:
-//    double weight;
 
 public:
     BasicAnalyser(HistogramManagerPtr histMan);

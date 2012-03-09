@@ -131,29 +131,6 @@ const vector<string> ConfigFile::getVector(const string attribute) {
 	return ret;
 }
 //
-//void ConfigFile::LoadJetL7Resolutions(std::string bJetResoFile, std::string lightJetResoFile){
-//    unsigned int nEtaBins_ = 11;
-//    Float_t towerBinning[] = {0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5};
-//    TFile *bFile = new TFile (bJetResoFile.c_str(), "READ");
-//    TFile *lFile = new TFile (lightJetResoFile.c_str(), "READ");
-//
-//    bFile->cd();
-//    lFile->cd();
-//
-//    for(UInt_t iEta = 0; iEta < nEtaBins_; iEta++) {
-//        TString loweretastrg;
-//        TString upperetastrg;
-//        Char_t etachar[10];
-//        sprintf(etachar,"%1.3f",towerBinning[iEta]);
-//        loweretastrg = etachar;
-//        sprintf(etachar,"%1.3f",towerBinning[iEta+1]);
-//        upperetastrg = etachar;
-//        Globals::bL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) bFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
-//        Globals::lightL7Corrections[iEta] = boost::shared_ptr<TF1>((TF1*) lFile->Get("mean_relative_et_"+loweretastrg+"_"+upperetastrg));
-//    }
-//    bFile->Close();
-//    lFile->Close();
-//}
 
 boost::array<boost::shared_ptr<TF1>, 12> ConfigFile::getL7Correction(std::string correctionFile) {
 	//TODO: add check if file exists (boost::filesystem)
@@ -332,9 +309,6 @@ void ConfigFile::loadIntoMemory() {
 	Globals::useHitFit = useHitFit();
 	Globals::produceFitterASCIIoutput = fitterOutputFlag();
 
-	//Loading l7 JEC
-//	LoadJetL7Resolutions(bJetResoFile(), lightJetResoFile());
-
 	Globals::estimatedPileup = getPileUpHistogram(PUFile());
 
 	//Loading l7 JEC
@@ -344,6 +318,7 @@ void ConfigFile::loadIntoMemory() {
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
 	using namespace std;
+	//TODO:add file check
 	boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
 	boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
 	file->Close();
