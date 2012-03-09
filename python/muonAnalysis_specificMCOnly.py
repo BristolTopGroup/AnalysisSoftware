@@ -17,7 +17,7 @@ mc_path = '/storage/TopQuarkGroup/mc/'
 
 mcFolders = [
                      #insert QCD MC here
-                     'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v4d_Summer11-PU_S3_START42_V11-v2'
+                     'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v6_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
              ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
@@ -28,4 +28,4 @@ inputFiles.extend(mcFolders)
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 4692.363
+lumi = 5.028#pb-1

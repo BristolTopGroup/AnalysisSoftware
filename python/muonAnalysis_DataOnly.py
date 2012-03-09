@@ -13,12 +13,8 @@ inputFiles = []
 data_path = '/storage/TopQuarkGroup/data/MuHad/'
 filetype = '*.root'
 
-dataFiles = ['nTuple_v4c_Run2011A-05Aug2011-v1_GoldenJSON_muonSkim',
-              'nTuple_v4c_Run2011A-May10ReReco-v1_GoldenJSON_muonSkim',
-              'nTuple_v4d_Run2011A-PromptReco-v4_GoldenJSON_muonSkim',
-              'nTuple_v4d_Run2011A-PromptReco-v6_GoldenJSON_muonSkim',
-              'nTuple_v4d_Run2011B-PromptReco-v1_GoldenJSON_muonSkim',
-              'nTuple_v4d_Run2011B-PromptReco-v1_GoldenJSON_muonSkim_21.10.11-04.11.11']
+dataFiles = ['nTuple_v6_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
+              'nTuple_v6_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets']
 dataFiles = [data_path + path + '/' + filetype for path in dataFiles]
 
 
@@ -30,4 +26,4 @@ inputFiles.extend(dataFiles)
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 4692.363
+lumi = 5.028#pb-1

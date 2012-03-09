@@ -9,13 +9,13 @@ maxEvents = 5000
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-#              '/scratch/TopQuarkGroup/data/ElectronHad/nTuple_v4a_Run2011A-05Aug2011-v1_GoldenJSON_electronSkim/919e07a072adba25d339f168e288c1b2/*.root',
-              '/storage/TopQuarkGroup/data/MuHad/nTuple_v4c_Run2011A-05Aug2011-v1_GoldenJSON_muonSkim/*.root',
-#              '/storage/TopQuarkGroup/mc/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v4a_Summer11-PU_S4_START42_V11-v2_LeptonSkim/320e12f5112fc77647c2bcc27037229f/*.root'
+              '/storage/TopQuarkGroup/data/ElectronHad/nTuple_v6_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
+#              '/storage/TopQuarkGroup/data/MuHad/nTuple_v6_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
+#              '/storage/TopQuarkGroup/mc/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5000
+lumi = 16000#pb-1

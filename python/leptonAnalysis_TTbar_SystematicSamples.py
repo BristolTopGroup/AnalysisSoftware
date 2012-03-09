@@ -31,4 +31,4 @@ inputFiles.extend(mcFolders)
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 4692.363
+lumi = 5.028#pb-1
