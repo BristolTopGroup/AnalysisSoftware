@@ -10,26 +10,28 @@
 namespace BAT {
 const double initialBigValue = 123456789;
 
-Lepton::Lepton():
-		Particle(),
-		ecal_Isolation(initialBigValue),
-		hcal_Isolation(initialBigValue),
-		tracker_Isolation(initialBigValue),
-		PFGamma_Isolation(initialBigValue),
-		PFChargedHadron_Isolation(initialBigValue),
-		PFNeutralHadron_Isolation(initialBigValue),
-		zDistanceToPrimaryVertex(initialBigValue) {
+Lepton::Lepton() : //
+		Particle(), //
+		ecal_Isolation(initialBigValue), //
+		hcal_Isolation(initialBigValue), //
+		tracker_Isolation(initialBigValue), //
+		PFGamma_Isolation(initialBigValue), //
+		PFChargedHadron_Isolation(initialBigValue), //
+		PFNeutralHadron_Isolation(initialBigValue), //
+		zDistanceToPrimaryVertex(initialBigValue), //
+		directionalIsolation_(initialBigValue) {
 }
 
-Lepton::Lepton(double energy, double px, double py, double pz):
-		Particle(energy, px, py, pz),
-		ecal_Isolation(initialBigValue),
-		hcal_Isolation(initialBigValue),
-		tracker_Isolation(initialBigValue),
-		PFGamma_Isolation(initialBigValue),
-		PFChargedHadron_Isolation(initialBigValue),
-		PFNeutralHadron_Isolation(initialBigValue),
-		zDistanceToPrimaryVertex(initialBigValue) {
+Lepton::Lepton(double energy, double px, double py, double pz) : //
+		Particle(energy, px, py, pz), //
+		ecal_Isolation(initialBigValue), //
+		hcal_Isolation(initialBigValue), //
+		tracker_Isolation(initialBigValue), //
+		PFGamma_Isolation(initialBigValue), //
+		PFChargedHadron_Isolation(initialBigValue), //
+		PFNeutralHadron_Isolation(initialBigValue), //
+		zDistanceToPrimaryVertex(initialBigValue), //
+		directionalIsolation_(initialBigValue) {
 
 }
 
@@ -91,6 +93,14 @@ double Lepton::pfIsolation() const {
 
 void Lepton::setZDistanceToPrimaryVertex(double dist) {
 	zDistanceToPrimaryVertex = dist;
+}
+
+void Lepton::setDirectionalIsolation(double iso) {
+	directionalIsolation_ = iso;
+}
+
+double Lepton::directionalIsolation() const {
+	return directionalIsolation_;
 }
 
 Lepton::~Lepton() {

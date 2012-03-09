@@ -87,6 +87,7 @@ public:
     bool isHEEPIsolated() const;
     bool isTaggedAsConversion(double maxDist = 0.02, double maxDCotTheta = 0.02) const;
     bool isFromConversion() const;
+    bool passesConversionVeto() const;
     bool isLoose() const;
     bool isQCDElectron(short) const;
 

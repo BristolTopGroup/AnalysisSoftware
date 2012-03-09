@@ -20,10 +20,10 @@ Electron::Electron() :
     robustTightId(false),
     superCluser_Eta(initialBigValue),
     innerLayerMissingHits_(initialBigValue),
-    sigma_IEtaIEta(0),
-    dPhi_In(0),
-    dEta_In(0),
-    hadOverEm(0),
+    sigma_IEtaIEta(initialBigValue),
+    dPhi_In(initialBigValue),
+    dEta_In(initialBigValue),
+    hadOverEm(initialBigValue),
     CiCElectronIDCompressed(0),
     gsfTrack(),
     closesTrackID(-1),
@@ -40,9 +40,9 @@ Electron::Electron(double energy, double px, double py, double pz) :
     superCluser_Eta(initialBigValue),
     innerLayerMissingHits_(initialBigValue),
     sigma_IEtaIEta(0),
-    dPhi_In(0),
-    dEta_In(0),
-    hadOverEm(0),
+    dPhi_In(initialBigValue),
+    dEta_In(initialBigValue),
+    hadOverEm(initialBigValue),
     CiCElectronIDCompressed(0),
     gsfTrack(),
     closesTrackID(-1),
@@ -211,6 +211,12 @@ bool Electron::isInEndCapRegion() const {
 
 bool Electron::isFromConversion() const {
     return innerLayerMissingHits_ > 0;
+}
+
+bool Electron::passesConversionVeto() const {
+	bool noInnerLayerMissingHits = innerLayerMissingHits_ == 0;
+	bool no2ndTrackCloseBy = fabs(distToNextTrack) > 0.02 && fabs(dCotThetaToNextTrack) > 0.02;
+	return  noInnerLayerMissingHits && no2ndTrackCloseBy;
 }
 
 bool Electron::isTaggedAsConversion(double maxDist, double maxDCotTheta) const {

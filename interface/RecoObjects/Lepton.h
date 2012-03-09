@@ -29,6 +29,7 @@ public:
 	virtual double ecalIsolation() const;
 	virtual double hcalIsolation() const;
 	virtual double trackerIsolation() const;
+	virtual double directionalIsolation() const;
 
 	virtual void setPFGammaIsolation(double pfGammaIso);
 	virtual void setPFChargedHadronIsolation(double chargedHadronIso);
@@ -41,11 +42,12 @@ public:
 	virtual double pfIsolation() const;
 
 	virtual void setZDistanceToPrimaryVertex(double dist);
+	virtual void setDirectionalIsolation(double iso);
 
 protected:
 	double ecal_Isolation, hcal_Isolation, tracker_Isolation;
 	double PFGamma_Isolation, PFChargedHadron_Isolation, PFNeutralHadron_Isolation;
-	double zDistanceToPrimaryVertex;
+	double zDistanceToPrimaryVertex, directionalIsolation_;
 
 };
 
