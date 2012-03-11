@@ -6,7 +6,7 @@
  */
 
 #include "../../interface/RecoObjects/Lepton.h"
-
+#include <iostream>
 namespace BAT {
 const double initialBigValue = 123456789;
 
@@ -77,7 +77,7 @@ void Lepton::setEcalIsolation(double isolation, double coneSize) {
 	else if (coneSize == 0.5)
 		ecal_Isolation_DR05_ = isolation;
 	else {
-		std::cout << "Lepton::setEcalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::setEcalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 
@@ -89,7 +89,7 @@ void Lepton::setHcalIsolation(double isolation, double coneSize) {
 	else if (coneSize == 0.5)
 		hcal_Isolation_DR05_ = isolation;
 	else {
-		std::cout << "Lepton::setHcalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::setHcalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 
@@ -101,7 +101,7 @@ void Lepton::setTrackerIsolation(double isolation, double coneSize) {
 	else if (coneSize == 0.5)
 		tracker_Isolation_DR05_ = isolation;
 	else {
-		std::cout << "Lepton::setTrackerIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::setTrackerIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 
@@ -114,7 +114,7 @@ double Lepton::trackerIsolation(double coneSize) const {
 	else if (coneSize == 0.5)
 		isolation = tracker_Isolation_DR05_;
 	else {
-		std::cout << "Lepton::trackerIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::trackerIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -128,7 +128,7 @@ double Lepton::hcalIsolation(double coneSize) const {
 	else if (coneSize == 0.5)
 		isolation = hcal_Isolation_DR05_;
 	else {
-		std::cout << "Lepton::hcalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::hcalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -142,7 +142,7 @@ double Lepton::ecalIsolation(double coneSize) const {
 	else if (coneSize == 0.5)
 		isolation = ecal_Isolation_DR05_;
 	else {
-		std::cout << "Lepton::ecalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::ecalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -155,7 +155,7 @@ void Lepton::setPFGammaIsolation(double pfGammaIso, double coneSize) {
 	else if (coneSize == 0.5)
 		PFGamma_Isolation_DR05_ = pfGammaIso;
 	else {
-		std::cout << "Lepton::setPFGammaIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::setPFGammaIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 
@@ -167,7 +167,7 @@ void Lepton::setPFChargedHadronIsolation(double chargedHadronIso, double coneSiz
 	else if (coneSize == 0.5)
 		PFChargedHadron_Isolation_DR05_ = chargedHadronIso;
 	else {
-		std::cout << "Lepton::setPFChargedHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::setPFChargedHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 
@@ -179,7 +179,7 @@ void Lepton::setPFNeutralHadronIsolation(double neutralHadronIso, double coneSiz
 	else if (coneSize == 0.5)
 		PFNeutralHadron_Isolation_DR05_ = neutralHadronIso;
 	else {
-		std::cout << "Lepton::setPFNeutralHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::setPFNeutralHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 
@@ -192,7 +192,7 @@ double Lepton::PFGammaIsolation(double coneSize) const {
 	else if (coneSize == 0.5)
 		isolation = PFGamma_Isolation_DR05_;
 	else {
-		std::cout << "Lepton::PFGammaIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::PFGammaIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -206,7 +206,7 @@ double Lepton::PFChargedHadronIsolation(double coneSize) const {
 	else if (coneSize == 0.5)
 		isolation = PFChargedHadron_Isolation_DR05_;
 	else {
-		std::cout << "Lepton::PFChargedHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::PFChargedHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -220,7 +220,7 @@ double Lepton::PFNeutralHadronIsolation(double coneSize) const {
 	else if (coneSize == 0.5)
 		isolation = PFNeutralHadron_Isolation_DR05_;
 	else {
-		std::cout << "Lepton::PFNeutralHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::PFNeutralHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -243,7 +243,7 @@ void Lepton::setDirectionalIsolation(double iso, double coneSize) {
 	else if (coneSize == 0.3)
 		directionalIsolation_DR03_ = iso;
 	else {
-		std::cout << "Lepton::setDirectionalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::setDirectionalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 
@@ -253,7 +253,7 @@ void Lepton::setDirectionalIsolationWithGaussianFallOff(double iso, double coneS
 	else if (coneSize == 0.3)
 		directionalIsolation_GaussianFallOff_DR03_ = iso;
 	else {
-		std::cout << "Lepton::setDirectionalIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize
+		std::cerr << "Lepton::setDirectionalIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize
 				<< std::endl;
 	}
 }
@@ -264,7 +264,7 @@ void Lepton::setPFIsolationWithGaussianFallOff(double iso, double coneSize) {
 	else if (coneSize == 0.3)
 		pfIsolation_GaussianFallOff_DR03_ = iso;
 	else {
-		std::cout << "Lepton::setPFRelativeIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize
+		std::cerr << "Lepton::setPFRelativeIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize
 				<< std::endl;
 	}
 }
@@ -276,7 +276,7 @@ double Lepton::directionalIsolation(double coneSize) const {
 	else if (coneSize == 0.3)
 		isolation = directionalIsolation_DR03_;
 	else {
-		std::cout << "Lepton::directionalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::directionalIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -288,7 +288,7 @@ double Lepton::directionalIsolationWithGaussianFallOff(double coneSize) const {
 	else if (coneSize == 0.3)
 		isolation = directionalIsolation_GaussianFallOff_DR03_;
 	else {
-		std::cout << "Lepton::directionalIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::directionalIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 	return isolation;
 }
@@ -300,7 +300,7 @@ double Lepton::pfIsolationWithGaussianFallOff(double coneSize) const {
 		else if (coneSize == 0.3)
 			isolation = pfIsolation_GaussianFallOff_DR03_;
 		else {
-			std::cout << "Lepton::pfIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize << std::endl;
+			std::cerr << "Lepton::pfIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize << std::endl;
 		}
 		return isolation;
 }
