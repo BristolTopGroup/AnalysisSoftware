@@ -118,7 +118,7 @@ public:
     const TrackPointer GSFTrack() const;
     int closestCTFTrackID() const;
     double shFracInnerLayer() const;
-    double ZDistanceToPrimaryVertex() const;
+//    double ZDistanceToPrimaryVertex() const;
 
     void setRobustLooseID(bool id);
     void setRobustTightID(bool id);
@@ -149,17 +149,17 @@ public:
 //    double vz() const;
 
 private:
-    ElectronAlgorithm::value usedAlgorithm;
+    ElectronAlgorithm::value usedAlgorithm_;
     bool robustLooseId, robustTightId;
     double superCluser_Eta;
     double innerLayerMissingHits_;
     //used for electron ID
     double sigma_IEtaIEta, dPhi_In, dEta_In, hadOverEm;
-    int CiCElectronIDCompressed;
+    int CiCElectronIDCompressed_;
     TrackPointer gsfTrack;
     int closesTrackID;
     double sharedFractionInnerHits;
-    double dCotThetaToNextTrack, distToNextTrack;
+    double dCotThetaToNextTrack_, distToNextTrack_;
 
     bool getVBTF_WP70_ElectronID_Barrel() const;
     bool getVBTF_WP70_ElectronID_Endcap() const;

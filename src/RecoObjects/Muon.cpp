@@ -84,7 +84,7 @@ bool Muon::isGood(short leptonID) const {
 	bool passesNormChi2 = normalisedChi2 < 10;
 
 	bool passesD0 = d0() < 0.02;
-	bool passesDistanceToVertex = fabs(zDistanceToPrimaryVertex) < 1;
+	bool passesDistanceToVertex = fabs(zDistanceToPrimaryVertex_) < 1;
 
 	bool passesNTrackerHits = numberOfValidHits > 10;
 	bool passesNMuonHit = numberOfValidMuonHits > 0;

@@ -12,7 +12,7 @@
 namespace BAT {
 
 QCDAnalyser::QCDAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-	histMan(histMan) {
+		histMan(histMan) {
 
 }
 
@@ -44,7 +44,8 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 			histMan->H1D_JetBinned("QCDest_CombRelIso_2btag")->Fill(electron->relativeIsolation(), weight);
 	}
 
-	if (ttbarCandidate.passesEPlusJetsPFIsoSelection() && Globals::electronAlgorithm == ElectronAlgorithm::ParticleFlow) {
+	if (ttbarCandidate.passesEPlusJetsPFIsoSelection()
+			&& Globals::electronAlgorithm == ElectronAlgorithm::ParticleFlow) {
 		const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
 		histMan->H1D_JetBinned("QCDest_PFIsolation")->Fill(electron->pfIsolation(), weight);
 
@@ -74,16 +75,31 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 			if (ttbarCandidate.GoodElectronCleanedJets().size() >= 2) {
 				if (ttbarCandidate.GoodElectronCleanedJets().front()->pt() > 70
 						&& ttbarCandidate.GoodElectronCleanedJets().at(1)->pt() > 50) {
-					histMan->H1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts")->Fill(
-							electron->pfIsolation(), weight);
+					histMan->H1D_JetBinned("QCDest_PFIsolation_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
+							weight);
 
 					if (ttbarCandidate.GoodElectronCleanedJets().size() == 3)
 						histMan->H1D_BJetBinned("PFIsolation_3jets_WithMETCutAndAsymJetCuts")->Fill(
 								electron->pfIsolation(), weight);
 
-					if (ttbarCandidate.GoodElectronCleanedJets().size() >= 4)
-						histMan->H1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts")->Fill(electron->pfIsolation(),
-								weight);
+					if (ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
+						histMan->H1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts_DR03")->Fill(
+								electron->pfRelativeIsolation(0.3), weight);
+						histMan->H1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts_DR04")->Fill(
+								electron->pfRelativeIsolation(0.4), weight);
+						histMan->H1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts_DR05")->Fill(
+								electron->pfRelativeIsolation(0.5), weight);
+						histMan->H1D_BJetBinned("DirectionalIsolation_WithMETCutAndAsymJetCuts_DR02")->Fill(
+								electron->directionalIsolation(0.2) / electron->et(), weight);
+						histMan->H1D_BJetBinned("DirectionalIsolation_WithMETCutAndAsymJetCuts_DR03")->Fill(
+								electron->directionalIsolation(0.3) / electron->et(), weight);
+
+						histMan->H1D_BJetBinned("DirectionalIsolationWithGaussianFallOff_WithMETCutAndAsymJetCuts_DR02")->Fill(
+								electron->directionalIsolationWithGaussianFallOff(0.2) / electron->et(), weight);
+						histMan->H1D_BJetBinned("DirectionalIsolationWithGaussianFallOff_WithMETCutAndAsymJetCuts_DR03")->Fill(
+								electron->directionalIsolationWithGaussianFallOff(0.3) / electron->et(), weight);
+					}
+
 				}
 			}
 		}
@@ -95,20 +111,24 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 		histMan->H1D_JetBinned("QCDest_CombRelIso_controlRegion")->Fill(electron->relativeIsolation(), weight);
 
 		if (ttbarCandidate.GoodElectronCleanedBJets().size() >= 1)
-			histMan->H1D_JetBinned("QCDest_CombRelIso_controlRegion_1btag")->Fill(electron->relativeIsolation(), weight);
+			histMan->H1D_JetBinned("QCDest_CombRelIso_controlRegion_1btag")->Fill(electron->relativeIsolation(),
+					weight);
 
 		if (ttbarCandidate.GoodElectronCleanedBJets().size() >= 2)
-			histMan->H1D_JetBinned("QCDest_CombRelIso_controlRegion_2btag")->Fill(electron->relativeIsolation(), weight);
+			histMan->H1D_JetBinned("QCDest_CombRelIso_controlRegion_2btag")->Fill(electron->relativeIsolation(),
+					weight);
 
 		if (Globals::electronAlgorithm == ElectronAlgorithm::ParticleFlow) {
 			const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
 			histMan->H1D_JetBinned("QCDest_PFIsolation_controlRegion2")->Fill(electron->pfIsolation(), weight);
 
 			if (ttbarCandidate.GoodElectronCleanedBJets().size() >= 1)
-				histMan->H1D_JetBinned("QCDest_PFIsolation_controlRegion2_1btag")->Fill(electron->pfIsolation(), weight);
+				histMan->H1D_JetBinned("QCDest_PFIsolation_controlRegion2_1btag")->Fill(electron->pfIsolation(),
+						weight);
 
 			if (ttbarCandidate.GoodElectronCleanedBJets().size() >= 2)
-				histMan->H1D_JetBinned("QCDest_PFIsolation_controlRegion2_2btag")->Fill(electron->pfIsolation(), weight);
+				histMan->H1D_JetBinned("QCDest_PFIsolation_controlRegion2_2btag")->Fill(electron->pfIsolation(),
+						weight);
 
 			if (ttbarCandidate.MET()->pt() > 20) {
 				histMan->H1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCut")->Fill(electron->pfIsolation(),
@@ -135,8 +155,8 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 
 	}
 
-	if (ttbarCandidate.passesEPlusJEtsPFIsoControlSelection() && Globals::electronAlgorithm
-			== ElectronAlgorithm::ParticleFlow) {
+	if (ttbarCandidate.passesEPlusJEtsPFIsoControlSelection()
+			&& Globals::electronAlgorithm == ElectronAlgorithm::ParticleFlow) {
 		const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
 		histMan->H1D_JetBinned("QCDest_PFIsolation_controlRegion")->Fill(electron->pfIsolation(), weight);
 
@@ -148,12 +168,13 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 
 	}
 
-	if (ttbarCandidate.passesEPlusJEtsPFIsoControlSelection() && Globals::electronAlgorithm
-			== ElectronAlgorithm::ParticleFlow && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
+	if (ttbarCandidate.passesEPlusJEtsPFIsoControlSelection()
+			&& Globals::electronAlgorithm == ElectronAlgorithm::ParticleFlow
+			&& ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
 		const ElectronPointer electron = ttbarCandidate.MostPFIsolatedElectron(ttbarCandidate.Electrons());
 		histMan->H1D_BJetBinned("PFIsolation_controlRegion")->Fill(electron->pfIsolation(), weight);
 	}
-	
+
 	if (ttbarCandidate.passesEPlusJetsQCDselection() && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
 		const ElectronPointer electron = ttbarCandidate.GoodPFNonIsolatedElectrons().front();
 		histMan->H1D("QCD_electronEta")->Fill(electron->eta(), weight);
@@ -180,8 +201,8 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 	histMan->setCurrentHistogramFolder("topReconstruction/backgroundShape");
 	if (ttbarCandidate.passesEPlusJetsRelIsoSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
 		const ElectronPointer electron = ttbarCandidate.MostIsolatedElectron(ttbarCandidate.Electrons());
-		if (electron->relativeIsolation() > Globals::maxElectronRelativeIsolation && !isnan(
-				electron->relativeIsolation()) && !isinf(electron->relativeIsolation())) {
+		if (electron->relativeIsolation() > Globals::maxElectronRelativeIsolation
+				&& !isnan(electron->relativeIsolation()) && !isinf(electron->relativeIsolation())) {
 			try {
 				ttbarCandidate.reconstructTTbarToEPlusJets(electron);
 				const ParticlePointer resonance = ttbarCandidate.getResonance();
@@ -260,7 +281,8 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 	}
 
 	histMan->setCurrentHistogramFolder("topReconstruction/backgroundShape");
-	if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection() && ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
+	if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection()
+			&& ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
 		ElectronPointer electron = ttbarCandidate.GoodElectrons().front();
 		try {
 			ttbarCandidate.reconstructTTbarToEPlusJets(electron);
@@ -283,7 +305,8 @@ void QCDAnalyser::analyse(const TopPairEventCandidate& Event) {
 		}
 	}
 
-	if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection() && ttbarCandidate.GoodElectronCleanedJets().size() == 3) {
+	if (ttbarCandidate.passesEPlusJetsAntiIsolationSelection()
+			&& ttbarCandidate.GoodElectronCleanedJets().size() == 3) {
 		ElectronPointer electron = ttbarCandidate.GoodElectrons().front();
 		try {
 			ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(electron);
@@ -394,7 +417,6 @@ void QCDAnalyser::ABCDMethod(const TopPairEventCandidate& event) {
 
 }
 
-
 /**
  * Require event cleaning, HLT, at least one good vertex, at least 3 good jets, apply Z veto
  * and require to have at least one good electron but at most one good isolated electron
@@ -409,10 +431,8 @@ bool QCDAnalyser::passesSelectionWithoutIsolationOrConversionVeto(const TopPairE
 	//If more than 2 isolated electrons return 0;
 	result = result && Event.GoodPFIsolatedElectrons().size() < 2;
 
-
 	return result;
 }
-
 
 void QCDAnalyser::createHistograms() {
 	histMan->setCurrentHistogramFolder("QCDStudy");
@@ -456,7 +476,21 @@ void QCDAnalyser::createHistograms() {
 	histMan->addH1D_BJetBinned("PFIsolation", "PFIso", 500, 0, 5);
 
 	histMan->addH1D_BJetBinned("PFIsolation_controlRegion", "PFIso", 500, 0, 5);
-	histMan->addH1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
+//	histMan->addH1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
+	histMan->addH1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts_DR03", "PFIso (deltaR < 0.3);events;pf relIso",
+			500, 0, 5);
+	histMan->addH1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts_DR04", "PFIso (deltaR < 0.4);events;pf relIso",
+			500, 0, 5);
+	histMan->addH1D_BJetBinned("PFIsolation_WithMETCutAndAsymJetCuts_DR05", "PFIso (deltaR < 0.5);events;pf relIso",
+			500, 0, 5);
+	histMan->addH1D_BJetBinned("DirectionalIsolation_WithMETCutAndAsymJetCuts_DR02",
+			"PFIso (deltaR < 0.2);events;pf relIso", 500, 0, 5);
+	histMan->addH1D_BJetBinned("DirectionalIsolation_WithMETCutAndAsymJetCuts_DR03",
+			"PFIso (deltaR < 0.3);events;pf relIso", 500, 0, 5);
+	histMan->addH1D_BJetBinned("DirectionalIsolationWithGaussianFallOff_WithMETCutAndAsymJetCuts_DR02",
+			"DirectionalIso (deltaR < 0.2);events;pf relIso", 500, 0, 5);
+	histMan->addH1D_BJetBinned("DirectionalIsolationWithGaussianFallOff_WithMETCutAndAsymJetCuts_DR03",
+			"DirectionalIso (deltaR < 0.3);events;pf relIso", 500, 0, 5);
 	histMan->addH1D_BJetBinned("PFIsolation_3jets_WithMETCutAndAsymJetCuts", "PFIso", 500, 0, 5);
 
 	histMan->addH1D_BJetBinned("RelativeIsolation_PUCorrected", "PFIso", 500, 0, 5);
@@ -472,14 +506,14 @@ void QCDAnalyser::createHistograms() {
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_2btag_WithMETCutAndAsymJetCuts", "PFIso (>=2 btag)", 500, 0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_2btag", "PFIso control region", 500, 0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithMETCut", "PFIso control region", 500, 0, 5);
-	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithMETCutAndAsymJetCuts", "PFIso control region",
-			1000, 0, 10);
+	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithMETCutAndAsymJetCuts", "PFIso control region", 1000,
+			0, 10);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion_WithAsymJetCuts", "PFIso control region", 500, 0, 5);
 
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2", "PFIso control region", 500, 0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCut", "PFIso control region", 500, 0, 5);
-	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCutAndAsymJetCuts", "PFIso control region",
-			500, 0, 5);
+	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithMETCutAndAsymJetCuts", "PFIso control region", 500,
+			0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_WithAsymJetCuts", "PFIso control region", 500, 0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_1btag", "PFIso control region", 500, 0, 5);
 	histMan->addH1D_JetBinned("QCDest_PFIsolation_controlRegion2_2btag", "PFIso control region", 500, 0, 5);

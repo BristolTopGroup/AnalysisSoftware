@@ -385,7 +385,7 @@ MuonPointer TestObjectFactory::goodIsolatedMuon() {
 	goodIsolatedMuon->setPFNeutralHadronIsolation(1);
 	assert(fabs(goodIsolatedMuon->eta()) < 2.1);
 	assert(goodIsolatedMuon->isGood());
-	assert(goodIsolatedMuon->pfIsolation() < 0.1);
+	assert(goodIsolatedMuon->pfRelativeIsolation() < 0.1);
 
 	return goodIsolatedMuon;
 }

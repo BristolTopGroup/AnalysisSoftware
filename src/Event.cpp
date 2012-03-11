@@ -285,7 +285,7 @@ const MuonPointer Event::MostIsolatedMuon(const MuonCollection& muons, bool useP
 	for (unsigned int index = 0; index < muons.size(); ++index) {
 		float currentIsolation = 999999999;
 		if (usePFIso)
-			currentIsolation = muons.at(index)->pfIsolation();
+			currentIsolation = muons.at(index)->pfRelativeIsolation();
 		else
 			currentIsolation = muons.at(index)->relativeIsolation();
 
@@ -328,7 +328,7 @@ void Event::selectMuonsByQuality() {
 		MuonPointer muon = allMuons.at(index);
 
 		bool isGood(muon->isGood());
-		bool isPFIsolated = muon->isPFLepton() && muon->pfIsolation() < Globals::maxMuonPFIsolation;
+		bool isPFIsolated = muon->isPFLepton() && muon->pfRelativeIsolation() < Globals::maxMuonPFIsolation;
 		if (isGood)
 			goodMuons.push_back(muon);
 

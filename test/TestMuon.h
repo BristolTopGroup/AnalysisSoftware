@@ -18,18 +18,25 @@ private:
 	MuonPointer badEtaMuon;
 
 public:
-	TestMuon() ;
+	TestMuon();
 	void testGlobalMuon();
-	void testEcalIsolation();
-	void testHcalIsolation();
-	void testTrackerIsolation();
-	void testRelativeIsolation();
-	void testIsIsolated();
-	void testIsNotIsolated();
-	void testIsGoodMuon();
-	void testNonGlobalMuonIsGood();
-	void testBadMuonLowPtIsGood();
-	void testBadEtaMuonIsGood();
+
+//	void testEcalIsolation03();
+//	void testHcalIsolation03();
+//	void testTrackerIsolation03();
+//	void testEcalIsolation04();
+//	void testHcalIsolation04();
+//	void testTrackerIsolation04();
+//	void testEcalIsolation05();
+//	void testHcalIsolation05();
+//	void testTrackerIsolation05();
+//	void testRelativeIsolation();
+//	void testIsIsolated();
+//	void testIsNotIsolated();
+//	void testIsGoodMuon();
+//	void testNonGlobalMuonIsGood();
+//	void testBadMuonLowPtIsGood();
+//	void testBadEtaMuonIsGood();
 };
 
 extern cute::suite make_suite_TestMuon();

@@ -29,15 +29,15 @@ void TestElectron::testTrackerIsolation() {
 }
 
 void TestElectron::testBadEtElectron() {
-	ASSERT(badEtElectron->isGood(false) == false);
+	ASSERT(badEtElectron->isGood(0) == false);
 }
 
 void TestElectron::testBadEtaElectron() {
-	ASSERT(badEtaElectron->isGood(false) == false);
+	ASSERT(badEtaElectron->isGood(0) == false);
 }
 
 void TestElectron::testBadInCrackElectron() {
-	ASSERT(badInCrackElectron->isGood(false) == false);
+	ASSERT(badInCrackElectron->isGood(0) == false);
 }
 
 void TestElectron::testElectronFromConversion() {
@@ -49,7 +49,7 @@ void TestElectron::testElectronFromConversionWithPartnerTrack() {
 }
 
 void TestElectron::testBadD0Electron() {
-	ASSERT(badD0Electron->isGood(false) == false);
+	ASSERT(badD0Electron->isGood(0) == false);
 }
 
 void TestElectron::testLooseElectron() {

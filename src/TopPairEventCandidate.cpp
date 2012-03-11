@@ -186,7 +186,7 @@ bool TopPairEventCandidate::ePlusJetsLooseMuonVeto() const {
 		bool passLooseIso = false;
 
 		if (Event::usePFIsolation)
-			passLooseIso = looseMuon->pfIsolation() < 0.2;
+			passLooseIso = looseMuon->pfRelativeIsolation() < 0.2;
 		else
 			passLooseIso = looseMuon->relativeIsolation() < 0.2;
 
@@ -213,7 +213,7 @@ bool TopPairEventCandidate::muPlusJetsLooseMuonVeto() const {
 		bool passLooseIso = false;
 
 		if (Event::usePFIsolation)
-			passLooseIso = looseMuon->pfIsolation() < 0.2;
+			passLooseIso = looseMuon->pfRelativeIsolation() < 0.2;
 		else
 			passLooseIso = looseMuon->relativeIsolation() < 0.2;
 

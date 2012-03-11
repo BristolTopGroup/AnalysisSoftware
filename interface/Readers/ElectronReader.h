@@ -30,14 +30,29 @@ private:
 	VariableReader<MultiDoublePointer> d0_PV_Reader;
 	VariableReader<MultiIntPointer> numberOfInnerLayerMissingHitsReader;
 
-	VariableReader<MultiDoublePointer> ecalIsolationReader;
-	VariableReader<MultiDoublePointer> hcalIsolationReader;
-	VariableReader<MultiDoublePointer> trackerIsolationReader;
+	VariableReader<MultiDoublePointer> ecalIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> hcalIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> trackerIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> ecalIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> hcalIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> trackerIsolationReader_DR04_;
 
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader;
-    VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader;
-    VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader;
-    VariableReader<MultiDoublePointer> DirectionalIsolationReader;
+	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR05_;
+	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR05_;
+	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR05_;
+
+	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR02_;
+	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> DirectionalIsolationReaderWithGaussianFallOff_DR02_;
+	VariableReader<MultiDoublePointer> DirectionalIsolationReaderWithGaussianFallOff_DR03_;
+	VariableReader<MultiDoublePointer> PFIsolationReaderWithGaussianFallOff_DR02_;
+	VariableReader<MultiDoublePointer> PFIsolationReaderWithGaussianFallOff_DR03_;
 
 	VariableReader<MultiDoublePointer> sigmaIEtaIEtaReader;
 	VariableReader<MultiDoublePointer> dPhiInReader;
