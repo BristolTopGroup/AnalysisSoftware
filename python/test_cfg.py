@@ -19,3 +19,6 @@ TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
 lumi = 16000#pb-1
+
+#file with information (cross-section, number of processed events) for event weight calculation 
+datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo.py"
