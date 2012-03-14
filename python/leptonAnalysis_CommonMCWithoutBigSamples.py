@@ -35,4 +35,7 @@ inputFiles.extend(mcFolders)
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5.028#pb-1
+lumi = 5028.#pb-1
+
+#file with information (cross-section, number of processed events) for event weight calculation 
+datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo.py"
