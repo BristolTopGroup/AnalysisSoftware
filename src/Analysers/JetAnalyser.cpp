@@ -65,22 +65,22 @@ void JetAnalyser::createHistograms() {
 	histMan->addH1D_BJetBinned("GoodJetMass_atLeastFourJets", "good jet mass (>= 4 jets; m(j) [GeV]; events", 500, 0,
 			500);
 
-	histMan->addH1D("goodJetsMultiplicity", "Good jets multiplicity", 4, 3.5, 7.5);
-	histMan->addH1D("jetsMultiplicity", "All jets multiplicity", 4, 3.5, 7.5);
-	histMan->addH1D("btaggedJetsMultiplicity", "b-tagged jets multiplicity", 4, -0.5, 3.5);
-	histMan->addH1D("jetPt", "Jet Pt", 100, 0, 200);
+	histMan->addH1D("goodJetsMultiplicity", "Good jets multiplicity", 21, -0.5, 19.5);
+	histMan->addH1D("jetsMultiplicity", "All jets multiplicity", 21, -0.5, 19.5);
+	histMan->addH1D("btaggedJetsMultiplicity", "b-tagged jets multiplicity", 10, -0.5, 9.5);
+	histMan->addH1D("jetPt", "Jet Pt", 2000, 0, 2000);
 	histMan->addH1D("jetEta", "Jet Eta", 100, -2.5, 2.5);
 	histMan->addH1D("jetPhi", "Jet Phi", 100, -2.5, 2.5);
-	histMan->addH1D("jetMass", "Jet Mass", 100, 0, 40);
+	histMan->addH1D("jetMass", "Jet Mass", 500, 0, 500);
 
-	histMan->addH1D("1stJetPt", "Leading Jet Pt", 100, 0, 200);
+	histMan->addH1D("1stJetPt", "Leading Jet Pt", 2000, 0, 2000);
 	histMan->addH1D("1stJetEta", "Leading Jet Eta", 100, -2.5, 2.5);
 	histMan->addH1D("1stJetPhi", "Leading Jet Phi", 100, -2.5, 2.5);
-	histMan->addH1D("1stJetMass", "Leading Jet Mass", 100, 0, 40);
+	histMan->addH1D("1stJetMass", "Leading Jet Mass", 500, 0, 500);
 }
 
 JetAnalyser::JetAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-	BasicAnalyser(histMan) {
+		BasicAnalyser(histMan) {
 
 }
 
