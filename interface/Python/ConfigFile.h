@@ -12,7 +12,7 @@
 #include <vector>
 #include <boost/program_options.hpp>
 #include <boost/program_options/options_description.hpp>
-#include "EventWeightProvider.h"
+#include "../EventWeightProvider.h"
 #include "TH1D.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
@@ -26,6 +26,7 @@ public:
 
 	void loadIntoMemory();
 	long maxEvents() const;
+	std::string datasetInfoFile() const;
 	std::string PUFile() const;
     std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
@@ -45,6 +46,7 @@ private:
 	boost::program_options::variables_map programOptions;
 	boost::python::object config;
 	long maxEvents_;
+	std::string datasetInfoFile_;
 	std::string pileUpFile_;
     std::string bJetResoFile_;
     std::string lightJetResoFile_;
@@ -53,12 +55,8 @@ private:
 	std::vector<std::string> inputFiles_;
 	std::string tqafPath_;
 	double lumi_;
-	PileUpReweightingMethod::value pileUpReweightingMethod_;
+//	PileUpReweightingMethod::value pileUpReweightingMethod_;
 
-	boost::python::object parse_config(const std::string configPath);
-	std::string parse_python_exception() const;
-	template<typename T> const T get(const std::string attribute) const;
-	const std::vector<std::string> getVector(const std::string attribute);
 	boost::program_options::variables_map getParameters(int argc, char **argv);
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);

@@ -26,7 +26,7 @@ TestHistogramManager::TestHistogramManager() :
 			boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>();
 
 	seenDataTypes[DataType::ElectronHad] = true;
-	seenDataTypes[DataType::ttbar] = true;
+	seenDataTypes[DataType::TTJets] = true;
 	Globals::luminosity = lumi;
 //        man.setCurrentLumi(lumi);
 	man.prepareForSeenDataTypes(seenDataTypes);
@@ -48,7 +48,7 @@ void TestHistogramManager::testPreparationData() {
 
 void TestHistogramManager::testPreparationTtbar() {
 	man.addH1D("myHist", "Testing", 10, 0., 1);
-	man.setCurrentDataType(DataType::ttbar);
+	man.setCurrentDataType(DataType::TTJets);
 	man.setCurrentHistogramFolder("");
 	ASSERT(man.H1D("myHist") != 0);
 }

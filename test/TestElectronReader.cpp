@@ -111,6 +111,39 @@ void TestElectronReader::testCiCElectronIDHyperTight4MC() {
 	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight4MC;
 	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
 }
+
+void TestElectronReader::testPFRelIso03() {
+	ASSERT_EQUAL_DELTA(0.0117867, firstElectron->pfRelativeIsolation(0.3), 0.0000001);
+}
+
+void TestElectronReader::testPFRelIso04() {
+	ASSERT_EQUAL_DELTA(0.0268713, firstElectron->pfRelativeIsolation(0.4), 0.0000001);
+}
+
+void TestElectronReader::testPFRelIso05() {
+	ASSERT_EQUAL_DELTA(0.0610566, firstElectron->pfRelativeIsolation(0.5), 0.0000001);
+}
+
+void TestElectronReader::testPFRelIso03FallOff() {
+	ASSERT_EQUAL_DELTA(41.6861, firstElectron->pfIsolationWithGaussianFallOff(0.3), 0.0001);
+}
+
+void TestElectronReader::testDirectionalRelIso02() {
+	ASSERT_EQUAL_DELTA(0.0, firstElectron->directionalIsolation(0.2), 0.0000001);
+}
+
+void TestElectronReader::testDirectionalRelIso03() {
+	ASSERT_EQUAL_DELTA(0.0, firstElectron->directionalIsolation(0.3), 0.0000001);
+}
+
+void TestElectronReader::testDirectionalRelIso02FallOff() {
+	ASSERT_EQUAL_DELTA(0.101282, firstElectron->directionalIsolationWithGaussianFallOff(0.2), 0.000001);
+}
+
+void TestElectronReader::testDirectionalRelIso03FallOff() {
+	ASSERT_EQUAL_DELTA(2.69377, firstElectron->directionalIsolationWithGaussianFallOff(0.3), 0.00001);
+}
+
 cute::suite make_suite_TestElectronReader() {
 	cute::suite s;
 
@@ -125,15 +158,6 @@ cute::suite make_suite_TestElectronReader() {
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testFirstElectronD0));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testShFracInnerHits));
 
-//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrack));
-//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPhi));
-//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackEta));
-//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackPt));
-//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testGSFTrackTheta));
-
-//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testClosestCTFTrackID));
-//    s.push_back(CUTE_SMEMFUN(TestElectronReader, testTrackd0));
-
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDVeryLooseMC));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDLooseMC));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDMediumMC));
@@ -143,6 +167,15 @@ cute::suite make_suite_TestElectronReader() {
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight2MC));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight3MC));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight4MC));
+
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testPFRelIso03));
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testPFRelIso04));
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testPFRelIso05));
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testPFRelIso03FallOff));
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testDirectionalRelIso02));
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testDirectionalRelIso03));
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testDirectionalRelIso02FallOff));
+	s.push_back(CUTE_SMEMFUN(TestElectronReader, testDirectionalRelIso03FallOff));
 
 	return s;
 }

@@ -13,7 +13,7 @@
 #include <boost/program_options.hpp>
 #include <boost/program_options/options_description.hpp>
 //#include <google/profiler.h>
-#include "../interface/ConfigFile.h"
+#include "../interface/Python/ConfigFile.h"
 #include "../interface/GlobalVariables.h"
 
 using namespace ROOT;
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 	Analysis::useCustomConversionTagger(false);
 	Analysis::usePFIsolation(true);
 
-	boost::scoped_ptr<Analysis> myAnalysis(new Analysis(config.PUFile()));
+	boost::scoped_ptr<Analysis> myAnalysis(new Analysis(config.datasetInfoFile()));
 
 	myAnalysis->setMaximalNumberOfEvents(Globals::maxEvents);
 

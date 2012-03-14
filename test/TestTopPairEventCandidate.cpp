@@ -70,7 +70,7 @@ void TestTopPairEventCandidate::setUpTTbarEvent() {
 	muons.push_back(badMuon);
 	ttbarEvent.setMuons(muons);
 	ttbarEvent.setMET(met);
-	ttbarEvent.setDataType(DataType::ttbar);
+	ttbarEvent.setDataType(DataType::TTJets);
 	ttbarEvent.setTracks(moreThan10TracksHighPurity);
 	ttbarEvent.setBeamScrapingVeto(false);
 	ttbarEvent.setHLTs(HLTs);

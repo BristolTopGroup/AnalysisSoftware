@@ -19,7 +19,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	if (!ttbarCandidate->passesFullTTbarEPlusJetSelection()) return;
 
 	//set MC matching flag
-	if (ttbarCandidate->getDataType() == DataType::ttbar)
+	if (ttbarCandidate->getDataType() == DataType::TTJets)
 		do_MC_matching = true;
 	else
 		do_MC_matching = false;
@@ -58,7 +58,7 @@ void HitFitAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
         } else outFile << "9999";
 
         outFile << "  ";
-        if ((ttbarCandidate->getDataType() == DataType::ttbar) or (ttbarCandidate->getDataType() == DataType::ttbar161) or
+        if ((ttbarCandidate->getDataType() == DataType::TTJets) or (ttbarCandidate->getDataType() == DataType::ttbar161) or
         		(ttbarCandidate->getDataType() == DataType::ttbar163) or (ttbarCandidate->getDataType() == DataType::ttbar166) or
         		(ttbarCandidate->getDataType() == DataType::ttbar169) or (ttbarCandidate->getDataType() == DataType::ttbar175) or
         		(ttbarCandidate->getDataType() == DataType::ttbar178) or (ttbarCandidate->getDataType() == DataType::ttbar181) or

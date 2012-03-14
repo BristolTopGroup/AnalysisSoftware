@@ -22,6 +22,7 @@ struct Globals {
 	//general
 	static unsigned long maxEvents;
 	static double luminosity;
+	static unsigned short energyInTeV;
 	static unsigned long printEveryXEvents;
 	static std::string selectedEventsOutputfile;
 	static std::string selectedEventsWithMetaDataOutputfile;

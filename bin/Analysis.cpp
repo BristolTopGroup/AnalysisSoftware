@@ -38,13 +38,13 @@ void Analysis::analyse() {
 		diElectronAnalyser->analyse(ttbarCandidate);
 		electronAnalyser->analyse(ttbarCandidate);
 		if (Globals::useHitFit) {
-			if (currentEvent.getDataType() == DataType::ttbar)
+			if (currentEvent.getDataType() == DataType::TTJets)
 				hitfitAnalyser->setMCTTbarHypothesis(mcAnalyser->GetMCTTbarHypothesis());
 			hitfitAnalyser->analyse(ttbarCandidate);
 		}
 		hltriggerAnalyser->analyse(ttbarCandidate);
 		jetAnalyser->analyse(ttbarCandidate);
-		if (currentEvent.getDataType() == DataType::ttbar)
+		if (currentEvent.getDataType() == DataType::TTJets)
 			mcAnalyser->analyse(ttbarCandidate);
 		metAnalyser->analyse(ttbarCandidate);
 		mttbarAnalyser->analyse(ttbarCandidate);
@@ -221,7 +221,7 @@ void Analysis::createHistograms() {
 
 }
 
-Analysis::Analysis(std::string fileForPileUpReweighting) : //
+Analysis::Analysis(std::string datasetInfoFile) : //
 		eventReader(new NTupleEventReader()), //
 		currentEvent(), //
 		ttbarCandidate(), //
@@ -235,7 +235,7 @@ Analysis::Analysis(std::string fileForPileUpReweighting) : //
 		interestingEvents(), //
 		brokenEvents(), //
 		eventCheck(), //
-		weights(new EventWeightProvider(Globals::luminosity/*current lumi*/, 7, fileForPileUpReweighting)), //
+		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
 		ePlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,

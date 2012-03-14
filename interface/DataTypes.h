@@ -15,7 +15,7 @@ namespace DataType {
 enum value {
 	ElectronHad,
 	MuHad,
-	ttbar,
+	TTJets,
 	Wjets,
 	Zjets,
 	QCD_BCtoE_Pt20to30,

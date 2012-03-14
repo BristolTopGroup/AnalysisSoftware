@@ -86,7 +86,7 @@ public:
 
 	void testTTbarType() {
 		Event currentEvent = TTbarReader->getNextEvent();
-		ASSERT_EQUAL(short(DataType::ttbar), short(currentEvent.getDataType()));
+		ASSERT_EQUAL(short(DataType::TTJets), short(currentEvent.getDataType()));
 	}
 
 	void testQCD_EMEnriched_80_to_170Type() {
@@ -261,7 +261,7 @@ public:
 		const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenTypes = TTbarReader->getSeenDatatypes();
 
 		for (unsigned short index = 0; index < DataType::NUMBER_OF_DATA_TYPES; ++index) {
-			if (index == DataType::ttbar)
+			if (index == DataType::TTJets)
 				ASSERT_EQUAL(true, seenTypes.at(index));
 			else
 				ASSERT_EQUAL(false, seenTypes.at(index));

@@ -1,0 +1,239 @@
+/*
+ * ConfigFile.cpp
+ *
+ *  Created on: 20 Oct 2011
+ *      Author: kreczko
+ */
+
+#include "../../interface/Python/ConfigFile.h"
+#include "../../interface/Python/PythonParser.h"
+#include "../../interface/GlobalVariables.h"
+
+#include "TF1.h"
+#include "TFile.h"
+
+#include <iostream>
+#include <iomanip>
+
+#include <boost/filesystem.hpp>
+#include <boost/scoped_ptr.hpp>
+
+using namespace std;
+
+namespace BAT {
+const string DEFAULT_CONFIG_PATH = "python/default_cfg.py";
+
+ConfigFile::ConfigFile(int argc, char **argv) :
+		programOptions(getParameters(argc, argv)), //
+		config(PythonParser::parse_python_file(configPath())), //
+		maxEvents_(PythonParser::getAttributeFromPyObject<long>(config, "maxEvents")), //
+		datasetInfoFile_(PythonParser::getAttributeFromPyObject<string>(config, "datasetInfoFile")), //
+		pileUpFile_(PythonParser::getAttributeFromPyObject<string>(config, "PUFile")), //
+		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
+		lightJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "lightJetResoFile")), //
+		useHitFit_(PythonParser::getAttributeFromPyObject<bool>(config, "useHitFit")), //
+		fitterOutputFlag_(PythonParser::getAttributeFromPyObject<bool>(config, "produceFitterASCIIoutput")), //
+		inputFiles_(PythonParser::getVectorFromPythonObject(config, "inputFiles")), //
+		tqafPath_(PythonParser::getAttributeFromPyObject<string>(config, "TQAFPath")), //
+		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")){
+
+}
+
+boost::program_options::variables_map ConfigFile::getParameters(int argc, char** argv) {
+	using namespace boost::program_options;
+	variables_map vm;
+	positional_options_description p;
+	p.add("config-file", -1);
+
+	// Declare the supported options.
+	options_description desc("Allowed options");
+	desc.add_options()("help,h", "produce help message");
+	desc.add_options()("maxEvents", value<unsigned long>(), "set maximal number of events to be processed");
+	desc.add_options()("config-file", value<std::string>(), "Configuration file for BAT");
+	desc.add_options()("datasetInfoFile", value<std::string>(), "Dataset information file for event weight calculation");
+	desc.add_options()("PUFile", value<std::string>(), "set input PU file for PU re-weighting");
+	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
+	desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
+	desc.add_options()("fitter", value<bool>(), "turn on the fitter (HitFit)");
+	desc.add_options()("fitterASCIIoutput", value<bool>(), "produce full kinematic fit output in ASCII format");
+	desc.add_options()("TQAFPath", value<std::string>(),
+			"path to TopQuarkAnalysis folder (the folder itself not included).");
+	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to.");
+
+	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
+	notify(vm);
+	if (vm.count("help")) {
+		cout << desc << "\n";
+		exit(0);
+		return 0;
+	}
+
+	return vm;
+}
+
+boost::array<boost::shared_ptr<TF1>, 12> ConfigFile::getL7Correction(std::string correctionFile) {
+	boost::array<boost::shared_ptr<TF1>, 12> correctionsArray;
+
+	boost::array<double, 12> towerBinning = { { 0., 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74,
+			2.5 } };
+	if (!boost::filesystem::exists(correctionFile))
+		throw "Could not find L7 correction path in " + correctionFile;
+	boost::scoped_ptr<TFile> inputFile(TFile::Open(correctionFile.c_str()));
+
+	for (unsigned int etaBin = 0; etaBin < towerBinning.size() - 1; ++etaBin) {
+		stringstream graphname;
+		graphname << "mean_relative_et_" << fixed << setprecision(3) << towerBinning[etaBin];
+		graphname << "_" << fixed << setprecision(3) << towerBinning[etaBin + 1];
+		boost::shared_ptr<TF1> corrections((TF1*) inputFile->Get(graphname.str().c_str()));
+		correctionsArray[etaBin] = corrections;
+	}
+
+	inputFile->Close();
+	return correctionsArray;
+}
+
+string ConfigFile::bJetResoFile() const {
+	if (programOptions.count("bJetResoFile"))
+		return programOptions["bJetResoFile"].as<std::string>();
+	else
+		return bJetResoFile_;
+}
+
+string ConfigFile::lightJetResoFile() const {
+	if (programOptions.count("lightJetResoFile"))
+		return programOptions["lightJetResoFile"].as<std::string>();
+	else
+		return lightJetResoFile_;
+}
+
+string ConfigFile::TQAFPath() const {
+	if (programOptions.count("TQAFPath"))
+		return programOptions["TQAFPath"].as<std::string>();
+	else
+		return tqafPath_;
+}
+
+string ConfigFile::configPath() const {
+	if (programOptions.count("config-file"))
+		return programOptions["config-file"].as<std::string>();
+	else
+		return DEFAULT_CONFIG_PATH;
+}
+
+string ConfigFile::PUFile() const {
+	if (programOptions.count("PUfile"))
+		return programOptions["PUfile"].as<std::string>();
+	else
+		return pileUpFile_;
+}
+
+string ConfigFile::datasetInfoFile() const {
+	if (programOptions.count("datasetInfoFile"))
+		return programOptions["datasetInfoFile"].as<std::string>();
+	else
+		return datasetInfoFile_;
+}
+
+long ConfigFile::maxEvents() const {
+	if (programOptions.count("maxEvents"))
+		return programOptions["maxEvents"].as<unsigned long>();
+	else
+		return maxEvents_;
+}
+
+bool ConfigFile::useHitFit() const {
+	if (programOptions.count("fitter"))
+		return programOptions["fitter"].as<bool>();
+	else
+		return useHitFit_;
+}
+
+bool ConfigFile::fitterOutputFlag() const {
+	if (programOptions.count("fitterASCIIoutput"))
+		return programOptions["fitterASCIIoutput"].as<bool>();
+	else
+		return fitterOutputFlag_;
+}
+
+const vector<string>& ConfigFile::inputFiles() const {
+	return inputFiles_;
+}
+
+double ConfigFile::lumi() const {
+	if (programOptions.count("lumi"))
+		return programOptions["lumi"].as<double>();
+	else
+		return lumi_;
+}
+
+ConfigFile::~ConfigFile() {
+}
+
+PileUpReweightingMethod::value ConfigFile::PileUpReweightingMethod() const {
+	std::string option = "";
+
+	if (isOptionSetInConsole("pileUpReweightingMethod")) {
+		option = programOptions["pileUpReweightingMethod"].as<std::string>();
+	} else if (isOptionSetInConfig(option)) {
+		option = PythonParser::getAttributeFromPyObject<std::string>(config, "pileUpReweightingMethod");
+	} else
+		return Globals::pileUpReweightingMethod;
+
+	if (option == "averagePileUp")
+		return PileUpReweightingMethod::averagePileUp;
+	else if (option == "inTimePileUpOnly")
+		return PileUpReweightingMethod::inTimePileUpOnly;
+	else if (option == "threeDReweighting")
+		return PileUpReweightingMethod::threeDReweighting;
+	else {
+		cout << "WARNING: Unknown or empty pile up reweighting option '" << option << "', using default" << endl;
+		return Globals::pileUpReweightingMethod;
+	}
+}
+
+bool ConfigFile::isOptionSet(std::string option) const {
+	bool isInProgramOptions(isOptionSetInConsole(option));
+	bool isInConfigFile(isOptionSetInConfig(option));
+
+	return isInProgramOptions || isInConfigFile;
+}
+
+bool ConfigFile::isOptionSetInConsole(std::string option) const {
+	return programOptions.count(option);
+}
+
+bool ConfigFile::isOptionSetInConfig(std::string option) const {
+	return PyObject_HasAttrString(config.ptr(), option.c_str());
+}
+
+void ConfigFile::loadIntoMemory() {
+	//always use function to access the variables
+	//general
+	Globals::luminosity = lumi();
+	Globals::maxEvents = maxEvents();
+
+	//kinematic fit
+	Globals::TQAFPath = TQAFPath();
+	Globals::useHitFit = useHitFit();
+	Globals::produceFitterASCIIoutput = fitterOutputFlag();
+
+	Globals::estimatedPileup = getPileUpHistogram(PUFile());
+
+	//Loading l7 JEC
+	Globals::bL7Corrections = getL7Correction(bJetResoFile());
+	Globals::lightL7Corrections = getL7Correction(lightJetResoFile());
+}
+
+boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(pileUpEstimationFile))
+		throw "Could not find pile-up histogram file in " + pileUpEstimationFile;
+
+	boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
+	boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
+	file->Close();
+
+	return pileUp;
+}
+} /* namespace BAT */
