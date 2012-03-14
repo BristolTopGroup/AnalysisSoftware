@@ -6,204 +6,215 @@
  */
 
 #include "../interface/EventWeightProvider.h"
+#include "../interface/GlobalVariables.h"
+
 #include "TFile.h"
+
 #include <boost/scoped_ptr.hpp>
+#include <boost/filesystem.hpp>
+
 #include <iostream>
 
+
+using namespace std;
 namespace BAT {
 
-boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
-    boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
-    //https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
-    xsection[DataType::ElectronHad] = 0;
-    xsection[DataType::MuHad] = 0;
-    xsection[DataType::ttbar] = 157.5;
-    xsection[DataType::TTJetsFall11] = 157.5;
-    xsection[DataType::Zjets] = 3048.;//m(ll)>50GeV
-    xsection[DataType::Wjets] = 31314.;
-//    xsection[DataType::WToENu] = 7899.;
+//boost::array<float, DataType::NUMBER_OF_DATA_TYPES> sevenTeV::getXSections() {
+//	boost::array<float, DataType::NUMBER_OF_DATA_TYPES> xsection;
+//	//https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
+//	xsection[DataType::ElectronHad] = 0;
+//	xsection[DataType::MuHad] = 0;
+//	xsection[DataType::TTJets] = 157.5;
+//	xsection[DataType::TTJetsFall11] = 157.5;
+//	xsection[DataType::Zjets] = 3048.; //m(ll)>50GeV
+//	xsection[DataType::Wjets] = 31314.;
+//
+//	xsection[DataType::ttbar161] = 157.5; //136.4;
+//	xsection[DataType::ttbar163] = 157.5; //127.1;
+//	xsection[DataType::ttbar166] = 157.5; //114.3;
+//	xsection[DataType::ttbar169] = 157.5; //106.2;
+//	xsection[DataType::ttbar175] = 157.5; //87.87;
+//	xsection[DataType::ttbar178] = 157.5; //79.77;
+//	xsection[DataType::ttbar181] = 157.5; //72.0;
+//	xsection[DataType::ttbar184] = 157.5; //66.14;
+//
+//	xsection[DataType::QCD_EMEnriched_Pt20to30] = 0.2355e9 * 0.0073; //xs 0.2355 mb (filter efficiency=0.0073)
+//	xsection[DataType::QCD_EMEnriched_Pt30to80] = 0.0593e9 * 0.059; //xs 0.0593 mb
+//	xsection[DataType::QCD_EMEnriched_Pt80to170] = 0.906e6 * 0.148; //xs 0.906e-3 mb
+//	xsection[DataType::QCD_MuEnrichedPt15_Pt20] = 84679.3; //xs 0.906e-3 mb
+//
+//	xsection[DataType::QCD_BCtoE_Pt20to30] = 0.2355e9 * 0.00046; //xs 0.2355 mb (filter efficiency=0.00046)
+//	xsection[DataType::QCD_BCtoE_Pt30to80] = 0.0593e9 * 0.00234; //xs 0.0593 mb
+//	xsection[DataType::QCD_BCtoE_Pt80to170] = 0.906e6 * 0.0104; //xs 0.906e-3 mb
+//
+//	xsection[DataType::PhotonJets_Pt40to100] = 23620.; //pb
+//	xsection[DataType::PhotonJets_Pt100to200] = 3476.; //pb
+//	xsection[DataType::PhotonJets_Pt200toInf] = 485.; //pb
+//
+//	xsection[DataType::WWtoAnything] = 43.; //pb +-1.5
+//	xsection[DataType::WZtoAnything] = 18.2; //pb +-0.7pb
+//	xsection[DataType::ZZtoAnything] = 5.9; //pb +- 0.15pb
+//
+//	xsection[DataType::singleTop_And_W] = 5.3; //pb
+//	xsection[DataType::singleTopTChannel] = 42.6; //pb
+//	xsection[DataType::singleTopSChannel] = 2.72; //pb
+//
+//	xsection[DataType::singleAntiTop_And_W] = 5.3; //pb
+//	xsection[DataType::singleAntiTopTChannel] = 22.0; //pb
+//	xsection[DataType::singleAntiTopSChannel] = 1.49; //pb
+//
+//	xsection[DataType::VQQ] = 35.3;
+//	xsection[DataType::Zprime_M500GeV_W5GeV] = 50;
+//	xsection[DataType::Zprime_M500GeV_W50GeV] = 50;
+//	xsection[DataType::Zprime_M750GeV_W7500MeV] = 50;
+//	xsection[DataType::Zprime_M1TeV_W10GeV] = 50;
+//	xsection[DataType::Zprime_M1TeV_W100GeV] = 50;
+//	xsection[DataType::Zprime_M1250GeV_W12500MeV] = 50;
+//	xsection[DataType::Zprime_M1500GeV_W15GeV] = 50;
+//	xsection[DataType::Zprime_M1500GeV_W150GeV] = 50;
+//	xsection[DataType::Zprime_M2TeV_W20GeV] = 50;
+//	xsection[DataType::Zprime_M2TeV_W200GeV] = 50;
+//	xsection[DataType::Zprime_M3TeV_W30GeV] = 50;
+//	xsection[DataType::Zprime_M3TeV_W300GeV] = 50;
+//	xsection[DataType::Zprime_M4TeV_W40GeV] = 50;
+//	xsection[DataType::Zprime_M4TeV_W400GeV] = 50;
+//
+//	//https://twiki.cern.ch/twiki/bin/view/CMS/MadGraphSummer11Production
+//	xsection[DataType::TTJets_matchingdown] = 764;
+//	xsection[DataType::TTJets_matchingup] = 172;
+//	xsection[DataType::TTJets_scaledown] = 552;
+//	xsection[DataType::TTJets_scaleup] = 200;
+//
+//	xsection[DataType::WJets_matchingdown] = 42352;
+//	xsection[DataType::WJets_matchingup] = 11439;
+//	xsection[DataType::WJets_scaledown] = 20137;
+//	xsection[DataType::WJets_scaleup] = 17859;
+//	return xsection;
+//}
 
-    xsection[DataType::ttbar161] = 157.5;//136.4;
-    xsection[DataType::ttbar163] = 157.5;//127.1;
-    xsection[DataType::ttbar166] = 157.5;//114.3;
-    xsection[DataType::ttbar169] = 157.5;//106.2;
-    xsection[DataType::ttbar175] = 157.5;//87.87;
-    xsection[DataType::ttbar178] = 157.5;//79.77;
-    xsection[DataType::ttbar181] = 157.5;//72.0;
-    xsection[DataType::ttbar184] = 157.5;//66.14;
+EventWeightProvider::EventWeightProvider(string datasetInformationFile) :
+//		lumiInInversePb(lumiInInversePb), //
+//		tev(tev), //
+//		useSkimEff(true), //
+		datasetInfo_(datasetInformationFile),//
+		xsection(datasetInfo_.getCrossSections()), //
+		numberOfProcessedEvents(datasetInfo_.getArrayOfProcessedEvents()), //
+		estimatedPileUp(Globals::estimatedPileup), //
+		DATAdistribution(), //
+		pileUpWeights(), //
+		numberOfEventsWithTooHighPileUp(0) {
 
-    xsection[DataType::QCD_EMEnriched_Pt20to30] = 0.2355e9 * 0.0073;//xs 0.2355 mb (filter efficiency=0.0073)
-    xsection[DataType::QCD_EMEnriched_Pt30to80] = 0.0593e9 * 0.059; //xs 0.0593 mb
-    xsection[DataType::QCD_EMEnriched_Pt80to170] = 0.906e6 * 0.148; //xs 0.906e-3 mb
-    xsection[DataType::QCD_MuEnrichedPt15_Pt20] = 84679.3; //xs 0.906e-3 mb
-
-    xsection[DataType::QCD_BCtoE_Pt20to30] = 0.2355e9 * 0.00046; //xs 0.2355 mb (filter efficiency=0.00046)
-    xsection[DataType::QCD_BCtoE_Pt30to80] = 0.0593e9 * 0.00234; //xs 0.0593 mb
-    xsection[DataType::QCD_BCtoE_Pt80to170] = 0.906e6 * 0.0104; //xs 0.906e-3 mb
-
-    xsection[DataType::PhotonJets_Pt40to100] = 23620.; //pb
-    xsection[DataType::PhotonJets_Pt100to200] = 3476.; //pb
-    xsection[DataType::PhotonJets_Pt200toInf] = 485.; //pb
-
-    xsection[DataType::WWtoAnything] = 43.; //pb +-1.5
-    xsection[DataType::WZtoAnything] = 18.2; //pb +-0.7pb
-    xsection[DataType::ZZtoAnything] = 5.9; //pb +- 0.15pb
-
-    xsection[DataType::singleTop_And_W] = 5.3; //pb
-    xsection[DataType::singleTopTChannel] = 42.6; //pb
-    xsection[DataType::singleTopSChannel] = 2.72; //pb
-
-    xsection[DataType::singleAntiTop_And_W] = 5.3; //pb
-	xsection[DataType::singleAntiTopTChannel] = 22.0; //pb
-	xsection[DataType::singleAntiTopSChannel] = 1.49; //pb
-
-    xsection[DataType::VQQ] = 35.3;
-    xsection[DataType::Zprime_M500GeV_W5GeV] = 50;
-    xsection[DataType::Zprime_M500GeV_W50GeV] = 50;
-    xsection[DataType::Zprime_M750GeV_W7500MeV] = 50;
-    xsection[DataType::Zprime_M1TeV_W10GeV] = 50;
-    xsection[DataType::Zprime_M1TeV_W100GeV] = 50;
-    xsection[DataType::Zprime_M1250GeV_W12500MeV] = 50;
-    xsection[DataType::Zprime_M1500GeV_W15GeV] = 50;
-    xsection[DataType::Zprime_M1500GeV_W150GeV] = 50;
-    xsection[DataType::Zprime_M2TeV_W20GeV] = 50;
-    xsection[DataType::Zprime_M2TeV_W200GeV] = 50;
-    xsection[DataType::Zprime_M3TeV_W30GeV] = 50;
-    xsection[DataType::Zprime_M3TeV_W300GeV] = 50;
-    xsection[DataType::Zprime_M4TeV_W40GeV] = 50;
-    xsection[DataType::Zprime_M4TeV_W400GeV] = 50;
-
-    //https://twiki.cern.ch/twiki/bin/view/CMS/MadGraphSummer11Production
-    xsection[DataType::TTJets_matchingdown] = 764;
-    xsection[DataType::TTJets_matchingup] = 172;
-    xsection[DataType::TTJets_scaledown] = 552;
-    xsection[DataType::TTJets_scaleup] = 200;
-
-    xsection[DataType::WJets_matchingdown] = 42352;
-    xsection[DataType::WJets_matchingup] = 11439;
-    xsection[DataType::WJets_scaledown] = 20137;
-    xsection[DataType::WJets_scaleup] = 17859;
-    return xsection;
+	generate_weights();
+//	if (Globals::energyInTeV == 7)
+//		xsection = sevenTeV::getXSections();
+//	defineNumberOfProducedEvents();
 }
 
-EventWeightProvider::EventWeightProvider(float lumiInInversePb, unsigned short tev, std::string pileUpEstimationFile) :
-    lumiInInversePb(lumiInInversePb),
-    tev(tev),
-    useSkimEff(true),
-    xsection(),
-    numberOfProcessedEvents(),
-//    numberOfSkimmedEvents(),
-    estimatedPileUp(getPileUpHistogram(pileUpEstimationFile)),
-    DATAdistribution(),
-    pileUpWeights(),
-    numberOfEventsWithTooHighPileUp(0){
-
-
-    generate_weights();
-    if (tev == 7)
-        xsection = sevenTeV::getXSections();
-    defineNumberOfProducedEvents();
-}
-
-void EventWeightProvider::defineNumberOfProducedEvents() {
-    numberOfProcessedEvents[DataType::ElectronHad] = 0;
-    numberOfProcessedEvents[DataType::MuHad] = 0;
-
-    numberOfProcessedEvents[DataType::ttbar] = 3701947;//3673321;
-    numberOfProcessedEvents[DataType::TTJetsFall11] = 58599824;//59613991;
-    numberOfProcessedEvents[DataType::Zjets] = 36277961;//36277961;
-    numberOfProcessedEvents[DataType::Wjets] = 81268812;//78982439;
-
-    numberOfProcessedEvents[DataType::ttbar161] = 1620072;
-    numberOfProcessedEvents[DataType::ttbar163] = 1633197;
-    numberOfProcessedEvents[DataType::ttbar166] = 1669034;
-    numberOfProcessedEvents[DataType::ttbar169] = 1606570;
-    numberOfProcessedEvents[DataType::ttbar175] = 1538301;
-    numberOfProcessedEvents[DataType::ttbar178] = 1648519;
-    numberOfProcessedEvents[DataType::ttbar181] = 1665350;
-    numberOfProcessedEvents[DataType::ttbar184] = 1671859;
-
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 35729669;
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 69578129;//70392060;
-    numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8150672;//8090132;
-
-    numberOfProcessedEvents[DataType::QCD_MuEnrichedPt15_Pt20] = 24661584;
-
-    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2081560;
-    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt30to80] = 2030033;
-    numberOfProcessedEvents[DataType::QCD_BCtoE_Pt80to170] = 1082691;
-
-    numberOfProcessedEvents[DataType::PhotonJets_Pt40to100] = 2217101;
-    numberOfProcessedEvents[DataType::PhotonJets_Pt100to200] = 1508384;
-    numberOfProcessedEvents[DataType::PhotonJets_Pt200toInf] = 8339186;
-
-    numberOfProcessedEvents[DataType::WWtoAnything] = 3490064;
-    numberOfProcessedEvents[DataType::WZtoAnything] = 2368019;
-    numberOfProcessedEvents[DataType::ZZtoAnything] = 3145780;
-
-    numberOfProcessedEvents[DataType::singleTop_And_W] = 814390;//556519;
-	numberOfProcessedEvents[DataType::singleTopTChannel] = 3900171;//2867419;
-	numberOfProcessedEvents[DataType::singleTopSChannel] = 259971;
-
-	numberOfProcessedEvents[DataType::singleAntiTop_And_W] = 809984;//375192;
-	numberOfProcessedEvents[DataType::singleAntiTopTChannel] = 1944826;
-	numberOfProcessedEvents[DataType::singleAntiTopSChannel] = 137980;
-
-    numberOfProcessedEvents[DataType::VQQ] = 720613;
-    numberOfProcessedEvents[DataType::Zprime_M500GeV_W5GeV] = 227068;
-    numberOfProcessedEvents[DataType::Zprime_M500GeV_W50GeV] = 238963;
-    numberOfProcessedEvents[DataType::Zprime_M750GeV_W7500MeV] = 204819;
-    numberOfProcessedEvents[DataType::Zprime_M1TeV_W10GeV] = 213384;
-    numberOfProcessedEvents[DataType::Zprime_M1TeV_W100GeV] = 200387;
-    numberOfProcessedEvents[DataType::Zprime_M1250GeV_W12500MeV] = 233361;
-    numberOfProcessedEvents[DataType::Zprime_M1500GeV_W15GeV] = 193779;
-    numberOfProcessedEvents[DataType::Zprime_M1500GeV_W150GeV] = 199121;
-    numberOfProcessedEvents[DataType::Zprime_M2TeV_W20GeV] = 238752;
-    numberOfProcessedEvents[DataType::Zprime_M2TeV_W200GeV] = 213363;
-    numberOfProcessedEvents[DataType::Zprime_M3TeV_W30GeV] = 205270;
-    numberOfProcessedEvents[DataType::Zprime_M3TeV_W300GeV] = 229034;
-    numberOfProcessedEvents[DataType::Zprime_M4TeV_W40GeV] = 183920;
-    numberOfProcessedEvents[DataType::Zprime_M4TeV_W400GeV] = 238142;
-
-    numberOfProcessedEvents[DataType::TTJets_matchingdown] = 1065323;
-    numberOfProcessedEvents[DataType::TTJets_matchingup] = 1062792;
-    numberOfProcessedEvents[DataType::TTJets_scaledown] = 967055;
-    numberOfProcessedEvents[DataType::TTJets_scaleup] = 930483;
-
-    numberOfProcessedEvents[DataType::WJets_matchingdown] = 9956679;
-    numberOfProcessedEvents[DataType::WJets_matchingup] = 10461655;
-    numberOfProcessedEvents[DataType::WJets_scaledown] = 10092532;
-    numberOfProcessedEvents[DataType::WJets_scaleup] = 9756359;
-}
+//void EventWeightProvider::defineNumberOfProducedEvents() {
+//	numberOfProcessedEvents[DataType::ElectronHad] = 0;
+//	numberOfProcessedEvents[DataType::MuHad] = 0;
+//
+//	numberOfProcessedEvents[DataType::TTJets] = 3701947; //3673321;
+//	numberOfProcessedEvents[DataType::TTJetsFall11] = 58599824; //59613991;
+//	numberOfProcessedEvents[DataType::Zjets] = 36277961; //36277961;
+//	numberOfProcessedEvents[DataType::Wjets] = 81268812; //78982439;
+//
+//	numberOfProcessedEvents[DataType::ttbar161] = 1620072;
+//	numberOfProcessedEvents[DataType::ttbar163] = 1633197;
+//	numberOfProcessedEvents[DataType::ttbar166] = 1669034;
+//	numberOfProcessedEvents[DataType::ttbar169] = 1606570;
+//	numberOfProcessedEvents[DataType::ttbar175] = 1538301;
+//	numberOfProcessedEvents[DataType::ttbar178] = 1648519;
+//	numberOfProcessedEvents[DataType::ttbar181] = 1665350;
+//	numberOfProcessedEvents[DataType::ttbar184] = 1671859;
+//
+//	numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt20to30] = 35729669;
+//	numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt30to80] = 69578129; //70392060;
+//	numberOfProcessedEvents[DataType::QCD_EMEnriched_Pt80to170] = 8150672; //8090132;
+//
+//	numberOfProcessedEvents[DataType::QCD_MuEnrichedPt15_Pt20] = 24661584;
+//
+//	numberOfProcessedEvents[DataType::QCD_BCtoE_Pt20to30] = 2081560;
+//	numberOfProcessedEvents[DataType::QCD_BCtoE_Pt30to80] = 2030033;
+//	numberOfProcessedEvents[DataType::QCD_BCtoE_Pt80to170] = 1082691;
+//
+//	numberOfProcessedEvents[DataType::PhotonJets_Pt40to100] = 2217101;
+//	numberOfProcessedEvents[DataType::PhotonJets_Pt100to200] = 1508384;
+//	numberOfProcessedEvents[DataType::PhotonJets_Pt200toInf] = 8339186;
+//
+//	numberOfProcessedEvents[DataType::WWtoAnything] = 3490064;
+//	numberOfProcessedEvents[DataType::WZtoAnything] = 2368019;
+//	numberOfProcessedEvents[DataType::ZZtoAnything] = 3145780;
+//
+//	numberOfProcessedEvents[DataType::singleTop_And_W] = 814390; //556519;
+//	numberOfProcessedEvents[DataType::singleTopTChannel] = 3900171; //2867419;
+//	numberOfProcessedEvents[DataType::singleTopSChannel] = 259971;
+//
+//	numberOfProcessedEvents[DataType::singleAntiTop_And_W] = 809984; //375192;
+//	numberOfProcessedEvents[DataType::singleAntiTopTChannel] = 1944826;
+//	numberOfProcessedEvents[DataType::singleAntiTopSChannel] = 137980;
+//
+//	numberOfProcessedEvents[DataType::VQQ] = 720613;
+//	numberOfProcessedEvents[DataType::Zprime_M500GeV_W5GeV] = 227068;
+//	numberOfProcessedEvents[DataType::Zprime_M500GeV_W50GeV] = 238963;
+//	numberOfProcessedEvents[DataType::Zprime_M750GeV_W7500MeV] = 204819;
+//	numberOfProcessedEvents[DataType::Zprime_M1TeV_W10GeV] = 213384;
+//	numberOfProcessedEvents[DataType::Zprime_M1TeV_W100GeV] = 200387;
+//	numberOfProcessedEvents[DataType::Zprime_M1250GeV_W12500MeV] = 233361;
+//	numberOfProcessedEvents[DataType::Zprime_M1500GeV_W15GeV] = 193779;
+//	numberOfProcessedEvents[DataType::Zprime_M1500GeV_W150GeV] = 199121;
+//	numberOfProcessedEvents[DataType::Zprime_M2TeV_W20GeV] = 238752;
+//	numberOfProcessedEvents[DataType::Zprime_M2TeV_W200GeV] = 213363;
+//	numberOfProcessedEvents[DataType::Zprime_M3TeV_W30GeV] = 205270;
+//	numberOfProcessedEvents[DataType::Zprime_M3TeV_W300GeV] = 229034;
+//	numberOfProcessedEvents[DataType::Zprime_M4TeV_W40GeV] = 183920;
+//	numberOfProcessedEvents[DataType::Zprime_M4TeV_W400GeV] = 238142;
+//
+//	numberOfProcessedEvents[DataType::TTJets_matchingdown] = 1065323;
+//	numberOfProcessedEvents[DataType::TTJets_matchingup] = 1062792;
+//	numberOfProcessedEvents[DataType::TTJets_scaledown] = 967055;
+//	numberOfProcessedEvents[DataType::TTJets_scaleup] = 930483;
+//
+//	numberOfProcessedEvents[DataType::WJets_matchingdown] = 9956679;
+//	numberOfProcessedEvents[DataType::WJets_matchingup] = 10461655;
+//	numberOfProcessedEvents[DataType::WJets_scaledown] = 10092532;
+//	numberOfProcessedEvents[DataType::WJets_scaleup] = 9756359;
+//}
 
 EventWeightProvider::~EventWeightProvider() {
 
 }
 
-float EventWeightProvider::getWeight(DataType::value type) {
-    if (type == DataType::ElectronHad || type == DataType::MuHad)
-        return 1.;
-    else
-        return xsection[type] * lumiInInversePb / numberOfProcessedEvents[type];
+double EventWeightProvider::getWeight(DataType::value type) {
+	if (type == DataType::ElectronHad || type == DataType::MuHad)
+		return 1.;
+	else
+		return xsection[type] * Globals::luminosity / numberOfProcessedEvents[type];
 }
 
-float EventWeightProvider::reweightPileUp(unsigned int numberOfVertices){
-    if(numberOfVertices >= pileUpWeights.size()){
-        ++numberOfEventsWithTooHighPileUp;
-        return 1.;
-    }
+double EventWeightProvider::reweightPileUp(unsigned int numberOfVertices) {
+	if (numberOfVertices >= pileUpWeights.size()) {
+		++numberOfEventsWithTooHighPileUp;
+		return 1.;
+	}
 
-    return pileUpWeights.at(numberOfVertices);
+	return pileUpWeights.at(numberOfVertices);
 }
 
-boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pileUpEstimationFile){
-	using namespace std;
-    cout << "Using pile-up estimation file " << pileUpEstimationFile << endl;
-    boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
-    boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
-    file->Close();
-    return pileUp;
-}
+//boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pileUpEstimationFile) {
+//	using namespace std;
+//
+//	if (!boost::filesystem::exists(pileUpEstimationFile))
+//		throw "Exception in EventWeightProvider::getPileUpHistogram: could not find pile-up file '"
+//				+ pileUpEstimationFile + "'";
+//
+//	cout << "Using pile-up estimation file " << pileUpEstimationFile << endl;
+//	boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
+//	boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
+//	file->Close();
+//
+//	return pileUp;
+//}
 
 void EventWeightProvider::generate_weights() {
 
@@ -240,7 +251,7 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		if (npu >= (unsigned int) estimatedPileUp->GetNbinsX())
 			break;
 		DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
-		if(inputMC[npu] != 0)
+		if (inputMC[npu] != 0)
 			weights[npu] = DATAdistribution[npu] / inputMC[npu];
 		else
 			weights[npu] = 0;
@@ -257,8 +268,8 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 	return weights;
 }
 
-unsigned long EventWeightProvider::getNumberOfEventsWithTooHighPileUp() const{
-    return numberOfEventsWithTooHighPileUp;
+unsigned long EventWeightProvider::getNumberOfEventsWithTooHighPileUp() const {
+	return numberOfEventsWithTooHighPileUp;
 }
 
 } // namespace BAT
