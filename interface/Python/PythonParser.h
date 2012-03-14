@@ -14,6 +14,8 @@
 #include <boost/python.hpp>
 #include <vector>
 #include <string>
+#include <iostream>
+
 namespace BAT {
 
 class PythonParser {
