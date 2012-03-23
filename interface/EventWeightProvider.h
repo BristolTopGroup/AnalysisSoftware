@@ -1,13 +1,16 @@
-/*
+/**
  * CrossSections.h
  *
  *  Created on: 29 Jul 2010
  *      Author: kreczko
+ *      Adaptation of
+ *      PhysicsTools/Utilities/interface/LumiReWeighting.h
+ *      PhysicsTools/Utilities/interface/Lumi3DReWeighting.h
+ *
  */
 
 #ifndef EVENTWEIGHTPROVIDER_H_
 #define EVENTWEIGHTPROVIDER_H_
-
 #include "DataTypes.h"
 #include "Python/DatasetInformation.h"
 
@@ -22,10 +25,6 @@
 
 namespace BAT {
 
-//namespace sevenTeV {
-//extern boost::array<float, DataType::NUMBER_OF_DATA_TYPES> getXSections();
-//}
-
 namespace PileUpReweightingMethod {
 enum value {
 	averagePileUp, //
@@ -33,6 +32,10 @@ enum value {
 	threeDReweighting
 };
 }
+}
+#include "Event.h"
+namespace BAT{
+
 
 class EventWeightProvider {
 private:
@@ -50,17 +53,24 @@ private:
 public:
 
 	EventWeightProvider(std::string datasetInformationFile);
+//	EventWeightProvider(boost::shared_ptr<TH1D>,boost::shared_ptr<TH1D>);
+//	EventWeightProvider(std::vector<double>, std::vector<double>);
 	~EventWeightProvider();
+	double getWeight(const EventPtr) const;
+	double getPUWeight(const EventPtr) const;
 
+	//@deprecated
 	double getWeight(DataType::value type);
+	//@deprecated
 	double reweightPileUp(unsigned int);
-	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
+//	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
 	void generate_weights();
 	boost::array<double, NWEIGHTSSIZE> generateWeights(const boost::array<double, NWEIGHTSSIZE>);
 	unsigned long getNumberOfEventsWithTooHighPileUp() const;
 
 };
 
+typedef boost::shared_ptr<EventWeightProvider> EventWeightProviderPtr;
 /**
  * Input sample distributions from
  * https://twiki.cern.ch/twiki/bin/view/CMS/PileupMCReweightingUtilities#Sample_Input_Distributions
@@ -70,11 +80,11 @@ public:
  * (Can be used for Spring11 and Summer11 if you don't worry about small shifts in the mean)
  * SHOULD be used for 3-D Reweighting, as this is the "true" input for all Summer11 samples.
  */
-const boost::array<double, NWEIGHTSSIZE> probdistFlat10 = { { 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584,
-		0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0630151648,
-		0.0526654164, 0.0402754482, 0.0292988928, 0.0194384503, 0.0122016783, 0.007207042, 0.004003637, 0.0020278322,
-		0.0010739954, 0.0004595759, 0.0002229748, 0.0001028162, 4.58337152809607E-05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-		0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } };
+//const boost::array<double, NWEIGHTSSIZE> probdistFlat10 = { { 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584,
+//		0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0630151648,
+//		0.0526654164, 0.0402754482, 0.0292988928, 0.0194384503, 0.0122016783, 0.007207042, 0.004003637, 0.0020278322,
+//		0.0010739954, 0.0004595759, 0.0002229748, 0.0001028162, 4.58337152809607E-05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+//		0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } };
 
 /*
  * Summer11 PU_S3 and PU_S4, distribution obtained by only looking at the in-time crossing.
