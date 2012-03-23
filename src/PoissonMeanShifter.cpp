@@ -56,7 +56,7 @@ PoissonMeanShifter::PoissonMeanShifter(double Shift) {
 
 double PoissonMeanShifter::ShiftWeight(unsigned int ibin) const {
 
-	if (ibin < 25 && ibin >= 0) {
+	if (ibin < 25) {
 		return Pweight_[ibin];
 	} else {
 		return 0;
