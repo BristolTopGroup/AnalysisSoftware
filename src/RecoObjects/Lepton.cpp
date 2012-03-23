@@ -8,7 +8,7 @@
 #include "../../interface/RecoObjects/Lepton.h"
 #include <iostream>
 namespace BAT {
-const double initialBigValue = 123456789;
+const double initialBigValue = 123456789.;
 
 Lepton::Lepton() : //
 		Particle(), //
@@ -231,6 +231,28 @@ double Lepton::relativeIsolation(double coneSize) const {
 
 double Lepton::pfRelativeIsolation(double coneSize) const {
 	return (PFChargedHadronIsolation(coneSize) + PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize)) / pt();
+}
+
+double Lepton::pfRelativeIsolationPUCorrected(double rho, double coneSize) const{
+	double effectiveArea = 0;
+	double eta = fabs(this->eta());
+	if(eta < 1.)
+		effectiveArea = 0.18;
+	if(eta > 1. && eta < 1.479)
+		effectiveArea = 0.19;
+	if(eta > 1.479 && eta < 2.0)
+		effectiveArea = 0.21;
+	if(eta > 2.0 && eta < 2.2)
+		effectiveArea = 0.38;
+	if(eta > 2.2 && eta < 2.3)
+		effectiveArea = 0.61;
+	if(eta > 2.3 && eta < 2.4)
+		effectiveArea = 0.73;
+	if(eta > 2.4)
+		effectiveArea = 0.78;
+
+	double pfIso = PFChargedHadronIsolation(coneSize) + PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize) - rho*effectiveArea;
+	return pfIso/pt();
 }
 
 void Lepton::setZDistanceToPrimaryVertex(double dist) {
