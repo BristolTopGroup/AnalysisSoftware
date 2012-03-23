@@ -2,6 +2,7 @@
 #include "cute/ide_listener.h"
 #include "cute/cute_runner.h"
 
+#include "TestDatasetInformation.h"
 #include "TestEventWeightProvider.h"
 #include "TestElectron.h"
 #include "TestElectronReader.h"
@@ -11,6 +12,7 @@
 #include "TestHistogramManager.h"
 #include "TestJet.h"
 #include "TestJetReader.h"
+#include "TestLepton.h"
 #include "TestMET.h"
 #include "TestMETReader.h"
 #include "TestMuon.h"
@@ -39,7 +41,8 @@ void setUpOnce() {
 
 void runSuite() {
     setUpOnce();
-    cute::suite s = make_suite_TestEventWeightProvider();
+    cute::suite s = make_suite_TestDatasetInformation();
+    s += make_suite_TestEventWeightProvider();
     s += make_suite_TestElectron();
     s += make_suite_TestElectronReader();
     s += make_suite_TestEvent();
@@ -48,6 +51,7 @@ void runSuite() {
     s += make_suite_TestHistogramManager();
     s += make_suite_TestJet();
     s += make_suite_TestJetReader();
+    s += make_suite_TestLepton();
     s += make_suite_TestMET();
     s += make_suite_TestMETReader();
     s += make_suite_TestMuon();
