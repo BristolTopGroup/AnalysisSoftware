@@ -50,6 +50,7 @@ public:
 	virtual double PFChargedHadronIsolation(double coneSize = 0.3) const;
 	virtual double PFNeutralHadronIsolation(double coneSize = 0.3) const;
 	virtual double pfRelativeIsolation(double coneSize = 0.3) const;
+	virtual double pfRelativeIsolationPUCorrected(double rho, double coneSize = 0.3) const;
 	virtual double pfIsolationWithGaussianFallOff(double coneSize = 0.3) const;
 	//directional particle based isolation
 	virtual double directionalIsolation(double coneSize = 0.2) const;
