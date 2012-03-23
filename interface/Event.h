@@ -16,17 +16,17 @@
 #include "DataTypes.h"
 #include "Printers/EventContentPrinter.h"
 #include "HighLevelTriggers.h"
-#include "EventWeightProvider.h"
-#include "GlobalVariables.h"
+
 #include <boost/shared_ptr.hpp>
 
 //forward definition of event needed before BasicSelection inclusion.
 namespace BAT {
 class Event;
-typedef boost::shared_ptr<Event> EventPointer;
+typedef boost::shared_ptr<Event> EventPtr;
 }
 //include BasicSelection to have access to the selections.
 #include "Selections/BasicSelection.h"
+#include "GlobalVariables.h"
 namespace BAT {
 
 
@@ -73,10 +73,11 @@ protected:
 	double pileUpWeight;
 
 //    double jetCleaningEfficiency;
-	unsigned int numberOfHighPurityTracks;
-	bool isBeamScraping;
+	unsigned int numberOfHighPurityTracks_;
+	bool isBeamScraping_;
 
 	std::vector<int> genNumberOfPileUpVertices;
+	std::vector<int> trueNumberOfPileUpVertices_;
 	std::vector<double> pdfWeights;
 
 	double ptdensityRho;
@@ -105,6 +106,7 @@ public:
 	void setPileUpWeight(double weight);
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
+	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
 	void setPDFWeights(std::vector<double> pdfWeights);
 	void setPtDensityRho(double rho);
 
@@ -159,9 +161,14 @@ public:
 //	double averageNumberOfGeneratedPileUpVertices() const;
 	const std::vector<int> GeneratedPileUpVertices() const;
 	const std::vector<double> PDFWeights() const;
-	double numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method =
-			Globals::pileUpReweightingMethod) const;
+	double averageNumberOfVertices() const;
+	double inTimeOnlyNUmberOfVertices() const;
+//	double numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method =
+//			Globals::pileUpReweightingMethod) const;
 	double rho() const;
+	unsigned int numberOfHighPurityTracks() const;
+	bool isBeamScraping() const;
+	const std::vector<int>& getTrueNumberOfVertices() const;
 
 private:
 	void selectElectronsByQuality();

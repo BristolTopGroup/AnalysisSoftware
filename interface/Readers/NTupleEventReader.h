@@ -41,15 +41,11 @@ class NTupleEventReader {
 public:
 	static const char * EVENT_CHAIN;
 
-//	static JetAlgorithm::value jetAlgorithm;
-//	static ElectronAlgorithm::value electronAlgorithm;
-//	static METAlgorithm::value metAlgorithm;
-//	static MuonAlgorithm::value muonAlgorithm;
 	static bool loadTracks;
 
 	NTupleEventReader();
 	virtual ~NTupleEventReader();
-	const Event& getNextEvent();
+	const EventPtr getNextEvent();
 	bool hasNextEvent();
 	void addInputFile(const TString fileName);
 	// without check for unit tests -> faster to start, no difference in long analysis
@@ -83,8 +79,9 @@ private:
 	boost::scoped_ptr<VariableReader<unsigned int> > lumiBlockReader;
 	boost::scoped_ptr<VariableReader<MultiDoublePointer> > PDFWeightsReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
+	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;
 	bool areReadersSet, areDatatypesKnown;
-	Event currentEvent;
+	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
 
 	void selectNextNtupleEvent();
@@ -92,6 +89,10 @@ private:
 	DataType::value getDataType(const std::string filename);
 	void readDataTypes();
 };
-}
+
+typedef boost::scoped_ptr<NTupleEventReader> NTupleEventReaderLocalPtr;
+
+
+}//end namespace BAT
 
 #endif /* NTUPLEEVENTREADER_H_ */

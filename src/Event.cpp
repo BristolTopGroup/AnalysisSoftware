@@ -16,43 +16,44 @@ using namespace std;
 namespace BAT {
 bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = false;
-//bool Event::useCiCElectronID = false;
-Event::Event() ://
-	HLTs(new std::vector<int>()),//
-			HLTPrescales(new std::vector<int>()),//
-			vertices(),//
-			goodVertices(),//
-			tracks(),//
-			allElectrons(),//
-			goodElectrons(),//
-			goodIsolatedElectrons(),//
-			goodPFIsolatedElectrons(),//
-			goodPFNonIsolatedElectrons(),//
-			looseElectrons(),//
-			qcdElectrons(),//
-			allJets(),//
-			goodJets(),//
-			goodBJets(),//
-			goodElectronCleanedJets(),//
-			goodElectronCleanedBJets(),//
-			goodMuonCleanedJets(),//
-			goodMuonCleanedBJets(),//
-			allMuons(),//
-			goodMuons(),//
-			goodIsolatedMuons(),//
-			goodPFIsolatedMuons(),//
-			looseMuons(),//
-			genParticles(),//
-			met(),//
-			dataType(DataType::ElectronHad),//
-			runNumber(0),//
-			eventNumber(0),//
-			lumiBlock(0),//
-			eventWeight(1.),//
-			numberOfHighPurityTracks(0),//
-			isBeamScraping(true),//
-			genNumberOfPileUpVertices(0),//
-			ptdensityRho(0.) {
+
+Event::Event() : //
+		HLTs(new std::vector<int>()), //
+		HLTPrescales(new std::vector<int>()), //
+		vertices(), //
+		goodVertices(), //
+		tracks(), //
+		allElectrons(), //
+		goodElectrons(), //
+		goodIsolatedElectrons(), //
+		goodPFIsolatedElectrons(), //
+		goodPFNonIsolatedElectrons(), //
+		looseElectrons(), //
+		qcdElectrons(), //
+		allJets(), //
+		goodJets(), //
+		goodBJets(), //
+		goodElectronCleanedJets(), //
+		goodElectronCleanedBJets(), //
+		goodMuonCleanedJets(), //
+		goodMuonCleanedBJets(), //
+		allMuons(), //
+		goodMuons(), //
+		goodIsolatedMuons(), //
+		goodPFIsolatedMuons(), //
+		looseMuons(), //
+		genParticles(), //
+		met(), //
+		dataType(DataType::ElectronHad), //
+		runNumber(0), //
+		eventNumber(0), //
+		lumiBlock(0), //
+		eventWeight(1.), //
+		numberOfHighPurityTracks_(0), //
+		isBeamScraping_(true), //
+		genNumberOfPileUpVertices(0), //
+		trueNumberOfPileUpVertices_(0),//
+		ptdensityRho(0.) {
 }
 
 Event::~Event() {
@@ -89,10 +90,10 @@ void Event::selectVerticesByQuality() {
 void Event::setTracks(TrackCollection tracks) {
 	this->tracks.clear();
 	this->tracks = tracks;
-	numberOfHighPurityTracks = 0;
+	numberOfHighPurityTracks_ = 0;
 	for (unsigned int index = 0; index < tracks.size(); ++index) {
 		if (tracks.at(index)->isHighPurity())
-			numberOfHighPurityTracks++;
+			numberOfHighPurityTracks_++;
 	}
 }
 
@@ -128,7 +129,7 @@ void Event::selectElectronsByQuality() {
 		if (isGood && isPFIsolated)
 			goodPFIsolatedElectrons.push_back(electron);
 
-		if(isGood && isPFNonIsolated)
+		if (isGood && isPFNonIsolated)
 			goodPFNonIsolatedElectrons.push_back(electron);
 
 		if (electron->isLoose())
@@ -195,8 +196,8 @@ void Event::cleanGoodJets() {
 			else
 				goodElectronCleanedJets = cleanGoodJetsAgainstIsolatedElectrons(goodIsolatedElectrons);
 		} else if (allElectrons.size() > 0)
-			goodElectronCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(MostIsolatedElectron(allElectrons,
-					Event::usePFIsolation));
+			goodElectronCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(
+					MostIsolatedElectron(allElectrons, Event::usePFIsolation));
 
 		if (goodIsolatedMuons.size() > 0 || goodPFIsolatedMuons.size() > 0) {
 			if (Event::usePFIsolation)
@@ -204,8 +205,8 @@ void Event::cleanGoodJets() {
 			else
 				goodMuonCleanedJets = cleanGoodJetsAgainstIsolatedMuons(goodIsolatedMuons);
 		} else if (allMuons.size() > 0) {
-			goodMuonCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(MostIsolatedMuon(allMuons,
-					Event::usePFIsolation));
+			goodMuonCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(
+					MostIsolatedMuon(allMuons, Event::usePFIsolation));
 		}
 
 	}
@@ -224,7 +225,8 @@ JetCollection Event::cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollect
 		}
 	}
 
-	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end(); ++jetIndex) {
+	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end();
+			++jetIndex) {
 		cleanedJets.push_back(goodJets.at(*jetIndex));
 	}
 
@@ -243,7 +245,8 @@ JetCollection Event::cleanGoodJetsAgainstIsolatedMuons(const MuonCollection& muo
 		}
 	}
 
-	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end(); ++jetIndex) {
+	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end();
+			++jetIndex) {
 		cleanedJets.push_back(goodJets.at(*jetIndex));
 	}
 
@@ -377,7 +380,7 @@ void Event::setPileUpWeight(double weight) {
 }
 
 void Event::setBeamScrapingVeto(bool isScraping) {
-	isBeamScraping = isScraping;
+	isBeamScraping_ = isScraping;
 }
 
 const VertexPointer Event::PrimaryVertex() const {
@@ -504,7 +507,7 @@ void Event::inspect() const {
 	cout << "run " << runNumber << ", event number " << eventNumber << ", lumi section " << lumiBlock << endl;
 
 	cout << "number of tracks: " << tracks.size() << endl;
-	cout << "number of high purity tracks: " << numberOfHighPurityTracks << endl;
+	cout << "number of high purity tracks: " << numberOfHighPurityTracks_ << endl;
 
 	cout << "number of jets: " << allJets.size() << endl;
 	EventContentPrinter::printJets(allJets);
@@ -529,7 +532,7 @@ void Event::setGenNumberOfPileUpVertices(std::vector<int> pileup) {
 	genNumberOfPileUpVertices = pileup;
 }
 
-void Event::setPDFWeights(std::vector<double> pdfWeights){
+void Event::setPDFWeights(std::vector<double> pdfWeights) {
 	this->pdfWeights = pdfWeights;
 }
 
@@ -546,28 +549,39 @@ const std::vector<int> Event::GeneratedPileUpVertices() const {
 	return genNumberOfPileUpVertices;
 }
 
-double Event::numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method) const {
-	using namespace std;
-
-	double numberOfVertices(0);
+double Event::averageNumberOfVertices() const {
 	double average(0);
-
-	switch (method) {
-	case PileUpReweightingMethod::averagePileUp:
-		average = accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0);
-		average = average / genNumberOfPileUpVertices.size();
-		numberOfVertices = average;
-		break;
-	case PileUpReweightingMethod::inTimePileUpOnly:
-		numberOfVertices = genNumberOfPileUpVertices.at(1);
-		break;
-	case PileUpReweightingMethod::threeDReweighting:
-		cout << "Pile-up reweighting method '3D-reweighting' not implemented" << endl;
-		return 0;
-	}
-
-	return numberOfVertices;
+	average = accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0);
+	average = average / genNumberOfPileUpVertices.size();
+	return average;
 }
+
+double Event::inTimeOnlyNUmberOfVertices() const {
+	return genNumberOfPileUpVertices.at(1);
+}
+//double Event::numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method) const {
+//	using namespace std;
+//
+//	double numberOfVertices(0);
+//	double average(0);
+//
+//	switch (method) {
+//	case PileUpReweightingMethod::averagePileUp:
+//		average = accumulate(genNumberOfPileUpVertices.begin(), genNumberOfPileUpVertices.end(), 0);
+//		average = average / genNumberOfPileUpVertices.size();
+//		numberOfVertices = average;
+//		break;
+//	case PileUpReweightingMethod::inTimePileUpOnly:
+//		numberOfVertices = genNumberOfPileUpVertices.at(1);
+//		break;
+//	case PileUpReweightingMethod::threeDReweighting:
+//		cout << "Pile-up reweighting method '3D-reweighting' not implemented" << endl;
+//		return 0;
+//	}
+//
+//	return numberOfVertices;
+//}
+
 void Event::setHLTPrescales(const boost::shared_ptr<std::vector<int> > prescales) {
 	HLTPrescales = prescales;
 }
@@ -584,4 +598,19 @@ double Event::rho() const {
 	return ptdensityRho;
 }
 
+unsigned int Event::numberOfHighPurityTracks() const {
+	return numberOfHighPurityTracks_;
+}
+
+bool Event::isBeamScraping() const {
+	return isBeamScraping_;
+}
+
+void Event::setTrueNumberOfPileUpVertices(vector<int> pileup) {
+	trueNumberOfPileUpVertices_ = pileup;
+}
+
+const vector<int>& Event::getTrueNumberOfVertices() const{
+	return trueNumberOfPileUpVertices_;
+}
 }
