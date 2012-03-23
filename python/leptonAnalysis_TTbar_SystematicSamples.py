@@ -1,8 +1,8 @@
 #File for pile-up re-weighting
-PUFile = "BristolAnalysis/Tools/PileUp2011_v2.root"
+PUFile = "BristolAnalysis/Tools/data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
-bJetResoFile = "BristolAnalysis/Tools/bJetReso.root"
-lightJetResoFile = "BristolAnalysis/Tools/lightJetReso.root"
+bJetResoFile = "BristolAnalysis/Tools/data/bJetReso.root"
+lightJetResoFile = "BristolAnalysis/Tools/data/lightJetReso.root"
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis
@@ -17,10 +17,10 @@ mc_path = '/storage/TopQuarkGroup/mc/'
 
 
 mcFolders = [
-           'TTjets_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
-           'TTjets_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
-           'TTjets_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
-           'TTjets_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v4_Summer11-PU_S4_START42_V11-v2_LeptonSkim',
+           'TTjets_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'TTjets_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'TTjets_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'TTjets_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]

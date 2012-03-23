@@ -1,8 +1,8 @@
 #File for pile-up re-weighting
-PUFile = "BristolAnalysis/Tools/PileUp2011_v2.root"
+PUFile = "BristolAnalysis/Tools/data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)
-bJetResoFile = "BristolAnalysis/Tools/bJetReso.root"
-lightJetResoFile = "BristolAnalysis/Tools/lightJetReso.root"
+bJetResoFile = "BristolAnalysis/Tools/data/bJetReso.root"
+lightJetResoFile = "BristolAnalysis/Tools/data/lightJetReso.root"
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis
@@ -13,8 +13,8 @@ inputFiles = []
 data_path = '/storage/TopQuarkGroup/data/ElectronHad/'
 filetype = '*.root'
 
-dataFiles = ['nTuple_v6_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
-              'nTuple_v6_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets']
+dataFiles = ['nTuple_v6b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
+              'nTuple_v6b_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets']
 
 dataFiles = [data_path + path + '/' + filetype for path in dataFiles]
 
