@@ -6,47 +6,50 @@
  */
 
 #include "../../interface/Analysers/JetAnalyser.h"
+#include "../../interface/TopPairEventCandidate.h"
 
 namespace BAT {
 
-void JetAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
-	histMan->setCurrentHistogramFolder("jetStudy");
-	double weight = ttbarEvent.weight();
-	if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)) {
-		for (unsigned short jetIndex = 0; jetIndex < ttbarEvent.Jets().size(); ++jetIndex)
-			histMan->H1D_BJetBinned("AllJetMass")->Fill(ttbarEvent.Jets().at(jetIndex)->mass());
+void JetAnalyser::analyse(const EventPtr event) {
+	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 
-		for (unsigned short jetIndex = 0; jetIndex < ttbarEvent.GoodJets().size(); ++jetIndex) {
-			double jetMass = ttbarEvent.Jets().at(jetIndex)->mass();
+	histMan->setCurrentHistogramFolder("jetStudy");
+	double weight =  event->weight();
+	if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)) {
+		for (unsigned short jetIndex = 0; jetIndex <  event->Jets().size(); ++jetIndex)
+			histMan->H1D_BJetBinned("AllJetMass")->Fill( event->Jets().at(jetIndex)->mass());
+
+		for (unsigned short jetIndex = 0; jetIndex <  event->GoodJets().size(); ++jetIndex) {
+			double jetMass =  event->Jets().at(jetIndex)->mass();
 			histMan->H1D_BJetBinned("AllGoodJetMass")->Fill(jetMass, weight);
 
-			if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastOneGoodJets))
+			if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastOneGoodJets))
 				histMan->H1D_BJetBinned("GoodJetMass_atLeastOneJets")->Fill(jetMass, weight);
 
-			if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets))
+			if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets))
 				histMan->H1D_BJetBinned("GoodJetMass_atLeastTwoJets")->Fill(jetMass, weight);
 
-			if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastThreeGoodJets))
+			if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastThreeGoodJets))
 				histMan->H1D_BJetBinned("GoodJetMass_atLeastThreeJets")->Fill(jetMass, weight);
 
-			if (ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets))
+			if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets))
 				histMan->H1D_BJetBinned("GoodJetMass_atLeastFourJets")->Fill(jetMass, weight);
 		}
 	}
-	if (ttbarEvent.passesFullTTbarEPlusJetSelection()) {
-		histMan->H1D("goodJetsMultiplicity")->Fill(ttbarEvent.GoodElectronCleanedJets().size(), weight);
-		histMan->H1D("jetsMultiplicity")->Fill(ttbarEvent.Jets().size(), weight);
-		histMan->H1D("btaggedJetsMultiplicity")->Fill(ttbarEvent.GoodElectronCleanedBJets().size(), weight);
-		for (unsigned index = 0; index < ttbarEvent.GoodElectronCleanedJets().size(); ++index) {
-			histMan->H1D("jetPt")->Fill(ttbarEvent.GoodElectronCleanedJets().at(index)->pt(), weight);
-			histMan->H1D("jetEta")->Fill(ttbarEvent.GoodElectronCleanedJets().at(index)->eta(), weight);
-			histMan->H1D("jetPhi")->Fill(ttbarEvent.GoodElectronCleanedJets().at(index)->phi(), weight);
-			histMan->H1D("jetMass")->Fill(ttbarEvent.GoodElectronCleanedJets().at(index)->mass(), weight);
+	if ( ttbarCand->passesFullTTbarEPlusJetSelection()) {
+		histMan->H1D("goodJetsMultiplicity")->Fill( event->GoodElectronCleanedJets().size(), weight);
+		histMan->H1D("jetsMultiplicity")->Fill( event->Jets().size(), weight);
+		histMan->H1D("btaggedJetsMultiplicity")->Fill( event->GoodElectronCleanedBJets().size(), weight);
+		for (unsigned index = 0; index <  event->GoodElectronCleanedJets().size(); ++index) {
+			histMan->H1D("jetPt")->Fill( event->GoodElectronCleanedJets().at(index)->pt(), weight);
+			histMan->H1D("jetEta")->Fill( event->GoodElectronCleanedJets().at(index)->eta(), weight);
+			histMan->H1D("jetPhi")->Fill( event->GoodElectronCleanedJets().at(index)->phi(), weight);
+			histMan->H1D("jetMass")->Fill( event->GoodElectronCleanedJets().at(index)->mass(), weight);
 		}
-		histMan->H1D("1stJetPt")->Fill(ttbarEvent.GoodElectronCleanedJets().front()->pt(), weight);
-		histMan->H1D("1stJetEta")->Fill(ttbarEvent.GoodElectronCleanedJets().front()->eta(), weight);
-		histMan->H1D("1stJetPhi")->Fill(ttbarEvent.GoodElectronCleanedJets().front()->phi(), weight);
-		histMan->H1D("1stJetMass")->Fill(ttbarEvent.GoodElectronCleanedJets().front()->mass(), weight);
+		histMan->H1D("1stJetPt")->Fill( event->GoodElectronCleanedJets().front()->pt(), weight);
+		histMan->H1D("1stJetEta")->Fill( event->GoodElectronCleanedJets().front()->eta(), weight);
+		histMan->H1D("1stJetPhi")->Fill( event->GoodElectronCleanedJets().front()->phi(), weight);
+		histMan->H1D("1stJetMass")->Fill( event->GoodElectronCleanedJets().front()->mass(), weight);
 	}
 
 	//Add NJets for TTbar selection

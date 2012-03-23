@@ -17,7 +17,7 @@ public:
 	MuonAnalyser(HistogramManagerPtr histMan);
 	virtual ~MuonAnalyser();
 
-	void analyse(const TopPairEventCandidate& ttbarEvent);
+	void analyse(const EventPtr);
 	void createHistograms();
 };
 

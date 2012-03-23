@@ -15,14 +15,14 @@ namespace BAT {
 
 class VertexAnalyser: public BAT::BasicAnalyser {
 public:
-	VertexAnalyser(boost::shared_ptr<HistogramManager> histMan, boost::shared_ptr<EventWeightProvider> weights);
+	VertexAnalyser(HistogramManagerPtr histMan, EventWeightProviderPtr weights);
 	virtual ~VertexAnalyser();
 
-	void analyse(const TopPairEventCandidate& ttbarEvent);
+	void analyse(const EventPtr);
 	void createHistograms();
 
 private:
-	boost::shared_ptr<EventWeightProvider> weights;
+	EventWeightProviderPtr weights;
 };
 
 }

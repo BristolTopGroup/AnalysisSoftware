@@ -9,7 +9,7 @@
 
 namespace BAT {
 
-void METAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+void METAnalyser::analyse(const EventPtr event) {
 
 }
 
@@ -17,7 +17,7 @@ void METAnalyser::createHistograms() {
 
 }
 
-METAnalyser::METAnalyser(boost::shared_ptr<HistogramManager> histMan) :
+METAnalyser::METAnalyser(HistogramManagerPtr histMan) :
 	BasicAnalyser(histMan) {
 
 }

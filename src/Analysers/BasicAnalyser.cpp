@@ -8,7 +8,7 @@
 #include "../../interface/Analysers/BasicAnalyser.h"
 
 namespace BAT {
-BasicAnalyser::BasicAnalyser(boost::shared_ptr<HistogramManager> histMan):
+BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan):
         histMan(histMan){
 
 }

@@ -16,7 +16,7 @@ public:
     ElectronAnalyser(HistogramManagerPtr histMan);
     virtual ~ElectronAnalyser();
 
-    void analyse(const TopPairEventCandidate& ttbarEvent);
+    void analyse(const EventPtr);
     void createHistograms();
 };
 

@@ -17,7 +17,7 @@ public:
 	METAnalyser(HistogramManagerPtr histMan);
 	virtual ~METAnalyser();
 
-	void analyse(const TopPairEventCandidate& ttbarEvent);
+	void analyse(const EventPtr);
 	void createHistograms();
 };
 

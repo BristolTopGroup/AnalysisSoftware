@@ -17,7 +17,7 @@ public:
 	JetAnalyser(HistogramManagerPtr histMan);
 	virtual ~JetAnalyser();
 
-	void analyse(const TopPairEventCandidate& ttbarEvent);
+	void analyse(const EventPtr);
 	void createHistograms();
 };
 

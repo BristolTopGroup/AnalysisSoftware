@@ -22,15 +22,15 @@ class MTtbarAnalyser: public BAT::BasicAnalyser {
 public:
 	MTtbarAnalyser(HistogramManagerPtr histMan);
 	virtual ~MTtbarAnalyser();
-	void analyse(const TopPairEventCandidate& ttbarEvent);
+	void analyse(const EventPtr);
 
 	void createHistograms();
 
 protected:
-	void analyseFourJetChi2(const TopPairEventCandidate& ttbarEvent);
-	void analyseThreeJetChi2(const TopPairEventCandidate& ttbarEvent);
-	void analyseFourJetTopMassDifference(const TopPairEventCandidate& ttbarEvent);
-	void analyseFourJetChi2QCDConversionBackground(const TopPairEventCandidate& ttbarEvent);
+	void analyseFourJetChi2(const TopPairEventCandidatePtr);
+	void analyseThreeJetChi2(const TopPairEventCandidatePtr);
+	void analyseFourJetTopMassDifference(const TopPairEventCandidatePtr);
+	void analyseFourJetChi2QCDConversionBackground(const TopPairEventCandidatePtr);
 	void fillHistograms(std::string subcollection, std::string suffix = "");
 
 	void createHistogramsFor(std::string collection);

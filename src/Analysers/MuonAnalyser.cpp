@@ -9,7 +9,7 @@
 
 namespace BAT {
 
-void MuonAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+void MuonAnalyser::analyse(const EventPtr ttbarEvent) {
 
 }
 
@@ -17,7 +17,7 @@ void MuonAnalyser::createHistograms() {
 
 }
 
-MuonAnalyser::MuonAnalyser(boost::shared_ptr<HistogramManager> histMan) :
+MuonAnalyser::MuonAnalyser(HistogramManagerPtr histMan) :
 	BasicAnalyser(histMan) {
 
 }

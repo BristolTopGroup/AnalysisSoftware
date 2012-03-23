@@ -6,24 +6,27 @@
  */
 
 #include "../../interface/Analysers/VertexAnalyser.h"
+#include "../../interface/TopPairEventCandidate.h"
 
 namespace BAT {
 
-void VertexAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+void VertexAnalyser::analyse(const EventPtr event) {
+	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
+
 	histMan->setCurrentHistogramFolder("pileupStudy");
 
-	double weight = ttbarEvent.weight();
-	double pileUpWeight = ttbarEvent.PileUpWeight();
+	double weight = ttbarCand->weight();
+	double pileUpWeight = ttbarCand->PileUpWeight();
 
 	if (pileUpWeight > 0) {
-		histMan->H1D("nVertex")->Fill(ttbarEvent.Vertices().size(), weight / pileUpWeight);
-		histMan->H1D("nVertex_reweighted")->Fill(ttbarEvent.Vertices().size(), weight);
+		histMan->H1D("nVertex")->Fill(ttbarCand->Vertices().size(), weight / pileUpWeight);
+		histMan->H1D("nVertex_reweighted")->Fill(ttbarCand->Vertices().size(), weight);
 
-		if (ttbarEvent.passesFullTTbarEPlusJetSelection()) {
-			if (ttbarEvent.passesMETCut() && ttbarEvent.passesAsymmetricElectronCleanedJetCuts()) {
-				histMan->H1D_BJetBinned("nVertex_withMETAndAsymJets")->Fill(ttbarEvent.Vertices().size(), weight
-						/ pileUpWeight);
-				histMan->H1D_BJetBinned("nVertex_reweighted_withMETAndAsymJets")->Fill(ttbarEvent.Vertices().size(),
+		if (ttbarCand->passesFullTTbarEPlusJetSelection()) {
+			if (ttbarCand->passesMETCut() && ttbarCand->passesAsymmetricElectronCleanedJetCuts()) {
+				histMan->H1D_BJetBinned("nVertex_withMETAndAsymJets")->Fill(ttbarCand->Vertices().size(),
+						weight / pileUpWeight);
+				histMan->H1D_BJetBinned("nVertex_reweighted_withMETAndAsymJets")->Fill(ttbarCand->Vertices().size(),
 						weight);
 			}
 		}
@@ -36,15 +39,14 @@ void VertexAnalyser::createHistograms() {
 	histMan->setCurrentHistogramFolder("pileupStudy");
 	histMan->addH1D("nVertex", "number of primary vertices; N(PV); events", 51, 0, 50);
 	histMan->addH1D("nVertex_reweighted", "number of primary vertices; N(PV); events", 51, 0, 50);
-	histMan->addH1D_BJetBinned("nVertex_reweighted_withMETAndAsymJets", "number of primary vertices; N(PV); events",
-			51, 0, 50);
+	histMan->addH1D_BJetBinned("nVertex_reweighted_withMETAndAsymJets", "number of primary vertices; N(PV); events", 51,
+			0, 50);
 	histMan->addH1D_BJetBinned("nVertex_withMETAndAsymJets", "number of primary vertices; N(PV); events", 51, 0, 50);
 }
 
-VertexAnalyser::VertexAnalyser(boost::shared_ptr<HistogramManager> histMan,
-		boost::shared_ptr<EventWeightProvider> weights) :
-	BasicAnalyser(histMan),
-	weights(weights) {
+VertexAnalyser::VertexAnalyser(HistogramManagerPtr histMan, boost::shared_ptr<EventWeightProvider> weights) :
+		BasicAnalyser(histMan), //
+		weights(weights) {
 
 }
 

@@ -14,13 +14,12 @@ namespace BAT {
 
 class TopReconstructionAnalyser: public BAT::BasicAnalyser {
 public:
-	TopReconstructionAnalyser(boost::shared_ptr<HistogramManager>);
+	TopReconstructionAnalyser(HistogramManagerPtr);
 	virtual ~TopReconstructionAnalyser();
 
-	void analyse(const TopPairEventCandidate& ttbarEvent);
+	void analyse(const EventPtr);
 	void createHistograms();
 
-//	std::vector<InterestingEvent> interestingEvents;
 };
 
 }

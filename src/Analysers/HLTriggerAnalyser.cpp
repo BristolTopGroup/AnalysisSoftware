@@ -21,7 +21,8 @@ HLTriggerAnalyser::~HLTriggerAnalyser() {
 
 }
 
-void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+void HLTriggerAnalyser::analyse(const EventPtr event) {
+	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 	/*
 	 * triggers use (calo + tracker) electrons with ID looser than WP 80
 	 * early triggers don't require isolation
@@ -33,13 +34,13 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	 *
 	 */
 
-	bool isData(ttbarEvent.isRealData());
-	weight = ttbarEvent.weight();
+	bool isData( event->isRealData());
+	weight =  event->weight();
 	unsigned int currentJetBin = histMan->getCurrentJetBin();
 	unsigned int currentBJetBin = histMan->getCurrentBJetBin();
-	bool isTTJetsFall11 = ttbarEvent.getDataType() == DataType::TTJetsFall11;
+	bool isTTJetsFall11 =  event->getDataType() == DataType::TTJetsFall11;
 
-	ElectronCollection electrons = ttbarEvent.Electrons();
+	ElectronCollection electrons =  event->Electrons();
 	ElectronCollection goodElectrons;
 
 	for (unsigned int index = 0; index < electrons.size(); ++index) {
@@ -63,7 +64,7 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 
 	//all jets in the v2 nTuples have the following cuts applied:
 	//pt > 20 & abs(eta) < 2.5 && loose ID
-	JetCollection jets = ttbarEvent.Jets();
+	JetCollection jets =  event->Jets();
 
 	JetCollection cleanedJets, cleanedBJets;
 
@@ -95,16 +96,16 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		const JetPointer jet1(cleanedJets.front());
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30";
 		if (isData) {
-			passesPreCondition = (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && ttbarEvent.runnumber() <= 178380;
+			passesPreCondition = ( event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+					||  event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
+					||  event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) &&  event->runnumber() <= 178380;
 		} else {
 			//no pre-trigger for MC as triggers here are not prescaled
 			passesPreCondition = true;
 		}
 
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
-		prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+		passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+		prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
 
 		if (mostIsolatedElectron->relativeIsolation() < 0.1) {
@@ -112,21 +113,21 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.runnumber() > 165970
-						&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+				passesPreCondition =  event->runnumber() > 165970
+						&& ( event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+								||  event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
+								||  event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+				prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 			} else {
 				//emulating trigger for MC, not necessary for Fall11 MC
-				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+				passesPreCondition =  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
 						|| isTTJetsFall11;
 				if (!isTTJetsFall11)
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				else
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 				prescale = 1;
 			}
 			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
@@ -137,17 +138,17 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	if (cleanedJets.size() > 1) {
 		const JetPointer jet2(cleanedJets.at(1));
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30";
-		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+		passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 		if (isData)
-			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() <= 178380;
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
-				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+			passesPreCondition = passesPreCondition &&  event->runnumber() <= 178380;
+		passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
+				||  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 
-		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30))
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
+		if ( event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30))
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
 
-		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30))
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+		if ( event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30))
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet2, prescale);
 
@@ -155,21 +156,21 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			//isoEle + 2 jets
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30";
 			if (isData) {
-				passesPreCondition = ttbarEvent.HLT(
+				passesPreCondition =  event->HLT(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-				passesPreCondition = passesPreCondition && ttbarEvent.runnumber() > 165970
-						&& ttbarEvent.runnumber() <= 178380;
+				passesPreCondition = passesPreCondition &&  event->runnumber() > 165970
+						&&  event->runnumber() <= 178380;
 			} else {
 				if (!isTTJetsFall11) {
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-					prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 				} else {
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-					prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+					prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
 				}
 			}
 
@@ -181,19 +182,19 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		const JetPointer jet3(cleanedJets.at(2));
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30";
 
-		passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
-				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
+		passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30)
+				||  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30);
 		if (isData)
-			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() <= 165633;
+			passesPreCondition = passesPreCondition &&  event->runnumber() <= 165633;
 
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-				|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+		passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
+				||  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 
-		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30))
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+		if ( event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30))
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 
-		if (ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30))
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+		if ( event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30))
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet3, prescale);
 
@@ -202,24 +203,24 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-				passesPreCondition = passesPreCondition && ttbarEvent.runnumber() > 165970 && ttbarEvent.runnumber() <= 178380;
-				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+				passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+				passesPreCondition = passesPreCondition &&  event->runnumber() > 165970 &&  event->runnumber() <= 178380;
+				prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 
 			} else {
 				if(!isTTJetsFall11){
-				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
+						&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				prescale = 1;
 				//emulate trigger
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+						&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				}
 				else {
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-					prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
+					prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 				}
 			}
 			analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet3, prescale);
@@ -231,18 +232,18 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30";
 		if (isData) {
 			//run 165970, first occurance of the QuadJet trigger
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-					&& ttbarEvent.runnumber() > 165970 && ttbarEvent.runnumber() <= 178380;
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
+					&&  event->runnumber() > 165970 &&  event->runnumber() <= 178380;
 
 		} else {
 			prescale = 1;
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 			//no emulation so far
 			passesTrigger = false;
 		}
 		if (isData || isTTJetsFall11) {
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30);
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30);
 		}
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet4, prescale);
 
@@ -250,23 +251,23 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			//isoEle + 4 jets
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30";
 			if (isData) {
-				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-				passesPreCondition = passesPreCondition	&& ttbarEvent.runnumber() > 165970 && ttbarEvent.runnumber() <= 178380;
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
-				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
+				passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+				passesPreCondition = passesPreCondition	&&  event->runnumber() > 165970 &&  event->runnumber() <= 178380;
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
+				prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
 
 			} else {
 				if(!isTTJetsFall11) {
-				prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
-				passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+				passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+						&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				//no emulation so far
 				passesTrigger = false;
 				}
 				else {
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
-					prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
+					prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
 				}
 			}
 
@@ -279,16 +280,16 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		const JetPointer jet1(cleanedJets.front());
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30";
 		if (isData) {
-			passesPreCondition = (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-					|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && ttbarEvent.runnumber() > 178380;
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
+			passesPreCondition = ( event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+					||  event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
+					||  event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) &&  event->runnumber() > 178380;
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
 		} else {
 			//no pre-trigger for MC as triggers here are not prescaled
 			passesPreCondition = true;
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 		}
 
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet1, prescale);
@@ -298,25 +299,25 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.runnumber() > 178380
-						&& (ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-								|| ttbarEvent.HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
-				prescale = ttbarEvent.HLTPrescale(
+				passesPreCondition =  event->runnumber() > 178380
+						&& ( event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
+								||  event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
+								||  event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
+				prescale =  event->HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
 			} else {
 				if (!isTTJetsFall11) {
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 					//emulating trigger for MC
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-					prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
 				} else {
 					passesPreCondition = true;
 					//emulating trigger for MC
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-					prescale = ttbarEvent.HLTPrescale(
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
+					prescale =  event->HLTPrescale(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 				}
 			}
@@ -329,14 +330,14 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		const JetPointer jet2(cleanedJets.at(1));
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30";
 		if (isData) {
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
-			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() > 178380;
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30);
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
+			passesPreCondition = passesPreCondition &&  event->runnumber() > 178380;
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30);
 		} else {
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
 		}
 
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet2, prescale);
@@ -346,25 +347,25 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.runnumber() > 178380
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
-				prescale = ttbarEvent.HLTPrescale(
+				passesPreCondition =  event->runnumber() > 178380
+						&&  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
+				prescale =  event->HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
 			} else {
 
 				if (!isTTJetsFall11) {
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
-					prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				} else {
-					passesPreCondition = ttbarEvent.HLT(
+					passesPreCondition =  event->HLT(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
-					prescale = ttbarEvent.HLTPrescale(
+					prescale =  event->HLTPrescale(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-					passesTrigger = ttbarEvent.HLT(
+					passesTrigger =  event->HLT(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
 				}
 
@@ -378,14 +379,14 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30";
 
 		if (isData) {
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30);
-			passesPreCondition = passesPreCondition && ttbarEvent.runnumber() > 178380;
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralPFJet30);
+			passesPreCondition = passesPreCondition &&  event->runnumber() > 178380;
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
 		} else {
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30);
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 		}
 
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet3, prescale);
@@ -395,26 +396,26 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30";
 
 			if (isData) {
-				passesPreCondition = ttbarEvent.runnumber() > 178380
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
-				prescale = ttbarEvent.HLTPrescale(
+				passesPreCondition =  event->runnumber() > 178380
+						&&  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralPFJet30);
+				prescale =  event->HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-				passesTrigger = ttbarEvent.HLT(
+				passesTrigger =  event->HLT(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
 			} else {
 				if (!isTTJetsFall11) {
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 					prescale = 1;
 					//emulate trigger
-					passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 				} else {
-					passesPreCondition = ttbarEvent.HLT(
+					passesPreCondition =  event->HLT(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_DiCentralJet30);
-					prescale = ttbarEvent.HLTPrescale(
+					prescale =  event->HLTPrescale(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-					passesTrigger = ttbarEvent.HLT(
+					passesTrigger =  event->HLT(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 				}
 
@@ -428,18 +429,18 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30";
 		if (isData) {
 			//run 165970, first occurance of the QuadJet trigger
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30)
-					&& ttbarEvent.runnumber() > 178380;
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30);
-			prescale = ttbarEvent.HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30);
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30)
+					&&  event->runnumber() > 178380;
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30);
+			prescale =  event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralPFJet30);
 		} else {
 			prescale = 1;
-			passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+			passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 			//no emulation so far
 			if (!isTTJetsFall11)
 				passesTrigger = false;
 			else
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30);
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30);
 		}
 		analyseTrigger(passesPreCondition, passesTrigger, histFolder, jet4, prescale);
 
@@ -447,25 +448,25 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 			//isoEle + 4 jets
 			histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30";
 			if (isData) {
-				passesPreCondition = ttbarEvent.HLT(
+				passesPreCondition =  event->HLT(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-				passesTrigger = ttbarEvent.HLT(
+				passesTrigger =  event->HLT(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30);
-				prescale = ttbarEvent.HLTPrescale(
+				prescale =  event->HLTPrescale(
 						HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30);
 			} else {
 				if (!isTTJetsFall11) {
 					prescale = 1;
-					passesPreCondition = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-							&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+					passesPreCondition =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+							&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 					//no emulation so far
 					passesTrigger = false;
 				} else {
-					passesPreCondition = ttbarEvent.HLT(
+					passesPreCondition =  event->HLT(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-					passesTrigger = ttbarEvent.HLT(
+					passesTrigger =  event->HLT(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
-					prescale = ttbarEvent.HLTPrescale(
+					prescale =  event->HLTPrescale(
 							HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralJet30);
 				}
 
@@ -479,55 +480,55 @@ void HLTriggerAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
 	passesTrigger = false;
 
 	//same trigger for MC and data
-	passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-			|| ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+	passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
+			||  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 
-	if ((isData && ttbarEvent.runnumber() <= 178380) || !isData) {
+	if ((isData &&  event->runnumber() <= 178380) || !isData) {
 		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
 				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			//only in the range it was used as a signal trigger
-			if ((isData && ttbarEvent.runnumber() > 160404 && ttbarEvent.runnumber() <= 165633) || !isData)
+			if ((isData &&  event->runnumber() > 160404 &&  event->runnumber() <= 165633) || !isData)
 				analyseTriggerEfficiency((AnalysisReference::value) analysis,
-						"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30", passesTrigger, ttbarEvent);
+						"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30", passesTrigger, ttbarCand);
 		}
 
 		if (isData || isTTJetsFall11)
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 		else
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-					&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
+					&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 
 		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
 				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
-			if ((isData && ttbarEvent.runnumber() > 165633 && ttbarEvent.runnumber() <= 178380) || !isData)
+			if ((isData &&  event->runnumber() > 165633 &&  event->runnumber() <= 178380) || !isData)
 				analyseTriggerEfficiency((AnalysisReference::value) analysis,
-						"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30", passesTrigger, ttbarEvent);
+						"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30", passesTrigger, ttbarCand);
 		}
 	}
-	if ((isData && ttbarEvent.runnumber() > 178380) || !isData) {
+	if ((isData &&  event->runnumber() > 178380) || !isData) {
 		//PF jet triggers
-		passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+		passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
 
 		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
 				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			analyseTriggerEfficiency((AnalysisReference::value) analysis, "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30",
-					passesTrigger, ttbarEvent);
+					passesTrigger, ttbarCand);
 		}
 
 		if (isData)
-			passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+			passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
 		else {
 			if (!isTTJetsFall11)
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30)
-						&& ttbarEvent.HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30)
+						&&  event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT);
 			else
-				passesTrigger = ttbarEvent.HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+				passesTrigger =  event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 		}
 
 		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
 				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			analyseTriggerEfficiency((AnalysisReference::value) analysis,
-					"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30", passesTrigger, ttbarEvent);
+					"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30", passesTrigger, ttbarCand);
 		}
 	}
 	//restore normal jet binning
@@ -615,7 +616,7 @@ void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigg
 }
 
 void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName,
-		bool passesTrigger, const TopPairEventCandidate& ttbarEvent) {
+		bool passesTrigger, const TopPairEventCandidatePtr event) {
 
 	double triggerResult = passesTrigger ? 1.0 : 0.;
 
@@ -630,38 +631,38 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 	//all common cuts except HLT
 	for (unsigned int cut = TTbarEPlusJetsSelection::GoodPrimaryvertex;
 			cut <= TTbarEPlusJetsSelection::AtLeastThreeGoodJets; cut++) {
-		passesCuts = passesCuts && ttbarEvent.passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut);
+		passesCuts = passesCuts &&  event->passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut);
 	}
 	bool passesRequired = false;
 
 	switch (analysis) {
 	case AnalysisReference::Ele30_TriPFJet30:
 		//require == 3 jets
-		passesRequired = !ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+		passesRequired = ! event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
 			histMan->H1D("Ele30_TriPFJet30")->Fill(triggerResult, weight);
 		break;
 	case AnalysisReference::Ele30_QuadPFJet30:
-		passesRequired = ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+		passesRequired =  event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
 			histMan->H1D("Ele30_QuadPFJet30")->Fill(triggerResult, weight);
 		break;
 
 	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30:
 		//require == 3 jets
-		passesRequired = !ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+		passesRequired = ! event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
 		passesRequired = passesRequired
-				&& ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
+				&&  event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
 			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(triggerResult, weight);
 		break;
 
 	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30_PFJet30:
-		passesRequired = ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+		passesRequired =  event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
 		passesRequired = passesRequired
-				&& ttbarEvent.passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
+				&&  event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
 			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(triggerResult, weight);
 		break;

@@ -9,10 +9,10 @@
 
 namespace BAT {
 
-void BJetAnalyser::analyse(const TopPairEventCandidate& event) {
-	double weight = event.weight();
+void BJetAnalyser::analyse(const EventPtr event) {
+	double weight =  event->weight();
     histMan->setCurrentHistogramFolder("BJetAnalysis");
-    const JetCollection allJets = event.Jets();
+    const JetCollection allJets =  event->Jets();
 
     for(unsigned int jetIndex = 0; jetIndex < allJets.size(); ++jetIndex){
     	const JetPointer jet(allJets.at(jetIndex));

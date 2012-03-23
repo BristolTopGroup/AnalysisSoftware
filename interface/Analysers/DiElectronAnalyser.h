@@ -9,7 +9,6 @@
 #define DIELECTRONANALYSER_H_
 
 #include "BasicAnalyser.h"
-#include <boost/shared_ptr.hpp>
 #include "../../interface/TopPairEventCandidate.h"
 #include "../../interface/HistHelpers/HistogramManager.h"
 
@@ -20,7 +19,7 @@ public:
 	DiElectronAnalyser(HistogramManagerPtr histMan);
 	virtual ~DiElectronAnalyser();
 
-    void analyse(const TopPairEventCandidate& ttbarEvent);
+    void analyse(const EventPtr);
     void createHistograms();
 };
 

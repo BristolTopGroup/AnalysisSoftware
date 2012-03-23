@@ -23,7 +23,7 @@ public:
     MCAnalyser(HistogramManagerPtr histMan);
     virtual ~MCAnalyser();
 
-    void analyse(const TopPairEventCandidate& ttbarEvent);
+    void analyse(const EventPtr);
     void createHistograms();
 
     double topMass() const;

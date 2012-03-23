@@ -9,13 +9,14 @@
 
 namespace BAT {
 
-MVAnalyser::MVAnalyser(HistogramManagerPtr histMan): BasicAnalyser(histMan) {
+MVAnalyser::MVAnalyser(HistogramManagerPtr histMan) :
+		BasicAnalyser(histMan) {
 }
 
 MVAnalyser::~MVAnalyser() {
 }
 
-void MVAnalyser::analyse(const TopPairEventCandidate& event)
+void MVAnalyser::analyse(const EventPtr event)
 {
 	histMan->setCurrentHistogramFolder("MVAnalysis");
 	histMan->H3D("Test")->FillRandom("gaus", 10);

@@ -9,17 +9,17 @@
 
 namespace BAT {
 
-void DiElectronAnalyser::analyse(const TopPairEventCandidate& ttbarEvent) {
+void DiElectronAnalyser::analyse(const EventPtr event) {
 	histMan->setCurrentHistogramFolder("DiElectronAnalysis");
-	ElectronCollection electrons = ttbarEvent.GoodElectrons();
-	double weight = ttbarEvent.weight();
+	ElectronCollection electrons =  event->GoodElectrons();
+	double weight =  event->weight();
 	if (electrons.size() == 2) {
 		ElectronPointer leadingElectron = electrons.front();
 		ElectronPointer secondElectron = electrons.at(1);
 		histMan->H1D_JetBinned("diElectronMass")->Fill(leadingElectron->invariantMass(secondElectron), weight);
 	}
 
-	ElectronCollection isolatedElectrons = ttbarEvent.GoodPFIsolatedElectrons();
+	ElectronCollection isolatedElectrons =  event->GoodPFIsolatedElectrons();
 	if (isolatedElectrons.size() == 2) {
 		ElectronPointer leadingElectron = isolatedElectrons.front();
 		ElectronPointer secondElectron = isolatedElectrons.at(1);

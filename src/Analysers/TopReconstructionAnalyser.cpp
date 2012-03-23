@@ -6,22 +6,23 @@
  */
 
 #include "../../interface/Analysers/TopReconstructionAnalyser.h"
+#include "../../interface/TopPairEventCandidate.h"
 
 namespace BAT {
 
-void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarEvent) {
-	TopPairEventCandidate ttbarCandidate(ttbarEvent);
-	double weight = ttbarCandidate.weight();
+void TopReconstructionAnalyser::analyse(const EventPtr event) {
+	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
+	double weight =  event->weight();
 
 	histMan->setCurrentHistogramFolder("topReconstruction");
-	if (ttbarCandidate.passesNMinus1(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
-		histMan->H1D("numberOfJets")->Fill(ttbarCandidate.GoodJets().size());
+	if ( ttbarCand->passesNMinus1(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
+		histMan->H1D("numberOfJets")->Fill( ttbarCand->GoodJets().size());
 	}
 
-	if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)
-			&& ttbarCandidate.ePlusJetsLooseMuonVeto() && ttbarCandidate.electronPlusJetsZVeto()
-			&& ttbarCandidate.GoodElectronCleanedJets().size() >= 4) {
-		const ElectronCollection coll = ttbarCandidate.Electrons();
+	if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)
+			&&  ttbarCand->ePlusJetsLooseMuonVeto() &&  ttbarCand->electronPlusJetsZVeto()
+			&&  ttbarCand->GoodElectronCleanedJets().size() >= 4) {
+		const ElectronCollection coll =  ttbarCand->Electrons();
 		for (unsigned int index = 0; index < coll.size(); ++index) {
 			const ElectronPointer electron = coll.at(index);
 			bool passesEt = electron->et() > 30;
@@ -33,48 +34,48 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 			}
 		}
 	}
-	if (ttbarCandidate.passesFullTTbarEPlusJetSelection()) {
+	if ( ttbarCand->passesFullTTbarEPlusJetSelection()) {
 //		ChiSquaredBasedTopPairReconstruction reco(ttbarCandidate.GoodPFIsolatedElectrons().front(),
 //				ttbarCandidate.MET(), ttbarCandidate.GoodElectronCleanedJets());
-		histMan->H1D("numberOfBJets")->Fill(ttbarCandidate.GoodElectronCleanedBJets().size(), weight);
+		histMan->H1D("numberOfBJets")->Fill( ttbarCand->GoodElectronCleanedBJets().size(), weight);
 		try {
 			if (Event::usePFIsolation)
-				ttbarCandidate.reconstructTTbarToEPlusJets(ttbarCandidate.GoodPFIsolatedElectrons().front());
+				 ttbarCand->reconstructTTbarToEPlusJets( ttbarCand->GoodPFIsolatedElectrons().front());
 			else
-				ttbarCandidate.reconstructTTbarToEPlusJets(ttbarCandidate.GoodIsolatedElectrons().front());
+				 ttbarCand->reconstructTTbarToEPlusJets( ttbarCand->GoodIsolatedElectrons().front());
 		} catch (ReconstructionException &e) {
 			cout << e.what() << endl;
 			return;
 		}
-		vector<TtbarHypothesisPointer> solutions = ttbarCandidate.Solutions();
-		const ParticlePointer resonance = ttbarCandidate.getResonance();
-		double mttbar = ttbarCandidate.mttbar();
+		vector<TtbarHypothesisPointer> solutions =  ttbarCand->Solutions();
+		const ParticlePointer resonance =  ttbarCand->getResonance();
+		double mttbar =  ttbarCand->mttbar();
 
 		ParticlePointer leadingTop, nextToLeadingTop;
 
-		if (ttbarCandidate.getHadronicTop()->pt() > ttbarCandidate.getLeptonicTop()->pt()) {
-			leadingTop = ttbarCandidate.getHadronicTop();
-			nextToLeadingTop = ttbarCandidate.getLeptonicTop();
+		if ( ttbarCand->getHadronicTop()->pt() >  ttbarCand->getLeptonicTop()->pt()) {
+			leadingTop =  ttbarCand->getHadronicTop();
+			nextToLeadingTop =  ttbarCand->getLeptonicTop();
 		} else {
-			leadingTop = ttbarCandidate.getLeptonicTop();
-			nextToLeadingTop = ttbarCandidate.getHadronicTop();
+			leadingTop =  ttbarCand->getLeptonicTop();
+			nextToLeadingTop =  ttbarCand->getHadronicTop();
 		}
 		double angleTops = leadingTop->angle(nextToLeadingTop);
 		histMan->H1D_BJetBinned("angleTops")->Fill(angleTops, weight);
 		histMan->H2D_BJetBinned("angleTops_vs_mttbar")->Fill(mttbar, angleTops, weight);
-		histMan->H1D_BJetBinned("mLeptonicTop")->Fill(ttbarCandidate.getLeptonicTop()->mass(), weight);
-		histMan->H1D_BJetBinned("mHadronicTop")->Fill(ttbarCandidate.getHadronicTop()->mass(), weight);
-		histMan->H1D_BJetBinned("mAllTop")->Fill(ttbarCandidate.getLeptonicTop()->mass(), weight);
-		histMan->H1D_BJetBinned("mAllTop")->Fill(ttbarCandidate.getHadronicTop()->mass(), weight);
+		histMan->H1D_BJetBinned("mLeptonicTop")->Fill( ttbarCand->getLeptonicTop()->mass(), weight);
+		histMan->H1D_BJetBinned("mHadronicTop")->Fill( ttbarCand->getHadronicTop()->mass(), weight);
+		histMan->H1D_BJetBinned("mAllTop")->Fill( ttbarCand->getLeptonicTop()->mass(), weight);
+		histMan->H1D_BJetBinned("mAllTop")->Fill( ttbarCand->getHadronicTop()->mass(), weight);
 
-		histMan->H1D_BJetBinned("MET")->Fill(ttbarCandidate.MET()->et(), weight);
-		histMan->H2D_BJetBinned("METvsMttbar")->Fill(mttbar, ttbarCandidate.MET()->et(), weight);
-		histMan->H1D_BJetBinned("HT")->Fill(ttbarCandidate.fullHT(), weight);
-		histMan->H2D_BJetBinned("HTvsMttbar")->Fill(mttbar, ttbarCandidate.fullHT(), weight);
-		histMan->H1D_BJetBinned("mtW")->Fill(ttbarCandidate.transverseWmass(ttbarCandidate.getElectronFromWDecay()),
+		histMan->H1D_BJetBinned("MET")->Fill( ttbarCand->MET()->et(), weight);
+		histMan->H2D_BJetBinned("METvsMttbar")->Fill(mttbar,  ttbarCand->MET()->et(), weight);
+		histMan->H1D_BJetBinned("HT")->Fill( ttbarCand->fullHT(), weight);
+		histMan->H2D_BJetBinned("HTvsMttbar")->Fill(mttbar,  ttbarCand->fullHT(), weight);
+		histMan->H1D_BJetBinned("mtW")->Fill( ttbarCand->transverseWmass( ttbarCand->getElectronFromWDecay()),
 				weight);
 
-		histMan->H1D_BJetBinned("m3")->Fill(ttbarCandidate.M3(), weight);
+		histMan->H1D_BJetBinned("m3")->Fill( ttbarCand->M3(), weight);
 
 		histMan->H1D_BJetBinned("mttbar")->Fill(mttbar, weight);
 
@@ -86,15 +87,15 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 
 		histMan->H2D_BJetBinned("ttbar_pt_vs_mttbar")->Fill(mttbar, resonance->pt(), weight);
 
-		histMan->H1D("electron_et")->Fill(ttbarCandidate.getElectronFromWDecay()->et(), weight);
-		histMan->H1D_BJetBinned("neutrino_pz")->Fill(ttbarCandidate.getNeutrinoFromWDecay()->pz(), weight);
+		histMan->H1D("electron_et")->Fill( ttbarCand->getElectronFromWDecay()->et(), weight);
+		histMan->H1D_BJetBinned("neutrino_pz")->Fill( ttbarCand->getNeutrinoFromWDecay()->pz(), weight);
 
 		histMan->H1D_BJetBinned("pt_leadingTop")->Fill(leadingTop->pt(), weight);
 		histMan->H1D_BJetBinned("pt_NextToLeadingTop")->Fill(nextToLeadingTop->pt(), weight);
 		histMan->H2D_BJetBinned("pt_leadingTop_vs_mttbar")->Fill(mttbar, leadingTop->pt(), weight);
 		histMan->H2D_BJetBinned("pt_NextToLeadingTop_vs_mttbar")->Fill(mttbar, nextToLeadingTop->pt(), weight);
 
-		if (ttbarCandidate.passesMETCut()) {
+		if ( ttbarCand->passesMETCut()) {
 			histMan->H1D_BJetBinned("angleTops_withMETCut")->Fill(angleTops, weight);
 			histMan->H2D_BJetBinned("angleTops_vs_mttbar_withMETCut")->Fill(mttbar, angleTops, weight);
 			histMan->H1D_BJetBinned("mttbar_withMETCut")->Fill(mttbar, weight);
@@ -107,7 +108,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 			histMan->H2D_BJetBinned("pt_NextToLeadingTop_vs_mttbar_withMETCut")->Fill(mttbar, nextToLeadingTop->pt(),
 					weight);
 
-			if (ttbarCandidate.passesAsymmetricElectronCleanedJetCuts()) {
+			if ( ttbarCand->passesAsymmetricElectronCleanedJetCuts()) {
 				histMan->H1D_BJetBinned("angleTops_withMETAndAsymJets")->Fill(angleTops, weight);
 				histMan->H2D_BJetBinned("angleTops_vs_mttbar_withMETAndAsymJets")->Fill(mttbar, angleTops, weight);
 				histMan->H1D_BJetBinned("mttbar_withMETAndAsymJets")->Fill(mttbar, weight);
@@ -121,23 +122,23 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 						weight);
 				histMan->H2D_BJetBinned("pt_NextToLeadingTop_vs_mttbar_withMETAndAsymJets")->Fill(mttbar,
 						nextToLeadingTop->pt(), weight);
-				histMan->H1D_BJetBinned("HT_withMETAndAsymJets")->Fill(ttbarCandidate.fullHT(), weight);
+				histMan->H1D_BJetBinned("HT_withMETAndAsymJets")->Fill( ttbarCand->fullHT(), weight);
 				histMan->H1D_BJetBinned("mLeptonicTop_withMETAndAsymJets")->Fill(
-						ttbarCandidate.getLeptonicTop()->mass(), weight);
+						 ttbarCand->getLeptonicTop()->mass(), weight);
 				histMan->H1D_BJetBinned("mHadronicTop_withMETAndAsymJets")->Fill(
-						ttbarCandidate.getHadronicTop()->mass(), weight);
-				histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill(ttbarCandidate.getLeptonicTop()->mass(),
+						 ttbarCand->getHadronicTop()->mass(), weight);
+				histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill( ttbarCand->getLeptonicTop()->mass(),
 						weight);
-				histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill(ttbarCandidate.getHadronicTop()->mass(),
+				histMan->H1D_BJetBinned("mAllTop_withMETAndAsymJets")->Fill( ttbarCand->getHadronicTop()->mass(),
 						weight);
-				histMan->H1D_BJetBinned("m3_withMETAndAsymJets")->Fill(ttbarCandidate.M3(), weight);
-				histMan->H1D_BJetBinned("MET_withMETAndAsymJets")->Fill(ttbarCandidate.MET()->et(), weight);
-				histMan->H1D_BJetBinned("mtW_withMETAndAsymJets")->Fill(ttbarCandidate.transverseWmass(
-						ttbarCandidate.getElectronFromWDecay()), weight);
+				histMan->H1D_BJetBinned("m3_withMETAndAsymJets")->Fill( ttbarCand->M3(), weight);
+				histMan->H1D_BJetBinned("MET_withMETAndAsymJets")->Fill( event->MET()->et(), weight);
+				histMan->H1D_BJetBinned("mtW_withMETAndAsymJets")->Fill( ttbarCand->transverseWmass(
+						 ttbarCand->getElectronFromWDecay()), weight);
 			}
 		}
 
-		if (ttbarCandidate.passesAsymmetricElectronCleanedJetCuts()) {
+		if ( ttbarCand->passesAsymmetricElectronCleanedJetCuts()) {
 			histMan->H1D_BJetBinned("angleTops_withAsymJetsCut")->Fill(angleTops, weight);
 			histMan->H2D_BJetBinned("angleTops_vs_mttbar_withAsymJetsCut")->Fill(mttbar, angleTops, weight);
 			histMan->H1D_BJetBinned("mttbar_withAsymJetsCut")->Fill(mttbar, weight);
@@ -151,6 +152,8 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 			histMan->H2D_BJetBinned("pt_NextToLeadingTop_vs_mttbar_withAsymJetsCut")->Fill(mttbar,
 					nextToLeadingTop->pt(), weight);
 
+			histMan->H1D_BJetBinned("MET_withAsymJetsCut")->Fill( event->MET()->et(), weight);
+
 		}
 		unsigned int numberOfSolutions(solutions.size());
 		for (unsigned int solutionIndex = 0; solutionIndex < solutions.size(); ++solutionIndex) {
@@ -162,7 +165,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 					solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
 					weight / numberOfSolutions);
 
-			if (ttbarCandidate.passesMETCut()) {
+			if ( ttbarCand->passesMETCut()) {
 				histMan->H1D_BJetBinned("mttbar_allSolutions_withMETCut")->Fill(
 						solutions.at(solutionIndex)->resonance->mass(), weight / numberOfSolutions);
 				histMan->H1D_BJetBinned("ttbar_pt_allSolutions_withMETCut")->Fill(
@@ -171,7 +174,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 						solutions.at(solutionIndex)->resonance->mass(), solutions.at(solutionIndex)->resonance->pt(),
 						weight / numberOfSolutions);
 
-				if (ttbarCandidate.passesAsymmetricElectronCleanedJetCuts()) {
+				if ( ttbarCand->passesAsymmetricElectronCleanedJetCuts()) {
 					histMan->H1D_BJetBinned("mttbar_allSolutions_withMETAndAsymJets")->Fill(
 							solutions.at(solutionIndex)->resonance->mass(), weight / numberOfSolutions);
 					histMan->H1D_BJetBinned("ttbar_pt_allSolutions_withMETAndAsymJets")->Fill(solutions.at(
@@ -185,7 +188,7 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 		}
 
 		histMan->setCurrentHistogramFolder("topReconstruction/backgroundShape");
-		if (ttbarCandidate.MET()->et() < 20) {
+		if ( ttbarCand->MET()->et() < 20) {
 			histMan->H1D_BJetBinned("mttbar_QCDEnriched")->Fill(mttbar, weight);
 			histMan->H1D_BJetBinned("ttbar_pt_QCDEnriched")->Fill(resonance->pt());
 		}
@@ -202,22 +205,22 @@ void TopReconstructionAnalyser::analyse(const BAT::TopPairEventCandidate& ttbarE
 
 	//for 3 jets only
 	histMan->setCurrentHistogramFolder("topReconstruction");
-	if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets)
-			&& ttbarCandidate.GoodElectronCleanedJets().size() == 3) {
+	if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets)
+			&&  ttbarCand->GoodElectronCleanedJets().size() == 3) {
 		try {
 			if (Event::usePFIsolation)
-				ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(ttbarCandidate.GoodPFIsolatedElectrons().front());
+				 ttbarCand->reconstructTTbarToEPlusJetsFrom3Jets( ttbarCand->GoodPFIsolatedElectrons().front());
 			else
-				ttbarCandidate.reconstructTTbarToEPlusJetsFrom3Jets(ttbarCandidate.GoodIsolatedElectrons().front());
+				 ttbarCand->reconstructTTbarToEPlusJetsFrom3Jets( ttbarCand->GoodIsolatedElectrons().front());
 		} catch (ReconstructionException &e) {
 			cout << e.what() << endl;
 			return;
 		}
-		const ParticlePointer resonance = ttbarCandidate.getResonance();
+		const ParticlePointer resonance =  ttbarCand->getResonance();
 		double mttbar = resonance->mass();
 		histMan->H1D_BJetBinned("mttbar_3jets")->Fill(mttbar, weight);
-		if (ttbarCandidate.MET()->pt() > 20) {
-			if (ttbarCandidate.GoodJets().front()->pt() > 70 && ttbarCandidate.GoodJets().at(1)->pt() > 50) {
+		if ( ttbarCand->MET()->pt() > 20) {
+			if ( ttbarCand->GoodJets().front()->pt() > 70 &&  ttbarCand->GoodJets().at(1)->pt() > 50) {
 				histMan->H1D_BJetBinned("mttbar_3jets_withMETAndAsymJets")->Fill(mttbar, weight);
 
 			}

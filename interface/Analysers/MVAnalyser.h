@@ -18,7 +18,7 @@ public:
 	MVAnalyser(HistogramManagerPtr histMan);
 	virtual ~MVAnalyser();
 
-	void analyse(const TopPairEventCandidate& event);
+	void analyse(const EventPtr);
 	void createHistograms();
 };
 

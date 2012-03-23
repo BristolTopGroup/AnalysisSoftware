@@ -65,7 +65,7 @@ public:
     HitFitAnalyser(HistogramManagerPtr histMan);
     virtual ~HitFitAnalyser();
 
-    void analyse(const TopPairEventCandidate& ttbarEvent);
+    void analyse(const EventPtr);
     void setMCTTbarHypothesis(const TtbarHypothesis& mcEvent);
     void createHistograms();
     void printFile(const string filename);

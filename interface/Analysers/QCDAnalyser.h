@@ -18,14 +18,14 @@ public:
 	QCDAnalyser(HistogramManagerPtr histMan);
 	~QCDAnalyser();
 
-	void analyse(const TopPairEventCandidate& Event);
+	void analyse(const EventPtr);
 	void createHistograms();
 
 private:
 	boost::shared_ptr<HistogramManager> histMan;
 
-	void ABCDMethod(const TopPairEventCandidate& Event);
-	bool passesSelectionWithoutIsolationOrConversionVeto(const TopPairEventCandidate& Event);
+	void ABCDMethod(const TopPairEventCandidatePtr);
+	bool passesSelectionWithoutIsolationOrConversionVeto(const TopPairEventCandidatePtr);
 };
 
 }

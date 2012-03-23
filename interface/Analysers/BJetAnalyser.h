@@ -17,7 +17,7 @@ public:
     BJetAnalyser(HistogramManagerPtr);
     virtual ~BJetAnalyser();
 
-    void analyse(const TopPairEventCandidate&);
+    void analyse(const EventPtr);
     void createHistograms();
 };
 
