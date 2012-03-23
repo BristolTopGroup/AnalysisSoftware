@@ -9,21 +9,20 @@
 
 namespace BAT {
 
-BasicSelection::BasicSelection(std::vector<std::string> selectionSteps) : //
-		selectionSteps_(selectionSteps), //
-		numberOfSelectionSteps_(selectionSteps.size()) //
+BasicSelection::BasicSelection(unsigned int numberOfSelectionSteps) : //
+		numberOfSelectionSteps_(numberOfSelectionSteps) //
 {
 
 }
 
-bool BasicSelection::passesFullSelection(const EventPointer event) const {
-	return passesSelectionUpToStep(numberOfSelectionSteps_);
+bool BasicSelection::passesFullSelection(const EventPtr event) const {
+	return passesSelectionUpToStep(event, numberOfSelectionSteps_);
 }
 
-bool BasicSelection::passesSelectionUpToStep(unsigned int selectionStep) const {
+bool BasicSelection::passesSelectionUpToStep(const EventPtr event, unsigned int selectionStep) const {
 	bool passes(false);
 	for (unsigned int step = 0; step < selectionStep; ++step) {
-		bool result(passesSelectionStep(step));
+		bool result(passesSelectionStep(event, step));
 		if (!result) {
 			passes = false;
 			break;
@@ -33,13 +32,13 @@ bool BasicSelection::passesSelectionUpToStep(unsigned int selectionStep) const {
 	return passes;
 }
 
-bool BasicSelection::passesFullSelectionExceptStep(unsigned int selectionStep) const {
+bool BasicSelection::passesFullSelectionExceptStep(const EventPtr event, unsigned int excludedStep) const {
 	bool passes(false);
 	for (unsigned int step = 0; step < numberOfSelectionSteps_; ++step) {
-		if (step == selectionStep)
+		if (step == excludedStep)
 			continue;
 
-		bool result(passesSelectionStep(step));
+		bool result(passesSelectionStep(event, step));
 		if (!result) {
 			passes = false;
 			break;

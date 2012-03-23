@@ -25,7 +25,7 @@ typedef boost::shared_ptr<BasicSelection> SelectionPointer;
 
 class BasicSelection {
 public:
-	BasicSelection(std::vector<std::string> selectionSteps);
+	BasicSelection(unsigned int numberOfSelectionSteps);
 	virtual ~BasicSelection();
 	//definitions of good objects
 	virtual bool isGoodJet(const JetPointer jet) const = 0;
@@ -35,13 +35,12 @@ public:
 	virtual bool isLooseElectron(const ElectronPointer electron) const = 0;
 	virtual bool isLooseMuon(const MuonPointer electron) const = 0;
 
-	virtual bool passesFullSelection(const EventPointer event) const;
-	virtual bool passesSelectionStep(unsigned int selectionStep) const = 0;
-	virtual bool passesFullSelectionExceptStep(unsigned int selectionStep) const; //N-1 cuts
-	virtual bool passesSelectionUpToStep(unsigned int selectionStep) const;
+	virtual bool passesFullSelection(const EventPtr event) const;
+	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const = 0;
+	virtual bool passesFullSelectionExceptStep(const EventPtr event, unsigned int selectionStep) const; //N-1 cuts
+	virtual bool passesSelectionUpToStep(const EventPtr event, unsigned int selectionStep) const;
 
 private:
-	std::vector<std::string> selectionSteps_;
 	unsigned int numberOfSelectionSteps_;
 };
 

@@ -18,7 +18,7 @@ enum Step {
 	OneIsolatedElectron,
 	LooseMuonVeto,
 	DiLeptonVeto,
-	ConversionRejectionMissinLayers,
+	ConversionRejectionMissingLayers,
 	ConversionRejectionPartnerTrack,
 	AtLeastOneGoodJets,
 	AtLeastTwoGoodJets,
@@ -45,10 +45,11 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 		};
 }
 
-class TopPairReferenceSelection: public BAT::BasicSelection {
+class TopPairEPlusJetsReferenceSelection: public BAT::BasicSelection {
 public:
-	TopPairReferenceSelection(std::vector<std::string> selectionSteps);
-	virtual ~TopPairReferenceSelection();
+	TopPairEPlusJetsReferenceSelection(unsigned int numberOfSelectionSteps =
+			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS);
+	virtual ~TopPairEPlusJetsReferenceSelection();
 
 	virtual bool isGoodJet(const JetPointer jet) const;
 	virtual bool isGoodElectron(const ElectronPointer electron) const;
@@ -57,8 +58,17 @@ public:
 	//definitions of loose objects
 	virtual bool isLooseElectron(const ElectronPointer electron) const;
 	virtual bool isLooseMuon(const MuonPointer electron) const;
+	//isolation definitions
+	virtual bool isIsolated(const LeptonPointer lepton) const;
 
-	virtual bool passesSelectionStep(unsigned int selectionStep) const;
+	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const;
+	virtual bool passesEventCleaning(const EventPtr event) const;
+	virtual bool passesTriggerSelection(const EventPtr event) const;
+	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
+	virtual bool passesLooseLeptonVeto(const EventPtr event) const;
+	virtual bool passesDileptonVeto(const EventPtr event) const;
+	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
+	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
 };
 
 } /* namespace BAT */
