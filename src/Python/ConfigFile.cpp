@@ -76,8 +76,11 @@ boost::array<boost::shared_ptr<TF1>, 12> ConfigFile::getL7Correction(std::string
 
 	boost::array<double, 12> towerBinning = { { 0., 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74,
 			2.5 } };
-	if (!boost::filesystem::exists(correctionFile))
+	if (!boost::filesystem::exists(correctionFile)){
+		cerr << "ConfigFile::getL7Correction(" << correctionFile << "): could not find file" << endl;
 		throw "Could not find L7 correction path in " + correctionFile;
+	}
+
 	boost::scoped_ptr<TFile> inputFile(TFile::Open(correctionFile.c_str()));
 
 	for (unsigned int etaBin = 0; etaBin < towerBinning.size() - 1; ++etaBin) {
@@ -121,8 +124,8 @@ string ConfigFile::configPath() const {
 }
 
 string ConfigFile::PUFile() const {
-	if (programOptions.count("PUfile"))
-		return programOptions["PUfile"].as<std::string>();
+	if (programOptions.count("PUFile"))
+		return programOptions["PUFile"].as<std::string>();
 	else
 		return pileUpFile_;
 }
@@ -227,8 +230,11 @@ void ConfigFile::loadIntoMemory() {
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
 	using namespace std;
 
-	if (!boost::filesystem::exists(pileUpEstimationFile))
+	if (!boost::filesystem::exists(pileUpEstimationFile)){
+		cerr << "ConfigFile::getPileUpHistogram(" << pileUpEstimationFile << "): could not find file" << endl;
 		throw "Could not find pile-up histogram file in " + pileUpEstimationFile;
+	}
+
 
 	boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
 	boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());

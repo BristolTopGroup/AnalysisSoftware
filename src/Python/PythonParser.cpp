@@ -6,6 +6,7 @@
  */
 
 #include "../../interface/Python/PythonParser.h"
+#include <boost/filesystem.hpp>
 using namespace std;
 
 namespace BAT {
@@ -20,6 +21,11 @@ PythonParser::~PythonParser() {
 boost::python::object PythonParser::parse_python_file(const string configPath) {
 	Py_Initialize();
 	boost::python::object configuration;
+	if(!boost::filesystem::exists(configPath)){
+		cerr << "PythonParser::parse_python_file(" << configPath << "): could not find file" << endl;
+		throw "PythonParser::parse_python_file(" + configPath + "): could not find file";
+	}
+
 	try {
 		boost::python::object main_module = boost::python::import("__main__");
 		boost::python::object main_namespace = main_module.attr("__dict__");
@@ -45,25 +51,24 @@ boost::python::object PythonParser::parse_python_file(const string configPath) {
 		configuration = load_from_file(configPath);
 	} catch (boost::python::error_already_set const &) {
 		string perror_str = parse_python_exception();
-		cout << "Error during configuration parsing: " << perror_str << endl;
+		cerr << "Error during configuration parsing: " << perror_str << endl;
 		throw "ConfigParser: Terminating. Could not initialise configuration.";
 	}
 	return configuration;
 }
 
 const vector<string> PythonParser::getVectorFromPythonObject(const boost::python::object pyObject, const string vectorName) {
-	using namespace boost::python;
 	vector<string> ret;
 	try {
-		list myList = extract<list>(pyObject.attr(vectorName.c_str()));
-		unsigned int length = extract<unsigned int>(myList.attr("__len__")());
+		boost::python::list myList = boost::python::extract<boost::python::list>(pyObject.attr(vectorName.c_str()));
+		unsigned int length = boost::python::extract<unsigned int>(myList.attr("__len__")());
 
 		for (unsigned int index = 0; index < length; ++index) {
-			ret.push_back(extract<string>(myList[index]));
+			ret.push_back(boost::python::extract<string>(myList[index]));
 		}
 	} catch (boost::python::error_already_set const &) {
 		string perror_str = PythonParser::parse_python_exception();
-		cout << "Error during configuration parsing: " << perror_str << endl;
+		cerr << "Error during configuration parsing: " << perror_str << endl;
 		throw "Configparser: error when parsing '" + vectorName + "'.";
 	}
 	return ret;
