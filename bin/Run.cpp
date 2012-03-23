@@ -85,6 +85,7 @@ void setConfiguration(ConfigFile config) {
 	cout << "Using set-up for nTuple version " << Globals::NTupleVersion << endl;
 	cout << "Loading configuration..." << endl;
 	cout << "Using config-file '" << config.configPath() << endl;
+	cout << "Using pileup-file '" << config.PUFile() << endl;
 	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
 	cout << config.lightJetResoFile() << endl;
 	long maxEvents(config.maxEvents());
@@ -93,7 +94,7 @@ void setConfiguration(ConfigFile config) {
 		cout << maxEvents << ".\n";
 	else
 		cout << "all available" << ".\n";
-
+	cout << "Scaling to luminosity " << config.lumi() << "pb-1" << endl;
 	if (config.useHitFit())
 		cout << "Using HitFit.\n";
 

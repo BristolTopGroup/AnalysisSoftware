@@ -38,13 +38,13 @@ void Analysis::analyse() {
 		diElectronAnalyser->analyse(ttbarCandidate);
 		electronAnalyser->analyse(ttbarCandidate);
 		if (Globals::useHitFit) {
-			if (currentEvent.getDataType() == DataType::TTJets)
+			if (currentEvent->getDataType() == DataType::TTJets)
 				hitfitAnalyser->setMCTTbarHypothesis(mcAnalyser->GetMCTTbarHypothesis());
 			hitfitAnalyser->analyse(ttbarCandidate);
 		}
 		hltriggerAnalyser->analyse(ttbarCandidate);
 		jetAnalyser->analyse(ttbarCandidate);
-		if (currentEvent.getDataType() == DataType::TTJets)
+		if (currentEvent->getDataType() == DataType::TTJets)
 			mcAnalyser->analyse(ttbarCandidate);
 		metAnalyser->analyse(ttbarCandidate);
 		mttbarAnalyser->analyse(ttbarCandidate);
@@ -52,14 +52,15 @@ void Analysis::analyse() {
 		mvAnalyser->analyse(ttbarCandidate);
 		qcdAnalyser->analyse(ttbarCandidate);
 		topRecoAnalyser->analyse(ttbarCandidate);
+		ttbarPlusMETAnalyser_->analyse(currentEvent);
 		vertexAnalyser->analyse(ttbarCandidate);
 
 		//TODO: move to TTbarAnalysis
 		doTTbarCutFlow();
 //TODO: to be tidied up
 		//                doSynchExercise();
-//        if(currentEvent.getDataType() == DataType::DATA)
-//            eventCheck[currentEvent.runnumber()].push_back(currentEvent.eventnumber());
+//        if(currentEvent->getDataType() == DataType::DATA)
+//            eventCheck[currentEvent->runnumber()].push_back(currentEvent->eventnumber());
 //        checkForBrokenEvents();
 	}
 //    checkForDuplicatedEvents();
@@ -70,7 +71,7 @@ void Analysis::analyse() {
 void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 	unsigned long eventIndex = eventReader->getNumberOfProccessedEvents();
 	if (eventIndex % printEvery == 0 || eventIndex == 1) {
-		cout << "Analysing event no " << eventIndex << ", sample: " << DataType::names[currentEvent.getDataType()]
+		cout << "Analysing event no " << eventIndex << ", sample: " << DataType::names[currentEvent->getDataType()]
 				<< endl;
 		cout << "File: " << eventReader->getCurrentFile() << endl;
 	}
@@ -79,76 +80,78 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 
 void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
-	ttbarCandidate = TopPairEventCandidate(currentEvent);
-	weight = weights->getWeight(currentEvent.getDataType());
-	if (!currentEvent.isRealData()) {
-		pileUpWeight = weights->reweightPileUp(
-				currentEvent.numberOfGeneratedPileUpVertices(Globals::pileUpReweightingMethod));
+	ttbarCandidate = TopPairEventCandidatePtr(new TopPairEventCandidate(*currentEvent.get()));
+	weight = weights->getWeight(currentEvent->getDataType());
+	if (!currentEvent->isRealData()) {
+		//TODO: fix this dirty little thing
+		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
+//		pileUpWeight = weights->reweightPileUp(
+//				currentEvent->numberOfGeneratedPileUpVertices(Globals::pileUpReweightingMethod));
 		weight *= pileUpWeight;
 	}
 
-	currentEvent.setEventWeight(weight);
-	currentEvent.setPileUpWeight(pileUpWeight);
-	ttbarCandidate.setEventWeight(weight);
-	ttbarCandidate.setPileUpWeight(pileUpWeight);
+	currentEvent->setEventWeight(weight);
+	currentEvent->setPileUpWeight(pileUpWeight);
+	ttbarCandidate->setEventWeight(weight);
+	ttbarCandidate->setPileUpWeight(pileUpWeight);
 
-	histMan->setCurrentDataType(ttbarCandidate.getDataType());
-	histMan->setCurrentJetBin(currentEvent.GoodElectronCleanedJets().size());
-	histMan->setCurrentBJetBin(currentEvent.GoodElectronCleanedBJets().size());
+	histMan->setCurrentDataType(ttbarCandidate->getDataType());
+	histMan->setCurrentJetBin(currentEvent->GoodElectronCleanedJets().size());
+	histMan->setCurrentBJetBin(currentEvent->GoodElectronCleanedBJets().size());
 }
 
 void Analysis::inspectEvents() {
 	std::vector<InterestingEvent> eventsToInspect;
 
 	for (unsigned int index = 0; index < eventsToInspect.size(); ++index) {
-		if ((ttbarCandidate.runnumber() == eventsToInspect.at(index).runNumber
-				&& ttbarCandidate.eventnumber() == eventsToInspect.at(index).eventNumber)) {
+		if ((ttbarCandidate->runnumber() == eventsToInspect.at(index).candidate->runnumber()
+				&& ttbarCandidate->eventnumber() == eventsToInspect.at(index).candidate->eventnumber())) {
 			cout << "file: " << eventReader->getCurrentFile() << endl;
-			ttbarCandidate.inspect();
+			ttbarCandidate->inspect();
 		}
 	}
 
 }
 
 void Analysis::doSynchExercise() {
-	if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionFinder)) {
-		cout << ttbarCandidate.runnumber() << ":" << ttbarCandidate.eventnumber() << ":" << endl; //electron->et() << endl;
-		if (ttbarCandidate.eventnumber() == 450622) {
-			ttbarCandidate.inspect();
+	if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionFinder)) {
+		cout << ttbarCandidate->runnumber() << ":" << ttbarCandidate->eventnumber() << ":" << endl; //electron->et() << endl;
+		if (ttbarCandidate->eventnumber() == 450622) {
+			ttbarCandidate->inspect();
 		}
 	}
 }
 
 void Analysis::doTTbarCutFlow() {
 	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		if (ttbarCandidate.passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut)) {
+		if (ttbarCandidate->passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut)) {
 			++ePlusJetsSingleCuts[cut];
 			ePlusJetsSingleCutsPerFile[eventReader->getCurrentFile()][cut]++;
 		}
 
-		if (ttbarCandidate.passesEPlusJetsSelectionStepUpTo((TTbarEPlusJetsSelection::Step) cut)) {
+		if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo((TTbarEPlusJetsSelection::Step) cut)) {
 			ePlusJetsCutflow[cut] += 1;
 			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-			unsigned int njet = ttbarCandidate.GoodElectronCleanedJets().size();
+			unsigned int njet = ttbarCandidate->GoodElectronCleanedJets().size();
 			if (njet >= JetBin::NUMBER_OF_JET_BINS)
 				njet = JetBin::NUMBER_OF_JET_BINS - 1;
-			ePlusJetsCutflowPerSample.increase(ttbarCandidate.getDataType(), cut, njet, weight);
+			ePlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
 		}
 	}
 
 	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		if (ttbarCandidate.passesMuPlusJetsSelectionStep((TTbarMuPlusJetsSelection::Step) cut)) {
+		if (ttbarCandidate->passesMuPlusJetsSelectionStep((TTbarMuPlusJetsSelection::Step) cut)) {
 			++muPlusJetsSingleCuts[cut];
 //			ePlusJetsSingleCutsPerFile[eventReader->getCurrentFile()][cut]++;
 		}
 
-		if (ttbarCandidate.passesMuPlusJetsSelectionStepUpTo((TTbarMuPlusJetsSelection::Step) cut)) {
+		if (ttbarCandidate->passesMuPlusJetsSelectionStepUpTo((TTbarMuPlusJetsSelection::Step) cut)) {
 			muPlusJetsCutFlow[cut] += 1;
 //			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-			unsigned int njet = ttbarCandidate.GoodMuonCleanedJets().size();
+			unsigned int njet = ttbarCandidate->GoodMuonCleanedJets().size();
 			if (njet >= JetBin::NUMBER_OF_JET_BINS)
 				njet = JetBin::NUMBER_OF_JET_BINS - 1;
-			muPlusJetsCutflowPerSample.increase(ttbarCandidate.getDataType(), cut, njet, weight);
+			muPlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
 		}
 	}
 }
@@ -217,6 +220,7 @@ void Analysis::createHistograms() {
 	mvAnalyser->createHistograms();
 	qcdAnalyser->createHistograms();
 	topRecoAnalyser->createHistograms();
+	ttbarPlusMETAnalyser_->createHistograms();
 	vertexAnalyser->createHistograms();
 
 }
@@ -255,6 +259,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		mvAnalyser(new MVAnalyser(histMan)), //
 		qcdAnalyser(new QCDAnalyser(histMan)), //
 		topRecoAnalyser(new TopReconstructionAnalyser(histMan)), //
+		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan, weights)) //
 {
 	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
@@ -314,13 +319,13 @@ void Analysis::checkForDuplicatedEvents() {
 }
 
 void Analysis::checkForBrokenEvents() {
-	if (ttbarCandidate.Electrons().size() == 0) {
+	if (ttbarCandidate->Electrons().size() == 0) {
 		brokenEvents.push_back(InterestingEvent(ttbarCandidate, eventReader->getCurrentFile()));
 	}
 
-	if (ttbarCandidate.eventnumber() == 1019245) {
+	if (ttbarCandidate->eventnumber() == 1019245) {
 		cout << "broken event" << endl;
-		ttbarCandidate.inspect();
+		ttbarCandidate->inspect();
 	}
 }
 

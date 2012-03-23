@@ -40,6 +40,7 @@
 #include "../interface/Analysers/MVAnalyser.h"
 #include "../interface/Analysers/QCDAnalyser.h"
 #include "../interface/Analysers/TopReconstructionAnalyser.h"
+#include "../interface/Analysers/TTbarPlusMETAnalyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
 
 
@@ -51,8 +52,8 @@ typedef boost::unordered_map<std::string, ePlusJetscutarray> cutmap;
 class Analysis {
 private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
-    BAT::Event currentEvent;
-    BAT::TopPairEventCandidate ttbarCandidate;
+    BAT::EventPtr currentEvent;
+    BAT::TopPairEventCandidatePtr ttbarCandidate;
     boost::shared_ptr<BAT::HistogramManager> histMan;
     ePlusJetscutarray ePlusJetsCutflow;
     ePlusJetscutarray ePlusJetsSingleCuts;
@@ -80,6 +81,7 @@ private:
     BAT::MVAnalyserPtr mvAnalyser;
     boost::scoped_ptr<BAT::QCDAnalyser> qcdAnalyser;
     boost::scoped_ptr<BAT::TopReconstructionAnalyser> topRecoAnalyser;
+    BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
 
 
