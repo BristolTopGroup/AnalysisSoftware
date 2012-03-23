@@ -35,6 +35,7 @@ ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::Particl
 ElectronID::value Globals::electronID = ElectronID::CiCHyperTight1MC;
 double Globals::MaxAbsoluteElectronEta = 2.5;
 double Globals::minElectronET = 30;
+double Globals::electronIsolationCone = 0.3;
 
 //muons
 double Globals::maxMuonRelativeIsolation = 0.1;
@@ -42,6 +43,7 @@ double Globals::maxMuonPFIsolation = 0.1;
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
 double Globals::maxAbsoluteMuonEta = 2.1;
 double Globals::minMuonPt = 20.;
+double Globals::muonIsolationCone = 0.3;
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;

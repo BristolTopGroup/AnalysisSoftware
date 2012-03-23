@@ -7,6 +7,7 @@
 
 #ifndef GLOBALVARIABLES_H_
 #define GLOBALVARIABLES_H_
+#include "EventWeightProvider.h"
 #include "RecoObjects/Jet.h"
 #include "RecoObjects/Electron.h"
 #include "RecoObjects/Muon.h"
@@ -14,7 +15,7 @@
 #include "TF1.h"
 #include "TH1D.h"
 #include <string>
-#include "EventWeightProvider.h"
+
 
 namespace BAT {
 struct Globals {
@@ -43,6 +44,7 @@ struct Globals {
 	static ElectronID::value electronID;
 	static double minElectronET;
 	static double MaxAbsoluteElectronEta;
+	static double electronIsolationCone;
 
 	//muons
 	static double maxMuonPFIsolation;
@@ -50,6 +52,7 @@ struct Globals {
 	static MuonAlgorithm::value muonAlgorithm;
 	static double maxAbsoluteMuonEta;
 	static double minMuonPt;
+	static double muonIsolationCone;
 
 	//jets
 	static JetAlgorithm::value jetAlgorithm;
