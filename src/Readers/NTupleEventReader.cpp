@@ -150,11 +150,11 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		PDFWeightsReader->initialiseBlindly();
 		PileupInfoReader->initialiseBlindly();
 		TruePileupInfoReader->initialiseBlindly();
-		PUWeightInTimeOnly_->initialise();
-		PUWeight3BX_->initialise();
-		PUWeight3D_->initialise();
-		PUWeightShiftUp_->initialise();
-		PUWeightShiftDown_->initialise();
+		PUWeightInTimeOnly_->initialiseBlindly();
+		PUWeight3BX_->initialiseBlindly();
+		PUWeight3D_->initialiseBlindly();
+		PUWeightShiftUp_->initialiseBlindly();
+		PUWeightShiftDown_->initialiseBlindly();
 		areReadersSet = true;
 	}
 
