@@ -37,6 +37,7 @@ void Analysis::analyse() {
 		bjetAnalyser->analyse(ttbarCandidate);
 		diElectronAnalyser->analyse(ttbarCandidate);
 		electronAnalyser->analyse(ttbarCandidate);
+		eventcountAnalyser->analyse(currentEvent);
 		if (Globals::useHitFit) {
 			if (currentEvent->getDataType() == DataType::TTJets)
 				hitfitAnalyser->setMCTTbarHypothesis(mcAnalyser->GetMCTTbarHypothesis());
@@ -210,6 +211,7 @@ void Analysis::createHistograms() {
 	bjetAnalyser->createHistograms();
 	diElectronAnalyser->createHistograms();
 	electronAnalyser->createHistograms();
+	eventcountAnalyser->createHistograms();
 	hitfitAnalyser->createHistograms();
 	hltriggerAnalyser->createHistograms();
 	jetAnalyser->createHistograms();
@@ -249,6 +251,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		bjetAnalyser(new BJetAnalyser(histMan)), //
 		diElectronAnalyser(new DiElectronAnalyser(histMan)), //
 		electronAnalyser(new ElectronAnalyser(histMan)), //
+		eventcountAnalyser(new EventCountAnalyser(histMan)), //
 		hitfitAnalyser(new HitFitAnalyser(histMan)), //
 		hltriggerAnalyser(new HLTriggerAnalyser(histMan)), //
 		jetAnalyser(new JetAnalyser(histMan)), //
