@@ -40,6 +40,11 @@ NTupleEventReader::NTupleEventReader() :
 		PDFWeightsReader(new VariableReader<MultiDoublePointer>(input, "Event.PDFWeights")), //
 		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
+		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
+		PUWeight3BX_(new VariableReader<double>(input, "Event.PUWeight3BX")), //
+		PUWeight3D_(new VariableReader<double>(input, "Event.PUWeight3D")), //
+		PUWeightShiftUp_(new VariableReader<double>(input, "Event.PUWeightShiftUp")), //
+		PUWeightShiftDown_(new VariableReader<double>(input, "Event.PUWeightShiftDown")), //
 		areReadersSet(false), //
 		areDatatypesKnown(false), //
 		currentEvent(), //
@@ -90,6 +95,11 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 		currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
 		currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
+		currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
+		currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
+		currentEvent->setPUWeight3D(PUWeight3D_->getVariable());
+		currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
+		currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
 	}
 
 	currentEvent->setJets(jetReader->getJets());
@@ -140,6 +150,11 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		PDFWeightsReader->initialiseBlindly();
 		PileupInfoReader->initialiseBlindly();
 		TruePileupInfoReader->initialiseBlindly();
+		PUWeightInTimeOnly_->initialise();
+		PUWeight3BX_->initialise();
+		PUWeight3D_->initialise();
+		PUWeightShiftUp_->initialise();
+		PUWeightShiftDown_->initialise();
 		areReadersSet = true;
 	}
 

@@ -80,6 +80,7 @@ private:
 	boost::scoped_ptr<VariableReader<MultiDoublePointer> > PDFWeightsReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;
+	boost::scoped_ptr<VariableReader<double> > PUWeightInTimeOnly_, PUWeight3BX_, PUWeight3D_, PUWeightShiftUp_, PUWeightShiftDown_;
 	bool areReadersSet, areDatatypesKnown;
 	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;

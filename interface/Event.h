@@ -70,7 +70,9 @@ protected:
 	unsigned long localEventNumber;
 	unsigned long lumiBlock;
 	double eventWeight;
-	double pileUpWeight;
+	double pileUpWeight_;
+	//These values are calculated with PileUp_2011_truth_finebin.root
+	double PUWeightInTimeOnly_, PUWeight3BX_, PUWeight3D_, PUWeightShiftUp_, PUWeightShiftDown_;
 
 //    double jetCleaningEfficiency;
 	unsigned int numberOfHighPurityTracks_;
@@ -109,6 +111,11 @@ public:
 	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
 	void setPDFWeights(std::vector<double> pdfWeights);
 	void setPtDensityRho(double rho);
+	void setPUWeightInTimeOnly(double puweight);
+	void setPUWeight3BX(double puweight);
+	void setPUWeight3D(double puweight);
+	void setPUWeightShiftUp(double puweight);
+	void setPUWeightShiftDown(double puweight);
 
 	const VertexPointer PrimaryVertex() const;
 	const VertexCollection& Vertices() const;
@@ -169,6 +176,12 @@ public:
 	unsigned int numberOfHighPurityTracks() const;
 	bool isBeamScraping() const;
 	const std::vector<int>& getTrueNumberOfVertices() const;
+
+	double PUWeightInTimeOnly() const;
+	double PUWeight3BX() const;
+	double PUWeight3D() const;
+	double PUWeightShiftUp() const;
+	double PUWeightShiftDown() const;
 
 private:
 	void selectElectronsByQuality();

@@ -52,7 +52,7 @@ Event::Event() : //
 		numberOfHighPurityTracks_(0), //
 		isBeamScraping_(true), //
 		genNumberOfPileUpVertices(0), //
-		trueNumberOfPileUpVertices_(0),//
+		trueNumberOfPileUpVertices_(0), //
 		ptdensityRho(0.) {
 }
 
@@ -376,7 +376,7 @@ void Event::setEventWeight(double weight) {
 }
 
 void Event::setPileUpWeight(double weight) {
-	pileUpWeight = weight;
+	pileUpWeight_ = weight;
 }
 
 void Event::setBeamScrapingVeto(bool isScraping) {
@@ -500,7 +500,7 @@ double Event::weight() const {
 }
 
 double Event::PileUpWeight() const {
-	return pileUpWeight;
+	return pileUpWeight_;
 }
 
 void Event::inspect() const {
@@ -610,7 +610,48 @@ void Event::setTrueNumberOfPileUpVertices(vector<int> pileup) {
 	trueNumberOfPileUpVertices_ = pileup;
 }
 
-const vector<int>& Event::getTrueNumberOfVertices() const{
+const vector<int>& Event::getTrueNumberOfVertices() const {
 	return trueNumberOfPileUpVertices_;
 }
+
+void Event::setPUWeightInTimeOnly(double puweight) {
+	PUWeightInTimeOnly_ = puweight;
+}
+
+double Event::PUWeightInTimeOnly() const {
+	return PUWeightInTimeOnly_;
+}
+
+void Event::setPUWeight3BX(double puweight) {
+	PUWeight3BX_ = puweight;
+}
+
+double Event::PUWeight3BX() const {
+	return PUWeight3BX_;
+}
+
+void Event::setPUWeight3D(double weight) {
+	PUWeight3D_ = weight;
+}
+
+double Event::PUWeight3D() const {
+	return PUWeight3D_;
+}
+
+void Event::setPUWeightShiftUp(double weight) {
+	PUWeightShiftUp_ = weight;
+}
+
+double Event::PUWeightShiftUp() const {
+	return PUWeightShiftUp_;
+}
+
+void Event::setPUWeightShiftDown(double weight) {
+	PUWeightShiftDown_ = weight;
+}
+
+double Event::PUWeightShiftDown() const {
+	return PUWeightShiftDown_;
+}
+
 }
