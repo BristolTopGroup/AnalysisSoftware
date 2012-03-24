@@ -44,7 +44,7 @@ public:
     virtual void createHistograms() = 0;
 };
 
-typedef boost::scoped_ptr<BasicAnalyser> BasicAnalyserPtr;
+typedef boost::scoped_ptr<BasicAnalyser> BasicAnalyserLocalPtr;
 }
 
 
