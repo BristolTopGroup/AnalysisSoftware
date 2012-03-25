@@ -31,6 +31,7 @@ Event::Event() : //
 		looseElectrons(), //
 		qcdElectrons(), //
 		allJets(), //
+		genJets(),//
 		goodJets(), //
 		goodBJets(), //
 		goodElectronCleanedJets(), //
@@ -47,12 +48,20 @@ Event::Event() : //
 		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
+		localEventNumber(0),//
 		lumiBlock(0), //
 		eventWeight(1.), //
+		pileUpWeight_(1.),//
+		PUWeightInTimeOnly_(1.),//
+		PUWeight3BX_(1.),//
+		PUWeight3D_(1.),//
+		PUWeightShiftUp_(1.),//
+		PUWeightShiftDown_(1.),//
 		numberOfHighPurityTracks_(0), //
 		isBeamScraping_(true), //
 		genNumberOfPileUpVertices(0), //
 		trueNumberOfPileUpVertices_(0), //
+		pdfWeights(),//
 		ptdensityRho(0.) {
 }
 
