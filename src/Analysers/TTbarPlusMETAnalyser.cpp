@@ -23,7 +23,17 @@ void TTbarPlusMETAnalyser::analyse(const EventPtr event) {
 				histMan->H1D_BJetBinned("MET_withMETAndAsymJets")->Fill(event->MET()->et(), weight);
 			}
 		}
+	}
 
+	if (ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastThreeGoodJets)
+			&& ttbarCand->GoodElectronCleanedJets().size() == 3) {
+		histMan->H1D_BJetBinned("MET_3jets")->Fill(event->MET()->et(), weight);
+		if (ttbarCand->passesAsymmetricElectronCleanedJetCuts()) {
+			histMan->H1D_BJetBinned("MET_withAsymJetsCut_3jets")->Fill(event->MET()->et(), weight);
+			if (ttbarCand->passesMETCut()) {
+				histMan->H1D_BJetBinned("MET_withMETAndAsymJets_3jets")->Fill(event->MET()->et(), weight);
+			}
+		}
 	}
 }
 
@@ -32,6 +42,10 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	histMan->addH1D_BJetBinned("MET", "MET", 1000, 0, 1000);
 	histMan->addH1D_BJetBinned("MET_withMETAndAsymJets", "MET", 1000, 0, 1000);
 	histMan->addH1D_BJetBinned("MET_withAsymJetsCut", "MET", 1000, 0, 1000);
+
+	histMan->addH1D_BJetBinned("MET_3jets", "MET", 1000, 0, 1000);
+	histMan->addH1D_BJetBinned("MET_withMETAndAsymJets_3jets", "MET", 1000, 0, 1000);
+	histMan->addH1D_BJetBinned("MET_withAsymJetsCut_3jets", "MET", 1000, 0, 1000);
 }
 
 TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan) :
