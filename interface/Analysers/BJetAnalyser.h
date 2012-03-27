@@ -14,7 +14,7 @@ namespace BAT {
 
 class BJetAnalyser : public BasicAnalyser{
 public:
-    BJetAnalyser(HistogramManagerPtr);
+    BJetAnalyser(HistogramManagerPtr, std::string histogramFolder = "BJetAnalysis");
     virtual ~BJetAnalyser();
 
     void analyse(const EventPtr);

@@ -8,8 +8,9 @@
 #include "../../interface/Analysers/BasicAnalyser.h"
 
 namespace BAT {
-BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan):
-        histMan(histMan){
+BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder):
+        histMan_(histMan),
+        histogramFolder_(histogramFolder){
 
 }
 

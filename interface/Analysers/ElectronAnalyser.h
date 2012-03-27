@@ -13,7 +13,7 @@ namespace BAT {
 
 class ElectronAnalyser : public BasicAnalyser{
 public:
-    ElectronAnalyser(HistogramManagerPtr histMan);
+    ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "ElectronAnalysis");
     virtual ~ElectronAnalyser();
 
     void analyse(const EventPtr);

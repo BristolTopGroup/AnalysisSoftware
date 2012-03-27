@@ -14,7 +14,7 @@ namespace BAT {
 
 class METAnalyser: public BAT::BasicAnalyser {
 public:
-	METAnalyser(HistogramManagerPtr histMan);
+	METAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "METAnalysis");
 	virtual ~METAnalyser();
 
 	void analyse(const EventPtr);

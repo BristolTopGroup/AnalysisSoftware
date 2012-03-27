@@ -14,7 +14,7 @@ namespace BAT {
 
 class MuonAnalyser: public BAT::BasicAnalyser {
 public:
-	MuonAnalyser(HistogramManagerPtr histMan);
+	MuonAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "MuonAnalysis");
 	virtual ~MuonAnalyser();
 
 	void analyse(const EventPtr);

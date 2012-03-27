@@ -16,7 +16,7 @@ namespace BAT {
 
 class DiElectronAnalyser: public BAT::BasicAnalyser {
 public:
-	DiElectronAnalyser(HistogramManagerPtr histMan);
+	DiElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "DiElectronAnalysis");
 	virtual ~DiElectronAnalyser();
 
     void analyse(const EventPtr);

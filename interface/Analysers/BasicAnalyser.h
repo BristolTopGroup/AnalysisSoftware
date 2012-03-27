@@ -7,6 +7,7 @@
 
 #ifndef BASICANALYSER_H_
 #define BASICANALYSER_H_
+#include <string>
 #include <boost/scoped_ptr.hpp>
 #include "../HistHelpers/HistogramManager.h"
 #include "../Event.h"
@@ -21,14 +22,18 @@ namespace BAT{
  */
 class BasicAnalyser{
 protected:
-	HistogramManagerPtr histMan;
+	HistogramManagerPtr histMan_;
+	std::string histogramFolder_;
 
 public:
 	/**
-	 * Default constructor for an analyser. Has to take a pointer to a HistogramManager to have access to the hostogram pool.
+	 * Default constructor for an analyser. Has to take a pointer to a HistogramManager to have access to the histogram pool.
+	 * @param histMan Pointer to the histogram manager which organises the histogram-creation and -access.
+	 * @param histogramFolder Optional parameter to set the folder in the ROOT file. By default this should be the analyser name.
+	 *
 	 * Analysers are created at the beginning of the analysis.
 	 */
-    BasicAnalyser(HistogramManagerPtr histMan);
+    BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "BasicAnalyser");
     virtual ~BasicAnalyser();
     /**
      * The main functionality of an analyser is available in the analyse function.

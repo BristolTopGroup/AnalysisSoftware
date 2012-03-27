@@ -14,7 +14,7 @@ namespace BAT {
 
 class JetAnalyser: public BAT::BasicAnalyser {
 public:
-	JetAnalyser(HistogramManagerPtr histMan);
+	JetAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "JetAnalysis");
 	virtual ~JetAnalyser();
 
 	void analyse(const EventPtr);

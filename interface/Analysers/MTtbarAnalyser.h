@@ -20,7 +20,7 @@ enum type {
 
 class MTtbarAnalyser: public BAT::BasicAnalyser {
 public:
-	MTtbarAnalyser(HistogramManagerPtr histMan);
+	MTtbarAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "MttbarAnalysis");
 	virtual ~MTtbarAnalyser();
 	void analyse(const EventPtr);
 

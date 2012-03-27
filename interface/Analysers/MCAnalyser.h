@@ -20,7 +20,7 @@ namespace BAT {
 
 class MCAnalyser : public BasicAnalyser{
 public:
-    MCAnalyser(HistogramManagerPtr histMan);
+    MCAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "MCStudy");
     virtual ~MCAnalyser();
 
     void analyse(const EventPtr);

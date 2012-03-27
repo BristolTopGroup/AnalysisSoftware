@@ -18,7 +18,7 @@ namespace BAT {
 void MCAnalyser::analyse(const EventPtr event) {
 	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 
-	histMan->setCurrentHistogramFolder("MCStudy");
+	histMan_->setCurrentHistogramFolder("MCStudy");
 	MCParticlePointer top, antitop, b_from_top, b_from_antitop, W_plus, W_minus, electron, neutrino, quark_from_W,
 			antiquark_from_W;
 	JetCollection genJets = event->GenJets();
@@ -188,15 +188,15 @@ void MCAnalyser::analyse(const EventPtr event) {
 			antitopBjet = genJets.at(closestJetBfromAntiTopIndex);
 
 			//delta R between genJets and partons histograms
-			histMan->H1D("deltaRjet1")->Fill(minDR_quarkW);
-			histMan->H1D("deltaRjet2")->Fill(minDR_antiquarkW);
-			histMan->H1D("deltaRjet3")->Fill(minDR_BfromTop);
-			histMan->H1D("deltaRjet4")->Fill(minDR_BfromAntiTop);
+			histMan_->H1D("deltaRjet1")->Fill(minDR_quarkW);
+			histMan_->H1D("deltaRjet2")->Fill(minDR_antiquarkW);
+			histMan_->H1D("deltaRjet3")->Fill(minDR_BfromTop);
+			histMan_->H1D("deltaRjet4")->Fill(minDR_BfromAntiTop);
 
-			histMan->H1D("deltaRjet_sum")->Fill(minDR_quarkW);
-			histMan->H1D("deltaRjet_sum")->Fill(minDR_antiquarkW);
-			histMan->H1D("deltaRjet_sum")->Fill(minDR_BfromTop);
-			histMan->H1D("deltaRjet_sum")->Fill(minDR_BfromAntiTop);
+			histMan_->H1D("deltaRjet_sum")->Fill(minDR_quarkW);
+			histMan_->H1D("deltaRjet_sum")->Fill(minDR_antiquarkW);
+			histMan_->H1D("deltaRjet_sum")->Fill(minDR_BfromTop);
+			histMan_->H1D("deltaRjet_sum")->Fill(minDR_BfromAntiTop);
 		}
 
 		if (leptonic_Wplus_found) {
@@ -227,20 +227,20 @@ void MCAnalyser::analyse(const EventPtr event) {
 			cout << "ERROR: no hadronic or leptonic W's in semileptonic event (nonsense).\n";
 
 		//comparing deltaR between genJets from W and closest partons
-		histMan->H2D("deltaR_genJets_partons")->Fill(mcEvent.jet1FromW->deltaR(mcEvent.jet2FromW),
+		histMan_->H2D("deltaR_genJets_partons")->Fill(mcEvent.jet1FromW->deltaR(mcEvent.jet2FromW),
 				quark_from_W->deltaR(antiquark_from_W));
 
 		//invariant mass histograms
-		histMan->H1D("W_inv_mass_from_truth_partons")->Fill(quark_from_W->invariantMass(antiquark_from_W));
-		histMan->H1D("W_inv_mass_from_genJets")->Fill(mcEvent.jet1FromW->invariantMass(mcEvent.jet2FromW));
-		histMan->H1D("top_leptonic_inv_mass_from_truth")->Fill(mcEvent.leptonicW->invariantMass(mcEvent.leptonicBjet));
-		histMan->H1D("top_hadronic_inv_mass_from_truth")->Fill(mcEvent.hadronicW->invariantMass(mcEvent.hadronicBJet));
+		histMan_->H1D("W_inv_mass_from_truth_partons")->Fill(quark_from_W->invariantMass(antiquark_from_W));
+		histMan_->H1D("W_inv_mass_from_genJets")->Fill(mcEvent.jet1FromW->invariantMass(mcEvent.jet2FromW));
+		histMan_->H1D("top_leptonic_inv_mass_from_truth")->Fill(mcEvent.leptonicW->invariantMass(mcEvent.leptonicBjet));
+		histMan_->H1D("top_hadronic_inv_mass_from_truth")->Fill(mcEvent.hadronicW->invariantMass(mcEvent.hadronicBJet));
 
-		histMan->H1D("m3_mc")->Fill(mcEvent.M3());
+		histMan_->H1D("m3_mc")->Fill(mcEvent.M3());
 
 		// comparing truth and reco objects
 		if (ttbarCand->passesFullTTbarEPlusJetSelection()) {
-			histMan->H1D("m3_diff")->Fill(fabs(mcEvent.M3() - ttbarCand->M3()));
+			histMan_->H1D("m3_diff")->Fill(fabs(mcEvent.M3() - ttbarCand->M3()));
 
 			try {
 				if (Event::usePFIsolation)
@@ -276,23 +276,23 @@ void MCAnalyser::analyse(const EventPtr event) {
 
 			double deltaEtaNeutrino = mcEvent.neutrinoFromW->deltaEta(ttbarCand->getNeutrinoFromWDecay());
 			double deltaPhiNeutrino = mcEvent.neutrinoFromW->deltaPhi(ttbarCand->getNeutrinoFromWDecay());
-			histMan->H1D("deltaEtaNeutrino")->Fill(deltaEtaNeutrino);
-			histMan->H1D("deltaPhiNeutrino")->Fill(deltaPhiNeutrino);
+			histMan_->H1D("deltaEtaNeutrino")->Fill(deltaEtaNeutrino);
+			histMan_->H1D("deltaPhiNeutrino")->Fill(deltaPhiNeutrino);
 
-			histMan->H1D("deltaRElectron")->Fill(deltaRElectron);
-			histMan->H1D("deltaRLeptonicBjet")->Fill(deltaRLeptonicBjet);
-			histMan->H1D("deltaRHadronicBjet")->Fill(deltaRHadronicBjet);
-			histMan->H1D("deltaRjet1fromW")->Fill(deltaRjet1fromW);
-			histMan->H1D("deltaRjet2fromW")->Fill(deltaRjet2fromW);
-			histMan->H1D("deltaRsum")->Fill(
+			histMan_->H1D("deltaRElectron")->Fill(deltaRElectron);
+			histMan_->H1D("deltaRLeptonicBjet")->Fill(deltaRLeptonicBjet);
+			histMan_->H1D("deltaRHadronicBjet")->Fill(deltaRHadronicBjet);
+			histMan_->H1D("deltaRjet1fromW")->Fill(deltaRjet1fromW);
+			histMan_->H1D("deltaRjet2fromW")->Fill(deltaRjet2fromW);
+			histMan_->H1D("deltaRsum")->Fill(
 					deltaRElectron + deltaRLeptonicBjet + deltaRHadronicBjet + deltaRjet1fromW + deltaRjet2fromW);
 
 		}
 	}
 }
 
-MCAnalyser::MCAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-		BasicAnalyser(histMan) {
+MCAnalyser::MCAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder ) :
+		BasicAnalyser(histMan, histogramFolder) {
 
 }
 
@@ -300,32 +300,32 @@ MCAnalyser::~MCAnalyser() {
 }
 
 void MCAnalyser::createHistograms() {
-	histMan->setCurrentHistogramFolder("MCStudy");
-	histMan->addH1D("deltaRElectron", "delta R between truth and reco electron", 100, 0, 0.3);
-	histMan->addH1D("deltaRLeptonicBjet", "delta R between truth and reco b-jet on leptonic side", 100, 0, 5.0);
-	histMan->addH1D("deltaRHadronicBjet", "delta R between truth and reco b-jet on hadronic side", 100, 0, 5.0);
-	histMan->addH1D("deltaRjet1fromW", "delta R between truth and reco jet1 from W decay", 100, 0, 5.0);
-	histMan->addH1D("deltaRjet2fromW", "delta R between truth and reco jet2 from W decay", 100, 0, 5.0);
-	histMan->addH1D("deltaRsum", "cumulative delta R between truth and reco", 100, 0, 15.0);
+	histMan_->setCurrentHistogramFolder("MCStudy");
+	histMan_->addH1D("deltaRElectron", "delta R between truth and reco electron", 100, 0, 0.3);
+	histMan_->addH1D("deltaRLeptonicBjet", "delta R between truth and reco b-jet on leptonic side", 100, 0, 5.0);
+	histMan_->addH1D("deltaRHadronicBjet", "delta R between truth and reco b-jet on hadronic side", 100, 0, 5.0);
+	histMan_->addH1D("deltaRjet1fromW", "delta R between truth and reco jet1 from W decay", 100, 0, 5.0);
+	histMan_->addH1D("deltaRjet2fromW", "delta R between truth and reco jet2 from W decay", 100, 0, 5.0);
+	histMan_->addH1D("deltaRsum", "cumulative delta R between truth and reco", 100, 0, 15.0);
 
-	histMan->addH1D("deltaRjet1", "delta R between quark from W and closest genJet", 100, 0, 5.0);
-	histMan->addH1D("deltaRjet2", "delta R between antiquark from W and closest genJet", 100, 0, 5.0);
-	histMan->addH1D("deltaRjet3", "delta R between b quark from top and closest genJet", 100, 0, 5.0);
-	histMan->addH1D("deltaRjet4", "delta R between b quark from antitop and closest genJet", 100, 0, 5.0);
-	histMan->addH1D("deltaRjet_sum", "summarized delta R between partons and genJets", 100, 0, 5.0);
+	histMan_->addH1D("deltaRjet1", "delta R between quark from W and closest genJet", 100, 0, 5.0);
+	histMan_->addH1D("deltaRjet2", "delta R between antiquark from W and closest genJet", 100, 0, 5.0);
+	histMan_->addH1D("deltaRjet3", "delta R between b quark from top and closest genJet", 100, 0, 5.0);
+	histMan_->addH1D("deltaRjet4", "delta R between b quark from antitop and closest genJet", 100, 0, 5.0);
+	histMan_->addH1D("deltaRjet_sum", "summarized delta R between partons and genJets", 100, 0, 5.0);
 
-	histMan->addH1D("deltaEtaNeutrino", "delta Eta between truth and reco neutrino", 100, -4, 4);
-	histMan->addH1D("deltaPhiNeutrino", "delta Phi between truth and reco neutrino", 100, -4, 4);
+	histMan_->addH1D("deltaEtaNeutrino", "delta Eta between truth and reco neutrino", 100, -4, 4);
+	histMan_->addH1D("deltaPhiNeutrino", "delta Phi between truth and reco neutrino", 100, -4, 4);
 
-	histMan->addH2D("deltaR_genJets_partons", "delta R between genJets from W as opposed to partons", 100, 0, 5, 100, 0,
+	histMan_->addH2D("deltaR_genJets_partons", "delta R between genJets from W as opposed to partons", 100, 0, 5, 100, 0,
 			5);
 
-	histMan->addH1D("W_inv_mass_from_truth_partons", "W inv. mass from truth partons", 100, 0, 120);
-	histMan->addH1D("W_inv_mass_from_genJets", "W inv. mass from genJets", 100, 0, 120);
-	histMan->addH1D("top_leptonic_inv_mass_from_truth", "Leptonic top inv. mass from truth partons", 100, 100, 220);
-	histMan->addH1D("top_hadronic_inv_mass_from_truth", "Haronic top inv. mass from truth partons", 100, 100, 220);
-	histMan->addH1D("m3_mc", "M3 for truth event", 500, 0, 500);
-	histMan->addH1D("m3_diff", "M3 difference between truth and reco", 500, 0, 500);
+	histMan_->addH1D("W_inv_mass_from_truth_partons", "W inv. mass from truth partons", 100, 0, 120);
+	histMan_->addH1D("W_inv_mass_from_genJets", "W inv. mass from genJets", 100, 0, 120);
+	histMan_->addH1D("top_leptonic_inv_mass_from_truth", "Leptonic top inv. mass from truth partons", 100, 100, 220);
+	histMan_->addH1D("top_hadronic_inv_mass_from_truth", "Haronic top inv. mass from truth partons", 100, 100, 220);
+	histMan_->addH1D("m3_mc", "M3 for truth event", 500, 0, 500);
+	histMan_->addH1D("m3_diff", "M3 difference between truth and reco", 500, 0, 500);
 }
 
 double MCAnalyser::topMass() const {

@@ -10,8 +10,8 @@
 #include <math.h>
 namespace BAT {
 
-HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-		BasicAnalyser(histMan), //
+HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder ) :
+		BasicAnalyser(histMan, histogramFolder), //
 		weight(1.), //
 		triggerEfficiencies() //
 {
@@ -36,8 +36,8 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 
 	bool isData( event->isRealData());
 	weight =  event->weight();
-	unsigned int currentJetBin = histMan->getCurrentJetBin();
-	unsigned int currentBJetBin = histMan->getCurrentBJetBin();
+	unsigned int currentJetBin = histMan_->getCurrentJetBin();
+	unsigned int currentBJetBin = histMan_->getCurrentBJetBin();
 	bool isTTJetsFall11 =  event->getDataType() == DataType::TTJetsFall11;
 
 	ElectronCollection electrons =  event->Electrons();
@@ -85,8 +85,8 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 		return; //need at least one jet to continue
 
 	//set jet binning for HLT analysis
-	histMan->setCurrentJetBin(cleanedJets.size());
-	histMan->setCurrentBJetBin(cleanedBJets.size());
+	histMan_->setCurrentJetBin(cleanedJets.size());
+	histMan_->setCurrentBJetBin(cleanedBJets.size());
 	bool passesPreCondition(false);
 	bool passesTrigger(false);
 	std::string histFolder("");
@@ -475,7 +475,7 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 		}
 	}
 //	//restore normal jet binning
-//	histMan->setCurrentJetBin(ttbarEvent.GoodJets().size());
+//	histMan_->setCurrentJetBin(ttbarEvent.GoodJets().size());
 
 	passesTrigger = false;
 
@@ -532,8 +532,8 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 		}
 	}
 	//restore normal jet binning
-	histMan->setCurrentJetBin(currentJetBin);
-	histMan->setCurrentBJetBin(currentBJetBin);
+	histMan_->setCurrentJetBin(currentJetBin);
+	histMan_->setCurrentBJetBin(currentBJetBin);
 
 }
 //TODO: JetPointer -> JetCollection, add uint nthJet
@@ -543,72 +543,72 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigger, std::string histFolder,
 		const JetPointer jet, int prescale) {
 	if (passesPreCondition) {
-		histMan->setCurrentHistogramFolder(histFolder);
+		histMan_->setCurrentHistogramFolder(histFolder);
 
-		histMan->H1D_JetBinned("jet_pt_visited")->Fill(jet->pt(), weight);
-		histMan->H1D_JetBinned("jet_eta_visited")->Fill(jet->eta(), weight);
-		histMan->H1D_JetBinned("jet_phi_visited")->Fill(jet->phi(), weight);
-		if (histMan->getCurrentJetBin() == 3) {
-			histMan->H1D_BJetBinned("jet_pt_visited_3jets")->Fill(jet->pt(), weight);
-			histMan->H1D_BJetBinned("jet_eta_visited_3jets")->Fill(jet->eta(), weight);
-			histMan->H1D_BJetBinned("jet_phi_visited_3jets")->Fill(jet->phi(), weight);
+		histMan_->H1D_JetBinned("jet_pt_visited")->Fill(jet->pt(), weight);
+		histMan_->H1D_JetBinned("jet_eta_visited")->Fill(jet->eta(), weight);
+		histMan_->H1D_JetBinned("jet_phi_visited")->Fill(jet->phi(), weight);
+		if (histMan_->getCurrentJetBin() == 3) {
+			histMan_->H1D_BJetBinned("jet_pt_visited_3jets")->Fill(jet->pt(), weight);
+			histMan_->H1D_BJetBinned("jet_eta_visited_3jets")->Fill(jet->eta(), weight);
+			histMan_->H1D_BJetBinned("jet_phi_visited_3jets")->Fill(jet->phi(), weight);
 		}
 
-		if (histMan->getCurrentJetBin() > 3) {
-			histMan->H1D_BJetBinned("jet_pt_visited")->Fill(jet->pt(), weight);
-			histMan->H1D_BJetBinned("jet_eta_visited")->Fill(jet->eta(), weight);
-			histMan->H1D_BJetBinned("jet_phi_visited")->Fill(jet->phi(), weight);
+		if (histMan_->getCurrentJetBin() > 3) {
+			histMan_->H1D_BJetBinned("jet_pt_visited")->Fill(jet->pt(), weight);
+			histMan_->H1D_BJetBinned("jet_eta_visited")->Fill(jet->eta(), weight);
+			histMan_->H1D_BJetBinned("jet_phi_visited")->Fill(jet->phi(), weight);
 		}
 
 		if (jet->pt() > 30.) {
-			histMan->H1D_JetBinned("jet_eta_PtGT30_visited")->Fill(jet->eta(), weight);
-			histMan->H1D_JetBinned("jet_phi_PtGT30_visited")->Fill(jet->phi(), weight);
+			histMan_->H1D_JetBinned("jet_eta_PtGT30_visited")->Fill(jet->eta(), weight);
+			histMan_->H1D_JetBinned("jet_phi_PtGT30_visited")->Fill(jet->phi(), weight);
 		}
 
 		if (jet->pt() > 35.) {
-			histMan->H1D_JetBinned("jet_eta_PtGT35_visited")->Fill(jet->eta(), weight);
-			histMan->H1D_JetBinned("jet_phi_PtGT35_visited")->Fill(jet->phi(), weight);
+			histMan_->H1D_JetBinned("jet_eta_PtGT35_visited")->Fill(jet->eta(), weight);
+			histMan_->H1D_JetBinned("jet_phi_PtGT35_visited")->Fill(jet->phi(), weight);
 		}
 
 		if (jet->pt() > 40.) {
-			histMan->H1D_JetBinned("jet_eta_PtGT40_visited")->Fill(jet->eta(), weight);
-			histMan->H1D_JetBinned("jet_phi_PtGT40_visited")->Fill(jet->phi(), weight);
+			histMan_->H1D_JetBinned("jet_eta_PtGT40_visited")->Fill(jet->eta(), weight);
+			histMan_->H1D_JetBinned("jet_phi_PtGT40_visited")->Fill(jet->phi(), weight);
 		}
 		if (jet->pt() > 45.) {
-			histMan->H1D_JetBinned("jet_eta_PtGT45_visited")->Fill(jet->eta(), weight);
-			histMan->H1D_JetBinned("jet_phi_PtGT45_visited")->Fill(jet->phi(), weight);
+			histMan_->H1D_JetBinned("jet_eta_PtGT45_visited")->Fill(jet->eta(), weight);
+			histMan_->H1D_JetBinned("jet_phi_PtGT45_visited")->Fill(jet->phi(), weight);
 		}
 
 		if (passesTrigger) {
-			histMan->H1D_JetBinned("jet_pt_fired")->Fill(jet->pt(), prescale * weight);
-			histMan->H1D_JetBinned("jet_eta_fired")->Fill(jet->eta(), prescale * weight);
-			histMan->H1D_JetBinned("jet_phi_fired")->Fill(jet->phi(), prescale * weight);
-			if (histMan->getCurrentJetBin() == 3) {
-				histMan->H1D_BJetBinned("jet_pt_fired_3jets")->Fill(jet->pt(), prescale * weight);
-				histMan->H1D_BJetBinned("jet_eta_fired_3jets")->Fill(jet->eta(), prescale * weight);
-				histMan->H1D_BJetBinned("jet_phi_fired_3jets")->Fill(jet->phi(), prescale * weight);
+			histMan_->H1D_JetBinned("jet_pt_fired")->Fill(jet->pt(), prescale * weight);
+			histMan_->H1D_JetBinned("jet_eta_fired")->Fill(jet->eta(), prescale * weight);
+			histMan_->H1D_JetBinned("jet_phi_fired")->Fill(jet->phi(), prescale * weight);
+			if (histMan_->getCurrentJetBin() == 3) {
+				histMan_->H1D_BJetBinned("jet_pt_fired_3jets")->Fill(jet->pt(), prescale * weight);
+				histMan_->H1D_BJetBinned("jet_eta_fired_3jets")->Fill(jet->eta(), prescale * weight);
+				histMan_->H1D_BJetBinned("jet_phi_fired_3jets")->Fill(jet->phi(), prescale * weight);
 			}
-			if (histMan->getCurrentJetBin() > 3) {
-				histMan->H1D_BJetBinned("jet_pt_fired")->Fill(jet->pt(), prescale * weight);
-				histMan->H1D_BJetBinned("jet_eta_fired")->Fill(jet->eta(), prescale * weight);
-				histMan->H1D_BJetBinned("jet_phi_fired")->Fill(jet->phi(), prescale * weight);
+			if (histMan_->getCurrentJetBin() > 3) {
+				histMan_->H1D_BJetBinned("jet_pt_fired")->Fill(jet->pt(), prescale * weight);
+				histMan_->H1D_BJetBinned("jet_eta_fired")->Fill(jet->eta(), prescale * weight);
+				histMan_->H1D_BJetBinned("jet_phi_fired")->Fill(jet->phi(), prescale * weight);
 			}
 			if (jet->pt() > 30.) {
-				histMan->H1D_JetBinned("jet_eta_PtGT30_fired")->Fill(jet->eta(), weight);
-				histMan->H1D_JetBinned("jet_phi_PtGT30_fired")->Fill(jet->phi(), weight);
+				histMan_->H1D_JetBinned("jet_eta_PtGT30_fired")->Fill(jet->eta(), weight);
+				histMan_->H1D_JetBinned("jet_phi_PtGT30_fired")->Fill(jet->phi(), weight);
 			}
 			if (jet->pt() > 35.) {
-				histMan->H1D_JetBinned("jet_eta_PtGT35_fired")->Fill(jet->eta(), weight);
-				histMan->H1D_JetBinned("jet_phi_PtGT35_fired")->Fill(jet->phi(), weight);
+				histMan_->H1D_JetBinned("jet_eta_PtGT35_fired")->Fill(jet->eta(), weight);
+				histMan_->H1D_JetBinned("jet_phi_PtGT35_fired")->Fill(jet->phi(), weight);
 			}
 			if (jet->pt() > 40.) {
-				histMan->H1D_JetBinned("jet_eta_PtGT40_fired")->Fill(jet->eta(), weight);
-				histMan->H1D_JetBinned("jet_phi_PtGT40_fired")->Fill(jet->phi(), weight);
+				histMan_->H1D_JetBinned("jet_eta_PtGT40_fired")->Fill(jet->eta(), weight);
+				histMan_->H1D_JetBinned("jet_phi_PtGT40_fired")->Fill(jet->phi(), weight);
 			}
 
 			if (jet->pt() > 45.) {
-				histMan->H1D_JetBinned("jet_eta_PtGT45_fired")->Fill(jet->eta(), weight);
-				histMan->H1D_JetBinned("jet_phi_PtGT45_fired")->Fill(jet->phi(), weight);
+				histMan_->H1D_JetBinned("jet_eta_PtGT45_fired")->Fill(jet->eta(), weight);
+				histMan_->H1D_JetBinned("jet_phi_PtGT45_fired")->Fill(jet->phi(), weight);
 			}
 		}
 	}
@@ -626,7 +626,7 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 	if (isnan(weight) || isinf(weight))
 		cout << "Weight is infinite or not a number" << endl;
 
-	histMan->setCurrentHistogramFolder("HLTStudy/" + triggerName + "/TriggerEfficiency");
+	histMan_->setCurrentHistogramFolder("HLTStudy/" + triggerName + "/TriggerEfficiency");
 	bool passesCuts = true;
 	//all common cuts except HLT
 	for (unsigned int cut = TTbarEPlusJetsSelection::GoodPrimaryvertex;
@@ -640,12 +640,12 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		//require == 3 jets
 		passesRequired = ! event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_TriPFJet30")->Fill(triggerResult, weight);
+			histMan_->H1D("Ele30_TriPFJet30")->Fill(triggerResult, weight);
 		break;
 	case AnalysisReference::Ele30_QuadPFJet30:
 		passesRequired =  event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_QuadPFJet30")->Fill(triggerResult, weight);
+			histMan_->H1D("Ele30_QuadPFJet30")->Fill(triggerResult, weight);
 		break;
 
 	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30:
@@ -655,7 +655,7 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		passesRequired = passesRequired
 				&&  event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(triggerResult, weight);
+			histMan_->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(triggerResult, weight);
 		break;
 
 	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30_PFJet30:
@@ -664,7 +664,7 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 		passesRequired = passesRequired
 				&&  event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
 		if (passesRequired && passesCuts)
-			histMan->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(triggerResult, weight);
+			histMan_->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(triggerResult, weight);
 		break;
 
 	default:
@@ -698,56 +698,56 @@ void HLTriggerAnalyser::createHistograms() {
 }
 
 void HLTriggerAnalyser::createHistograms(std::string trigger) {
-	histMan->setCurrentHistogramFolder("HLTStudy/" + trigger);
+	histMan_->setCurrentHistogramFolder("HLTStudy/" + trigger);
 
 	//kinematic distributions for HLT path when visited
-	histMan->addH1D_JetBinned("jet_pt_visited", trigger + " jet pt (visited)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_visited", trigger + " jet eta (visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_visited", trigger + " jet phi (visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_pt_visited", trigger + " jet pt (visited)", 200, 0, 200);
+	histMan_->addH1D_JetBinned("jet_eta_visited", trigger + " jet eta (visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_visited", trigger + " jet phi (visited)", 80, -4, 4);
 	//kinematic distributions for HLT path when visited and fired
-	histMan->addH1D_JetBinned("jet_pt_fired", trigger + " jet pt (fired)", 200, 0, 200);
-	histMan->addH1D_JetBinned("jet_eta_fired", trigger + " jet eta (fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_fired", trigger + " jet phi (fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_pt_fired", trigger + " jet pt (fired)", 200, 0, 200);
+	histMan_->addH1D_JetBinned("jet_eta_fired", trigger + " jet eta (fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_fired", trigger + " jet phi (fired)", 80, -4, 4);
 
 	//pre-plateau regions in 5 GeV steps
-	histMan->addH1D_JetBinned("jet_eta_PtGT30_visited", trigger + " jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT30_visited", trigger + " jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT30_fired", trigger + " jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT30_fired", trigger + " jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT30_visited", trigger + " jet eta (jet pT > 30 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT30_visited", trigger + " jet phi (jet pT > 30 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT30_fired", trigger + " jet eta (jet pT > 30 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT30_fired", trigger + " jet phi (jet pT > 30 GeV, fired)", 80, -4, 4);
 
-	histMan->addH1D_JetBinned("jet_eta_PtGT35_visited", trigger + " jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT35_visited", trigger + " jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT35_fired", trigger + " jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT35_fired", trigger + " jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT35_visited", trigger + " jet eta (jet pT > 35 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT35_visited", trigger + " jet phi (jet pT > 35 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT35_fired", trigger + " jet eta (jet pT > 35 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT35_fired", trigger + " jet phi (jet pT > 35 GeV, fired)", 80, -4, 4);
 
-	histMan->addH1D_JetBinned("jet_eta_PtGT40_visited", trigger + " jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT40_visited", trigger + " jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT40_fired", trigger + " jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT40_fired", trigger + " jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT40_visited", trigger + " jet eta (jet pT > 40 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT40_visited", trigger + " jet phi (jet pT > 40 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT40_fired", trigger + " jet eta (jet pT > 40 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT40_fired", trigger + " jet phi (jet pT > 40 GeV, fired)", 80, -4, 4);
 
 	//plateau region
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_visited", trigger + " jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_visited", trigger + " jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_eta_PtGT45_fired", trigger + " jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
-	histMan->addH1D_JetBinned("jet_phi_PtGT45_fired", trigger + " jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT45_visited", trigger + " jet eta (jet pT > 45 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT45_visited", trigger + " jet phi (jet pT > 45 GeV, visited)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_eta_PtGT45_fired", trigger + " jet eta (jet pT > 45 GeV, fired)", 80, -4, 4);
+	histMan_->addH1D_JetBinned("jet_phi_PtGT45_fired", trigger + " jet phi (jet pT > 45 GeV, fired)", 80, -4, 4);
 
-//	histMan->setCurrentCollection("HLTStudy/" + trigger + "/FlavourDependence");
+//	histMan_->setCurrentCollection("HLTStudy/" + trigger + "/FlavourDependence");
 	//kinematic distributions for HLT path when visited
-	histMan->addH1D_BJetBinned("jet_pt_visited", trigger + " jet pt (visited, >=4 jets)", 200, 0, 200);
-	histMan->addH1D_BJetBinned("jet_eta_visited", trigger + " jet eta (visited, >=4 jets)", 80, -4, 4);
-	histMan->addH1D_BJetBinned("jet_phi_visited", trigger + " jet phi (visited, >=4 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_pt_visited", trigger + " jet pt (visited, >=4 jets)", 200, 0, 200);
+	histMan_->addH1D_BJetBinned("jet_eta_visited", trigger + " jet eta (visited, >=4 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_phi_visited", trigger + " jet phi (visited, >=4 jets)", 80, -4, 4);
 	//kinematic distributions for HLT path when visited and fired
-	histMan->addH1D_BJetBinned("jet_pt_fired", trigger + " jet pt (fired, >=4 jets)", 200, 0, 200);
-	histMan->addH1D_BJetBinned("jet_eta_fired", trigger + " jet eta (fired, >=4 jets)", 80, -4, 4);
-	histMan->addH1D_BJetBinned("jet_phi_fired", trigger + " jet phi (fired, >=4 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_pt_fired", trigger + " jet pt (fired, >=4 jets)", 200, 0, 200);
+	histMan_->addH1D_BJetBinned("jet_eta_fired", trigger + " jet eta (fired, >=4 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_phi_fired", trigger + " jet phi (fired, >=4 jets)", 80, -4, 4);
 
-	histMan->addH1D_BJetBinned("jet_pt_visited_3jets", trigger + " jet pt (visited, ==3 jets)", 200, 0, 200);
-	histMan->addH1D_BJetBinned("jet_eta_visited_3jets", trigger + " jet eta (visited, ==3 jets)", 80, -4, 4);
-	histMan->addH1D_BJetBinned("jet_phi_visited_3jets", trigger + " jet phi (visited, ==3 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_pt_visited_3jets", trigger + " jet pt (visited, ==3 jets)", 200, 0, 200);
+	histMan_->addH1D_BJetBinned("jet_eta_visited_3jets", trigger + " jet eta (visited, ==3 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_phi_visited_3jets", trigger + " jet phi (visited, ==3 jets)", 80, -4, 4);
 	//kinematic distributions for HLT path when visited and fired
-	histMan->addH1D_BJetBinned("jet_pt_fired_3jets", trigger + " jet pt (fired, ==3 jets) ", 200, 0, 200);
-	histMan->addH1D_BJetBinned("jet_eta_fired_3jets", trigger + " jet eta (fired, ==3 jets)", 80, -4, 4);
-	histMan->addH1D_BJetBinned("jet_phi_fired_3jets", trigger + " jet phi (fired, ==3 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_pt_fired_3jets", trigger + " jet pt (fired, ==3 jets) ", 200, 0, 200);
+	histMan_->addH1D_BJetBinned("jet_eta_fired_3jets", trigger + " jet eta (fired, ==3 jets)", 80, -4, 4);
+	histMan_->addH1D_BJetBinned("jet_phi_fired_3jets", trigger + " jet phi (fired, ==3 jets)", 80, -4, 4);
 	//signal trigger efficiencies
 	if (trigger == "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30"
 			|| trigger == "HLT_Ele25_CaloIdVT_TrkIdT_QuadCentralJet30"
@@ -758,12 +758,12 @@ void HLTriggerAnalyser::createHistograms(std::string trigger) {
 			|| trigger == "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30"
 			|| trigger == "HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_QuadCentralPFJet30") {
 
-		histMan->setCurrentHistogramFolder("HLTStudy/" + trigger + "/TriggerEfficiency");
-		histMan->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
-		histMan->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
-		histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
+		histMan_->setCurrentHistogramFolder("HLTStudy/" + trigger + "/TriggerEfficiency");
+		histMan_->addH1D("Ele30_TriPFJet30", "Signal trigger effiency for Ele30 + 3x PFJet30", 2, -0.5, 1.5);
+		histMan_->addH1D("Ele30_QuadPFJet30", "Signal trigger effiency for Ele30 + 4x PFJet30", 2, -0.5, 1.5);
+		histMan_->addH1D("Ele30_PFJet70_PFJet50_PFJet30", "Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30", 2,
 				-0.5, 1.5);
-		histMan->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
+		histMan_->addH1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30",
 				"Signal trigger effiency for Ele30_PFJet70_PFJet50_PFJet30_PFJet30", 2, -0.5, 1.5);
 
 	}

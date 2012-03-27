@@ -17,8 +17,8 @@ void METAnalyser::createHistograms() {
 
 }
 
-METAnalyser::METAnalyser(HistogramManagerPtr histMan) :
-	BasicAnalyser(histMan) {
+METAnalyser::METAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
+	BasicAnalyser(histMan, histogramFolder) {
 
 }
 

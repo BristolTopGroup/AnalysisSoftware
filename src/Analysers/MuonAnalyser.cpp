@@ -17,8 +17,8 @@ void MuonAnalyser::createHistograms() {
 
 }
 
-MuonAnalyser::MuonAnalyser(HistogramManagerPtr histMan) :
-	BasicAnalyser(histMan) {
+MuonAnalyser::MuonAnalyser(HistogramManagerPtr histMan, std::string histogramFolder ) :
+	BasicAnalyser(histMan, histogramFolder) {
 
 }
 

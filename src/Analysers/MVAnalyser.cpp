@@ -9,8 +9,8 @@
 
 namespace BAT {
 
-MVAnalyser::MVAnalyser(HistogramManagerPtr histMan) :
-		BasicAnalyser(histMan) {
+MVAnalyser::MVAnalyser(HistogramManagerPtr histMan, std::string histogramFolder ) :
+		BasicAnalyser(histMan, histogramFolder) {
 }
 
 MVAnalyser::~MVAnalyser() {
@@ -18,13 +18,13 @@ MVAnalyser::~MVAnalyser() {
 
 void MVAnalyser::analyse(const EventPtr event)
 {
-	histMan->setCurrentHistogramFolder("MVAnalysis");
-	histMan->H3D("Test")->FillRandom("gaus", 10);
+	histMan_->setCurrentHistogramFolder("MVAnalysis");
+	histMan_->H3D("Test")->FillRandom("gaus", 10);
 }
 
 void MVAnalyser::createHistograms() {
-	histMan->setCurrentHistogramFolder("MVAnalysis");
-	histMan->addH3D("Test", "Test", 10, 0., 10., 10, 0., 10., 10, 0., 10.);
+	histMan_->setCurrentHistogramFolder("MVAnalysis");
+	histMan_->addH3D("Test", "Test", 10, 0., 10., 10, 0., 10., 10, 0., 10.);
 }
 }
 

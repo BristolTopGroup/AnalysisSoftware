@@ -14,7 +14,7 @@ namespace BAT {
 
 class TopReconstructionAnalyser: public BAT::BasicAnalyser {
 public:
-	TopReconstructionAnalyser(HistogramManagerPtr);
+	TopReconstructionAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "topReconstruction");
 	virtual ~TopReconstructionAnalyser();
 
 	void analyse(const EventPtr);

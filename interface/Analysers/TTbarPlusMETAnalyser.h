@@ -9,15 +9,20 @@
 #define TTBARPLUSMETANALYSER_H_
 
 #include "BasicAnalyser.h"
+#include "METAnalyser.h"
+#include <string>
 
 namespace BAT {
 
 class TTbarPlusMETAnalyser: public BAT::BasicAnalyser {
 public:
-	TTbarPlusMETAnalyser(HistogramManagerPtr);
+	TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "TTbarPlusMetAnalysis");
 	virtual ~TTbarPlusMETAnalyser();
 	virtual void analyse(const EventPtr);
 	virtual void createHistograms();
+
+private:
+	BasicAnalyserLocalPtr metAnalyser;
 };
 
 typedef boost::scoped_ptr<BAT::TTbarPlusMETAnalyser> TTbarPlusMETAnalyserLocalPtr;

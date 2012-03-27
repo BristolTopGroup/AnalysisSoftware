@@ -14,7 +14,7 @@ namespace BAT {
 
 class EventCountAnalyser: public BAT::BasicAnalyser {
 public:
-	EventCountAnalyser(HistogramManagerPtr);
+	EventCountAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "EventCount");
 	virtual ~EventCountAnalyser();
 	virtual void analyse(const EventPtr);
 	virtual void createHistograms();

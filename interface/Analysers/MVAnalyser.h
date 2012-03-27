@@ -15,7 +15,7 @@ namespace BAT {
 
 class MVAnalyser: public BAT::BasicAnalyser {
 public:
-	MVAnalyser(HistogramManagerPtr histMan);
+	MVAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "MVAAnalysis");
 	virtual ~MVAnalyser();
 
 	void analyse(const EventPtr);

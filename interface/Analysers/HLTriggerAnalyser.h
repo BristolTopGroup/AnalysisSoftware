@@ -31,7 +31,7 @@ enum value {
 class HLTriggerAnalyser: public BasicAnalyser {
 
 public:
-	HLTriggerAnalyser(HistogramManagerPtr histMan);
+	HLTriggerAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "HLTStudy");
 	virtual ~HLTriggerAnalyser();
 	void analyse(const EventPtr);
 	void createHistograms();

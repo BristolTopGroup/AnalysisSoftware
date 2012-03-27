@@ -35,7 +35,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	string tempFileName = "temp.txt";
 	ofstream tempFile(tempFileName.c_str());
 
-	histMan->setCurrentHistogramFolder("hitfitStudy");
+	histMan_->setCurrentHistogramFolder("hitfitStudy");
 
 	if (Globals::produceFitterASCIIoutput) {
 		//write the event info into ASCII file
@@ -137,7 +137,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		all_jets_pt = all_jets_pt + jetsForFitting[i]->pt();
 	}
 
-	histMan->H1D("AllJetsPt")->Fill(all_jets_pt, event->weight());
+	histMan_->H1D("AllJetsPt")->Fill(all_jets_pt, event->weight());
 
 	// Add missing transverse energy into HitFit
 	hhFitter.SetMet(*event->MET());
@@ -177,20 +177,20 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		hitfit::Fit_Result fitResult = hitfitResult[fit];
 
 		if (hitfitResult[fit].chisq() > 0.0) {
-			histMan->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), event->weight());
-			histMan->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), event->weight());
-			histMan->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), event->weight());
+			histMan_->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), event->weight());
+			histMan_->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), event->weight());
+			histMan_->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), event->weight());
 			const hitfit::Column_Vector &px = fitResult.pullx();
 			const hitfit::Column_Vector &py = fitResult.pully();
 			double sumPx = 0.0;
 			for (int i = 0; i < px.num_row(); ++i) {
-				histMan->H1D("PullDistAllVarsAllSolutions")->Fill(px[i]);
-				histMan->H2D("PullDistPerVarAllSolutions")->Fill(px[i], i);
+				histMan_->H1D("PullDistAllVarsAllSolutions")->Fill(px[i]);
+				histMan_->H2D("PullDistPerVarAllSolutions")->Fill(px[i], i);
 				sumPx += px[i] * px[i];
 			}
-			histMan->H1D("PullSumSquaredAllSolutions")->Fill(sumPx);
+			histMan_->H1D("PullSumSquaredAllSolutions")->Fill(sumPx);
 			for (int i = 0; i < py.num_row(); ++i) {
-				histMan->H1D("PullDistYVarsAllSolutions")->Fill(py[i]);
+				histMan_->H1D("PullDistYVarsAllSolutions")->Fill(py[i]);
 			}
 
 			if (Globals::produceFitterASCIIoutput) {
@@ -227,21 +227,21 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	//
 
 	if (bestX2pos < nHitFit + 1) {
-		histMan->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), event->weight());
-		histMan->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), event->weight());
-		histMan->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), event->weight());
+		histMan_->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), event->weight());
+		histMan_->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), event->weight());
+		histMan_->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), event->weight());
 
 		const hitfit::Column_Vector &px = hitfitResult[bestX2pos].pullx();
 		const hitfit::Column_Vector &py = hitfitResult[bestX2pos].pully();
 		double sumPx = 0.0;
 		for (int i = 0; i < px.num_row(); ++i) {
-			histMan->H1D("PullDistAllVarsBestSolution")->Fill(px[i]);
-			histMan->H2D("PullDistPerVarBestSolution")->Fill(px[i], i);
+			histMan_->H1D("PullDistAllVarsBestSolution")->Fill(px[i]);
+			histMan_->H2D("PullDistPerVarBestSolution")->Fill(px[i], i);
 			sumPx += px[i] * px[i];
 		}
-		histMan->H1D("PullSumSquaredBestSolution")->Fill(sumPx);
+		histMan_->H1D("PullSumSquaredBestSolution")->Fill(sumPx);
 		for (int i = 0; i < py.num_row(); ++i) {
-			histMan->H1D("PullDistYVarsBestSolution")->Fill(py[i]);
+			histMan_->H1D("PullDistYVarsBestSolution")->Fill(py[i]);
 		}
 
 		//pass hitfit event into BAT format
@@ -289,25 +289,32 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 
 }
 
-HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan) :
-		BasicAnalyser(histMan), outFileName("FitResults.txt"), outFile(outFileName.c_str()),
+HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder ) :
+		BasicAnalyser(histMan, histogramFolder), //
+		outFileName("FitResults.txt"), //
+		outFile(outFileName.c_str()), //
 		// The following five initializers read the config parameters for the
 		// ASCII text files which contains the physics object resolutions.
-		FitterPath_(Globals::TQAFPath), hitfitDefault_(
-				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"), hitfitElectronResolution_(
-				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"), hitfitMuonResolution_(
-				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafMuonResolution.txt"), hitfitUdscJetResolution_(
-				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafUdscJetResolution.txt"), hitfitBJetResolution_(
-				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafBJetResolution.txt"), hitfitMETResolution_(
-				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafKtResolution.txt"),
+		FitterPath_(Globals::TQAFPath), //
+		hitfitDefault_(FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"), //
+		hitfitElectronResolution_(
+				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"), //
+		hitfitMuonResolution_(FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafMuonResolution.txt"), //
+		hitfitUdscJetResolution_(FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafUdscJetResolution.txt"), //
+		hitfitBJetResolution_(FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafBJetResolution.txt"), //
+		hitfitMETResolution_(FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafKtResolution.txt"), //
 		// The following three initializers read the config parameters for the
 		// values to which the leptonic W, hadronic W, and top quark masses are to
 		// be constrained to.
-		hitfitLepWMass_(80.4), hitfitHadWMass_(80.4), hitfitTopMass_(0.0),
+		hitfitLepWMass_(80.4), //
+		hitfitHadWMass_(80.4), //
+		hitfitTopMass_(0.0), //
 		// The following three initializers instantiate the translator between PAT objects
 		// and HitFit objects using the ASCII text files which contains the resolutions.
-		electronTranslator_(hitfitElectronResolution_), muonTranslator_(hitfitMuonResolution_), jetTranslator_(
-				hitfitUdscJetResolution_, hitfitBJetResolution_), metTranslator_(hitfitMETResolution_)
+		electronTranslator_(hitfitElectronResolution_), //
+		muonTranslator_(hitfitMuonResolution_), //
+		jetTranslator_(hitfitUdscJetResolution_, hitfitBJetResolution_), //
+		metTranslator_(hitfitMETResolution_)
 
 {
 
@@ -385,64 +392,64 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 		deltaRhadronicBjet = truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet);
 		deltaRleptonicBjet = truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet);
 
-		histMan->H1D("deltaPtElectron")->Fill(
+		histMan_->H1D("deltaPtElectron")->Fill(
 				(truthMatchEvent.leptonFromW->pt() - hyp.leptonFromW->pt()) / truthMatchEvent.leptonFromW->pt());
-		histMan->H1D("deltaRelectron")->Fill(truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW));
-		histMan->H1D("deltaPtHadronicBjet")->Fill(
+		histMan_->H1D("deltaRelectron")->Fill(truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW));
+		histMan_->H1D("deltaPtHadronicBjet")->Fill(
 				(truthMatchEvent.hadronicBJet->pt() - hyp.hadronicBJet->pt()) / truthMatchEvent.hadronicBJet->pt());
-		histMan->H1D("deltaRhadronicBjet")->Fill(truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet));
-		histMan->H1D("deltaPtLeptonicBjet")->Fill(
+		histMan_->H1D("deltaRhadronicBjet")->Fill(truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet));
+		histMan_->H1D("deltaPtLeptonicBjet")->Fill(
 				(truthMatchEvent.leptonicBjet->pt() - hyp.leptonicBjet->pt()) / truthMatchEvent.leptonicBjet->pt());
-		histMan->H1D("deltaRleptonicBjet")->Fill(truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet));
+		histMan_->H1D("deltaRleptonicBjet")->Fill(truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet));
 		if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW) < truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
 			deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW);
 			deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW);
-			histMan->H1D("deltaPtWjet1")->Fill(
+			histMan_->H1D("deltaPtWjet1")->Fill(
 					(truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-			histMan->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW));
-			histMan->H1D("deltaPtWjet2")->Fill(
+			histMan_->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW));
+			histMan_->H1D("deltaPtWjet2")->Fill(
 					(truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet2FromW->pt());
-			histMan->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW));
+			histMan_->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW));
 		} else {
 			deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW);
 			deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW);
-			histMan->H1D("deltaPtWjet1")->Fill(
+			histMan_->H1D("deltaPtWjet1")->Fill(
 					(truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-			histMan->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW));
-			histMan->H1D("deltaPtWjet2")->Fill(
+			histMan_->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW));
+			histMan_->H1D("deltaPtWjet2")->Fill(
 					(truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet2FromW->pt());
-			histMan->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW));
+			histMan_->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW));
 		}
 
 		sumDeltaR = deltaRelectron + deltaRhadronicBjet + deltaRleptonicBjet + deltaRWjet1 + deltaRWjet2;
-		histMan->H1D("SumDeltaR")->Fill(sumDeltaR);
+		histMan_->H1D("SumDeltaR")->Fill(sumDeltaR);
 
-		histMan->H1D("deltaLeptonicTopMass")->Fill(
+		histMan_->H1D("deltaLeptonicTopMass")->Fill(
 				(truthMatchEvent.leptonicTop->mass() - leptonicTop->mass()) / truthMatchEvent.leptonicTop->mass());
-		histMan->H1D("deltaHadronicTopMass")->Fill(
+		histMan_->H1D("deltaHadronicTopMass")->Fill(
 				(truthMatchEvent.hadronicTop->mass() - hadronicTop->mass()) / truthMatchEvent.hadronicTop->mass());
 
 		if (sumDeltaR < 0.4) {
 			if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW) < truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
-				histMan->H1D("deltaPtWjet1Best")->Fill(
+				histMan_->H1D("deltaPtWjet1Best")->Fill(
 						(truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-				histMan->H1D("deltaPtWjet2Best")->Fill(
+				histMan_->H1D("deltaPtWjet2Best")->Fill(
 						(truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet2FromW->pt());
 			} else {
-				histMan->H1D("deltaPtWjet1")->Fill(
+				histMan_->H1D("deltaPtWjet1")->Fill(
 						(truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-				histMan->H1D("deltaPtWjet2")->Fill(
+				histMan_->H1D("deltaPtWjet2")->Fill(
 						(truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet2FromW->pt());
 			}
-			histMan->H1D("deltaPtElectronBest")->Fill(
+			histMan_->H1D("deltaPtElectronBest")->Fill(
 					(truthMatchEvent.leptonFromW->pt() - hyp.leptonFromW->pt()) / truthMatchEvent.leptonFromW->pt());
-			histMan->H1D("deltaPtHadronicBjetBest")->Fill(
+			histMan_->H1D("deltaPtHadronicBjetBest")->Fill(
 					(truthMatchEvent.hadronicBJet->pt() - hyp.hadronicBJet->pt()) / truthMatchEvent.hadronicBJet->pt());
-			histMan->H1D("deltaPtLeptonicBjetBest")->Fill(
+			histMan_->H1D("deltaPtLeptonicBjetBest")->Fill(
 					(truthMatchEvent.leptonicBjet->pt() - hyp.leptonicBjet->pt()) / truthMatchEvent.leptonicBjet->pt());
-			histMan->H1D("deltaLeptonicTopMassBest")->Fill(
+			histMan_->H1D("deltaLeptonicTopMassBest")->Fill(
 					(truthMatchEvent.leptonicTop->mass() - leptonicTop->mass()) / truthMatchEvent.leptonicTop->mass());
-			histMan->H1D("deltaHadronicTopMassBest")->Fill(
+			histMan_->H1D("deltaHadronicTopMassBest")->Fill(
 					(truthMatchEvent.hadronicTop->mass() - hadronicTop->mass()) / truthMatchEvent.hadronicTop->mass());
 		}
 	}
@@ -500,55 +507,55 @@ HitFitAnalyser::~HitFitAnalyser() {
 }
 
 void HitFitAnalyser::createHistograms() {
-	histMan->setCurrentHistogramFolder("hitfitStudy");
-	histMan->addH1D("AllJetsPt", "All jets Pt", 100, 0., 600.);
-	histMan->addH1D("FittedTopMassAllSolutions", "Fitted top mass all solutions", 100, 0., 400.);
-	histMan->addH1D("FitChiSquaredAllSolutions", "Fit chi-squared all solutions", 100, 0., 20.);
-	histMan->addH1D("FitLogChiSqdAllSolutions", "Fit log(chi-sqd) all solutions", 100, -5., 5.);
-	histMan->addH1D("FittedTopMassBestSolution", "Fitted top mass best solution", 100, 0., 400.);
-	histMan->addH1D("FitChiSquaredBestSolution", "Fit chi-squared best solution", 100, 0., 20.);
-	histMan->addH1D("FitLogChiSqdBestSolution", "Fit log(chi-sqd) best solutions", 100, -5., 5.);
+	histMan_->setCurrentHistogramFolder("hitfitStudy");
+	histMan_->addH1D("AllJetsPt", "All jets Pt", 100, 0., 600.);
+	histMan_->addH1D("FittedTopMassAllSolutions", "Fitted top mass all solutions", 100, 0., 400.);
+	histMan_->addH1D("FitChiSquaredAllSolutions", "Fit chi-squared all solutions", 100, 0., 20.);
+	histMan_->addH1D("FitLogChiSqdAllSolutions", "Fit log(chi-sqd) all solutions", 100, -5., 5.);
+	histMan_->addH1D("FittedTopMassBestSolution", "Fitted top mass best solution", 100, 0., 400.);
+	histMan_->addH1D("FitChiSquaredBestSolution", "Fit chi-squared best solution", 100, 0., 20.);
+	histMan_->addH1D("FitLogChiSqdBestSolution", "Fit log(chi-sqd) best solutions", 100, -5., 5.);
 
-	histMan->addH1D("PullDistAllVarsAllSolutions", "Pulls well measured all solutions", 100, -10., 10.);
-	histMan->addH1D("PullSumSquaredAllSolutions", "Sum-squared pulls all solutions", 100, 0, 500.);
-	histMan->addH2D("PullDistPerVarAllSolutions", "Pulls well measured vs varno all", 100, -10., 10., 25, 0., 25.);
-	histMan->addH1D("PullDistYVarsAllSolutions", "Pulls poorly measured all", 100, -10., 10.);
-	histMan->addH1D("PullDistAllVarsBestSolution", "Pulls well measured best solution", 100, -10., 10.);
-	histMan->addH1D("PullSumSquaredBestSolution", "Sum-squared pulls best solution", 100, 0, 500.);
-	histMan->addH2D("PullDistPerVarBestSolution", "Pulls well measured vs varno best", 100, -10., 10., 25, 0., 25.);
-	histMan->addH1D("PullDistYVarsBestSolution", "Pulls poorly measured best", 100, -10., 10.);
+	histMan_->addH1D("PullDistAllVarsAllSolutions", "Pulls well measured all solutions", 100, -10., 10.);
+	histMan_->addH1D("PullSumSquaredAllSolutions", "Sum-squared pulls all solutions", 100, 0, 500.);
+	histMan_->addH2D("PullDistPerVarAllSolutions", "Pulls well measured vs varno all", 100, -10., 10., 25, 0., 25.);
+	histMan_->addH1D("PullDistYVarsAllSolutions", "Pulls poorly measured all", 100, -10., 10.);
+	histMan_->addH1D("PullDistAllVarsBestSolution", "Pulls well measured best solution", 100, -10., 10.);
+	histMan_->addH1D("PullSumSquaredBestSolution", "Sum-squared pulls best solution", 100, 0, 500.);
+	histMan_->addH2D("PullDistPerVarBestSolution", "Pulls well measured vs varno best", 100, -10., 10., 25, 0., 25.);
+	histMan_->addH1D("PullDistYVarsBestSolution", "Pulls poorly measured best", 100, -10., 10.);
 
 	// MC matching study histograms
-	histMan->addH1D("deltaPtElectron", "Pt difference between truth and fitted electrons", 100, -1.5, 1.5);
-	histMan->addH1D("deltaRelectron", "DeltaR between truth and fitted electrons", 100, 0., 2.);
-	histMan->addH1D("deltaPtHadronicBjet", "Pt difference between truth and fitted b-jets from hadronic top", 100, -1.5,
-			1.5);
-	histMan->addH1D("deltaRhadronicBjet", "DeltaR between truth and fitted b-jets from hadronic top", 100, 0., 5.);
-	histMan->addH1D("deltaPtLeptonicBjet", "Pt difference between truth and fitted b-jets from leptonic top", 100, -1.5,
-			1.5);
-	histMan->addH1D("deltaRleptonicBjet", "DeltaR between truth and fitted b-jets from leptonic top", 100, 0., 5.);
-	histMan->addH1D("deltaPtWjet1", "Pt difference between truth and fitted W jets 1", 100, -1.5, 1.5);
-	histMan->addH1D("deltaRWjet1", "DeltaR between truth and fitted W jets 1", 100, 0., 5.);
-	histMan->addH1D("deltaPtWjet2", "Pt difference between truth and fitted W jets 2", 100, -1.5, 1.5);
-	histMan->addH1D("deltaRWjet2", "DeltaR between truth and fitted W jets 2", 100, 0., 5.);
-	histMan->addH1D("SumDeltaR", "Summarised deltaR of all e+jets", 100, 0., 25.);
-	histMan->addH1D("deltaPtElectronBest", "Pt difference between truth and fitted electrons for matched solutions",
+	histMan_->addH1D("deltaPtElectron", "Pt difference between truth and fitted electrons", 100, -1.5, 1.5);
+	histMan_->addH1D("deltaRelectron", "DeltaR between truth and fitted electrons", 100, 0., 2.);
+	histMan_->addH1D("deltaPtHadronicBjet", "Pt difference between truth and fitted b-jets from hadronic top", 100,
+			-1.5, 1.5);
+	histMan_->addH1D("deltaRhadronicBjet", "DeltaR between truth and fitted b-jets from hadronic top", 100, 0., 5.);
+	histMan_->addH1D("deltaPtLeptonicBjet", "Pt difference between truth and fitted b-jets from leptonic top", 100,
+			-1.5, 1.5);
+	histMan_->addH1D("deltaRleptonicBjet", "DeltaR between truth and fitted b-jets from leptonic top", 100, 0., 5.);
+	histMan_->addH1D("deltaPtWjet1", "Pt difference between truth and fitted W jets 1", 100, -1.5, 1.5);
+	histMan_->addH1D("deltaRWjet1", "DeltaR between truth and fitted W jets 1", 100, 0., 5.);
+	histMan_->addH1D("deltaPtWjet2", "Pt difference between truth and fitted W jets 2", 100, -1.5, 1.5);
+	histMan_->addH1D("deltaRWjet2", "DeltaR between truth and fitted W jets 2", 100, 0., 5.);
+	histMan_->addH1D("SumDeltaR", "Summarised deltaR of all e+jets", 100, 0., 25.);
+	histMan_->addH1D("deltaPtElectronBest", "Pt difference between truth and fitted electrons for matched solutions",
 			100, -1.5, 1.5);
-	histMan->addH1D("deltaPtHadronicBjetBest",
+	histMan_->addH1D("deltaPtHadronicBjetBest",
 			"Pt difference between truth and fitted b-jets from hadronic top for matched solutions", 100, -1.5, 1.5);
-	histMan->addH1D("deltaPtLeptonicBjetBest",
+	histMan_->addH1D("deltaPtLeptonicBjetBest",
 			"Pt difference between truth and fitted b-jets from leptonic top for matched solutions", 100, -1.5, 1.5);
-	histMan->addH1D("deltaPtWjet1Best", "Pt difference between truth and fitted W jets 1 for matched solutions", 100,
+	histMan_->addH1D("deltaPtWjet1Best", "Pt difference between truth and fitted W jets 1 for matched solutions", 100,
 			-1.5, 1.5);
-	histMan->addH1D("deltaPtWjet2Best", "Pt difference between truth and fitted W jets 2 for matched solutions", 100,
+	histMan_->addH1D("deltaPtWjet2Best", "Pt difference between truth and fitted W jets 2 for matched solutions", 100,
 			-1.5, 1.5);
-	histMan->addH1D("deltaMET", "Delta MET between truth and fitted solutions", 100, -50., 50.);
-	histMan->addH1D("deltaMETbest", "Delta MET between truth and fitted matched solutions", 100, -50., 50.);
-	histMan->addH1D("deltaLeptonicTopMass", "Difference between truth and fitted leptonic top masses", 100, -1.5, 1.5);
-	histMan->addH1D("deltaHadronicTopMass", "Difference between truth and fitted hadronic top masses", 100, -1.5, 1.5);
-	histMan->addH1D("deltaLeptonicTopMassBest",
+	histMan_->addH1D("deltaMET", "Delta MET between truth and fitted solutions", 100, -50., 50.);
+	histMan_->addH1D("deltaMETbest", "Delta MET between truth and fitted matched solutions", 100, -50., 50.);
+	histMan_->addH1D("deltaLeptonicTopMass", "Difference between truth and fitted leptonic top masses", 100, -1.5, 1.5);
+	histMan_->addH1D("deltaHadronicTopMass", "Difference between truth and fitted hadronic top masses", 100, -1.5, 1.5);
+	histMan_->addH1D("deltaLeptonicTopMassBest",
 			"Difference between truth and fitted leptonic top masses for matched solutions", 100, -1.5, 1.5);
-	histMan->addH1D("deltaHadronicTopMassBest",
+	histMan_->addH1D("deltaHadronicTopMassBest",
 			"Difference between truth and fitted hadronic top masses for matched solutions", 100, -1.5, 1.5);
 
 }
