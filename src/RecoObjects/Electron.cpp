@@ -143,8 +143,9 @@ void Electron::setHadOverEm(double HoverE) {
 
 bool Electron::isLoose() const {
     bool passesEt = et() > 20;
-    bool passesEta = fabs(eta()) < 2.5;
-    return passesEt && passesEta && VBTF_WP95_ElectronID();
+    bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
+    bool passesID = passesElectronID(ElectronID::CiCLooseMC);//VBTF_WP95_ElectronID()
+    return passesEt && passesEta && passesID;
 
 }
 
