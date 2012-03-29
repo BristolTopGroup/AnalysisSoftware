@@ -1,18 +1,18 @@
 /*
- * TopPairZprimeSelection.h
+ * TopPairEplusJetsPlusMETSelection.h
  *
- *  Created on: 25 Feb 2012
+ *  Created on: 29 Mar 2012
  *      Author: kreczko
  */
 
-#ifndef TOPPAIRZPRIMESELECTION_H_
-#define TOPPAIRZPRIMESELECTION_H_
+#ifndef TOPPAIREPLUSJETSPLUSMETSELECTION_H_
+#define TOPPAIREPLUSJETSPLUSMETSELECTION_H_
 
-#include "TopPairEPlusJetsReferenceSelection.h"
+#include "TopPairEPlusJetsZprimeSelection.h"
 
 namespace BAT {
 
-namespace TTbarEPlusJetsZprimeSelection { //TODO: change to new counting
+namespace TTbarEPlusJetsPlusMETSelection {
 enum Step {
 	EvenCleaningAndTrigger,
 	OneIsolatedElectron,
@@ -24,7 +24,6 @@ enum Step {
 	AtLeastTwoGoodJets,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
-	MissingTransverseEnergy,
 	AsymmetricJetCuts,
 	AtLeastOneBtag,
 	AtLeastTwoBtags,
@@ -42,23 +41,20 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				">= 2 jets", //
 				">= 3 jets", //
 				">= 4 jets", //
-				"MET > 20GeV", //
 				"jet pT: 1st > 70 GeV, 2nd > 50 GeV", //
 				">=1 SSV b-tag", //
 				">=2 SSV b-tag" //
 		};
 }
 
-class TopPairEPlusJetsZprimeSelection: public BAT::TopPairEPlusJetsReferenceSelection {
+class TopPairEplusJetsPlusMETSelection: public BAT::TopPairEPlusJetsZprimeSelection {
 public:
-	TopPairEPlusJetsZprimeSelection(unsigned int numberOfSelectionSteps =
-			TTbarEPlusJetsZprimeSelection::NUMBER_OF_SELECTION_STEPS);
-	virtual ~TopPairEPlusJetsZprimeSelection();
+	TopPairEplusJetsPlusMETSelection(unsigned int numberOfSelectionSteps =
+			TTbarEPlusJetsPlusMETSelection::NUMBER_OF_SELECTION_STEPS);
+	virtual ~TopPairEplusJetsPlusMETSelection();
 
 	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const;
-
-	virtual bool passesAsymmetricJetCuts(const EventPtr event) const;
 };
 
 } /* namespace BAT */
-#endif /* TOPPAIRZPRIMESELECTION_H_ */
+#endif /* TOPPAIREPLUSJETSPLUSMETSELECTION_H_ */

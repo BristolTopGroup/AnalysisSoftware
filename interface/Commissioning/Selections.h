@@ -10,6 +10,11 @@
 
 #include "../Analysers/BasicAnalyser.h"
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
+#include "../Selections/TopPairEPlusJetsZprimeSelection.h"
+#include "../Selections/TopPairEplusJetsPlusMETSelection.h"
+#include "../TopPairEventCandidate.h"
+
+#include <string>
 
 namespace BAT {
 
@@ -21,7 +26,15 @@ public:
 	virtual void createHistograms();
 
 private:
-	SelectionPointer topEplusJetsReferenceSelection_;
+	SelectionPointer topEplusJetsReferenceSelection_, topEplusJetsZprimeSelection_,topEplusJetsPlusMETSelection_;
+	EventPtr currentEvent_;
+	TopPairEventCandidatePtr currentTopEvent_;
+
+	void commissionTopEplusJetsReferenceSelection(const EventPtr event);
+	void commissionTopEplusJetsZprimeSelection(const EventPtr event);
+	void commissionTopEplusJetsPlusMETSelection(const EventPtr event);
+
+	void testResult(bool news, bool old, std::string step) const;
 };
 
 } /* namespace BAT */

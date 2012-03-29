@@ -62,10 +62,24 @@ bool TopPairEPlusJetsReferenceSelection::passesSelectionStep(const EventPtr even
 		return hasExactlyOneIsolatedLepton(event);
 	case TTbarEPlusJetsReferenceSelection::LooseMuonVeto:
 		return passesLooseLeptonVeto(event);
+	case TTbarEPlusJetsReferenceSelection::DiLeptonVeto:
+		return passesDileptonVeto(event);
 	case TTbarEPlusJetsReferenceSelection::ConversionRejectionMissingLayers:
 		return passesConversionRejectionMissingLayers(event);
 	case TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack:
 		return passesConversionRejectionPartnerTrack(event);
+	case TTbarEPlusJetsReferenceSelection::AtLeastOneGoodJet:
+		return hasAtLeastOneGoodJet(event);
+	case TTbarEPlusJetsReferenceSelection::AtLeastTwoGoodJets:
+			return hasAtLeastTwoGoodJets(event);
+	case TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets:
+			return hasAtLeastThreeGoodJets(event);
+	case TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets:
+			return hasAtLeastFourGoodJets(event);
+	case TTbarEPlusJetsReferenceSelection::AtLeastOneBtag:
+			return hasAtLeastOneGoodBJet(event);
+	case TTbarEPlusJetsReferenceSelection::AtLeastTwoBtags:
+			return hasAtLeastTwoGoodBJets(event);
 	default:
 		break;
 	}
@@ -111,9 +125,9 @@ bool TopPairEPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Event
 		if (isGoodElectron(electron) && isIsolated(electron))
 			++nIsolatedGoodElectrons;
 	}
-	return nIsolatedGoodElectrons == 1;
+//	return nIsolatedGoodElectrons == 1;
 
-//	return event->GoodPFIsolatedElectrons().size() == 1;
+	return event->GoodPFIsolatedElectrons().size() == 1;
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
@@ -140,7 +154,7 @@ bool TopPairEPlusJetsReferenceSelection::passesLooseLeptonVeto(const EventPtr ev
 			++nLooseMuons;
 	}
 
-	return nLooseMuons > 0;
+	return nLooseMuons == 0;
 }
 
 bool TopPairEPlusJetsReferenceSelection::isLooseMuon(const MuonPointer muon) const {
@@ -170,32 +184,56 @@ bool TopPairEPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer e
 
 	bool passesEtAndEta = electron->et() > 20. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesID(electron->passesElectronID(ElectronID::CiCLooseMC));
-	bool passesIso = electron->pfRelativeIsolation(Globals::electronIsolationCone);
+	bool passesIso = electron->pfRelativeIsolation(Globals::electronIsolationCone) < 0.2;
 
 	return passesEtAndEta && passesID && passesIso;
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionMissingLayers(const EventPtr event) const {
-	bool passesVeto(false);
+	bool hasMissingHitsInInnerLayer(true);
 
 	if (event->GoodPFIsolatedElectrons().size() > 0) {
 		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
-		passesVeto = electron->innerLayerMissingHits() == 0;
+		hasMissingHitsInInnerLayer = electron->innerLayerMissingHits() > 0;
 	}
 
-	return passesVeto;
+	return !hasMissingHitsInInnerLayer;
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {
-	bool passesVeto(false);
+	bool hasPartnerTrack(true);
 
 	if (event->GoodPFIsolatedElectrons().size() > 0) {
 		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
-		passesVeto = fabs(electron->dCotThetaToClosestTrack()) < 0.02 && //
+		hasPartnerTrack = fabs(electron->dCotThetaToClosestTrack()) < 0.02 && //
 				fabs(electron->distToClosestTrack()) < 0.02;
 	}
 
-	return passesVeto;
+	return !hasPartnerTrack;
+}
+
+bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodJet(const EventPtr event) const {
+	return event->GoodElectronCleanedJets().size() > 0;
+}
+
+bool TopPairEPlusJetsReferenceSelection::hasAtLeastTwoGoodJets(const EventPtr event) const {
+	return event->GoodElectronCleanedJets().size() > 1;
+}
+
+bool TopPairEPlusJetsReferenceSelection::hasAtLeastThreeGoodJets(const EventPtr event) const {
+	return event->GoodElectronCleanedJets().size() > 2;
+}
+
+bool TopPairEPlusJetsReferenceSelection::hasAtLeastFourGoodJets(const EventPtr event) const {
+	return event->GoodElectronCleanedJets().size() > 3;
+}
+
+bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodBJet(const EventPtr event) const {
+	return event->GoodElectronCleanedBJets().size() > 0;
+}
+
+bool TopPairEPlusJetsReferenceSelection::hasAtLeastTwoGoodBJets(const EventPtr event) const {
+	return event->GoodElectronCleanedBJets().size() > 1;
 }
 
 } /* namespace BAT */

@@ -12,7 +12,7 @@
 
 namespace BAT {
 
-namespace TTbarEPlusJetsReferenceSelection { //TODO: change to new counting
+namespace TTbarEPlusJetsReferenceSelection {
 enum Step {
 	EvenCleaningAndTrigger,
 	OneIsolatedElectron,
@@ -20,7 +20,7 @@ enum Step {
 	DiLeptonVeto,
 	ConversionRejectionMissingLayers,
 	ConversionRejectionPartnerTrack,
-	AtLeastOneGoodJets,
+	AtLeastOneGoodJet,
 	AtLeastTwoGoodJets,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
@@ -62,6 +62,7 @@ public:
 	virtual bool isIsolated(const LeptonPointer lepton) const;
 
 	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const;
+
 	virtual bool passesEventCleaning(const EventPtr event) const;
 	virtual bool passesTriggerSelection(const EventPtr event) const;
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
@@ -69,6 +70,12 @@ public:
 	virtual bool passesDileptonVeto(const EventPtr event) const;
 	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
 	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
+	virtual bool hasAtLeastOneGoodJet(const EventPtr event) const;
+	virtual bool hasAtLeastTwoGoodJets(const EventPtr event) const;
+	virtual bool hasAtLeastThreeGoodJets(const EventPtr event) const;
+	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
+	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;
+	virtual bool hasAtLeastTwoGoodBJets(const EventPtr event) const;
 };
 
 } /* namespace BAT */
