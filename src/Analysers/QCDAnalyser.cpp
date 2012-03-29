@@ -422,7 +422,7 @@ bool QCDAnalyser::passesSelectionWithoutIsolationOrConversionVeto(const TopPairE
 	bool result(event->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex));
 	result = result && event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastThreeGoodJets);
 	result = result && event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
-	result = result && event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::Zveto);
+	result = result && event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::DileptonVeto);
 	//require at least one good electron
 	result = result && event->GoodElectrons().size() > 0;
 	//If more than 2 isolated electrons return 0;

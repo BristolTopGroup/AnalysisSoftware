@@ -178,7 +178,7 @@ bool DummyTTbarEvent::passesSelectionStep(enum TTbarEPlusJetsSelection::Step ste
 	        return isolatedElectronNotTaggedAsFromConversion();
 	    case TTbarEPlusJetsSelection::LooseMuonVeto:
 	        return hasNoIsolatedMuon();
-	    case TTbarEPlusJetsSelection::AtLeastOneGoodJets:
+	    case TTbarEPlusJetsSelection::AtLeastOneGoodJet:
 	        return hasAtLeastOneGoodJet();
 	    case TTbarEPlusJetsSelection::AtLeastTwoGoodJets:
 	        return hasAtLeastTwoGoodJets();
@@ -186,7 +186,7 @@ bool DummyTTbarEvent::passesSelectionStep(enum TTbarEPlusJetsSelection::Step ste
 	        return hasAtLeastThreeGoodJets();
 	    case TTbarEPlusJetsSelection::AtLeastFourGoodJets:
 	        return hasAtLeastFourGoodJets();
-	    case TTbarEPlusJetsSelection::Zveto:
+	    case TTbarEPlusJetsSelection::DileptonVeto:
 	        return isNotAZBosonEvent();
 	    case TTbarEPlusJetsSelection::MissingTransverseEnergy:
 	        return passesMETCut();

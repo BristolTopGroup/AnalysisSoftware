@@ -23,7 +23,7 @@ void JetAnalyser::analyse(const EventPtr event) {
 			double jetMass =  event->Jets().at(jetIndex)->mass();
 			histMan_->H1D_BJetBinned("AllGoodJetMass")->Fill(jetMass, weight);
 
-			if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastOneGoodJets))
+			if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastOneGoodJet))
 				histMan_->H1D_BJetBinned("GoodJetMass_atLeastOneJets")->Fill(jetMass, weight);
 
 			if ( ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets))
