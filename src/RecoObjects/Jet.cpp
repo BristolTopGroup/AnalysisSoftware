@@ -23,10 +23,10 @@ Jet::Jet() :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
-		pxRaw(-9999),//
-		pyRaw(-9999),// 
-		pzRaw(-9999),// 
-		JECUncertainty(-9999),//
+		pxRaw(-9999), //
+		pyRaw(-9999), //
+		pzRaw(-9999), //
+		JECUncertainty(-9999), //
 		partonFlavour_(0) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
@@ -45,10 +45,10 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
-		pxRaw(-9999),//
-		pyRaw(-9999),// 
-		pzRaw(-9999),// 
-		JECUncertainty(-9999),//
+		pxRaw(-9999), //
+		pyRaw(-9999), //
+		pzRaw(-9999), //
+		JECUncertainty(-9999), //
 		partonFlavour_(0) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
@@ -218,67 +218,51 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 	switch (type) {
 
 	case BtagAlgorithm::CombinedSecondaryVertex:
-		switch (wp) {
-		case BtagAlgorithm::LOOSE:
+		if (wp == BtagAlgorithm::LOOSE)
 			cut = 0.244;
-			break;
-		case BtagAlgorithm::MEDIUM:
+		else if (wp == BtagAlgorithm::MEDIUM)
 			cut = 0.679;
-			break;
-		case BtagAlgorithm::TIGHT:
+		else if (wp == BtagAlgorithm::TIGHT)
 			cut = 0.898;
-			break;
-		}
+		break;
 
 	case BtagAlgorithm::CombinedSecondaryVertexMVA:
 		//same as without MVA? No hints found
 		//according to
 		//https://cms-btag-validation.web.cern.ch/cms-btag-validation/validation/index_RecoB_CMSSW_4_2_1_TTbar_421_vs_420_Startup.html
 		//these cuts should be lower
-		switch (wp) {
-		case BtagAlgorithm::LOOSE:
+		if (wp == BtagAlgorithm::LOOSE)
 			cut = 0.244;
-			break;
-		case BtagAlgorithm::MEDIUM:
+		else if (wp == BtagAlgorithm::MEDIUM)
 			cut = 0.679;
-			break;
-		case BtagAlgorithm::TIGHT:
+		else if (wp == BtagAlgorithm::TIGHT)
 			cut = 0.898;
-			break;
-		}
+		break;
 
 	case BtagAlgorithm::JetBProbability:
-		switch (wp) {
-		case BtagAlgorithm::LOOSE:
+		if (wp == BtagAlgorithm::LOOSE)
 			cut = 1.33;
-			break;
-		case BtagAlgorithm::MEDIUM:
+		else if (wp == BtagAlgorithm::MEDIUM)
 			cut = 2.55;
-			break;
-		case BtagAlgorithm::TIGHT:
+		else if (wp == BtagAlgorithm::TIGHT)
 			cut = 3.74;
-			break;
-		}
+		break;
 
 	case BtagAlgorithm::JetProbability:
-		switch (wp) {
-		case BtagAlgorithm::LOOSE:
+		if (wp == BtagAlgorithm::LOOSE)
 			cut = 0.275;
-			break;
-		case BtagAlgorithm::MEDIUM:
+		else if (wp == BtagAlgorithm::MEDIUM)
 			cut = 0.545;
-			break;
-		case BtagAlgorithm::TIGHT:
+		else if (wp == BtagAlgorithm::TIGHT)
 			cut = 0.790;
-			break;
-		}
+		break;
 
 	case BtagAlgorithm::SimpleSecondaryVertexHighEfficiency:
 		if (wp == BtagAlgorithm::LOOSE)
 			cut = 9998; //no input found
 		else if (wp == BtagAlgorithm::MEDIUM)
 			cut = 1.74;
-		else if (wp == BtagAlgorithm::TIGHT)//not supported
+		else if (wp == BtagAlgorithm::TIGHT) //not supported
 			cut = 3.05;
 		break;
 
@@ -296,12 +280,12 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 			cut = 1.7;
 		else if (wp == BtagAlgorithm::MEDIUM)
 			cut = 3.3;
-		else if (wp == BtagAlgorithm::TIGHT)//not supported
+		else if (wp == BtagAlgorithm::TIGHT) //not supported
 			cut = 10.2;
 		break;
 
 	case BtagAlgorithm::TrackCountingHighPurity:
-		if (wp == BtagAlgorithm::LOOSE)//not supported
+		if (wp == BtagAlgorithm::LOOSE) //not supported
 			cut = 1.19;
 		else if (wp == BtagAlgorithm::MEDIUM)
 			cut = 1.93;
@@ -344,7 +328,7 @@ int Jet::partonFlavour() const {
 	return partonFlavour_;
 }
 
-double Jet::getBTagDiscriminator(BtagAlgorithm::value type) const{
+double Jet::getBTagDiscriminator(BtagAlgorithm::value type) const {
 	return btag_discriminators.at((unsigned int) type);
 }
 
