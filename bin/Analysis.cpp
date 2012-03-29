@@ -34,6 +34,9 @@ void Analysis::analyse() {
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
+
+		selectionCommissioning_->analyse(currentEvent);
+
 		bjetAnalyser->analyse(ttbarCandidate);
 		diElectronAnalyser->analyse(ttbarCandidate);
 		electronAnalyser->analyse(ttbarCandidate);
@@ -263,8 +266,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		qcdAnalyser(new QCDAnalyser(histMan)), //
 		topRecoAnalyser(new TopReconstructionAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
-		vertexAnalyser(new VertexAnalyser(histMan, weights)) //
-{
+		vertexAnalyser(new VertexAnalyser(histMan, weights)), //
+		selectionCommissioning_(new Selections(histMan)) {
 	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
 		ePlusJetsCutflow[cut] = 0;
 		ePlusJetsSingleCuts[cut] = 0;

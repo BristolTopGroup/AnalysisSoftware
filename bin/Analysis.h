@@ -44,6 +44,7 @@
 #include "../interface/Analysers/TTbarPlusMETAnalyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
 
+#include "../interface/Commissioning/Selections.h"
 
 
 typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
@@ -85,6 +86,9 @@ private:
     boost::scoped_ptr<BAT::TopReconstructionAnalyser> topRecoAnalyser;
     BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
+
+    //commisioning
+    BAT::BasicAnalyserLocalPtr selectionCommissioning_;
 
 
 public:
