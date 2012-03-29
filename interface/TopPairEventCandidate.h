@@ -42,10 +42,10 @@ enum Step {
 	GoodPrimaryvertex,
 	OneIsolatedElectron,
 	LooseMuonVeto,
-	Zveto,
+	DileptonVeto,
 	ConversionRejection,
 	ConversionFinder,
-	AtLeastOneGoodJets,
+	AtLeastOneGoodJet,
 	AtLeastTwoGoodJets,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
@@ -61,7 +61,7 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { "Scraping Filter", 
 		"good primary vertex", //
 		"exactly one isolated electron", //
 		"loose muon veto", //
-		"Z veto", //
+		"di-lepton veto", //
 		"Conversion veto (missing hits)", //
 		"Conversion finder (partner track)", //
 		">= 1 jets", //

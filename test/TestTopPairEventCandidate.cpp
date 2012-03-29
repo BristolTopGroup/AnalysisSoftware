@@ -393,11 +393,11 @@ void TestTopPairEventCandidate::testEventPasses6thStep() {
 }
 
 void TestTopPairEventCandidate::testEventPasses7thStep() {
-	ASSERT_EQUAL(true, ttbarEvent.passesSelectionStep(TTbarEPlusJetsSelection::Zveto));
+	ASSERT_EQUAL(true, ttbarEvent.passesSelectionStep(TTbarEPlusJetsSelection::DileptonVeto));
 }
 
 void TestTopPairEventCandidate::testTTbarEventPassesNStep() {
-	ASSERT_EQUAL(true, ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto));
+	ASSERT_EQUAL(true, ttbarEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::DileptonVeto));
 }
 
 void TestTopPairEventCandidate::testPoorZEventPassesUpToStep() {
@@ -412,7 +412,7 @@ void TestTopPairEventCandidate::testPoorZEventPassesUpToStep() {
 }
 
 void TestTopPairEventCandidate::testPoorZEventDoesntPassUpToStep() {
-	ASSERT_EQUAL(false, poorZEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto));
+	ASSERT_EQUAL(false, poorZEvent.passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::DileptonVeto));
 }
 
 void TestTopPairEventCandidate::testPassesFullTTbarSelection() {

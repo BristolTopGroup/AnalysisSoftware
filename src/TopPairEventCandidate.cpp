@@ -180,29 +180,10 @@ bool TopPairEventCandidate::muPlusJetsLooseMuonVeto() const {
 	return hasNoLooseMuon;
 }
 
-//bool TopPairEventCandidate::hasAtLeastOneGoodJet() const {
-//    return goodElectronCleanedJets.size() >= 1;
-//}
-//
-//bool TopPairEventCandidate::hasAtLeastTwoGoodJets() const {
-//    return goodElectronCleanedJets.size() >= 2;
-//}
-//
-//bool TopPairEventCandidate::hasAtLeastThreeGoodJets() const {
-//    return goodElectronCleanedJets.size() >= 3;
-//}
-//
-//bool TopPairEventCandidate::hasExactlyThreeGoodJets() const {
-//    return goodElectronCleanedJets.size() == 3;
-//}
-//
-//bool TopPairEventCandidate::hasAtLeastFourGoodJets() const {
-//    return goodElectronCleanedJets.size() >= 4;
-//}
-
 bool TopPairEventCandidate::electronPlusJetsZVeto() const {
-	double invariantMass = 0;
-	bool isZEvent = false;
+//	double invariantMass = 0;
+//	bool isZEvent = false;
+	unsigned int nLooseElectrons(0);
 	ElectronPointer isoElectron;
 
 	if (Event::usePFIsolation && goodPFIsolatedElectrons.size() > 0)
@@ -216,24 +197,26 @@ bool TopPairEventCandidate::electronPlusJetsZVeto() const {
 			bool passLooseIso = false;
 
 			if (Event::usePFIsolation)
-				passLooseIso = looseElectron->pfIsolation() < 1.;
+				passLooseIso = looseElectron->pfIsolation() < 0.2;
 			else
-				passLooseIso = looseElectron->relativeIsolation() < 1.;
+				passLooseIso = looseElectron->relativeIsolation() < 0.2;
 
-			if (passLooseIso)
-				invariantMass = isoElectron->invariantMass(looseElectron);
-			else
-				invariantMass = 0;
-
-			bool passesLowerLimit = invariantMass > 76;
-			bool passesUpperLimit = invariantMass < 106;
-			if (passesLowerLimit && passesUpperLimit)
-				isZEvent = true;
+			if(passLooseIso)
+				++nLooseElectrons;
+//			if (passLooseIso)
+//				invariantMass = isoElectron->invariantMass(looseElectron);
+//			else
+//				invariantMass = 0;
+//
+//			bool passesLowerLimit = invariantMass > 76;
+//			bool passesUpperLimit = invariantMass < 106;
+//			if (passesLowerLimit && passesUpperLimit)
+//				isZEvent = true;
 		}
 
 	}
-
-	return isZEvent == false;
+	return nLooseElectrons < 2;
+//	return isZEvent == false;
 }
 
 bool TopPairEventCandidate::muonPlusJetsLooseElectronVeto() const {
@@ -413,7 +396,7 @@ bool TopPairEventCandidate::passesEPlusJetsSelectionStep(enum TTbarEPlusJetsSele
 		return isolatedElectronNotTaggedAsFromConversion();
 	case TTbarEPlusJetsSelection::LooseMuonVeto:
 		return ePlusJetsLooseMuonVeto();
-	case TTbarEPlusJetsSelection::AtLeastOneGoodJets:
+	case TTbarEPlusJetsSelection::AtLeastOneGoodJet:
 		return goodElectronCleanedJets.size() > 0;
 	case TTbarEPlusJetsSelection::AtLeastTwoGoodJets:
 		return goodElectronCleanedJets.size() > 1;
@@ -421,7 +404,7 @@ bool TopPairEventCandidate::passesEPlusJetsSelectionStep(enum TTbarEPlusJetsSele
 		return goodElectronCleanedJets.size() > 2;
 	case TTbarEPlusJetsSelection::AtLeastFourGoodJets:
 		return goodElectronCleanedJets.size() > 3;
-	case TTbarEPlusJetsSelection::Zveto:
+	case TTbarEPlusJetsSelection::DileptonVeto:
 		return electronPlusJetsZVeto();
 	case TTbarEPlusJetsSelection::MissingTransverseEnergy:
 		return passesMETCut();
@@ -530,7 +513,7 @@ bool TopPairEventCandidate::passesEPlusJEtsPFIsoControlSelection() const {
 }
 
 bool TopPairEventCandidate::passesConversionSelection() const {
-	bool passesFirst6 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::Zveto);
+	bool passesFirst6 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::DileptonVeto);
 	bool isConversion1 = isolatedElectronDoesNotComeFromConversion() == false;
 	bool isConversion2 = isolatedElectronNotTaggedAsFromConversion() == false;
 	return passesFirst6 && (isConversion1 || isConversion2);
@@ -560,7 +543,7 @@ bool TopPairEventCandidate::passesEPlusJetsAntiIsolationSelection() const {
 	bool passesFirst3 = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
 
 	bool muonVeto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
-	bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::Zveto);
+	bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::DileptonVeto);
 	bool conversionVeto = (goodElectrons.front()->isFromConversion()
 			|| goodElectrons.front()->isTaggedAsConversion(0.2, 0.2)) == false;
 	return passesFirst3 && muonVeto && zveto && conversionVeto;
@@ -574,7 +557,7 @@ bool TopPairEventCandidate::passesEPlusJetsQCDselection() const {
 	bool passesFirst3 = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::GoodPrimaryvertex);
 
 	bool muonVeto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
-	bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::Zveto);
+	bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::DileptonVeto);
 	bool conversionVeto = (goodElectrons.front()->isFromConversion()
 			|| goodElectrons.front()->isTaggedAsConversion(0.2, 0.2)) == false;
 	return passesFirst3 && muonVeto && zveto && conversionVeto;
