@@ -21,7 +21,7 @@ bool BasicSelection::passesFullSelection(const EventPtr event) const {
 
 bool BasicSelection::passesSelectionUpToStep(const EventPtr event, unsigned int selectionStep) const {
 	bool passes(false);
-	for (unsigned int step = 0; step < selectionStep; ++step) {
+	for (unsigned int step = 0; step < selectionStep + 1; ++step) {
 		bool result(passesSelectionStep(event, step));
 		if (!result) {
 			passes = false;
