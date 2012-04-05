@@ -94,12 +94,16 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setGenJets(genJetReader->getGenJets());
 		currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 		currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
-		currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
-		currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
-		currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
-		currentEvent->setPUWeight3D(PUWeight3D_->getVariable());
-		currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
-		currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
+
+		if (Globals::NTupleVersion >= 6) {
+			currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
+			currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
+			currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
+			currentEvent->setPUWeight3D(PUWeight3D_->getVariable());
+			currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
+			currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
+		}
+
 	}
 
 	currentEvent->setJets(jetReader->getJets());
