@@ -41,19 +41,25 @@ void Analysis::analyse() {
 		diElectronAnalyser->analyse(ttbarCandidate);
 		electronAnalyser->analyse(ttbarCandidate);
 		eventcountAnalyser->analyse(currentEvent);
-		if (Globals::useHitFit) {
-			if (currentEvent->getDataType() == DataType::TTJets)
-				hitfitAnalyser->setMCTTbarHypothesis(mcAnalyser->GetMCTTbarHypothesis());
-			hitfitAnalyser->analyse(ttbarCandidate);
-		}
+
 		hltriggerAnalyser->analyse(ttbarCandidate);
 		jetAnalyser->analyse(ttbarCandidate);
-		if (currentEvent->getDataType() == DataType::TTJets)
+		if (currentEvent->getDataType() == DataType::TTJets) {
 			mcAnalyser->analyse(ttbarCandidate);
+			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
+			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
+			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
+			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
+		}
+		//hitfit analyser has to be after mcAnalyser as it depends on it
+		if (Globals::useHitFit) {
+			hitfitAnalyser->analyse(ttbarCandidate);
+		}
 		metAnalyser->analyse(ttbarCandidate);
 		mttbarAnalyser->analyse(ttbarCandidate);
 		muonAnalyser->analyse(ttbarCandidate);
 		mvAnalyser->analyse(ttbarCandidate);
+		neutrinoRecoAnalyser->analyse(currentEvent);
 		qcdAnalyser->analyse(ttbarCandidate);
 		topRecoAnalyser->analyse(ttbarCandidate);
 		ttbarPlusMETAnalyser_->analyse(currentEvent);
@@ -88,7 +94,10 @@ void Analysis::initiateEvent() {
 	weight = weights->getWeight(currentEvent->getDataType());
 	if (!currentEvent->isRealData()) {
 		//TODO: fix this dirty little thing
+		if(Globals::NTupleVersion >= 6)
 		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
+		else
+			pileUpWeight = 1.;
 //		pileUpWeight = weights->reweightPileUp(
 //				currentEvent->numberOfGeneratedPileUpVertices(Globals::pileUpReweightingMethod));
 		weight *= pileUpWeight;
@@ -170,8 +179,8 @@ void Analysis::printInterestingEvents() {
 void Analysis::printSummary() {
 	EventTablePrinter::printCutFlowLatexTable(ePlusJetsCutflowPerSample, TTbarEPlusJetsSelection::StringSteps,
 			Globals::luminosity);
-	EventTablePrinter::printUnweightedCutFlowLatexTable(ePlusJetsCutflowPerSample, TTbarEPlusJetsSelection::StringSteps,
-			Globals::luminosity);
+	EventTablePrinter::printUnweightedCutFlowLatexTable(ePlusJetsCutflowPerSample,
+			TTbarEPlusJetsSelection::StringSteps, Globals::luminosity);
 
 	cout << "Muon + jets selection" << endl;
 	EventTablePrinter::printCutFlowLatexTable(muPlusJetsCutflowPerSample, TTbarMuPlusJetsSelection::StringSteps,
@@ -223,6 +232,7 @@ void Analysis::createHistograms() {
 	mttbarAnalyser->createHistograms();
 	muonAnalyser->createHistograms();
 	mvAnalyser->createHistograms();
+	neutrinoRecoAnalyser->createHistograms();
 	qcdAnalyser->createHistograms();
 	topRecoAnalyser->createHistograms();
 	ttbarPlusMETAnalyser_->createHistograms();
@@ -263,6 +273,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		mttbarAnalyser(new MTtbarAnalyser(histMan)), //
 		muonAnalyser(new MuonAnalyser(histMan)), //
 		mvAnalyser(new MVAnalyser(histMan)), //
+		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)),//
 		qcdAnalyser(new QCDAnalyser(histMan)), //
 		topRecoAnalyser(new TopReconstructionAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //

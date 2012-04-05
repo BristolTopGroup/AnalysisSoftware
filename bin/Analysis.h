@@ -39,6 +39,7 @@
 #include "../interface/Analysers/MTtbarAnalyser.h"
 #include "../interface/Analysers/MuonAnalyser.h"
 #include "../interface/Analysers/MVAnalyser.h"
+#include "../interface/Analysers/NeutrinoReconstructionAnalyser.h"
 #include "../interface/Analysers/QCDAnalyser.h"
 #include "../interface/Analysers/TopReconstructionAnalyser.h"
 #include "../interface/Analysers/TTbarPlusMETAnalyser.h"
@@ -82,6 +83,7 @@ private:
     boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
     boost::scoped_ptr<BAT::MuonAnalyser> muonAnalyser;
     BAT::MVAnalyserPtr mvAnalyser;
+    BAT::NeutrinoRecoAnalyserLocalPtr neutrinoRecoAnalyser;
     boost::scoped_ptr<BAT::QCDAnalyser> qcdAnalyser;
     boost::scoped_ptr<BAT::TopReconstructionAnalyser> topRecoAnalyser;
     BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;

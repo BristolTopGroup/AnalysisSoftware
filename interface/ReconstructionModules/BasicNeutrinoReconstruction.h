@@ -31,7 +31,7 @@ public:
 	BasicNeutrinoReconstruction(const LeptonPointer lepton, const METPointer met);
 	virtual ~BasicNeutrinoReconstruction();
 //	void setMETResolution(double resolution);
-	boost::array<ParticlePointer, 2> getNeutrinos(NeutrinoSelection::value selection = NeutrinoSelection::None);
+	virtual boost::array<ParticlePointer, 2> getNeutrinos(unsigned int selection = NeutrinoSelection::None);
 	static double const W_mass;
 protected:
 	boost::array<double, 2> resolveComplexROOT(double root, double A, double B);

@@ -26,13 +26,13 @@ BasicNeutrinoReconstruction::BasicNeutrinoReconstruction(const LeptonPointer lep
 		throw ReconstructionException("Could not reconstruct neutrinos: no MET found!");
 }
 
-boost::array<ParticlePointer, 2> BasicNeutrinoReconstruction::getNeutrinos(NeutrinoSelection::value selection) {
+boost::array<ParticlePointer, 2> BasicNeutrinoReconstruction::getNeutrinos(unsigned int selection) {
 	boost::array<ParticlePointer, 2> neutrinos;
 	if(!alreadyReconstructed){
 		reconstructNeutrinos();
 	}
 
-	selectNeutrinos(selection);
+	selectNeutrinos((NeutrinoSelection::value) selection);
 
 	neutrinos.at(0) = neutrino1;
 	neutrinos.at(1) = neutrino2;
