@@ -56,6 +56,10 @@ double Particle::et() const {
     return fourvector.Et();
 }
 
+double Particle::momentum() const {
+	return fourvector.P();
+}
+
 double Particle::px() const {
     return fourvector.Px();
 }

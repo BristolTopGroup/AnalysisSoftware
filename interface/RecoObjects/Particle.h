@@ -36,6 +36,7 @@ public:
 	double d0_wrtBeamSpot() const;
 	double energy() const;
 	double et() const;
+	double momentum() const;
 	double px() const;
 	double py() const;
 	double pz() const;
