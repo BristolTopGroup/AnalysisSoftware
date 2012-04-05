@@ -16,6 +16,9 @@
 #https://svnweb.cern.ch/trac/bat/browser/trunk/AnalysisTools/interface/DataTypes.h
 ####################################################################################################
 
+#TODO: read this variable in the config
+nTuple_version = 6
+
 datasetInfo = {}
 datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":59414270}
 #if using the designated subset:
