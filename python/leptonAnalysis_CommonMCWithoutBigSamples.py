@@ -25,7 +25,8 @@ mcFolders = [
            'T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            'WW_TuneZ2_7TeV_pythia6_tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            'WZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets']
+           'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'TTJetsZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets']
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
 

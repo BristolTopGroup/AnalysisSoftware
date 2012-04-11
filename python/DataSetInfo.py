@@ -51,7 +51,9 @@ datasetInfo['Tbar_TuneZ2_tW-channel'] = {"cross-section": 5.3, "NumberOfProcesse
 datasetInfo['WWtoAnything'] = {"cross-section": 43., "NumberOfProcessedEvents":4191740}
 datasetInfo['WZtoAnything'] = {"cross-section": 18.2, "NumberOfProcessedEvents":4136765}
 datasetInfo['ZZtoAnything'] = {"cross-section": 5.9, "NumberOfProcessedEvents":2408805}
-
+#Ttbar + Z/W from http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2011_288_v14.pdf
+datasetInfo['TTJetsZIncl'] = {"cross-section": 0.14, "NumberOfProcessedEvents":196277}
+datasetInfo['TTbarInclWIncl'] = {"cross-section": 0.16, "NumberOfProcessedEvents":349038}
 #heavy flavour sample
 datasetInfo['VqqJets'] = {"cross-section": 35.3, "NumberOfProcessedEvents":720613}
 
