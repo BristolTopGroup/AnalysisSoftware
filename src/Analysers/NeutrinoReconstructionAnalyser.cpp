@@ -15,7 +15,7 @@ using namespace std;
 namespace BAT {
 
 void NeutrinoReconstructionAnalyser::analyse(const EventPtr event) {
-	if (!event->getDataType() == DataType::TTJets)
+	if (event->getDataType() != DataType::TTJets)
 		return;
 
 	if (!truthMatchEvent.get()) {
