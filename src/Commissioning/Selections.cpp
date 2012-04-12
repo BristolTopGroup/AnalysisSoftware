@@ -18,7 +18,7 @@ void Selections::analyse(const EventPtr event) {
 	commissionTopEplusJetsReferenceSelection(event);
 	commissionTopEplusJetsZprimeSelection(event);
 	commissionTopEplusJetsPlusMETSelection(event);
-
+	commissionQCDPFRelIsoSelection(event);
 }
 
 void Selections::commissionTopEplusJetsReferenceSelection(const EventPtr event) {
@@ -146,6 +146,13 @@ void Selections::commissionTopEplusJetsPlusMETSelection(const EventPtr event) {
 	testResult(resultSelection, resultOldSelection, "AtLeastTwoBtags");
 }
 
+void Selections::commissionQCDPFRelIsoSelection(const EventPtr event) {
+	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
+	bool resultSelection(qcdPFRelIsoSelection_->passesFullSelection(event));
+	bool resultOldSelection(ttbarCand->passesEPlusJEtsPFIsoControlSelection());
+	testResult(resultSelection, resultOldSelection, "QCD PF RelIso Selection");
+}
+
 void Selections::createHistograms() {
 
 }
@@ -155,6 +162,7 @@ Selections::Selections(HistogramManagerPtr histMan) :
 		topEplusJetsReferenceSelection_(new TopPairEPlusJetsReferenceSelection()), //
 		topEplusJetsZprimeSelection_(new TopPairEPlusJetsZprimeSelection()), //
 		topEplusJetsPlusMETSelection_(new TopPairEplusJetsPlusMETSelection()), //
+		qcdPFRelIsoSelection_(new QCDPFRelIsoSelection()),//
 		currentEvent_(), //
 		currentTopEvent_() {
 

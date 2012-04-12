@@ -12,6 +12,7 @@
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
 #include "../Selections/TopPairEPlusJetsZprimeSelection.h"
 #include "../Selections/TopPairEplusJetsPlusMETSelection.h"
+#include "../Selections/QCDPFRelIsoSelection.h"
 #include "../TopPairEventCandidate.h"
 
 #include <string>
@@ -26,14 +27,15 @@ public:
 	virtual void createHistograms();
 
 private:
-	SelectionPointer topEplusJetsReferenceSelection_, topEplusJetsZprimeSelection_,topEplusJetsPlusMETSelection_;
+	SelectionPointer topEplusJetsReferenceSelection_, topEplusJetsZprimeSelection_, topEplusJetsPlusMETSelection_,
+			qcdPFRelIsoSelection_;
 	EventPtr currentEvent_;
 	TopPairEventCandidatePtr currentTopEvent_;
 
 	void commissionTopEplusJetsReferenceSelection(const EventPtr event);
 	void commissionTopEplusJetsZprimeSelection(const EventPtr event);
 	void commissionTopEplusJetsPlusMETSelection(const EventPtr event);
-
+	void commissionQCDPFRelIsoSelection(const EventPtr event);
 	void testResult(bool news, bool old, std::string step) const;
 };
 
