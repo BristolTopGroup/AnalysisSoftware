@@ -15,7 +15,7 @@ using namespace std;
 
 namespace BAT {
 bool Event::useCustomConversionTagger = false;
-bool Event::usePFIsolation = false;
+bool Event::usePFIsolation = true;
 
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
@@ -31,7 +31,7 @@ Event::Event() : //
 		looseElectrons(), //
 		qcdElectrons(), //
 		allJets(), //
-		genJets(),//
+		genJets(), //
 		goodJets(), //
 		goodBJets(), //
 		goodElectronCleanedJets(), //
@@ -48,20 +48,20 @@ Event::Event() : //
 		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
-		localEventNumber(0),//
+		localEventNumber(0), //
 		lumiBlock(0), //
 		eventWeight(1.), //
-		pileUpWeight_(1.),//
-		PUWeightInTimeOnly_(1.),//
-		PUWeight3BX_(1.),//
-		PUWeight3D_(1.),//
-		PUWeightShiftUp_(1.),//
-		PUWeightShiftDown_(1.),//
+		pileUpWeight_(1.), //
+		PUWeightInTimeOnly_(1.), //
+		PUWeight3BX_(1.), //
+		PUWeight3D_(1.), //
+		PUWeightShiftUp_(1.), //
+		PUWeightShiftDown_(1.), //
 		numberOfHighPurityTracks_(0), //
 		isBeamScraping_(true), //
 		genNumberOfPileUpVertices(0), //
 		trueNumberOfPileUpVertices_(0), //
-		pdfWeights(),//
+		pdfWeights(), //
 		ptdensityRho(0.) {
 }
 
@@ -126,8 +126,10 @@ void Event::selectElectronsByQuality() {
 
 		bool isGood(electron->isGood((short) Globals::electronID));
 		bool isIsolated = electron->relativeIsolation() < Globals::maxElectronRelativeIsolation;
-		bool isPFIsolated = electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation;
-		bool isPFNonIsolated = electron->isPFLepton() && electron->pfIsolation() > Globals::maxElectronLoosePFIsolation;
+		bool isPFIsolated = electron->isPFLepton()
+				&& electron->pfRelativeIsolation(Globals::electronIsolationCone) < Globals::maxElectronPFIsolation;
+		bool isPFNonIsolated = electron->isPFLepton()
+				&& electron->pfRelativeIsolation(Globals::electronIsolationCone) > Globals::maxElectronLoosePFIsolation;
 
 		if (isGood)
 			goodElectrons.push_back(electron);
