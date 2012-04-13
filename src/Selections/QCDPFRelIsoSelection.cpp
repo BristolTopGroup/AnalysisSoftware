@@ -18,23 +18,24 @@ QCDPFRelIsoSelection::~QCDPFRelIsoSelection() {
 }
 
 bool QCDPFRelIsoSelection::passesTriggerSelection(const EventPtr event) const {
-	unsigned int runNumber(event->runnumber());
-	if (event->isRealData()) {
-		if (runNumber >= 160404 && runNumber <= 163869)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
-		else if (runNumber > 163869 && runNumber <= 165633)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-		else if (runNumber > 165633 && runNumber <= 178380)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-		else if (runNumber > 178380)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-		else
-			return false;
-	} else {
-		return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-				|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-				|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-	}
+	return TopPairEPlusJetsReferenceSelection::passesTriggerSelection(event);
+//	unsigned int runNumber(event->runnumber());
+//	if (event->isRealData()) {
+//		if (runNumber >= 160404 && runNumber <= 163869)
+//			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+//		else if (runNumber > 163869 && runNumber <= 165633)
+//			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+//		else if (runNumber > 165633 && runNumber <= 178380)
+//			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+//		else if (runNumber > 178380)
+//			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+//		else
+//			return false;
+//	} else {
+//		return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+//				|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
+//				|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+//	}
 }
 
 bool QCDPFRelIsoSelection::hasExactlyOneIsolatedLepton(const EventPtr event) const {
@@ -55,8 +56,8 @@ bool QCDPFRelIsoSelection::hasExactlyOneIsolatedLepton(const EventPtr event) con
 }
 
 bool QCDPFRelIsoSelection::passesConversionRejectionMissingLayers(const EventPtr event) const {
-	const ElectronPointer electron = MostIsolatedElectron(event->Electrons());
-	return electron->innerLayerMissingHits() < 1;
+	const ElectronPointer electron = MostIsolatedElectron(event->GoodElectrons());
+	return electron->innerLayerMissingHits() == 0;
 }
 
 const ElectronPointer QCDPFRelIsoSelection::MostIsolatedElectron(const ElectronCollection& electrons) const {
@@ -76,8 +77,8 @@ const ElectronPointer QCDPFRelIsoSelection::MostIsolatedElectron(const ElectronC
 }
 
 bool QCDPFRelIsoSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {
-	const ElectronPointer electron = MostIsolatedElectron(event->Electrons());
-	bool isConversion = electron->dCotThetaToClosestTrack() < 0.02 && electron->distToClosestTrack() < 0.02;
+	const ElectronPointer electron = MostIsolatedElectron(event->GoodElectrons());
+	bool isConversion = fabs(electron->dCotThetaToClosestTrack()) < 0.02 && fabs(electron->distToClosestTrack()) < 0.02;
 	return !isConversion;
 }
 

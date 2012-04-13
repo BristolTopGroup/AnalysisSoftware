@@ -29,15 +29,59 @@ NeutrinoSelectionCriterion::value TopPairEventCandidate::usedNeutrinoSelection; 
 TTbarReconstructionCriterion::value TopPairEventCandidate::usedTTbarReconstruction; // = TTbarReconstructionCriterion::TopMassDifference;
 
 TopPairEventCandidate::TopPairEventCandidate() :
-		Event(), electronFromW(), leptonicBJet(), hadronicBJet(), jet1FromW(), jet2FromW(), neutrino1(), neutrino2(), leptonicW1(), leptonicW2(), hadronicW(), leptonicTop1(), leptonicTop2(), hadronicTop(), selectedNeutrino(
-				0), currentSelectedNeutrino(0), hadronicBIndex(0), leptonicBIndex(0), jet1FromWIndex(0), jet2FromWIndex(
-				0), doneReconstruction_(false), conversionTagger(new ConversionTagger()), doneConversionTagging(false), solutions(), compareSolutions() {
+		Event(), //
+		electronFromW(), //
+		leptonicBJet(), //
+		hadronicBJet(), //
+		jet1FromW(), //
+		jet2FromW(), //
+		neutrino1(), //
+		neutrino2(), //
+		leptonicW1(), //
+		leptonicW2(), //
+		hadronicW(), //
+		leptonicTop1(), //
+		leptonicTop2(), //
+		hadronicTop(), //
+		selectedNeutrino(0), //
+		currentSelectedNeutrino(0), //
+		hadronicBIndex(0), //
+		leptonicBIndex(0), //
+		jet1FromWIndex(0), //
+		jet2FromWIndex(0), //
+		doneReconstruction_(false), //
+		conversionTagger(new ConversionTagger()), //
+		doneConversionTagging(false), //
+		solutions(), //
+		compareSolutions() {
 }
 
 TopPairEventCandidate::TopPairEventCandidate(const Event& event) :
-		Event(event), electronFromW(), leptonicBJet(), hadronicBJet(), jet1FromW(), jet2FromW(), neutrino1(), neutrino2(), leptonicW1(), leptonicW2(), hadronicW(), leptonicTop1(), leptonicTop2(), hadronicTop(), selectedNeutrino(
-				0), currentSelectedNeutrino(0), hadronicBIndex(0), leptonicBIndex(0), jet1FromWIndex(0), jet2FromWIndex(
-				0), doneReconstruction_(false), conversionTagger(new ConversionTagger()), doneConversionTagging(false), solutions(), compareSolutions() {
+		Event(event), //
+		electronFromW(), //
+		leptonicBJet(), //
+		hadronicBJet(), //
+		jet1FromW(), //
+		jet2FromW(), //
+		neutrino1(), //
+		neutrino2(), //
+		leptonicW1(), //
+		leptonicW2(), //
+		hadronicW(), //
+		leptonicTop1(), //
+		leptonicTop2(), //
+		hadronicTop(), //
+		selectedNeutrino(0), //
+		currentSelectedNeutrino(0), //
+		hadronicBIndex(0), //
+		leptonicBIndex(0), //
+		jet1FromWIndex(0), //
+		jet2FromWIndex(0), //
+		doneReconstruction_(false), //
+		conversionTagger(new ConversionTagger()), //
+		doneConversionTagging(false), //
+		solutions(), //
+		compareSolutions() {
 
 }
 
@@ -56,18 +100,6 @@ bool TopPairEventCandidate::passesScrapingFilter() const {
 
 bool TopPairEventCandidate::passesElectronHighLevelTrigger() const {
 	if (isRealData()) {
-//        if (runNumber < 140041)
-//			return HLT(HLTriggers::HLT_Ele10_LW_L1R);
-//		else if (runNumber >= 140041 && runNumber <= 143962)
-//			return HLT(HLTriggers::HLT_Ele15_SW_L1R);
-//		else if (runNumber > 143962 && runNumber <= 146427)
-//			return HLT(HLTriggers::HLT_Ele15_SW_CaloEleId_L1R);
-//		else if (runNumber > 146427 && runNumber <= 147116)
-//			return HLT(HLTriggers::HLT_Ele17_SW_CaloEleId_L1R);
-//		else if (runNumber > 147116 && runNumber <= 148818)
-//			return HLT(HLTriggers::HLT_Ele17_SW_TightEleId_L1R);
-//		else if (runNumber >= 148819 && runNumber < 160000)
-//			return HLT(HLTriggers::HLT_Ele22_SW_TighterEleId_L1R);
 		if (runNumber >= 160404 && runNumber <= 163869)
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 		else if (runNumber > 163869 && runNumber <= 165633)
@@ -184,14 +216,14 @@ bool TopPairEventCandidate::electronPlusJetsZVeto() const {
 //	double invariantMass = 0;
 //	bool isZEvent = false;
 	unsigned int nLooseElectrons(0);
-	ElectronPointer isoElectron;
-
-	if (Event::usePFIsolation && goodPFIsolatedElectrons.size() > 0)
-		isoElectron = goodPFIsolatedElectrons.front();
-	else if (goodIsolatedElectrons.size() > 0)
-		isoElectron = goodIsolatedElectrons.front();
-
-	if (isoElectron != NULL && looseElectrons.size() > 1) {
+//	ElectronPointer isoElectron;
+//
+//	if (Event::usePFIsolation && goodPFIsolatedElectrons.size() > 0)
+//		isoElectron = goodPFIsolatedElectrons.front();
+//	else if (goodIsolatedElectrons.size() > 0)
+//		isoElectron = goodIsolatedElectrons.front();
+//
+//	if (isoElectron != NULL && looseElectrons.size() > 1) {
 		for (unsigned int index = 0; index < looseElectrons.size(); ++index) {
 			const ElectronPointer looseElectron = looseElectrons.at(index);
 			bool passLooseIso = false;
@@ -201,7 +233,7 @@ bool TopPairEventCandidate::electronPlusJetsZVeto() const {
 			else
 				passLooseIso = looseElectron->relativeIsolation() < 0.2;
 
-			if(passLooseIso)
+			if (passLooseIso)
 				++nLooseElectrons;
 //			if (passLooseIso)
 //				invariantMass = isoElectron->invariantMass(looseElectron);
@@ -214,7 +246,7 @@ bool TopPairEventCandidate::electronPlusJetsZVeto() const {
 //				isZEvent = true;
 		}
 
-	}
+//	}
 	return nLooseElectrons < 2;
 //	return isZEvent == false;
 }
@@ -263,14 +295,6 @@ bool TopPairEventCandidate::passesAsymmetricMuonCleanedJetCuts() const {
 	return leadingJet->pt() > 70 && secondLeadingJet->pt() > 50 && thirdLeadingJet->pt() > 50;
 
 }
-
-//bool TopPairEventCandidate::hasAtLeastOneBtag() const {
-//    return goodBJets.size() >= 1;
-//}
-//
-//bool TopPairEventCandidate::hasAtLeastTwoBtags() const{
-//    return goodBJets.size() >= 2;
-//}
 
 bool TopPairEventCandidate::passesFullTTbarEPlusJetSelection() const {
 //    unsigned int newstep = (int) TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS - 1;
@@ -369,17 +393,6 @@ bool TopPairEventCandidate::passesMuPlusJetsSelectionStepUpTo(enum TTbarMuPlusJe
 	}
 }
 
-//bool TopPairEventCandidate::passesNMinus1(enum TTbarMuPlusJetsSelection::Step omitted) const {
-//    bool passes(true);
-//
-//    for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-//        if (cut == (unsigned int) omitted)
-//            continue;
-//        passes = passes && passesMuPlusJetsSelectionStep((TTbarMuPlusJetsSelection::Step) cut);
-//    }
-//    return passes;
-//}
-
 bool TopPairEventCandidate::passesEPlusJetsSelectionStep(enum TTbarEPlusJetsSelection::Step step) const {
 	switch (step) {
 	case TTbarEPlusJetsSelection::FilterOutScraping:
@@ -471,16 +484,16 @@ bool TopPairEventCandidate::passesEPlusJetsPFIsoSelection() const {
 	bool passesBothIsolationvetos = false;
 	if (passGoodElectrons) {
 		//TODO: shoudn't this be goodElectrons?
-		const ElectronPointer electron = MostPFIsolatedElectron(allElectrons);
+		const ElectronPointer electron = MostPFIsolatedElectron(goodElectrons);
 		if (electron->isGood(Globals::electronID)) {
-			if (useCustomConversionTagger) {
-				conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
-				passesBothIsolationvetos = electron->isFromConversion() == false
-						&& conversionTagger->isFromConversion(0.02, 0.02) == false;
-			} else {
-				passesBothIsolationvetos = electron->isFromConversion() == false
-						&& electron->isTaggedAsConversion(0.02, 0.02) == false;
-			}
+//			if (useCustomConversionTagger) {
+//				conversionTagger->calculateConversionVariables(electron, tracks, 3.8, 0.45);
+//				passesBothIsolationvetos = electron->isFromConversion() == false
+//						&& conversionTagger->isFromConversion(0.02, 0.02) == false;
+//			} else {
+			passesBothIsolationvetos = electron->isFromConversion() == false
+					&& electron->isTaggedAsConversion(0.02, 0.02) == false;
+//			}
 		}
 
 	}

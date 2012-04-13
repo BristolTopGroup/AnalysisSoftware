@@ -148,9 +148,51 @@ void Selections::commissionTopEplusJetsPlusMETSelection(const EventPtr event) {
 
 void Selections::commissionQCDPFRelIsoSelection(const EventPtr event) {
 	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-	bool resultSelection(qcdPFRelIsoSelection_->passesFullSelection(event));
-	bool resultOldSelection(ttbarCand->passesEPlusJEtsPFIsoControlSelection());
+	if (event->runnumber() == 1 && event->lumiblock() == 161061 && event->eventnumber() == 48308576) {
+		cout << "Passes trigger: "
+				<< qcdPFRelIsoSelection_->passesSelectionStep(event,
+						TTbarEPlusJetsReferenceSelection::EvenCleaningAndTrigger);
+		cout << " , " << ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)
+				<< endl;
+		bool passGoodElectrons = event->GoodElectrons().size() > 0 && event->GoodPFIsolatedElectrons().size() < 2;
+		cout << "Passes good electrons: "
+				<< qcdPFRelIsoSelection_->passesSelectionStep(event,
+						TTbarEPlusJetsReferenceSelection::OneIsolatedElectron);
+		cout << " , " << passGoodElectrons << endl;
+
+		const ElectronPointer electron = event->MostPFIsolatedElectron(event->Electrons());
+		bool passesNew = qcdPFRelIsoSelection_->passesSelectionStep(event,
+				TTbarEPlusJetsReferenceSelection::ConversionRejectionMissingLayers);
+		bool passesOld = electron->isFromConversion() == false;
+
+		cout << "Conversion (missing layers: " << passesNew << " , " << passesOld << endl;
+
+		passesNew = passesNew
+				&& qcdPFRelIsoSelection_->passesSelectionStep(event,
+						TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack);
+		passesOld = passesOld && electron->isTaggedAsConversion(0.02, 0.02) == false;
+		cout << "Conversion (missing layers + partner track): " << passesNew << " , " << passesOld << endl;
+		cout << "Loose Muon: " << qcdPFRelIsoSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::LooseMuonVeto);
+		cout << " , " << ttbarCand->ePlusJetsLooseMuonVeto() << endl;
+		cout << "Dilepton veto: "<< qcdPFRelIsoSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::DiLeptonVeto);
+		cout << " , " << ttbarCand->electronPlusJetsZVeto() << endl;
+
+	}
+	bool resultSelection(
+			qcdPFRelIsoSelection_->passesSelectionUpToStep(event,
+					TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack));
+	bool resultOldSelection(ttbarCand->passesEPlusJetsPFIsoSelection());
 	testResult(resultSelection, resultOldSelection, "QCD PF RelIso Selection");
+}
+
+void Selections::commissionQCDConversionSelection(const EventPtr event) {
+	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
+
+	bool resultSelection(
+			qcdConversionSelection_->passesSelectionUpToStep(event,
+					TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack));
+	bool resultOldSelection(ttbarCand->passesConversionSelection());
+	testResult(resultSelection, resultOldSelection, "QCD Conversion Selection");
 }
 
 void Selections::createHistograms() {
@@ -162,7 +204,8 @@ Selections::Selections(HistogramManagerPtr histMan) :
 		topEplusJetsReferenceSelection_(new TopPairEPlusJetsReferenceSelection()), //
 		topEplusJetsZprimeSelection_(new TopPairEPlusJetsZprimeSelection()), //
 		topEplusJetsPlusMETSelection_(new TopPairEplusJetsPlusMETSelection()), //
-		qcdPFRelIsoSelection_(new QCDPFRelIsoSelection()),//
+		qcdPFRelIsoSelection_(new QCDPFRelIsoSelection()), //
+		qcdConversionSelection_(new QCDConversionSelection()), //
 		currentEvent_(), //
 		currentTopEvent_() {
 
@@ -176,6 +219,8 @@ void Selections::testResult(bool news, bool old, string step) const {
 		cout << "Selections are not equal at step " << step << endl;
 		cout << "Result new selection: " << news << endl;
 		cout << "Result old selection: " << old << endl;
+		cout << "<run, lumi, event>: <" << currentEvent_->runnumber() << ",";
+		cout << currentEvent_->lumiblock() << "," << currentEvent_->eventnumber() << ">" << endl;
 		EventContentPrinter::printJets(currentEvent_->Jets());
 		EventContentPrinter::printElectrons(currentEvent_->Electrons());
 		EventContentPrinter::printMuons(currentEvent_->Muons());
