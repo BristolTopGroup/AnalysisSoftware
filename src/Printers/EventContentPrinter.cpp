@@ -80,10 +80,10 @@ extern void printElectron(const ElectronPointer electron) {
 			<< electron->isFromConversion() << setw(30) << electron->superClusterEta() << endl;
 
 	cout << setw(30) << "dCotTheta" << setw(30) << "pf rel. iso." << setw(30) << "dist" << setw(30)
-				<< "----" << endl;
+				<< "has partnertrack" << endl;
 
 		cout << setw(30) << electron->dCotThetaToClosestTrack()<< setw(30) << electron->pfRelativeIsolation(0.3) << setw(30)
-				<< electron->distToClosestTrack() << setw(30) << "" << endl;
+				<< electron->distToClosestTrack() << setw(30) << electron->isTaggedAsConversion(0.02, 0.02) << endl;
 
 	//    cout << setw(30) << "isTrackerDriven" << setw(30) << "swiss_cross" << setw(30) << "isLoose" << setw(30)
 	//            << "isEcalDriven" << endl;
