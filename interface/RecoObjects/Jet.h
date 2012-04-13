@@ -23,8 +23,8 @@ enum value {
 	JetProbability,
 	SimpleSecondaryVertexHighEfficiency,
 	SimpleSecondaryVertexHighPurity,
-	SoftElectronByIP3d,
-	SoftElectronByPt,
+//	SoftElectronByIP3d,
+//	SoftElectronByPt,
 	SoftMuon,
 	SoftMuonByIP3d,
 	SoftMuonByPt,
@@ -43,8 +43,8 @@ const boost::array<std::string, BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS> names =
 		"JetProbability",//
 		"SimpleSecondaryVertexHighEfficiency",//
 		"SimpleSecondaryVertexHighPurity",//
-		"SoftElectronByIP3d",//
-		"SoftElectronByPt",//
+//		"SoftElectronByIP3d",//
+//		"SoftElectronByPt",//
 		"SoftMuon",//
 		"SoftMuonByIP3d",//
 		"SoftMuonByPt",//
