@@ -35,7 +35,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		fitterOutputFlag_(PythonParser::getAttributeFromPyObject<bool>(config, "produceFitterASCIIoutput")), //
 		inputFiles_(PythonParser::getVectorFromPythonObject(config, "inputFiles")), //
 		tqafPath_(PythonParser::getAttributeFromPyObject<string>(config, "TQAFPath")), //
-		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")){
+		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")),//
+		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")){
 
 }
 
@@ -149,6 +150,13 @@ bool ConfigFile::useHitFit() const {
 		return programOptions["fitter"].as<bool>();
 	else
 		return useHitFit_;
+}
+
+unsigned int ConfigFile::centerOfMassEnergy() const {
+	if (programOptions.count("centerOfMassEnergy"))
+			return programOptions["centerOfMassEnergy"].as<unsigned int>();
+		else
+			return centerOfMassEnergy_;
 }
 
 bool ConfigFile::fitterOutputFlag() const {

@@ -28,5 +28,13 @@ TQAFPath = ""
 #integrated luminosity the MC simulation will be scaled to
 lumi = 5028.#pb-1
 
-#file with information (cross-section, number of processed events) for event weight calculation 
-datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo.py"
+#center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
+#this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
+centerOfMassEnergy = 7
+
+#file with information (cross-section, number of processed events) for event weight calculation
+datasetInfoFile = ""
+if centerOfMassEnergy == 7:
+    datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo.py"
+elif centerOfMassEnergy == 8:
+    datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo_8TeV.py"

@@ -41,7 +41,7 @@ T PythonParser::getAttributeFromPyObject(const boost::python::object pyObject, c
 		ret = extract<T>(pyObject.attr(attribute.c_str()));
 	} catch (error_already_set const &) {
 		std::string perror_str = PythonParser::parse_python_exception();
-		std::cout << "Error during python file parsing: " << perror_str << std::endl;
+		std::cout << "Error during Python file parsing: " << perror_str << std::endl;
 		throw "PythonParser: error when parsing '" + attribute + "'.";
 	}
 	return ret;
