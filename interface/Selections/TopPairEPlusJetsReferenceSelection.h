@@ -14,7 +14,7 @@ namespace BAT {
 
 namespace TTbarEPlusJetsReferenceSelection {
 enum Step {
-	EvenCleaningAndTrigger,
+	EventCleaningAndTrigger,
 	OneIsolatedElectron,
 	LooseMuonVeto,
 	DiLeptonVeto,
