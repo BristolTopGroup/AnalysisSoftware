@@ -29,7 +29,6 @@ public:
 	Particle(double energy, double px, double py, double pz);
 	virtual ~Particle();
 	Particle operator+(const Particle &other) const;
-//	ParticlePointer operator+(const Particle* other) const;
 	Particle & operator=(const Particle &rightHandSide);
 	double mass() const;
 	double d0() const;
@@ -57,7 +56,6 @@ public:
 	bool isInBarrelRegion() const;
 	bool isInCrack() const;
 	bool isInEndCapRegion() const;
-	const char* getEtaRegion() const;
 	double relativePtTo(const ParticlePointer otherParticle) const;
 	double deltaR(const ParticlePointer otherParticle) const;
 	double deltaPhi(const ParticlePointer otherParticle) const;
@@ -65,11 +63,12 @@ public:
 	bool isWithinDeltaR(double deltaR, const ParticlePointer particle) const;
 	double invariantMass(const ParticlePointer otherParticle) const;
 	double angle(const ParticlePointer otherParticle) const;
+	virtual std::string toString() const;
 
 protected:
 	double particleMass, particleCharge;
-	double distanceFromInteractionPointInMicron;
-	double distanceFromInteractionPointInMicron_wrt_to_BeamSpot;
+	double distanceFromInteractionPointInCM;
+	double distanceFromInteractionPointInCM_wrt_to_BeamSpot;
 	FourVector fourvector;
 
 };
