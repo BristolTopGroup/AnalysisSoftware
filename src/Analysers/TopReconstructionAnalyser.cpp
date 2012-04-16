@@ -192,15 +192,6 @@ void TopReconstructionAnalyser::analyse(const EventPtr event) {
 			histMan_->H1D_BJetBinned("mttbar_QCDEnriched")->Fill(mttbar, weight);
 			histMan_->H1D_BJetBinned("ttbar_pt_QCDEnriched")->Fill(resonance->pt());
 		}
-
-//		if (ttbarCandidate.isRealData() && mttbar > 600 && ttbarCandidate.passesEPlusJetsSelectionStepUpTo(
-//				TTbarEPlusJetsSelection::AsymmetricJetCuts)) {
-//			cout << "run " << ttbarCandidate.runnumber() << ", event " << ttbarCandidate.eventnumber() << ", lumi "
-//					<< ttbarCandidate.lumiblock();
-//			cout << ", top pair invariant mass = " << mttbar << " GeV" << endl;
-//			interestingEvents.push_back(InterestingEvent(ttbarCandidate, eventReader->getCurrentFile()));
-//		}
-
 	}
 
 	//for 3 jets only

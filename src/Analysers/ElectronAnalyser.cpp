@@ -11,20 +11,19 @@
 namespace BAT {
 
 void ElectronAnalyser::analyse(const EventPtr event) {
-	histMan_->setCurrentHistogramFolder("ElectronAnalysis");
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-
-	const ElectronCollection electrons =  event->Electrons();
-	float weight =  event->weight();
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	weight_ = event->weight() * prescale_;
+	const ElectronCollection electrons = event->Electrons();
+	const ElectronCollection goodElectrons = event->GoodElectrons();
 	ElectronCollection goodElectronsNoID;
 
-	if ( ttbarCand->passesFullTTbarEPlusJetSelection()) {
-		const ElectronPointer electron =  event->MostPFIsolatedElectron( event->GoodElectrons());
-		histMan_->H1D("electronEta")->Fill(electron->eta(), weight);
-		histMan_->H1D("electronAbsEta")->Fill(abs(electron->eta()), weight);
-		histMan_->H1D("electronPt")->Fill(electron->pt(), weight);
-		histMan_->H1D("electronPFIsolation")->Fill(electron->pfIsolation(), weight);
-		histMan_->H1D("electronRelIso")->Fill(electron->relativeIsolation(), weight);
+	if (goodElectrons.size() > 0) {
+		const ElectronPointer electron = event->MostPFIsolatedElectron(goodElectrons);
+		histMan_->H1D("electronEta")->Fill(electron->eta(), weight_);
+		histMan_->H1D("electronAbsEta")->Fill(abs(electron->eta()), weight_);
+		histMan_->H1D("electronPt")->Fill(electron->pt(), weight_);
+		histMan_->H1D("electronPFIsolation")->Fill(electron->pfIsolation(), weight_);
+		histMan_->H1D("electronRelIso")->Fill(electron->relativeIsolation(), weight_);
 	}
 
 	for (unsigned index = 0; index < electrons.size(); ++index) {
@@ -46,20 +45,20 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 			const ElectronPointer electron = goodElectronsNoID.at(index);
 
 			if (electron->CiC_ElectronID((CiCElectronID::value) id)) {
-				histMan_->H1D("nEventsPassingCiCId")->Fill(id + 1, weight);
+				histMan_->H1D("nEventsPassingCiCId")->Fill(id + 1, weight_);
 
 				if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)
-					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(id + 1, weight);
+					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(id + 1, weight_);
 
 				if (!electron->isPFLepton() && electron->relativeIsolation() < Globals::maxElectronRelativeIsolation)
-					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(id + 1, weight);
+					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(id + 1, weight_);
 
 			} else {
-				histMan_->H1D("nEventsPassingCiCId")->Fill(0., weight);
+				histMan_->H1D("nEventsPassingCiCId")->Fill(0., weight_);
 				if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)
-					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(0., weight);
+					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(0., weight_);
 				if (!electron->isPFLepton() && electron->relativeIsolation() < Globals::maxElectronRelativeIsolation)
-					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(0., weight);
+					histMan_->H1D("nEventsPassingCiCIdIso")->Fill(0., weight_);
 			}
 		}
 
@@ -82,36 +81,36 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 
 			}
 
-			histMan_->H1D("nElectronsCiCHyperTight4MC")->Fill(goodElectrons, weight);
-			histMan_->H1D("nElectronsCiCHyperTight4MCIso")->Fill(goodIsoElectrons, weight);
+			histMan_->H1D("nElectronsCiCHyperTight4MC")->Fill(goodElectrons, weight_);
+			histMan_->H1D("nElectronsCiCHyperTight4MCIso")->Fill(goodIsoElectrons, weight_);
 
 		}
 	}
-	unsigned int goodElectrons = 0;
-	unsigned int goodIsoElectrons = 0;
+	unsigned int nGoodElectrons = 0;
+	unsigned int nGoodIsoElectrons = 0;
 
 	for (unsigned int index = 0; index < goodElectronsNoID.size(); ++index) {
 		const ElectronPointer electron = goodElectronsNoID.at(index);
 		if (electron->VBTF_WP70_ElectronID()) {
-			++goodElectrons;
+			++nGoodElectrons;
 
 			if (electron->isPFLepton() && electron->pfIsolation() < Globals::maxElectronPFIsolation)
-				++goodIsoElectrons;
+				++nGoodIsoElectrons;
 
 			if (!electron->isPFLepton() && electron->relativeIsolation() < Globals::maxElectronRelativeIsolation)
-				++goodIsoElectrons;
+				++nGoodIsoElectrons;
 		}
 
 	}
 
-	histMan_->H1D("nElectronsWP70")->Fill(goodElectrons, weight);
-	histMan_->H1D("nElectronsWP70Iso")->Fill(goodIsoElectrons, weight);
+	histMan_->H1D("nElectronsWP70")->Fill(nGoodElectrons, weight_);
+	histMan_->H1D("nElectronsWP70Iso")->Fill(nGoodIsoElectrons, weight_);
 
 	//TODO:Add H/E for electrons which pass the id
 
 }
 
-ElectronAnalyser::ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder ) :
+ElectronAnalyser::ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder) {
 
 }
@@ -120,7 +119,7 @@ ElectronAnalyser::~ElectronAnalyser() {
 }
 
 void ElectronAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder("ElectronAnalysis");
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
 	histMan_->addH1D("nEventsPassingCiCId", "nEventsPassingCiCId", CiCElectronID::NUMBER_OF_CiCIds + 1, 0,
 			CiCElectronID::NUMBER_OF_CiCIds);

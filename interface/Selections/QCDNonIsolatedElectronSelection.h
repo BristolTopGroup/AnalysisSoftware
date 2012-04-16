@@ -18,7 +18,10 @@ public:
 			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS);
 	virtual ~QCDNonIsolatedElectronSelection();
 
+	virtual bool passesTriggerSelection(const EventPtr event) const;
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
+
+	virtual unsigned int prescale(const EventPtr event) const;
 };
 
 } /* namespace BAT */

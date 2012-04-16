@@ -25,9 +25,9 @@ mcFolders = ['DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S
            'Tbar_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            'Tbar_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            'Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+#           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #only a subset (first 3 files of complete samples. Remember to change the weight as well (DataSetInfo.py)!
-           #'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset',
+           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset',
            'T_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            'T_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            'T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',

@@ -19,7 +19,7 @@ void Selections::analyse(const EventPtr event) {
 	commissionTopEplusJetsZprimeSelection(event);
 	commissionTopEplusJetsPlusMETSelection(event);
 	commissionQCDPFRelIsoSelection(event);
-	commissionQCDNonIsoSelection(event);
+//	commissionQCDNonIsoSelection(event);
 }
 
 void Selections::commissionTopEplusJetsReferenceSelection(const EventPtr event) {
@@ -180,8 +180,8 @@ void Selections::createHistograms() {
 
 }
 
-Selections::Selections(HistogramManagerPtr histMan) :
-		BasicAnalyser(histMan), //
+Selections::Selections(HistogramManagerPtr histMan, string histogramFolder) :
+		BasicAnalyser(histMan, histogramFolder), //
 		topEplusJetsReferenceSelection_(new TopPairEPlusJetsReferenceSelection()), //
 		topEplusJetsZprimeSelection_(new TopPairEPlusJetsZprimeSelection()), //
 		topEplusJetsPlusMETSelection_(new TopPairEplusJetsPlusMETSelection()), //

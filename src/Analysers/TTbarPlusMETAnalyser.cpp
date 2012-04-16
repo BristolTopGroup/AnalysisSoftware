@@ -11,6 +11,7 @@
 namespace BAT {
 
 void TTbarPlusMETAnalyser::analyse(const EventPtr event) {
+	qcdAnalysis(event);
 	histMan_->setCurrentHistogramFolder("TTbarPlusMetAnalysis");
 	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 	double weight = event->weight();
@@ -68,6 +69,26 @@ void TTbarPlusMETAnalyser::analyse(const EventPtr event) {
 	}
 }
 
+void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
+	if (qcdNonIsoEPlusJetsSelection_->passesFullSelection(event)){
+		qcdNonIsoElectronAnalyser_->setPrescale(qcdNonIsoEPlusJetsSelection_->prescale(event));
+		qcdNonIsoElectronAnalyser_->analyse(event);
+	}
+
+
+	if (qcdConversionSelection_->passesFullSelection(event)){
+		qcdConversionsElectronAnalyser_->setPrescale(qcdConversionSelection_->prescale(event));
+		qcdConversionsElectronAnalyser_->analyse(event);
+	}
+
+
+	if (qcdEPlusJetsPFRelIsoSelection_->passesFullSelection(event)){
+		qcdEPlusjetsPFRelIsoElectronAnalyser_->setPrescale(qcdEPlusJetsPFRelIsoSelection_->prescale(event));
+		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyse(event);
+	}
+
+}
+
 void TTbarPlusMETAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder("TTbarPlusMetAnalysis");
 	//missing transverse energy
@@ -108,11 +129,21 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	histMan_->addH1D_BJetBinned("MT_withAsymJetsCut_3jets", "Transverse Mass(lepton,MET);M_{T}(l,MET);Events", 1000, 0,
 			1000);
 	histMan_->addH1D_BJetBinned("MT_withMETAndAsymJets_3jets", "Transverse Mass(lepton,MET)", 1000, 0, 1000);
+
+	qcdNonIsoElectronAnalyser_->createHistograms();
+	qcdConversionsElectronAnalyser_->createHistograms();
+	qcdEPlusjetsPFRelIsoElectronAnalyser_->createHistograms();
 }
 
 TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
-		metAnalyser(new METAnalyser(histMan, histogramFolder)) {
+		qcdNonIsoEPlusJetsSelection_(new QCDNonIsolatedElectronSelection()), //
+		qcdConversionSelection_(new QCDConversionSelection()), //
+		qcdEPlusJetsPFRelIsoSelection_(new QCDPFRelIsoSelection()), //
+		metAnalyser_(new METAnalyser(histMan, histogramFolder)), //
+		qcdNonIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder + "/QCDEPlusJetsNonIso")), //
+		qcdConversionsElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder + "/QCDConversions")), //
+		qcdEPlusjetsPFRelIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder + "/QCDEPlusJetsPFRelIso")) {
 
 }
 

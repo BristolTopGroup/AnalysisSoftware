@@ -4,7 +4,7 @@ PUFile = "BristolAnalysis/Tools/data/PileUp2011_v2.root"
 bJetResoFile = "BristolAnalysis/Tools/data/bJetReso.root"
 lightJetResoFile = "BristolAnalysis/Tools/data/lightJetReso.root"
 #number of events to be processed
-maxEvents = 5000
+maxEvents = 100000
 #use HitFit for analysis
 useHitFit = False
 produceFitterASCIIoutput = False

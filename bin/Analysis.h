@@ -115,6 +115,8 @@ public:
 
     unsigned long getNumberOfProccessedEvents() const;
 
+    void finishAnalysis();
+
 private:
     void printNumberOfProccessedEventsEvery(unsigned long printEvery);
     void initiateEvent();

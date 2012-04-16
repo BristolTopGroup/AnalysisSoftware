@@ -24,6 +24,8 @@ class BasicAnalyser{
 protected:
 	HistogramManagerPtr histMan_;
 	std::string histogramFolder_;
+	double weight_;
+	unsigned int prescale_;
 
 public:
 	/**
@@ -47,6 +49,8 @@ public:
      * The function is executed on the creation of the analysis.
      */
     virtual void createHistograms() = 0;
+
+    virtual void setPrescale(unsigned int prescale);
 };
 
 typedef boost::scoped_ptr<BasicAnalyser> BasicAnalyserLocalPtr;

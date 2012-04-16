@@ -18,7 +18,7 @@ const boost::array<std::string, 5> JETTYPES = { { "allJets", //
 
 void BJetAnalyser::analyse(const EventPtr event) {
 	double weight = event->weight();
-	histMan_->setCurrentHistogramFolder("BJetAnalysis");
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	const JetCollection allJets = event->Jets();
 
 	for (unsigned int jetIndex = 0; jetIndex < allJets.size(); ++jetIndex) {
@@ -50,7 +50,7 @@ void BJetAnalyser::analyse(const EventPtr event) {
 }
 
 void BJetAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder("BJetAnalysis");
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
 	for (unsigned int algo = 0; algo < BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS; ++algo) {
 		for (unsigned int index = 0; index < JETTYPES.size(); ++index) {

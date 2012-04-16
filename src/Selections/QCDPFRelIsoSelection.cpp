@@ -65,15 +65,19 @@ const ElectronPointer QCDPFRelIsoSelection::MostIsolatedElectron(const ElectronC
 	unsigned int bestIsolatedLepton = 990;
 
 	for (unsigned int index = 0; index < electrons.size(); ++index) {
-		double currentIsolation = 999999999;
-		currentIsolation = electrons.at(index)->pfIsolation();
+		double currentIsolation(electrons.at(index)->pfRelativeIsolation(Globals::electronIsolationCone));
 
 		if (currentIsolation < bestIsolation) {
 			bestIsolation = currentIsolation;
 			bestIsolatedLepton = index;
 		}
 	}
-	return electrons.at(bestIsolatedLepton);
+	ElectronPointer electron(new Electron());
+
+	if (bestIsolatedLepton < electrons.size())
+		electron = electrons.at(bestIsolatedLepton);
+
+	return electron;
 }
 
 bool QCDPFRelIsoSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {

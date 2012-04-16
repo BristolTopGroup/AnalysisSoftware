@@ -20,9 +20,9 @@
 nTuple_version = 6
 
 datasetInfo = {}
-datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":59414270}
+#datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":59414270}
 #if using the designated subset:
-#datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":3636129}
+datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":3636129}
 datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":75476429}
 datasetInfo['DYJetsToLL'] = {"cross-section": 3048., "NumberOfProcessedEvents":32112858}
 

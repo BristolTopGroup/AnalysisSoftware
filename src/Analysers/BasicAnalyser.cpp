@@ -8,13 +8,19 @@
 #include "../../interface/Analysers/BasicAnalyser.h"
 
 namespace BAT {
-BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder):
-        histMan_(histMan),
-        histogramFolder_(histogramFolder){
+BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
+		histMan_(histMan), //
+		histogramFolder_(histogramFolder), //
+		weight_(1.),//
+		prescale_(1){
 
 }
 
-BasicAnalyser::~BasicAnalyser(){
+BasicAnalyser::~BasicAnalyser() {
 
+}
+
+void BasicAnalyser::setPrescale(unsigned int prescale){
+	prescale_ = prescale;
 }
 }

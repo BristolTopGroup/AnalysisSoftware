@@ -67,6 +67,13 @@ int main(int argc, char **argv) {
 	double eventsPerMinute = myAnalysis->getNumberOfProccessedEvents() / (watch.CpuTime() / 60);
 	cout << "Number of events processed per minute: " << eventsPerMinute << endl;
 	watch.Print();
+	watch.Reset();
+	cout << "Finishing up analysis and writing histograms do disk" << endl;
+	watch.Start();
+	myAnalysis->finishAnalysis();
+	watch.Stop();
+	watch.Print();
+	cout << "Analysis finished" << endl;
 
 	return 0;
 }

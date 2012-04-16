@@ -10,6 +10,12 @@
 
 #include "BasicAnalyser.h"
 #include "METAnalyser.h"
+#include "ElectronAnalyser.h"
+#include "../Selections/TopPairEplusJetsPlusMETSelection.h"
+#include "../Selections/QCDNonIsolatedElectronSelection.h"
+#include "../Selections/QCDConversionSelection.h"
+#include "../Selections/QCDPFRelIsoSelection.h"
+
 #include <string>
 
 namespace BAT {
@@ -20,9 +26,11 @@ public:
 	virtual ~TTbarPlusMETAnalyser();
 	virtual void analyse(const EventPtr);
 	virtual void createHistograms();
+	void qcdAnalysis(const EventPtr);
 
 private:
-	BasicAnalyserLocalPtr metAnalyser;
+	SelectionPointer qcdNonIsoEPlusJetsSelection_, qcdConversionSelection_, qcdEPlusJetsPFRelIsoSelection_;
+	BasicAnalyserLocalPtr metAnalyser_, qcdNonIsoElectronAnalyser_, qcdConversionsElectronAnalyser_, qcdEPlusjetsPFRelIsoElectronAnalyser_;
 };
 
 typedef boost::scoped_ptr<BAT::TTbarPlusMETAnalyser> TTbarPlusMETAnalyserLocalPtr;

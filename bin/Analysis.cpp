@@ -292,6 +292,10 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 }
 
 Analysis::~Analysis() {
+
+}
+
+void Analysis::finishAnalysis(){
 	histMan->writeToDisk();
 }
 

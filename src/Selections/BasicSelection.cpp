@@ -10,13 +10,12 @@
 namespace BAT {
 
 BasicSelection::BasicSelection(unsigned int numberOfSelectionSteps) : //
-		numberOfSelectionSteps_(numberOfSelectionSteps) //
-{
+		numberOfSelectionSteps_(numberOfSelectionSteps){
 
 }
 
 bool BasicSelection::passesFullSelection(const EventPtr event) const {
-	return passesSelectionUpToStep(event, numberOfSelectionSteps_);
+	return passesSelectionUpToStep(event, numberOfSelectionSteps_ -1);
 }
 
 bool BasicSelection::passesSelectionUpToStep(const EventPtr event, unsigned int selectionStep) const {
@@ -46,6 +45,10 @@ bool BasicSelection::passesFullSelectionExceptStep(const EventPtr event, unsigne
 			passes = true;
 	}
 	return passes;
+}
+
+unsigned int BasicSelection::prescale(const EventPtr event) const {
+	return 1;
 }
 
 BasicSelection::~BasicSelection() {

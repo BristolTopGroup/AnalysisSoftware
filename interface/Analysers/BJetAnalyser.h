@@ -12,13 +12,14 @@
 
 namespace BAT {
 
-class BJetAnalyser : public BasicAnalyser{
+class BJetAnalyser: public BasicAnalyser {
 public:
-    BJetAnalyser(HistogramManagerPtr, std::string histogramFolder = "BJetAnalysis");
-    virtual ~BJetAnalyser();
+	BJetAnalyser(HistogramManagerPtr, std::string histogramFolder = "BJetAnalysis");
+	virtual ~BJetAnalyser();
 
-    void analyse(const EventPtr);
-    void createHistograms();
+	void analyse(const EventPtr);
+	void createHistograms();
+
 };
 
 typedef boost::scoped_ptr<BAT::BJetAnalyser> BJetAnalyserLocalPtr;

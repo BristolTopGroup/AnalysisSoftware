@@ -25,6 +25,7 @@ public:
 	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
 	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;
+
 };
 
 } /* namespace BAT */

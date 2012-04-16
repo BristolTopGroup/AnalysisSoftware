@@ -530,9 +530,27 @@ bool TopPairEventCandidate::passedEPlusJetsAntiIDSelection() const {
 bool TopPairEventCandidate::passesEPlusJetsAntiIsolationSelection() const {
 	bool passesFirst3 = passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex);
 
-	//require at least one good electron and no isolated good electrons
-	if (!(goodElectrons.size() > 0 && goodIsolatedElectrons.size() == 0 && goodPFIsolatedElectrons.size() == 0))
+	unsigned int nGoodElectrons(goodElectrons.size()), nGoodIsolatedElectrons(0);
+	for (unsigned int index = 0; index < goodElectrons.size(); ++index) {
+		const ElectronPointer electron(goodElectrons.at(index));
+		if (electron->pfRelativeIsolation(Globals::electronIsolationCone) < 0.1)
+			++nGoodIsolatedElectrons;
+	}
+
+	if (!(nGoodElectrons > 0 && nGoodIsolatedElectrons == 0))
 		return false;
+
+//	unsigned int nGoodNonIsolatedElectrons(0), nGoodIsolatedElectrons(0);
+//
+//	for (unsigned int index = 0; index < goodElectrons.size(); ++index) {
+//		const ElectronPointer electron(goodElectrons.at(index));
+//		if (electron->pfRelativeIsolation(Globals::electronIsolationCone) < 0.1)
+//			++nGoodIsolatedElectrons;
+//		if (electron->pfRelativeIsolation(Globals::electronIsolationCone) > 0.2)
+//			++nGoodNonIsolatedElectrons;
+//	}
+//	if (!(nGoodNonIsolatedElectrons == 1 && nGoodIsolatedElectrons == 0))
+//		return false;
 
 	bool muonVeto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
 	bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::DileptonVeto);
@@ -553,7 +571,7 @@ bool TopPairEventCandidate::passesEPlusJetsQCDselection() const {
 	bool muonVeto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::LooseMuonVeto);
 	bool zveto = passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::DileptonVeto);
 	bool conversionVeto = (goodElectrons.front()->isFromConversion()
-			|| goodElectrons.front()->isTaggedAsConversion(0.2, 0.2)) == false;
+			|| goodElectrons.front()->isTaggedAsConversion(0.02, 0.02)) == false;
 	return passesFirst3 && muonVeto && zveto && conversionVeto;
 }
 

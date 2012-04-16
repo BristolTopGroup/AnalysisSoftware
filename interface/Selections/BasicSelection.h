@@ -40,7 +40,8 @@ public:
 	virtual bool passesFullSelectionExceptStep(const EventPtr event, unsigned int selectionStep) const; //N-1 cuts
 	virtual bool passesSelectionUpToStep(const EventPtr event, unsigned int selectionStep) const;
 
-private:
+	virtual unsigned int prescale(const EventPtr event) const;
+protected:
 	unsigned int numberOfSelectionSteps_;
 };
 

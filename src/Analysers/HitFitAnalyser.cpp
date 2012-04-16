@@ -16,7 +16,7 @@ using namespace BAT;
 
 void HitFitAnalyser::analyse(const EventPtr event) {
 	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-
+	weight_ = event->weight();
 	//fit only the events that pass full ttbar selection
 	if (!ttbarCand->passesFullTTbarEPlusJetSelection())
 		return;
@@ -44,7 +44,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		outFile << "RunNr: " << event->runnumber() << endl;
 		outFile << "LumiSection: " << event->lumiblock() << endl;
 		outFile << "EventNr: " << event->eventnumber() << endl;
-		outFile << "EventWeight: " << event->weight() << "  ";
+		outFile << "EventWeight: " << weight_ << "  ";
 		double nVertices(0);
 		if (!event->isRealData()) {
 			float lumiWeight = event->PileUpWeight();
@@ -137,7 +137,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		all_jets_pt = all_jets_pt + jetsForFitting[i]->pt();
 	}
 
-	histMan_->H1D("AllJetsPt")->Fill(all_jets_pt, event->weight());
+	histMan_->H1D("AllJetsPt")->Fill(all_jets_pt, weight_);
 
 	// Add missing transverse energy into HitFit
 	hhFitter.SetMet(*event->MET());
@@ -177,9 +177,9 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		hitfit::Fit_Result fitResult = hitfitResult[fit];
 
 		if (hitfitResult[fit].chisq() > 0.0) {
-			histMan_->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), event->weight());
-			histMan_->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), event->weight());
-			histMan_->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), event->weight());
+			histMan_->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), weight_);
+			histMan_->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), weight_);
+			histMan_->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), weight_);
 			const hitfit::Column_Vector &px = fitResult.pullx();
 			const hitfit::Column_Vector &py = fitResult.pully();
 			double sumPx = 0.0;
@@ -227,9 +227,9 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	//
 
 	if (bestX2pos < nHitFit + 1) {
-		histMan_->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), event->weight());
-		histMan_->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), event->weight());
-		histMan_->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), event->weight());
+		histMan_->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), weight_);
+		histMan_->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), weight_);
+		histMan_->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), weight_);
 
 		const hitfit::Column_Vector &px = hitfitResult[bestX2pos].pullx();
 		const hitfit::Column_Vector &py = hitfitResult[bestX2pos].pully();
