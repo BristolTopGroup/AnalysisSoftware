@@ -22,12 +22,14 @@ extern void printJets(const JetCollection jets) {
 }
 
 extern void printJet(const JetPointer jet) {
+	printParticle(jet);
+	cout << "Jet Information" << endl;
 	cout << setw(30) << "JECUnc" << endl;
 	cout << setw(30) << jet->JECUnc() << endl;
 	cout << setw(30) << "ptRaw" << setw(30) << "pxRaw" << setw(30) << "pyRaw" << setw(30) << "pzRaw" << endl;
 	cout << setw(30) << sqrt(jet->PxRaw() * jet->PxRaw() + jet->PyRaw() * jet->PyRaw()) << setw(30) << jet->PxRaw()
 			<< setw(30) << jet->PyRaw() << setw(30) << jet->PzRaw() << endl;
-	printParticle(jet);
+
 	cout << setw(30) << "emf" << setw(30) << "n90Hits" << setw(30) << "fHPD" << setw(30) << "B tag(SSV)" << endl;
 	cout << setw(30) << jet->emf() << setw(30) << jet->n90Hits() << setw(30) << jet->fHPD() << setw(30)
 			<< jet->isBJet(BtagAlgorithm::SimpleSecondaryVertexHighEfficiency) << endl << endl;
@@ -48,8 +50,9 @@ extern void printPFJetExtra(const JetPointer jet) {
 extern void printElectrons(const ElectronCollection electrons) {
 	for (unsigned short index = 0; index < electrons.size(); ++index) {
 		const ElectronPointer electron = electrons.at(index);
-		cout << "Electron " << index + 1 << endl;
+		cout << "Electron " << index + 1 << " " << string( 110, '=' ) << endl;
 		printElectron(electron);
+
 	}
 }
 
@@ -63,6 +66,7 @@ extern void printMuons(const MuonCollection muons) {
 
 extern void printElectron(const ElectronPointer electron) {
 	printParticle(electron);
+	cout << "Electron Information" << endl;
 	cout << setw(30) << "VBTF70" << setw(30) << "VBTF95" << setw(30) << "robust loose" << setw(30) << "robust tight"
 			<< endl;
 	cout << setw(30) << electron->VBTF_WP70_ElectronID() << setw(30) << electron->VBTF_WP95_ElectronID() << setw(30)
@@ -91,28 +95,19 @@ extern void printElectron(const ElectronPointer electron) {
 
 extern void printMuon(const MuonPointer muon) {
 	printParticle(muon);
+	cout << "Muon Information" << endl;
 	cout << setw(30) << "is global" << setw(30) << "is tracker" << setw(30) << "PF RelIso DR=0.3" << setw(30) << "----" << endl;
 	cout << setw(30) << muon->isGlobal() << setw(30) << "" << setw(30) << muon->pfRelativeIsolation(0.3) << setw(30) << "" << endl;
 
 }
 
 extern void printParticle(const ParticlePointer particle) {
-	cout << setw(30) << "pt" << setw(30) << "px" << setw(30) << "py" << setw(30) << "pz" << endl;
-	cout << setw(30) << particle->pt() << setw(30) << particle->px() << setw(30) << particle->py() << setw(30)
-			<< particle->pz() << endl;
-
-	cout << setw(30) << "energy" << setw(30) << "et" << setw(30) << "eta" << setw(30) << "phi" << endl;
-	cout << setw(30) << particle->energy() << setw(30) << particle->et() << setw(30) << particle->eta() << setw(30)
-			<< particle->phi() << endl;
-
-	cout << setw(30) << "d0" << setw(30) << "dyn. mass" << setw(30) << "fix. mass" << setw(30) << "charge" << endl;
-	cout << setw(30) << particle->d0() << setw(30) << particle->massFromEnergyAndMomentum() << setw(30)
-			<< particle->mass() << setw(30) << particle->charge() << endl;
+	cout << particle->toString() << endl;
 }
 
 extern void printGenParticle(const MCParticlePointer genParticle) {
 	printParticle(genParticle);
-
+	cout << "GenParticle Information" << endl;
 	cout << setw(30) << "pdgid" << setw(30) << "status" << setw(30) << "mother index" << setw(30) << "energy" << endl;
 	cout << setw(30) << genParticle->pdgId() << setw(30) << genParticle->status() << setw(30)
 			<< genParticle->motherIndex() << setw(30) << genParticle->energy() << endl;
