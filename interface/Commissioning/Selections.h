@@ -14,6 +14,7 @@
 #include "../Selections/TopPairEplusJetsPlusMETSelection.h"
 #include "../Selections/QCDPFRelIsoSelection.h"
 #include "../Selections/QCDConversionSelection.h"
+#include "../Selections/QCDNonIsolatedElectronSelection.h"
 #include "../TopPairEventCandidate.h"
 
 #include <string>
@@ -29,7 +30,7 @@ public:
 
 private:
 	SelectionPointer topEplusJetsReferenceSelection_, topEplusJetsZprimeSelection_, topEplusJetsPlusMETSelection_,
-			qcdPFRelIsoSelection_, qcdConversionSelection_;
+			qcdPFRelIsoSelection_, qcdConversionSelection_, qcdNonIsoSelection_;
 	EventPtr currentEvent_;
 	TopPairEventCandidatePtr currentTopEvent_;
 
@@ -38,6 +39,7 @@ private:
 	void commissionTopEplusJetsPlusMETSelection(const EventPtr event);
 	void commissionQCDPFRelIsoSelection(const EventPtr event);
 	void commissionQCDConversionSelection(const EventPtr event);
+	void commissionQCDNonIsoSelection(const EventPtr event);
 	void testResult(bool news, bool old, std::string step) const;
 };
 

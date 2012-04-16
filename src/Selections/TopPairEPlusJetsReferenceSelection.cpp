@@ -56,7 +56,7 @@ bool TopPairEPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) cons
 bool TopPairEPlusJetsReferenceSelection::passesSelectionStep(const EventPtr event, unsigned int selectionStep) const {
 	TTbarEPlusJetsReferenceSelection::Step step = TTbarEPlusJetsReferenceSelection::Step(selectionStep);
 	switch (step) {
-	case TTbarEPlusJetsReferenceSelection::EvenCleaningAndTrigger:
+	case TTbarEPlusJetsReferenceSelection::EventCleaningAndTrigger:
 		return passesEventCleaning(event) && passesTriggerSelection(event);
 	case TTbarEPlusJetsReferenceSelection::OneIsolatedElectron:
 		return hasExactlyOneIsolatedLepton(event);

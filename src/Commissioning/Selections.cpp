@@ -19,6 +19,7 @@ void Selections::analyse(const EventPtr event) {
 	commissionTopEplusJetsZprimeSelection(event);
 	commissionTopEplusJetsPlusMETSelection(event);
 	commissionQCDPFRelIsoSelection(event);
+	commissionQCDNonIsoSelection(event);
 }
 
 void Selections::commissionTopEplusJetsReferenceSelection(const EventPtr event) {
@@ -26,7 +27,7 @@ void Selections::commissionTopEplusJetsReferenceSelection(const EventPtr event) 
 
 	bool resultSelection(
 			topEplusJetsReferenceSelection_->passesSelectionStep(event,
-					TTbarEPlusJetsReferenceSelection::EvenCleaningAndTrigger));
+					TTbarEPlusJetsReferenceSelection::EventCleaningAndTrigger));
 	bool resultOldSelection(ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex));
 	testResult(resultSelection, resultOldSelection, "EvenCleaningAndTrigger");
 
@@ -148,36 +149,7 @@ void Selections::commissionTopEplusJetsPlusMETSelection(const EventPtr event) {
 
 void Selections::commissionQCDPFRelIsoSelection(const EventPtr event) {
 	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-	if (event->runnumber() == 1 && event->lumiblock() == 161061 && event->eventnumber() == 48308576) {
-		cout << "Passes trigger: "
-				<< qcdPFRelIsoSelection_->passesSelectionStep(event,
-						TTbarEPlusJetsReferenceSelection::EvenCleaningAndTrigger);
-		cout << " , " << ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::GoodPrimaryvertex)
-				<< endl;
-		bool passGoodElectrons = event->GoodElectrons().size() > 0 && event->GoodPFIsolatedElectrons().size() < 2;
-		cout << "Passes good electrons: "
-				<< qcdPFRelIsoSelection_->passesSelectionStep(event,
-						TTbarEPlusJetsReferenceSelection::OneIsolatedElectron);
-		cout << " , " << passGoodElectrons << endl;
 
-		const ElectronPointer electron = event->MostPFIsolatedElectron(event->Electrons());
-		bool passesNew = qcdPFRelIsoSelection_->passesSelectionStep(event,
-				TTbarEPlusJetsReferenceSelection::ConversionRejectionMissingLayers);
-		bool passesOld = electron->isFromConversion() == false;
-
-		cout << "Conversion (missing layers: " << passesNew << " , " << passesOld << endl;
-
-		passesNew = passesNew
-				&& qcdPFRelIsoSelection_->passesSelectionStep(event,
-						TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack);
-		passesOld = passesOld && electron->isTaggedAsConversion(0.02, 0.02) == false;
-		cout << "Conversion (missing layers + partner track): " << passesNew << " , " << passesOld << endl;
-		cout << "Loose Muon: " << qcdPFRelIsoSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::LooseMuonVeto);
-		cout << " , " << ttbarCand->ePlusJetsLooseMuonVeto() << endl;
-		cout << "Dilepton veto: "<< qcdPFRelIsoSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::DiLeptonVeto);
-		cout << " , " << ttbarCand->electronPlusJetsZVeto() << endl;
-
-	}
 	bool resultSelection(
 			qcdPFRelIsoSelection_->passesSelectionUpToStep(event,
 					TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack));
@@ -195,6 +167,15 @@ void Selections::commissionQCDConversionSelection(const EventPtr event) {
 	testResult(resultSelection, resultOldSelection, "QCD Conversion Selection");
 }
 
+void Selections::commissionQCDNonIsoSelection(const EventPtr event) {
+	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
+	bool resultSelection(
+			qcdNonIsoSelection_->passesSelectionUpToStep(event,
+					TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack));
+	bool resultOldSelection(ttbarCand->passesEPlusJetsAntiIsolationSelection());
+	testResult(resultSelection, resultOldSelection, "QCD NonIso Selection");
+}
+
 void Selections::createHistograms() {
 
 }
@@ -206,6 +187,7 @@ Selections::Selections(HistogramManagerPtr histMan) :
 		topEplusJetsPlusMETSelection_(new TopPairEplusJetsPlusMETSelection()), //
 		qcdPFRelIsoSelection_(new QCDPFRelIsoSelection()), //
 		qcdConversionSelection_(new QCDConversionSelection()), //
+		qcdNonIsoSelection_(new QCDNonIsolatedElectronSelection()), //
 		currentEvent_(), //
 		currentTopEvent_() {
 
