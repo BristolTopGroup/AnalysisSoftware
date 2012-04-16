@@ -33,9 +33,6 @@ public:
     void testParticleIsInBarrelRegion();
     void testParticleInEndcap();
     void testParticleInCrack();
-    void testGetEtaRegionCrack();
-    void testGetEtaRegionBarrel();
-    void testGetEtaRegionEndcap();
     void testInvarianMassOfTwoParticles();
     void testInvarianMassOfOneParticles();
     void testRelativePtParallelParticles();

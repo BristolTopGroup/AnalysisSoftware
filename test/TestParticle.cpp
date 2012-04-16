@@ -125,18 +125,6 @@ void TestParticle::testParticleInCrack() {
 	ASSERT(particleInCrack->isInBarrelRegion() == false);
 }
 
-void TestParticle::testGetEtaRegionCrack() {
-	ASSERT_EQUAL(0, strcmp("crack", particleInCrack->getEtaRegion()));
-}
-
-void TestParticle::testGetEtaRegionBarrel() {
-	ASSERT_EQUAL(0, strcmp("barrel", particleInBarrelRegion->getEtaRegion()));
-}
-
-void TestParticle::testGetEtaRegionEndcap() {
-	ASSERT_EQUAL(0, strcmp("endcap", particleInEndcap->getEtaRegion()));
-}
-
 void TestParticle::testInvarianMassOfTwoParticles() {
 	TLorentzVector combinedParticle(zParticle1->getFourVector() + zParticle2->getFourVector());
 	ASSERT_EQUAL_DELTA(combinedParticle.M(), zParticle1->invariantMass(zParticle2), 0.0001);
@@ -204,10 +192,6 @@ cute::suite make_suite_TestParticle() {
 	s.push_back(CUTE_SMEMFUN(TestParticle, testParticleInEndcap));
 	s.push_back(CUTE_SMEMFUN(TestParticle, testParticleInCrack));
 	s.push_back(CUTE_SMEMFUN(TestParticle, testParticleConstructor));
-
-	s.push_back(CUTE_SMEMFUN(TestParticle, testGetEtaRegionCrack));
-	s.push_back(CUTE_SMEMFUN(TestParticle, testGetEtaRegionBarrel));
-	s.push_back(CUTE_SMEMFUN(TestParticle, testGetEtaRegionEndcap));
 
 	s.push_back(CUTE_SMEMFUN(TestParticle, testDeltaEta));
 	s.push_back(CUTE_SMEMFUN(TestParticle, testDeltaPhi));
