@@ -83,8 +83,10 @@ void setUpOnce() {
 void setConfiguration(ConfigFile config) {
 	Globals::NTupleVersion = 6;
 	cout << "Using set-up for nTuple version " << Globals::NTupleVersion << endl;
+	cout << "Using set-up for center of mass energy = " << config.centerOfMassEnergy() << endl;
 	cout << "Loading configuration..." << endl;
 	cout << "Using config-file '" << config.configPath() << endl;
+	cout << "Using Dataset info file:  '" << config.datasetInfoFile() << endl;
 	cout << "Using pileup-file '" << config.PUFile() << endl;
 	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
 	cout << config.lightJetResoFile() << endl;
