@@ -23,7 +23,7 @@ namespace BAT {
 
 class Selections: public BAT::BasicAnalyser {
 public:
-	Selections(HistogramManagerPtr);
+	Selections(HistogramManagerPtr histMan, std::string histogramFolder = "Selections");
 	virtual ~Selections();
 	virtual void analyse(const EventPtr);
 	virtual void createHistograms();
