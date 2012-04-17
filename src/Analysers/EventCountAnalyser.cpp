@@ -163,7 +163,8 @@ void EventCountAnalyser::createHistograms() {
 			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS, -0.5,
 			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
 
-	setHistogramLabels();
+	//this does not work as it tries to access histograms without knowing the data type
+//	setHistogramLabels();
 }
 
 void EventCountAnalyser::setHistogramLabels() {
