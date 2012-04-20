@@ -161,6 +161,9 @@ public:
     TH3Ptr H3D_BJetBinned(std::string);
 
     void writeToDisk();
+    //TODO implement this one so the histogram file is written to disk once the sample is done.
+    //also add isWritten[DataType::Numberofdatatypes]
+    void writeToDisk(DataType::value dataType);
 
     void enableDebugMode(bool enable);
 private:
