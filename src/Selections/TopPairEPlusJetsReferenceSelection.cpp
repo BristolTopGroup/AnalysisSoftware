@@ -71,15 +71,15 @@ bool TopPairEPlusJetsReferenceSelection::passesSelectionStep(const EventPtr even
 	case TTbarEPlusJetsReferenceSelection::AtLeastOneGoodJet:
 		return hasAtLeastOneGoodJet(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastTwoGoodJets:
-			return hasAtLeastTwoGoodJets(event);
+		return hasAtLeastTwoGoodJets(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets:
-			return hasAtLeastThreeGoodJets(event);
+		return hasAtLeastThreeGoodJets(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets:
-			return hasAtLeastFourGoodJets(event);
+		return hasAtLeastFourGoodJets(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastOneBtag:
-			return hasAtLeastOneGoodBJet(event);
+		return hasAtLeastOneGoodBJet(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastTwoBtags:
-			return hasAtLeastTwoGoodBJets(event);
+		return hasAtLeastTwoGoodBJets(event);
 	default:
 		break;
 	}
@@ -125,9 +125,9 @@ bool TopPairEPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Event
 		if (isGoodElectron(electron) && isIsolated(electron))
 			++nIsolatedGoodElectrons;
 	}
-//	return nIsolatedGoodElectrons == 1;
+	return nIsolatedGoodElectrons == 1;
 
-	return event->GoodPFIsolatedElectrons().size() == 1;
+//	return event->GoodPFIsolatedElectrons().size() == 1;
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
@@ -234,6 +234,24 @@ bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodBJet(const EventPtr ev
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastTwoGoodBJets(const EventPtr event) const {
 	return event->GoodElectronCleanedBJets().size() > 1;
+}
+
+const LeptonPointer TopPairEPlusJetsReferenceSelection::signalLepton(const EventPtr event) const {
+	if (!hasExactlyOneIsolatedLepton(event)) {
+		cout << "No signal lepton to be found!" << endl;
+		throw "Access exception: No signal lepton could be found. Event doesn't pass 'hasExactlyOneIsolatedLepton' selection";
+	}
+
+	const ElectronCollection allElectrons(event->Electrons());
+	ElectronCollection goodIsolatedElectrons;
+	for (unsigned int index = 0; index < allElectrons.size(); ++index) {
+		const ElectronPointer electron(allElectrons.at(index));
+		if (isGoodElectron(electron) && isIsolated(electron))
+			goodIsolatedElectrons.push_back(electron);
+	}
+
+	return goodIsolatedElectrons.front();
+
 }
 
 } /* namespace BAT */

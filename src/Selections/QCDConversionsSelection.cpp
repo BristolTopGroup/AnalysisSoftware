@@ -5,27 +5,27 @@
  *      Author: kreczko
  */
 
-#include "../../interface/Selections/QCDConversionSelection.h"
+#include "../../interface/Selections/QCDConversionsSelection.h"
 
 namespace BAT {
 
-QCDConversionSelection::QCDConversionSelection(unsigned int numberOfSelectionSteps) :
+QCDConversionsSelection::QCDConversionsSelection(unsigned int numberOfSelectionSteps) :
 		TopPairEPlusJetsReferenceSelection(numberOfSelectionSteps) {
 
 }
 
-QCDConversionSelection::~QCDConversionSelection() {
+QCDConversionsSelection::~QCDConversionsSelection() {
 }
 
-bool QCDConversionSelection::passesConversionRejectionMissingLayers(const EventPtr event) const{
+bool QCDConversionsSelection::passesConversionRejectionMissingLayers(const EventPtr event) const{
 	return failsEitherConversionVeto(event);
 }
 
-bool QCDConversionSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const{
+bool QCDConversionsSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const{
 	return failsEitherConversionVeto(event);
 }
 
-bool QCDConversionSelection::failsEitherConversionVeto(const EventPtr event) const{
+bool QCDConversionsSelection::failsEitherConversionVeto(const EventPtr event) const{
 	bool failsMissingHits(!TopPairEPlusJetsReferenceSelection::passesConversionRejectionMissingLayers(event));
 	bool failsPartnerTrack(!TopPairEPlusJetsReferenceSelection::passesConversionRejectionPartnerTrack(event));
 	return failsMissingHits || failsPartnerTrack;

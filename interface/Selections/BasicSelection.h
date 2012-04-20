@@ -41,8 +41,16 @@ public:
 	virtual bool passesSelectionUpToStep(const EventPtr event, unsigned int selectionStep) const;
 
 	virtual unsigned int prescale(const EventPtr event) const;
+	virtual void useNonIsoTrigger(bool use = true);
+
+	virtual const LeptonPointer signalLepton(const EventPtr event) const = 0;
+
+	virtual bool passesFullSelectionExceptLastTwoSteps(const EventPtr event) const;
+
+
 protected:
 	unsigned int numberOfSelectionSteps_;
+	bool useNonIsoTrigger_;
 };
 
 } /* namespace BAT */

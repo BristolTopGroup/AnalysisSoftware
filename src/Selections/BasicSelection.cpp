@@ -10,7 +10,8 @@
 namespace BAT {
 
 BasicSelection::BasicSelection(unsigned int numberOfSelectionSteps) : //
-		numberOfSelectionSteps_(numberOfSelectionSteps){
+		numberOfSelectionSteps_(numberOfSelectionSteps),//
+		useNonIsoTrigger_(false){
 
 }
 
@@ -49,6 +50,16 @@ bool BasicSelection::passesFullSelectionExceptStep(const EventPtr event, unsigne
 
 unsigned int BasicSelection::prescale(const EventPtr event) const {
 	return 1;
+}
+
+void BasicSelection::useNonIsoTrigger(bool use) {
+	useNonIsoTrigger_ = use;
+}
+
+bool BasicSelection::passesFullSelectionExceptLastTwoSteps(const EventPtr event) const{
+	//usually the last two selection steps are >= 1b-tag and >= 2 b=tag
+	//-> ommit last two cuts
+	return passesSelectionUpToStep(event, numberOfSelectionSteps_ - 2);
 }
 
 BasicSelection::~BasicSelection() {

@@ -12,11 +12,11 @@
 
 namespace BAT {
 
-class QCDConversionSelection: public BAT::TopPairEPlusJetsReferenceSelection {
+class QCDConversionsSelection: virtual public BAT::TopPairEPlusJetsReferenceSelection {
 public:
-	QCDConversionSelection(unsigned int numberOfSelectionSteps =
+	QCDConversionsSelection(unsigned int numberOfSelectionSteps =
 			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS);
-	virtual ~QCDConversionSelection();
+	virtual ~QCDConversionsSelection();
 
 	/**
 	 * This function has inverted functionality w.r.t reference selection
@@ -28,6 +28,7 @@ public:
 	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
 
 	virtual bool failsEitherConversionVeto(const EventPtr event) const;
+
 };
 
 } /* namespace BAT */

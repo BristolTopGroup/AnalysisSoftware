@@ -8,11 +8,11 @@
 #ifndef TOPPAIREPLUSJETSPLUSMETSELECTION_H_
 #define TOPPAIREPLUSJETSPLUSMETSELECTION_H_
 
-#include "TopPairEPlusJetsZprimeSelection.h"
+#include "TopPairEPlusJetsReferenceSelection.h"
 
 namespace BAT {
 
-namespace TTbarEPlusJetsPlusMETSelection {
+namespace TTbarEPlusJetsRefAsymJetsSelection {
 enum Step {
 	EvenCleaningAndTrigger,
 	OneIsolatedElectron,
@@ -42,18 +42,20 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				">= 3 jets", //
 				">= 4 jets", //
 				"jet pT: 1st > 70 GeV, 2nd > 50 GeV", //
-				">=1 SSV b-tag", //
-				">=2 SSV b-tag" //
+				">=1 CSV b-tag", //
+				">=2 CSV b-tag" //
 		};
 }
 
-class TopPairEplusJetsPlusMETSelection: public BAT::TopPairEPlusJetsZprimeSelection {
+class TopPairEplusJetsRefAsymJetsSelection: virtual public BAT::TopPairEPlusJetsReferenceSelection {
 public:
-	TopPairEplusJetsPlusMETSelection(unsigned int numberOfSelectionSteps =
-			TTbarEPlusJetsPlusMETSelection::NUMBER_OF_SELECTION_STEPS);
-	virtual ~TopPairEplusJetsPlusMETSelection();
+	TopPairEplusJetsRefAsymJetsSelection(unsigned int numberOfSelectionSteps =
+			TTbarEPlusJetsRefAsymJetsSelection::NUMBER_OF_SELECTION_STEPS);
+	virtual ~TopPairEplusJetsRefAsymJetsSelection();
 
 	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const;
+
+	virtual bool passesAsymmetricJetCuts(const EventPtr event) const;
 };
 
 } /* namespace BAT */

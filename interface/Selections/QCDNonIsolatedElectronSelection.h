@@ -8,11 +8,11 @@
 #ifndef QCDNONISOLATEDELECTRONSELECTION_H_
 #define QCDNONISOLATEDELECTRONSELECTION_H_
 
-#include "QCDPFRelIsoSelection.h"
+#include "QCDPFRelIsoEPlusJetsSelection.h"
 
 namespace BAT {
 
-class QCDNonIsolatedElectronSelection: public BAT::QCDPFRelIsoSelection {
+class QCDNonIsolatedElectronSelection: public BAT::QCDPFRelIsoEPlusJetsSelection {
 public:
 	QCDNonIsolatedElectronSelection(unsigned int numberOfSelectionSteps =
 			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS);
@@ -22,7 +22,9 @@ public:
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
 
 	virtual unsigned int prescale(const EventPtr event) const;
+
 };
+typedef boost::shared_ptr<QCDNonIsolatedElectronSelection> QCDNonIsolatedElectronSelectionPointer;
 
 } /* namespace BAT */
 #endif /* QCDNONISOLATEDELECTRONSELECTION_H_ */

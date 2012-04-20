@@ -14,19 +14,24 @@ namespace BAT {
 /**
  * QCD control region selection for relative isolation based on the top pair e + jets reference selection.
  */
-class QCDPFRelIsoSelection: public BAT::TopPairEPlusJetsReferenceSelection {
+class QCDPFRelIsoEPlusJetsSelection: virtual public BAT::TopPairEPlusJetsReferenceSelection {
 public:
-	QCDPFRelIsoSelection(unsigned int numberOfSelectionSteps =
+	QCDPFRelIsoEPlusJetsSelection(unsigned int numberOfSelectionSteps =
 			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS);
-	virtual ~QCDPFRelIsoSelection();
+	virtual ~QCDPFRelIsoEPlusJetsSelection();
 
 	virtual bool passesTriggerSelection(const EventPtr event) const;
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
 	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
 	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
-	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;
+	virtual const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;
 
+	virtual unsigned int prescale(const EventPtr event) const;
+
+	virtual const LeptonPointer signalLepton(const EventPtr event) const;
 };
+
+typedef boost::shared_ptr<QCDPFRelIsoEPlusJetsSelection> QCDEPlusJetsPFRelIsoSelectionPointer;
 
 } /* namespace BAT */
 #endif /* QCDPFRELISOSELECTION_H_ */

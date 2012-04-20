@@ -40,8 +40,8 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				">= 2 jets", //
 				">= 3 jets", //
 				">= 4 jets", //
-				">=1 SSV b-tag", //
-				">=2 SSV b-tag" //
+				">=1 CSV b-tag", //
+				">=2 CSV b-tag" //
 		};
 }
 
@@ -76,6 +76,8 @@ public:
 	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;
 	virtual bool hasAtLeastTwoGoodBJets(const EventPtr event) const;
+
+	virtual const LeptonPointer signalLepton(const EventPtr event) const;
 };
 
 } /* namespace BAT */

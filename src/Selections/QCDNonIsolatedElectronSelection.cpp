@@ -10,7 +10,7 @@
 namespace BAT {
 
 QCDNonIsolatedElectronSelection::QCDNonIsolatedElectronSelection(unsigned int numberOfSelectionSteps) :
-		QCDPFRelIsoSelection(numberOfSelectionSteps) {
+		QCDPFRelIsoEPlusJetsSelection(numberOfSelectionSteps){
 
 }
 
@@ -18,23 +18,25 @@ QCDNonIsolatedElectronSelection::~QCDNonIsolatedElectronSelection() {
 }
 
 bool QCDNonIsolatedElectronSelection::passesTriggerSelection(const EventPtr event) const {
-	//for now use the normal triggers
-//	return TopPairEPlusJetsReferenceSelection::passesTriggerSelection(event);
-	unsigned int runNumber(event->runnumber());
-	if (event->isRealData()) {
-		if (runNumber >= 160404 && runNumber <= 163869)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
-		else if (runNumber > 163869 && runNumber <= 178380)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+	if (!useNonIsoTrigger_)
+		return TopPairEPlusJetsReferenceSelection::passesTriggerSelection(event);
+	else {
+		unsigned int runNumber(event->runnumber());
+		if (event->isRealData()) {
+			if (runNumber >= 160404 && runNumber <= 163869)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+			else if (runNumber > 163869 && runNumber <= 178380)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 
-		else if (runNumber > 178380)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
-		else
-			return false;
+			else if (runNumber > 178380)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+			else
+				return false;
 
-	} else
-		return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-				|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+		} else
+			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
+					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+	}
 
 }
 
@@ -61,20 +63,15 @@ bool QCDNonIsolatedElectronSelection::hasExactlyOneIsolatedLepton(const EventPtr
 unsigned int QCDNonIsolatedElectronSelection::prescale(const EventPtr event) const {
 	unsigned int runNumber(event->runnumber());
 	unsigned int prescale(1);
-	if (event->isRealData()) {
+
+	if (useNonIsoTrigger_) {
 		if (runNumber >= 160404 && runNumber <= 163869)
 			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 		else if (runNumber > 163869 && runNumber <= 178380)
 			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 		else if (runNumber > 178380)
 			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
-		else {
-			prescale = 1;
-			return false;
-		}
-	} else
-		prescale = 1;
-
+	}
 	return prescale;
 }
 
