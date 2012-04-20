@@ -18,8 +18,12 @@ public:
 	virtual ~METAnalyser();
 
 	void analyse(const EventPtr);
+	void analyseTransverseMass(const METPointer, const ParticlePointer, double weight);
+	double transverseMass(const METPointer, const ParticlePointer) const;
 	void createHistograms();
 };
+
+typedef boost::scoped_ptr<METAnalyser> METAnalyserLocalPtr;
 
 } /* namespace BAT */
 #endif /* METANALYSER_H_ */

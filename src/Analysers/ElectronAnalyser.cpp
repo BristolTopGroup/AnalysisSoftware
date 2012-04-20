@@ -19,11 +19,11 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 
 	if (goodElectrons.size() > 0) {
 		const ElectronPointer electron = event->MostPFIsolatedElectron(goodElectrons);
-		histMan_->H1D("electronEta")->Fill(electron->eta(), weight_);
-		histMan_->H1D("electronAbsEta")->Fill(abs(electron->eta()), weight_);
-		histMan_->H1D("electronPt")->Fill(electron->pt(), weight_);
-		histMan_->H1D("electronPFIsolation")->Fill(electron->pfIsolation(), weight_);
-		histMan_->H1D("electronRelIso")->Fill(electron->relativeIsolation(), weight_);
+		histMan_->H1D("AllElectronEta")->Fill(electron->eta(), weight_);
+		histMan_->H1D("AllElectronAbsEta")->Fill(abs(electron->eta()), weight_);
+		histMan_->H1D("AllElectronPt")->Fill(electron->pt(), weight_);
+		histMan_->H1D("AllElectronPFIsolation")->Fill(electron->pfIsolation(), weight_);
+		histMan_->H1D("AllElectronRelIso")->Fill(electron->relativeIsolation(), weight_);
 	}
 
 	for (unsigned index = 0; index < electrons.size(); ++index) {
@@ -110,6 +110,18 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 
 }
 
+//TODO: move to LeptonAnalyser
+void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double weight){
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	weight_ = weight * prescale_;
+	histMan_->H1D("pT")->Fill(electron->pt(), weight_);
+	histMan_->H1D("eta")->Fill(electron->eta(), weight_);
+	histMan_->H1D("phi")->Fill(electron->phi(), weight_);
+	histMan_->H1D("PFIsolation_03")->Fill(electron->pfRelativeIsolation(0.3), weight_);
+	histMan_->H1D("PFIsolation_04")->Fill(electron->pfRelativeIsolation(0.4), weight_);
+	histMan_->H1D("PFIsolation_05")->Fill(electron->pfRelativeIsolation(0.5), weight_);
+}
+
 ElectronAnalyser::ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder) {
 
@@ -129,11 +141,19 @@ void ElectronAnalyser::createHistograms() {
 	histMan_->addH1D("nElectronsCiCHyperTight4MCIso", "nElectronsCiCHyperTight4MCIso", 6, 0, 5);
 	histMan_->addH1D("nElectronsWP70", "nElectronsWP70", 6, 0, 5);
 	histMan_->addH1D("nElectronsWP70Iso", "nElectronsWP70Iso", 6, 0, 5);
-	histMan_->addH1D("electronEta", "Electron eta", 100, -2.4, 2.4);
-	histMan_->addH1D("electronAbsEta", "Electron abs(eta)", 100, 0, 2.6);
-	histMan_->addH1D("electronPt", "Electron Pt", 100, 0, 200);
-	histMan_->addH1D("electronPFIsolation", "Electron PFIso", 100, 0, 5);
-	histMan_->addH1D("electronRelIso", "Electron RelIso", 100, 0, 5);
+	histMan_->addH1D("AllElectronEta", "Electron eta", 100, -2.4, 2.4);
+	histMan_->addH1D("AllElectronAbsEta", "Electron abs(eta)", 100, 0, 2.6);
+	histMan_->addH1D("AllElectronPt", "Electron Pt", 100, 0, 200);
+	histMan_->addH1D("AllElectronPFIsolation", "Electron PFIso", 100, 0, 5);
+	histMan_->addH1D("AllElectronRelIso", "Electron RelIso", 100, 0, 5);
+
+	//single electron histograms for analyseElectron
+	histMan_->addH1D("PFIsolation_03", "Electron PFIso (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
+	histMan_->addH1D("PFIsolation_04", "Electron PFIso (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
+	histMan_->addH1D("PFIsolation_05", "Electron PFIso (DR=0.5); PF relative isolation; Events/(0.01)", 500, 0, 5);
+	histMan_->addH1D("pT", "Electron pT; p_{T} (GeV); Events/(1 GeV)", 2000, 0, 2000);
+	histMan_->addH1D("eta", "Electron #eta; #eta(e); Events/(0.01)", 600, -3, 3);
+	histMan_->addH1D("phi", "Electron #phi; #phi(e); Events/(0.01)", 800, -4, 4);
 }
 
 }

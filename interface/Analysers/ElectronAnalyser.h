@@ -16,10 +16,17 @@ public:
     ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "ElectronAnalysis");
     virtual ~ElectronAnalyser();
 
+    /**
+     * Analyses all electrons in an event
+     */
     void analyse(const EventPtr);
+    /**
+     * Analyses a single electron
+     */
+    void analyseElectron(const ElectronPointer electron, double weight);
     void createHistograms();
 };
-
+typedef boost::scoped_ptr<ElectronAnalyser> ElectronAnalyserLocalPtr;
 }
 
 #endif /* ELECTRONANALYSER_H_ */

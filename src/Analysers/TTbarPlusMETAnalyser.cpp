@@ -6,144 +6,435 @@
  */
 
 #include "../../interface/Analysers/TTbarPlusMETAnalyser.h"
-#include "../../interface/TopPairEventCandidate.h"
+//#include "../../interface/TopPairEventCandidate.h"
+//signal selections
+#include "../../interface/Selections/TopPairEplusJetsRefAsymJetsSelection.h"
+#include "../../interface/Selections/TopPairEPlusJetsReferenceSelection.h"
+#include "../../interface/Selections/TopPairEPlusJetsRefAsymJetsMETSelection.h"
+//QCD selections w.r.t signal ref selection
+#include "../../interface/Selections/QCDNonIsolatedElectronSelection.h"
+#include "../../interface/Selections/QCDConversionsSelection.h"
+#include "../../interface/Selections/QCDPFRelIsoEPlusJetsSelection.h"
+//QCD selections w.r.t signal ref selection + asymmetric jets
+#include "../../interface/Selections/QCDNonIsolatedElectronAsymJetsSelection.h"
+#include "../../interface/Selections/QCDConversionsAsymJetsSelection.h"
+#include "../../interface/Selections/QCDPFRelIsoEPlusAsymJetsSelection.h"
+//QCD selections w.r.t signal ref selection + asymmetric jets + MET
+#include "../../interface/Selections/QCDNonIsolatedElectronAsymJetsMETSelection.h"
+#include "../../interface/Selections/QCDConversionsAsymJetsMETSelection.h"
+#include "../../interface/Selections/QCDPFRelIsoEPlusAsymJetsMET.h"
 
 namespace BAT {
 
 void TTbarPlusMETAnalyser::analyse(const EventPtr event) {
+	signalAnalysis(event);
 	qcdAnalysis(event);
-	histMan_->setCurrentHistogramFolder("TTbarPlusMetAnalysis");
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-	double weight = event->weight();
-	const METPointer met = event->MET();
+	qcdAnalysisAsymJets(event);
+	qcdAnalysisAsymJetsMET(event);
+}
 
-	if (ttbarCand->passesFullTTbarEPlusJetSelection()) {
-		const ElectronPointer electron = event->GoodPFIsolatedElectrons().front();
-		double MT = ttbarCand->transverseWmass(electron);
+void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 
-		histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight);
-		histMan_->H1D_BJetBinned("METsignificance")->Fill(met->significance(), weight);
-		histMan_->H2D_BJetBinned("METsignificance_vs_MET")->Fill(met->et(), met->significance(), weight);
+	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-		histMan_->H1D_BJetBinned("MT")->Fill(MT, weight);
-		if (ttbarCand->passesAsymmetricElectronCleanedJetCuts()) {
-			histMan_->H1D_BJetBinned("MET_withAsymJetsCut")->Fill(met->et(), weight);
-			histMan_->H1D_BJetBinned("METsignificance_withAsymJetsCut")->Fill(met->significance(), weight);
-			histMan_->H2D_BJetBinned("METsignificance_vs_MET_withAsymJetsCut")->Fill(met->et(), met->significance(),
-					weight);
-			histMan_->H1D_BJetBinned("MT_withAsymJetsCut")->Fill(MT, weight);
-			if (ttbarCand->passesMETCut()) {
-				histMan_->H1D_BJetBinned("MET_withMETAndAsymJets")->Fill(met->et(), weight);
-				histMan_->H1D_BJetBinned("METsignificance_withMETAndAsymJets")->Fill(met->et(), weight);
+		metAnalyserRefSelection_->analyse(event);
+		metAnalyserRefSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
 
-				histMan_->H1D_BJetBinned("MT_withMETAndAsymJets")->Fill(MT, weight);
-			}
-		}
+		electronAnalyserRefSelection_->analyse(event);
+		electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
 	}
 
-	if (ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastThreeGoodJets)
-			&& ttbarCand->GoodElectronCleanedJets().size() == 3) {
-		const ElectronPointer electron = event->GoodPFIsolatedElectrons().front();
-		double MT = ttbarCand->transverseWmass(electron);
+	if (topEplusAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const LeptonPointer signalLepton = topEplusAsymJetsMETSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-		histMan_->H1D_BJetBinned("MET_3jets")->Fill(met->et(), weight);
-		histMan_->H1D_BJetBinned("METsignificance_3jets")->Fill(met->significance(), weight);
-		histMan_->H2D_BJetBinned("METsignificance_vs_MET_3jets")->Fill(met->et(), met->significance(), weight);
+		metAnalyserRefAsymJetsMETSelection_->analyse(event);
+		metAnalyserRefAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
 
-		histMan_->H1D_BJetBinned("MT_3jets")->Fill(MT, weight);
-
-		if (ttbarCand->passesAsymmetricElectronCleanedJetCuts()) {
-			histMan_->H1D_BJetBinned("MET_withAsymJetsCut_3jets")->Fill(met->et(), weight);
-			histMan_->H1D_BJetBinned("METsignificance_withAsymJetsCut_3jets")->Fill(met->significance(), weight);
-			histMan_->H2D_BJetBinned("METsignificance_vs_MET_withAsymJetsCut_3jets")->Fill(met->et(),
-					met->significance(), weight);
-
-			histMan_->H1D_BJetBinned("MT_withAsymJetsCut_3jets")->Fill(MT, weight);
-
-			if (ttbarCand->passesMETCut()) {
-				histMan_->H1D_BJetBinned("MET_withMETAndAsymJets_3jets")->Fill(met->et(), weight);
-				histMan_->H1D_BJetBinned("METsignificance_withMETAndAsymJets_3jets")->Fill(met->significance(), weight);
-				histMan_->H1D_BJetBinned("MT_withMETAndAsymJets_3jets")->Fill(MT, weight);
-			}
-		}
+		electronAnalyserRefAsymJetsMETSelection_->analyse(event);
+		electronAnalyserRefAsymJetsMETSelection_->analyseElectron(signalElectron, event->weight());
 	}
+
+	if (topEplusAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const LeptonPointer signalLepton = topEplusAsymJetsSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		metAnalyserRefAsymJetsSelection_->analyse(event);
+		metAnalyserRefAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+
+		electronAnalyserRefAsymJetsSelection_->analyse(event);
+		electronAnalyserRefAsymJetsSelection_->analyseElectron(signalElectron, event->weight());
+	}
+
 }
 
 void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
-	if (qcdNonIsoEPlusJetsSelection_->passesFullSelection(event)){
-		qcdNonIsoElectronAnalyser_->setPrescale(qcdNonIsoEPlusJetsSelection_->prescale(event));
+	//selection with respect to reference selection
+	if (qcdNonIsoElectronSelection_->passesSelectionUpToStep(event,
+			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		//in case of prescaled triggers
+		unsigned int prescale(qcdNonIsoElectronSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdNonIsoElectronSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
+		metAnalyserqcdNonIsoSelection_->setPrescale(prescale);
+
 		qcdNonIsoElectronAnalyser_->analyse(event);
+		qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdNonIsoSelection_->analyse(event);
+		metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
 	}
 
+	if (qcdNonIsoElectronNonIsoTriggerSelection_->passesSelectionUpToStep(event,
+			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		//in case of prescaled triggers
+		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-	if (qcdConversionSelection_->passesFullSelection(event)){
-		qcdConversionsElectronAnalyser_->setPrescale(qcdConversionSelection_->prescale(event));
+		qcdNonIsoNonIsoTriggerElectronAnalyser_->setPrescale(prescale);
+		metAnalyserqcdNonIsoNonIsoTriggerSelection_->setPrescale(prescale);
+
+		qcdNonIsoNonIsoTriggerElectronAnalyser_->analyse(event);
+		qcdNonIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyse(event);
+		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+	}
+
+	if (qcdConversionSelection_->passesSelectionUpToStep(event,
+			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		unsigned int prescale(qcdConversionSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdConversionSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdConversionsElectronAnalyser_->setPrescale(prescale);
+		metAnalyserqcdConversionSelection_->setPrescale(prescale);
+
 		qcdConversionsElectronAnalyser_->analyse(event);
+		qcdConversionsElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdConversionSelection_->analyse(event);
+		metAnalyserqcdConversionSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
 	}
 
+	if (qcdPFRelIsoSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		unsigned int prescale(qcdPFRelIsoSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdPFRelIsoSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-	if (qcdEPlusJetsPFRelIsoSelection_->passesFullSelection(event)){
-		qcdEPlusjetsPFRelIsoElectronAnalyser_->setPrescale(qcdEPlusJetsPFRelIsoSelection_->prescale(event));
+		qcdEPlusjetsPFRelIsoElectronAnalyser_->setPrescale(prescale);
+
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyse(event);
+		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+	}
+
+	if (qcdPFRelIsoNonIsoTriggerSelection_->passesSelectionUpToStep(event,
+			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		unsigned int prescale(qcdPFRelIsoNonIsoTriggerSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdPFRelIsoNonIsoTriggerSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->setPrescale(prescale);
+
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyse(event);
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+	}
+
+	//selection with respect to reference selection + asymmetric jet cuts
+
+}
+
+void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
+	//selection with respect to reference selection + asym. jet cuts
+	if (qcdNonIsoElectronAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		//in case of prescaled triggers
+		unsigned int prescale(qcdNonIsoElectronAsymJetsSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdNonIsoElectronAsymJetsSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdNonIsoElectronAnalyserAsymJets_->setPrescale(prescale);
+		metAnalyserqcdNonIsoAsymJetsSelection_->setPrescale(prescale);
+
+		qcdNonIsoElectronAnalyserAsymJets_->analyse(event);
+		qcdNonIsoElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdNonIsoAsymJetsSelection_->analyse(event);
+		metAnalyserqcdNonIsoAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+	}
+
+	if (qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		//in case of prescaled triggers
+		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_->setPrescale(prescale);
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_->setPrescale(prescale);
+
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_->analyse(event);
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_->analyse(event);
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton,
+				event->weight());
+	}
+
+	if (qcdConversionAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		unsigned int prescale(qcdConversionAsymJetsSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdConversionAsymJetsSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdConversionsElectronAnalyserAsymJets_->setPrescale(prescale);
+		metAnalyserqcdConversionAsymJetsSelection_->setPrescale(prescale);
+
+		qcdConversionsElectronAnalyserAsymJets_->analyse(event);
+		qcdConversionsElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdConversionAsymJetsSelection_->analyse(event);
+		metAnalyserqcdConversionAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+	}
+
+	if (qcdPFRelIsoAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		unsigned int prescale(qcdPFRelIsoAsymJetsSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdPFRelIsoAsymJetsSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJets_->setPrescale(prescale);
+
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJets_->analyse(event);
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
+	}
+
+	if (qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		unsigned int prescale(qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJets_->setPrescale(prescale);
+
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJets_->analyse(event);
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
+	}
+
+}
+
+void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
+	//selection with respect to reference selection + asym. jet cuts
+	if (qcdNonIsoElectronAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		//in case of prescaled triggers
+		unsigned int prescale(qcdNonIsoElectronAsymJetsMETSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdNonIsoElectronAsymJetsMETSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdNonIsoElectronAnalyserAsymJetsMET_->setPrescale(prescale);
+		metAnalyserqcdNonIsoAsymJetsMETSelection_->setPrescale(prescale);
+
+		qcdNonIsoElectronAnalyserAsymJetsMET_->analyse(event);
+		qcdNonIsoElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdNonIsoAsymJetsMETSelection_->analyse(event);
+		metAnalyserqcdNonIsoAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+	}
+
+	if (qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		//in case of prescaled triggers
+		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->setPrescale(prescale);
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_->setPrescale(prescale);
+
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->analyse(event);
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_->analyse(event);
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton,
+				event->weight());
+	}
+
+	if (qcdConversionAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		unsigned int prescale(qcdConversionAsymJetsMETSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdConversionAsymJetsMETSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdConversionsElectronAnalyserAsymJetsMET_->setPrescale(prescale);
+		metAnalyserqcdConversionAsymJetsMETSelection_->setPrescale(prescale);
+
+		qcdConversionsElectronAnalyserAsymJetsMET_->analyse(event);
+		qcdConversionsElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
+		metAnalyserqcdConversionAsymJetsMETSelection_->analyse(event);
+		metAnalyserqcdConversionAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton,
+				event->weight());
+	}
+
+	if (qcdPFRelIsoAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		unsigned int prescale(qcdPFRelIsoAsymJetsMETSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdPFRelIsoAsymJetsMETSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_->setPrescale(prescale);
+
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_->analyse(event);
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
+	}
+
+	if (qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		unsigned int prescale(qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->setPrescale(prescale);
+
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->analyse(event);
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
 	}
 
 }
 
 void TTbarPlusMETAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder("TTbarPlusMetAnalysis");
-	//missing transverse energy
-	histMan_->addH1D_BJetBinned("MET", "MET", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("MET_withMETAndAsymJets", "MET", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("MET_withAsymJetsCut", "MET", 1000, 0, 1000);
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
-	histMan_->addH1D_BJetBinned("MET_3jets", "MET", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("MET_withMETAndAsymJets_3jets", "MET", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("MET_withAsymJetsCut_3jets", "MET", 1000, 0, 1000);
-
-	//MET significance:
-	histMan_->addH1D_BJetBinned("METsignificance", "METsignificance", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("METsignificance_withMETAndAsymJets", "METsignificance", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("METsignificance_withAsymJetsCut", "METsignificance", 1000, 0, 1000);
-
-	histMan_->addH1D_BJetBinned("METsignificance_3jets", "METsignificance", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("METsignificance_withMETAndAsymJets_3jets", "METsignificance", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("METsignificance_withAsymJetsCut_3jets", "METsignificance", 1000, 0, 1000);
-
-	//METsignificance vs MET
-	histMan_->addH2D_BJetBinned("METsignificance_vs_MET", "MET vs MET significance;MET; MET significance", 1000, 0,
-			1000, 1000, 0, 1000);
-	histMan_->addH2D_BJetBinned("METsignificance_vs_MET_withAsymJetsCut",
-			"MET vs MET significance;MET; MET significance", 1000, 0, 1000, 1000, 0, 1000);
-
-	histMan_->addH2D_BJetBinned("METsignificance_vs_MET_3jets", "MET vs MET significance;MET; MET significance", 1000,
-			0, 1000, 1000, 0, 1000);
-	histMan_->addH2D_BJetBinned("METsignificance_vs_MET_withAsymJetsCut_3jets",
-			"MET vs MET significance;MET; MET significance", 1000, 0, 1000, 1000, 0, 1000);
-
-	//transverse mass:
-	histMan_->addH1D_BJetBinned("MT", "Transverse Mass(lepton,MET);M_{T}(l,MET); Events", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("MT_withAsymJetsCut", "Transverse Mass(lepton,MET);M_{T}(l,MET);Events", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("MT_withMETAndAsymJets", "Transverse Mass(lepton,MET)", 1000, 0, 1000);
-
-	histMan_->addH1D_BJetBinned("MT_3jets", "Transverse Mass(lepton,MET);M_{T}(l,MET); Events", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("MT_withAsymJetsCut_3jets", "Transverse Mass(lepton,MET);M_{T}(l,MET);Events", 1000, 0,
-			1000);
-	histMan_->addH1D_BJetBinned("MT_withMETAndAsymJets_3jets", "Transverse Mass(lepton,MET)", 1000, 0, 1000);
-
+	//signal
+	metAnalyserRefSelection_->createHistograms();
+	metAnalyserRefAsymJetsMETSelection_->createHistograms();
+	metAnalyserRefAsymJetsSelection_->createHistograms();
+	electronAnalyserRefSelection_->createHistograms();
+	electronAnalyserRefAsymJetsSelection_->createHistograms();
+	electronAnalyserRefAsymJetsMETSelection_->createHistograms();
+	//QCD region
 	qcdNonIsoElectronAnalyser_->createHistograms();
+	qcdNonIsoNonIsoTriggerElectronAnalyser_->createHistograms();
+	metAnalyserqcdNonIsoSelection_->createHistograms();
+	metAnalyserqcdNonIsoNonIsoTriggerSelection_->createHistograms();
+
 	qcdConversionsElectronAnalyser_->createHistograms();
+	metAnalyserqcdConversionSelection_->createHistograms();
+
 	qcdEPlusjetsPFRelIsoElectronAnalyser_->createHistograms();
+	qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->createHistograms();
+	//QCD region + asym. jet cuts
+	qcdNonIsoElectronAnalyserAsymJets_->createHistograms();
+	qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_->createHistograms();
+	metAnalyserqcdNonIsoAsymJetsSelection_->createHistograms();
+	metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_->createHistograms();
+
+	qcdConversionsElectronAnalyserAsymJets_->createHistograms();
+	metAnalyserqcdConversionAsymJetsSelection_->createHistograms();
+
+	qcdEPlusjetsPFRelIsoElectronAnalyserAsymJets_->createHistograms();
+	qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJets_->createHistograms();
+	//QCD region + asym. jet cuts
+	qcdNonIsoElectronAnalyserAsymJetsMET_->createHistograms();
+	qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->createHistograms();
+	metAnalyserqcdNonIsoAsymJetsMETSelection_->createHistograms();
+	metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_->createHistograms();
+
+	qcdConversionsElectronAnalyserAsymJetsMET_->createHistograms();
+	metAnalyserqcdConversionAsymJetsMETSelection_->createHistograms();
+
+	qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_->createHistograms();
+	qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->createHistograms();
+
 }
 
 TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
-		qcdNonIsoEPlusJetsSelection_(new QCDNonIsolatedElectronSelection()), //
-		qcdConversionSelection_(new QCDConversionSelection()), //
-		qcdEPlusJetsPFRelIsoSelection_(new QCDPFRelIsoSelection()), //
-		metAnalyser_(new METAnalyser(histMan, histogramFolder)), //
-		qcdNonIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder + "/QCDEPlusJetsNonIso")), //
-		qcdConversionsElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder + "/QCDConversions")), //
-		qcdEPlusjetsPFRelIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder + "/QCDEPlusJetsPFRelIso")) {
+		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
+		topEplusAsymJetsSelection_(new TopPairEplusJetsRefAsymJetsSelection()), //
+		topEplusAsymJetsMETSelection_(new TopPairEPlusJetsRefAsymJetsMETSelection()), //
+//QCD selections with respect to reference selection
+		qcdNonIsoElectronSelection_(new QCDNonIsolatedElectronSelection()), //
+		qcdNonIsoElectronNonIsoTriggerSelection_(new QCDNonIsolatedElectronSelection()), //
+		qcdConversionSelection_(new QCDConversionsSelection()), //
+		qcdPFRelIsoSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
+		qcdPFRelIsoNonIsoTriggerSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
+//QCD selections with respect to reference selection + asymmetric jet cuts
+		qcdNonIsoElectronAsymJetsSelection_(new QCDNonIsolatedElectronAsymJetsSelection()), //
+		qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_(new QCDNonIsolatedElectronAsymJetsSelection()), //
+		qcdConversionAsymJetsSelection_(new QCDConversionsAsymJetsSelection()), //
+		qcdPFRelIsoAsymJetsSelection_(new QCDPFRelIsoEPlusAsymJetsSelection()), //
+		qcdPFRelIsoNonIsoTriggerAsymJetsSelection_(new QCDPFRelIsoEPlusAsymJetsSelection()), //
+//QCD selections with respect to reference selection + MET + asymmetric jet cuts
+		qcdNonIsoElectronAsymJetsMETSelection_(new QCDNonIsolatedElectronAsymJetsMETSelection()), //
+		qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_(new QCDNonIsolatedElectronAsymJetsMETSelection()), //
+		qcdConversionAsymJetsMETSelection_(new QCDConversionsAsymJetsMETSelection()), //
+		qcdPFRelIsoAsymJetsMETSelection_(new QCDPFRelIsoEPlusAsymJetsMET()), //
+		qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_(new QCDPFRelIsoEPlusAsymJetsMET()), //
+//analysers
+//signal regions
+		metAnalyserRefSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/MET")), //
+		metAnalyserRefAsymJetsMETSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref + AsymJets + MET selection/MET")), //
+		metAnalyserRefAsymJetsSelection_(new METAnalyser(histMan, histogramFolder + "/Ref + AsymJets selection/MET")), //
+		electronAnalyserRefSelection_(new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/Electron")), //
+		electronAnalyserRefAsymJetsMETSelection_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref + AsymJets + MET selection/Electron")), //
+		electronAnalyserRefAsymJetsSelection_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref + AsymJets selection/Electron")), //
+//QCD region
+		metAnalyserqcdNonIsoSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/MET")), //
+		metAnalyserqcdNonIsoNonIsoTriggerSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/MET")), //
+		qcdNonIsoElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/Electron")), //
+		qcdNonIsoNonIsoTriggerElectronAnalyser_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/Electron")), //
+		metAnalyserqcdConversionSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/MET")), //
+		qcdConversionsElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/Electron")), //
+		qcdEPlusjetsPFRelIsoElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCD e+jets PFRelIso/Electron")), //
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref selection/QCD e+jets PFRelIso, non iso trigger/Electron")), //
+//QCD region with asym. jets
+		metAnalyserqcdNonIsoAsymJetsSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref + AsymJets selection/QCD non iso e+jets/MET")), //
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_(
+				new METAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET")), //
+		qcdNonIsoElectronAnalyserAsymJets_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets selection/QCD non iso e+jets/Electron")), //
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/Electron")), //
+		metAnalyserqcdConversionAsymJetsSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref + AsymJets selection/QCDConversions/MET")), //
+		qcdConversionsElectronAnalyserAsymJets_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref + AsymJets selection/QCDConversions/Electron")), //
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJets_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron")), //
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJets_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron")), //
+//QCD region with asym. jets + MET
+		metAnalyserqcdNonIsoAsymJetsMETSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref + AsymJets + MET selection/QCD non iso e+jets/MET")), //
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_(
+				new METAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets + MET selection/QCD non iso e+jets, non iso trigger/MET")), //
+		qcdNonIsoElectronAnalyserAsymJetsMET_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets + MET selection/QCD non iso e+jets/Electron")), //
+		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_(
+				new ElectronAnalyser(histMan,
+						histogramFolder
+								+ "/Ref + AsymJets + MET selection/QCD non iso e+jets, non iso trigger/Electron")), //
+		metAnalyserqcdConversionAsymJetsMETSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref + AsymJets + MET selection/QCDConversions/MET")), //
+		qcdConversionsElectronAnalyserAsymJetsMET_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets + MET selection/QCDConversions/Electron")), //
+		qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref + AsymJets + MET selection/QCD e+jets PFRelIso/Electron")), //
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_(
+				new ElectronAnalyser(histMan,
+						histogramFolder
+								+ "/Ref + AsymJets + MET selection/QCD e+jets PFRelIso, non iso trigger/Electron")) {
+	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
+	qcdPFRelIsoNonIsoTriggerSelection_->useNonIsoTrigger(true);
 
 }
 

@@ -10,11 +10,20 @@
 
 #include "BasicAnalyser.h"
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
-#include "../Selections/TopPairEplusJetsPlusMETSelection.h"
+#include "../Selections/TopPairEplusJetsRefAsymJetsSelection.h"
+#include "../Selections/TopPairEPlusJetsRefAsymJetsMETSelection.h"
+//QCD selections
 #include "../Selections/QCDNonIsolatedElectronSelection.h"
-#include "../Selections/QCDConversionSelection.h"
-#include "../Selections/QCDPFRelIsoSelection.h"
-
+#include "../Selections/QCDConversionsSelection.h"
+#include "../Selections/QCDPFRelIsoEPlusJetsSelection.h"
+//QCD selections with AsymJets
+#include "../Selections/QCDNonIsolatedElectronAsymJetsSelection.h"
+#include "../Selections/QCDPFRelIsoEPlusAsymJetsSelection.h"
+#include "../Selections/QCDConversionsAsymJetsSelection.h"
+//QCD selections with AsymJets & MET cuts
+#include "../Selections/QCDNonIsolatedElectronAsymJetsMETSelection.h"
+#include "../Selections/QCDPFRelIsoEPlusAsymJetsMET.h"
+#include "../Selections/QCDConversionsAsymJetsMETSelection.h"
 namespace BAT {
 
 class EventCountAnalyser: public BAT::BasicAnalyser {
@@ -26,11 +35,31 @@ public:
 	void setHistogramLabels();
 
 	void topEPlusJetsReferenceSelection(const EventPtr event);
+	void topEplusJetsPlusMETSelection(const EventPtr event);
+	void topEplusJetsZprimeSelection(const EventPtr event);
+
 	void qcdSelections(const EventPtr event);
+	void qcdAsymJetsSelections(const EventPtr event);
+	void qcdAsymJetsMETSelections(const EventPtr event);
+	void qcdNonIsoTriggerSelections(const EventPtr event);
+	void qcdNonIsoTriggerAsymJetsSelections(const EventPtr event);
+	void qcdNonIsoTriggerAsymJetsMETSelections(const EventPtr event);
 
 private:
-	SelectionPointer topEplusJetsRefSelection_, topEplusJetsPlusMETSelection_;
-	SelectionPointer qcdNonIsoElectronSelection_, qcdConversionSelection_, qcdPFRelIsoSelection_;
+	SelectionPointer topEplusJetsRefSelection_, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_;
+
+	//QCD selections with respect to reference selection
+	SelectionPointer qcdNonIsoElectronSelection_, qcdNonIsoElectronNonIsoTriggerSelection_;
+	SelectionPointer qcdConversionSelection_;
+	SelectionPointer qcdPFRelIsoSelection_, qcdPFRelIsoNonIsoTriggerSelection_;
+	//QCD selections with respect to reference selection + asymmetric jet cuts
+	SelectionPointer qcdNonIsoElectronAsymJetsSelection_, qcdNonIsoElectronAsymJetsNonIsoTriggerSelection_;
+	SelectionPointer qcdConversionAsymJetsSelection_;
+	SelectionPointer qcdPFRelIsoAsymJetsSelection_, qcdPFRelIsoNonIsoTriggerAsymJetsSelection_;
+	//QCD selections with respect to reference selection + MET + asymmetric jet cuts
+	SelectionPointer qcdNonIsoElectronAsymJetsMETSelection_, qcdNonIsoElectronAsymJetsMETNonIsoTriggerSelection_;
+	SelectionPointer qcdConversionAsymJetsMETSelection_;
+	SelectionPointer qcdPFRelIsoAsymJetsMETSelection_, qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_;
 };
 
 } /* namespace BAT */
