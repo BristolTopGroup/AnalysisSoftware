@@ -10,10 +10,10 @@
 
 #include "../Analysers/BasicAnalyser.h"
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
-#include "../Selections/TopPairEPlusJetsZprimeSelection.h"
-#include "../Selections/TopPairEplusJetsPlusMETSelection.h"
-#include "../Selections/QCDPFRelIsoSelection.h"
-#include "../Selections/QCDConversionSelection.h"
+#include "../Selections/TopPairEPlusJetsRefAsymJetsMETSelection.h"
+#include "../Selections/TopPairEplusJetsRefAsymJetsSelection.h"
+#include "../Selections/QCDPFRelIsoEPlusJetsSelection.h"
+#include "../Selections/QCDConversionsSelection.h"
 #include "../Selections/QCDNonIsolatedElectronSelection.h"
 #include "../TopPairEventCandidate.h"
 

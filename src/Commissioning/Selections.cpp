@@ -97,23 +97,23 @@ void Selections::commissionTopEplusJetsZprimeSelection(const EventPtr event) {
 
 	bool resultSelection(
 			topEplusJetsZprimeSelection_->passesSelectionUpToStep(event,
-					TTbarEPlusJetsZprimeSelection::MissingTransverseEnergy));
+					TTbarEPlusJetsRefAsymJetsMETSelection::MissingTransverseEnergy));
 	bool resultOldSelection(
 			ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::MissingTransverseEnergy));
 	testResult(resultSelection, resultOldSelection, "MissingTransverseEnergy");
 
 	resultSelection = topEplusJetsZprimeSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsZprimeSelection::AsymmetricJetCuts);
+			TTbarEPlusJetsRefAsymJetsMETSelection::AsymmetricJetCuts);
 	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AsymmetricJetCuts);
 	testResult(resultSelection, resultOldSelection, "AsymmetricJetCuts");
 
 	resultSelection = topEplusJetsZprimeSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsZprimeSelection::AtLeastOneBtag);
+			TTbarEPlusJetsRefAsymJetsMETSelection::AtLeastOneBtag);
 	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastOneBtag);
 	testResult(resultSelection, resultOldSelection, "AtLeastOneBtag");
 
 	resultSelection = topEplusJetsZprimeSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsZprimeSelection::AtLeastTwoBtags);
+			TTbarEPlusJetsRefAsymJetsMETSelection::AtLeastTwoBtags);
 	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoBtags);
 	testResult(resultSelection, resultOldSelection, "AtLeastTwoBtags");
 }
@@ -126,21 +126,21 @@ void Selections::commissionTopEplusJetsPlusMETSelection(const EventPtr event) {
 
 	bool resultSelection(
 			topEplusJetsPlusMETSelection_->passesSelectionUpToStep(event,
-					TTbarEPlusJetsPlusMETSelection::AsymmetricJetCuts));
+					TTbarEPlusJetsRefAsymJetsSelection::AsymmetricJetCuts));
 	bool resultOldSelection(
 			ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)
 					&& ttbarCand->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts));
 	testResult(resultSelection, resultOldSelection, "AsymmetricJetCuts");
 
 	resultSelection = topEplusJetsPlusMETSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsPlusMETSelection::AtLeastOneBtag);
+			TTbarEPlusJetsRefAsymJetsSelection::AtLeastOneBtag);
 	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)
 			&& ttbarCand->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts)
 			&& ttbarCand->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastOneBtag);
 	testResult(resultSelection, resultOldSelection, "AtLeastOneBtag");
 
 	resultSelection = topEplusJetsPlusMETSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsPlusMETSelection::AtLeastTwoBtags);
+			TTbarEPlusJetsRefAsymJetsSelection::AtLeastTwoBtags);
 	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)
 			&& ttbarCand->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts)
 			&& ttbarCand->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastTwoBtags);
@@ -183,10 +183,10 @@ void Selections::createHistograms() {
 Selections::Selections(HistogramManagerPtr histMan, string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
 		topEplusJetsReferenceSelection_(new TopPairEPlusJetsReferenceSelection()), //
-		topEplusJetsZprimeSelection_(new TopPairEPlusJetsZprimeSelection()), //
-		topEplusJetsPlusMETSelection_(new TopPairEplusJetsPlusMETSelection()), //
-		qcdPFRelIsoSelection_(new QCDPFRelIsoSelection()), //
-		qcdConversionSelection_(new QCDConversionSelection()), //
+		topEplusJetsZprimeSelection_(new TopPairEPlusJetsRefAsymJetsMETSelection()), //
+		topEplusJetsPlusMETSelection_(new TopPairEplusJetsRefAsymJetsSelection()), //
+		qcdPFRelIsoSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
+		qcdConversionSelection_(new QCDConversionsSelection()), //
 		qcdNonIsoSelection_(new QCDNonIsolatedElectronSelection()), //
 		currentEvent_(), //
 		currentTopEvent_() {
