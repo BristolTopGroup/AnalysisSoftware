@@ -75,7 +75,6 @@ void Analysis::analyse() {
 	}
 //    checkForDuplicatedEvents();
 //    printInterestingEvents();
-	printSummary();
 }
 
 void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
@@ -177,41 +176,41 @@ void Analysis::printInterestingEvents() {
 }
 
 void Analysis::printSummary() {
-	EventTablePrinter::printCutFlowLatexTable(ePlusJetsCutflowPerSample, TTbarEPlusJetsSelection::StringSteps,
-			Globals::luminosity);
-	EventTablePrinter::printUnweightedCutFlowLatexTable(ePlusJetsCutflowPerSample,
-			TTbarEPlusJetsSelection::StringSteps, Globals::luminosity);
-
-	cout << "Muon + jets selection" << endl;
-	EventTablePrinter::printCutFlowLatexTable(muPlusJetsCutflowPerSample, TTbarMuPlusJetsSelection::StringSteps,
-			Globals::luminosity);
-	EventTablePrinter::printUnweightedCutFlowLatexTable(muPlusJetsCutflowPerSample,
-			TTbarMuPlusJetsSelection::StringSteps, Globals::luminosity);
+//	EventTablePrinter::printCutFlowLatexTable(ePlusJetsCutflowPerSample, TTbarEPlusJetsSelection::StringSteps,
+//			Globals::luminosity);
+//	EventTablePrinter::printUnweightedCutFlowLatexTable(ePlusJetsCutflowPerSample,
+//			TTbarEPlusJetsSelection::StringSteps, Globals::luminosity);
+//
+//	cout << "Muon + jets selection" << endl;
+//	EventTablePrinter::printCutFlowLatexTable(muPlusJetsCutflowPerSample, TTbarMuPlusJetsSelection::StringSteps,
+//			Globals::luminosity);
+//	EventTablePrinter::printUnweightedCutFlowLatexTable(muPlusJetsCutflowPerSample,
+//			TTbarMuPlusJetsSelection::StringSteps, Globals::luminosity);
 
 	cout << "total number of processed events: " << eventReader->getNumberOfProccessedEvents() << endl;
 	cout << endl;
-	cout << "Electron + jets selection" << endl;
-	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		cout << "Selection step '" << TTbarEPlusJetsSelection::StringSteps[cut] << "'" << endl;
-		cout << "passed events (single cut): " << ePlusJetsSingleCuts.at(cut) << endl;
-		if (cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS)
-			cout << "passed events (up to this cut):" << ePlusJetsCutflow.at(cut) << endl;
-		else
-			cout << "passed events (full selection):" << ePlusJetsCutflow.at(cut) << endl;
-		cout << endl;
-	}
-
-	cout << "Muon + jets selection" << endl;
-	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		cout << "Selection step '" << TTbarMuPlusJetsSelection::StringSteps[cut] << "'" << endl;
-		cout << "passed events (single cut): " << muPlusJetsSingleCuts.at(cut) << endl;
-
-		if (cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS)
-			cout << "passed events (up to this cut):" << muPlusJetsCutFlow.at(cut) << endl;
-		else
-			cout << "passed events (full selection):" << muPlusJetsCutFlow.at(cut) << endl;
-		cout << endl;
-	}
+//	cout << "Electron + jets selection" << endl;
+//	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
+//		cout << "Selection step '" << TTbarEPlusJetsSelection::StringSteps[cut] << "'" << endl;
+//		cout << "passed events (single cut): " << ePlusJetsSingleCuts.at(cut) << endl;
+//		if (cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS)
+//			cout << "passed events (up to this cut):" << ePlusJetsCutflow.at(cut) << endl;
+//		else
+//			cout << "passed events (full selection):" << ePlusJetsCutflow.at(cut) << endl;
+//		cout << endl;
+//	}
+//
+//	cout << "Muon + jets selection" << endl;
+//	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
+//		cout << "Selection step '" << TTbarMuPlusJetsSelection::StringSteps[cut] << "'" << endl;
+//		cout << "passed events (single cut): " << muPlusJetsSingleCuts.at(cut) << endl;
+//
+//		if (cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS)
+//			cout << "passed events (up to this cut):" << muPlusJetsCutFlow.at(cut) << endl;
+//		else
+//			cout << "passed events (full selection):" << muPlusJetsCutFlow.at(cut) << endl;
+//		cout << endl;
+//	}
 
 	cout << "number of events without electrons: " << brokenEvents.size() << endl;
 	cout << "number of events with too high pileup: " << weights->getNumberOfEventsWithTooHighPileUp() << endl;
@@ -296,6 +295,7 @@ Analysis::~Analysis() {
 }
 
 void Analysis::finishAnalysis(){
+	printSummary();
 	histMan->writeToDisk();
 }
 

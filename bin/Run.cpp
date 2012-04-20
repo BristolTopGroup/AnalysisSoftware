@@ -84,7 +84,7 @@ void setUpOnce() {
 	//prevent automatic ownership of ROOT objects
 	TH1F::AddDirectory(false);
 	//ignore ROOT errors (temporaly due to different nTuple content)
-//	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
+	gROOT->ProcessLine("gErrorIgnoreLevel = 3001;");
 }
 
 void setConfiguration(ConfigFile config) {
