@@ -16,7 +16,6 @@ mc_path = '/storage/TopQuarkGroup/mc/'
 
 
 mcFolders = [
-                     #insert QCD MC here
                      'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
              ]
 
