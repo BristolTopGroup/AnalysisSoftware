@@ -9,6 +9,10 @@
 #include "../../interface/GlobalVariables.h"
 #include <exception>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+
+using namespace std;
 
 namespace BAT {
 
@@ -424,4 +428,10 @@ bool Electron::isPFLepton() const {
 	return usedAlgorithm_ == ElectronAlgorithm::ParticleFlow;
 }
 
+string Electron::toString() const{
+	stringstream out;
+	out << Lepton::toString();
+	out << "Electron information" << "\n";
+	return out.str();
+}
 }

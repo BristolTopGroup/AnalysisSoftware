@@ -145,8 +145,7 @@ public:
     bool isInCrack() const;
     bool isInEndCapRegion() const;
     bool isPFLepton() const;
-
-//    double vz() const;
+    virtual std::string toString() const;
 
 private:
     ElectronAlgorithm::value usedAlgorithm_;

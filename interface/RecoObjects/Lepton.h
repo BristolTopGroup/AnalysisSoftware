@@ -57,6 +57,7 @@ public:
 	virtual double directionalIsolationWithGaussianFallOff(double coneSize = 0.2) const;
 	//other
 	virtual double ZDistanceToPrimaryVertex() const;
+	virtual std::string toString() const;
 
 protected:
 	double ecal_Isolation_DR03_, hcal_Isolation_DR03_, tracker_Isolation_DR03_;

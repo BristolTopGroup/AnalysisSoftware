@@ -7,6 +7,10 @@
 
 #include "../../interface/RecoObjects/Lepton.h"
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+
+using namespace std;
 namespace BAT {
 const double initialBigValue = 123456789.;
 
@@ -233,26 +237,27 @@ double Lepton::pfRelativeIsolation(double coneSize) const {
 	return (PFChargedHadronIsolation(coneSize) + PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize)) / pt();
 }
 
-double Lepton::pfRelativeIsolationPUCorrected(double rho, double coneSize) const{
+double Lepton::pfRelativeIsolationPUCorrected(double rho, double coneSize) const {
 	double effectiveArea = 0;
 	double eta = fabs(this->eta());
-	if(eta < 1.)
+	if (eta < 1.)
 		effectiveArea = 0.18;
-	if(eta > 1. && eta < 1.479)
+	if (eta > 1. && eta < 1.479)
 		effectiveArea = 0.19;
-	if(eta > 1.479 && eta < 2.0)
+	if (eta > 1.479 && eta < 2.0)
 		effectiveArea = 0.21;
-	if(eta > 2.0 && eta < 2.2)
+	if (eta > 2.0 && eta < 2.2)
 		effectiveArea = 0.38;
-	if(eta > 2.2 && eta < 2.3)
+	if (eta > 2.2 && eta < 2.3)
 		effectiveArea = 0.61;
-	if(eta > 2.3 && eta < 2.4)
+	if (eta > 2.3 && eta < 2.4)
 		effectiveArea = 0.73;
-	if(eta > 2.4)
+	if (eta > 2.4)
 		effectiveArea = 0.78;
 
-	double pfIso = PFChargedHadronIsolation(coneSize) + PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize) - rho*effectiveArea;
-	return pfIso/pt();
+	double pfIso = PFChargedHadronIsolation(coneSize) + PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize)
+			- rho * effectiveArea;
+	return pfIso / pt();
 }
 
 void Lepton::setZDistanceToPrimaryVertex(double dist) {
@@ -310,21 +315,22 @@ double Lepton::directionalIsolationWithGaussianFallOff(double coneSize) const {
 	else if (coneSize == 0.3)
 		isolation = directionalIsolation_GaussianFallOff_DR03_;
 	else {
-		std::cerr << "Lepton::directionalIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize << std::endl;
+		std::cerr << "Lepton::directionalIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize
+				<< std::endl;
 	}
 	return isolation;
 }
 
 double Lepton::pfIsolationWithGaussianFallOff(double coneSize) const {
 	double isolation(initialBigValue);
-		if (coneSize == 0.2)
-			isolation = pfIsolation_GaussianFallOff_DR02_;
-		else if (coneSize == 0.3)
-			isolation = pfIsolation_GaussianFallOff_DR03_;
-		else {
-			std::cerr << "Lepton::pfIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize << std::endl;
-		}
-		return isolation;
+	if (coneSize == 0.2)
+		isolation = pfIsolation_GaussianFallOff_DR02_;
+	else if (coneSize == 0.3)
+		isolation = pfIsolation_GaussianFallOff_DR03_;
+	else {
+		std::cerr << "Lepton::pfIsolationWithGaussianFallOff: Unknown cone of deltaR = " << coneSize << std::endl;
+	}
+	return isolation;
 }
 
 double Lepton::ZDistanceToPrimaryVertex() const {
@@ -332,6 +338,37 @@ double Lepton::ZDistanceToPrimaryVertex() const {
 }
 
 Lepton::~Lepton() {
+}
+
+string Lepton::toString() const {
+	stringstream out;
+	out << Particle::toString();
+	out << "Lepton information" << "\n";
+	out << setw(30) << "rel. iso (DR = 0.3)" << setw(30) << "ECAL iso (DR = 0.3)" << setw(30) << "HCAL iso (DR = 0.3)"
+			<< setw(30) << "Track. iso (DR = 0.3)" << "\n";
+	out << setw(30) << relativeIsolation(0.3) << setw(30) << ecalIsolation(0.3) << setw(30) << hcalIsolation(0.3)
+			<< setw(30) << trackerIsolation(0.3) << "\n";
+	out << setw(30) << "rel. iso (DR = 0.4)" << setw(30) << "ECAL iso (DR = 0.4)" << setw(30) << "HCAL iso (DR = 0.4)"
+			<< setw(30) << "Track. iso (DR = 0.4)" << "\n";
+	out << setw(30) << relativeIsolation(0.4) << setw(30) << ecalIsolation(0.4) << setw(30) << hcalIsolation(0.4)
+			<< setw(30) << trackerIsolation(0.4) << "\n";
+	out << setw(30) << "rel. iso (DR = 0.5)" << setw(30) << "ECAL iso (DR = 0.5)" << setw(30) << "HCAL iso (DR = 0.5)"
+			<< setw(30) << "Track. iso (DR = 0.5)" << "\n";
+	out << setw(30) << relativeIsolation(0.5) << setw(30) << ecalIsolation(0.5) << setw(30) << hcalIsolation(0.5)
+			<< setw(30) << trackerIsolation(0.5) << "\n";
+	out << setw(30) << "PF rel. iso (DR = 0.3)" << setw(30) << "PF EGamma iso (DR = 0.3)" << setw(30)
+			<< "PF neutral hadron iso (DR = 0.3)" << setw(30) << "PF charged hadron. iso (DR = 0.3)" << "\n";
+	out << setw(30) << pfRelativeIsolation(0.3) << setw(30) << PFGammaIsolation(0.3) << setw(30)
+			<< PFNeutralHadronIsolation(0.3) << setw(30) << PFChargedHadronIsolation(0.3) << "\n";
+	out << setw(30) << "PF rel. iso (DR = 0.4)" << setw(30) << "PF EGamma iso (DR = 0.4)" << setw(30)
+			<< "PF neutral hadron iso (DR = 0.4)" << setw(30) << "PF charged hadron. iso (DR = 0.4)" << "\n";
+	out << setw(30) << pfRelativeIsolation(0.4) << setw(30) << PFGammaIsolation(0.4) << setw(30)
+			<< PFNeutralHadronIsolation(0.4) << setw(30) << PFChargedHadronIsolation(0.4) << "\n";
+	out << setw(30) << "PF rel. iso (DR = 0.5)" << setw(30) << "PF EGamma iso (DR = 0.5)" << setw(30)
+			<< "PF neutral hadron iso (DR = 0.5)" << setw(30) << "PF charged hadron. iso (DR = 0.5)" << "\n";
+	out << setw(30) << pfRelativeIsolation(0.5) << setw(30) << PFGammaIsolation(0.5) << setw(30)
+			<< PFNeutralHadronIsolation(0.5) << setw(30) << PFChargedHadronIsolation(0.5) << "\n";
+	return out.str();
 }
 
 } /* namespace BAT */
