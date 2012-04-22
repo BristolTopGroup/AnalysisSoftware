@@ -9,6 +9,7 @@
 #include "../../interface/Readers/NTupleEventReader.h"
 #include "../../interface/GlobalVariables.h"
 
+using namespace boost;
 namespace BAT {
 
 HistogramManager::HistogramManager() : //
