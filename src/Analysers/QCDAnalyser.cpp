@@ -201,7 +201,7 @@ void QCDAnalyser::analyse(const EventPtr event) {
 	if (ttbarCand->passesEPlusJetsRelIsoSelection() && ttbarCand->GoodElectronCleanedJets().size() >= 4) {
 		const ElectronPointer electron = ttbarCand->MostIsolatedElectron(ttbarCand->Electrons());
 		if (electron->relativeIsolation() > Globals::maxElectronRelativeIsolation
-				&& !isnan(electron->relativeIsolation()) && !isinf(electron->relativeIsolation())) {
+				&& !std::isnan(electron->relativeIsolation()) && !isinf(electron->relativeIsolation())) {
 			try {
 				ttbarCand->reconstructTTbarToEPlusJets(electron);
 				const ParticlePointer resonance = ttbarCand->getResonance();

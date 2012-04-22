@@ -620,10 +620,10 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 
 	double triggerResult = passesTrigger ? 1.0 : 0.;
 
-	if (isnan(triggerResult) || isinf(triggerResult))
+	if (std::isnan(triggerResult) || std::isinf(triggerResult))
 		cout << "Trigger result is infinite or not a number" << endl;
 
-	if (isnan(weight) || isinf(weight))
+	if (std::isnan(weight) || std::isinf(weight))
 		cout << "Weight is infinite or not a number" << endl;
 
 	histMan_->setCurrentHistogramFolder("HLTStudy/" + triggerName + "/TriggerEfficiency");

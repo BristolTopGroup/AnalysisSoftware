@@ -739,11 +739,11 @@ void TopPairEventCandidate::reconstructNeutrinos() {
 	neutrino1 = ParticlePointer(new Particle(energy1, met->px(), met->py(), neutrinoPzs.at(0)));
 	neutrino2 = ParticlePointer(new Particle(energy2, met->px(), met->py(), neutrinoPzs.at(1)));
 
-	if (isnan(neutrino1->energy()) && isnan(neutrino2->energy()))
+	if (std::isnan(neutrino1->energy()) && std::isnan(neutrino2->energy()))
 		throw ReconstructionException("No physical neutrino solution found");
-	else if (isnan(neutrino1->energy()))
+	else if (std::isnan(neutrino1->energy()))
 		neutrino1 = neutrino2;
-	else if (isnan(neutrino2->energy()))
+	else if (std::isnan(neutrino2->energy()))
 		neutrino2 = neutrino1;
 }
 

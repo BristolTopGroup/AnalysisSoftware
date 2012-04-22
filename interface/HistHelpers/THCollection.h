@@ -21,13 +21,12 @@
 #include <iostream>
 #include "StringOperations.h"
 
-using namespace boost;
 namespace BAT {
 
 template<class histType>
 class THCollection {
-    typedef shared_ptr<histType> histPointer;
-    typedef unordered_map<std::string, histPointer> map;
+    typedef boost::shared_ptr<histType> histPointer;
+    typedef boost::unordered_map<std::string, histPointer> map;
 
 protected:
     boost::shared_ptr<TFile> histogramFile;

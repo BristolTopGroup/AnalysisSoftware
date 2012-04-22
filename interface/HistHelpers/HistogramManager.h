@@ -191,15 +191,15 @@ private:
 //    std::string current1DCollection, current1DJetCollection, current1DBJetCollection;
 //    std::string current2DCollection, current2DJetCollection, current2DBJetCollection;
 
-    unordered_map<std::string, TH1Array> collection1D;
-    unordered_map<std::string, TH2Array> collection2D;
-    unordered_map<std::string, TH3Array> collection3D;
-    unordered_map<std::string, TH1MultiArray> jetCollection1D;
-    unordered_map<std::string, TH2MultiArray> jetCollection2D;
-    unordered_map<std::string, TH3MultiArray> jetCollection3D;
-    unordered_map<std::string, TH1MultiArray> bJetCollection1D;
-    unordered_map<std::string, TH2MultiArray> bJetCollection2D;
-    unordered_map<std::string, TH3MultiArray> bJetCollection3D;
+    boost::unordered_map<std::string, TH1Array> collection1D;
+    boost::unordered_map<std::string, TH2Array> collection2D;
+    boost::unordered_map<std::string, TH3Array> collection3D;
+    boost::unordered_map<std::string, TH1MultiArray> jetCollection1D;
+    boost::unordered_map<std::string, TH2MultiArray> jetCollection2D;
+    boost::unordered_map<std::string, TH3MultiArray> jetCollection3D;
+    boost::unordered_map<std::string, TH1MultiArray> bJetCollection1D;
+    boost::unordered_map<std::string, TH2MultiArray> bJetCollection2D;
+    boost::unordered_map<std::string, TH3MultiArray> bJetCollection3D;
 
     bool debugMode;
 
