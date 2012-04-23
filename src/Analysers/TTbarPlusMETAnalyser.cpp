@@ -435,6 +435,10 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 								+ "/Ref + AsymJets + MET selection/QCD e+jets PFRelIso, non iso trigger/Electron")) {
 	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdPFRelIsoNonIsoTriggerSelection_->useNonIsoTrigger(true);
+	qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->useNonIsoTrigger(true);
+	qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->useNonIsoTrigger(true);
+	qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->useNonIsoTrigger(true);
+	qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->useNonIsoTrigger(true);
 
 }
 
