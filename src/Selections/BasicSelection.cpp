@@ -59,7 +59,10 @@ void BasicSelection::useNonIsoTrigger(bool use) {
 bool BasicSelection::passesFullSelectionExceptLastTwoSteps(const EventPtr event) const{
 	//usually the last two selection steps are >= 1b-tag and >= 2 b=tag
 	//-> ommit last two cuts
-	return passesSelectionUpToStep(event, numberOfSelectionSteps_ - 2);
+	// last cut = numberOfSelectionSteps_ -1
+	// next to last cut numberOfSelectionSteps_ -2
+	// numberOfSelectionSteps_ -3 = all steps except last two
+	return passesSelectionUpToStep(event, numberOfSelectionSteps_ - 3);
 }
 
 BasicSelection::~BasicSelection() {
