@@ -111,9 +111,8 @@ bool TopPairEventCandidate::passesElectronHighLevelTrigger() const {
 		else
 			return false;
 	} else {
-		return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-				|| HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-				|| HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		//Fall 11 MC
+		return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 	}
 
 }

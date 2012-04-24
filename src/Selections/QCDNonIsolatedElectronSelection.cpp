@@ -10,7 +10,7 @@
 namespace BAT {
 
 QCDNonIsolatedElectronSelection::QCDNonIsolatedElectronSelection(unsigned int numberOfSelectionSteps) :
-		QCDPFRelIsoEPlusJetsSelection(numberOfSelectionSteps){
+		QCDPFRelIsoEPlusJetsSelection(numberOfSelectionSteps) {
 
 }
 
@@ -27,17 +27,15 @@ bool QCDNonIsolatedElectronSelection::passesTriggerSelection(const EventPtr even
 				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
 			else if (runNumber > 163869 && runNumber <= 178380)
 				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-
 			else if (runNumber > 178380)
 				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
 			else
 				return false;
-
-		} else
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+		} else {
+			//Fall11 MC
+			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+		}
 	}
-
 }
 
 bool QCDNonIsolatedElectronSelection::hasExactlyOneIsolatedLepton(const EventPtr event) const {
@@ -65,12 +63,16 @@ unsigned int QCDNonIsolatedElectronSelection::prescale(const EventPtr event) con
 	unsigned int prescale(1);
 
 	if (useNonIsoTrigger_) {
-		if (runNumber >= 160404 && runNumber <= 163869)
-			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
-		else if (runNumber > 163869 && runNumber <= 178380)
+		if (event->isRealData()) {
+			if (runNumber >= 160404 && runNumber <= 163869)
+				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+			else if (runNumber > 163869 && runNumber <= 178380)
+				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+			else if (runNumber > 178380)
+				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+		} else
 			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-		else if (runNumber > 178380)
-			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+
 	}
 	return prescale;
 }

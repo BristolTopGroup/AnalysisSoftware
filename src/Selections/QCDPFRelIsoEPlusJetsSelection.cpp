@@ -13,7 +13,7 @@ using namespace std;
 namespace BAT {
 
 QCDPFRelIsoEPlusJetsSelection::QCDPFRelIsoEPlusJetsSelection(unsigned int numberOfSelectionSteps) :
-		TopPairEPlusJetsReferenceSelection(numberOfSelectionSteps){
+		TopPairEPlusJetsReferenceSelection(numberOfSelectionSteps) {
 
 }
 
@@ -35,11 +35,10 @@ bool QCDPFRelIsoEPlusJetsSelection::passesTriggerSelection(const EventPtr event)
 			else
 				return false;
 		} else {
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+			//Fall11 MC
+			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 		}
 	}
-
 }
 
 bool QCDPFRelIsoEPlusJetsSelection::hasExactlyOneIsolatedLepton(const EventPtr event) const {
@@ -95,12 +94,16 @@ unsigned int QCDPFRelIsoEPlusJetsSelection::prescale(const EventPtr event) const
 	unsigned int prescale(1);
 
 	if (useNonIsoTrigger_) {
-		if (runNumber >= 160404 && runNumber <= 163869)
-			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
-		else if (runNumber > 163869 && runNumber <= 178380)
+		if (event->isRealData()) {
+			if (runNumber >= 160404 && runNumber <= 163869)
+				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+			else if (runNumber > 163869 && runNumber <= 178380)
+				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+			else if (runNumber > 178380)
+				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+		} else
 			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-		else if (runNumber > 178380)
-			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30);
+
 	}
 	return prescale;
 }

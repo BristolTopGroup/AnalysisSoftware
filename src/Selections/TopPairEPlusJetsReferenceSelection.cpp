@@ -111,9 +111,8 @@ bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr e
 		else
 			return false;
 	} else {
-		return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30)
-				|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30)
-				|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		//Fall11 MC
+		return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
 	}
 }
 
