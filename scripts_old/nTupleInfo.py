@@ -91,7 +91,14 @@ def printBiggestConsumers(branches, filesize):
         zipSize = branch['zippedBytes'] / 1024 / 1024#MB
         print '| !%s  |  %.3f |  %.3f%% |' %(branch['name'], zipSize, zipSize / filesize * 100)#%)
 #        print branch['name'], zipSize, zipSize / filesize * 100#%
-        
+
+def getTriggers(chain):
+    for event in chain:
+        triggers = event.__getattr__("Trigger.HLTNames")
+        for trigger in triggers:
+            if not 'not found' in trigger:
+                print '   * ' + trigger
+        break      
         
 if __name__ == '__main__':
     gROOT.SetBatch(1);
@@ -124,3 +131,6 @@ if __name__ == '__main__':
     
     print '---+++ Biggest consumers'
     printBiggestConsumers(branches, filesize)
+    
+    print '---+++ Available Triggers'
+    getTriggers(chain)
