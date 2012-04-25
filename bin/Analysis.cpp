@@ -276,7 +276,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		qcdAnalyser(new QCDAnalyser(histMan)), //
 		topRecoAnalyser(new TopReconstructionAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
-		vertexAnalyser(new VertexAnalyser(histMan, weights)), //
+		vertexAnalyser(new VertexAnalyser(histMan)), //
 		selectionCommissioning_(new Selections(histMan)) {
 	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
 		ePlusJetsCutflow[cut] = 0;

@@ -9,21 +9,16 @@
 #define VERTEXANALYSER_H_
 
 #include "BasicAnalyser.h"
-#include "../EventWeightProvider.h"
 
 namespace BAT {
 
 class VertexAnalyser: public BAT::BasicAnalyser {
 public:
-	//TODO: remove weights. VertexAnalyser should create own weights
-	VertexAnalyser(HistogramManagerPtr histMan, EventWeightProviderPtr weights, std::string histogramFolder = "pileupStudy");
+	VertexAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "VertexAnalyser");
 	virtual ~VertexAnalyser();
 
-	void analyse(const EventPtr);
-	void createHistograms();
-
-private:
-	EventWeightProviderPtr weights;
+	virtual void analyse(const EventPtr);
+	virtual void createHistograms();
 };
 
 }
