@@ -44,6 +44,8 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 
 		electronAnalyserRefSelection_->analyse(event);
 		electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
+
+		vertexAnalyserRefSelection_->analyse(event);
 	}
 
 	if (topEplusAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -296,9 +298,12 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	metAnalyserRefSelection_->createHistograms();
 	metAnalyserRefAsymJetsMETSelection_->createHistograms();
 	metAnalyserRefAsymJetsSelection_->createHistograms();
+
 	electronAnalyserRefSelection_->createHistograms();
 	electronAnalyserRefAsymJetsSelection_->createHistograms();
 	electronAnalyserRefAsymJetsMETSelection_->createHistograms();
+
+	vertexAnalyserRefSelection_->createHistograms();
 	//QCD region
 	qcdNonIsoElectronAnalyser_->createHistograms();
 	qcdNonIsoNonIsoTriggerElectronAnalyser_->createHistograms();
@@ -369,8 +374,11 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 				new ElectronAnalyser(histMan, histogramFolder + "/Ref + AsymJets + MET selection/Electron")), //
 		electronAnalyserRefAsymJetsSelection_(
 				new ElectronAnalyser(histMan, histogramFolder + "/Ref + AsymJets selection/Electron")), //
+		vertexAnalyserRefSelection_(
+				new VertexAnalyser(histMan, histogramFolder + "/Ref selection/Vertices")), //
 //QCD region
-		metAnalyserqcdNonIsoSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/MET")), //
+		metAnalyserqcdNonIsoSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/MET")), //
 		metAnalyserqcdNonIsoNonIsoTriggerSelection_(
 				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/MET")), //
 		qcdNonIsoElectronAnalyser_(
@@ -378,7 +386,8 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		qcdNonIsoNonIsoTriggerElectronAnalyser_(
 				new ElectronAnalyser(histMan,
 						histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/Electron")), //
-		metAnalyserqcdConversionSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/MET")), //
+		metAnalyserqcdConversionSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/MET")), //
 		qcdConversionsElectronAnalyser_(
 				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/Electron")), //
 		qcdEPlusjetsPFRelIsoElectronAnalyser_(

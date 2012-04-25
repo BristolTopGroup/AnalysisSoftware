@@ -11,6 +11,7 @@
 #include "BasicAnalyser.h"
 #include "METAnalyser.h"
 #include "ElectronAnalyser.h"
+#include "VertexAnalyser.h"
 #include "../Selections/BasicSelection.h"
 
 #include <string>
@@ -50,6 +51,7 @@ private:
 	//signal regions
 	METAnalyserLocalPtr metAnalyserRefSelection_, metAnalyserRefAsymJetsMETSelection_, metAnalyserRefAsymJetsSelection_;
 	ElectronAnalyserLocalPtr electronAnalyserRefSelection_, electronAnalyserRefAsymJetsMETSelection_, electronAnalyserRefAsymJetsSelection_;
+	BasicAnalyserLocalPtr vertexAnalyserRefSelection_;
 
 	//QCD region
 	METAnalyserLocalPtr metAnalyserqcdNonIsoSelection_, metAnalyserqcdNonIsoNonIsoTriggerSelection_;
