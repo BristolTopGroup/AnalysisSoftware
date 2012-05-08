@@ -36,7 +36,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		inputFiles_(PythonParser::getVectorFromPythonObject(config, "inputFiles")), //
 		tqafPath_(PythonParser::getAttributeFromPyObject<string>(config, "TQAFPath")), //
 		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")),//
-		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")){
+		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")),//
+		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")){
 
 }
 
@@ -233,6 +234,8 @@ void ConfigFile::loadIntoMemory() {
 	//Loading l7 JEC
 	Globals::bL7Corrections = getL7Correction(bJetResoFile());
 	Globals::lightL7Corrections = getL7Correction(lightJetResoFile());
+
+	Globals::NTupleVersion = nTupleVersion();
 }
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
@@ -249,5 +252,9 @@ boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimat
 	file->Close();
 
 	return pileUp;
+}
+
+unsigned int ConfigFile::nTupleVersion() const {
+	return nTupleVersion_;
 }
 } /* namespace BAT */

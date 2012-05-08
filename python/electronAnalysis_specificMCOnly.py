@@ -51,3 +51,4 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo_8TeV.py"
     
+nTuple_version = 6

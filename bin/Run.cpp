@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 	cout << "Number of events processed per minute: " << eventsPerMinute << endl;
 	watch.Print();
 	watch.Reset();
-	cout << "Finishing up analysis and writing histograms do disk" << endl;
+	cout << "Finishing up analysis and writing histograms do disk (wait for \"Analysis finished\"" << endl;
 	watch.Start();
 	myAnalysis->finishAnalysis();
 	watch.Stop();
@@ -88,8 +88,7 @@ void setUpOnce() {
 }
 
 void setConfiguration(ConfigFile config) {
-	Globals::NTupleVersion = 6;
-	cout << "Using set-up for nTuple version " << Globals::NTupleVersion << endl;
+	cout << "Using set-up for nTuple version " << config.nTupleVersion() << endl;
 	cout << "Using set-up for center of mass energy = " << config.centerOfMassEnergy() << endl;
 	cout << "Loading configuration..." << endl;
 	cout << "Using config-file '" << config.configPath() << endl;
@@ -108,8 +107,7 @@ void setConfiguration(ConfigFile config) {
 		cout << "Using HitFit.\n";
 
 	config.loadIntoMemory();
-	
-	Globals::produceFitterASCIIoutput = config.fitterOutputFlag();
+
 
 	//@Deprecated: move to selections
 	//jets
@@ -128,10 +126,4 @@ void setConfiguration(ConfigFile config) {
 	//mets
 	Globals::metAlgorithm = METAlgorithm::ParticleFlowMET;
 	Globals::METCut = 20.;
-
-//	//Loading l7 JEC
-//	config.LoadJetL7Resolutions(bJetResoFile, lightJetResoFile);
-
-//	cout << "From Config file: " << pileUpFile << endl;
-//	cout << "Using L7 jet energy corrections: " << bJetResoFile << ", " << lightJetResoFile << endl;
 }

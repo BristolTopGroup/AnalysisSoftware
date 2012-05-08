@@ -71,8 +71,10 @@ centerOfMassEnergy = 7
 
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
+
 if centerOfMassEnergy == 7:
     datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo_8TeV.py"
     
+nTuple_version = 6
