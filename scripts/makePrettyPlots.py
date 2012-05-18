@@ -15,6 +15,11 @@ important features:
 
 import ROOT
 
+from tools import PlottingUtilities
+
+def plot(histpath, qcdShapeFrom, qcdRateEstimate, rebin = 1,bjetBinned=True, jetBinned=False, bjetBins = PlottingUtilities.allBJetBins, jetBins = []):
+    pass
+
 inputFiles = {}
 
 

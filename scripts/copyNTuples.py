@@ -17,3 +17,27 @@ if __name__ == "__main__":
     #check-only
     #skim info only
     
+    #print output of hadd
+#    Total number of files: N
+#    Total number of unique files: M
+#    Process recognised: Sample
+#    Input files per output file: X
+#    Input directory:  /gpfs_phys/storm/cms/user/<path>
+#    Using compression level Z
+#    ==================================================
+#    Creating output file: Sample_merged_I.root
+#    Number of input files: Y
+#    CRAB job number of input files: 1-2, 4,7, 10-33
+#    ==================================================
+
+
+#    supress output of hadd except for debug flag
+#    Source file N
+#    ...
+
+#group by max size of output
+#group by number of output files
+#create mergeROOTFiles.log automatically (full logging), print summarised output somewhere else
+#print warning when more than 500 files are going to be merged. ROOT can't handle this!!
+#alternative: create temporary files so max 500 files per output file, merge the temp files and then remove them!
+    
