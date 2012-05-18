@@ -182,6 +182,7 @@ public:
 	double PUWeight3D() const;
 	double PUWeightShiftUp() const;
 	double PUWeightShiftDown() const;
+	double getBTagCorrectionFactor(const JetCollection jets) const;
 
 private:
 	void selectElectronsByQuality();

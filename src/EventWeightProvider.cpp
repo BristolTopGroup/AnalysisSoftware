@@ -75,6 +75,11 @@ void EventWeightProvider::generate_weights() {
 	 * Fall11, use Fall2011
 	 */
 	pileUpWeights = generateWeights(Fall2011);
+//	cout << "Pile up weights" << endl;
+//
+//	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
+//		cout << index << ": " << pileUpWeights.at(index) << endl;
+//	}
 }
 
 boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(

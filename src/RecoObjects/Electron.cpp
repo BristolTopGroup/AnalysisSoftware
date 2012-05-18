@@ -395,10 +395,6 @@ double Electron::pfIsolation() const {
     return (PFGamma_Isolation_DR03_ + PFChargedHadron_Isolation_DR03_ + PFNeutralHadron_Isolation_DR03_) / et();
 }
 
-//double Electron::ZDistanceToPrimaryVertex() const {
-//    return zDistanceToPrimaryVertex_;
-//}
-
 ElectronAlgorithm::value Electron::algorithm() const {
     return usedAlgorithm_;
 }

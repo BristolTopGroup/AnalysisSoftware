@@ -97,8 +97,6 @@ void Analysis::initiateEvent() {
 		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
 		else
 			pileUpWeight = 1.;
-//		pileUpWeight = weights->reweightPileUp(
-//				currentEvent->numberOfGeneratedPileUpVertices(Globals::pileUpReweightingMethod));
 		weight *= pileUpWeight;
 	}
 

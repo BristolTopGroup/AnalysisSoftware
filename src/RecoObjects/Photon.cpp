@@ -10,12 +10,10 @@
 namespace BAT {
 
 Photon::Photon() {
-	// TODO Auto-generated constructor stub
 
 }
 
 Photon::~Photon() {
-	// TODO Auto-generated destructor stub
 }
 
 }

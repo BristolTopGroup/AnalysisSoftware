@@ -53,8 +53,8 @@ private:
 public:
 
 	EventWeightProvider(std::string datasetInformationFile);
-//	EventWeightProvider(boost::shared_ptr<TH1D>,boost::shared_ptr<TH1D>);
-//	EventWeightProvider(std::vector<double>, std::vector<double>);
+	EventWeightProvider(std::string datasetInformationFile, boost::shared_ptr<TH1D>,boost::shared_ptr<TH1D>);
+	EventWeightProvider(std::string datasetInformationFile, std::vector<double>, std::vector<double>);
 	~EventWeightProvider();
 	double getWeight(const EventPtr) const;
 	double getPUWeight(const EventPtr) const;
@@ -71,21 +71,6 @@ public:
 };
 
 typedef boost::shared_ptr<EventWeightProvider> EventWeightProviderPtr;
-/**
- * Input sample distributions from
- * https://twiki.cern.ch/twiki/bin/view/CMS/PileupMCReweightingUtilities#Sample_Input_Distributions
- */
-
-/* Flat10+Tail distribution taken directly from MixingModule input:
- * (Can be used for Spring11 and Summer11 if you don't worry about small shifts in the mean)
- * SHOULD be used for 3-D Reweighting, as this is the "true" input for all Summer11 samples.
- */
-//const boost::array<double, NWEIGHTSSIZE> probdistFlat10 = { { 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584,
-//		0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0698146584, 0.0630151648,
-//		0.0526654164, 0.0402754482, 0.0292988928, 0.0194384503, 0.0122016783, 0.007207042, 0.004003637, 0.0020278322,
-//		0.0010739954, 0.0004595759, 0.0002229748, 0.0001028162, 4.58337152809607E-05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-//		0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } };
-
 /*
  * Summer11 PU_S3 and PU_S4, distribution obtained by only looking at the in-time crossing.
  * This is the "spike+smear" distribution, RECOMMENDED FOR REWEIGHTING.

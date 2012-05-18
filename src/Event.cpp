@@ -665,4 +665,13 @@ double Event::PUWeightShiftDown() const {
 	return PUWeightShiftDown_;
 }
 
+double Event::getBTagCorrectionFactor(const JetCollection jets) const{
+	double correction(1.);
+	if(!isRealData()){
+
+	}
+
+	return correction;
+}
+
 }

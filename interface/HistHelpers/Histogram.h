@@ -58,6 +58,7 @@ public:
 
 	unsigned long GetEntries() const;
 	unsigned int FindBin(double x) const;
+	unsigned int GetDimension() const;
 
 private:
 	std::string name_, title_;
