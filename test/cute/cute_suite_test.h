@@ -33,18 +33,22 @@ namespace boost_or_tr1 = std;
 namespace boost_or_tr1 = boost;
 #endif
 #include <algorithm>
-namespace cute{
-	// make a whole suite a test, failure stops the suite's execution
-	struct suite_test {
-		suite theSuite;
-		suite_test(suite const &s):theSuite(s){}
-		void operator()(){
+namespace cute {
+// make a whole suite a test, failure stops the suite's execution
+struct suite_test {
+	suite theSuite;
+	suite_test(suite const &s) :
+		theSuite(s) {
+	}
+	void operator()() {
 #if defined(USE_STD0X) || defined(USE_TR1)
-			using namespace boost_or_tr1::placeholders;
+		using namespace boost_or_tr1::placeholders;
 #endif
-			std::for_each(theSuite.begin(),theSuite.end(),boost_or_tr1::bind(&test::operator(),_1));
-		}
-	};
+		std::for_each(theSuite.begin(), theSuite.end(), boost_or_tr1::bind(&test::operator(),
+				boost_or_tr1::placeholders::_1));
+	}
+};
 }
 #define CUTE_SUITE_TEST(s) cute::test(cute::suite_test((s)),#s)
 #endif /*CUTE_SUITE_TEST_H_*/
+
