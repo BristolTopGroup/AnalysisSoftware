@@ -172,15 +172,15 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();
-		if (Globals::NTupleVersion >= 6) {
-			PDFWeightsReader->initialise();
-			PileupInfoReader->initialise();
-			TruePileupInfoReader->initialise();
-			PUWeightInTimeOnly_->initialise();
-			PUWeight3BX_->initialise();
-			PUWeight3D_->initialise();
-			PUWeightShiftUp_->initialise();
-			PUWeightShiftDown_->initialise();
+		if (Globals::NTupleVersion >= 6) {//MC only info!
+			PDFWeightsReader->initialiseBlindly();
+			PileupInfoReader->initialiseBlindly();
+			TruePileupInfoReader->initialiseBlindly();
+			PUWeightInTimeOnly_->initialiseBlindly();
+			PUWeight3BX_->initialiseBlindly();
+			PUWeight3D_->initialiseBlindly();
+			PUWeightShiftUp_->initialiseBlindly();
+			PUWeightShiftDown_->initialiseBlindly();
 		}
 		if (Globals::NTupleVersion >= 7)
 			sumETReader_->initialise();

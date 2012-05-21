@@ -40,8 +40,8 @@ mcFolders = ['DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S
            #muon enriched samples
            'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #rare processes
-           'TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'TTbarInclWIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
+#           'TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+#           'TTbarInclWIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
