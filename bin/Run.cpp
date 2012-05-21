@@ -124,6 +124,6 @@ void setConfiguration(ConfigFile config) {
 	Globals::maxAbsoluteMuonEta = 2.1;
 	Globals::minMuonPt = 20.;
 	//mets
-	Globals::metAlgorithm = METAlgorithm::ParticleFlowMET;
+	Globals::metAlgorithm = METAlgorithm::patMETsPFlow;
 	Globals::METCut = 20.;
 }

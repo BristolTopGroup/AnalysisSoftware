@@ -30,7 +30,6 @@ public:
 	std::string PUFile() const;
     std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
-//    void LoadJetL7Resolutions(std::string bJetResoFile, std::string lightJetResoFile);
 	bool useHitFit() const;
 	bool fitterOutputFlag() const;
 	const std::vector<std::string>& inputFiles() const;

@@ -62,7 +62,7 @@ protected:
 
 	MCParticleCollection genParticles;
 
-	METPointer met;
+	METCollection mets_;
 
 	DataType::value dataType;
 	unsigned long runNumber;
@@ -74,7 +74,6 @@ protected:
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, PUWeight3D_, PUWeightShiftUp_, PUWeightShiftDown_;
 
-//    double jetCleaningEfficiency;
 	unsigned int numberOfHighPurityTracks_;
 	bool isBeamScraping_;
 
@@ -97,7 +96,7 @@ public:
 	void setJets(JetCollection jets);
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
-	void setMET(const METPointer met);
+	void setMETs(const std::vector<METPointer> mets);
 	void setHLTs(const boost::shared_ptr<std::vector<int> >);
 	void setHLTPrescales(const boost::shared_ptr<std::vector<int> >);
 	void setRunNumber(unsigned long number);
@@ -141,6 +140,7 @@ public:
 	const MuonCollection& GoodIsolatedMuons() const;
 	const MuonCollection& GoodPFIsolatedMuons() const;
 	const METPointer MET() const;
+	const METPointer MET(METAlgorithm::value type) const;
 
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&, bool usePFIso) const;
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;

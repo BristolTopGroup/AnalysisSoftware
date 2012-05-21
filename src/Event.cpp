@@ -44,7 +44,7 @@ Event::Event() : //
 		goodPFIsolatedMuons(), //
 		looseMuons(), //
 		genParticles(), //
-		met(), //
+//		met(), //
 		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
@@ -362,8 +362,12 @@ void Event::setHLTs(const boost::shared_ptr<std::vector<int> > triggers) {
 	HLTs = triggers;
 }
 
-void Event::setMET(const METPointer met) {
-	this->met = met;
+//void Event::setMET(const METPointer met) {
+//	this->met = met;
+//}
+
+void Event::setMETs(const std::vector<METPointer> mets){
+	mets_ = mets;
 }
 
 void Event::setRunNumber(unsigned long number) {
@@ -487,7 +491,16 @@ const MCParticleCollection& Event::GenParticles() const {
 }
 
 const METPointer Event::MET() const {
-	return met;
+	return MET(Globals::metAlgorithm);
+//	return met;
+}
+
+const METPointer Event::MET(METAlgorithm::value type) const {
+	unsigned int index(type);
+	if(index >= mets_.size())
+		throw "Trying to access non-available MET at " + index;
+
+	return mets_.at(index);
 }
 
 unsigned long Event::runnumber() const {

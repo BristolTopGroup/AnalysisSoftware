@@ -62,6 +62,6 @@ boost::array< boost::shared_ptr<TF1>, 12 > Globals::lightL7Corrections = {{
 		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1}};
 
 //MET
-METAlgorithm::value Globals::metAlgorithm = METAlgorithm::ParticleFlowMET;
+METAlgorithm::value Globals::metAlgorithm = METAlgorithm::patMETsPFlow;
 double Globals::METCut = 20.; //GeV
 }

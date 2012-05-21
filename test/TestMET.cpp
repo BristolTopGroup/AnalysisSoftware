@@ -41,12 +41,12 @@ void TestMET::testBadMETNoGood() {
 }
 
 void TestMET::testSetAlgorithm() {
-	goodMET->setUsedAlgorithm(METAlgorithm::ParticleFlowMET);
-	ASSERT_EQUAL(METAlgorithm::ParticleFlowMET, goodMET->getUsedAlgorithm());
+	goodMET->setUsedAlgorithm(METAlgorithm::patMETsPFlow);
+	ASSERT_EQUAL(METAlgorithm::patMETsPFlow, goodMET->getUsedAlgorithm());
 }
 
 void TestMET::testStandardAlgorithm() {
-	ASSERT_EQUAL(METAlgorithm::Calo, goodMET->getUsedAlgorithm());
+	ASSERT_EQUAL(METAlgorithm::patMETsPFlow, goodMET->getUsedAlgorithm());
 }
 
 void TestMET::testSumET() {

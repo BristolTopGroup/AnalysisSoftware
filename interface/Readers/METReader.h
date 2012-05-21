@@ -17,7 +17,7 @@ public:
 //    const static std::string algorithmPrefixes[METAlgorithm::NUMBER_OF_METALGORITHMS];
 
     METReader();
-    METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::Calo);
+    METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::patMETsPFlow);
     const METPointer getMET();
     virtual ~METReader();
     void initialise();
@@ -25,7 +25,6 @@ private:
     VariableReader<double> exReader;
     VariableReader<double> eyReader;
     VariableReader<double> significanceReader;
-    VariableReader<double> sumETReader;
     METPointer met;
     METAlgorithm::value usedAlgorithm;
     void readMET();

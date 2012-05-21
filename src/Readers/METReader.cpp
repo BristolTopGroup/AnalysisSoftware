@@ -10,15 +10,14 @@
 namespace BAT {
 
 METReader::METReader() :
-    exReader(), eyReader(), met() {
+		exReader(), eyReader(), met() {
 
 }
 
 METReader::METReader(TChainPointer input, METAlgorithm::value algo) :
-    exReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"),
-    eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"),
-    significanceReader(input, METAlgorithm::prefixes.at(algo) + ".Significance"),
-    sumETReader(input, "Event.SumET") {
+		exReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"), //
+		eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"), //
+		significanceReader(input, METAlgorithm::prefixes.at(algo) + ".Significance") {
 
 }
 
@@ -26,20 +25,18 @@ METReader::~METReader() {
 }
 
 void METReader::initialise() {
-    exReader.initialise();
-    eyReader.initialise();
-    significanceReader.initialise();
-    sumETReader.initialise();
+	exReader.initialise();
+	eyReader.initialise();
+	significanceReader.initialise();
 }
 
 const METPointer METReader::getMET() {
-    readMET();
-    return met;
+	readMET();
+	return met;
 }
 
 void METReader::readMET() {
-    met = METPointer(new MET(exReader.getVariable(), eyReader.getVariable()));
-    met->setSignificance(significanceReader.getVariable());
-    met->setSumET(sumETReader.getVariable());
+	met = METPointer(new MET(exReader.getVariable(), eyReader.getVariable()));
+	met->setSignificance(significanceReader.getVariable());
 }
 }

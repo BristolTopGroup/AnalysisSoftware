@@ -72,7 +72,8 @@ private:
 	boost::scoped_ptr<JetReader> jetReader;
 	boost::scoped_ptr<GenJetReader> genJetReader;
 	boost::scoped_ptr<MuonReader> muonReader;
-	boost::scoped_ptr<METReader> metReader;
+//	boost::scoped_ptr<METReader> metReader;
+	std::vector<boost::shared_ptr<METReader> > metReaders;
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
@@ -81,6 +82,8 @@ private:
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;
 	boost::scoped_ptr<VariableReader<double> > PUWeightInTimeOnly_, PUWeight3BX_, PUWeight3D_, PUWeightShiftUp_, PUWeightShiftDown_;
+	boost::scoped_ptr<VariableReader<double> > sumETReader_;
+
 	bool areReadersSet, areDatatypesKnown;
 	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;

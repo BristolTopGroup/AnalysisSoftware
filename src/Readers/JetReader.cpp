@@ -35,8 +35,6 @@ JetReader::JetReader() : //
 		btagJetProbabilityReader(), //
 		btagSimpleSecondaryVertexHEReader(), //
 		btagSimpleSecondaryVertexHPReader(), //
-//		btagSoftElectronByIP3dReader(), //
-//		btagSoftElectronByPtReader(), //
 		btagSoftMuonReader(), //
 		btagSoftMuonByIP3dReader(), //
 		btagSoftMuonByPtReader(), //
@@ -74,8 +72,6 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		btagJetProbabilityReader(input, JetAlgorithm::prefixes.at(algo) + ".JetProbabilityBTag"), //
 		btagSimpleSecondaryVertexHEReader(input, JetAlgorithm::prefixes.at(algo) + ".SimpleSecondaryVertexHighEffBTag"), //
 		btagSimpleSecondaryVertexHPReader(input, JetAlgorithm::prefixes.at(algo) + ".SimpleSecondaryVertexHighPurBTag"), //
-//		btagSoftElectronByIP3dReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftElectronByIP3dBJetTag"), //
-//		btagSoftElectronByPtReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftElectronByPtBJetTag"), //
 		btagSoftMuonReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonBJetTag"), //
 		btagSoftMuonByIP3dReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonByIP3dBJetTag"), //
 		btagSoftMuonByPtReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonByPtBJetTag"), //
@@ -137,11 +133,6 @@ void JetReader::readJets() {
 				BtagAlgorithm::SimpleSecondaryVertexHighEfficiency);
 		jet->setDiscriminatorForBtagType(btagSimpleSecondaryVertexHPReader.getVariableAt(jetIndex),
 				BtagAlgorithm::SimpleSecondaryVertexHighPurity);
-		//soft electron
-//		jet->setDiscriminatorForBtagType(btagSoftElectronByIP3dReader.getVariableAt(jetIndex),
-//				BtagAlgorithm::SoftElectronByIP3d);
-//		jet->setDiscriminatorForBtagType(btagSoftElectronByPtReader.getVariableAt(jetIndex),
-//				BtagAlgorithm::SoftElectronByPt);
 		//soft muon
 		jet->setDiscriminatorForBtagType(btagSoftMuonReader.getVariableAt(jetIndex), BtagAlgorithm::SoftMuon);
 		jet->setDiscriminatorForBtagType(btagSoftMuonByIP3dReader.getVariableAt(jetIndex),
@@ -191,8 +182,6 @@ void JetReader::initialise() {
 	btagJetProbabilityReader.initialise();
 	btagSimpleSecondaryVertexHEReader.initialise();
 	btagSimpleSecondaryVertexHPReader.initialise();
-//	btagSoftElectronByIP3dReader.initialise();
-//	btagSoftElectronByPtReader.initialise();
 	btagSoftMuonReader.initialise();
 	btagSoftMuonByIP3dReader.initialise();
 	btagSoftMuonByPtReader.initialise();

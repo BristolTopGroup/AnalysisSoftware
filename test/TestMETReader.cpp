@@ -6,7 +6,7 @@ using namespace BAT;
 
 TestMETReader::TestMETReader() :
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)), //
-		PFMETreader(new METReader(input, METAlgorithm::ParticleFlowMET)), //
+		PFMETreader(new METReader(input, METAlgorithm::patMETsPFlow)), //
 		pfmet() //
 {
 	input->Add(InputFile::TTJets);

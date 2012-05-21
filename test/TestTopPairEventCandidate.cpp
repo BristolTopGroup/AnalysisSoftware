@@ -69,7 +69,10 @@ void TestTopPairEventCandidate::setUpTTbarEvent() {
 	MuonCollection muons;
 	muons.push_back(badMuon);
 	ttbarEvent.setMuons(muons);
-	ttbarEvent.setMET(met);
+	METCollection mets;
+	mets.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
+	mets.at(METAlgorithm::patMETsPFlow) = met;
+	ttbarEvent.setMETs(mets);
 	ttbarEvent.setDataType(DataType::TTJets);
 	ttbarEvent.setTracks(moreThan10TracksHighPurity);
 	ttbarEvent.setBeamScrapingVeto(false);
@@ -470,7 +473,10 @@ void TestTopPairEventCandidate::testComputeNeutrinoPzs() {
 	electron->setHadOverEm(0);
 
 	DummyTTbarEvent cand = DummyTTbarEvent();
-	cand.setMET(met);
+	METCollection mets;
+	mets.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
+	mets.at(METAlgorithm::patMETsPFlow) = met;
+	cand.setMETs(mets);
 	cand.setElectronFromW(electron);
 	ASSERT_EQUAL(sqrt(80*80-80.389*80.389), cand.computeNeutrinoPz().at(0));
 	ASSERT_EQUAL(sqrt(80*80-80.389*80.389), cand.computeNeutrinoPz().at(1));
@@ -484,7 +490,11 @@ void TestTopPairEventCandidate::testReconstructTopEventUsingChiWithNotEnoughJets
 	VertexCollection vertices;
 	vertices.push_back(goodVertex);
 	cand.setVertices(vertices);
-	cand.setMET(met);
+	METCollection mets;
+	mets.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
+	mets.at(METAlgorithm::patMETsPFlow) = met;
+
+	cand.setMETs(mets);
 	cand.setElectrons(eCollection);
 	ASSERT_THROWS(cand.reconstructTTbarToEPlusJets(goodIsolatedElectron), ReconstructionException);
 }

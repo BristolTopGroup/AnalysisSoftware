@@ -12,12 +12,12 @@ namespace BAT {
 
 MET::MET() :
     Particle(),
-    usedAlgorithm(METAlgorithm::Calo) {
+    usedAlgorithm(METAlgorithm::patMETsPFlow) {
 }
 
 MET::MET(double ex, double ey) :
     Particle(sqrt(ex * ex + ey * ey), ex, ey, 0),
-    usedAlgorithm(METAlgorithm::Calo),
+    usedAlgorithm(METAlgorithm::patMETsPFlow),
     significance_(0),
     sumET_(0){
 

@@ -251,7 +251,7 @@ bool TopPairEventCandidate::muonPlusJetsLooseElectronVeto() const {
 }
 
 bool TopPairEventCandidate::passesMETCut() const {
-	return met->et() > Globals::METCut;
+	return MET()->et() > Globals::METCut;
 }
 
 bool TopPairEventCandidate::passesAsymmetricElectronCleanedJetCuts() const {
@@ -733,10 +733,10 @@ void TopPairEventCandidate::reconstructTTbarToEPlusJetsFrom3Jets(ElectronPointer
 
 void TopPairEventCandidate::reconstructNeutrinos() {
 	boost::array<double, 2> neutrinoPzs = computeNeutrinoPz();
-	double energy1 = sqrt(met->et() * met->et() + neutrinoPzs.at(0) * neutrinoPzs.at(0));
-	double energy2 = sqrt(met->et() * met->et() + neutrinoPzs.at(1) * neutrinoPzs.at(1));
-	neutrino1 = ParticlePointer(new Particle(energy1, met->px(), met->py(), neutrinoPzs.at(0)));
-	neutrino2 = ParticlePointer(new Particle(energy2, met->px(), met->py(), neutrinoPzs.at(1)));
+	double energy1 = sqrt(MET()->et() * MET()->et() + neutrinoPzs.at(0) * neutrinoPzs.at(0));
+	double energy2 = sqrt(MET()->et() * MET()->et() + neutrinoPzs.at(1) * neutrinoPzs.at(1));
+	neutrino1 = ParticlePointer(new Particle(energy1, MET()->px(), MET()->py(), neutrinoPzs.at(0)));
+	neutrino2 = ParticlePointer(new Particle(energy2, MET()->px(), MET()->py(), neutrinoPzs.at(1)));
 
 	if (std::isnan(neutrino1->energy()) && std::isnan(neutrino2->energy()))
 		throw ReconstructionException("No physical neutrino solution found");
@@ -749,7 +749,7 @@ void TopPairEventCandidate::reconstructNeutrinos() {
 const boost::array<double, 2> TopPairEventCandidate::computeNeutrinoPz() {
 	if (electronFromW == 0)
 		throw ReconstructionException("Could not reconstruct neutrinos: no isolated electrons found");
-	if (met->energy() == 0)
+	if (MET()->energy() == 0)
 		throw ReconstructionException("Could not reconstruct neutrinos: no MET found");
 	boost::array<double, 2> neutrinoPzs;
 	//    const ElectronPointer electron = goodIsolatedElectrons.front();
@@ -760,8 +760,8 @@ const boost::array<double, 2> TopPairEventCandidate::computeNeutrinoPz() {
 	double pxe = electronFromW->px();
 	double pye = electronFromW->py();
 	double pze = electronFromW->pz();
-	double pxnu = met->px();
-	double pynu = met->py();
+	double pxnu = MET()->px();
+	double pynu = MET()->py();
 
 	double a = W_mass * W_mass - M_e * M_e + 2.0 * pxe * pxnu + 2.0 * pye * pynu;
 	double A = 4.0 * (ee * ee - pze * pze);
@@ -1079,7 +1079,7 @@ void TopPairEventCandidate::inspectReconstructedEvent() const {
 	EventContentPrinter::printElectron(electronFromW);
 
 	cout << "MET" << endl;
-	EventContentPrinter::printParticle(met);
+	EventContentPrinter::printParticle(MET());
 	cout << endl;
 
 	cout << "reconstructed neutrino 1(selected: " << selectedNeutrino << ")" << endl;
@@ -1125,7 +1125,7 @@ void TopPairEventCandidate::inspectReconstructedEvent() const {
 }
 
 double TopPairEventCandidate::fullHT() const {
-	double ht(met->pt());
+	double ht(MET()->pt());
 
 	for (unsigned int index = 0; index < goodIsolatedElectrons.size(); ++index) {
 		ht += goodIsolatedElectrons.at(index)->pt();
@@ -1142,8 +1142,8 @@ double TopPairEventCandidate::fullHT() const {
 }
 
 double TopPairEventCandidate::transverseWmass(const ElectronPointer electron) const {
-	double energySquared = pow(electron->et() + met->et(), 2);
-	double momentumSquared = pow(electron->px() + met->px(), 2) + pow(electron->py() + met->py(), 2);
+	double energySquared = pow(electron->et() + MET()->et(), 2);
+	double momentumSquared = pow(electron->px() + MET()->px(), 2) + pow(electron->py() + MET()->py(), 2);
 	double tMassSquared = energySquared - momentumSquared;
 
 	if (tMassSquared > 0)

@@ -53,7 +53,11 @@ void TestEvent::setUpTTbarEvent() {
 	MuonCollection muons;
 	muons.push_back(badMuon);
 	ttbarEvent.setMuons(muons);
-	ttbarEvent.setMET(met);
+	METCollection mets;
+	mets.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
+	mets.at(METAlgorithm::patMETsPFlow) = met;
+
+	ttbarEvent.setMETs(mets);
 }
 
 void TestEvent::setUpGoodZEvent() {
