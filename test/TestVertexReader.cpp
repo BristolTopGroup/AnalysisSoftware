@@ -17,11 +17,11 @@ TestVertexReader::TestVertexReader() :
 }
 
 void TestVertexReader::testVertexZPosition() {
-	ASSERT_EQUAL_DELTA(5.19014, vertex->absoluteZPosition(), 0.00001);
+	ASSERT_EQUAL_DELTA(3.4284, vertex->absoluteZPosition(), 0.00001);
 }
 
 void TestVertexReader::testVertexRho() {
-	ASSERT_EQUAL_DELTA(0.462303, vertex->absoluteRho(), 0.000001);
+	ASSERT_EQUAL_DELTA(0.461604, vertex->absoluteRho(), 0.000001);
 }
 
 void TestVertexReader::testVertexIsFake() {
@@ -29,7 +29,7 @@ void TestVertexReader::testVertexIsFake() {
 }
 
 void TestVertexReader::testVertexNDOF() {
-	ASSERT_EQUAL(69, vertex->ndof());
+	ASSERT_EQUAL(87, vertex->ndof());
 }
 
 cute::suite make_suite_TestVertexReader() {

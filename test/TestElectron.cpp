@@ -53,7 +53,7 @@ void TestElectron::testBadD0Electron() {
 }
 
 void TestElectron::testLooseElectron() {
-	ASSERT_EQUAL(true, badD0Electron->isLoose());
+	ASSERT_EQUAL(false, badD0Electron->isLoose());
 	ASSERT_EQUAL(true, looseElectron->isLoose());
 }
 

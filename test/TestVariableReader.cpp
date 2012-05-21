@@ -33,7 +33,7 @@ void TestVariableReader::testReadSingleVariable() {
 }
 
 void TestVariableReader::testReadMultipleVariable() {
-	ASSERT_EQUAL_DELTA(50.2523, multipleVariableReader->getVariableAt(0), 0.001);
+	ASSERT_EQUAL_DELTA(257.856, multipleVariableReader->getVariableAt(0), 0.001);
 }
 
 void TestVariableReader::testInvalidVariableThrowsException() {

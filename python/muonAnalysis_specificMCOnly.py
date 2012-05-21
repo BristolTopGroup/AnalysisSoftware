@@ -12,11 +12,11 @@ produceFitterASCIIoutput = False
 inputFiles = []
 filetype = '*.root'
 
-mc_path = '/storage/TopQuarkGroup/mc/'
+mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
 mcFolders = [
-                     'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
+                     'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
              ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]

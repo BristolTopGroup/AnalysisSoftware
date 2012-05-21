@@ -144,7 +144,7 @@ void TestNTupleEventReader::testNumberOfElectronsInEvent1() {
 void TestNTupleEventReader::testNumberOfJetsInEvent1() {
 	EventPtr currentEvent = TTbarReader->getNextEvent();
 	cout << TTbarReader->getCurrentLocalEventNumber() << endl;
-	ASSERT_EQUAL(5, currentEvent->Jets().size());
+	ASSERT_EQUAL(3, currentEvent->Jets().size());
 }
 
 void TestNTupleEventReader::testNumberOfMuonsInEvent1() {
@@ -203,7 +203,7 @@ void TestNTupleEventReader::testMCRunNumber() {
 }
 
 void TestNTupleEventReader::testMCLumiBlock() {
-	ASSERT_EQUAL(521065, TTbarReader->getNextEvent()->lumiblock());
+	ASSERT_EQUAL(161061, TTbarReader->getNextEvent()->lumiblock());
 }
 
 void TestNTupleEventReader::testLocalEventNumber() {
@@ -225,7 +225,7 @@ void TestNTupleEventReader::testEventChainConstant() {
 
 void TestNTupleEventReader::testTTbarEventMET() {
 	EventPtr event = TTbarReader->getNextEvent();
-	ASSERT_EQUAL_DELTA(7.69286, event->MET()->et(), 0.001);
+	ASSERT_EQUAL_DELTA(32.0708, event->MET()->et(), 0.001);
 }
 
 void TestNTupleEventReader::testSeenTTbar() {
@@ -268,7 +268,7 @@ void TestNTupleEventReader::testAddInputFileNoFileThrowsException() {
 
 void TestNTupleEventReader::testGenJetsMC() {
 	EventPtr event = TTbarReader->getNextEvent();
-	ASSERT_EQUAL(7, event->GenJets().size());
+	ASSERT_EQUAL(5, event->GenJets().size());
 }
 
 void TestNTupleEventReader::testGenJetsDATA() {

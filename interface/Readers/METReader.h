@@ -22,10 +22,10 @@ public:
     virtual ~METReader();
     void initialise();
 private:
-    VariableReader<MultiDoublePointer> exReader;
-    VariableReader<MultiDoublePointer> eyReader;
-    VariableReader<MultiDoublePointer> significanceReader;
-    VariableReader<MultiDoublePointer> sumETReader;
+    VariableReader<double> exReader;
+    VariableReader<double> eyReader;
+    VariableReader<double> significanceReader;
+    VariableReader<double> sumETReader;
     METPointer met;
     METAlgorithm::value usedAlgorithm;
     void readMET();

@@ -10,11 +10,11 @@ useHitFit = False
 produceFitterASCIIoutput = False
 
 inputFiles = []
-data_path = '/storage/TopQuarkGroup/data/ElectronHad/'
+data_path = '/storage/TopQuarkGroup/data/2011/ElectronHad/'
 filetype = '*.root'
 
-dataFiles = ['nTuple_v6b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
-              'nTuple_v6b_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets']
+dataFiles = ['nTuple_v7a_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
+              'nTuple_v7a_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets']
 
 dataFiles = [data_path + path + '/' + filetype for path in dataFiles]
 

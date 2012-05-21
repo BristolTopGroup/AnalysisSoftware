@@ -11,8 +11,8 @@ produceFitterASCIIoutput = False
 inputFiles = [
 #              '/storage/TopQuarkGroup/data/ElectronHad/nTuple_v6_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
 #              '/storage/TopQuarkGroup/data/MuHad/nTuple_v6_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
-#              '/storage/TopQuarkGroup/mc/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
-              '/storage/TopQuarkGroup/mc/TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
+              '/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset/*.root'
+#              '/storage/TopQuarkGroup/mc/TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
 #             '/storage/TopQuarkGroup/mc/TTbarInclWIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
               ]
 
@@ -32,3 +32,4 @@ if centerOfMassEnergy == 7:
     datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo_8TeV.py"
+nTuple_version = 6

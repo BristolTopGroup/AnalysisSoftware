@@ -17,7 +17,7 @@ TestMETReader::TestMETReader() :
 }
 
 void TestMETReader::testPFMET() {
-	ASSERT_EQUAL_DELTA(7.69286, pfmet->et(), 0.0001);
+	ASSERT_EQUAL_DELTA(32.0708, pfmet->et(), 0.0001);
 }
 
 void TestMETReader::testPFMETRAW() {
@@ -25,11 +25,11 @@ void TestMETReader::testPFMETRAW() {
 }
 
 void TestMETReader::testPFSignificance() {
-	ASSERT_EQUAL_DELTA(0.39553, pfmet->significance(), 0.0001);
+	ASSERT_EQUAL_DELTA(14.231, pfmet->significance(), 0.0001);
 }
 
 void TestMETReader::testPFSumET() {
-	ASSERT_EQUAL_DELTA(632.157, pfmet->sumET(), 0.001);
+	ASSERT_EQUAL_DELTA(440.114, pfmet->sumET(), 0.001);
 }
 
 cute::suite make_suite_TestMETReader() {

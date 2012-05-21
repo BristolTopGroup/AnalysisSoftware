@@ -13,13 +13,13 @@ inputFiles = []
 filetype = '*.root'
 
 
-mc_path = '/storage/TopQuarkGroup/mc/'
+mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
 mcFolders = [
-#           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+#           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #only a subset (first 3 files of complete samples. Remember to change the weight as well (DataSetInfo.py)!
-           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset',
+           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset',
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]

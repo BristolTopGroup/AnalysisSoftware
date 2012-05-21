@@ -28,11 +28,11 @@ TestElectronReader::TestElectronReader() :
 }
 
 void TestElectronReader::testReadElectronsSize() {
-	ASSERT_EQUAL(1, electrons.size());
+	ASSERT_EQUAL(2, electrons.size());
 }
 
 void TestElectronReader::testReadFirstElectronEnergy() {
-	ASSERT_EQUAL_DELTA(50.2523, firstElectron->energy(), 0.001);
+	ASSERT_EQUAL_DELTA(257.856, firstElectron->energy(), 0.001);
 }
 
 void TestElectronReader::testReadFirstElectronIsIsolated() {
@@ -40,15 +40,15 @@ void TestElectronReader::testReadFirstElectronIsIsolated() {
 }
 
 void TestElectronReader::testFirstElectronSigmaEtaEta() {
-	ASSERT_EQUAL_DELTA(0.0089932, firstElectron->sigmaIEtaIEta(), 0.0000001);
+	ASSERT_EQUAL_DELTA(0.0211602, firstElectron->sigmaIEtaIEta(), 0.0000001);
 }
 
 void TestElectronReader::testFirstElectronDPhiIn() {
-	ASSERT_EQUAL_DELTA(-0.00186157, firstElectron->dPhiIn(), 0.0000001);
+	ASSERT_EQUAL_DELTA(-0.00968266, firstElectron->dPhiIn(), 0.0000001);
 }
 
 void TestElectronReader::testFirstElectronDEtaIn() {
-	ASSERT_EQUAL_DELTA(-0.00117373, firstElectron->dEtaIn(), 0.0000001);
+	ASSERT_EQUAL_DELTA(-0.00388098, firstElectron->dEtaIn(), 0.0000001);
 }
 
 void TestElectronReader::testFirstElectronHadOverEm() {
@@ -60,7 +60,7 @@ void TestElectronReader::testFirstElectronCharge() {
 }
 
 void TestElectronReader::testFirstElectronD0() {
-	ASSERT_EQUAL_DELTA(0.00216157, firstElectron->d0(), 0.0000001);
+	ASSERT_EQUAL_DELTA(0.0127306, firstElectron->d0(), 0.0000001);
 }
 
 void TestElectronReader::testShFracInnerHits() {
@@ -113,19 +113,19 @@ void TestElectronReader::testCiCElectronIDHyperTight4MC() {
 }
 
 void TestElectronReader::testPFRelIso03() {
-	ASSERT_EQUAL_DELTA(0.0117867, firstElectron->pfRelativeIsolation(0.3), 0.0000001);
+	ASSERT_EQUAL_DELTA(0.0137179, firstElectron->pfRelativeIsolation(0.3), 0.0000001);
 }
 
 void TestElectronReader::testPFRelIso04() {
-	ASSERT_EQUAL_DELTA(0.0268713, firstElectron->pfRelativeIsolation(0.4), 0.0000001);
+	ASSERT_EQUAL_DELTA(0.022701, firstElectron->pfRelativeIsolation(0.4), 0.0000001);
 }
 
 void TestElectronReader::testPFRelIso05() {
-	ASSERT_EQUAL_DELTA(0.0610566, firstElectron->pfRelativeIsolation(0.5), 0.0000001);
+	ASSERT_EQUAL_DELTA(0.022701, firstElectron->pfRelativeIsolation(0.5), 0.0000001);
 }
 
 void TestElectronReader::testPFRelIso03FallOff() {
-	ASSERT_EQUAL_DELTA(41.6861, firstElectron->pfIsolationWithGaussianFallOff(0.3), 0.0001);
+	ASSERT_EQUAL_DELTA(65.9962, firstElectron->pfIsolationWithGaussianFallOff(0.3), 0.0001);
 }
 
 void TestElectronReader::testDirectionalRelIso02() {
@@ -133,15 +133,15 @@ void TestElectronReader::testDirectionalRelIso02() {
 }
 
 void TestElectronReader::testDirectionalRelIso03() {
-	ASSERT_EQUAL_DELTA(0.0, firstElectron->directionalIsolation(0.3), 0.0000001);
+	ASSERT_EQUAL_DELTA(1.32731, firstElectron->directionalIsolation(0.3), 0.00001);
 }
 
 void TestElectronReader::testDirectionalRelIso02FallOff() {
-	ASSERT_EQUAL_DELTA(0.101282, firstElectron->directionalIsolationWithGaussianFallOff(0.2), 0.000001);
+	ASSERT_EQUAL_DELTA(2.26685, firstElectron->directionalIsolationWithGaussianFallOff(0.2), 0.00001);
 }
 
 void TestElectronReader::testDirectionalRelIso03FallOff() {
-	ASSERT_EQUAL_DELTA(2.69377, firstElectron->directionalIsolationWithGaussianFallOff(0.3), 0.00001);
+	ASSERT_EQUAL_DELTA(2.8498, firstElectron->directionalIsolationWithGaussianFallOff(0.3), 0.00001);
 }
 
 cute::suite make_suite_TestElectronReader() {

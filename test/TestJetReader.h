@@ -13,9 +13,9 @@ using namespace BAT;
 struct TestJetReader {
 private:
 	boost::shared_ptr<TChain> input;
-	boost::scoped_ptr<JetReader> reader, PFCA08Jetreader;
-	JetCollection jets, pfCA08jets;
-	JetPointer firstJet, firstPFJet;
+	boost::scoped_ptr<JetReader> reader;
+	JetCollection jets;
+	JetPointer firstJet;
 
 public:
 	TestJetReader();
@@ -25,13 +25,7 @@ public:
 	void testReadFirstJetEMF();
 	void testReadFirstJetn90Hits();
 	void testReadFirstJetfHPD();
-	void testReadPFJetsSize();
-	void testReadFirstPFJetEnergy();
-	void testReadFirstPFJetEMF();
-	void testReadFirstPFJetn90Hits();
-	void testReadFirstPFJetfHPD();
 	void testUsedAlgorithmDefault();
-	void testUsedAlgorithmPFJet();
 
 };
 extern cute::suite make_suite_TestJetReader();

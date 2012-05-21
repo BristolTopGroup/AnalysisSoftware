@@ -236,6 +236,7 @@ void ConfigFile::loadIntoMemory() {
 	Globals::lightL7Corrections = getL7Correction(lightJetResoFile());
 
 	Globals::NTupleVersion = nTupleVersion();
+	Globals::energyInTeV = centerOfMassEnergy();
 }
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {

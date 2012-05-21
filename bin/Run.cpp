@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 	cout << "Number of events processed per minute: " << eventsPerMinute << endl;
 	watch.Print();
 	watch.Reset();
-	cout << "Finishing up analysis and writing histograms do disk (wait for \"Analysis finished\"" << endl;
+	cout << "Finishing up analysis and writing histograms do disk (wait for \"Analysis finished\")" << endl;
 	watch.Start();
 	myAnalysis->finishAnalysis();
 	watch.Stop();

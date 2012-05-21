@@ -29,23 +29,23 @@ void TestMuonReader::testNumberOfMuons() {
 }
 
 void TestMuonReader::testLeadingMuonEnergy() {
-	ASSERT_EQUAL_DELTA(69.8599, leadingMuon->energy(), 0.0001);
+	ASSERT_EQUAL_DELTA(95.381, leadingMuon->energy(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonPx() {
-	ASSERT_EQUAL_DELTA(-1.87493, leadingMuon->px(), 0.0001);
+	ASSERT_EQUAL_DELTA(5.70759, leadingMuon->px(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonPy() {
-	ASSERT_EQUAL_DELTA(-28.8254, leadingMuon->py(), 0.0001);
+	ASSERT_EQUAL_DELTA(30.843, leadingMuon->py(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonPz() {
-	ASSERT_EQUAL_DELTA(63.608, leadingMuon->pz(), 0.0001);
+	ASSERT_EQUAL_DELTA(-90.0759, leadingMuon->pz(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonRelativeIsolation() {
-	ASSERT_EQUAL_DELTA(0.0931756, leadingMuon->relativeIsolation(), 0.00001);
+	ASSERT_EQUAL_DELTA(0, leadingMuon->relativeIsolation(), 0.00001);
 }
 
 void TestMuonReader::testLeadingMuonIsGlobal() {

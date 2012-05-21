@@ -13,10 +13,10 @@ inputFiles = []
 filetype = '*.root'
 
 
-mc_path = '/storage/TopQuarkGroup/mc/'
+mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
-mcFolders = ['DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v6b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+mcFolders = ['DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]

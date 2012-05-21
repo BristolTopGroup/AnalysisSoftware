@@ -17,7 +17,7 @@
 ####################################################################################################
 
 datasetInfo = {}
-datasetInfo['TTJet'] = {"cross-section": 225.197, "NumberOfProcessedEvents":59414270}
+datasetInfo['TTJets'] = {"cross-section": 225.197, "NumberOfProcessedEvents":59414270}
 #if using the designated subset:
 #datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":3636129}
 datasetInfo['WJetsToLNu'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":75476429}
@@ -91,7 +91,6 @@ datasetInfo['WJetsToLNu-matchingup'] = {"cross-section": 11439, "NumberOfProcess
 datasetInfo['WJetsToLNu-scaledown'] = {"cross-section": 20137, "NumberOfProcessedEvents":10092532}
 datasetInfo['WJetsToLNu-scaleup'] = {"cross-section": 17859, "NumberOfProcessedEvents":9756359}
 
-#Data and not used samples
+#Data
 datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 datasetInfo['MuHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['TTJetsFall11'] = {"cross-section": 0, "NumberOfProcessedEvents":0}

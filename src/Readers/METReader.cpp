@@ -8,10 +8,6 @@
 #include "../../interface/Readers/METReader.h"
 
 namespace BAT {
-//const std::string METReader::algorithmPrefixes[METAlgorithm::NUMBER_OF_METALGORITHMS] = {
-//        "mets",
-//        "tcmets",
-//        "PFMets" };
 
 METReader::METReader() :
     exReader(), eyReader(), met() {
@@ -22,7 +18,7 @@ METReader::METReader(TChainPointer input, METAlgorithm::value algo) :
     exReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"),
     eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"),
     significanceReader(input, METAlgorithm::prefixes.at(algo) + ".Significance"),
-    sumETReader(input, METAlgorithm::prefixes.at(algo) + ".SumET") {
+    sumETReader(input, "Event.SumET") {
 
 }
 
@@ -42,8 +38,8 @@ const METPointer METReader::getMET() {
 }
 
 void METReader::readMET() {
-    met = METPointer(new MET(exReader.getVariableAt(0), eyReader.getVariableAt(0)));
-    met->setSignificance(significanceReader.getVariableAt(0));
-    met->setSumET(sumETReader.getVariableAt(0));
+    met = METPointer(new MET(exReader.getVariable(), eyReader.getVariable()));
+    met->setSignificance(significanceReader.getVariable());
+    met->setSumET(sumETReader.getVariable());
 }
 }

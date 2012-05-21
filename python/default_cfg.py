@@ -10,7 +10,7 @@ useHitFit = False
 produceFitterASCIIoutput = False
 
 #input files for analysis
-inputFiles = ['/storage/TopQuarkGroup/data/ElectronHad/nTuple_v6b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/ElectronHad_*001.root']
+inputFiles = ['/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v7a_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/ElectronHad_*001.root']
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
 TQAFPath = ""
@@ -29,6 +29,6 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = "BristolAnalysis/Tools/python/DataSetInfo_8TeV.py"
     
-nTuple_version = 6
+nTuple_version = 7
 
     

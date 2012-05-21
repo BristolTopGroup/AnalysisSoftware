@@ -19,15 +19,15 @@ TestGenJetReader::TestGenJetReader() :
 }
 
 void TestGenJetReader::testReadJetsSize() {
-	ASSERT_EQUAL(8, genJets.size());
+	ASSERT_EQUAL(4, genJets.size());
 }
 
 void TestGenJetReader::testReadFirstJetEnergy() {
-	ASSERT_EQUAL_DELTA(642.435, firstJet->energy(), 0.001);
+	ASSERT_EQUAL_DELTA(196.684, firstJet->energy(), 0.001);
 }
 
 void TestGenJetReader::testReadFirstJetEMF() {
-	ASSERT_EQUAL_DELTA(0.578493, firstJet->emf(), 0.00001);
+	ASSERT_EQUAL_DELTA(0.169122, firstJet->emf(), 0.00001);
 }
 
 cute::suite make_suite_TestGenJetReader() {

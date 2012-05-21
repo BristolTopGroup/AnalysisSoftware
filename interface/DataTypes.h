@@ -64,7 +64,6 @@ enum value {
 	TTJets_matchingup,
 	TTJets_scaledown,
 	TTJets_scaleup,
-	TTJetsFall11,
 	WJets_matchingdown,
 	WJets_matchingup,
 	WJets_scaledown,
@@ -88,16 +87,16 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_Pt-30to80_EMEnriched", //
 		"QCD_Pt-80to170_EMEnriched", //10
 		"QCD_Pt-20_MuEnrichedPt-15", //
-		"GJets_TuneD6T_HT-40To100", //
-		"GJets_TuneD6T_HT-100To200", //
-		"GJets_TuneD6T_HT-200", //
+		"GJets_HT-40To100", //
+		"GJets_HT-100To200", //
+		"GJets_HT-200", //
 		"VqqJets", //
-		"T_TuneZ2_tW-channel", //
-		"T_TuneZ2_t-channel", //
-		"T_TuneZ2_s-channel", //
-		"Tbar_TuneZ2_tW-channel", //
-		"Tbar_TuneZ2_t-channel", //20
-		"Tbar_TuneZ2_s-channel", //
+		"T_tW-channel", //
+		"T_t-channel", //
+		"T_s-channel", //
+		"Tbar_tW-channel", //
+		"Tbar_t-channel", //20
+		"Tbar_s-channel", //
 		"Zprime_M500GeV_W5GeV", //
 		"Zprime_M500GeV_W50GeV", //
 		"Zprime_M750GeV_W7500MeV", //
@@ -127,7 +126,6 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TTJets-matchingup", //
 		"TTJets-scaledown", //
 		"TTJets-scaleup", //
-		"TTJetsFall11", //
 		"WJetsToLNu-matchingdown", //
 		"WJetsToLNu-matchingup", //
 		"WJetsToLNu-scaledown", //
