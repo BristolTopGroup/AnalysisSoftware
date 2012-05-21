@@ -14,8 +14,6 @@ namespace BAT {
 
 class METReader {
 public:
-//    const static std::string algorithmPrefixes[METAlgorithm::NUMBER_OF_METALGORITHMS];
-
     METReader();
     METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::patMETsPFlow);
     const METPointer getMET();

@@ -72,7 +72,6 @@ private:
 	boost::scoped_ptr<JetReader> jetReader;
 	boost::scoped_ptr<GenJetReader> genJetReader;
 	boost::scoped_ptr<MuonReader> muonReader;
-//	boost::scoped_ptr<METReader> metReader;
 	std::vector<boost::shared_ptr<METReader> > metReaders;
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
