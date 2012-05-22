@@ -38,30 +38,30 @@ void Analysis::analyse() {
 		selectionCommissioning_->analyse(currentEvent);
 
 		bjetAnalyser->analyse(ttbarCandidate);
-		diElectronAnalyser->analyse(ttbarCandidate);
+//		diElectronAnalyser->analyse(ttbarCandidate);
 		electronAnalyser->analyse(ttbarCandidate);
 		eventcountAnalyser->analyse(currentEvent);
 
-		hltriggerAnalyser->analyse(ttbarCandidate);
+//		hltriggerAnalyser->analyse(ttbarCandidate);
 		jetAnalyser->analyse(ttbarCandidate);
 		if (currentEvent->getDataType() == DataType::TTJets) {
-			mcAnalyser->analyse(ttbarCandidate);
+//			mcAnalyser->analyse(ttbarCandidate);
 			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
 			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
-			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
-			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
+//			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
+//			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
 		}
 		//hitfit analyser has to be after mcAnalyser as it depends on it
 		if (Globals::useHitFit) {
 			hitfitAnalyser->analyse(ttbarCandidate);
 		}
 		metAnalyser->analyse(ttbarCandidate);
-		mttbarAnalyser->analyse(ttbarCandidate);
+//		mttbarAnalyser->analyse(ttbarCandidate);
 		muonAnalyser->analyse(ttbarCandidate);
-		mvAnalyser->analyse(ttbarCandidate);
-		neutrinoRecoAnalyser->analyse(currentEvent);
-		qcdAnalyser->analyse(ttbarCandidate);
-		topRecoAnalyser->analyse(ttbarCandidate);
+//		mvAnalyser->analyse(ttbarCandidate);
+//		neutrinoRecoAnalyser->analyse(currentEvent);
+//		qcdAnalyser->analyse(ttbarCandidate);
+//		topRecoAnalyser->analyse(ttbarCandidate);
 		ttbarPlusMETAnalyser_->analyse(currentEvent);
 		vertexAnalyser->analyse(ttbarCandidate);
 
@@ -174,42 +174,7 @@ void Analysis::printInterestingEvents() {
 }
 
 void Analysis::printSummary() {
-//	EventTablePrinter::printCutFlowLatexTable(ePlusJetsCutflowPerSample, TTbarEPlusJetsSelection::StringSteps,
-//			Globals::luminosity);
-//	EventTablePrinter::printUnweightedCutFlowLatexTable(ePlusJetsCutflowPerSample,
-//			TTbarEPlusJetsSelection::StringSteps, Globals::luminosity);
-//
-//	cout << "Muon + jets selection" << endl;
-//	EventTablePrinter::printCutFlowLatexTable(muPlusJetsCutflowPerSample, TTbarMuPlusJetsSelection::StringSteps,
-//			Globals::luminosity);
-//	EventTablePrinter::printUnweightedCutFlowLatexTable(muPlusJetsCutflowPerSample,
-//			TTbarMuPlusJetsSelection::StringSteps, Globals::luminosity);
-
 	cout << "total number of processed events: " << eventReader->getNumberOfProccessedEvents() << endl;
-	cout << endl;
-//	cout << "Electron + jets selection" << endl;
-//	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-//		cout << "Selection step '" << TTbarEPlusJetsSelection::StringSteps[cut] << "'" << endl;
-//		cout << "passed events (single cut): " << ePlusJetsSingleCuts.at(cut) << endl;
-//		if (cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS)
-//			cout << "passed events (up to this cut):" << ePlusJetsCutflow.at(cut) << endl;
-//		else
-//			cout << "passed events (full selection):" << ePlusJetsCutflow.at(cut) << endl;
-//		cout << endl;
-//	}
-//
-//	cout << "Muon + jets selection" << endl;
-//	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-//		cout << "Selection step '" << TTbarMuPlusJetsSelection::StringSteps[cut] << "'" << endl;
-//		cout << "passed events (single cut): " << muPlusJetsSingleCuts.at(cut) << endl;
-//
-//		if (cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS)
-//			cout << "passed events (up to this cut):" << muPlusJetsCutFlow.at(cut) << endl;
-//		else
-//			cout << "passed events (full selection):" << muPlusJetsCutFlow.at(cut) << endl;
-//		cout << endl;
-//	}
-
 	cout << "number of events without electrons: " << brokenEvents.size() << endl;
 	cout << "number of events with too high pileup: " << weights->getNumberOfEventsWithTooHighPileUp() << endl;
 }
@@ -218,20 +183,20 @@ void Analysis::createHistograms() {
 	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
 	bjetAnalyser->createHistograms();
-	diElectronAnalyser->createHistograms();
+//	diElectronAnalyser->createHistograms();
 	electronAnalyser->createHistograms();
 	eventcountAnalyser->createHistograms();
-	hitfitAnalyser->createHistograms();
-	hltriggerAnalyser->createHistograms();
+//	hitfitAnalyser->createHistograms();
+//	hltriggerAnalyser->createHistograms();
 	jetAnalyser->createHistograms();
-	mcAnalyser->createHistograms();
+//	mcAnalyser->createHistograms();
 	metAnalyser->createHistograms();
-	mttbarAnalyser->createHistograms();
+//	mttbarAnalyser->createHistograms();
 	muonAnalyser->createHistograms();
-	mvAnalyser->createHistograms();
-	neutrinoRecoAnalyser->createHistograms();
-	qcdAnalyser->createHistograms();
-	topRecoAnalyser->createHistograms();
+//	mvAnalyser->createHistograms();
+//	neutrinoRecoAnalyser->createHistograms();
+//	qcdAnalyser->createHistograms();
+//	topRecoAnalyser->createHistograms();
 	ttbarPlusMETAnalyser_->createHistograms();
 	vertexAnalyser->createHistograms();
 
