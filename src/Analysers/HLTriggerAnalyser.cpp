@@ -95,9 +95,8 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 		const JetPointer jet1(cleanedJets.front());
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30";
 		if (isData) {
-			passesPreCondition = (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-					|| event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-					|| event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && event->runnumber() <= 178380;
+			passesPreCondition = (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT))
+					&& event->runnumber() <= 178380;
 		} else {
 			//no pre-trigger for MC as triggers here are not prescaled
 			passesPreCondition = true;
@@ -113,9 +112,7 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 
 			if (isData) {
 				passesPreCondition = event->runnumber() > 165970
-						&& (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-								|| event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-								|| event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
+						&& (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT));
 				passesTrigger = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralJet30);
 			} else {
@@ -245,9 +242,8 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 		const JetPointer jet1(cleanedJets.front());
 		histFolder = "HLTStudy/HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30";
 		if (isData) {
-			passesPreCondition = (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-					|| event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-					|| event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20)) && event->runnumber() > 178380;
+			passesPreCondition = (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT))
+					&& event->runnumber() > 178380;
 			passesTrigger = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
 			prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralPFJet30);
 		} else {
@@ -265,9 +261,7 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 
 			if (isData) {
 				passesPreCondition = event->runnumber() > 178380
-						&& (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT)
-								|| event->HLT(HLTriggers::HLT_Ele25_WP80_PFMT40)
-								|| event->HLT(HLTriggers::HLT_Ele27_WP70_PFMT40_PFMHT20));
+						&& (event->HLT(HLTriggers::HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT));
 				passesTrigger = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
 				prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_CentralPFJet30);
 			} else {
