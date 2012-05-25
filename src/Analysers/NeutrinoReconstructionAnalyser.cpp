@@ -95,9 +95,9 @@ void NeutrinoReconstructionAnalyser::createHistograms() {
 	histMan_->addH1D("Neutrino_phi_resolution", "Neutrino_phi resolution; #phi_{#nu} - #phi_{MET}; events/0.01", 800,
 			-4., 4);
 
-	histMan_->addH2D("Neutrino_px_vs_MET_px", "p_{x}(#nu) vs p_{x}(MET);p_{x}(MET) (GeV); p_{x}(#nu) (GeV)", 500, 0.,
+	histMan_->addH2D("Neutrino_px_vs_MET_px", "p_{x}(#nu) vs p_{x}(MET);p_{x}(MET) (GeV); p_{x}(#nu) (GeV)", 100, 0.,
 			500, 500, 0., 500);
-	histMan_->addH2D("Neutrino_py_vs_MET_py", "p_{y}(#nu) vs p_{y}(MET);p_{y}(MET) (GeV); p_{y}(#nu) (GeV)", 500, 0.,
+	histMan_->addH2D("Neutrino_py_vs_MET_py", "p_{y}(#nu) vs p_{y}(MET);p_{y}(MET) (GeV); p_{y}(#nu) (GeV)", 100, 0.,
 			500, 500, 0., 500);
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/BasicReco");
