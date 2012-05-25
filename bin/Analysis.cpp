@@ -38,34 +38,33 @@ void Analysis::analyse() {
 		selectionCommissioning_->analyse(currentEvent);
 
 		bjetAnalyser->analyse(ttbarCandidate);
-//		diElectronAnalyser->analyse(ttbarCandidate);
+		diElectronAnalyser->analyse(ttbarCandidate);
 		electronAnalyser->analyse(ttbarCandidate);
 		eventcountAnalyser->analyse(currentEvent);
 
-//		hltriggerAnalyser->analyse(ttbarCandidate);
+		hltriggerAnalyser->analyse(ttbarCandidate);
 		jetAnalyser->analyse(ttbarCandidate);
 		if (currentEvent->getDataType() == DataType::TTJets) {
-//			mcAnalyser->analyse(ttbarCandidate);
+			mcAnalyser->analyse(ttbarCandidate);
 			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
 			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
-//			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
-//			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
+			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
+			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
 		}
 		//hitfit analyser has to be after mcAnalyser as it depends on it
 		if (Globals::useHitFit) {
 			hitfitAnalyser->analyse(ttbarCandidate);
 		}
-		metAnalyser->analyse(ttbarCandidate);
-//		mttbarAnalyser->analyse(ttbarCandidate);
+//		metAnalyser->analyse(ttbarCandidate);
+		mttbarAnalyser->analyse(ttbarCandidate);
 		muonAnalyser->analyse(ttbarCandidate);
 //		mvAnalyser->analyse(ttbarCandidate);
 //		neutrinoRecoAnalyser->analyse(currentEvent);
 //		qcdAnalyser->analyse(ttbarCandidate);
-//		topRecoAnalyser->analyse(ttbarCandidate);
 		ttbarPlusMETAnalyser_->analyse(currentEvent);
 		vertexAnalyser->analyse(ttbarCandidate);
 
-		//TODO: move to TTbarAnalysis
+//TODO: move to TTbarAnalysis
 		doTTbarCutFlow();
 //TODO: to be tidied up
 		//                doSynchExercise();
@@ -93,8 +92,8 @@ void Analysis::initiateEvent() {
 	weight = weights->getWeight(currentEvent->getDataType());
 	if (!currentEvent->isRealData()) {
 		//TODO: fix this dirty little thing
-		if(Globals::NTupleVersion >= 6)
-		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
+		if (Globals::NTupleVersion >= 6)
+			pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
 		else
 			pileUpWeight = 1.;
 		weight *= pileUpWeight;
@@ -181,25 +180,88 @@ void Analysis::printSummary() {
 
 void Analysis::createHistograms() {
 	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
-
+	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
 	bjetAnalyser->createHistograms();
-//	diElectronAnalyser->createHistograms();
-	electronAnalyser->createHistograms();
-	eventcountAnalyser->createHistograms();
-//	hitfitAnalyser->createHistograms();
-//	hltriggerAnalyser->createHistograms();
-	jetAnalyser->createHistograms();
-//	mcAnalyser->createHistograms();
-	metAnalyser->createHistograms();
-//	mttbarAnalyser->createHistograms();
-	muonAnalyser->createHistograms();
-//	mvAnalyser->createHistograms();
-//	neutrinoRecoAnalyser->createHistograms();
-//	qcdAnalyser->createHistograms();
-//	topRecoAnalyser->createHistograms();
-	ttbarPlusMETAnalyser_->createHistograms();
-	vertexAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by bjetAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
 
+	diElectronAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by diElectronAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	electronAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by electronAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	eventcountAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by eventcountAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	hitfitAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by hitfitAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	hltriggerAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by hltriggerAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	jetAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by jetAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	mcAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by mcAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+//	metAnalyser->createHistograms();
+//	numberOfHistograms = histMan->size();
+//	cout << "Number of histograms added by metAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+//	lastNumberOfHistograms = numberOfHistograms;
+
+	mttbarAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by mttbarAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	muonAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by muonAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+//	mvAnalyser->createHistograms();
+//	numberOfHistograms = histMan->size();
+//	cout << "Number of histograms added by mvAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+//	lastNumberOfHistograms = numberOfHistograms;
+
+//	neutrinoRecoAnalyser->createHistograms();
+//	numberOfHistograms = histMan->size();
+//	cout << "Number of histograms added by neutrinoRecoAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+//	lastNumberOfHistograms = numberOfHistograms;
+
+//	qcdAnalyser->createHistograms();
+//	numberOfHistograms = histMan->size();
+//	cout << "Number of histograms added by qcdAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+//	lastNumberOfHistograms = numberOfHistograms;
+
+	ttbarPlusMETAnalyser_->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by ttbarPlusMETAnalyser_: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	vertexAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by vertexAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	cout << "Total number of histograms: " << histMan->size() << endl;
 }
 
 Analysis::Analysis(std::string datasetInfoFile) : //
@@ -235,9 +297,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		mttbarAnalyser(new MTtbarAnalyser(histMan)), //
 		muonAnalyser(new MuonAnalyser(histMan)), //
 		mvAnalyser(new MVAnalyser(histMan)), //
-		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)),//
+		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
 		qcdAnalyser(new QCDAnalyser(histMan)), //
-		topRecoAnalyser(new TopReconstructionAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)), //
 		selectionCommissioning_(new Selections(histMan)) {
@@ -257,7 +318,7 @@ Analysis::~Analysis() {
 
 }
 
-void Analysis::finishAnalysis(){
+void Analysis::finishAnalysis() {
 	printSummary();
 	histMan->writeToDisk();
 }

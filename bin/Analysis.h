@@ -85,7 +85,6 @@ private:
     BAT::MVAnalyserPtr mvAnalyser;
     BAT::NeutrinoRecoAnalyserLocalPtr neutrinoRecoAnalyser;
     boost::scoped_ptr<BAT::QCDAnalyser> qcdAnalyser;
-    boost::scoped_ptr<BAT::TopReconstructionAnalyser> topRecoAnalyser;
     BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
 
