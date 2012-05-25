@@ -16,32 +16,41 @@ using namespace BAT;
 
 struct TestHistogramManager {
 private:
-    HistogramManager man;
-    float lumi;
-    string expectedTtbarFile, expectedDataFile;
+	HistogramManager man;
+	float lumi;
+	string expectedTtbarFile, expectedDataFile;
 public:
-    TestHistogramManager();
-    ~TestHistogramManager();
+	TestHistogramManager();
+	~TestHistogramManager();
 
-    void testPreparationData();
+	void testPreparationData();
 
-    void testPreparationTtbar();
-    void testDataFile();
-    void testPreparationData2D();
-    void testPreparationDatajetBinned();
-    void testNumberOf1DJetHistsInFile();
-    void testNumberOf2DJetHistsInFile();
-    void testNumberOf1DBJetHistsInFile();
-    void testNumberOf2DBJetHistsInFile();
-    void testJetBinnedHistInFile();
-    void testAddCollection();
-    void testAddCollectionWithoutAdd();
-    void throwExceptionWhenAccessingNonExistentHistIn1DCollection();
-    void throwExceptionWhenAccessingNonExistentHistIn1DBJetCollection();
-    void throwExceptionWhenAccessingNonExistentHistIn1DJetCollection();
-    void throwExceptionWhenAccessingNonExistentHistIn2DCollection();
-    void throwExceptionWhenAccessingNonExistentHistIn2DBJetCollection();
-    void throwExceptionWhenAccessingNonExistentHistIn2DJetCollection();
+	void testPreparationTtbar();
+	void testDataFile();
+	void testPreparationData2D();
+	void testPreparationDatajetBinned();
+	void testPreparationDataBjetBinned();
+
+	void testNumberOf1DJetHistsInFile();
+	void testNumberOf2DJetHistsInFile();
+	void testNumberOf3DJetHistsInFile();
+
+	void testNumberOf1DBJetHistsInFile();
+	void testNumberOf2DBJetHistsInFile();
+	void testNumberOf3DBJetHistsInFile();
+
+	void testJetBinnedHistInFile();
+	void testAddCollection();
+	void testAddCollectionWithoutAdd();
+	void throwExceptionWhenAccessingNonExistentHistIn1DCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn1DBJetCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn1DJetCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn2DCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn2DBJetCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn2DJetCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn3DCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn3DBJetCollection();
+	void throwExceptionWhenAccessingNonExistentHistIn3DJetCollection();
 
 };
 

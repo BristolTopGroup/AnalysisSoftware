@@ -73,6 +73,14 @@ void TestHistogramManager::testPreparationDatajetBinned() {
 	ASSERT(man.H1D_JetBinned("myHistJeted") != 0);
 }
 
+void TestHistogramManager::testPreparationDataBjetBinned() {
+	man.addH1D_BJetBinned("myHistJeted", "Testing", 10, 0., 1);
+	man.setCurrentDataType(DataType::ElectronHad);
+	man.setCurrentBJetBin(0);
+	man.setCurrentHistogramFolder("");
+	ASSERT(man.H1D_BJetBinned("myHistJeted") != 0);
+}
+
 void TestHistogramManager::testNumberOf1DJetHistsInFile() {
 	man.addH1D_JetBinned("myHistJeted", "Testing", 10, 0., 1);
 	man.writeToDisk();
@@ -87,6 +95,13 @@ void TestHistogramManager::testNumberOf2DJetHistsInFile() {
 	ASSERT_EQUAL(JetBin::NUMBER_OF_JET_BINS + JetBinSummed::NUMBER_OF_SUMMED_JET_BINS, file->GetNkeys());
 }
 
+void TestHistogramManager::testNumberOf3DJetHistsInFile() {
+	man.addH3D_JetBinned("myHistJeted", "Testing", 10, 0., 1, 10, 0., 1, 10, 0., 1);
+	man.writeToDisk();
+	boost::shared_ptr<TFile> file(new TFile(expectedDataFile.c_str()));
+	ASSERT_EQUAL(JetBin::NUMBER_OF_JET_BINS + JetBinSummed::NUMBER_OF_SUMMED_JET_BINS, file->GetNkeys());
+}
+
 void TestHistogramManager::testNumberOf1DBJetHistsInFile() {
 	man.addH1D_BJetBinned("myHist", "Testing", 10, 0., 1);
 	man.writeToDisk();
@@ -96,6 +111,13 @@ void TestHistogramManager::testNumberOf1DBJetHistsInFile() {
 
 void TestHistogramManager::testNumberOf2DBJetHistsInFile() {
 	man.addH2D_BJetBinned("myHist", "Testing", 10, 0., 1, 10, 0., 1);
+	man.writeToDisk();
+	boost::shared_ptr<TFile> file(new TFile(expectedDataFile.c_str()));
+	ASSERT_EQUAL(BJetBin::NUMBER_OF_BJET_BINS + BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS, file->GetNkeys());
+}
+
+void TestHistogramManager::testNumberOf3DBJetHistsInFile() {
+	man.addH3D_BJetBinned("myHist", "Testing", 10, 0., 1, 10, 0., 1, 10, 0., 1);
 	man.writeToDisk();
 	boost::shared_ptr<TFile> file(new TFile(expectedDataFile.c_str()));
 	ASSERT_EQUAL(BJetBin::NUMBER_OF_BJET_BINS + BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS, file->GetNkeys());
@@ -165,6 +187,21 @@ void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn2DJetColl
 	ASSERT_THROWS(man.H2D_JetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
 }
 
+void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn3DCollection() {
+	man.setCurrentHistogramFolder("test");
+	ASSERT_THROWS(man.H3D("tfdgsdf")->Fill(12), HistogramAccessException);
+}
+
+void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn3DBJetCollection() {
+	man.setCurrentHistogramFolder("test");
+	ASSERT_THROWS(man.H3D_BJetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+}
+
+void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn3DJetCollection() {
+	man.setCurrentHistogramFolder("test");
+	ASSERT_THROWS(man.H3D_JetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+}
+
 extern cute::suite make_suite_TestHistogramManager() {
 	cute::suite s;
 
@@ -173,10 +210,13 @@ extern cute::suite make_suite_TestHistogramManager() {
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testDataFile));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testPreparationData2D));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testPreparationDatajetBinned));
+	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testPreparationDataBjetBinned));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testNumberOf1DJetHistsInFile));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testNumberOf2DJetHistsInFile));
+	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testNumberOf3DJetHistsInFile));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testNumberOf1DBJetHistsInFile));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testNumberOf2DBJetHistsInFile));
+	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testNumberOf3DBJetHistsInFile));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testJetBinnedHistInFile));
 
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, testAddCollection));
@@ -189,6 +229,10 @@ extern cute::suite make_suite_TestHistogramManager() {
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn2DCollection));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn2DBJetCollection));
 	s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn2DJetCollection));
+
+	s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn3DCollection));
+	s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn3DBJetCollection));
+	s.push_back(CUTE_SMEMFUN(TestHistogramManager, throwExceptionWhenAccessingNonExistentHistIn3DJetCollection));
 
 	return s;
 }
