@@ -26,7 +26,7 @@ void TestEventWeightProvider::testGetWeightData() {
 }
 
 void TestEventWeightProvider::testGetWeightTtbar() {
-	ASSERT_EQUAL_DELTA(157.5 * lumi/3636129, xSectionProvider.getWeight(DataType::TTJets), 0.00000001);
+	ASSERT_EQUAL_DELTA(157.5 * lumi/4438282, xSectionProvider.getWeight(DataType::TTJets), 0.00000001);
 }
 
 cute::suite make_suite_TestEventWeightProvider() {
