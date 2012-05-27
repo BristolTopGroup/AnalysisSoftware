@@ -1,9 +1,9 @@
 toolsFolder = 'BristolAnalysis/Tools/'
 #File for pile-up re-weighting
-PUFile = toolsFolder + "/data/PileUp_2011_truth_finebin.root"
+PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
-bJetResoFile = toolsFolder + "/data/bJetReso.root"
-lightJetResoFile = toolsFolder + "/data/lightJetReso.root"
+bJetResoFile = toolsFolder + "data/bJetReso.root"
+lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis
@@ -11,7 +11,7 @@ useHitFit = False
 produceFitterASCIIoutput = False
 
 inputFiles = []
-data_path = '/storage/TopQuarkGroup/dataFolder + "2011/MuHad/'
+data_path = '/storage/TopQuarkGroup/data/2011/MuHad/'
 filetype = '*.root'
 
 dataFiles = ['nTuple_v6b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',

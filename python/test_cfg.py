@@ -1,16 +1,18 @@
 toolsFolder = 'BristolAnalysis/Tools/'
+toolsFolder = ''
 #File for pile-up re-weighting
-PUFile = toolsFolder + "/data/PileUp_2011_truth_finebin.root"
+PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
-bJetResoFile = toolsFolder + "/data/bJetReso.root"
-lightJetResoFile = toolsFolder + "/data/lightJetReso.root"
+bJetResoFile = toolsFolder + "data/bJetReso.root"
+lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 #number of events to be processed
 maxEvents = 50000
 #use HitFit for analysis
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-              '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v7a_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
+              '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v7b_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/*.root',
+#              '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v7a_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
 #              '/storage/TopQuarkGroup/data/2011/MuHad/nTuple_v7a_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
 #              '/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset/*.root'
 #              '/storage/TopQuarkGroup/mc/7TeV/TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'

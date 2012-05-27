@@ -1,9 +1,9 @@
 toolsFolder = 'BristolAnalysis/Tools/'
 #File for pile-up re-weighting
-PUFile = toolsFolder + "/data/PileUp_2011_truth_finebin.root"
+PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
-bJetResoFile = toolsFolder + "/data/bJetReso.root"
-lightJetResoFile = toolsFolder + "/data/lightJetReso.root"
+bJetResoFile = toolsFolder + "data/bJetReso.root"
+lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis
