@@ -49,6 +49,8 @@ ElectronReader::ElectronReader() : //
 		dist(), //
 		dCotTheta(), //
 		CiCElectronIDReader(), //
+		mvaTrigV0_(), //
+		mvaNonTrigV0_(), //
 		algorithm(ElectronAlgorithm::Calo), //
 		electrons() {
 
@@ -96,6 +98,8 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		dCotTheta(input, ElectronAlgorithm::prefixes.at(algo) + ".DCotTheta"), //
 		CiCElectronIDReader(
 				new VariableReader<MultiIntPointer>(input, ElectronAlgorithm::prefixes.at(algo) + ".PassID")), //
+		mvaTrigV0_(input, ElectronAlgorithm::prefixes.at(algo) + ".mvaTrigV0"), //
+		mvaNonTrigV0_(input, ElectronAlgorithm::prefixes.at(algo) + ".mvaNonTrigV0"), //
 		algorithm(algo), //
 		electrons() {
 
@@ -168,6 +172,11 @@ void ElectronReader::readElectrons() {
 			}
 
 		}
+		if(Globals::NTupleVersion >= 7){
+			electron->setMVATrigV0(mvaTrigV0_.getVariableAt(index));
+			electron->setMVANonTrigV0(mvaNonTrigV0_.getVariableAt(index));
+		}
+
 		electrons.push_back(electron);
 	}
 }
@@ -219,7 +228,11 @@ void ElectronReader::initialise() {
 			PFIsolationReaderWithGaussianFallOff_DR02_.initialise();
 			PFIsolationReaderWithGaussianFallOff_DR03_.initialise();
 		}
+	}
 
+	if(Globals::NTupleVersion >= 7){
+		mvaTrigV0_.initialise();
+		mvaNonTrigV0_.initialise();
 	}
 }
 

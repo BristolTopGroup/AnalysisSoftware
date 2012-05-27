@@ -118,7 +118,8 @@ public:
     const TrackPointer GSFTrack() const;
     int closestCTFTrackID() const;
     double shFracInnerLayer() const;
-//    double ZDistanceToPrimaryVertex() const;
+    double mvaTrigV0() const;
+    double mvaNonTrigV0() const;
 
     void setRobustLooseID(bool id);
     void setRobustTightID(bool id);
@@ -136,6 +137,8 @@ public:
     void setDistToNextTrack(double dist);
     void setDCotThetaToNextTrack(double dCotTheta);
     void setCompressedCiCElectronID(int electronID);
+    void setMVATrigV0(double mva);
+    void setMVANonTrigV0(double mva);
 
     double relativeIsolation() const;
     double relativeIsolationPUCorrected(double rho) const;
@@ -159,6 +162,7 @@ private:
     int closesTrackID;
     double sharedFractionInnerHits;
     double dCotThetaToNextTrack_, distToNextTrack_;
+    double mvaTrigV0_, mvaNonTrigV0_;
 
     bool getVBTF_WP70_ElectronID_Barrel() const;
     bool getVBTF_WP70_ElectronID_Endcap() const;

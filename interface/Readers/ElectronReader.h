@@ -63,6 +63,8 @@ private:
 	VariableReader<MultiDoublePointer> dist;
 	VariableReader<MultiDoublePointer> dCotTheta;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > CiCElectronIDReader;
+	VariableReader<MultiDoublePointer> mvaTrigV0_, mvaNonTrigV0_;
+
 	ElectronAlgorithm::value algorithm;
 	ElectronCollection electrons;
 	void readElectrons();
