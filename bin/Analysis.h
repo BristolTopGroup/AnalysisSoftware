@@ -32,7 +32,8 @@
 #include "../interface/Analysers/ElectronAnalyser.h"
 #include "../interface/Analysers/EventCountAnalyser.h"
 #include "../interface/Analysers/HitFitAnalyser.h"
-#include "../interface/Analysers/HLTriggerAnalyser.h"
+#include "../interface/Analysers/HLTriggerTurnOnAnalyser.h"
+#include "../interface/Analysers/HLTriggerQCDAnalyser.h"
 #include "../interface/Analysers/JetAnalyser.h"
 #include "../interface/Analysers/MCAnalyser.h"
 #include "../interface/Analysers/METAnalyser.h"
@@ -56,7 +57,7 @@ class Analysis {
 private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
     BAT::EventPtr currentEvent;
-    BAT::TopPairEventCandidatePtr ttbarCandidate;
+//    BAT::TopPairEventCandidatePtr ttbarCandidate;
     boost::shared_ptr<BAT::HistogramManager> histMan;
     ePlusJetscutarray ePlusJetsCutflow;
     ePlusJetscutarray ePlusJetsSingleCuts;
@@ -76,7 +77,8 @@ private:
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     BAT::BasicAnalyserLocalPtr eventcountAnalyser;
     boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
-    boost::scoped_ptr<BAT::HLTriggerAnalyser> hltriggerAnalyser;
+    boost::scoped_ptr<BAT::HLTriggerTurnOnAnalyser> hltriggerAnalyser;
+    BAT::BasicAnalyserLocalPtr hltriggerQCDAnalyser_;
     boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;
     boost::scoped_ptr<BAT::MCAnalyser> mcAnalyser;
     boost::scoped_ptr<BAT::METAnalyser> metAnalyser;

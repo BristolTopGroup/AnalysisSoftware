@@ -37,15 +37,16 @@ void Analysis::analyse() {
 
 		selectionCommissioning_->analyse(currentEvent);
 
-		bjetAnalyser->analyse(ttbarCandidate);
-		diElectronAnalyser->analyse(ttbarCandidate);
-		electronAnalyser->analyse(ttbarCandidate);
+		bjetAnalyser->analyse(currentEvent);
+		diElectronAnalyser->analyse(currentEvent);
+		electronAnalyser->analyse(currentEvent);
 		eventcountAnalyser->analyse(currentEvent);
 
-		hltriggerAnalyser->analyse(ttbarCandidate);
-		jetAnalyser->analyse(ttbarCandidate);
+//		hltriggerAnalyser->analyse(currentEvent);
+		hltriggerQCDAnalyser_->analyse(currentEvent);
+		jetAnalyser->analyse(currentEvent);
 		if (currentEvent->getDataType() == DataType::TTJets) {
-			mcAnalyser->analyse(ttbarCandidate);
+			mcAnalyser->analyse(currentEvent);
 			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
 			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
 			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
@@ -53,21 +54,19 @@ void Analysis::analyse() {
 		}
 		//hitfit analyser has to be after mcAnalyser as it depends on it
 		if (Globals::useHitFit) {
-			hitfitAnalyser->analyse(ttbarCandidate);
+			hitfitAnalyser->analyse(currentEvent);
 		}
-//		metAnalyser->analyse(ttbarCandidate);
-		mttbarAnalyser->analyse(ttbarCandidate);
-		muonAnalyser->analyse(ttbarCandidate);
-//		mvAnalyser->analyse(ttbarCandidate);
+//		metAnalyser->analyse(currentEvent);
+		mttbarAnalyser->analyse(currentEvent);
+		muonAnalyser->analyse(currentEvent);
+//		mvAnalyser->analyse(currentEvent);
 //		neutrinoRecoAnalyser->analyse(currentEvent);
-//		qcdAnalyser->analyse(ttbarCandidate);
+//		qcdAnalyser->analyse(currentEvent);
 		ttbarPlusMETAnalyser_->analyse(currentEvent);
-		vertexAnalyser->analyse(ttbarCandidate);
+		vertexAnalyser->analyse(currentEvent);
 
 //TODO: move to TTbarAnalysis
-		doTTbarCutFlow();
-//TODO: to be tidied up
-		//                doSynchExercise();
+//		doTTbarCutFlow();
 //        if(currentEvent->getDataType() == DataType::DATA)
 //            eventCheck[currentEvent->runnumber()].push_back(currentEvent->eventnumber());
 //        checkForBrokenEvents();
@@ -88,7 +87,7 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 
 void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
-	ttbarCandidate = TopPairEventCandidatePtr(new TopPairEventCandidate(*currentEvent.get()));
+//	ttbarCandidate = TopPairEventCandidatePtr(new TopPairEventCandidate(*currentEvent.get()));
 	weight = weights->getWeight(currentEvent->getDataType());
 	if (!currentEvent->isRealData()) {
 		//TODO: fix this dirty little thing
@@ -101,10 +100,10 @@ void Analysis::initiateEvent() {
 
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);
-	ttbarCandidate->setEventWeight(weight);
-	ttbarCandidate->setPileUpWeight(pileUpWeight);
+//	ttbarCandidate->setEventWeight(weight);
+//	ttbarCandidate->setPileUpWeight(pileUpWeight);
 
-	histMan->setCurrentDataType(ttbarCandidate->getDataType());
+	histMan->setCurrentDataType(currentEvent->getDataType());
 	histMan->setCurrentJetBin(currentEvent->GoodElectronCleanedJets().size());
 	histMan->setCurrentBJetBin(currentEvent->GoodElectronCleanedBJets().size());
 }
@@ -113,57 +112,57 @@ void Analysis::inspectEvents() {
 	std::vector<InterestingEvent> eventsToInspect;
 
 	for (unsigned int index = 0; index < eventsToInspect.size(); ++index) {
-		if ((ttbarCandidate->runnumber() == eventsToInspect.at(index).candidate->runnumber()
-				&& ttbarCandidate->eventnumber() == eventsToInspect.at(index).candidate->eventnumber())) {
+		if ((currentEvent->runnumber() == eventsToInspect.at(index).candidate->runnumber()
+				&& currentEvent->eventnumber() == eventsToInspect.at(index).candidate->eventnumber())) {
 			cout << "file: " << eventReader->getCurrentFile() << endl;
-			ttbarCandidate->inspect();
+			currentEvent->inspect();
 		}
 	}
 
 }
 
-void Analysis::doSynchExercise() {
-	if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionFinder)) {
-		cout << ttbarCandidate->runnumber() << ":" << ttbarCandidate->eventnumber() << ":" << endl; //electron->et() << endl;
-		if (ttbarCandidate->eventnumber() == 450622) {
-			ttbarCandidate->inspect();
-		}
-	}
-}
+//void Analysis::doSynchExercise() {
+//	if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionFinder)) {
+//		cout << ttbarCandidate->runnumber() << ":" << ttbarCandidate->eventnumber() << ":" << endl; //electron->et() << endl;
+//		if (ttbarCandidate->eventnumber() == 450622) {
+//			ttbarCandidate->inspect();
+//		}
+//	}
+//}
 
-void Analysis::doTTbarCutFlow() {
-	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		if (ttbarCandidate->passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut)) {
-			++ePlusJetsSingleCuts[cut];
-			ePlusJetsSingleCutsPerFile[eventReader->getCurrentFile()][cut]++;
-		}
-
-		if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo((TTbarEPlusJetsSelection::Step) cut)) {
-			ePlusJetsCutflow[cut] += 1;
-			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-			unsigned int njet = ttbarCandidate->GoodElectronCleanedJets().size();
-			if (njet >= JetBin::NUMBER_OF_JET_BINS)
-				njet = JetBin::NUMBER_OF_JET_BINS - 1;
-			ePlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
-		}
-	}
-
-	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		if (ttbarCandidate->passesMuPlusJetsSelectionStep((TTbarMuPlusJetsSelection::Step) cut)) {
-			++muPlusJetsSingleCuts[cut];
+//void Analysis::doTTbarCutFlow() {
+//	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
+//		if (ttbarCandidate->passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut)) {
+//			++ePlusJetsSingleCuts[cut];
 //			ePlusJetsSingleCutsPerFile[eventReader->getCurrentFile()][cut]++;
-		}
-
-		if (ttbarCandidate->passesMuPlusJetsSelectionStepUpTo((TTbarMuPlusJetsSelection::Step) cut)) {
-			muPlusJetsCutFlow[cut] += 1;
+//		}
+//
+//		if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo((TTbarEPlusJetsSelection::Step) cut)) {
+//			ePlusJetsCutflow[cut] += 1;
 //			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-			unsigned int njet = ttbarCandidate->GoodMuonCleanedJets().size();
-			if (njet >= JetBin::NUMBER_OF_JET_BINS)
-				njet = JetBin::NUMBER_OF_JET_BINS - 1;
-			muPlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
-		}
-	}
-}
+//			unsigned int njet = ttbarCandidate->GoodElectronCleanedJets().size();
+//			if (njet >= JetBin::NUMBER_OF_JET_BINS)
+//				njet = JetBin::NUMBER_OF_JET_BINS - 1;
+//			ePlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
+//		}
+//	}
+//
+//	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
+//		if (ttbarCandidate->passesMuPlusJetsSelectionStep((TTbarMuPlusJetsSelection::Step) cut)) {
+//			++muPlusJetsSingleCuts[cut];
+////			ePlusJetsSingleCutsPerFile[eventReader->getCurrentFile()][cut]++;
+//		}
+//
+//		if (ttbarCandidate->passesMuPlusJetsSelectionStepUpTo((TTbarMuPlusJetsSelection::Step) cut)) {
+//			muPlusJetsCutFlow[cut] += 1;
+////			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
+//			unsigned int njet = ttbarCandidate->GoodMuonCleanedJets().size();
+//			if (njet >= JetBin::NUMBER_OF_JET_BINS)
+//				njet = JetBin::NUMBER_OF_JET_BINS - 1;
+//			muPlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
+//		}
+//	}
+//}
 
 void Analysis::printInterestingEvents() {
 	cout << "Interesting events:" << endl;
@@ -206,9 +205,14 @@ void Analysis::createHistograms() {
 	cout << "Number of histograms added by hitfitAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	hltriggerAnalyser->createHistograms();
+//	hltriggerAnalyser->createHistograms();
+//	numberOfHistograms = histMan->size();
+//	cout << "Number of histograms added by hltriggerAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+//	lastNumberOfHistograms = numberOfHistograms;
+
+	hltriggerQCDAnalyser_->createHistograms();
 	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by hltriggerAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	cout << "Number of histograms added by hltriggerQCDAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
 	jetAnalyser->createHistograms();
@@ -267,7 +271,7 @@ void Analysis::createHistograms() {
 Analysis::Analysis(std::string datasetInfoFile) : //
 		eventReader(new NTupleEventReader()), //
 		currentEvent(), //
-		ttbarCandidate(), //
+//		ttbarCandidate(), //
 		histMan(new BAT::HistogramManager()), //
 		ePlusJetsCutflow(), //
 		ePlusJetsSingleCuts(), //
@@ -290,7 +294,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		electronAnalyser(new ElectronAnalyser(histMan)), //
 		eventcountAnalyser(new EventCountAnalyser(histMan)), //
 		hitfitAnalyser(new HitFitAnalyser(histMan)), //
-		hltriggerAnalyser(new HLTriggerAnalyser(histMan)), //
+		hltriggerAnalyser(new HLTriggerTurnOnAnalyser(histMan)), //
+		hltriggerQCDAnalyser_(new HLTriggerQCDAnalyser(histMan)), //
 		jetAnalyser(new JetAnalyser(histMan)), //
 		mcAnalyser(new MCAnalyser(histMan)), //
 		metAnalyser(new METAnalyser(histMan)), //
@@ -363,16 +368,16 @@ void Analysis::checkForDuplicatedEvents() {
 	}
 }
 
-void Analysis::checkForBrokenEvents() {
-	if (ttbarCandidate->Electrons().size() == 0) {
-		brokenEvents.push_back(InterestingEvent(ttbarCandidate, eventReader->getCurrentFile()));
-	}
-
-	if (ttbarCandidate->eventnumber() == 1019245) {
-		cout << "broken event" << endl;
-		ttbarCandidate->inspect();
-	}
-}
+//void Analysis::checkForBrokenEvents() {
+//	if (ttbarCandidate->Electrons().size() == 0) {
+//		brokenEvents.push_back(InterestingEvent(currentEvent, eventReader->getCurrentFile()));
+//	}
+//
+//	if (currentEvent->eventnumber() == 1019245) {
+//		cout << "broken event" << endl;
+//		ttbarCandidate->inspect();
+//	}
+//}
 
 unsigned long Analysis::getNumberOfProccessedEvents() const {
 	return eventReader->getNumberOfProccessedEvents();

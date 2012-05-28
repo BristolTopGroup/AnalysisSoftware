@@ -28,11 +28,11 @@ enum value {
 	NUMBER_OF_TRIGGEREFFICIENCY_CASES
 };
 }
-class HLTriggerAnalyser: public BasicAnalyser {
+class HLTriggerTurnOnAnalyser: public BasicAnalyser {
 
 public:
-	HLTriggerAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "HLTStudy");
-	virtual ~HLTriggerAnalyser();
+	HLTriggerTurnOnAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "HLTStudy");
+	virtual ~HLTriggerTurnOnAnalyser();
 	void analyse(const EventPtr);
 	void createHistograms();
 	void createHistograms(std::string trigger);

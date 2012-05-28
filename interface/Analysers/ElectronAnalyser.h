@@ -11,20 +11,20 @@
 
 namespace BAT {
 
-class ElectronAnalyser : public BasicAnalyser{
+class ElectronAnalyser: public BasicAnalyser {
 public:
-    ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "ElectronAnalysis");
-    virtual ~ElectronAnalyser();
+	ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "ElectronAnalysis");
+	virtual ~ElectronAnalyser();
 
-    /**
-     * Analyses all electrons in an event
-     */
-    void analyse(const EventPtr);
-    /**
-     * Analyses a single electron
-     */
-    void analyseElectron(const ElectronPointer electron, double weight);
-    void createHistograms();
+	/**
+	 * Analyses all electrons in an event
+	 */
+	void analyse(const EventPtr);
+	/**
+	 * Analyses a single electron
+	 */
+	void analyseElectron(const ElectronPointer electron, double weight);
+	void createHistograms();
 };
 typedef boost::scoped_ptr<ElectronAnalyser> ElectronAnalyserLocalPtr;
 }

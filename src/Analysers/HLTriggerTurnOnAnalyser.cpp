@@ -5,23 +5,23 @@
  *      Author: lkreczko
  */
 
-#include "../../interface/Analysers/HLTriggerAnalyser.h"
+#include "../../interface/Analysers/HLTriggerTurnOnAnalyser.h"
 #include <iostream>
 #include <math.h>
 namespace BAT {
 
-HLTriggerAnalyser::HLTriggerAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
+HLTriggerTurnOnAnalyser::HLTriggerTurnOnAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
 		weight(1.), //
 		triggerEfficiencies() //
 {
 }
 
-HLTriggerAnalyser::~HLTriggerAnalyser() {
+HLTriggerTurnOnAnalyser::~HLTriggerTurnOnAnalyser() {
 
 }
 
-void HLTriggerAnalyser::analyse(const EventPtr event) {
+void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 	/*
 	 * triggers use (calo + tracker) electrons with ID looser than WP 80
@@ -441,7 +441,7 @@ void HLTriggerAnalyser::analyse(const EventPtr event) {
 // remove passesPreCondition and add it before the execution of the function
 //Create trigger object (not here) containing
 // triggerResult, trigger prescale
-void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigger, std::string histFolder,
+void HLTriggerTurnOnAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigger, std::string histFolder,
 		const JetPointer jet, int prescale) {
 	if (passesPreCondition) {
 		histMan_->setCurrentHistogramFolder(histFolder);
@@ -516,7 +516,7 @@ void HLTriggerAnalyser::analyseTrigger(bool passesPreCondition, bool passesTrigg
 
 }
 
-void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName,
+void HLTriggerTurnOnAnalyser::analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName,
 		bool passesTrigger, const TopPairEventCandidatePtr event) {
 
 	double triggerResult = passesTrigger ? 1.0 : 0.;
@@ -574,7 +574,7 @@ void HLTriggerAnalyser::analyseTriggerEfficiency(AnalysisReference::value analys
 
 }
 
-void HLTriggerAnalyser::createHistograms() {
+void HLTriggerTurnOnAnalyser::createHistograms() {
 
 	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30");
 	createHistograms("HLT_Ele25_CaloIdVT_TrkIdT_DiCentralJet30");
@@ -598,7 +598,7 @@ void HLTriggerAnalyser::createHistograms() {
 
 }
 
-void HLTriggerAnalyser::createHistograms(std::string trigger) {
+void HLTriggerTurnOnAnalyser::createHistograms(std::string trigger) {
 	histMan_->setCurrentHistogramFolder("HLTStudy/" + trigger);
 
 	//kinematic distributions for HLT path when visited
