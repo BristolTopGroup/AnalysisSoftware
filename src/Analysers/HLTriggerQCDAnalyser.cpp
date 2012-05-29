@@ -6,6 +6,9 @@
  */
 
 #include "../../interface/Analysers/HLTriggerQCDAnalyser.h"
+#include <iostream>
+
+using namespace std;
 
 namespace BAT {
 void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
@@ -19,6 +22,17 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
+
+		if (passesNonIsoWithoutBtagAndHLT(event))
+			QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
+		if (passesAntiIDWithoutBtagAndHLT(event))
+			QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
+		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
+			TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
+			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
+				TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
+		}
+
 	}
 
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)) {
@@ -26,6 +40,17 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->setPrescale(prescale);
 		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
+
+		if (passesNonIsoWithoutBtagAndHLT(event))
+			QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
+		if (passesAntiIDWithoutBtagAndHLT(event))
+			QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
+		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
+			TopSignalRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
+			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
+				TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
+		}
+
 	}
 
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)) {
@@ -33,13 +58,34 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 				(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->setPrescale(prescale);
 		eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
+
+		if (passesNonIsoWithoutBtagAndHLT(event))
+			QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
+		if (passesAntiIDWithoutBtagAndHLT(event))
+			QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
+		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
+			TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
+			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
+				TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
+		}
 	}
 
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)) {
 		int prescale = event->HLTPrescale((HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
 		eleAnalyser_CaloIdVT_TrkIdT_->analyse(event);
+		if (passesNonIsoWithoutBtagAndHLT(event))
+			QCDNonIsoRegionCount_CaloIdVT_TrkIdT_++;
+		if (passesAntiIDWithoutBtagAndHLT(event))
+			QCDAntiIDRegionCount_CaloIdVT_TrkIdT_++;
+
+		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
+			TopSignalRegionCount_CaloIdVT_TrkIdT_++;
+			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
+				TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_++;
+		}
 	}
+
 }
 
 void HLTriggerQCDAnalyser::createHistograms() {
@@ -61,11 +107,111 @@ HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::str
 				new ElectronAnalyser(histMan,
 						histogramFolder + "/HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30")), //
 		eleAnalyser_CaloIdVT_TrkIdT_(
-				new ElectronAnalyser(histMan, histogramFolder + "/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30")) {
+				new ElectronAnalyser(histMan, histogramFolder + "/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30")), //
+		qcdNonIsoSelection_(new QCDNonIsolatedElectronSelection()), //
+		QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(0), //
+		QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(0), //
+		QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_(0), //
+		QCDNonIsoRegionCount_CaloIdVT_TrkIdT_(0), //
+		qcdAntiIDSelection_(new QCDAntiIDEPlusJetsSelection()), //
+		QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(0), //
+		QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(0), //
+		QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_(0), //
+		QCDAntiIDRegionCount_CaloIdVT_TrkIdT_(0), //
+		topSignalSelection_(new TopPairEPlusJetsReferenceSelection()), //
+		TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(0), //
+		TopSignalRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(0), //
+		TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_(0), //
+		TopSignalRegionCount_CaloIdVT_TrkIdT_(0), //
+		TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(0), //
+		TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(0), //
+		TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_(0), //
+		TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_(0) {
 
 }
 
 HLTriggerQCDAnalyser::~HLTriggerQCDAnalyser() {
+	cout << "QCD non-iso selection" << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << QCDNonIsoRegionCount_CaloIdVT_TrkIdT_
+			<< endl;
+
+	cout << "QCD anti-id selection" << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << QCDAntiIDRegionCount_CaloIdVT_TrkIdT_
+			<< endl;
+
+	cout << "Top signal selection" << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< TopSignalRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << TopSignalRegionCount_CaloIdVT_TrkIdT_
+			<< endl;
+
+	cout << "Top signal selection (>= 2 b-tags)" << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+			<< TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: "
+			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_ << endl;
+}
+
+bool HLTriggerQCDAnalyser::passesNonIsoWithoutBtagAndHLT(const EventPtr event) const {
+	bool passes(false);
+	passes = qcdNonIsoSelection_->passesEventCleaning(event);
+	passes = passes && qcdNonIsoSelection_->hasExactlyOneIsolatedLepton(event);
+	passes = passes && qcdNonIsoSelection_->passesLooseLeptonVeto(event);
+	passes = passes && qcdNonIsoSelection_->passesDileptonVeto(event);
+	passes = passes && qcdNonIsoSelection_->passesConversionRejectionMissingLayers(event);
+	passes = passes && qcdNonIsoSelection_->passesConversionRejectionPartnerTrack(event);
+	passes = passes && qcdNonIsoSelection_->hasAtLeastThreeGoodJets(event);
+	passes = passes && qcdNonIsoSelection_->hasAtLeastFourGoodJets(event);
+
+	return passes;
+}
+
+bool HLTriggerQCDAnalyser::passesAntiIDWithoutBtagAndHLT(const EventPtr event) const {
+	bool passes(false);
+	passes = qcdAntiIDSelection_->passesEventCleaning(event);
+	passes = passes && qcdAntiIDSelection_->hasExactlyOneIsolatedLepton(event);
+	passes = passes && qcdAntiIDSelection_->passesLooseLeptonVeto(event);
+	passes = passes && qcdAntiIDSelection_->passesDileptonVeto(event);
+	passes = passes && qcdAntiIDSelection_->passesConversionRejectionMissingLayers(event);
+	passes = passes && qcdAntiIDSelection_->passesConversionRejectionPartnerTrack(event);
+	passes = passes && qcdAntiIDSelection_->hasAtLeastThreeGoodJets(event);
+	passes = passes && qcdAntiIDSelection_->hasAtLeastFourGoodJets(event);
+
+	return passes;
+}
+
+bool HLTriggerQCDAnalyser::passesSignalSelectionWithoutBtagAndHLT(const EventPtr event) const {
+	bool passes(false);
+	passes = topSignalSelection_->passesEventCleaning(event);
+	passes = passes && topSignalSelection_->hasExactlyOneIsolatedLepton(event);
+	passes = passes && topSignalSelection_->passesLooseLeptonVeto(event);
+	passes = passes && topSignalSelection_->passesDileptonVeto(event);
+	passes = passes && topSignalSelection_->passesConversionRejectionMissingLayers(event);
+	passes = passes && topSignalSelection_->passesConversionRejectionPartnerTrack(event);
+	passes = passes && topSignalSelection_->hasAtLeastThreeGoodJets(event);
+	passes = passes && topSignalSelection_->hasAtLeastFourGoodJets(event);
+
+	return passes;
 }
 
 } /* namespace BAT */

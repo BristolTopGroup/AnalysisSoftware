@@ -64,14 +64,8 @@ bool TopPairEPlusJetsReferenceSelection::passesSelectionStep(const EventPtr even
 		return passesLooseLeptonVeto(event);
 	case TTbarEPlusJetsReferenceSelection::DiLeptonVeto:
 		return passesDileptonVeto(event);
-	case TTbarEPlusJetsReferenceSelection::ConversionRejectionMissingLayers:
-		return passesConversionRejectionMissingLayers(event);
-	case TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack:
-		return passesConversionRejectionPartnerTrack(event);
-	case TTbarEPlusJetsReferenceSelection::AtLeastOneGoodJet:
-		return hasAtLeastOneGoodJet(event);
-	case TTbarEPlusJetsReferenceSelection::AtLeastTwoGoodJets:
-		return hasAtLeastTwoGoodJets(event);
+	case TTbarEPlusJetsReferenceSelection::ConversionVeto:
+		return passesConversionRejectionMissingLayers(event) && passesConversionRejectionPartnerTrack(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets:
 		return hasAtLeastThreeGoodJets(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets:
@@ -211,13 +205,6 @@ bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionPartnerTrack(c
 	return !hasPartnerTrack;
 }
 
-bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodJet(const EventPtr event) const {
-	return event->GoodElectronCleanedJets().size() > 0;
-}
-
-bool TopPairEPlusJetsReferenceSelection::hasAtLeastTwoGoodJets(const EventPtr event) const {
-	return event->GoodElectronCleanedJets().size() > 1;
-}
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastThreeGoodJets(const EventPtr event) const {
 	return event->GoodElectronCleanedJets().size() > 2;

@@ -18,8 +18,6 @@ void Selections::analyse(const EventPtr event) {
 	commissionTopEplusJetsReferenceSelection(event);
 	commissionTopEplusJetsZprimeSelection(event);
 	commissionTopEplusJetsPlusMETSelection(event);
-	commissionQCDPFRelIsoSelection(event);
-//	commissionQCDNonIsoSelection(event);
 }
 
 void Selections::commissionTopEplusJetsReferenceSelection(const EventPtr event) {
@@ -47,24 +45,10 @@ void Selections::commissionTopEplusJetsReferenceSelection(const EventPtr event) 
 	testResult(resultSelection, resultOldSelection, "DiLeptonVeto");
 
 	resultSelection = topEplusJetsReferenceSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsReferenceSelection::ConversionRejectionMissingLayers);
-	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionRejection);
+			TTbarEPlusJetsReferenceSelection::ConversionVeto);
+	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionRejection)
+			&& ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionFinder);
 	testResult(resultSelection, resultOldSelection, "ConversionRejectionMissingLayers");
-
-	resultSelection = topEplusJetsReferenceSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack);
-	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionFinder);
-	testResult(resultSelection, resultOldSelection, "ConversionRejectionPartnerTrack");
-
-	resultSelection = topEplusJetsReferenceSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsReferenceSelection::AtLeastOneGoodJet);
-	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastOneGoodJet);
-	testResult(resultSelection, resultOldSelection, "AtLeastOneGoodJets");
-
-	resultSelection = topEplusJetsReferenceSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsReferenceSelection::AtLeastTwoGoodJets);
-	resultOldSelection = ttbarCand->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets);
-	testResult(resultSelection, resultOldSelection, "AtLeastTwoGoodJets");
 
 	resultSelection = topEplusJetsReferenceSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets);
@@ -147,34 +131,6 @@ void Selections::commissionTopEplusJetsPlusMETSelection(const EventPtr event) {
 	testResult(resultSelection, resultOldSelection, "AtLeastTwoBtags");
 }
 
-void Selections::commissionQCDPFRelIsoSelection(const EventPtr event) {
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-
-	bool resultSelection(
-			qcdPFRelIsoSelection_->passesSelectionUpToStep(event,
-					TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack));
-	bool resultOldSelection(ttbarCand->passesEPlusJetsPFIsoSelection());
-	testResult(resultSelection, resultOldSelection, "QCD PF RelIso Selection");
-}
-
-void Selections::commissionQCDConversionSelection(const EventPtr event) {
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-
-	bool resultSelection(
-			qcdConversionSelection_->passesSelectionUpToStep(event,
-					TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack));
-	bool resultOldSelection(ttbarCand->passesConversionSelection());
-	testResult(resultSelection, resultOldSelection, "QCD Conversion Selection");
-}
-
-void Selections::commissionQCDNonIsoSelection(const EventPtr event) {
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
-	bool resultSelection(
-			qcdNonIsoSelection_->passesSelectionUpToStep(event,
-					TTbarEPlusJetsReferenceSelection::ConversionRejectionPartnerTrack));
-	bool resultOldSelection(ttbarCand->passesEPlusJetsAntiIsolationSelection());
-	testResult(resultSelection, resultOldSelection, "QCD NonIso Selection");
-}
 
 void Selections::createHistograms() {
 

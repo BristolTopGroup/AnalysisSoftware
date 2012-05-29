@@ -37,7 +37,6 @@ private:
 	void commissionTopEplusJetsReferenceSelection(const EventPtr event);
 	void commissionTopEplusJetsZprimeSelection(const EventPtr event);
 	void commissionTopEplusJetsPlusMETSelection(const EventPtr event);
-	void commissionQCDPFRelIsoSelection(const EventPtr event);
 	void commissionQCDConversionSelection(const EventPtr event);
 	void commissionQCDNonIsoSelection(const EventPtr event);
 	void testResult(bool news, bool old, std::string step) const;

@@ -57,7 +57,7 @@ void METAnalyser::createHistograms() {
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 			histMan_->addH1D_BJetBinned("MET", "MET", 1000, 0, 1000);
-			histMan_->addH1D_BJetBinned("MET_phi", "MET_phi", 80, -4, 4);
+			histMan_->addH1D_BJetBinned("MET_phi", "#phi(MET);#phi(MET);Events/0.1", 80, -4, 4);
 			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance", 1000, 0, 1000);
 			histMan_->addH2D_BJetBinned("METsignificance_vs_MET", "MET vs MET significance;MET; MET significance", 200,
 					0, 1000, 1000, 0, 1000);

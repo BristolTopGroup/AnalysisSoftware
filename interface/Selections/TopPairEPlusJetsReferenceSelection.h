@@ -18,10 +18,10 @@ enum Step {
 	OneIsolatedElectron,
 	LooseMuonVeto,
 	DiLeptonVeto,
-	ConversionRejectionMissingLayers,
-	ConversionRejectionPartnerTrack,
-	AtLeastOneGoodJet,
-	AtLeastTwoGoodJets,
+	ConversionVeto,
+//	ConversionRejectionPartnerTrack,
+//	AtLeastOneGoodJet,
+//	AtLeastTwoGoodJets,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
 	AtLeastOneBtag,
@@ -34,10 +34,10 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				"exactly one isolated electron", //
 				"loose muon veto", //
 				"di-lepton veto", //
-				"Conversion veto (missing hits)", //
-				"Conversion finder (partner track)", //
-				">= 1 jets", //
-				">= 2 jets", //
+				"Conversion veto", //
+//				"Conversion finder (partner track)", //
+//				">= 1 jets", //
+//				">= 2 jets", //
 				">= 3 jets", //
 				">= 4 jets", //
 				">=1 CSV b-tag", //
@@ -70,8 +70,8 @@ public:
 	virtual bool passesDileptonVeto(const EventPtr event) const;
 	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
 	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
-	virtual bool hasAtLeastOneGoodJet(const EventPtr event) const;
-	virtual bool hasAtLeastTwoGoodJets(const EventPtr event) const;
+//	virtual bool hasAtLeastOneGoodJet(const EventPtr event) const;
+//	virtual bool hasAtLeastTwoGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastThreeGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;
@@ -79,6 +79,8 @@ public:
 
 	virtual const LeptonPointer signalLepton(const EventPtr event) const;
 };
+
+typedef boost::shared_ptr<TopPairEPlusJetsReferenceSelection> TopPairEPlusJetsReferenceSelectionPointer;
 
 } /* namespace BAT */
 #endif /* TOPPAIRREFERENCESELECTION_H_ */
