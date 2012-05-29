@@ -22,6 +22,8 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
+		histMan_->H1D("MET")->Fill(event->MET()->et(), event->weight());
 
 		if (passesNonIsoWithoutBtagAndHLT(event))
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
@@ -93,6 +95,8 @@ void HLTriggerQCDAnalyser::createHistograms() {
 	eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->createHistograms();
 	eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->createHistograms();
 	eleAnalyser_CaloIdVT_TrkIdT_->createHistograms();
+	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
+	histMan_->addH1D("MET", "MET", 1000, 0, 1000);
 }
 
 HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
@@ -194,8 +198,9 @@ bool HLTriggerQCDAnalyser::passesAntiIDWithoutBtagAndHLT(const EventPtr event) c
 	passes = passes && qcdAntiIDSelection_->passesDileptonVeto(event);
 	passes = passes && qcdAntiIDSelection_->passesConversionRejectionMissingLayers(event);
 	passes = passes && qcdAntiIDSelection_->passesConversionRejectionPartnerTrack(event);
-	passes = passes && qcdAntiIDSelection_->hasAtLeastThreeGoodJets(event);
-	passes = passes && qcdAntiIDSelection_->hasAtLeastFourGoodJets(event);
+	passes = passes && event->GoodElectronCleanedJets().size() > 0;
+//	passes = passes && qcdAntiIDSelection_->hasAtLeastThreeGoodJets(event);
+//	passes = passes && qcdAntiIDSelection_->hasAtLeastFourGoodJets(event);
 
 	return passes;
 }
