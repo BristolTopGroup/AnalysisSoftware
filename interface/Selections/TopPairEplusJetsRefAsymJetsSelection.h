@@ -18,10 +18,10 @@ enum Step {
 	OneIsolatedElectron,
 	LooseMuonVeto,
 	DiLeptonVeto,
-	ConversionRejectionMissingLayers,
-	ConversionRejectionPartnerTrack,
-	AtLeastOneGoodJets,
-	AtLeastTwoGoodJets,
+	ConversionVeto,
+//	ConversionRejectionPartnerTrack,
+//	AtLeastOneGoodJets,
+//	AtLeastTwoGoodJets,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
 	AsymmetricJetCuts,
@@ -35,10 +35,10 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				"exactly one isolated electron", //
 				"loose muon veto", //
 				"di-lepton veto", //
-				"Conversion veto (missing hits)", //
-				"Conversion finder (partner track)", //
-				">= 1 jets", //
-				">= 2 jets", //
+				"Conversion veto", //
+//				"Conversion finder (partner track)", //
+//				">= 1 jets", //
+//				">= 2 jets", //
 				">= 3 jets", //
 				">= 4 jets", //
 				"jet pT: 1st > 70 GeV, 2nd > 50 GeV", //

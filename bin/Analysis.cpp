@@ -35,7 +35,7 @@ void Analysis::analyse() {
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
 
-		selectionCommissioning_->analyse(currentEvent);
+//		selectionCommissioning_->analyse(currentEvent);
 
 		bjetAnalyser->analyse(currentEvent);
 		diElectronAnalyser->analyse(currentEvent);

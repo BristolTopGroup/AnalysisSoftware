@@ -106,8 +106,10 @@ bool TopPairEventCandidate::passesElectronHighLevelTrigger() const {
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 		else if (runNumber > 165633 && runNumber <= 178380)
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-		else if (runNumber > 178380)
+		else if (runNumber > 178380 && runNumber <= 193621)
 			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+		else if (runNumber > 193621)
+			return HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
 		else
 			return false;
 	} else {

@@ -27,6 +27,7 @@ private:
 	bool passesNonIsoWithoutBtagAndHLT(const EventPtr event) const;
 	bool passesAntiIDWithoutBtagAndHLT(const EventPtr event) const;
 	bool passesSignalSelectionWithoutBtagAndHLT(const EventPtr event) const;
+	bool passesTriggerAnalysisSelection(const EventPtr event) const;
 
 	ElectronAnalyserLocalPtr eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_,
 			eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_, eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_,

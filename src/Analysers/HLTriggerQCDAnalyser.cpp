@@ -14,16 +14,23 @@ namespace BAT {
 void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 
 	//only do this analysis for runs above 193834 as previous runs don't have all triggers
-	if (!(event->runnumber() >= 193834 && event->runnumber() <= 194076))
+	if (!(event->runnumber() >= 193834 && event->runnumber() <= 194076 && event->isRealData()))
 		return;
 
+	if (event->Electrons().size() == 0)
+		return;
+
+	const ElectronPointer mostEnergeticElectron(event->Electrons().front());
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
-		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
-		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
-		histMan_->H1D("MET")->Fill(event->MET()->et(), event->weight());
+		if (passesTriggerAnalysisSelection(event)) {
+			eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
+			eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseElectron(mostEnergeticElectron, event->weight());
+		}
+//		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
+//		histMan_->H1D("MET")->Fill(event->MET()->et(), event->weight());
 
 		if (passesNonIsoWithoutBtagAndHLT(event))
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
@@ -41,7 +48,10 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->setPrescale(prescale);
-		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
+		if (passesTriggerAnalysisSelection(event)) {
+			eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
+			eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyseElectron(mostEnergeticElectron, event->weight());
+		}
 
 		if (passesNonIsoWithoutBtagAndHLT(event))
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
@@ -59,7 +69,10 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->setPrescale(prescale);
-		eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
+		if (passesTriggerAnalysisSelection(event)) {
+			eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
+			eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyseElectron(mostEnergeticElectron, event->weight());
+		}
 
 		if (passesNonIsoWithoutBtagAndHLT(event))
 			QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
@@ -75,7 +88,10 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)) {
 		int prescale = event->HLTPrescale((HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
-		eleAnalyser_CaloIdVT_TrkIdT_->analyse(event);
+		if (passesTriggerAnalysisSelection(event)) {
+			eleAnalyser_CaloIdVT_TrkIdT_->analyse(event);
+			eleAnalyser_CaloIdVT_TrkIdT_->analyseElectron(mostEnergeticElectron, event->weight());
+		}
 		if (passesNonIsoWithoutBtagAndHLT(event))
 			QCDNonIsoRegionCount_CaloIdVT_TrkIdT_++;
 		if (passesAntiIDWithoutBtagAndHLT(event))
@@ -95,8 +111,8 @@ void HLTriggerQCDAnalyser::createHistograms() {
 	eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->createHistograms();
 	eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->createHistograms();
 	eleAnalyser_CaloIdVT_TrkIdT_->createHistograms();
-	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
-	histMan_->addH1D("MET", "MET", 1000, 0, 1000);
+//	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
+//	histMan_->addH1D("MET", "MET", 1000, 0, 1000);
 }
 
 HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
@@ -217,6 +233,39 @@ bool HLTriggerQCDAnalyser::passesSignalSelectionWithoutBtagAndHLT(const EventPtr
 	passes = passes && topSignalSelection_->hasAtLeastFourGoodJets(event);
 
 	return passes;
+}
+
+bool HLTriggerQCDAnalyser::passesTriggerAnalysisSelection(const EventPtr event) const {
+	const ElectronCollection electrons(event->Electrons());
+	const JetCollection jets(event->Jets());
+	if (electrons.size() == 0 || jets.size() < 3)
+		return false;
+
+	unsigned int nElectrons(0);
+	for (unsigned int index = 0; index < electrons.size(); ++index) {
+		const ElectronPointer electron(electrons.at(index));
+		if (fabs(electron->eta()) < 2.5 && electron->pt() > 20)
+			++nElectrons;
+		//if more than 2 electrons passing the selection of > 20GeV, reject event
+	}
+	const ElectronPointer mostEnergeticElectron(electrons.front());
+	//clean jets against electron
+	JetCollection cleanedJets;
+
+	for (unsigned int index = 0; index < jets.size(); ++index) {
+		const JetPointer jet(jets.at(index));
+		if (!jet->isWithinDeltaR(0.3, mostEnergeticElectron))
+			cleanedJets.push_back(jet);
+	}
+
+	unsigned int nCleanedJets(0);
+	for (unsigned int index = 0; index < cleanedJets.size(); ++index) {
+		const JetPointer jet(cleanedJets.at(index));
+		if (jet->pt() > 45.)
+			++nCleanedJets;
+	}
+
+	return nElectrons == 1 && nCleanedJets >= 3;
 }
 
 } /* namespace BAT */

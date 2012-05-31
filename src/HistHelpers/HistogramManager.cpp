@@ -175,7 +175,7 @@ void HistogramManager::setCurrentJetBin(unsigned int jetbin) {
 }
 
 void HistogramManager::setCurrentBJetBin(unsigned int jetbin) {
-	if (jetbin > BJetBin::NUMBER_OF_BJET_BINS) {
+	if (jetbin >= BJetBin::NUMBER_OF_BJET_BINS) {
 		currentBJetbin = BJetBin::NUMBER_OF_BJET_BINS - 1;
 	} else
 		currentBJetbin = jetbin;

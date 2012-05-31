@@ -24,16 +24,16 @@ bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron)
 	bool passDetaIn(false);
 	bool passHoverE(false);
 
-	if(electron->isInBarrelRegion()){
+	if (electron->isInBarrelRegion()) {
 		passSigmaIetaIeta = electron->sigmaIEtaIEta() < 0.01;
-		passDphiIn= fabs(electron->dPhiIn()) < 0.06;
-		passDetaIn= fabs(electron->dEtaIn()) < 0.004;
+		passDphiIn = fabs(electron->dPhiIn()) < 0.06;
+		passDetaIn = fabs(electron->dEtaIn()) < 0.004;
 		passHoverE = electron->HadOverEm() < 0.12;
 	}
-	if(electron->isInEndCapRegion()){
+	if (electron->isInEndCapRegion()) {
 		passSigmaIetaIeta = electron->sigmaIEtaIEta() < 0.03;
-		passDphiIn= fabs(electron->dPhiIn()) < 0.03;
-		passDetaIn= fabs(electron->dEtaIn()) < 0.007;
+		passDphiIn = fabs(electron->dPhiIn()) < 0.03;
+		passDetaIn = fabs(electron->dEtaIn()) < 0.007;
 		passHoverE = electron->HadOverEm() < 0.1;
 	}
 
@@ -42,7 +42,7 @@ bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron)
 	return passesEtAndEta && passesD0 && passesDistanceToPV && failsTwoOfFourWP80Conditions;
 }
 
-bool QCDAntiIDEPlusJetsSelection::isIsolated(const LeptonPointer lepton) const{
+bool QCDAntiIDEPlusJetsSelection::isIsolated(const LeptonPointer lepton) const {
 	return lepton->pfRelativeIsolation(Globals::electronIsolationCone) < 0.2;
 }
 
