@@ -212,8 +212,7 @@ bool HLTriggerQCDAnalyser::passesAntiIDWithoutBtagAndHLT(const EventPtr event) c
 	passes = passes && qcdAntiIDSelection_->hasExactlyOneIsolatedLepton(event);
 	passes = passes && qcdAntiIDSelection_->passesLooseLeptonVeto(event);
 	passes = passes && qcdAntiIDSelection_->passesDileptonVeto(event);
-	passes = passes && qcdAntiIDSelection_->passesConversionRejectionMissingLayers(event);
-	passes = passes && qcdAntiIDSelection_->passesConversionRejectionPartnerTrack(event);
+	passes = passes && qcdAntiIDSelection_->passesConversionVeto(event);
 	passes = passes && event->GoodElectronCleanedJets().size() > 0;
 //	passes = passes && qcdAntiIDSelection_->hasAtLeastThreeGoodJets(event);
 //	passes = passes && qcdAntiIDSelection_->hasAtLeastFourGoodJets(event);
@@ -227,8 +226,7 @@ bool HLTriggerQCDAnalyser::passesSignalSelectionWithoutBtagAndHLT(const EventPtr
 	passes = passes && topSignalSelection_->hasExactlyOneIsolatedLepton(event);
 	passes = passes && topSignalSelection_->passesLooseLeptonVeto(event);
 	passes = passes && topSignalSelection_->passesDileptonVeto(event);
-	passes = passes && topSignalSelection_->passesConversionRejectionMissingLayers(event);
-	passes = passes && topSignalSelection_->passesConversionRejectionPartnerTrack(event);
+	passes = passes && topSignalSelection_->passesConversionVeto(event);
 	passes = passes && topSignalSelection_->hasAtLeastThreeGoodJets(event);
 	passes = passes && topSignalSelection_->hasAtLeastFourGoodJets(event);
 

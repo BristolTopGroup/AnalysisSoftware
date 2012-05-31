@@ -51,6 +51,7 @@ ElectronReader::ElectronReader() : //
 		CiCElectronIDReader(), //
 		mvaTrigV0_(), //
 		mvaNonTrigV0_(), //
+		passConversionVeto_(), //
 		algorithm(ElectronAlgorithm::Calo), //
 		electrons() {
 
@@ -100,6 +101,7 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 				new VariableReader<MultiIntPointer>(input, ElectronAlgorithm::prefixes.at(algo) + ".PassID")), //
 		mvaTrigV0_(input, ElectronAlgorithm::prefixes.at(algo) + ".mvaTrigV0"), //
 		mvaNonTrigV0_(input, ElectronAlgorithm::prefixes.at(algo) + ".mvaNonTrigV0"), //
+		passConversionVeto_(input, ElectronAlgorithm::prefixes.at(algo) + ".passConversionVeto"), //
 		algorithm(algo), //
 		electrons() {
 
@@ -172,9 +174,10 @@ void ElectronReader::readElectrons() {
 			}
 
 		}
-		if(Globals::NTupleVersion >= 7){
+		if (Globals::NTupleVersion >= 7) {
 			electron->setMVATrigV0(mvaTrigV0_.getVariableAt(index));
 			electron->setMVANonTrigV0(mvaNonTrigV0_.getVariableAt(index));
+			electron->setPassConversionVeto(passConversionVeto_.getBoolVariableAt(index));
 		}
 
 		electrons.push_back(electron);
@@ -230,9 +233,10 @@ void ElectronReader::initialise() {
 		}
 	}
 
-	if(Globals::NTupleVersion >= 7){
+	if (Globals::NTupleVersion >= 7) {
 		mvaTrigV0_.initialise();
 		mvaNonTrigV0_.initialise();
+		passConversionVeto_.initialise();
 	}
 }
 

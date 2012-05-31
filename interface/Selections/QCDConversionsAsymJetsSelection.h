@@ -18,16 +18,7 @@ public:
 	QCDConversionsAsymJetsSelection(unsigned int numberOfSelectionSteps =
 			TTbarEPlusJetsRefAsymJetsSelection::NUMBER_OF_SELECTION_STEPS);
 	virtual ~QCDConversionsAsymJetsSelection();
-	/**
-	 * This function has inverted functionality w.r.t reference selection
-	 */
-	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
-	/**
-	 * This function has inverted functionality w.r.t reference selection
-	 */
-	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
-
-	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const;
+	virtual bool passesConversionVeto(const EventPtr event) const;
 
 };
 

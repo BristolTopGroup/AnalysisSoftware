@@ -29,6 +29,7 @@ public:
 	virtual ~BasicSelection();
 	//definitions of good objects
 	virtual bool isGoodJet(const JetPointer jet) const = 0;
+	virtual bool isBJet(const JetPointer jet) const = 0;
 	virtual bool isGoodElectron(const ElectronPointer electron) const = 0;
 	virtual bool isGoodMuon(const MuonPointer electron) const = 0;
 	//definitions of loose objects
@@ -44,6 +45,8 @@ public:
 	virtual void useNonIsoTrigger(bool use = true);
 
 	virtual const LeptonPointer signalLepton(const EventPtr event) const = 0;
+	virtual const JetCollection cleanedJets(const EventPtr event) const = 0;
+	virtual const JetCollection cleanedBJets(const EventPtr event) const = 0;
 
 	virtual bool passesFullSelectionExceptLastTwoSteps(const EventPtr event) const;
 

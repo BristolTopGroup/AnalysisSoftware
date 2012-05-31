@@ -20,16 +20,7 @@ public:
 			TTbarEPlusJetsRefAsymJetsMETSelection::NUMBER_OF_SELECTION_STEPS);
 	virtual ~QCDConversionsAsymJetsMETSelection();
 
-	/**
-	 * This function has inverted functionality w.r.t reference selection
-	 */
-	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
-	/**
-	 * This function has inverted functionality w.r.t reference selection
-	 */
-	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
-
-	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const;
+	virtual bool passesConversionVeto(const EventPtr event) const;
 };
 
 } /* namespace BAT */

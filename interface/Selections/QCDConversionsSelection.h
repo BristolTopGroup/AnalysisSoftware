@@ -18,17 +18,7 @@ public:
 			TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS);
 	virtual ~QCDConversionsSelection();
 
-	/**
-	 * This function has inverted functionality w.r.t reference selection
-	 */
-	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
-	/**
-	 * This function has inverted functionality w.r.t reference selection
-	 */
-	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
-
-	virtual bool failsEitherConversionVeto(const EventPtr event) const;
-
+	virtual bool passesConversionVeto(const EventPtr event) const;
 };
 
 } /* namespace BAT */

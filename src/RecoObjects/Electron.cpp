@@ -35,7 +35,8 @@ Electron::Electron() :
 		dCotThetaToNextTrack_(0), //
 		distToNextTrack_(0), //
 		mvaTrigV0_(-initialBigValue), //
-		mvaNonTrigV0_(-initialBigValue) {
+		mvaNonTrigV0_(-initialBigValue),//
+		passConversionVeto_(false){
 }
 
 Electron::Electron(double energy, double px, double py, double pz) :
@@ -55,7 +56,8 @@ Electron::Electron(double energy, double px, double py, double pz) :
 		dCotThetaToNextTrack_(0), //
 		distToNextTrack_(0), //
 		mvaTrigV0_(-initialBigValue), //
-		mvaNonTrigV0_(-initialBigValue) {
+		mvaNonTrigV0_(-initialBigValue),//
+		passConversionVeto_(false){
 
 }
 
@@ -181,6 +183,10 @@ bool Electron::passesElectronID(short leptonID) const {
 		return VBTF_WP70_ElectronID();
 	case ElectronID::SimpleCutBasedWP95:
 		return VBTF_WP95_ElectronID();
+	case ElectronID::MVAIDTrigger:
+		return mvaTrigV0() > 0.0;
+	case ElectronID::MVAIDNonTrigger:
+		return mvaNonTrigV0() > 0.0;
 	default:
 		if (electronID >= ElectronID::CiCVeryLooseMC)
 			return CiC_ElectronID((CiCElectronID::value) electronID);
@@ -218,10 +224,8 @@ bool Electron::isFromConversion() const {
 	return innerLayerMissingHits_ > 0;
 }
 
-bool Electron::passesConversionVeto() const {
-	bool noInnerLayerMissingHits = innerLayerMissingHits_ == 0;
-	bool no2ndTrackCloseBy = fabs(distToNextTrack_) > 0.02 && fabs(dCotThetaToNextTrack_) > 0.02;
-	return noInnerLayerMissingHits && no2ndTrackCloseBy;
+bool Electron::passConversionVeto() const {
+	return passConversionVeto_;
 }
 
 bool Electron::isTaggedAsConversion(double maxDist, double maxDCotTheta) const {
@@ -389,8 +393,8 @@ void Electron::setDCotThetaToNextTrack(double dCotTheta) {
 	dCotThetaToNextTrack_ = dCotTheta;
 }
 
-double Electron::pfIsolation() const {
-	return (PFGamma_Isolation_DR03_ + PFChargedHadron_Isolation_DR03_ + PFNeutralHadron_Isolation_DR03_) / et();
+double Electron::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) const {
+	return pfIsolation(coneSize, deltaBetaCorrection)/et();
 }
 
 ElectronAlgorithm::value Electron::algorithm() const {
@@ -435,6 +439,10 @@ void Electron::setMVATrigV0(double mva) {
 
 void Electron::setMVANonTrigV0(double mva) {
 	mvaNonTrigV0_ = mva;
+}
+
+void Electron::setPassConversionVeto(bool passes){
+	passConversionVeto_ = passes;
 }
 
 double Electron::mvaTrigV0() const {

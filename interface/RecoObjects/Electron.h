@@ -62,6 +62,8 @@ enum value {
 	SimpleCutBasedWP95 = -9,
 	SimpleCutBasedWP80 = -8,
 	SimpleCutBasedWP70 = -7,
+	MVAIDTrigger = -6,
+	MVAIDNonTrigger = -5,
 	CiCVeryLooseMC = 0,
 	CiCLooseMC = 1,
 	CiCMediumMC = 2,
@@ -87,7 +89,7 @@ public:
     bool isHEEPIsolated() const;
     bool isTaggedAsConversion(double maxDist = 0.02, double maxDCotTheta = 0.02) const;
     bool isFromConversion() const;
-    bool passesConversionVeto() const;
+    bool passConversionVeto() const;
     bool isLoose() const;
     bool isQCDElectron(short) const;
 
@@ -139,10 +141,11 @@ public:
     void setCompressedCiCElectronID(int electronID);
     void setMVATrigV0(double mva);
     void setMVANonTrigV0(double mva);
+    void setPassConversionVeto(bool passes);
 
     double relativeIsolation() const;
     double relativeIsolationPUCorrected(double rho) const;
-    double pfIsolation() const;
+    virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
 
     bool isInBarrelRegion() const;
     bool isInCrack() const;
@@ -163,6 +166,7 @@ private:
     double sharedFractionInnerHits;
     double dCotThetaToNextTrack_, distToNextTrack_;
     double mvaTrigV0_, mvaNonTrigV0_;
+    bool passConversionVeto_;
 
     bool getVBTF_WP70_ElectronID_Barrel() const;
     bool getVBTF_WP70_ElectronID_Endcap() const;

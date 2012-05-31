@@ -18,16 +18,8 @@ QCDConversionsAsymJetsSelection::QCDConversionsAsymJetsSelection(unsigned int nu
 QCDConversionsAsymJetsSelection::~QCDConversionsAsymJetsSelection() {
 }
 
-bool QCDConversionsAsymJetsSelection::passesConversionRejectionMissingLayers(const EventPtr event) const {
-	return QCDConversionsSelection::passesConversionRejectionMissingLayers(event);
-}
-
-bool QCDConversionsAsymJetsSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {
-	return QCDConversionsSelection::passesConversionRejectionPartnerTrack(event);
-}
-
-bool QCDConversionsAsymJetsSelection::passesSelectionStep(const EventPtr event, unsigned int selectionStep) const{
-	return TopPairEplusJetsRefAsymJetsSelection::passesSelectionStep(event, selectionStep);
+bool QCDConversionsAsymJetsSelection::passesConversionVeto(const EventPtr event) const{
+	return QCDConversionsSelection::passesConversionVeto(event);
 }
 
 } /* namespace BAT */

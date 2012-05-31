@@ -49,6 +49,10 @@ bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
 
 }
 
+bool TopPairEPlusJetsReferenceSelection::isBJet(const JetPointer jet) const {
+	return jet->isBJet(Globals::btagAlgorithm, Globals::btagWorkingPoint);
+}
+
 bool TopPairEPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) const {
 	return false;
 }
@@ -65,7 +69,7 @@ bool TopPairEPlusJetsReferenceSelection::passesSelectionStep(const EventPtr even
 	case TTbarEPlusJetsReferenceSelection::DiLeptonVeto:
 		return passesDileptonVeto(event);
 	case TTbarEPlusJetsReferenceSelection::ConversionVeto:
-		return passesConversionRejectionMissingLayers(event) && passesConversionRejectionPartnerTrack(event);
+		return passesConversionVeto(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets:
 		return hasAtLeastThreeGoodJets(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets:
@@ -100,9 +104,9 @@ bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr e
 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
 		else if (runNumber > 165633 && runNumber <= 178380)
 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-		else if (runNumber > 178380 && runNumber <=193621 )
+		else if (runNumber > 178380 && runNumber <= 193621)
 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-		else if(runNumber > 193621)
+		else if (runNumber > 193621)
 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
 		else
 			return false;
@@ -126,17 +130,21 @@ bool TopPairEPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Event
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
-	bool passesEtAndEta = electron->et() > 30. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
+	bool passesEtAndEta = electron->et() > Globals::minElectronET
+			&& fabs(electron->eta()) < Globals::MaxAbsoluteElectronEta && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
-	bool passesDistanceToPV = fabs(electron->ZDistanceToPrimaryVertex()) < 1;
-	//since H/E is used at trigger level, use the same cut here:
+//	bool passesDistanceToPV = fabs(electron->ZDistanceToPrimaryVertex()) < 1;
+			//since H/E is used at trigger level, use the same cut here:
 	bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
 	bool passesID(electron->passesElectronID(Globals::electronID));
-	return passesEtAndEta && passesD0 && passesDistanceToPV && passesHOverE && passesID;
+	return passesEtAndEta && passesD0 &&
+//			passesDistanceToPV &&
+			passesHOverE && passesID;
 }
 
 bool TopPairEPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
-	return lepton->pfRelativeIsolation(Globals::electronIsolationCone) < 0.1;
+	const ElectronPointer electron(boost::static_pointer_cast<Electron>(lepton));
+	return electron->pfRelativeIsolation(Globals::electronIsolationCone) < 0.1;
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesLooseLeptonVeto(const EventPtr event) const {
@@ -177,43 +185,68 @@ bool TopPairEPlusJetsReferenceSelection::passesDileptonVeto(const EventPtr event
 
 bool TopPairEPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer electron) const {
 
-	bool passesEtAndEta = electron->et() > 20. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
-	bool passesID(electron->passesElectronID(ElectronID::CiCLooseMC));
+	bool passesEtAndEta = electron->et() > 30. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
+	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
 	bool passesIso = electron->pfRelativeIsolation(Globals::electronIsolationCone) < 0.2;
 
 	return passesEtAndEta && passesID && passesIso;
 }
 
-bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionMissingLayers(const EventPtr event) const {
-	bool hasMissingHitsInInnerLayer(true);
+bool TopPairEPlusJetsReferenceSelection::passesConversionVeto(const EventPtr event) const{
+	if (!hasExactlyOneIsolatedLepton(event))
+		return false;
 
-	if (event->GoodPFIsolatedElectrons().size() > 0) {
-		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
-		hasMissingHitsInInnerLayer = electron->innerLayerMissingHits() > 0;
-	}
-
-	return !hasMissingHitsInInnerLayer;
+	const ElectronPointer electron(boost::static_pointer_cast<Electron>(signalLepton(event)));
+	return electron->passConversionVeto();
+//	return passesConversionRejectionMissingLayers(event) && passesConversionRejectionPartnerTrack(event);
 }
 
-bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {
-	bool hasPartnerTrack(true);
-
-	if (event->GoodPFIsolatedElectrons().size() > 0) {
-		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
-		hasPartnerTrack = fabs(electron->dCotThetaToClosestTrack()) < 0.02 && //
-				fabs(electron->distToClosestTrack()) < 0.02;
-	}
-
-	return !hasPartnerTrack;
-}
-
+//bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionMissingLayers(const EventPtr event) const {
+//	bool hasMissingHitsInInnerLayer(true);
+//
+//	if (event->GoodPFIsolatedElectrons().size() > 0) {
+//		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
+//		hasMissingHitsInInnerLayer = electron->innerLayerMissingHits() > 0;
+//	}
+//
+//	return !hasMissingHitsInInnerLayer;
+//}
+//
+//bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {
+//	bool hasPartnerTrack(true);
+//
+//	if (event->GoodPFIsolatedElectrons().size() > 0) {
+//		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
+//		hasPartnerTrack = fabs(electron->dCotThetaToClosestTrack()) < 0.02 && //
+//				fabs(electron->distToClosestTrack()) < 0.02;
+//	}
+//
+//	return !hasPartnerTrack;
+//}
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastThreeGoodJets(const EventPtr event) const {
-	return event->GoodElectronCleanedJets().size() > 2;
+	const JetCollection goodJets(cleanedJets(event));
+	unsigned int nJetsAbove45GeV(0);
+	for (unsigned int index = 0; index < goodJets.size(); ++index) {
+		if (goodJets.at(index)->pt() > 45.)
+			++nJetsAbove45GeV;
+	}
+	return nJetsAbove45GeV > 2;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastFourGoodJets(const EventPtr event) const {
-	return event->GoodElectronCleanedJets().size() > 3;
+	const JetCollection goodJets(cleanedJets(event));
+	unsigned int nJetsAbove45GeV(0);
+	unsigned int nJetsAbove20GeV(0);
+
+	for (unsigned int index = 0; index < goodJets.size(); ++index) {
+		if (goodJets.at(index)->pt() > 45.)
+			++nJetsAbove45GeV;
+		if (goodJets.at(index)->pt() > 20.)
+			++nJetsAbove20GeV;
+	}
+
+	return nJetsAbove45GeV > 2 && nJetsAbove20GeV > 3;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodBJet(const EventPtr event) const {
@@ -239,6 +272,38 @@ const LeptonPointer TopPairEPlusJetsReferenceSelection::signalLepton(const Event
 	}
 
 	return goodIsolatedElectrons.front();
+
+}
+
+const JetCollection TopPairEPlusJetsReferenceSelection::cleanedJets(const EventPtr event) const {
+	const JetCollection jets(event->Jets());
+	JetCollection cleanedJets;
+
+	if (!hasExactlyOneIsolatedLepton(event))//if no signal lepton is found, can't clean jets, return them all!
+		return jets;
+
+	const LeptonPointer lepton(signalLepton(event));
+
+	for (unsigned int index = 0; index < jets.size(); ++index) {
+		const JetPointer jet(jets.at(index));
+		if (!jet->isWithinDeltaR(0.3, lepton))
+			cleanedJets.push_back(jet);
+	}
+
+	return cleanedJets;
+}
+
+const JetCollection TopPairEPlusJetsReferenceSelection::cleanedBJets(const EventPtr event) const {
+	const JetCollection jets(cleanedJets(event));
+	JetCollection cleanedBJets;
+
+	for (unsigned int index = 0; index < jets.size(); ++index) {
+		const JetPointer jet(jets.at(index));
+		if (isBJet(jet))
+			cleanedBJets.push_back(jet);
+	}
+
+	return cleanedBJets;
 
 }
 

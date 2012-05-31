@@ -14,11 +14,7 @@ namespace BAT {
 
 namespace TTbarEPlusJetsReferenceSelection {
 enum Step {
-	EventCleaningAndTrigger,
-	OneIsolatedElectron,
-	LooseMuonVeto,
-	DiLeptonVeto,
-	ConversionVeto,
+	EventCleaningAndTrigger, OneIsolatedElectron, LooseMuonVeto, DiLeptonVeto, ConversionVeto,
 //	ConversionRejectionPartnerTrack,
 //	AtLeastOneGoodJet,
 //	AtLeastTwoGoodJets,
@@ -52,6 +48,7 @@ public:
 	virtual ~TopPairEPlusJetsReferenceSelection();
 
 	virtual bool isGoodJet(const JetPointer jet) const;
+	virtual bool isBJet(const JetPointer jet) const;
 	virtual bool isGoodElectron(const ElectronPointer electron) const;
 	virtual bool isGoodMuon(const MuonPointer electron) const;
 
@@ -68,16 +65,15 @@ public:
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
 	virtual bool passesLooseLeptonVeto(const EventPtr event) const;
 	virtual bool passesDileptonVeto(const EventPtr event) const;
-	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
-	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
-//	virtual bool hasAtLeastOneGoodJet(const EventPtr event) const;
-//	virtual bool hasAtLeastTwoGoodJets(const EventPtr event) const;
+	virtual bool passesConversionVeto(const EventPtr event) const;
 	virtual bool hasAtLeastThreeGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;
 	virtual bool hasAtLeastTwoGoodBJets(const EventPtr event) const;
 
 	virtual const LeptonPointer signalLepton(const EventPtr event) const;
+	virtual const JetCollection cleanedJets(const EventPtr event) const;
+	virtual const JetCollection cleanedBJets(const EventPtr event) const;
 };
 
 typedef boost::shared_ptr<TopPairEPlusJetsReferenceSelection> TopPairEPlusJetsReferenceSelectionPointer;
