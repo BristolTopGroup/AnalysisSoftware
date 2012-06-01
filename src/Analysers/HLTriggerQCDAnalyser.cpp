@@ -25,6 +25,8 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
+		metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
+		metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
 		if (passesTriggerAnalysisSelection(event)) {
 			eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
 			eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseElectron(mostEnergeticElectron, event->weight());
@@ -32,10 +34,15 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 //		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
 //		histMan_->H1D("MET")->Fill(event->MET()->et(), event->weight());
 
-		if (passesNonIsoWithoutBtagAndHLT(event))
+		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
-		if (passesAntiIDWithoutBtagAndHLT(event))
+			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
+		}
+
+		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
+			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
+		}
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
 			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
@@ -48,15 +55,23 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->setPrescale(prescale);
+		metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->setPrescale(prescale);
+		metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->setPrescale(prescale);
+
 		if (passesTriggerAnalysisSelection(event)) {
 			eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
 			eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyseElectron(mostEnergeticElectron, event->weight());
 		}
 
-		if (passesNonIsoWithoutBtagAndHLT(event))
+		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
-		if (passesAntiIDWithoutBtagAndHLT(event))
+			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
+		}
+		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
+			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
+		}
+
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
 			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
@@ -69,15 +84,21 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->setPrescale(prescale);
+		metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->setPrescale(prescale);
+		metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->setPrescale(prescale);
 		if (passesTriggerAnalysisSelection(event)) {
 			eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
 			eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyseElectron(mostEnergeticElectron, event->weight());
 		}
 
-		if (passesNonIsoWithoutBtagAndHLT(event))
+		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
-		if (passesAntiIDWithoutBtagAndHLT(event))
+			metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
+		}
+		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
+			metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
+		}
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
 			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
@@ -88,14 +109,21 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)) {
 		int prescale = event->HLTPrescale((HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
+		metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
+		metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
+
 		if (passesTriggerAnalysisSelection(event)) {
 			eleAnalyser_CaloIdVT_TrkIdT_->analyse(event);
 			eleAnalyser_CaloIdVT_TrkIdT_->analyseElectron(mostEnergeticElectron, event->weight());
 		}
-		if (passesNonIsoWithoutBtagAndHLT(event))
+		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVT_TrkIdT_++;
-		if (passesAntiIDWithoutBtagAndHLT(event))
+			metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->analyse(event);
+		}
+		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVT_TrkIdT_++;
+			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->analyse(event);
+		}
 
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVT_TrkIdT_++;
@@ -111,8 +139,14 @@ void HLTriggerQCDAnalyser::createHistograms() {
 	eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->createHistograms();
 	eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->createHistograms();
 	eleAnalyser_CaloIdVT_TrkIdT_->createHistograms();
-//	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
-//	histMan_->addH1D("MET", "MET", 1000, 0, 1000);
+	metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->createHistograms();
+	metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->createHistograms();
+	metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->createHistograms();
+	metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->createHistograms();
+	metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->createHistograms();
+	metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->createHistograms();
+	metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->createHistograms();
+	metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->createHistograms();
 }
 
 HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
@@ -128,6 +162,36 @@ HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::str
 						histogramFolder + "/HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30")), //
 		eleAnalyser_CaloIdVT_TrkIdT_(
 				new ElectronAnalyser(histMan, histogramFolder + "/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30")), //
+		metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(
+				new METAnalyser(histMan,
+						histogramFolder
+								+ "/QCDNonIso/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30")), //
+		metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(
+				new METAnalyser(histMan,
+						histogramFolder
+								+ "/QCDNonIso/HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30")), //
+		metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_(
+				new METAnalyser(histMan,
+						histogramFolder
+								+ "/QCDNonIso/HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30")), //
+		metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_(
+				new METAnalyser(histMan,
+						histogramFolder + "/QCDNonIso/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30")), //
+		metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(
+				new METAnalyser(histMan,
+						histogramFolder
+								+ "/QCDAntiID/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30")), //
+		metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(
+				new METAnalyser(histMan,
+						histogramFolder
+								+ "/QCDAntiID/HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30")), //
+		metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_(
+				new METAnalyser(histMan,
+						histogramFolder
+								+ "/QCDAntiID/HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30")), //
+		metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_(
+				new METAnalyser(histMan,
+						histogramFolder + "/QCDAntiID/HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30")), //
 		qcdNonIsoSelection_(new QCDNonIsolatedElectronSelection()), //
 		QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(0), //
 		QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(0), //

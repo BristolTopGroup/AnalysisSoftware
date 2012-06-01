@@ -11,6 +11,7 @@
 #include "../Event.h"
 #include "../HighLevelTriggers.h"
 #include "ElectronAnalyser.h"
+#include "METAnalyser.h"
 #include "../Selections/QCDNonIsolatedElectronSelection.h"
 #include "../Selections/QCDAntiIDEPlusJetsSelection.h"
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
@@ -32,6 +33,12 @@ private:
 	ElectronAnalyserLocalPtr eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_,
 			eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_, eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_,
 			eleAnalyser_CaloIdVT_TrkIdT_;
+	METAnalyserLocalPtr metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_,
+			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_, metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_,
+			metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_;
+	METAnalyserLocalPtr metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_,
+			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_, metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_,
+			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_;
 	QCDNonIsolatedElectronSelectionPointer qcdNonIsoSelection_;
 	unsigned long QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_,
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_,
@@ -48,7 +55,8 @@ private:
 			TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_, TopSignalRegionCount_CaloIdVT_TrkIdT_;
 	unsigned long TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_,
 			TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_,
-			TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_, TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_;
+			TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_,
+			TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_;
 
 };
 
