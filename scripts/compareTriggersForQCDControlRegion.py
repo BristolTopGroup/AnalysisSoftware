@@ -13,6 +13,12 @@ gROOT.ProcessLine('gErrorIgnoreLevel = 5001;')
     
 availableSamples = FILES.samplesToLoad
 files = {'SingleElectron': '/home/kreczko/Workspace/Analysis/AnalysisTools/ElectronHad_99999pb_PFElectron_PFMuon_PF2PATJets_PFMET.root'}
+#folder where the plots will be placed
+outputFolder='/storage/results/plots/HLTQCDAnalysis/'
+outputFormats = [
+                 'png',
+                 #'pdf'
+                 ]
 
 variables = [
              'electron_pT',
@@ -126,4 +132,4 @@ for variable in variables:
         maxfactor = 1.3
     canvas, legend = plotting.compareShapes(compare, labels, styles, maxfactor)
     legend.Draw()    
-    plotting.saveAs(canvas, variable, outputFolder='/storage/results/plots/HLTQCDAnalysis/')
+    plotting.saveAs(canvas, variable, outputFormats = outputFormats, outputFolder=outputFolder)
