@@ -5,10 +5,12 @@ Created on Jan 4, 2012
 
 Email: Lukasz.Kreczko@cern.ch
 '''
+from ROOT import TStyle, kWhite, kTRUE
 
 class tdrStyle():
     
-    def getStyle(self):
+    @staticmethod
+    def getStyle():
         tdrStyle = TStyle("tdrStyle","Style for P-TDR");
 
         # For the canvas:
@@ -149,5 +151,3 @@ class tdrStyle():
 
         tdrStyle.cd();
         return tdrStyle
-    
-    staticmethod(getStyle)

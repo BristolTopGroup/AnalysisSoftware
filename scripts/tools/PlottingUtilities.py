@@ -7,7 +7,7 @@ Email: Lukasz.Kreczko@cern.ch
 '''
 import os
 from ROOT import *
-from tdrStyle import *
+import Styles
 
 jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
                     '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
@@ -188,7 +188,7 @@ def setYTitle(hists, title, histname=''):
     return hists   
 
 def setStyle():
-    tdrStyle = setTDRStyle();
+    tdrStyle = Styles.tdrStyle.getStyle()
 
     #slight adaptation
     tdrStyle.SetPadRightMargin(0.05); #originally was 0.02, too narrow!
