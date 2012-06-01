@@ -281,7 +281,7 @@ const ElectronPointer Event::MostIsolatedElectron(const ElectronCollection& elec
 	for (unsigned int index = 0; index < electrons.size(); ++index) {
 		float currentIsolation = 999999999;
 		if (usePFIso)
-			currentIsolation = electrons.at(index)->pfIsolation();
+			currentIsolation = electrons.at(index)->pfRelativeIsolation();
 		else
 			currentIsolation = electrons.at(index)->relativeIsolation();
 

@@ -32,6 +32,7 @@ public:
 	virtual void setPFGammaIsolation(double pfGammaIso, double coneSize = 0.3);
 	virtual void setPFChargedHadronIsolation(double chargedHadronIso, double coneSize = 0.3);
 	virtual void setPFNeutralHadronIsolation(double neutralHadronIso, double coneSize = 0.3);
+	virtual void setPFPUChargedHadronIsolation(double isolation, double coneSize = 0.3);
 	virtual void setPFIsolationWithGaussianFallOff(double iso, double coneSize = 0.3);
 	//directional particle based isolation
 	virtual void setDirectionalIsolation(double iso, double coneSize = 0.3);

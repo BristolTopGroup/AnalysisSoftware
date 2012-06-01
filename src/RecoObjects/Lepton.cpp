@@ -60,12 +60,15 @@ Lepton::Lepton(double energy, double px, double py, double pz) : //
 		PFGamma_Isolation_DR03_(initialBigValue), //
 		PFChargedHadron_Isolation_DR03_(initialBigValue), //
 		PFNeutralHadron_Isolation_DR03_(initialBigValue), //
+		PFPUChargedHadron_Isolation_DR03_(initialBigValue), //
 		PFGamma_Isolation_DR04_(initialBigValue), //
 		PFChargedHadron_Isolation_DR04_(initialBigValue), //
 		PFNeutralHadron_Isolation_DR04_(initialBigValue), //
+		PFPUChargedHadron_Isolation_DR04_(initialBigValue), //
 		PFGamma_Isolation_DR05_(initialBigValue), //
 		PFChargedHadron_Isolation_DR05_(initialBigValue), //
 		PFNeutralHadron_Isolation_DR05_(initialBigValue), //
+		PFPUChargedHadron_Isolation_DR05_(initialBigValue), //
 		zDistanceToPrimaryVertex_(initialBigValue), //
 		directionalIsolation_DR02_(initialBigValue), //
 		directionalIsolation_DR03_(initialBigValue), //
@@ -187,6 +190,18 @@ void Lepton::setPFNeutralHadronIsolation(double neutralHadronIso, double coneSiz
 		PFNeutralHadron_Isolation_DR05_ = neutralHadronIso;
 	else {
 		std::cerr << "Lepton::setPFNeutralHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
+	}
+}
+
+void Lepton::setPFPUChargedHadronIsolation(double isolation, double coneSize) {
+	if (coneSize == 0.3)
+		PFPUChargedHadron_Isolation_DR03_ = isolation;
+	else if (coneSize == 0.4)
+		PFPUChargedHadron_Isolation_DR04_ = isolation;
+	else if (coneSize == 0.5)
+		PFPUChargedHadron_Isolation_DR05_ = isolation;
+	else {
+		std::cerr << "Lepton::setPFPUChargedHadronIsolation: Unknown cone of deltaR = " << coneSize << std::endl;
 	}
 }
 

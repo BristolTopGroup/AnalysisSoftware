@@ -40,12 +40,15 @@ private:
 	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR03_;
 	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR03_;
 	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR03_;
 	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR04_;
 	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR04_;
 	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR04_;
 	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR05_;
 	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR05_;
 	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR05_;
+	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR05_;
 
 	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR02_;
 	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR03_;

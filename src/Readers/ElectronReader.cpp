@@ -29,9 +29,11 @@ ElectronReader::ElectronReader() : //
 		PFGammaIsolationReader_DR03_(), //
 		PFChargedHadronIsolationReader_DR03_(), //
 		PFNeutralHadronIsolationReader_DR03_(), //
+		PFPUChargedHadron_Isolation_DR03_(), //
 		PFGammaIsolationReader_DR04_(), //
 		PFChargedHadronIsolationReader_DR04_(), //
 		PFNeutralHadronIsolationReader_DR04_(), //
+		PFPUChargedHadron_Isolation_DR04_(), //
 		PFGammaIsolationReader_DR05_(), //
 		PFChargedHadronIsolationReader_DR05_(), //
 		PFNeutralHadronIsolationReader_DR05_(), //
@@ -41,7 +43,7 @@ ElectronReader::ElectronReader() : //
 		DirectionalIsolationReaderWithGaussianFallOff_DR03_(), //
 		PFIsolationReaderWithGaussianFallOff_DR02_(), //
 		PFIsolationReaderWithGaussianFallOff_DR03_(), //
-		sigmaIEtaIEtaReader(), //
+		PFPUChargedHadron_Isolation_DR05_(), sigmaIEtaIEtaReader(), //
 		dPhiInReader(), //
 		dEtaInReader(), //
 		hadOverEmReader(), //
@@ -76,12 +78,15 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		PFGammaIsolationReader_DR03_(input, ElectronAlgorithm::prefixes.at(algo) + ".PFGammaIso03"), //
 		PFChargedHadronIsolationReader_DR03_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfChargedHadronIso03"), //
 		PFNeutralHadronIsolationReader_DR03_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfNeutralHadronIso03"), //
+		PFPUChargedHadron_Isolation_DR03_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfPUChargedHadronIso03"), //
 		PFGammaIsolationReader_DR04_(input, ElectronAlgorithm::prefixes.at(algo) + ".PFGammaIso04"), //
 		PFChargedHadronIsolationReader_DR04_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfChargedHadronIso04"), //
 		PFNeutralHadronIsolationReader_DR04_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfNeutralHadronIso04"), //
+		PFPUChargedHadron_Isolation_DR04_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfPUChargedHadronIso04"), //
 		PFGammaIsolationReader_DR05_(input, ElectronAlgorithm::prefixes.at(algo) + ".PFGammaIso05"), //
 		PFChargedHadronIsolationReader_DR05_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfChargedHadronIso05"), //
 		PFNeutralHadronIsolationReader_DR05_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfNeutralHadronIso05"), //
+		PFPUChargedHadron_Isolation_DR05_(input, ElectronAlgorithm::prefixes.at(algo) + ".PfPUChargedHadronIso05"), //
 		DirectionalIsolationReader_DR02_(input, ElectronAlgorithm::prefixes.at(algo) + ".DirectionalPFIso02"), //
 		DirectionalIsolationReader_DR03_(input, ElectronAlgorithm::prefixes.at(algo) + ".DirectionalPFIso03"), //
 		DirectionalIsolationReaderWithGaussianFallOff_DR02_(input,
@@ -178,6 +183,16 @@ void ElectronReader::readElectrons() {
 			electron->setMVATrigV0(mvaTrigV0_.getVariableAt(index));
 			electron->setMVANonTrigV0(mvaNonTrigV0_.getVariableAt(index));
 			electron->setPassConversionVeto(passConversionVeto_.getBoolVariableAt(index));
+			electron->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR03_.getVariableAt(index), 0.3);
+			electron->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR04_.getVariableAt(index), 0.4);
+			electron->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR05_.getVariableAt(index), 0.5);
+		} else {
+			electron->setMVATrigV0(-1);
+			electron->setMVANonTrigV0(-1);
+			electron->setPassConversionVeto(false);
+			electron->setPFPUChargedHadronIsolation(0, 0.3);
+			electron->setPFPUChargedHadronIsolation(0, 0.4);
+			electron->setPFPUChargedHadronIsolation(0, 0.5);
 		}
 
 		electrons.push_back(electron);
@@ -237,6 +252,9 @@ void ElectronReader::initialise() {
 		mvaTrigV0_.initialise();
 		mvaNonTrigV0_.initialise();
 		passConversionVeto_.initialise();
+		PFPUChargedHadron_Isolation_DR03_.initialise();
+		PFPUChargedHadron_Isolation_DR04_.initialise();
+		PFPUChargedHadron_Isolation_DR05_.initialise();
 	}
 }
 
