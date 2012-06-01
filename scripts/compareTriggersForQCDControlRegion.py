@@ -12,15 +12,15 @@ gROOT.ProcessLine('gErrorIgnoreLevel = 5001;')
     
     
 availableSamples = FILES.samplesToLoad
-files = {'SingleElectron': '/home/kreczko/Workspace/Analysis/BristolAnalysisTools/ElectronHad_99999pb_PFElectron_PFMuon_PF2PATJets_PFMET.root'}
+files = {'SingleElectron': '/home/kreczko/Workspace/Analysis/AnalysisTools/ElectronHad_99999pb_PFElectron_PFMuon_PF2PATJets_PFMET.root'}
 
 variables = [
              'electron_pT',
              'electron_eta',
              'electron_phi',
-             "electron_pfIsolation_03",
-             "electron_pfIsolation_04",
-             "electron_pfIsolation_05",
+             "electron_pfIsolation_03_0orMoreBtag",
+             "electron_pfIsolation_04_0orMoreBtag",
+             "electron_pfIsolation_05_0orMoreBtag",
              "electron_dPhi_in",
              "electron_dEta_in",
              "electron_HadOverEM",
@@ -41,9 +41,9 @@ limits = {
           'electron_pT':(0, 200),
              'electron_eta':(-3, 3),
              'electron_phi':(-4, 4),
-             "electron_pfIsolation_03":(0, 2),
-             "electron_pfIsolation_04":(0, 2),
-             "electron_pfIsolation_05":(0, 2),
+             "electron_pfIsolation_03_0orMoreBtag":(0, 2),
+             "electron_pfIsolation_04_0orMoreBtag":(0, 2),
+             "electron_pfIsolation_05_0orMoreBtag":(0, 2),
              "electron_dPhi_in":(-0.2, 0.2),
              "electron_dEta_in":(-0.02, 0.02),
              "electron_HadOverEM":(0, 0.2),
@@ -57,9 +57,9 @@ rebins = {
           'electron_pT':5,
              'electron_eta':10,
              'electron_phi':10,
-             "electron_pfIsolation_03":5,
-             "electron_pfIsolation_04":5,
-             "electron_pfIsolation_05":5,
+             "electron_pfIsolation_03_0orMoreBtag":5,
+             "electron_pfIsolation_04_0orMoreBtag":5,
+             "electron_pfIsolation_05_0orMoreBtag":5,
              "electron_dPhi_in":1,
              "electron_dEta_in":1,
              "electron_HadOverEM":1,
@@ -73,9 +73,9 @@ titles = {
           'electron_pT':'Events/(5 GeV)',
              'electron_eta':'Events/(0.5)',
              'electron_phi':'Events/(0.5)',
-             "electron_pfIsolation_03":'Events/(0.05)',
-             "electron_pfIsolation_04":'Events/(0.05)',
-             "electron_pfIsolation_05":'Events/(0.05)',
+             "electron_pfIsolation_03_0orMoreBtag":'Events/(0.05)',
+             "electron_pfIsolation_04_0orMoreBtag":'Events/(0.05)',
+             "electron_pfIsolation_05_0orMoreBtag":'Events/(0.05)',
              "electron_dPhi_in":'Events/(0.01)',
              "electron_dEta_in":'Events/(0.001)',
              "electron_HadOverEM":'Events/(0.01)',
