@@ -14,19 +14,20 @@ files= FILES.files
 lumi= FILES.luminosity
 
 theorXsect = 157.5
-QCD_scale_factor = 0.1
+QCD_scale_factor = 1.0
 xmin = 0
 xmax = 0
 n_bins = 200
 n_par = 4 #number of parameters in Minuit
 N_total = 0 #Total number of events in data
 
-data_vector = [] #input data
+data_vector = [] #input data vector
 signal_template = [] #ttbar+single top template from mc
 wjets_template = [] #wjets template from mc
 zjets_template = [] #zjets template from mc
 qcd_template = [] #qcd template from data-driven method
 
+#corresponding errors
 signal_err = []
 wjets_err = []
 zjets_err = []
@@ -35,8 +36,9 @@ qcd_err = []
 outpar = array ("d", n_par*[0.0] ) #output fit parameters
 err = array ("d", n_par*[0.0]) #errors for them
 
-histname ='TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patType1CorrectedPFMet/MET_2orMoreBtags'
-histnameQCD = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patType1CorrectedPFMet/MET_2orMoreBtags'
+histname ='TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/MET_2orMoreBtags'
+histnameQCD = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET_2orMoreBtags'
+
 hists = FileReader.getHistogramDictionary(histname, files)
 histsQCD = FileReader.getHistogramDictionary(histnameQCD, files)
 
@@ -67,7 +69,6 @@ def getDataFromHistograms():
         nn = histData.GetBinContent(ibin+1)
         data_vector.append(nn)
         N_total += nn
-    #print "Total number of data events before the fit: ", N_total
 
 def getTemplatesFromHistograms(hist, template, err):
     #print "Number of bins before scaling and rebinning: ", hist, " = ", hist.GetSize()
@@ -78,17 +79,15 @@ def getTemplatesFromHistograms(hist, template, err):
         template.append(hist.GetBinContent(ibin+1))
         err.append(hist.GetBinError(ibin+1))
 
-# fcn passes back f = - 2*ln(L), the function to be minimised. not sure if N_{single top} is obtained from fitting
+# fcn returns back f = - 2*ln(L), the function to be minimised
 def fcn( npar, gin, f, par, iflag ):
     lnL = 0.0
     for i in range (0, n_bins):
         data_i = data_vector[i] #observed number of events in each bin
         x_i = par[0]*signal_template[i] + par[1]*wjets_template[i] + par[2]*zjets_template[i] + par[3]*qcd_template[i] #expected number of events in each bin
-        #print "{", i, ",", data_i, ",",  x_i, "}, parameters: {", par[0], "*", signal_template[i], "+", par[1], "*", wjets_template[i], "+", par[2], "*", zjets_template[i], "+", par[3], "*", qcd_template[i], "}"
         
         if (data_i != 0) and (x_i != 0):
             lnL += log(TMath.Poisson(data_i, x_i))
-            #print i, " { data_i = ", data_i, ", x_i = ", x_i, ", Poisson =  ", TMath.Poisson(data_i, x_i), ", log = ", log(TMath.Poisson(data_i, x_i)), ", lnL = ", lnL, "}"
     
     f[0] = -2.0 * lnL
     
@@ -107,16 +106,17 @@ def tempFit():
     getTemplatesFromHistograms(histZjets, zjets_template, zjets_err)
     getTemplatesFromHistograms(histQCD, qcd_template, qcd_err)
     
+    #setting up Minuit
     gMinuit = TMinuit(n_par)
     gMinuit.SetFCN( fcn )
     
     gMinuit.SetPrintLevel(1)
-    gMinuit.SetErrorDef(1.0)
+    
+    #Error definition: 1 for chi-squared, 0.5 for negative log likelihood
+    gMinuit.SetErrorDef(1)
     
     ierflg = Long(0)
     
-    #parameters_list = ["ttbar+single_top", "wjets", "zjets", "qcd"] #background parameters
-   
     par_value = array ("d", (Nsignal, Nwjets, Nzjets, Nqcd) ) #using the MC estimation as starting values
     
     print "Total number of data events before the fit: ", N_total
@@ -126,12 +126,17 @@ def tempFit():
     gMinuit.mnparm(2, "zjets", par_value[2], 10.0, 0, N_total, ierflg)
     gMinuit.mnparm(3, "qcd", par_value[3], 10.0, 0, N_total, ierflg)
       
-    #Fabian's code to improve minimum: optional
     arglist = array( 'd', 10*[0.] )
+    
+    #minimisation strategy: 1 standard, 2 try to improve minimum (a bit slower)
     arglist[0] = 2
+    
+    #minimisation itself
     gMinuit.mnexcm("SET STR", arglist, 1, ierflg)
     gMinuit.Migrad()
     
+    
+    #getting the output fit parameters back
     global outpar, err
    
     for i in range(n_par):
@@ -140,8 +145,8 @@ def tempFit():
         gMinuit.GetParameter(i, temp_par, temp_err)
         outpar[i] = temp_par
         err[i] = temp_err
-        #print "{", temp_par, ", ", temp_err, "}"
     
+    #calculate cross-section and error
     xs_fit = (outpar[0] - Nsingle_t) / (Nttbar/theorXsect)
     xs_fit_plus = (outpar[0]+err[0] - Nsingle_t) / (Nttbar/theorXsect)
     xs_fit_minus = (outpar[0]-err[0] - Nsingle_t) / (Nttbar/theorXsect)
@@ -156,11 +161,13 @@ def plotResult():
     result = TH1F("result", "", n_bins, xmin, xmax)
     data = TH1F("data", "", n_bins, xmin, xmax)
     
+    #contribution histograms for the stack plot
     signal_contribution = TH1F("signal_con", "", n_bins, xmin, xmax)
     wjets_contribution = TH1F("wjets_con", "", n_bins, xmin, xmax)
     zjets_contribution = TH1F("zjets_con", "", n_bins, xmin, xmax)
     qcd_contribution = TH1F("qcd_con", "", n_bins, xmin, xmax)
     
+    #templates histograms (scaling is irrelevant, shape matters)
     signal_temp = TH1F("signal_temp", "", n_bins, xmin, xmax)
     wjets_temp = TH1F("wjets_temp", "", n_bins, xmin, xmax)
     zjets_temp = TH1F("zjets_temp", "", n_bins, xmin, xmax)
