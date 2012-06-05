@@ -36,7 +36,9 @@ void METAnalyser::analyseTransverseMass(const METPointer met, const ParticlePoin
 	weight_ = weight * prescale_;
 
 	double MT = transverseMass(met, particle);
+	double angle = met->angle(particle);
 	histMan_->H1D_BJetBinned("Transverse_Mass")->Fill(MT, weight_);
+	histMan_->H1D_BJetBinned("Angle_lepton_MET")->Fill(angle, weight_);
 }
 
 double METAnalyser::transverseMass(const METPointer met, const ParticlePointer particle) const {
@@ -62,8 +64,10 @@ void METAnalyser::createHistograms() {
 			histMan_->addH2D_BJetBinned("METsignificance_vs_MET", "Missing transverse energy vs Missing transverse energy significance;#slash{E}_{T}/GeV; #slash{E}_{T} significance", 200,
 					0, 1000, 1000, 0, 1000);
 
-			histMan_->addH1D_BJetBinned("Transverse_Mass", "Transverse Mass(lepton,MET);M_{T}(l,MET); Events", 1000, 0,
+			histMan_->addH1D_BJetBinned("Transverse_Mass", "Transverse Mass(lepton,MET);M_{T}(l,MET)/GeV; Events/1GeV", 1000, 0,
 					1000);
+			histMan_->addH1D_BJetBinned("Angle_lepton_MET", "angle(lepton,MET);angle_{T}(l,MET); Events/0.01", 320, 0,
+								3.2);
 		}
 	}
 }

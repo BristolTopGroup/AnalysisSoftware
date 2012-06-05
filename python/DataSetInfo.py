@@ -20,7 +20,21 @@ datasetInfo = {}
 #datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":29475803}
 #if using the designated subset:
 datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":4438282}
-datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":47896878}
+#If using only the small sample
+#datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":47896878}
+#When using the W+NJet samples normalise the total amount to WJetsToLNu x-section
+#WJetsToLNu = 47896878
+#W1Jet = 71828418
+#W2Jets = 25400440
+#W3Jets = 7685939
+#W4Jets = 10814233
+totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233
+datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
+datasetInfo['W1Jet'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets }
+datasetInfo['W2Jets'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
+datasetInfo['W3Jets'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
+datasetInfo['W4Jets'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
+
 datasetInfo['DYJetsToLL'] = {"cross-section": 3048., "NumberOfProcessedEvents":36258986}
 
 datasetInfo['GJets_HT-40To100'] = {"cross-section": 23620., "NumberOfProcessedEvents":12711126}

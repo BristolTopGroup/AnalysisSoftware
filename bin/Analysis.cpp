@@ -257,7 +257,7 @@ void Analysis::createHistograms() {
 
 	ttbarPlusMETAnalyser_->createHistograms();
 	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by ttbarPlusMETAnalyser_: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	cout << "Number of histograms added by ttbarPlusMETAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
 	vertexAnalyser->createHistograms();

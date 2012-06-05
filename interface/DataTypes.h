@@ -17,23 +17,27 @@ enum value {
 	MuHad,
 	TTJets,
 	Wjets,
+	W1Jet,
+	W2Jets,
+	W3Jets,
+	W4Jets,
 	Zjets,
 	QCD_BCtoE_Pt20to30,
 	QCD_BCtoE_Pt30to80,
 	QCD_BCtoE_Pt80to170,
 	QCD_EMEnriched_Pt20to30,
-	QCD_EMEnriched_Pt30to80, //10
+	QCD_EMEnriched_Pt30to80,
 	QCD_EMEnriched_Pt80to170,
 	QCD_MuEnrichedPt15_Pt20,
 	PhotonJets_Pt40to100,
 	PhotonJets_Pt100to200,
 	PhotonJets_Pt200toInf,
 	VQQ,
-	singleTop_And_W,
+	singleTop_And_W, //
 	singleTopTChannel,
 	singleTopSChannel,
 	singleAntiTop_And_W,
-	singleAntiTopTChannel, //20
+	singleAntiTopTChannel,
 	singleAntiTopSChannel,
 	Zprime_M500GeV_W5GeV,
 	Zprime_M500GeV_W50GeV,
@@ -43,7 +47,7 @@ enum value {
 	Zprime_M1250GeV_W12500MeV,
 	Zprime_M1500GeV_W15GeV,
 	Zprime_M1500GeV_W150GeV,
-	Zprime_M2TeV_W20GeV, //30
+	Zprime_M2TeV_W20GeV,
 	Zprime_M2TeV_W200GeV,
 	Zprime_M3TeV_W30GeV,
 	Zprime_M3TeV_W300GeV,
@@ -53,7 +57,7 @@ enum value {
 	WZtoAnything,
 	ZZtoAnything,
 	ttbar161,
-	ttbar163, //40
+	ttbar163,
 	ttbar166,
 	ttbar169,
 	ttbar175,
@@ -79,6 +83,10 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"MuHad", //
 		"TTJet", //
 		"WJetsToLNu", //
+		"W1Jet", //
+		"W2Jets", //
+		"W3Jets", //
+		"W4Jets", //
 		"DYJetsToLL", //
 		"QCD_Pt-20to30_BCtoE", //
 		"QCD_Pt-30to80_BCtoE", //
@@ -130,8 +138,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"WJetsToLNu-matchingup", //
 		"WJetsToLNu-scaledown", //
 		"WJetsToLNu-scaleup", //
-		"TTbarZIncl",//
-		"TTbarInclWIncl"//
+		"TTbarZIncl", //
+		"TTbarInclWIncl" //
 		} };
 }
 
