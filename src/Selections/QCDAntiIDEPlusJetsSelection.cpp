@@ -17,7 +17,6 @@ QCDAntiIDEPlusJetsSelection::QCDAntiIDEPlusJetsSelection(unsigned int numberOfSe
 bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron) const {
 	bool passesEtAndEta = electron->et() > 30. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
-	bool passesDistanceToPV = fabs(electron->ZDistanceToPrimaryVertex()) < 1;
 
 	bool passSigmaIetaIeta(false);
 	bool passDphiIn(false);
@@ -39,7 +38,7 @@ bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron)
 
 	bool failsTwoOfFourWP80Conditions((passSigmaIetaIeta + passDphiIn + passDetaIn + passHoverE) < 2);
 
-	return passesEtAndEta && passesD0 && passesDistanceToPV && failsTwoOfFourWP80Conditions;
+	return passesEtAndEta && passesD0 && failsTwoOfFourWP80Conditions;
 }
 
 bool QCDAntiIDEPlusJetsSelection::isIsolated(const LeptonPointer lepton) const {
