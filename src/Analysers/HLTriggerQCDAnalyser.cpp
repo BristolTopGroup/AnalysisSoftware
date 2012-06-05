@@ -12,16 +12,20 @@ using namespace std;
 
 namespace BAT {
 void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
+	bool studyExclusiveEvents(false);
 
 	//only do this analysis for runs above 193834 as previous runs don't have all triggers
-	if (!(event->runnumber() >= 193834 && event->runnumber() <= 194076 && event->isRealData()))
+	if (!(event->runnumber() >= 193834 && event->isRealData()))
 		return;
 
 	if (event->Electrons().size() == 0)
 		return;
 
 	const ElectronPointer mostEnergeticElectron(event->Electrons().front());
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)) {
+	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)&& (!studyExclusiveEvents
+			|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+					&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+					&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
@@ -31,8 +35,6 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 			eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
 			eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseElectron(mostEnergeticElectron, event->weight());
 		}
-//		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30" );
-//		histMan_->H1D("MET")->Fill(event->MET()->et(), event->weight());
 
 		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
@@ -48,10 +50,12 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 			if (topSignalSelection_->hasAtLeastTwoGoodBJets(event))
 				TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
 		}
-
 	}
 
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)) {
+	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)&& (!studyExclusiveEvents
+			|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+					&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
+					&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->setPrescale(prescale);
@@ -80,7 +84,11 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 
 	}
 
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)) {
+	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+			&& (!studyExclusiveEvents
+					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
+							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->setPrescale(prescale);
@@ -106,7 +114,12 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		}
 	}
 
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)) {
+	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)
+			&& (!studyExclusiveEvents
+					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
+							&& !event->HLT(
+									HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)))) {
 		int prescale = event->HLTPrescale((HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
 		metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
@@ -277,9 +290,8 @@ bool HLTriggerQCDAnalyser::passesAntiIDWithoutBtagAndHLT(const EventPtr event) c
 	passes = passes && qcdAntiIDSelection_->passesLooseLeptonVeto(event);
 	passes = passes && qcdAntiIDSelection_->passesDileptonVeto(event);
 	passes = passes && qcdAntiIDSelection_->passesConversionVeto(event);
-	passes = passes && event->GoodElectronCleanedJets().size() > 0;
-//	passes = passes && qcdAntiIDSelection_->hasAtLeastThreeGoodJets(event);
-//	passes = passes && qcdAntiIDSelection_->hasAtLeastFourGoodJets(event);
+	passes = passes && qcdAntiIDSelection_->hasAtLeastThreeGoodJets(event);
+	passes = passes && qcdAntiIDSelection_->hasAtLeastFourGoodJets(event);
 
 	return passes;
 }

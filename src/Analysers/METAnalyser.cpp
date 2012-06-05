@@ -56,10 +56,10 @@ void METAnalyser::createHistograms() {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
-			histMan_->addH1D_BJetBinned("MET", "MET", 1000, 0, 1000);
-			histMan_->addH1D_BJetBinned("MET_phi", "#phi(MET);#phi(MET);Events/0.1", 80, -4, 4);
-			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance", 1000, 0, 1000);
-			histMan_->addH2D_BJetBinned("METsignificance_vs_MET", "MET vs MET significance;MET; MET significance", 200,
+			histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0, 1000);
+			histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80, -4, 4);
+			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0, 1000);
+			histMan_->addH2D_BJetBinned("METsignificance_vs_MET", "Missing transverse energy vs Missing transverse energy significance;#slash{E}_{T}/GeV; #slash{E}_{T} significance", 200,
 					0, 1000, 1000, 0, 1000);
 
 			histMan_->addH1D_BJetBinned("Transverse_Mass", "Transverse Mass(lepton,MET);M_{T}(l,MET); Events", 1000, 0,

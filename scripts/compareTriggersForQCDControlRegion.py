@@ -14,7 +14,8 @@ gROOT.ProcessLine('gErrorIgnoreLevel = 5001;')
 availableSamples = FILES.samplesToLoad
 files = {'SingleElectron': '/home/kreczko/Workspace/Analysis/AnalysisTools/ElectronHad_99999pb_PFElectron_PFMuon_PF2PATJets_PFMET.root'}
 #folder where the plots will be placed
-outputFolder='/storage/results/plots/HLTQCDAnalysis/'
+#outputFolder = '/storage/results/plots/HLTQCDAnalysis/ExclusiveEvents/'
+outputFolder = '/storage/results/plots/HLTQCDAnalysis/InclusiveEvents/'
 outputFormats = [
                  'png',
                  #'pdf'
@@ -98,7 +99,7 @@ plotting.setStyle()
 for variable in variables:
     hists = plotting.rebin(hists, rebins[variable], '*' + variable)
     hists = plotting.setXRange(hists, limits=limits[variable], histname='*' + variable)
-    hists = plotting.setYTitle(hists, title=titles[variable],  histname='*' + variable)
+    hists = plotting.setYTitle(hists, title=titles[variable], histname='*' + variable)
 
 labels = [
           'CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT',
@@ -132,4 +133,28 @@ for variable in variables:
         maxfactor = 1.3
     canvas, legend = plotting.compareShapes(compare, labels, styles, maxfactor)
     legend.Draw()    
-    plotting.saveAs(canvas, variable, outputFormats = outputFormats, outputFolder=outputFolder)
+    plotting.saveAs(canvas, variable, outputFormats=outputFormats, outputFolder=outputFolder)
+    
+#MET plots    
+variables = [
+              'MET_0btag',
+              'MET_0orMoreBtag',
+              ]
+selections = ['QCDAntiID', 'QCDNonIso']
+histograms = ['HLTQCDStudy/' + selection + '/' + trigger + '/patMETsPFlow/' + variable for variable in variables for trigger in triggers for selection in selections]
+hists = FileReader.getHistogramsFromFiles(histograms, files)
+hists = plotting.rebin(hists, 5, '*MET_')
+hists = plotting.setXRange(hists, limits=(0, 200), histname='*MET_')
+hists = plotting.setYTitle(hists, title="events/5 GeV", histname='*MET_')
+
+for selection in selections:
+    for variable in variables:
+        compare = []
+        app = compare.append
+        for hist in histograms:
+            if variable in hist and selection in hist:
+                app(hists['SingleElectron'][hist])
+        maxfactor = 1.3
+        canvas, legend = plotting.compareShapes(compare, labels, styles, maxfactor)
+        legend.Draw()    
+        plotting.saveAs(canvas, selection + "_" +variable, outputFormats=outputFormats, outputFolder=outputFolder)
