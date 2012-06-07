@@ -28,12 +28,12 @@ datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":443828
 #W2Jets = 25400440
 #W3Jets = 7685939
 #W4Jets = 10814233
-totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233
-datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
-datasetInfo['W1Jet'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets }
-datasetInfo['W2Jets'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
-datasetInfo['W3Jets'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
-datasetInfo['W4Jets'] = {"cross-section": 31314., "NumberOfProcessedEvents":totalWPlusJets}
+#totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233
+datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":47896878}
+datasetInfo['W1Jet'] = {"cross-section": 31314., "NumberOfProcessedEvents":71828418 }
+datasetInfo['W2Jets'] = {"cross-section": 1674., "NumberOfProcessedEvents":25400440}
+datasetInfo['W3Jets'] = {"cross-section": 484.7, "NumberOfProcessedEvents":7685939}
+datasetInfo['W4Jets'] = {"cross-section": 211.7, "NumberOfProcessedEvents":10814233}
 
 datasetInfo['DYJetsToLL'] = {"cross-section": 3048., "NumberOfProcessedEvents":36258986}
 
