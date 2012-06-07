@@ -57,7 +57,29 @@ void BJetAnalyser::createHistograms() {
 			string jettype = JETTYPES.at(index);
 			string algorithm = BtagAlgorithm::names.at(algo);
 			string histname = algorithm + "_" + jettype;
-			histMan_->addH1D(histname, histname, 1100, -1., 10.);
+			if (algorithm == "CombinedSecondaryVertex") {
+				histMan_->addH1D(histname, histname, 200, -0.5, 1.5);
+			} else if (algorithm == "CombinedSecondaryVertexMVA") {
+				histMan_->addH1D(histname, histname, 200, -0.5, 1.5);
+			} else if (algorithm == "JetBProbability") {
+				histMan_->addH1D(histname, histname, 1050, -0.5, 10.);
+			} else if (algorithm == "JetProbability") {
+				histMan_->addH1D(histname, histname, 1050, -0.5, 10.);
+			} else if (algorithm == "SimpleSecondaryVertexHighEfficiency") {
+				histMan_->addH1D(histname, histname, 600, 0., 6.);
+			} else if (algorithm == "SimpleSecondaryVertexHighPurity") {
+				histMan_->addH1D(histname, histname, 600, 0., 6.);
+			} else if (algorithm == "SoftMuon") {
+				histMan_->addH1D(histname, histname, 600, -5., 1.);
+			} else if (algorithm == "SoftMuonByIP3d") {
+				histMan_->addH1D(histname, histname, 27000, -120., 150.);
+			} else if (algorithm == "SoftMuonByPt") {
+				histMan_->addH1D(histname, histname, 5500, -5., 50.);
+			} else if (algorithm == "TrackCountingHighEfficiency") {
+				histMan_->addH1D(histname, histname, 17000, -70., 100.);
+			} else if (algorithm == "TrackCountingHighPurity") {
+				histMan_->addH1D(histname, histname, 17000, -70., 100.);
+			}
 		}
 	}
 }

@@ -15,9 +15,6 @@
 
 namespace BAT {
 
-
-
-
 class MCAnalyser : public BasicAnalyser{
 public:
     MCAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "MCStudy");

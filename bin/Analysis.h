@@ -27,6 +27,7 @@
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
 //Analysers
+#include "../interface/Analysers/ABCDMethodAnalyser.h"
 #include "../interface/Analysers/DiElectronAnalyser.h"
 #include "../interface/Analysers/BJetAnalyser.h"
 #include "../interface/Analysers/ElectronAnalyser.h"
@@ -72,6 +73,7 @@ private:
     float weight, pileUpWeight;
     BAT::Counter ePlusJetsCutflowPerSample, muPlusJetsCutflowPerSample;
 
+    BAT::ABCDMethodAnalyserLocalPtr abcdMethodAnalyser_;
     BAT::BJetAnalyserLocalPtr bjetAnalyser;
     boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;

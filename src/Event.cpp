@@ -492,7 +492,6 @@ const MCParticleCollection& Event::GenParticles() const {
 
 const METPointer Event::MET() const {
 	return MET(Globals::metAlgorithm);
-//	return met;
 }
 
 const METPointer Event::MET(METAlgorithm::value type) const {

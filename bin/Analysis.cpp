@@ -37,6 +37,7 @@ void Analysis::analyse() {
 
 //		selectionCommissioning_->analyse(currentEvent);
 
+		abcdMethodAnalyser_->analyse(currentEvent);
 		bjetAnalyser->analyse(currentEvent);
 		diElectronAnalyser->analyse(currentEvent);
 		electronAnalyser->analyse(currentEvent);
@@ -180,6 +181,12 @@ void Analysis::printSummary() {
 void Analysis::createHistograms() {
 	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
+
+	abcdMethodAnalyser_->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by abcdMethodAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
 	bjetAnalyser->createHistograms();
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by bjetAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
@@ -212,7 +219,8 @@ void Analysis::createHistograms() {
 
 	hltriggerQCDAnalyser_->createHistograms();
 	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by hltriggerQCDAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	cout << "Number of histograms added by hltriggerQCDAnalyser: " << numberOfHistograms - lastNumberOfHistograms
+			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
 	jetAnalyser->createHistograms();
@@ -257,7 +265,8 @@ void Analysis::createHistograms() {
 
 	ttbarPlusMETAnalyser_->createHistograms();
 	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by ttbarPlusMETAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	cout << "Number of histograms added by ttbarPlusMETAnalyser: " << numberOfHistograms - lastNumberOfHistograms
+			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
 	vertexAnalyser->createHistograms();
@@ -289,6 +298,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 				JetBin::NUMBER_OF_JET_BINS), //
 		muPlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
 				JetBin::NUMBER_OF_JET_BINS), //
+		abcdMethodAnalyser_(new ABCDMethodAnalyser(histMan)), //
 		bjetAnalyser(new BJetAnalyser(histMan)), //
 		diElectronAnalyser(new DiElectronAnalyser(histMan)), //
 		electronAnalyser(new ElectronAnalyser(histMan)), //

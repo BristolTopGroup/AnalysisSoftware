@@ -12,7 +12,7 @@
 #include "../HistHelpers/HistogramManager.h"
 #include "../Event.h"
 
-namespace BAT{
+namespace BAT {
 /**
  * @brief Interface/abstract class for Analysers.
  *
@@ -20,7 +20,7 @@ namespace BAT{
  * Stores a pointer to a HistogramManager for Histogram creation and manipulation.
  *
  */
-class BasicAnalyser{
+class BasicAnalyser {
 protected:
 	HistogramManagerPtr histMan_;
 	std::string histogramFolder_;
@@ -35,26 +35,25 @@ public:
 	 *
 	 * Analysers are created at the beginning of the analysis.
 	 */
-    BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "BasicAnalyser");
-    virtual ~BasicAnalyser();
-    /**
-     * The main functionality of an analyser is available in the analyse function.
-     * The function takes a constant pointer to an Event and reads the eventcontent.
-     * All changes to the event must be done on a private copy of this event in order to not distort the results of other analysers.
-     * The function is executed once for each event in the analysis.
-     */
-    virtual void analyse(const EventPtr) = 0;
-    /**
-     * The histogram folder as well as all histograms used by this analyser should be defined by this function
-     * The function is executed on the creation of the analysis.
-     */
-    virtual void createHistograms() = 0;
+	BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "BasicAnalyser");
+	virtual ~BasicAnalyser();
+	/**
+	 * The main functionality of an analyser is available in the analyse function.
+	 * The function takes a constant pointer to an Event and reads the eventcontent.
+	 * All changes to the event must be done on a private copy of this event in order to not distort the results of other analysers.
+	 * The function is executed once for each event in the analysis.
+	 */
+	virtual void analyse(const EventPtr) = 0;
+	/**
+	 * The histogram folder as well as all histograms used by this analyser should be defined by this function
+	 * The function is executed on the creation of the analysis.
+	 */
+	virtual void createHistograms() = 0;
 
-    virtual void setPrescale(unsigned int prescale);
+	virtual void setPrescale(unsigned int prescale);
 };
 
 typedef boost::scoped_ptr<BasicAnalyser> BasicAnalyserLocalPtr;
 }
-
 
 #endif /* BASICANALYSER_H_ */
