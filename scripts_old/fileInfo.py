@@ -131,3 +131,8 @@ if __name__ == "__main__":
             print 'check files'
     else:
         print 'File path was not specified. Use script "./remove_duplicates path"'
+        
+#print a list of
+#Files in 'Folder'
+# FileName, size, reason to delete
+#Do you want to delete these files? (Y/N) [need valid grid certificate]:

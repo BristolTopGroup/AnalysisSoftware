@@ -44,8 +44,8 @@ def deleteFolder(folder):
 def deleteGridFolder(path):
     filelist = listFiles(path)
     for file in getFiles(path, filelist):
-        delete(file)
-        deleteFolder(path)
+        print delete(file)
+    print deleteFolder(path)
         
 if __name__ == '__main__':
     

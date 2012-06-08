@@ -72,7 +72,7 @@ def estimateQCDFrom(histogramForEstimation, function='expo',
     else:
         return (0, 0) 
  
-def getQCDEstimateFor(histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_0orMoreBtag', function='expo',
+def getQCDEstimateFor(histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR03_0orMoreBtag', function='expo',
                    fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):
     estimate, absoluteError = estimateQCDFrom(histogramForEstimation, function, fitRanges=[fitRange])
     
@@ -98,9 +98,12 @@ def getQCDEstimateFor(histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAnd
     
     return estimate, absoluteError
 
-def getQCDEstimate(datafile, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', bjetBin='', function='expo',
+def getQCDEstimate(datafile, 
+                   histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR03', 
+                   bjetBin='', function='expo',
                    fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]): 
     bias = 0.45
+#    bias = 0
     reductionFromBias = 1 - bias 
     if bjetBin:
         histogramForEstimation = histogramForEstimation + '_' + bjetBin
@@ -126,7 +129,7 @@ def getIntegral(histogram, integralRange=(0, 0.1)):
     return integral, absoluteError
     
     
-def getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts', bjetBin='', function='expo',
+def getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR03', bjetBin='', function='expo',
                    fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]):  
     if bjetBin:
         histogramForEstimation = histogramForEstimation + '_' + bjetBin
@@ -156,41 +159,47 @@ def getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithM
     return result
     
     
-def getShapeErrorHistogram(histname, files):
+def getShapeErrorHistogram(files, 
+                           histogramForShape = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets', 
+                           histogramForComparison = 'topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets',
+                           rebin = 1, 
+                           suffix = ''):
     files = {'data': files['data']}
-    histogramForShape = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets'
-    histogramForComparison = 'topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets'
-    suffixes = allBjetBins
-    rebin = 50
+#    histogramForShape = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets'
+#    histogramForComparison = 'topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets'
+#    suffixes = allBjetBins
+#    rebin = 50
 
     errors = None
         
-    for suffix in suffixes:
-        if suffix in histname:
-            histogramForShape = histogramForShape + '_' + suffix
-            histogramForComparison = histogramForComparison + '_' + suffix
-            hists = [histogramForShape, histogramForComparison]
-            hists = getHistsFromFiles(hists, files)
-            histogramForShape = hists['data'][histogramForShape]
-            histogramForComparison = hists['data'][histogramForComparison]
-            histogramForShape.Sumw2()
-            histogramForComparison.Sumw2()
+#    for suffix in suffixes:
+#        if suffix in histname:
+    if not suffix == '':
+        histogramForShape = histogramForShape + '_' + suffix
+        histogramForComparison = histogramForComparison + '_' + suffix
+        
+    hists = [histogramForShape, histogramForComparison]
+    hists = getHistsFromFiles(hists, files)
+    histogramForShape = hists['data'][histogramForShape]
+    histogramForComparison = hists['data'][histogramForComparison]
+    histogramForShape.Sumw2()
+    histogramForComparison.Sumw2()
             
-            histogramForShape.Rebin(rebin)
-            histogramForComparison.Rebin(rebin)
+    histogramForShape.Rebin(rebin)
+    histogramForComparison.Rebin(rebin)
             
-            nShape = histogramForShape.Integral()
-            nCompare = histogramForComparison.Integral()
+    nShape = histogramForShape.Integral()
+    nCompare = histogramForComparison.Integral()
             
-            if nShape > 0 and nCompare > 0:
-                histogramForShape.Scale(1 / nShape)
-                histogramForComparison.Scale(1 / nCompare)
+    if nShape > 0 and nCompare > 0:
+        histogramForShape.Scale(1 / nShape)
+        histogramForComparison.Scale(1 / nCompare)
             
-            errors = histogramForShape.Clone('ShapeErrors')
-            errors.Add(histogramForComparison, -1)#subtraction
-            for bin in range(1, errors.GetNbinsX()):
-                errors.SetBinContent(bin, fabs(errors.GetBinContent(bin)))
-            errors.Divide(histogramForShape)
+    errors = histogramForShape.Clone('ShapeErrors')
+    errors.Add(histogramForComparison, -1)#subtraction
+    for bin in range(1, errors.GetNbinsX()):
+        errors.SetBinContent(bin, fabs(errors.GetBinContent(bin)))
+    errors.Divide(histogramForShape)
             
     return errors   
     
@@ -256,7 +265,7 @@ def doComparisonFitFunctions(files):
             print '| %s | %.3f | %d | %.3f |' % (function, chi2, ndof, chi2 / ndof)
         
         for btag in btags:
-            result = compareFitFunctions(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, functions=functions,
+            result = compareFitFunctions(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR03_%s' % btag, functions=functions,
                    fitRange=fitRange)
             print '| * 4jets, %s* | *fit range (%.1f, %1.f)*|||' % (btag, fitRange[0], fitRange[1])
             print '| *fit function* | *Chi^2* | *NDoF* | *Chi^2/NDoF* |'
@@ -277,12 +286,12 @@ def doComparisonFitFunctions(files):
             
     
     
-def doEstimation(files, function):
-    print 'QCD estimation in relative isolation using', function, 'function'
-    est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function,
-                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
-    print '| *region* | *N<sub>QCD, exp</sub>* | *N<sub>est</sub>* | *scale factor* |'
-    print '| 3j1t | --- |  %.1f &pm; %.1f | --- |' % (est, err)
+def doEstimation(files, function, hist):
+#    print 'QCD estimation in relative isolation using', function, 'function'
+#    est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function,
+#                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+#    print '| *region* | *N<sub>QCD, exp</sub>* | *N<sub>est</sub>* | *scale factor* |'
+#    print '| 3j1t | --- |  %.1f &pm; %.1f | --- |' % (est, err)
 #    print 'Final QCD estimate (==3jet, %s): %.1f +- %.1f' % ('1 b-tag', est, err)
     
     for btag in ['0btag', '1btag', '2orMoreBtags']:
@@ -294,22 +303,26 @@ def doEstimation(files, function):
         elif '2' in btag:
             tag = 2
         
-        est, err = getQCDEstimate(files['data'], histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function,
+        est, err = getQCDEstimate(files['data'], histogramForEstimation= hist + '_%s' % btag, function=function,
                    fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
 #        print 'Final QCD estimate (>=4jet, %s): %.1f +- %.1f' % (btag, est, err)
         print '| 4j%dt | --- |  %.1f +- %.1f | --- |' % (tag, est, err)
         
-def doMCPerformance(files, function):
-    print 'Performance on MC using', function, 'function'
-    result = getPerformanceOnMC(files, histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', function=function,
-                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
-    est, err = result['estimate']
-    N_qcd, N_qcd_error = result['qcdInSignalRegion']
-    performance, performanceError = result['performance']
+def doMCPerformance(files, function, hist):
+#    print 'Performance on MC using', function, 'function'
+#    result = getPerformanceOnMC(files, 
+#                                histogramForEstimation='QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets', 
+#                                function=function,
+#                   fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
+#    est, err = result['estimate']
+#    N_qcd, N_qcd_error = result['qcdInSignalRegion']
+#    performance, performanceError = result['performance']
     print '| *region* | *N<sub>QCD, true</sub>* | *N<sub>est</sub>* | *(N<sub>est</sub> - N<sub>QCD, true</sub>)/N<sub>QCD, true</sub>* |'
-    print '| (==3jet, %s) |  %.1f +- %.1f |  %.1f +- %.1f |  %.3f +- %.3f |' % ('1 b-tag', N_qcd, N_qcd_error, est, err, performance, performanceError)
+#    print '| (==3jet, %s) |  %.1f +- %.1f |  %.1f +- %.1f |  %.3f +- %.3f |' % ('1 b-tag', N_qcd, N_qcd_error, est, err, performance, performanceError)
+#    hist = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03'
     for btag in ['0btag', '1btag', '2orMoreBtags']:
-        result = getPerformanceOnMC(files, histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_%s' % btag, function=function,
+        result = getPerformanceOnMC(files, 
+                                    histogramForEstimation=hist + '_%s' % btag, function=function,
                    fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)])
         est, err = result['estimate']
         N_qcd, N_qcd_error = result['qcdInSignalRegion']
@@ -322,9 +335,11 @@ if __name__ == '__main__':
     
     files = inputFiles.files
     function = 'expo'
+    hist = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03'
     
-    doEstimation(files, function)
-    doMCPerformance(files, function)
+    doEstimation(files, function, hist)
+    print "MC performance"
+    doMCPerformance(files, function, hist)
     
 #    doComparisonFitFunctions(files)
     

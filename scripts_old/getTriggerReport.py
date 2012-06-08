@@ -1,5 +1,6 @@
 from __future__ import division
 import sys
+import glob
 
 def triggerInfo(trigger, logString):
     logString = logString.replace('\n', '')
@@ -106,7 +107,9 @@ if __name__ == "__main__":
     
     if len(sys.argv) > 1: 
         files = sys.argv[1:]
-        
+        if len(files) == 1:
+            if '*' in files[0]:
+                files = glob.glob(files[0])
     triggerTables = []
     for file in files:
         triggerTable = readTriggerSummaryTable(file)

@@ -7,7 +7,10 @@ from math import isnan
 
 import inputFiles
 import QCDEstimation
-outputFormats = ['png', 'pdf']
+outputFormats = [
+                 'png', 
+                 'pdf'
+                 ]
 outputFolder = '/storage/results/plots/ElectronHad/'
 saveAs = HistPlotter.saveAs
 triggers = [
@@ -47,37 +50,50 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
 
     AddLegendEntry = leg.AddEntry 
     alreadyAdded = False
-        
+    var = 'MET'
     for bin in bJetBins:
 #        normConv = dataHists['topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_' + bin]
 #        normContr = dataHists['topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets_' + bin]
 #        normAnti = dataHists['topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets_' + bin]
-        normConv = dataHists['topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets_' + bin]
-        normContr = dataHists['topReconstruction/backgroundShape/mttbar_3jets_antiID_withMETAndAsymJets_' + bin]
-        normAnti = dataHists['topReconstruction/backgroundShape/mttbar_3jets_antiIsolated_withMETAndAsymJets_' + bin]
-        normConv.SetYTitle("a.u/50GeV");
+        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET_' + bin]
+#        normContr = dataHists['topReconstruction/backgroundShape/mttbar_3jets_antiID_withMETAndAsymJets_' + bin]
+        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET_' + bin]
+        
+#        normConv =  dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_' + bin]
+#        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03_' + bin]
+#        
+#        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET_' + bin]
+#        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET/patMETsPFlow/MET_' + bin]
+        
+        normConv.SetYTitle("a.u/0.05GeV");
+        normConv.SetYTitle("a.u/0.05");
     
         normConv.Sumw2()
-        normContr.Sumw2()
+#        normContr.Sumw2()
         normAnti.Sumw2()
         
         
         normConv = HistPlotter.normalise(normConv)
-        normContr = HistPlotter.normalise(normContr)
+#        normContr = HistPlotter.normalise(normContr)
         normAnti = HistPlotter.normalise(normAnti)
     
         diff = normConv.Clone()
         diff.Divide(normAnti)
-        line = TLine(300, 1, 1800, 1)
+        line = TLine(0, 1, 500, 1)
+#        line = TLine(0, 1, 2, 1)
         line.SetLineColor(1)
         line.SetLineWidth(4)
     
     
         c = TCanvas("cname", 'cname', 1200, 900)
-        diff.SetYTitle("conversions/non-iso electrons /50GeV");
+        diff.SetYTitle("conversions/non-iso electrons /5GeV");
+#        diff.SetYTitle("iso/non-iso trigger /0.05");
+        diff.GetXaxis().SetRangeUser(0, 200);
+#        diff.GetXaxis().SetRangeUser(0, 2);
         diff.Draw('error')
         line.Draw('same')
         saveAs(c, 'shapeRatio_conversions_NonIsolatedElectrons' + '_' + bin , outputFormats)
+#        saveAs(c, 'shapeRatio_'+ var +'_NonIsolatedTriggers' + '_' + bin , outputFormats)
         del c
     
 #        diff = normConv.Clone()
@@ -95,24 +111,28 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
         normConv.SetFillColor(kYellow)
         normConv.SetFillStyle(1001)
         
-        normContr.SetFillColor(kAzure - 2)
-        normContr.SetFillStyle(3005)
+#        normContr.SetFillColor(kAzure - 2)
+#        normContr.SetFillStyle(3005)
     
         normAnti.SetFillColor(kRed + 1)
         normAnti.SetFillStyle(3004)
         normConv.GetYaxis().SetRangeUser(0, 0.2);
+        normConv.GetXaxis().SetRangeUser(0, 200);
+#        normConv.GetXaxis().SetRangeUser(0, 2);
         normConv.Draw('hist')
 #        normContr.Draw('hist same')
         normAnti.Draw('hist same')
     
         if not alreadyAdded:
             AddLegendEntry(normConv, "conversions", "f");
+#            AddLegendEntry(normConv, "iso e+jets", "f");
 #            AddLegendEntry(normContr, "fake electrons", "f");
-            AddLegendEntry(normAnti, "non isolated electrons", "f");
+#            AddLegendEntry(normAnti, "non isolated electrons", "f");
+            AddLegendEntry(normAnti, "non iso e+jets", "f");
             alreadyAdded = True
         
         leg.Draw()
-        saveAs(c, 'shape_comparison_3jets' + '_' + bin , outputFormats)
+        saveAs(c, 'shape_comparison_'+ var + '_NonIso_' + bin , outputFormats)
         del c
         
     del leg
@@ -203,13 +223,16 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             yTitle = 'efficiency/(GeV)'
             fitfunction = ''
             decimals = 2
+            variable = 'p_{T}'
             if 'jet_pt' in plot:
                 xlimits = [10,200]
                 xTitle = 'jet p_{T} (GeV)'
                 yTitle = 'efficiency/(%d GeV)' % (1*rebin)
                 fitfunction = "[0]*exp([1]*exp([2]*x))"
-                scaleFactorFitFunction = "[0]*exp([1]*exp([2]*x) - [3]*exp([4]*x))"
+                scaleFactorFitFunction = "[0]*exp([1]*exp([2]*x))"
+#                scaleFactorFitFunction = "[0]*exp([1]*exp([2]*x) - [3]*exp([4]*x))"
                 fitRange = [20,200]
+                variable = 'p_{T}'
             elif 'jet_eta' in plot:
                 xlimits = [-3,3]
                 xTitle = 'jet #eta (GeV)'
@@ -217,6 +240,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                 fitfunction = '[0]*x*x + [1]*x + [2]'
                 scaleFactorFitFunction = fitfunction
                 fitRange = [-3,3]
+                variable = '#eta'
             elif 'jet_phi' in plot:
                 xlimits = [-4.,4.]
                 xTitle = 'jet #phi (GeV)'
@@ -225,6 +249,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                 decimals = 4
                 scaleFactorFitFunction = fitfunction
                 fitRange = [-3.1,3.1]
+                variable = '#phi'
         
             fired.GetXaxis().SetRangeUser(xlimits[0], xlimits[1])
             visited.GetXaxis().SetRangeUser(xlimits[0], xlimits[1])
@@ -265,14 +290,14 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
                     f1.SetParLimits(0,0,1.0);
                     f2.SetParLimits(0,0,1.0);
                 
-#            if 'jet_eta' in plot:
-#                f1.SetParLimits(0,0.2,1.0);
-#                f1.SetParLimits(1,-100,-1);
-#                f1.SetParLimits(2,-1,-0.01);
-            
-#                f2.SetParLimits(0,0.2,1.0);
-#                f2.SetParLimits(1,-100,-1);
-#                f2.SetParLimits(2,-1,-0.01);
+            if 'jet_eta' in plot:
+                f1.SetParLimits(0,-0.2,0.0);
+                f1.SetParLimits(1,-1,-1);
+                f1.SetParLimits(2, 0.2,1.1);
+
+                f2.SetParLimits(0,-0.2,0.0);
+                f2.SetParLimits(1,-1,-1);
+                f2.SetParLimits(2, 0.2,1.1);
             
             f1.SetLineWidth(2);
             f1.SetLineColor(1);
@@ -289,24 +314,14 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             scaleFactor.Multiply(mc_visited)
             scaleFactor.Divide(visited)
             scaleFactor.Divide(mc_fired)
-#            scaleFactor = TH1D("sf", "sf",axis.GetNbins(), axis.GetXmin(), axis.GetXmax())
-#            print plot + '_' + jetbin
-#            for bin in range(1, axis.GetNbins()):
-#                effMC = mceff.GetEfficiency(bin)
-#                effData = eff.GetEfficiency(bin)
-#                #print effMC, effData
-#                sf = 0
-#                if not effData == 0 and not isnan(effData) and not isnan(effMC):
-#                    sf = effMC/effData
-#                    
-#                scaleFactor.SetBinContent(bin, sf)
-            
-#            scaleFactor = mc_hist.Clone("SF")
-#            scaleFactor.Divide(data_hist);
             
             mceff.SetLineColor(2)
             mceff.SetMarkerColor(2)
             mceff.SetMarkerStyle(22)
+#            mceff.SetMarkerSize(2)
+#            eff.SetMarkerSize(2)
+            mceff.SetLineWidth(3)
+            eff.SetLineWidth(3)
         
             saveName = plot + '_' + 'efficiency'
             if not suffix == '':
@@ -324,13 +339,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             pad2.Draw()
             
             pad1.cd()
-            leg = TLegend(0.7, 0.2, 0.8, 0.3)
-            leg.SetBorderSize(0);
-            leg.SetLineStyle(0);
-            leg.SetTextFont(42);
-            leg.SetFillStyle(0);
-            leg.AddEntry(eff, 'data', 'P')
-            leg.AddEntry(mceff, 'MC', 'P')
+            
     
             hFrame = (pad1.cd()).DrawFrame(xlimits[0],-.1,xlimits[1],1.1)
             hFrame.GetXaxis().SetTitle(xTitle)
@@ -349,7 +358,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             
             eff.Draw('SAMEP0')
             mceff.Draw('SAMEP0')
-            leg.Draw('same')
+#            leg.Draw('same')
             f1.DrawCopy('same')
             f2.DrawCopy('same')
 #            
@@ -363,39 +372,56 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             
             #f1.GetFunction? If yes, color-code the functions
             strFit = fitfunction
+            strFit = strFit.replace('x*x', 'x^{2}')
             strFit = strFit.replace('[0]', str(round(f1.GetParameter(0), decimals)))
             strFit = strFit.replace('[1]', str(round(f1.GetParameter(1), decimals)))
             strFit = strFit.replace('[2]', str(round(f1.GetParameter(2), decimals)))
-                                         
-                                         
-            #replace parameters
-            tex2 = TLatex(0.18,0.18,strFit);
-            tex2.SetNDC();
-            tex2.SetTextAlign(13);
-            tex2.SetTextFont(42);
-            tex2.SetTextSize(0.04);
-            tex2.SetLineWidth(2);
-            tex2.Draw();
+            strFit = strFit.replace('+ -', '-')
+            strFit = strFit.replace('- -', '+')
+            strFit = '#epsilon(' + variable + ') = ' + strFit
+            fitData = strFit                             
             
             strFit = fitfunction
+            strFit = strFit.replace('x*x', 'x^{2}')
             strFit = strFit.replace('[0]', str(round(f2.GetParameter(0), decimals)))
             strFit = strFit.replace('[1]', str(round(f2.GetParameter(1), decimals)))
             strFit = strFit.replace('[2]', str(round(f2.GetParameter(2), decimals)))
-                                         
-                                         
-            #replace parameters
-            tex3 = TLatex(0.57,0.18,strFit);
+            strFit = strFit.replace('+ -', '-')
+            strFit = strFit.replace('- -', '+')
+            strFit = '#epsilon(' + variable + ') = ' + strFit
+            fitMC = strFit                             
+                    
+            tex2 = TLatex(0.18,0.28,fitData);
+            tex2.SetNDC();
+            tex2.SetTextAlign(13);
+            tex2.SetTextFont(42);
+            tex2.SetTextSize(0.06);
+            tex2.SetLineWidth(2);
+            tex2.Draw();
+                                 
+            tex3 = TLatex(0.18,0.2,fitMC);
             tex3.SetNDC();
             tex3.SetTextAlign(13);
             tex3.SetTextFont(42);
-            tex3.SetTextSize(0.04);
+            tex3.SetTextSize(0.06);
             tex3.SetLineWidth(2);
             tex3.SetTextColor(2)
             tex3.Draw();
             
+            leg = TLegend(0.4, 0.4, 0.6, 0.6)
+            leg.SetBorderSize(0);
+            leg.SetLineStyle(0);
+            leg.SetTextFont(42);
+#            leg.SetTextSize(0.08)
+            leg.SetFillStyle(0);
+            leg.AddEntry(eff, 'data', 'P')
+            leg.AddEntry(mceff, 'MC', 'P')
+            leg.Draw('same')
+            
             pad2.cd()
             hFrame = (pad2.cd()).DrawFrame(xlimits[0],0,xlimits[1],2)
             hFrame.GetXaxis().SetTitle(xTitle)
+            yTitle = yTitle.replace('efficiency', 'scale factor')
             hFrame.GetYaxis().SetTitle(yTitle)
             hFrame.Draw()
             upper = TLine(xlimits[0],1.,xlimits[1],1.)
@@ -417,16 +443,21 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
             scaleFactor.SetLineColor(4)
             scaleFactor.SetMarkerColor(4)
             scaleFactor.Draw('SAMEP0')
-            strFit = fitfunction
+            strFit = scaleFactorFitFunction
+            strFit = strFit.replace('x*x', 'x^{2}')
             strFit = strFit.replace('[0]', str(round(f3.GetParameter(0), decimals)))
             strFit = strFit.replace('[1]', str(round(f3.GetParameter(1), decimals)))
             strFit = strFit.replace('[2]', str(round(f3.GetParameter(2), decimals)))
-            #replace parameters
-            tex4 = TLatex(0.18,0.78,strFit);
+            strFit = strFit.replace('[3]', str(round(f3.GetParameter(3), decimals)))
+            strFit = strFit.replace('[4]', str(round(f3.GetParameter(4), decimals)))
+            strFit = strFit.replace('+ -', '-')
+            strFit = strFit.replace('- -', '+')
+
+            tex4 = TLatex(0.2,0.8,strFit);
             tex4.SetNDC();
             tex4.SetTextAlign(13);
             tex4.SetTextFont(42);
-            tex4.SetTextSize(0.2);
+            tex4.SetTextSize(0.3);
             tex4.SetLineWidth(2);
             tex4.SetTextColor(2)
             tex4.Draw();
@@ -461,7 +492,7 @@ def plotHLTStudy(hists, suffix = '', rebin = 1):
 #            eff.DrawClone('P0')
 #            f1.Draw("SAME");
             
-            saveAs(c, saveName + '_' + jetbin + '_Summer11', outputFolder = outputFolder,outputFormats= ['png'])
+            saveAs(c, saveName + '_' + jetbin + '_Fall11', outputFolder = outputFolder,outputFormats= outputFormats)
             del hFrame
             del c
             del f1
@@ -631,7 +662,7 @@ def printHLTOutput(infos, mcInfos):
         f3.Draw('same')
         
         saveAs(c, hlt + '_scaleFactor', 
-               outputFolder = outputFolder,outputFormats= ['png'])
+               outputFolder = outputFolder,outputFormats= outputFormats)
         
         
         
@@ -649,21 +680,18 @@ if __name__ == '__main__':
     hltFiles['data'] = inputFiles.files['data']
     hltFiles['ttbar'] = inputFiles.files['ttbar']
 
-    histsNames = [
-                  'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets',
-                  'topReconstruction/backgroundShape/mttbar_3jets_conversions_withMETAndAsymJets',
-                  'topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets',
-                  'topReconstruction/backgroundShape/mttbar_3jets_antiIsolated_withMETAndAsymJets',
-                  'topReconstruction/backgroundShape/mttbar_controlRegion_withMETAndAsymJets',
-                  'topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets',
-                  'topReconstruction/backgroundShape/mttbar_3jets_antiID_withMETAndAsymJets'
-#                  "QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts",
-                  ]
-
+    qcdPlots = [#MET
+                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET',
+                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET',
+                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET/patMETsPFlow/MET',
+                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03',
+                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03'
+                ]
     triggerPlots = ['HLTStudy/' + trigger + '/' + variable + '_' + modifier for trigger in triggers for variable in triggerVariables for modifier in triggerModifiers]
+    
     HistPlotter.setStyle()
-#    hists = HistGetter.getHistsFromFiles(histsNames, files, bJetBins=HistPlotter.allBjetBins)
-    hists = HistGetter.getHistsFromFiles(triggerPlots, hltFiles, jetBins=HistPlotter.allJetBins)
+    hists = HistGetter.getHistsFromFiles(qcdPlots, files, bJetBins=HistPlotter.allBjetBins)
+#    hists = HistGetter.getHistsFromFiles(triggerPlots, hltFiles, jetBins=HistPlotter.allJetBins)
 #    hists = HistGetter.addSampleSum( hists )
 #    
 #    hists = HistPlotter.applyDefaultStylesAndColors( hists )
@@ -677,14 +705,21 @@ if __name__ == '__main__':
 #    hists = HistGetter.makeMCStack( hists )
 #    hists = HistGetter.makeDetailedMCStack( hists )
     
-#    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
+    hists = HistPlotter.rebin(hists, 5, 'MET*')
+    hists = HistPlotter.setXTitle(hists, 'MET/GeV', 'MET*')
+    hists = HistPlotter.setYTitle(hists, 'Events/(5 GeV)', 'MET*')
+    hists = HistPlotter.rebin(hists, 5, '*pfIsolation*')
+    hists = HistPlotter.setXTitle(hists, 'pf rel. iso', '*pfIsolation*')
+    hists = HistPlotter.setYTitle(hists, 'Events/(0.05)', '*pfIsolation*')
+    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
+    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.exclusiveBjetBins)
 #    compareShapesTwoData(
 #                         '/storage/results/histogramFiles/PAS3/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root',
 #                         '/storage/results/histogramFiles/CiCElectron ID/data_1611.95pb_PFElectron_PF2PATJets_PFMET.root'
 #                         )
 #    makeQCDErrorPlot(files, hists)
-    infos, mcInfos =  plotHLTStudy(hists, rebin = 5)
-    printHLTOutput(infos, mcInfos)
+#    infos, mcInfos =  plotHLTStudy(hists, rebin = 5)
+#    printHLTOutput(infos, mcInfos)
     
 #    
 #    c = TCanvas("cname4", 'cname4', 1200, 900)
