@@ -1,7 +1,7 @@
 
 placeholder = 'SAMPLE'
 pathToFiles = '/storage/results/histogramfiles/2012/7TeV'
-luminosity = 5028#pb-1
+luminosity = 5048#pb-1
 suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET.root'
 
 template = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles, 'lumi':luminosity, 'suffix':suffix, 'placeholder':placeholder}
@@ -28,8 +28,12 @@ samplesToLoad = ['ElectronHad',
                  'Tbar_tW-channel',
                  'Tbar_t-channel',
                  'Tbar_s-channel',
-#                 'TTbarZIncl',
-#                 'TTbarInclWIncl'
+                 'TTbarZIncl',
+                 'TTbarInclWIncl',
+                 'W1Jet',
+                 'W2Jets',
+                 'W3Jets',
+                 'W4Jets'
                  ]
 
 files = {}

@@ -1,6 +1,7 @@
 from ROOT import TFile, gROOT
 import tools.Log as Log
 
+#Reads a single histogram from a single file
 def getHistogramFromFile(histname, filename):
     file = TFile.Open(filename)
     
@@ -10,7 +11,7 @@ def getHistogramFromFile(histname, filename):
     hist = file.Get(histname)
     
     if not hist:
-        Log.logErrorMessage('Histogram "%s" could not be found in file:\n%s' % (histname, filename))
+        Log.logErrorMessage('Histogram \n"%s" \ncould not be found in file:\n%s' % (histname, filename))
         return
     
     gROOT.cd()
@@ -19,13 +20,15 @@ def getHistogramFromFile(histname, filename):
     
     return histogram 
     
-
-def getHistogramDictionary(histname, files):
+#Reads a single histogram from each given file
+#and returns a dictionary with the same naming as 'files'
+def getHistogramDictionary(histname, files={}):
     hists = {}
     for sample, filename in files.iteritems():
         hists[sample] = getHistogramFromFile(histname, filename)
     return hists
 
+#Reads a list of histograms from each given file
 def getHistogramsFromFiles(histnames=[], files={}):
     histograms = {}
     for sample, filename in files.iteritems():

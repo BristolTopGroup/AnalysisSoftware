@@ -88,10 +88,10 @@ def getQCDEstimateFor(histogramForEstimation='QCDStudy/PFIsolation_WithMETCutAnd
         if not estimate == 0:
             relativeErrorSquared += (deviation / estimate) ** 2
             
-    statisticalErrorSquared = 0
-    if not estimate == 0:
-        statisticalErrorSquared = 1 / estimate
-    relativeErrorSquared += statisticalErrorSquared
+#    statisticalErrorSquared = 0
+#    if not estimate == 0:
+#        statisticalErrorSquared = 1 / estimate
+#    relativeErrorSquared += statisticalErrorSquared
     
     relativeError = sqrt(relativeErrorSquared)
     absoluteError = relativeError * estimate
@@ -103,7 +103,7 @@ def getQCDEstimate(datafile,
                    bjetBin='', function='expo',
                    fitRange=(0.3, 1.6), additionFitRanges=[(0.2, 1.6), (0.4, 1.6)]): 
     bias = 0.45
-#    bias = 0
+    bias = 0
     reductionFromBias = 1 - bias 
     if bjetBin:
         histogramForEstimation = histogramForEstimation + '_' + bjetBin

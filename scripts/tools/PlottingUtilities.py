@@ -206,4 +206,20 @@ def getMax(histograms):
         if max > maximum:
             maximum = max
     return max
+
+
+#Usage:
+#histograms['summedSample'] = sumSamples(histograms, ['sample1','sample2', 'sample3'])
+def sumSamples(histograms = {}, samplesToSum = []):
+    summedHists = {}
+    
+    for sample in samplesToSum:
+        hists = histograms[sample]
+        for histname, hist in hist.iteritems():
+            if summedHists.has_key(histname):
+                summedHists[histname] += hist
+            else:
+                summedHists[histname] = hist
+    return summedHists
+            
         

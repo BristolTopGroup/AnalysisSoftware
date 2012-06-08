@@ -70,22 +70,23 @@ def plotMttbar():
 #    hists.append('MttbarAnalysis/ElectronPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/ttbar_pt_withMETAndAsymJets')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET_phi')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET_phi')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/Transverse_Mass')
-    hists.append('MttbarAnalysis/MuonPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
-    hists.append('MttbarAnalysis/MuonPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/MET_phi')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/Transverse_Mass')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET_phi')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET_phi')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/Transverse_Mass')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/Angle_lepton_MET')
+#    hists.append('MttbarAnalysis/MuonPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
+#    hists.append('MttbarAnalysis/MuonPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/MET_phi')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/Transverse_Mass')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/Transverse_Mass')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/Transverse_Mass')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03')
     
     
@@ -113,17 +114,17 @@ def plotMttbar():
 #    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/Electron/electron_pT')
 #    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
 #    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03')
-    otherHists.append('VertexAnalyser/nVertex')
-    otherHists.append('VertexAnalyser/nVertex_reweighted')
-    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeightInTimeOnly')
-    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeight3BX')
-    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeight3D')
+#    otherHists.append('VertexAnalyser/nVertex')
+#    otherHists.append('VertexAnalyser/nVertex_reweighted')
+#    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeightInTimeOnly')
+#    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeight3BX')
+#    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeight3D')
     
 #    otherHists.append('QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets')
-    otherHists = HistGetter.getHistsFromFiles(otherHists, files)
-    hists = HistGetter.joinHistogramDictionaries([hists,
-#                                                  #jetBinnedhists, 
-                                                  otherHists])
+#    otherHists = HistGetter.getHistsFromFiles(otherHists, files)
+#    hists = HistGetter.joinHistogramDictionaries([hists,
+##                                                  #jetBinnedhists, 
+#                                                  otherHists])
     gcd = gROOT.cd
 
     reverseMCOrdertmp = reverseMCOrder
@@ -241,7 +242,7 @@ def plotMttbar():
                 
             variable = histname.split('/')[-1]
             analyser = histname.split('/')[-2]
-            if 'MET' in variable:
+            if 'MET' in variable or 'Transverse_Mass' in variable or 'Angle_lepton_MET' in variable:
                 variable = histname.split('/')[-2] + '/' + histname.split('/')[-1]
                 analyser = histname.split('/')[-3]
             
@@ -294,7 +295,10 @@ def plotMttbar():
             hist_data.SetXTitle("m(t#bar{t})/GeV");
             hist_data.SetYTitle("Events/(50 GeV)");
             rebin = 50;
-            Urange = (250, 3000)
+            if setLogY:
+                Urange = (300, 3000)
+            else:
+                Urange = (300, 1500)
         elif ("m3" in histname):
             hist_data.SetXTitle("M3/GeV");
             hist_data.SetYTitle("Events/(50 GeV)");
@@ -308,7 +312,10 @@ def plotMttbar():
             hist_data.SetXTitle("p_{T} of t#bar{t} system/GeV");
             hist_data.SetYTitle("Events/(10 GeV)");
             rebin = 10;
-            Urange = (0, 1000)
+            if setLogY:
+                Urange = (0, 700)
+            else:
+                Urange = (0, 300)
         elif ("ttbar_px" in histname):
             hist_data.SetXTitle("p_{x} of t#bar{t} system/GeV");
             hist_data.SetYTitle("Events/(10 GeV)");
@@ -335,19 +342,24 @@ def plotMttbar():
         elif (histname == "numberOfBJets"):
             hist_data.SetXTitle("number of b-tagged jets (SSVHE medium)");
             hist_data.SetYTitle("Events");
-        elif ('MET_' in histname and not 'phi' in histname):
+        elif ('MET_' in histname and not 'phi' in histname and not 'Angle_lepton_MET' in histname):
             hist_data.SetXTitle("MET/GeV");
             hist_data.SetYTitle("Events/(5 GeV)");
             rebin = 5;
             if setLogY:
                 Urange = (0, 600)
             else:
-                Urange = (0, 300)
+                Urange = (0, 200)
         elif ('MET_phi' in histname):
             hist_data.SetXTitle("#phi(MET)");
             hist_data.SetYTitle("Events/(0.1)");
             rebin = 1;
             Urange = (-4, 4)
+        elif 'Angle_lepton_MET' in histname:
+            hist_data.SetXTitle("angle(l,MET)");
+            hist_data.SetYTitle("Events/0.05");
+            rebin = 5;
+            Urange = (0, 3.2)
         elif 'METsignificance' in histname:
             hist_data.SetXTitle("METsignificance/GeV");
             hist_data.SetYTitle("Events/(5 GeV)");
@@ -358,6 +370,10 @@ def plotMttbar():
             hist_data.SetYTitle("Events/(10 GeV)");
             rebin = 10;
             Urange = (0, 500)
+            if setLogY:
+                Urange = (0, 500)
+            else:
+                Urange = (0, 200)
         elif ("electronD0" in histname):
             hist_data.SetXTitle("electron d_{0} / cm");
             hist_data.SetYTitle("Events/(0.001 cm)");
