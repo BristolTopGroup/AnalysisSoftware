@@ -18,7 +18,7 @@ public:
 	virtual ~METAnalyser();
 
 	void analyse(const EventPtr);
-	void analyseTransverseMass(const METPointer, const ParticlePointer, double weight);
+	void analyseTransverseMass(const EventPtr, const ParticlePointer);
 	double transverseMass(const METPointer, const ParticlePointer) const;
 	void createHistograms();
 };

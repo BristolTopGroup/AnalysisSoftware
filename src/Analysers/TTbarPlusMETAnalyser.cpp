@@ -40,7 +40,7 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		metAnalyserRefSelection_->analyse(event);
-		metAnalyserRefSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserRefSelection_->analyseTransverseMass(event, signalLepton);
 
 		electronAnalyserRefSelection_->analyse(event);
 		electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
@@ -53,7 +53,7 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		metAnalyserRefAsymJetsMETSelection_->analyse(event);
-		metAnalyserRefAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserRefAsymJetsMETSelection_->analyseTransverseMass(event, signalLepton);
 
 		electronAnalyserRefAsymJetsMETSelection_->analyse(event);
 		electronAnalyserRefAsymJetsMETSelection_->analyseElectron(signalElectron, event->weight());
@@ -64,7 +64,7 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		metAnalyserRefAsymJetsSelection_->analyse(event);
-		metAnalyserRefAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserRefAsymJetsSelection_->analyseTransverseMass(event, signalLepton);
 
 		electronAnalyserRefAsymJetsSelection_->analyse(event);
 		electronAnalyserRefAsymJetsSelection_->analyseElectron(signalElectron, event->weight());
@@ -87,7 +87,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdNonIsoElectronAnalyser_->analyse(event);
 		qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdNonIsoSelection_->analyse(event);
-		metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdNonIsoElectronNonIsoTriggerSelection_->passesSelectionUpToStep(event,
@@ -103,7 +103,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdNonIsoNonIsoTriggerElectronAnalyser_->analyse(event);
 		qcdNonIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyse(event);
-		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdConversionSelection_->passesSelectionUpToStep(event,
@@ -118,7 +118,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdConversionsElectronAnalyser_->analyse(event);
 		qcdConversionsElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdConversionSelection_->analyse(event);
-		metAnalyserqcdConversionSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdPFRelIsoSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
@@ -162,7 +162,7 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 		qcdNonIsoElectronAnalyserAsymJets_->analyse(event);
 		qcdNonIsoElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdNonIsoAsymJetsSelection_->analyse(event);
-		metAnalyserqcdNonIsoAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserqcdNonIsoAsymJetsSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -177,8 +177,7 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_->analyse(event);
 		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_->analyse(event);
-		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton,
-				event->weight());
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdConversionAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -192,7 +191,7 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 		qcdConversionsElectronAnalyserAsymJets_->analyse(event);
 		qcdConversionsElectronAnalyserAsymJets_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdConversionAsymJetsSelection_->analyse(event);
-		metAnalyserqcdConversionAsymJetsSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserqcdConversionAsymJetsSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdPFRelIsoAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -233,7 +232,7 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 		qcdNonIsoElectronAnalyserAsymJetsMET_->analyse(event);
 		qcdNonIsoElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdNonIsoAsymJetsMETSelection_->analyse(event);
-		metAnalyserqcdNonIsoAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton, event->weight());
+		metAnalyserqcdNonIsoAsymJetsMETSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -248,8 +247,7 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->analyse(event);
 		qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_->analyse(event);
-		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton,
-				event->weight());
+		metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdConversionAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -263,8 +261,7 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 		qcdConversionsElectronAnalyserAsymJetsMET_->analyse(event);
 		qcdConversionsElectronAnalyserAsymJetsMET_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdConversionAsymJetsMETSelection_->analyse(event);
-		metAnalyserqcdConversionAsymJetsMETSelection_->analyseTransverseMass(event->MET(), signalLepton,
-				event->weight());
+		metAnalyserqcdConversionAsymJetsMETSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
 	if (qcdPFRelIsoAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
