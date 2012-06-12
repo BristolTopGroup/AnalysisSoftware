@@ -22,18 +22,18 @@ def plotMttbar():
 #    tdrstyle = setTDRStyle();
 #    gStyle.SetHatchesSpacing(1.0);
     HistPlotter.setStyle()
-    lumi = 5028.0#1959.75#1611.95
+    lumi = 5050.0#1959.75#1611.95
 #    lumi = 1091.45
-    oldLumi = 5028
+    oldLumi = 5050
     scale = lumi / oldLumi;
     prefix = 'CiCID_'
     prefix = 'EPlusJets_'
     outputFormats = [
-#                     'pdf', 
+                     'pdf', 
                      'png']
     reverseMCOrder = False
     qcdFromData = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_0orMoreBtag'
-    wjetScale = 1.#*81268812/81345381
+    wjetScale = 1.#0.75#*81268812/81345381
     topScale = 1.#*3701947/59038455
     savePath = "/storage/results/plots/ElectronHad/"
     print 'Top scale', topScale
@@ -70,7 +70,7 @@ def plotMttbar():
 #    hists.append('MttbarAnalysis/ElectronPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/ttbar_pt_withMETAndAsymJets')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET_phi')
@@ -78,7 +78,7 @@ def plotMttbar():
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/Transverse_Mass')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/Angle_lepton_MET')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/Angle_lepton_MET')
 #    hists.append('MttbarAnalysis/MuonPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/MuonPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/MET_phi')
@@ -112,8 +112,8 @@ def plotMttbar():
     
     otherHists = []
 #    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/Electron/electron_pT')
-#    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
-#    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03')
+    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron/All_Electron_mvaTrigV0')
+    otherHists.append('ElectronAnalysis/All_Electron_mvaTrigV0')
 #    otherHists.append('VertexAnalyser/nVertex')
 #    otherHists.append('VertexAnalyser/nVertex_reweighted')
 #    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeightInTimeOnly')
@@ -121,10 +121,10 @@ def plotMttbar():
 #    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeight3D')
     
 #    otherHists.append('QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets')
-#    otherHists = HistGetter.getHistsFromFiles(otherHists, files)
-#    hists = HistGetter.joinHistogramDictionaries([hists,
-##                                                  #jetBinnedhists, 
-#                                                  otherHists])
+    otherHists = HistGetter.getHistsFromFiles(otherHists, files)
+    hists = HistGetter.joinHistogramDictionaries([hists,
+#                                                  #jetBinnedhists, 
+                                                  otherHists])
     gcd = gROOT.cd
 
     reverseMCOrdertmp = reverseMCOrder
@@ -140,10 +140,10 @@ def plotMttbar():
         totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233 # = 163625908
         hists['wjets'][histname].Scale(0)
 #        hists['wjets'][histname].Scale(totalWPlusJets/47896878.)
-        hists['W1Jet'][histname].Scale(totalWPlusJets/71828418.*4480.0/31314.)
+        hists['W1Jet'][histname].Scale(totalWPlusJets/76048786.*4480.0/31314.)
         hists['W2Jets'][histname].Scale(totalWPlusJets/25400440.*1674./31314.)
         hists['W3Jets'][histname].Scale(totalWPlusJets/7685939.*484.7/31314.)
-        hists['W4Jets'][histname].Scale(totalWPlusJets/10814233.*211.7/31314.)
+        hists['W4Jets'][histname].Scale(totalWPlusJets/12998049.*211.7/31314.)
         hist_wjets = hists['wjets'][histname] + hists['W1Jet'][histname]
         hist_wjets += hists['W2Jets'][histname] 
         hist_wjets += hists['W3Jets'][histname] 
@@ -299,6 +299,11 @@ def plotMttbar():
                 Urange = (300, 3000)
             else:
                 Urange = (300, 1500)
+        if "All_Electron_mvaTrigV0" in histname:
+            hist_data.SetXTitle("mva disc");
+            hist_data.SetYTitle("Events/(0.01)");
+            rebin = 1;
+            Urange = (-1.1, 1.1)
         elif ("m3" in histname):
             hist_data.SetXTitle("M3/GeV");
             hist_data.SetYTitle("Events/(50 GeV)");

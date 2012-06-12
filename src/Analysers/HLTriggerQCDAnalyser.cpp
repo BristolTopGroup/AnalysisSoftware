@@ -12,18 +12,20 @@ using namespace std;
 
 namespace BAT {
 void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
-	bool studyExclusiveEvents(true);
-
 	//only do this analysis for runs above 193834 as previous runs don't have all triggers
-	if (!(event->runnumber() >= 193834 && event->isRealData()))
+	//after run 194225 the trigger has been changed to HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20
+//	if (!(event->runnumber() >= 193834 && event->runnumber() <= 194225 && event->isRealData()))
+//		return;
+	if (!(event->runnumber() >= 194270 && event->isRealData()))
 		return;
 
 	if (event->Electrons().size() == 0)
 		return;
 
 	const ElectronPointer mostEnergeticElectron(event->Electrons().front());
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
-			&& (!studyExclusiveEvents
+	if ((event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
+			|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20))
+			&& (!studyExclusiveEvents_
 					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
 							&& !event->HLT(
 									HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
@@ -49,7 +51,7 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 			QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
 			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
 			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseTransverseMass(event,
-					qcdNonIsoSelection_->signalLepton(event));
+					qcdAntiIDSelection_->signalLepton(event));
 		}
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
@@ -59,7 +61,7 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 	}
 
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
-			&& (!studyExclusiveEvents
+			&& (!studyExclusiveEvents_
 					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
 							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
 							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
@@ -84,7 +86,7 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 			QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
 			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
 			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
-					qcdNonIsoSelection_->signalLepton(event));
+					qcdAntiIDSelection_->signalLepton(event));
 		}
 
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
@@ -96,7 +98,7 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 	}
 
 	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
-			&& (!studyExclusiveEvents
+			&& (!studyExclusiveEvents_
 					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
 							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
 							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
@@ -120,7 +122,7 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 			QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
 			metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
 			metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
-					qcdNonIsoSelection_->signalLepton(event));
+					qcdAntiIDSelection_->signalLepton(event));
 		}
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
@@ -129,8 +131,9 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		}
 	}
 
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)
-			&& (!studyExclusiveEvents
+	if ((event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)
+			&& event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20))
+			&& (!studyExclusiveEvents_
 					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
 							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
 							&& !event->HLT(
@@ -154,7 +157,7 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 			QCDAntiIDRegionCount_CaloIdVT_TrkIdT_++;
 			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->analyse(event);
 			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->analyseTransverseMass(event,
-					qcdNonIsoSelection_->signalLepton(event));
+					qcdAntiIDSelection_->signalLepton(event));
 		}
 
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
@@ -181,9 +184,10 @@ void HLTriggerQCDAnalyser::createHistograms() {
 	metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->createHistograms();
 }
 
-HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
+HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::string histogramFolder,
+		bool studyExclusiveEvents) :
 		BasicAnalyser(histMan, histogramFolder), //
-		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(
+		studyExclusiveEvents_(studyExclusiveEvents), eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_(
 				new ElectronAnalyser(histMan,
 						histogramFolder + "/HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30")), //
 		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(

@@ -80,7 +80,7 @@ private:
     BAT::BasicAnalyserLocalPtr eventcountAnalyser;
     boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
     boost::scoped_ptr<BAT::HLTriggerTurnOnAnalyser> hltriggerAnalyser;
-    BAT::BasicAnalyserLocalPtr hltriggerQCDAnalyser_;
+    BAT::BasicAnalyserLocalPtr hltriggerQCDAnalyserInclusive_, hltriggerQCDAnalyserExclusive_;
     boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;
     boost::scoped_ptr<BAT::MCAnalyser> mcAnalyser;
     boost::scoped_ptr<BAT::METAnalyser> metAnalyser;

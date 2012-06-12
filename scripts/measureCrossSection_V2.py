@@ -19,9 +19,6 @@ normalisation = None
 vectors = None
 
 def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
-    fit = None
-    value, error = 0, 0
-    
     #at the moment store the values in the global variables. Not good but the only way it works with current setup
     global normalisation, vectors
     normalisation = normalisation_
@@ -38,14 +35,13 @@ def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
     
     ierflg = Long(0)
     
-    par_value = array ("d", (normalisation['TTJet'] + normalisation['SingleTop'] , normalisation['W+Jets'], normalisation['DYJetsToLL'], normalisation['QCD'])) #using the MC estimation as starting values
     N_total = normalisation['ElectronHad']
     print "Total number of data events before the fit: ", N_total
     
-    gMinuit.mnparm(0, "ttbar+single_top", par_value[0], 10.0, 0, N_total, ierflg)
-    gMinuit.mnparm(1, "wjets", par_value[1], 10.0, 0, N_total, ierflg)
-    gMinuit.mnparm(2, "zjets", par_value[2], 10.0, 0, N_total, ierflg)
-    gMinuit.mnparm(3, "qcd", par_value[3], 10.0, 0, N_total, ierflg)
+    gMinuit.mnparm(0, "ttbar+single_top", normalisation['TTJet'] + normalisation['SingleTop'], 10.0, 0, N_total, ierflg)
+    gMinuit.mnparm(1, "wjets", normalisation['W+Jets'], 10.0, 0, N_total, ierflg)
+    gMinuit.mnparm(2, "zjets", normalisation['DYJetsToLL'], 10.0, 0, N_total, ierflg)
+    gMinuit.mnparm(3, "qcd", normalisation['QCD'], 10.0, 0, N_total, ierflg)
       
     arglist = array('d', 10 * [0.])
     
@@ -55,6 +51,10 @@ def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
     #minimisation itself
     gMinuit.mnexcm("SET STR", arglist, 1, ierflg)
     gMinuit.Migrad()
+    
+    #get the results
+    fit = None
+    value, error = 0, 0
     fitvalues = []
     fitErrors = []
     for i in range(numberOfParameters):
@@ -88,7 +88,7 @@ def fitFunction(nParameters, gin, f, par, iflag):
             lnL += log(L)
     f = -2.0 * lnL
     
-    Nqcd_err = normalisation['QCD'] * 1.0
+#    Nqcd_err = normalisation['QCD'] * 1.0
     
     ratio_Z_W = normalisation['DYJetsToLL'] / normalisation['W+Jets']
     f += ((par[2] / par[1] - ratio_Z_W) / (0.05 * ratio_Z_W)) ** 2
@@ -115,7 +115,7 @@ def vectorise(histograms):
     errors = {}
     for sample in histograms.keys():
         hist = histograms[sample]
-        for bin in range(1, hist.GetNbinsX()):
+        for bin in range(1, hist.GetNbinsX() + 1):
             if not values.has_key(sample):
                 values[sample] = []
             if not errors.has_key(sample):
@@ -160,7 +160,9 @@ def performMeasurement(listOfDistributions, listOfFiles, rebin):
         print 'Performing measurement for:'
         print distribution
         hists = FileReader.getHistogramDictionary(distribution, listOfFiles)
-        hists = plotting.rebin(hists, 5)
+        print hists['TTJet'].GetSize()
+        hists = plotting.rebin(hists, 5)#rebin to 200 bins
+        print hists['TTJet'].GetSize()
         hists = plotting.setYTitle(hists, title="events/5 GeV")
         #rescale hists if needed
         hists = rescaleSamples(hists)

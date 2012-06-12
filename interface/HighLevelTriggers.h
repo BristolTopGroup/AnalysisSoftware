@@ -104,6 +104,11 @@ enum value {
 	HLT_IsoMu17_eta2p1_DiCentralPFNoPUJet30,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet50_40_30,
+//triggers with lower 3rd jet threshold to combat missing JEC
+	HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20,
+	HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20,
+	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30_30_20,
+	HLT_Mu17_eta2p1_TriCentralPFNoPUJet30_30_20,
 	NUMBER_OF_TRIGGERS
 };
 
@@ -200,7 +205,10 @@ const boost::array<std::string, NUMBER_OF_TRIGGERS> names = { {
 		"HLT_IsoMu17_eta2p1_CentralPFNoPUJet30", //
 		"HLT_IsoMu17_eta2p1_DiCentralPFNoPUJet30", //
 		"HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30", //
-		"HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet50_40_30" //
-		} };
+		"HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet50_40_30", //
+//triggers with lower 3rd jet threshold to combat missing JEC
+		"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20",
+		"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20", "HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30_30_20",
+		"HLT_Mu17_eta2p1_TriCentralPFNoPUJet30_30_20", } };
 }
 #endif /* HIGHLEVELTRIGGERS_H_ */

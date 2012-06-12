@@ -44,7 +44,8 @@ void Analysis::analyse() {
 		eventcountAnalyser->analyse(currentEvent);
 
 //		hltriggerAnalyser->analyse(currentEvent);
-		hltriggerQCDAnalyser_->analyse(currentEvent);
+		hltriggerQCDAnalyserInclusive_->analyse(currentEvent);
+		hltriggerQCDAnalyserExclusive_->analyse(currentEvent);
 		jetAnalyser->analyse(currentEvent);
 		if (currentEvent->getDataType() == DataType::TTJets) {
 			mcAnalyser->analyse(currentEvent);
@@ -217,10 +218,16 @@ void Analysis::createHistograms() {
 //	cout << "Number of histograms added by hltriggerAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 //	lastNumberOfHistograms = numberOfHistograms;
 
-	hltriggerQCDAnalyser_->createHistograms();
+	hltriggerQCDAnalyserInclusive_->createHistograms();
 	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by hltriggerQCDAnalyser: " << numberOfHistograms - lastNumberOfHistograms
-			<< endl;
+	cout << "Number of histograms added by hltriggerQCDAnalyserInclusive_: "
+			<< numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
+	hltriggerQCDAnalyserExclusive_->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by hltriggerQCDAnalyserExclusive_: "
+			<< numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
 	jetAnalyser->createHistograms();
@@ -305,7 +312,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		eventcountAnalyser(new EventCountAnalyser(histMan)), //
 		hitfitAnalyser(new HitFitAnalyser(histMan)), //
 		hltriggerAnalyser(new HLTriggerTurnOnAnalyser(histMan)), //
-		hltriggerQCDAnalyser_(new HLTriggerQCDAnalyser(histMan)), //
+		hltriggerQCDAnalyserInclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_inclusive", false)), //
+		hltriggerQCDAnalyserExclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_exclusive", true)), //
 		jetAnalyser(new JetAnalyser(histMan)), //
 		mcAnalyser(new MCAnalyser(histMan)), //
 		metAnalyser(new METAnalyser(histMan)), //

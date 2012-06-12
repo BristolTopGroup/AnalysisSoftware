@@ -9,16 +9,6 @@ import os
 from ROOT import *
 import Styles
 
-jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
-                    '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
-                    '4orMoreJets':'#geq 4 jets'}
-
-BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags',
-                    '1orMoreBtag':'#geq 1 b-tags',
-                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags',
-                    '3btags':'3 b-tags', '3orMoreBtags':'#geq 3 b-tags',
-                    '4orMoreBtags':'#geq 4 b-tags'}
-
 defaultCanvasWidth = 1200
 defaultCanvasHeight = 900
 
@@ -70,10 +60,20 @@ def compareShapes(histograms=[], histogramlables=[], styles=[], maxfactor = 1.3)
     
     return c, leg
 
-def get_cms_label(lumiInInvPb, njet="4orMoreJets", nbjet="0orMoreBtag", channel="e"):
-    mytext = TPaveText(0.35, 0.7, 0.7, 0.93, "NDC");
-    mytext.AddText("CMS Preliminary");
-    mytext.AddText("%.2f fb^{-1} at  #sqrt{s} = 7 TeV" % (lumiInInvPb / 1000));
+def create_cms_label(lumiInInvPb, njet="4orMoreJets", nbjet="0orMoreBtag", channel="e"):
+    jetBinsLatex = {'0jet':'0 jet', '0orMoreJets':'#geq 0 jets', '1jet':'1 jet', '1orMoreJets':'#geq 1 jet',
+                    '2jets':'2 jets', '2orMoreJets':'#geq 2 jets', '3jets':'3 jets', '3orMoreJets':'#geq 3 jets',
+                    '4orMoreJets':'#geq 4 jets'}
+
+    BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags',
+                    '1orMoreBtag':'#geq 1 b-tags',
+                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags',
+                    '3btags':'3 b-tags', '3orMoreBtags':'#geq 3 b-tags',
+                    '4orMoreBtags':'#geq 4 b-tags'}
+
+    mytext = TPaveText(0.35, 0.7, 0.7, 0.93, "NDC")
+    mytext.AddText("CMS Preliminary")
+    mytext.AddText("%.2f fb^{-1} at  #sqrt{s} = 7 TeV" % (lumiInInvPb / 1000))
     if njet != "":
         mytext.AddText(channel + ", %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet]))   
              
@@ -105,18 +105,21 @@ def normalise(histogram):
         histogram.Scale(1 / histogram.Integral())
     return histogram
 
-def rebin(hists, nbins, histname):
+def rebin(hists, nbins, histname = ''):
     for sample in hists.keys():
-        if len(hists[sample].keys()) == 0 or 'Stack' in sample:
-            continue
-        if '*' in histname:
-            nameToken = histname.replace('*', '')
-            histlist = hists[sample]
-            for name in histlist.keys():
-                if nameToken in name:
-                    hists[sample][name].Rebin(nbins)
-        elif hists[sample].has_key(histname):
-            hists[sample][histname].Rebin(nbins)
+        if isinstance(hists[sample], dict):
+            if len(hists[sample].keys()) == 0 or 'Stack' in sample:
+                continue
+            if '*' in histname:
+                nameToken = histname.replace('*', '')
+                histlist = hists[sample]
+                for name in histlist.keys():
+                    if nameToken in name:
+                        hists[sample][name].Rebin(nbins)
+            elif hists[sample].has_key(histname):
+                hists[sample][histname].Rebin(nbins)
+        else:
+            hists[sample].Rebin(nbins)
     return hists
 
 def setXRange(hists, limits=(0, 5000), histname=''):
@@ -161,30 +164,36 @@ def setYRange(hists, limits=(0, 5000), histname=''):
     
 def setXTitle(hists, title, histname=''):
     for sample in hists.keys():
-        if len(hists[sample].keys()) == 0 or 'Stack' in sample:
-            continue
-        if '*' in histname:
-            nameToken = histname.replace('*', '')
-            histlist = hists[sample]
-            for name in histlist.keys():
-                if nameToken in name:
-                    hists[sample][name].SetXTitle(title)
-        elif hists[sample].has_key(histname):
-            hists[sample][histname].SetXTitle(title);
+        if isinstance(hists[sample], dict):
+            if len(hists[sample].keys()) == 0 or 'Stack' in sample:
+                continue
+            if '*' in histname:
+                nameToken = histname.replace('*', '')
+                histlist = hists[sample]
+                for name in histlist.keys():
+                    if nameToken in name:
+                        hists[sample][name].SetXTitle(title)
+            elif hists[sample].has_key(histname):
+                hists[sample][histname].SetXTitle(title);
+        else:
+            hists[sample].SetXTitle(title);
     return hists
 
 def setYTitle(hists, title, histname=''):
     for sample in hists.keys():
-        if len(hists[sample].keys()) == 0 or 'Stack' in sample:
-            continue
-        if '*' in histname:
-            nameToken = histname.replace('*', '')
-            histlist = hists[sample]
-            for name in histlist.keys():
-                if nameToken in name:
-                    hists[sample][name].SetYTitle(title)
-        elif hists[sample].has_key(histname):
-            hists[sample][histname].SetYTitle(title);
+        if isinstance(hists[sample], dict):
+            if len(hists[sample].keys()) == 0 or 'Stack' in sample:
+                continue
+            if '*' in histname:
+                nameToken = histname.replace('*', '')
+                histlist = hists[sample]
+                for name in histlist.keys():
+                    if nameToken in name:
+                        hists[sample][name].SetYTitle(title)
+            elif hists[sample].has_key(histname):
+                hists[sample][histname].SetYTitle(title);
+        else:
+            hists[sample].SetYTitle(title);
     return hists   
 
 def setStyle():
@@ -212,14 +221,26 @@ def getMax(histograms):
 #histograms['summedSample'] = sumSamples(histograms, ['sample1','sample2', 'sample3'])
 def sumSamples(histograms = {}, samplesToSum = []):
     summedHists = {}
+    summedHist = None
+    doubleDictionary = False
     
     for sample in samplesToSum:
         hists = histograms[sample]
-        for histname, hist in hist.iteritems():
-            if summedHists.has_key(histname):
-                summedHists[histname] += hist
+        if isinstance(hists, dict):
+            doubleDictionary = True
+            for histname, hist in hists.iteritems():
+                if summedHists.has_key(histname):
+                    summedHists[histname] += hist
+                else:
+                    summedHists[histname] = hist
+        else:
+            if summedHist:
+                summedHist += hists
             else:
-                summedHists[histname] = hist
-    return summedHists
+                summedHist = hists
+    if doubleDictionary:        
+        return summedHists
+    else:
+        return summedHist
             
         

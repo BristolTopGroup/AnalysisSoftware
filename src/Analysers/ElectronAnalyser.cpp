@@ -15,6 +15,7 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 	weight_ = event->weight() * prescale_;
 	const ElectronCollection electrons = event->Electrons();
 
+	histMan_->H1D("Number_Of_Electrons")->Fill(electrons.size(), weight_);
 	for (unsigned int index = 0; index < electrons.size(); ++index) {
 		const ElectronPointer electron(electrons.at(index));
 
@@ -66,7 +67,8 @@ ElectronAnalyser::~ElectronAnalyser() {
 void ElectronAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	//analyse all electrons
-	histMan_->addH1D("All_Electron_Pt", "Electron p_{T};p_{T}(e)/GeV;events/2GeV ", 500, 0, 1000);
+	histMan_->addH1D("Number_Of_Electrons", "Number of electrons;N(e);Events ", 6, -0.5, 5.5);
+	histMan_->addH1D("All_Electron_Pt", "Electron p_{T};p_{T}(e)/GeV;Events/2GeV ", 500, 0, 1000);
 	histMan_->addH1D("All_Electron_Eta", "Electron #eta; #eta(e); Events/(0.05)", 300, -3, 3);
 	histMan_->addH1D("All_Electron_Phi", "Electron #phi; #phi(e); Events/(0.05)", 400, -4, 4);
 	histMan_->addH1D_BJetBinned("All_Electron_pfIsolation_03",
@@ -89,7 +91,6 @@ void ElectronAnalyser::createHistograms() {
 	histMan_->addH1D("electron_pT", "Electron p_{T}; p_{T} (GeV); Events/(1 GeV)", 2000, 0, 2000);
 	histMan_->addH1D("electron_eta", "Electron #eta; #eta(e); Events/(0.05)", 300, -3, 3);
 	histMan_->addH1D("electron_phi", "Electron #phi; #phi(e); Events/(0.05)", 400, -4, 4);
-	//TODO: add nElectrons
 
 	//b-jet binning useful for QCD estimates
 	histMan_->addH1D_BJetBinned("electron_pfIsolation_03",

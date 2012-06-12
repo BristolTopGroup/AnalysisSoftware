@@ -44,7 +44,7 @@ Event::Event() : //
 		goodPFIsolatedMuons(), //
 		looseMuons(), //
 		genParticles(), //
-//		met(), //
+		mets_(),//
 		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
@@ -62,7 +62,8 @@ Event::Event() : //
 		genNumberOfPileUpVertices(0), //
 		trueNumberOfPileUpVertices_(0), //
 		pdfWeights(), //
-		ptdensityRho(0.) {
+		ptdensityRho(0.),//
+		file_(""){
 }
 
 Event::~Event() {
@@ -362,14 +363,13 @@ void Event::setHLTs(const boost::shared_ptr<std::vector<int> > triggers) {
 	HLTs = triggers;
 }
 
-//void Event::setMET(const METPointer met) {
-//	this->met = met;
-//}
-
 void Event::setMETs(const std::vector<METPointer> mets){
 	mets_ = mets;
 }
 
+void Event::setFile(string file){
+	file_ = file;
+}
 void Event::setRunNumber(unsigned long number) {
 	runNumber = number;
 }
@@ -500,6 +500,10 @@ const METPointer Event::MET(METAlgorithm::value type) const {
 		throw "Trying to access non-available MET at " + index;
 
 	return mets_.at(index);
+}
+
+std::string Event::file() const{
+	return file_;
 }
 
 unsigned long Event::runnumber() const {

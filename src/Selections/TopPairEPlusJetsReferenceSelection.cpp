@@ -192,37 +192,13 @@ bool TopPairEPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer e
 	return passesEtAndEta && passesID && passesIso;
 }
 
-bool TopPairEPlusJetsReferenceSelection::passesConversionVeto(const EventPtr event) const{
+bool TopPairEPlusJetsReferenceSelection::passesConversionVeto(const EventPtr event) const {
 	if (!hasExactlyOneIsolatedLepton(event))
 		return false;
 
 	const ElectronPointer electron(boost::static_pointer_cast<Electron>(signalLepton(event)));
 	return electron->passConversionVeto();
-//	return passesConversionRejectionMissingLayers(event) && passesConversionRejectionPartnerTrack(event);
 }
-
-//bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionMissingLayers(const EventPtr event) const {
-//	bool hasMissingHitsInInnerLayer(true);
-//
-//	if (event->GoodPFIsolatedElectrons().size() > 0) {
-//		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
-//		hasMissingHitsInInnerLayer = electron->innerLayerMissingHits() > 0;
-//	}
-//
-//	return !hasMissingHitsInInnerLayer;
-//}
-//
-//bool TopPairEPlusJetsReferenceSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {
-//	bool hasPartnerTrack(true);
-//
-//	if (event->GoodPFIsolatedElectrons().size() > 0) {
-//		const ElectronPointer electron(event->GoodPFIsolatedElectrons().front());
-//		hasPartnerTrack = fabs(electron->dCotThetaToClosestTrack()) < 0.02 && //
-//				fabs(electron->distToClosestTrack()) < 0.02;
-//	}
-//
-//	return !hasPartnerTrack;
-//}
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastThreeGoodJets(const EventPtr event) const {
 	const JetCollection goodJets(cleanedJets(event));
@@ -259,7 +235,12 @@ bool TopPairEPlusJetsReferenceSelection::hasAtLeastTwoGoodBJets(const EventPtr e
 
 const LeptonPointer TopPairEPlusJetsReferenceSelection::signalLepton(const EventPtr event) const {
 	if (!hasExactlyOneIsolatedLepton(event)) {
-		cout << "No signal lepton to be found!" << endl;
+		cerr << "An error occurred in SignalSelection in event (no = " << event->eventnumber();
+		cerr << ", run = " << event->runnumber() << ", lumi = " << event->lumiblock() << "!" << endl;
+		cerr << "File = " << event->file() << endl;
+		cerr
+				<< "Access exception: No signal lepton could be found. Event doesn't pass 'hasExactlyOneIsolatedLepton' selection"
+				<< endl;
 		throw "Access exception: No signal lepton could be found. Event doesn't pass 'hasExactlyOneIsolatedLepton' selection";
 	}
 
@@ -279,7 +260,7 @@ const JetCollection TopPairEPlusJetsReferenceSelection::cleanedJets(const EventP
 	const JetCollection jets(event->Jets());
 	JetCollection cleanedJets;
 
-	if (!hasExactlyOneIsolatedLepton(event))//if no signal lepton is found, can't clean jets, return them all!
+	if (!hasExactlyOneIsolatedLepton(event)) //if no signal lepton is found, can't clean jets, return them all!
 		return jets;
 
 	const LeptonPointer lepton(signalLepton(event));

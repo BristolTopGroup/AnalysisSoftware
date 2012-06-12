@@ -33,7 +33,6 @@ NTupleEventReader::NTupleEventReader() :
 		jetReader(new JetReader(input, Globals::jetAlgorithm)), //
 		genJetReader(new GenJetReader(input)), //
 		muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
-//		metReader(new METReader(input, Globals::metAlgorithm)), //
 		metReaders(), //
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
@@ -88,6 +87,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 
 	currentEvent->setDataType(getDataType(getCurrentFile()));
+	currentEvent->setFile(getCurrentFile());
 	currentEvent->setHLTs(triggers);
 	currentEvent->setHLTPrescales(triggerPrescales);
 	currentEvent->setVertices(vertexReader->getVertices());

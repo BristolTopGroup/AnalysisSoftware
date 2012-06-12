@@ -20,7 +20,7 @@ namespace BAT {
 
 class HLTriggerQCDAnalyser: public BasicAnalyser {
 public:
-	HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "HLTQCDStudy");
+	HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "HLTQCDStudy", bool studyExclusiveEvents = false);
 	virtual ~HLTriggerQCDAnalyser();
 	void analyse(const EventPtr);
 	void createHistograms();
@@ -30,6 +30,7 @@ private:
 	bool passesSignalSelectionWithoutBtagAndHLT(const EventPtr event) const;
 	bool passesTriggerAnalysisSelection(const EventPtr event) const;
 
+	bool studyExclusiveEvents_;
 	ElectronAnalyserLocalPtr eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_,
 			eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_, eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_,
 			eleAnalyser_CaloIdVT_TrkIdT_;

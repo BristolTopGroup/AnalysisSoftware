@@ -42,6 +42,7 @@ T PythonParser::getAttributeFromPyObject(const boost::python::object pyObject, c
 	} catch (error_already_set const &) {
 		std::string perror_str = PythonParser::parse_python_exception();
 		std::cout << "Error during Python file parsing: " << perror_str << std::endl;
+		std::cout << "PythonParser: error when parsing '" + attribute + "'." << std::endl;
 		throw "PythonParser: error when parsing '" + attribute + "'.";
 	}
 	return ret;
@@ -56,6 +57,7 @@ T PythonParser::getObjectFromPyDictionary(const boost::python::dict pydict, cons
 	} catch (error_already_set const &) {
 		std::string perror_str = PythonParser::parse_python_exception();
 		std::cout << "Error during python file parsing: " << perror_str << std::endl;
+		std::cout << "PythonParser: error when accessing dictionary key '" + key + "'." << std::endl;
 		throw "PythonParser: error when accessing dictionary key '" + key + "'.";
 	}
 	return ret;

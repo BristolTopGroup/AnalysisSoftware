@@ -18,6 +18,7 @@
 #include "HighLevelTriggers.h"
 
 #include <boost/shared_ptr.hpp>
+#include <string>
 
 //forward definition of event needed before BasicSelection inclusion.
 namespace BAT {
@@ -82,6 +83,7 @@ protected:
 	std::vector<double> pdfWeights;
 
 	double ptdensityRho;
+	std::string file_;
 
 public:
 	Event();
@@ -99,6 +101,7 @@ public:
 	void setMETs(const std::vector<METPointer> mets);
 	void setHLTs(const boost::shared_ptr<std::vector<int> >);
 	void setHLTPrescales(const boost::shared_ptr<std::vector<int> >);
+	void setFile(std::string file);
 	void setRunNumber(unsigned long number);
 	void setEventNumber(unsigned long number);
 	void setLocalEventNumber(unsigned long number);
@@ -152,6 +155,7 @@ public:
 
 	JetCollection GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
 			BtagAlgorithm::workingPoint WP = BtagAlgorithm::MEDIUM) const;
+	std::string file() const;
 	unsigned long runnumber() const;
 	unsigned long eventnumber() const;
 	unsigned long localnumber() const;

@@ -21,6 +21,8 @@ datasetInfo = {}
 #if using the designated subset:
 datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":4438282}
 datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":47896878}
+#from https://twiki.cern.ch/twiki/bin/view/CMS/SingleTopMoscowTuples
+#more: http://prl.aps.org/abstract/PRL/v106/i9/e092001
 datasetInfo['W1Jet'] = {"cross-section": 4480., "NumberOfProcessedEvents":76048786 }
 datasetInfo['W2Jets'] = {"cross-section": 1674., "NumberOfProcessedEvents":25400440}
 datasetInfo['W3Jets'] = {"cross-section": 484.7, "NumberOfProcessedEvents":7685939}

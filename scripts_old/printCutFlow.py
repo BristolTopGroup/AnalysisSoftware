@@ -28,7 +28,12 @@ def printCutFlow(hist):
     files = inputFiles.files
     hists = HistGetter.getHistsFromFiles([hist], files, bJetBins=[])
     hists = HistGetter.addSampleSum(hists)
-    
+    totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233
+    hists['wjets'][hist].Scale(0)
+    hists['W1Jet'][hist].Scale(totalWPlusJets/71828418.*4480.0/31314.)
+    hists['W2Jets'][hist].Scale(totalWPlusJets/25400440.*1674./31314.)
+    hists['W3Jets'][hist].Scale(totalWPlusJets/7685939.*484.7/31314.)
+    hists['W4Jets'][hist].Scale(totalWPlusJets/10814233.*211.7/31314.)
     histname3 = 'EventCount/TTbarEplusJetsSelection_2orMoreBtags'
     
     header = "| Step | TTJet | W+jets | DY + Jets | single top | QCD | Sum MC | Data |"
@@ -47,6 +52,9 @@ def getEventNumbers(hists, histname):
         events = {}
         for sample in samples:
             events[sample] = hists[sample][histname].GetBinContent(step + 1)
+            if sample == "wjets":
+                tmpHist = hists['W1Jet'][histname] + hists['W2Jets'][histname] + hists['W3Jets'][histname] + hists['W4Jets'][histname]
+                events[sample] = tmpHist.GetBinContent(step + 1)
         eventNumbers.append(events)
     return eventNumbers
     
