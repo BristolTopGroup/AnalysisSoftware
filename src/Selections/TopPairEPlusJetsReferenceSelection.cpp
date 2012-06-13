@@ -7,7 +7,6 @@
 
 #include "../../interface/Selections/TopPairEPlusJetsReferenceSelection.h"
 #include "../../interface/HighLevelTriggers.h"
-#include "../../interface/GlobalVariables.h"
 
 using namespace std;
 
@@ -23,7 +22,7 @@ TopPairEPlusJetsReferenceSelection::~TopPairEPlusJetsReferenceSelection() {
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
-	bool passesPtAndEta = jet->pt() > Globals::minJetPt && fabs(jet->eta()) < Globals::maxAbsoluteJetEta;
+	bool passesPtAndEta = jet->pt() > 20 && fabs(jet->eta()) < 2.4;
 	bool passesJetID(false);
 	JetAlgorithm::value algo = jet->getUsedAlgorithm();
 	if (algo == JetAlgorithm::CA08PF || algo == JetAlgorithm::PF2PAT) { //PFJet
@@ -50,7 +49,7 @@ bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
 }
 
 bool TopPairEPlusJetsReferenceSelection::isBJet(const JetPointer jet) const {
-	return jet->isBJet(Globals::btagAlgorithm, Globals::btagWorkingPoint);
+	return jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM);
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) const {
@@ -130,13 +129,13 @@ bool TopPairEPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Event
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
-	bool passesEtAndEta = electron->et() > Globals::minElectronET
-			&& fabs(electron->eta()) < Globals::MaxAbsoluteElectronEta && !electron->isInCrack();
+	bool passesEtAndEta = electron->et() > 30
+			&& fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
 //	bool passesDistanceToPV = fabs(electron->ZDistanceToPrimaryVertex()) < 1;
 			//since H/E is used at trigger level, use the same cut here:
 	bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
-	bool passesID(electron->passesElectronID(Globals::electronID));
+	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
 	return passesEtAndEta && passesD0 &&
 //			passesDistanceToPV &&
 			passesHOverE && passesID;
@@ -144,7 +143,7 @@ bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer el
 
 bool TopPairEPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
 	const ElectronPointer electron(boost::static_pointer_cast<Electron>(lepton));
-	return electron->pfRelativeIsolation(Globals::electronIsolationCone) < 0.1;
+	return electron->pfRelativeIsolation(0.3) < 0.1;
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesLooseLeptonVeto(const EventPtr event) const {
@@ -164,7 +163,7 @@ bool TopPairEPlusJetsReferenceSelection::isLooseMuon(const MuonPointer muon) con
 	bool passesPt = muon->pt() > 10;
 	bool passesEta = fabs(muon->eta()) < 2.5;
 	bool isGlobal = muon->isGlobal();
-	bool isLooselyIsolated = muon->pfRelativeIsolation(Globals::muonIsolationCone) < 0.2;
+	bool isLooselyIsolated = muon->pfRelativeIsolation(0.3) < 0.2;
 
 	return passesPt && passesEta && isGlobal && isLooselyIsolated;
 }
@@ -187,7 +186,7 @@ bool TopPairEPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer e
 
 	bool passesEtAndEta = electron->et() > 30. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
-	bool passesIso = electron->pfRelativeIsolation(Globals::electronIsolationCone) < 0.2;
+	bool passesIso = electron->pfRelativeIsolation(0.3) < 0.2;
 
 	return passesEtAndEta && passesID && passesIso;
 }

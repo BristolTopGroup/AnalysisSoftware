@@ -12,26 +12,41 @@ using namespace std;
 
 namespace BAT {
 void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
+	unsigned long run(event->runnumber());
 	//only do this analysis for runs above 193834 as previous runs don't have all triggers
 	//after run 194225 the trigger has been changed to HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20
-//	if (!(event->runnumber() >= 193834 && event->runnumber() <= 194225 && event->isRealData()))
-//		return;
-	if (!(event->runnumber() >= 194270 && event->isRealData()))
+	if (!(run >= 193834 && run <= 194225 && event->isRealData()))
 		return;
+//	if (!(run >= 194270 && event->isRealData()))
+//		return;
 
 	if (event->Electrons().size() == 0)
 		return;
 
 	const ElectronPointer mostEnergeticElectron(event->Electrons().front());
-	if ((event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
-			|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20))
+
+	bool passCaloIdVT_CaloIsoT_TrkIdT_TrkIsoT = event->HLT(
+			HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
+			|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20);
+
+	bool passCaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT = event->HLT(
+			HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30);
+
+	bool passCaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT = event->HLT(
+			HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30);
+
+	bool passCaloIdVT_TrkIdT = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)
+			|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20);
+
+	if (passCaloIdVT_CaloIsoT_TrkIdT_TrkIsoT
 			&& (!studyExclusiveEvents_
-					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(
-									HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
-		int prescale = event->HLTPrescale(
-				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30));
+					|| (!passCaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT && !passCaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT
+							&& !passCaloIdVT_TrkIdT))) {
+		int prescale = event->HLTPrescale(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
+		if (run >= 194270)
+		prescale = event->HLTPrescale(
+				HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20);
+
 		eleAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
 		metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
 		metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->setPrescale(prescale);
@@ -60,11 +75,10 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		}
 	}
 
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+	if (passCaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT
 			&& (!studyExclusiveEvents_
-					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
+					|| (!passCaloIdVT_CaloIsoT_TrkIdT_TrkIsoT && !passCaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT
+							&& !passCaloIdVT_TrkIdT))) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->setPrescale(prescale);
@@ -97,11 +111,10 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 
 	}
 
-	if (event->HLT(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
+	if (passCaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT
 			&& (!studyExclusiveEvents_
-					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)))) {
+					|| (passCaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT && !passCaloIdVT_CaloIsoT_TrkIdT_TrkIsoT
+							&& !passCaloIdVT_TrkIdT))) {
 		int prescale = event->HLTPrescale(
 				(HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30));
 		eleAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->setPrescale(prescale);
@@ -131,14 +144,13 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		}
 	}
 
-	if ((event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30)
-			&& event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20))
+	if (passCaloIdVT_TrkIdT
 			&& (!studyExclusiveEvents_
-					|| (!event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30)
-							&& !event->HLT(
-									HLTriggers::HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30)))) {
+					|| (!passCaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT && !passCaloIdVT_CaloIsoT_TrkIdT_TrkIsoT
+							&& !passCaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT))) {
 		int prescale = event->HLTPrescale((HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30));
+		if (run >= 194270)
+			prescale = event->HLTPrescale((HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20));
 		eleAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
 		metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
 		metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->setPrescale(prescale);
@@ -355,14 +367,18 @@ bool HLTriggerQCDAnalyser::passesTriggerAnalysisSelection(const EventPtr event) 
 			cleanedJets.push_back(jet);
 	}
 
-	unsigned int nCleanedJets(0);
+	unsigned int nCleanedJetsAbove30GeV(0), nCleanedJetsAbove45GeV(0);
 	for (unsigned int index = 0; index < cleanedJets.size(); ++index) {
 		const JetPointer jet(cleanedJets.at(index));
 		if (jet->pt() > 45.)
-			++nCleanedJets;
+			++nCleanedJetsAbove45GeV;
+		if (jet->pt() > 30.)
+			++nCleanedJetsAbove30GeV;
 	}
 
-	return nElectrons == 1 && nCleanedJets >= 3;
+	return nElectrons == 1
+			&& (nCleanedJetsAbove45GeV >= 3
+					|| (nCleanedJetsAbove45GeV >= 2 && nCleanedJetsAbove30GeV >= 3 && event->runnumber() >= 194270));
 }
 
 } /* namespace BAT */

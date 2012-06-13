@@ -116,7 +116,7 @@ void setConfiguration(ConfigFile config) {
 	Globals::maxAbsoluteJetEta = 2.4;
 	//electrons
 	Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
-	Globals::electronID = ElectronID::CiCHyperTight1MC;
+	Globals::electronID = ElectronID::MVAIDTrigger;
 	Globals::minElectronET = 30.;
 	Globals::MaxAbsoluteElectronEta = 2.5;
 	//muons
