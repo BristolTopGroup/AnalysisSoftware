@@ -29,12 +29,8 @@ bool QCDPFRelIsoEPlusAsymJetsMET::hasExactlyOneIsolatedLepton(const EventPtr eve
 	return QCDPFRelIsoEPlusJetsSelection::hasExactlyOneIsolatedLepton(event);
 }
 
-bool QCDPFRelIsoEPlusAsymJetsMET::passesConversionRejectionMissingLayers(const EventPtr event) const {
-	return QCDPFRelIsoEPlusJetsSelection::passesConversionRejectionMissingLayers(event);
-}
-
-bool QCDPFRelIsoEPlusAsymJetsMET::passesConversionRejectionPartnerTrack(const EventPtr event) const {
-	return QCDPFRelIsoEPlusJetsSelection::passesConversionRejectionPartnerTrack(event);
+bool QCDPFRelIsoEPlusAsymJetsMET::passesConversionVeto(const EventPtr event) const {
+	return QCDPFRelIsoEPlusJetsSelection::passesConversionVeto(event);
 }
 
 unsigned int QCDPFRelIsoEPlusAsymJetsMET::prescale(const EventPtr event) const{

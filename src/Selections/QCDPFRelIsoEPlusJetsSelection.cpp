@@ -58,9 +58,19 @@ bool QCDPFRelIsoEPlusJetsSelection::hasExactlyOneIsolatedLepton(const EventPtr e
 	return nGoodElectrons > 0 && nGoodIsolatedElectrons < 2;
 }
 
-bool QCDPFRelIsoEPlusJetsSelection::passesConversionRejectionMissingLayers(const EventPtr event) const {
-	const ElectronPointer electron = MostIsolatedElectron(event->GoodElectrons());
-	return electron->innerLayerMissingHits() == 0;
+bool QCDPFRelIsoEPlusJetsSelection::passesConversionVeto(const EventPtr event) const {
+	if (!hasExactlyOneIsolatedLepton(event)) {
+		cerr << "An error occurred in QCD*Selection in event = " << event->eventnumber();
+		cerr << ", run = " << event->runnumber() << ", lumi = " << event->lumiblock() << "!" << endl;
+		cerr << "File = " << event->file() << endl;
+		cerr
+				<< "Access exception: No signal lepton could be found. Event doesn't pass 'hasExactlyOneIsolatedLepton' selection"
+				<< endl;
+		throw "Access exception: No signal lepton could be found. Event doesn't pass 'hasExactlyOneIsolatedLepton' selection";
+	}
+	const LeptonPointer signalLepton = this->signalLepton(event);
+	const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+	return signalElectron->passConversionVeto();
 }
 
 const ElectronPointer QCDPFRelIsoEPlusJetsSelection::MostIsolatedElectron(const ElectronCollection& electrons) const {
@@ -81,12 +91,6 @@ const ElectronPointer QCDPFRelIsoEPlusJetsSelection::MostIsolatedElectron(const 
 		electron = electrons.at(bestIsolatedLepton);
 
 	return electron;
-}
-
-bool QCDPFRelIsoEPlusJetsSelection::passesConversionRejectionPartnerTrack(const EventPtr event) const {
-	const ElectronPointer electron = MostIsolatedElectron(event->GoodElectrons());
-	bool isConversion = fabs(electron->dCotThetaToClosestTrack()) < 0.02 && fabs(electron->distToClosestTrack()) < 0.02;
-	return !isConversion;
 }
 
 unsigned int QCDPFRelIsoEPlusJetsSelection::prescale(const EventPtr event) const {

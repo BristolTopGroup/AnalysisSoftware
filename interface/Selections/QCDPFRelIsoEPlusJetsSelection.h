@@ -22,8 +22,7 @@ public:
 
 	virtual bool passesTriggerSelection(const EventPtr event) const;
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
-	virtual bool passesConversionRejectionMissingLayers(const EventPtr event) const;
-	virtual bool passesConversionRejectionPartnerTrack(const EventPtr event) const;
+	virtual bool passesConversionVeto(const EventPtr event) const;
 	virtual const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;
 
 	virtual unsigned int prescale(const EventPtr event) const;

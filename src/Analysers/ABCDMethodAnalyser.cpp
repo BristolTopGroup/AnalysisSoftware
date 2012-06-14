@@ -14,7 +14,7 @@ namespace BAT {
 //constructor:
 ABCDMethodAnalyser::ABCDMethodAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
-		qcdSelection_(new QCDPFRelIsoEPlusJetsSelection()) {
+		qcdPFRelIsoSelection_(new QCDPFRelIsoEPlusJetsSelection()) {
 	// inherits from QCDPFRelIsoEPlusJetsSelection.h which inherits from TopPairEPlusJetsReferenceSelection, which inherits from BasicSelection.
 }
 
@@ -32,11 +32,11 @@ void ABCDMethodAnalyser::analyse(const EventPtr event) {
 
 	// want the event to pass the selection steps up to DiLeptonVeto (including OneIsolatedElectron which we want) - from BasicSelection.cpp
 	//also want the event to pass the selection step of at least 4 good jets
-	bool passesSelection = qcdSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::DiLeptonVeto)
-			&& qcdSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets);
+	bool passesSelection = qcdPFRelIsoSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::DiLeptonVeto)
+			&& qcdPFRelIsoSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets);
 
 	if (passesSelection) {
-		const LeptonPointer signalLepton = qcdSelection_->signalLepton(event); //from QCDPFRelIsoEPlusJetsSelection.cpp
+		const LeptonPointer signalLepton = qcdPFRelIsoSelection_->signalLepton(event); //from QCDPFRelIsoEPlusJetsSelection.cpp
 		const ElectronPointer electron(boost::static_pointer_cast<Electron>(signalLepton));
 		double pfiso = electron->pfRelativeIsolation(); //removed 0.3 from brackets
 		bool isConversion = electron->passConversionVeto();
