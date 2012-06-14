@@ -259,7 +259,7 @@ HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::str
 		TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_(0), //
 		TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_(0), //
 		TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_(0) {
-
+	qcdAntiIDSelection_->useMVAID(false);
 }
 
 HLTriggerQCDAnalyser::~HLTriggerQCDAnalyser() {

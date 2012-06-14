@@ -10,7 +10,7 @@
 namespace BAT {
 
 QCDAntiIDEPlusJetsSelection::QCDAntiIDEPlusJetsSelection(unsigned int numberOfSelectionSteps) :
-		TopPairEPlusJetsReferenceSelection(numberOfSelectionSteps) {
+		TopPairEPlusJetsReferenceSelection(numberOfSelectionSteps), useMVAID_(true) {
 
 }
 
@@ -18,6 +18,23 @@ bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron)
 	bool passesEtAndEta = electron->et() > 30. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
 
+	bool passesAntiID = useMVAID_ ? passesMVAAntiID(electron) : passesWP80AntiID(electron);
+
+	return passesEtAndEta && passesD0 && passesAntiID;
+}
+
+bool QCDAntiIDEPlusJetsSelection::isIsolated(const LeptonPointer lepton) const {
+	return lepton->pfRelativeIsolation(Globals::electronIsolationCone) < 0.2;
+}
+
+QCDAntiIDEPlusJetsSelection::~QCDAntiIDEPlusJetsSelection() {
+}
+
+void QCDAntiIDEPlusJetsSelection::useMVAID(bool use) {
+	useMVAID_ = use;
+}
+
+bool QCDAntiIDEPlusJetsSelection::passesWP80AntiID(const ElectronPointer electron) const {
 	bool passSigmaIetaIeta(false);
 	bool passDphiIn(false);
 	bool passDetaIn(false);
@@ -36,16 +53,11 @@ bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron)
 		passHoverE = electron->HadOverEm() < 0.1;
 	}
 
-	bool failsTwoOfFourWP80Conditions((passSigmaIetaIeta + passDphiIn + passDetaIn + passHoverE) < 2);
-
-	return passesEtAndEta && passesD0 && failsTwoOfFourWP80Conditions;
+	bool failsTwoOfFourWP80Conditions((passSigmaIetaIeta + passDphiIn + passDetaIn + passHoverE) <= 2);
+	return failsTwoOfFourWP80Conditions;
 }
-
-bool QCDAntiIDEPlusJetsSelection::isIsolated(const LeptonPointer lepton) const {
-	return lepton->pfRelativeIsolation(Globals::electronIsolationCone) < 0.2;
-}
-
-QCDAntiIDEPlusJetsSelection::~QCDAntiIDEPlusJetsSelection() {
+bool QCDAntiIDEPlusJetsSelection::passesMVAAntiID(const ElectronPointer electron) const {
+	return electron->mvaTrigV0() < 0.0;
 }
 
 } /* namespace BAT */
