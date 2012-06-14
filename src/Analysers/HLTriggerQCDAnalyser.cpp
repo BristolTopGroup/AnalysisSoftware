@@ -310,8 +310,7 @@ bool HLTriggerQCDAnalyser::passesNonIsoWithoutBtagAndHLT(const EventPtr event) c
 	passes = passes && qcdNonIsoSelection_->hasExactlyOneIsolatedLepton(event);
 	passes = passes && qcdNonIsoSelection_->passesLooseLeptonVeto(event);
 	passes = passes && qcdNonIsoSelection_->passesDileptonVeto(event);
-	passes = passes && qcdNonIsoSelection_->passesConversionRejectionMissingLayers(event);
-	passes = passes && qcdNonIsoSelection_->passesConversionRejectionPartnerTrack(event);
+	passes = passes && qcdNonIsoSelection_->passesConversionVeto(event);
 	passes = passes && qcdNonIsoSelection_->hasAtLeastThreeGoodJets(event);
 	passes = passes && qcdNonIsoSelection_->hasAtLeastFourGoodJets(event);
 
