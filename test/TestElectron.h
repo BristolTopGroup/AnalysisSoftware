@@ -31,20 +31,8 @@ public:
 	void testEcalIsolation();
 	void testHcalIsolation();
 	void testTrackerIsolation();
-	void testBadEtElectron();
 
-	void testBadEtaElectron();
-
-	void testBadInCrackElectron();
-
-	void testElectronFromConversion();
-	void testElectronFromConversionWithPartnerTrack();
-	void testBadD0Electron();
-	void testLooseElectron();
 	void testRelativeIsolation();
-	void testGoodElectron();
-	void testBadLooseElectronNoID();
-	void testBadElectronNoID();
 	void testVBTFWP70Barrel();
 	void testVBTFWP70BarrelNegativeValues();
 	void testVBTFWP70BarrelFailSigmaIEtaIEta();

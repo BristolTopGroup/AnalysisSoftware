@@ -147,20 +147,8 @@ void TestEvent::testNumberOfElectrons() {
 	ASSERT_EQUAL(2, ttbarEvent.Electrons().size());
 }
 
-void TestEvent::testNumberOfGoodElectrons() {
-	ASSERT_EQUAL(1, ttbarEvent.GoodElectrons().size());
-}
-
-void TestEvent::testNumberOfGoodIsolatedElectrons() {
-	ASSERT_EQUAL(1, ttbarEvent.GoodIsolatedElectrons().size());
-}
-
 void TestEvent::testNumberOfJets() {
 	ASSERT_EQUAL(5, ttbarEvent.Jets().size());
-}
-
-void TestEvent::testNumberOfGoodJets() {
-	ASSERT_EQUAL(4, ttbarEvent.GoodJets().size());
 }
 
 void TestEvent::testRunNumber() {
@@ -210,7 +198,6 @@ void TestEvent::testGoodJetCleaning() {
 	jets.push_back(goodJetCloseToElectron);
 	event.setJets(jets);
 	ASSERT_EQUAL(5, event.Jets().size());
-	ASSERT_EQUAL(5, event.GoodJets().size());
 }
 
 void TestEvent::testGoodJetCleaningNoGoodElectrons() {
@@ -228,11 +215,7 @@ void TestEvent::testGoodJetCleaningNoGoodElectrons() {
 	jets.push_back(goodBJet);
 	jets.push_back(goodJetCloseToElectron);
 	event.setJets(jets);
-//TODO: simplify test
-	ASSERT_EQUAL(0, event.GoodElectrons().size());
-	ASSERT_EQUAL(0, event.GoodIsolatedElectrons().size());
 	ASSERT_EQUAL(jets.size(), event.Jets().size());
-	ASSERT_EQUAL(jets.size(), event.GoodJets().size());
 }
 
 void TestEvent::testGoodJetCleaningNoElectrons() {
@@ -248,7 +231,6 @@ void TestEvent::testGoodJetCleaningNoElectrons() {
 	jets.push_back(goodJetCloseToElectron);
 	event.setJets(jets);
 	ASSERT_EQUAL(jets.size(), event.Jets().size());
-	ASSERT_EQUAL(jets.size(), event.GoodJets().size());
 }
 
 void TestEvent::testGoodJetCleaningNoGoodJets() {
@@ -264,7 +246,6 @@ void TestEvent::testGoodJetCleaningNoGoodJets() {
 	jets.push_back(badJet);
 	event.setJets(jets);
 	ASSERT_EQUAL(jets.size(), event.Jets().size());
-	ASSERT_EQUAL(0, event.GoodJets().size());
 }
 
 void TestEvent::testMET() {
@@ -275,10 +256,7 @@ cute::suite make_suite_TestEvent() {
 	cute::suite s;
 
 	s.push_back(CUTE_SMEMFUN(TestEvent, testNumberOfElectrons));
-	s.push_back(CUTE_SMEMFUN(TestEvent, testNumberOfGoodElectrons));
-	s.push_back(CUTE_SMEMFUN(TestEvent, testNumberOfGoodIsolatedElectrons));
 	s.push_back(CUTE_SMEMFUN(TestEvent, testNumberOfJets));
-	s.push_back(CUTE_SMEMFUN(TestEvent, testNumberOfGoodJets));
 
 	s.push_back(CUTE_SMEMFUN(TestEvent, testRunNumber));
 	s.push_back(CUTE_SMEMFUN(TestEvent, testEventNumber));

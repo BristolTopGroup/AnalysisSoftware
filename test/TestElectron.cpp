@@ -28,52 +28,11 @@ void TestElectron::testTrackerIsolation() {
 	ASSERT_EQUAL_DELTA(0.4, isolatedElectron->trackerIsolation(), 0.01);
 }
 
-void TestElectron::testBadEtElectron() {
-	ASSERT(badEtElectron->isGood(0) == false);
-}
-
-void TestElectron::testBadEtaElectron() {
-	ASSERT(badEtaElectron->isGood(0) == false);
-}
-
-void TestElectron::testBadInCrackElectron() {
-	ASSERT(badInCrackElectron->isGood(0) == false);
-}
-
-void TestElectron::testElectronFromConversion() {
-	ASSERT(badElectronWithMissingInnerLayerHit->isFromConversion());
-}
-
-void TestElectron::testElectronFromConversionWithPartnerTrack() {
-	ASSERT(badElectronWithPartnerTrack->isTaggedAsConversion(0.2,0.2));
-}
-
-void TestElectron::testBadD0Electron() {
-	ASSERT(badD0Electron->isGood(0) == false);
-}
-
-void TestElectron::testLooseElectron() {
-	ASSERT_EQUAL(false, badD0Electron->isLoose());
-	ASSERT_EQUAL(true, looseElectron->isLoose());
-}
-
 void TestElectron::testRelativeIsolation() {
 	float isoSum = isolatedElectron->trackerIsolation() + isolatedElectron->ecalIsolation()
 			+ isolatedElectron->hcalIsolation();
 	ASSERT_EQUAL_DELTA(isoSum / isolatedElectron->et(), isolatedElectron->relativeIsolation(), 0.01);
 	ASSERT(isolatedElectron->relativeIsolation() < 0.1);
-}
-
-void TestElectron::testGoodElectron() {
-	ASSERT(goodElectron->isGood(ElectronID::CiCHyperTight1MC));
-}
-
-void TestElectron::testBadLooseElectronNoID() {
-	ASSERT(badLooseElectronNoID->isLoose() == false);
-}
-
-void TestElectron::testBadElectronNoID() {
-	ASSERT(badElectronNoID->isGood(false) == false);
 }
 
 void TestElectron::testVBTFWP70Barrel() {
@@ -721,19 +680,9 @@ void TestElectron::testCiCElectronIDMoreThanOneID() {
 cute::suite make_suite_TestElectron() {
 	cute::suite s;
 	s.push_back(CUTE_SMEMFUN(TestElectron, testRelativeIsolation));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testGoodElectron));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testBadEtElectron));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testBadEtaElectron));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testBadD0Electron));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testBadInCrackElectron));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testElectronFromConversion));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testElectronFromConversionWithPartnerTrack));
 	s.push_back(CUTE_SMEMFUN(TestElectron, testEcalIsolation));
 	s.push_back(CUTE_SMEMFUN(TestElectron, testHcalIsolation));
 	s.push_back(CUTE_SMEMFUN(TestElectron, testTrackerIsolation));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testLooseElectron));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testBadLooseElectronNoID));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testBadElectronNoID));
 
 	s.push_back(CUTE_SMEMFUN(TestElectron, testVBTFWP70Barrel));
 	s.push_back(CUTE_SMEMFUN(TestElectron, testVBTFWP70BarrelNegativeValues));

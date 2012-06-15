@@ -115,19 +115,10 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
 	electron->setDCotThetaToNextTrack(0.5);
 	electron->setDistToNextTrack(0.5);
 	int passId = 0;
-	CiCElectronID::value IDunderTest = (CiCElectronID::value) Globals::electronID; //CiCElectronID::eidHyperTight4MC;
+	ElectronID::value IDunderTest = ElectronID::CiCHyperTight1MC;
 	passId = passId | 1 << (int) IDunderTest;
 	electron->setCompressedCiCElectronID(passId);
 
-	if (electron->isGood(Globals::electronID) == false) {
-		cout << "Et " << electron->et() << endl;
-		cout << "Eta " << electron->eta() << endl;
-		cout << "VBTF 70 " << electron->VBTF_WP70_ElectronID() << endl;
-		cout << "d0 " << electron->d0_wrtBeamSpot() << endl;
-		cout << "Et " << electron->et() << endl;
-	}
-	assert(electron->isGood(Globals::electronID));
-	assert(electron->isFromConversion() == false);
 	assert(electron->relativeIsolation() > 0.1);
 	return electron;
 }
@@ -142,11 +133,8 @@ ElectronPointer TestObjectFactory::goodIsolatedElectron() {
 	electron->setPFNeutralHadronIsolation(0.5);
 	electron->setUsedAlgorithm(ElectronAlgorithm::ParticleFlow);
 
-	assert(electron->relativeIsolation() < Globals::maxElectronRelativeIsolation);
-	assert(electron->pfIsolation() < Globals::maxElectronPFIsolation);
-	assert(electron->isGood((short) Globals::electronID));
-	assert(electron->isFromConversion() == false);
-	assert(electron->isTaggedAsConversion(0.02,0.02) == false);
+	assert(electron->relativeIsolation() < 0.1);
+	assert(electron->pfRelativeIsolation() < 0.1);
 
 	return electron;
 }
@@ -163,7 +151,6 @@ ElectronPointer TestObjectFactory::goodIsolatedElectron2() {
 	assert(electron->invariantMass(electron2) > 80);
 	assert(electron->invariantMass(electron2) < 100);
 	assert(electron2->relativeIsolation() < 0.1);
-	assert(electron2->isGood(Globals::electronID));
 	return electron2;
 }
 
@@ -252,9 +239,6 @@ ElectronPointer TestObjectFactory::goodLooseElectron() {
 	CiCElectronID::value IDunderTest = CiCElectronID::eidLooseMC;
 	passId = passId | 1 << (int) IDunderTest;
 	looseElectron->setCompressedCiCElectronID(passId);
-
-	assert(looseElectron->isGood(false) == false);
-	assert(looseElectron->isLoose());
 
 	return looseElectron;
 }
@@ -392,7 +376,6 @@ MuonPointer TestObjectFactory::goodIsolatedMuon() {
 	goodIsolatedMuon->setPFGammaIsolation(1);
 	goodIsolatedMuon->setPFNeutralHadronIsolation(1);
 	assert(fabs(goodIsolatedMuon->eta()) < 2.1);
-	assert(goodIsolatedMuon->isGood());
 	assert(goodIsolatedMuon->pfRelativeIsolation() < 0.1);
 
 	return goodIsolatedMuon;
@@ -405,7 +388,6 @@ MuonPointer TestObjectFactory::goodNonIsolatedMuon() {
 	goodNonIsoMuon->setHcalIsolation(200);
 	goodNonIsoMuon->setTrackerIsolation(200);
 
-	assert(goodNonIsoMuon->isGood());
 	assert(goodNonIsoMuon->relativeIsolation() > 0.1);
 
 	return goodNonIsoMuon;
@@ -416,7 +398,6 @@ MuonPointer TestObjectFactory::badNonGlobalMuon() {
 
 	nonGlobalMuon->makeGlobal(false);
 
-	assert(nonGlobalMuon->isGood() == false);
 
 	return nonGlobalMuon;
 }
@@ -424,7 +405,6 @@ MuonPointer TestObjectFactory::badNonGlobalMuon() {
 MuonPointer TestObjectFactory::badPtMuon() {
 	MuonPointer badMuonLowPt(new Muon(5., 4., 1., 1.));
 
-	assert(badMuonLowPt->isGood() == false);
 
 	return badMuonLowPt;
 }
@@ -432,7 +412,6 @@ MuonPointer TestObjectFactory::badPtMuon() {
 MuonPointer TestObjectFactory::badEtaMuon() {
 	MuonPointer badEtaMu(new Muon(450., 50., 50., 444.));
 
-	assert(badEtaMu->isGood() == false);
 
 	return badEtaMu;
 }
