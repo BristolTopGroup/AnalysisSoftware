@@ -15,7 +15,7 @@
 #include "boost/array.hpp"
 #include "../DataTypes.h"
 #include "Efficiency.h"
-#include "../TopPairEventCandidate.h"
+#include "../Selections/TopPairEPlusJetsReferenceSelection.h"
 
 namespace BAT {
 
@@ -23,8 +23,8 @@ namespace AnalysisReference {
 enum value {
 	Ele30_TriPFJet30,
 	Ele30_QuadPFJet30,
-	Ele30_PFJet70_PFJet50_PFJet30,
-	Ele30_PFJet70_PFJet50_PFJet30_PFJet30,
+//	Ele30_PFJet70_PFJet50_PFJet30,
+//	Ele30_PFJet70_PFJet50_PFJet30_PFJet30,
 	NUMBER_OF_TRIGGEREFFICIENCY_CASES
 };
 }
@@ -42,10 +42,11 @@ private:
 			int prescale);
 
 	void analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName, bool passesTrigger,
-			const TopPairEventCandidatePtr ttbarEvent);
+			const EventPtr event);
 	double weight;
 	//for trigger efficiency
 	boost::array<Efficiency, AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES> triggerEfficiencies;
+	TopPairEPlusJetsReferenceSelectionPointer topEplusJetsRefSelection_;
 };
 
 }

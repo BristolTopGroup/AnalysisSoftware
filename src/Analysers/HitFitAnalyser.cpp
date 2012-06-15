@@ -9,17 +9,32 @@
 #include "../../interface/EventWeightProvider.h"
 #include "../../interface/PoissonMeanShifter.h"
 #include "../../interface/GlobalVariables.h"
+#include "../../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 #include <boost/scoped_ptr.hpp>
 
 //using namespace reweight;
 using namespace BAT;
 
 void HitFitAnalyser::analyse(const EventPtr event) {
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 	weight_ = event->weight();
 	//fit only the events that pass full ttbar selection
-	if (!ttbarCand->passesFullTTbarEPlusJetSelection())
+	if (!topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event))
+		;
+	return;
+
+	const JetCollection jets = topEplusJetsRefSelection_->cleanedJets(event);
+	LeptonPointer selectedLepton = topEplusJetsRefSelection_->signalLepton(event);
+	METPointer met = event->MET();
+
+	histMan_->H1D("m3_diff")->Fill(fabs(truthMatchEvent.M3() - TtbarHypothesis::M3(jets)));
+
+	boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
+			new ChiSquaredBasedTopPairReconstruction(selectedLepton, met, jets));
+	if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
+		cout << chi2Reco->getDetailsOnFailure();
 		return;
+	}
+	TtbarHypothesisPointer bestTopHypothesis = chi2Reco->getBestSolution();
 
 	//set MC matching flag
 	if (event->getDataType() == DataType::TTJets)
@@ -63,7 +78,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 
 		outFile << endl;
 
-		outFile << event->GoodElectronCleanedJets().size() << "  " << event->Vertices().size() << "  ";
+		outFile << jets.size() << "  " << event->Vertices().size() << "  ";
 		if (!event->isRealData()) {
 			outFile << nVertices;
 		} else
@@ -76,8 +91,6 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 				or (event->getDataType() == DataType::ttbar178) or (event->getDataType() == DataType::ttbar181)
 				or (event->getDataType() == DataType::ttbar184)) {
 			outFile << "9999  9999  9999" << endl; //needs to be fixed
-//        	outFile << ttbarCandidate->MCtruthAntiTopMass() << "  " << ttbarCandidate->MCtruthAntiTopMass() << "  "
-//        			<< ttbarCandidate->topDecayedLeptonically() << endl;
 		} else
 			outFile << "9999  9999  9999" << endl;
 	}
@@ -85,15 +98,12 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	//prepare the jets collection
 	// Copy jets into an array
 	JetCollection jetCopy;
-	for (JetCollection::const_iterator j = event->GoodElectronCleanedJets().begin();
-			j != event->GoodElectronCleanedJets().end(); ++j) {
+	for (JetCollection::const_iterator j = jets.begin(); j != jets.end(); ++j) {
 		jetCopy.push_back(*j);
-		//if ((*j)->getBTagDiscriminators().back() > 0.5) ++nBTags;
 	}
 
 	std::sort(jetCopy.begin(), jetCopy.end(), jetPtComp);
 
-	//cout << "Number of good jets in event: " << jetCopy.size() << "\n";
 
 	jetsForFitting.clear();
 	unsigned numJetsToFit = jetCopy.size();
@@ -110,21 +120,9 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	// Clear the internal state
 	hhFitter.clear();
 
-	// Add the lepton into HitFit
-	try {
-		if (Event::usePFIsolation)
-			ttbarCand->reconstructTTbarToEPlusJets(event->GoodPFIsolatedElectrons().front());
-		else
-			ttbarCand->reconstructTTbarToEPlusJets(event->GoodIsolatedElectrons().front());
-	} catch (ReconstructionException &e) {
-		cout << e.what() << endl;
-		return;
-	}
-
-	if (!ttbarCand->hasBeenReconstructed())
-		cout << "WRONG" << endl;
-
-	hhFitter.AddLepton(*ttbarCand->getElectronFromWDecay());
+	const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedLepton));
+	//TODO: fix the fitter to accept lepton class OR particle!!
+	hhFitter.AddLepton(*signalElectron);
 
 	// Add jets into HitFit
 	for (size_t jet = 0; jet != jetsForFitting.size(); ++jet) {
@@ -140,7 +138,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	histMan_->H1D("AllJetsPt")->Fill(all_jets_pt, weight_);
 
 	// Add missing transverse energy into HitFit
-	hhFitter.SetMet(*event->MET());
+	hhFitter.SetMet(*met);
 
 	// Results of the fit for all jet permutation of the event
 	std::vector<hitfit::Lepjets_Event> hitfitEventsInput;
@@ -245,7 +243,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		}
 
 		//pass hitfit event into BAT format
-		lepton_charge = ttbarCand->getElectronFromWDecay()->charge();
+		lepton_charge = selectedLepton->charge();
 		BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev());
 
 		if (Globals::produceFitterASCIIoutput) {
@@ -289,7 +287,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 
 }
 
-HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder ) :
+HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
 		outFileName("FitResults.txt"), //
 		outFile(outFileName.c_str()), //
@@ -314,23 +312,20 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, std:
 		electronTranslator_(hitfitElectronResolution_), //
 		muonTranslator_(hitfitMuonResolution_), //
 		jetTranslator_(hitfitUdscJetResolution_, hitfitBJetResolution_), //
-		metTranslator_(hitfitMETResolution_)
+		metTranslator_(hitfitMETResolution_), //
+		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection())
 
 {
 
 }
 
 BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
-	//TODO: Sergey, this variable is set but not used!!
-	bool evOk = true;
-
 	// Do the electron
 	//BAT::ElectronPointer newEle(new BAT::Electron(*truthMatchEvent.electronFromW));
 	BAT::ElectronPointer newEle(new BAT::Electron());
 	if (ev.nleps() > 0) {
 		newEle->setFourVector(fourVectorFromHitFit(ev.lep(0).p()));
 	} else {
-		evOk = false;
 		std::cout << "No electron in HitFit event!" << std::endl;
 	}
 
@@ -365,13 +360,8 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 			if (hfJType == hitfit::hadw2_label)
 				*newWj2 = newJet;
 		}
-//    } else {
-//      std::cout << "Distance to corresponding jet " << (*j)->getFourVector().DeltaR(hfJet) << " too large; not matching" << std::endl;
-//      if (hfJType != hitfit::unknown_label) evOk = false;
-//    }
 	}
 
-	//  if (!evOk) std::cout << "Solution is not Ok" << std::endl;
 
 	BAT::TtbarHypothesis hyp(newEle, newMet, newLep, newHad, newWj1, newWj2);
 

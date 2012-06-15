@@ -30,7 +30,6 @@ typedef boost::shared_ptr<Event> EventPtr;
 #include "GlobalVariables.h"
 namespace BAT {
 
-
 class Event {
 protected:
 	boost::shared_ptr<std::vector<int> > HLTs;
@@ -39,27 +38,27 @@ protected:
 	VertexCollection goodVertices;
 	TrackCollection tracks;
 	ElectronCollection allElectrons;
-	ElectronCollection goodElectrons;
-	ElectronCollection goodIsolatedElectrons;
-	ElectronCollection goodPFIsolatedElectrons;
-	ElectronCollection goodPFNonIsolatedElectrons;
-	ElectronCollection looseElectrons;
-	ElectronCollection qcdElectrons;
+//	ElectronCollection goodElectrons;
+//	ElectronCollection goodIsolatedElectrons;
+//	ElectronCollection goodPFIsolatedElectrons;
+//	ElectronCollection goodPFNonIsolatedElectrons;
+//	ElectronCollection looseElectrons;
+//	ElectronCollection qcdElectrons;
 
 	JetCollection allJets;
 	JetCollection genJets;
-	JetCollection goodJets;
-	JetCollection goodBJets;
-	JetCollection goodElectronCleanedJets;
-	JetCollection goodElectronCleanedBJets;
-	JetCollection goodMuonCleanedJets;
-	JetCollection goodMuonCleanedBJets;
+//	JetCollection goodJets;
+//	JetCollection goodBJets;
+//	JetCollection goodElectronCleanedJets;
+//	JetCollection goodElectronCleanedBJets;
+//	JetCollection goodMuonCleanedJets;
+//	JetCollection goodMuonCleanedBJets;
 
 	MuonCollection allMuons;
-	MuonCollection goodMuons;
-	MuonCollection goodIsolatedMuons;
-	MuonCollection goodPFIsolatedMuons;
-	MuonCollection looseMuons;
+//	MuonCollection goodMuons;
+//	MuonCollection goodIsolatedMuons;
+//	MuonCollection goodPFIsolatedMuons;
+//	MuonCollection looseMuons;
 
 	MCParticleCollection genParticles;
 
@@ -84,6 +83,9 @@ protected:
 
 	double ptdensityRho;
 	std::string file_;
+
+	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_, passesTrackingFailureFilter_,
+			passesNoisySCFilter_;
 
 public:
 	Event();
@@ -118,6 +120,12 @@ public:
 	void setPUWeight3D(double puweight);
 	void setPUWeightShiftUp(double puweight);
 	void setPUWeightShiftDown(double puweight);
+	void setCSCTightBeamHaloFilter(bool result);
+	void setHBHENoiseFilter(bool result);
+	void setHCALLaserFilter(bool result);
+	void setECALDeadCellFilter(bool result);
+	void setTrackingFailureFilter(bool result);
+	void setNoisySCFilter(bool result);
 
 	const VertexPointer PrimaryVertex() const;
 	const VertexCollection& Vertices() const;
@@ -125,23 +133,23 @@ public:
 	const TrackCollection& Tracks() const;
 	const MCParticleCollection& GenParticles() const;
 	const ElectronCollection& Electrons() const;
-	const ElectronCollection& GoodElectrons() const;
-	const ElectronCollection& GoodIsolatedElectrons() const;
-	const ElectronCollection& GoodPFIsolatedElectrons() const;
-	const ElectronCollection& GoodPFNonIsolatedElectrons() const;
+//	const ElectronCollection& GoodElectrons() const;
+//	const ElectronCollection& GoodIsolatedElectrons() const;
+//	const ElectronCollection& GoodPFIsolatedElectrons() const;
+//	const ElectronCollection& GoodPFNonIsolatedElectrons() const;
 	const ElectronCollection& QCDElectrons() const;
 	const JetCollection& Jets() const;
 	const JetCollection& GenJets() const;
-	const JetCollection& GoodJets() const;
-	const JetCollection& GoodElectronCleanedJets() const;
-	const JetCollection& GoodMuonCleanedJets() const;
-	const JetCollection& GoodBJets() const;
-	const JetCollection& GoodElectronCleanedBJets() const;
-	const JetCollection& GoodMuonCleanedBJets() const;
+//	const JetCollection& GoodJets() const;
+//	const JetCollection& GoodElectronCleanedJets() const;
+//	const JetCollection& GoodMuonCleanedJets() const;
+//	const JetCollection& GoodBJets() const;
+//	const JetCollection& GoodElectronCleanedBJets() const;
+//	const JetCollection& GoodMuonCleanedBJets() const;
 	const MuonCollection& Muons() const;
-	const MuonCollection& GoodMuons() const;
-	const MuonCollection& GoodIsolatedMuons() const;
-	const MuonCollection& GoodPFIsolatedMuons() const;
+//	const MuonCollection& GoodMuons() const;
+//	const MuonCollection& GoodIsolatedMuons() const;
+//	const MuonCollection& GoodPFIsolatedMuons() const;
 	const METPointer MET() const;
 	const METPointer MET(METAlgorithm::value type) const;
 
@@ -188,15 +196,22 @@ public:
 	double PUWeightShiftDown() const;
 	double getBTagCorrectionFactor(const JetCollection jets) const;
 
+	bool passesCSCTightBeamHaloFilter() const;
+	bool passesHBHENoiseFilter() const;
+	bool passesHCALLaserFilter() const;
+	bool passesECALDeadCellFilter() const;
+	bool passesTrackingFailureFilter() const;
+	bool passesNoisySCFilter() const;
+
 private:
-	void selectElectronsByQuality();
-	void cleanGoodJets();
-	JetCollection cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollection& electrons) const;
-	JetCollection cleanGoodJetsAgainstIsolatedMuons(const MuonCollection& muons) const;
-	JetCollection cleanGoodJetsAgainstMostIsolatedLepton(const LeptonPointer mostIsolatedLepton) const;
-	void selectGoodJets();
-	void selectMuonsByQuality();
-	void selectVerticesByQuality();
+//	void selectElectronsByQuality();
+//	void cleanGoodJets();
+//	JetCollection cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollection& electrons) const;
+//	JetCollection cleanGoodJetsAgainstIsolatedMuons(const MuonCollection& muons) const;
+//	JetCollection cleanGoodJetsAgainstMostIsolatedLepton(const LeptonPointer mostIsolatedLepton) const;
+//	void selectGoodJets();
+//	void selectMuonsByQuality();
+//	void selectVerticesByQuality();
 };
 
 }

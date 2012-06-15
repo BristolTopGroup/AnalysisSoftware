@@ -10,11 +10,12 @@
 #include <math.h>
 namespace BAT {
 
-HLTriggerTurnOnAnalyser::HLTriggerTurnOnAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
+HLTriggerTurnOnAnalyser::HLTriggerTurnOnAnalyser(boost::shared_ptr<HistogramManager> histMan,
+		std::string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
 		weight(1.), //
-		triggerEfficiencies() //
-{
+		triggerEfficiencies(), //
+		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()) {
 }
 
 HLTriggerTurnOnAnalyser::~HLTriggerTurnOnAnalyser() {
@@ -22,7 +23,7 @@ HLTriggerTurnOnAnalyser::~HLTriggerTurnOnAnalyser() {
 }
 
 void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
+//	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 	/*
 	 * triggers use (calo + tracker) electrons with ID looser than WP 80
 	 * early triggers don't require isolation
@@ -43,9 +44,14 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 	ElectronCollection goodElectrons;
 
 	for (unsigned int index = 0; index < electrons.size(); ++index) {
-		if (electrons.at(index)->isGood(ElectronID::SimpleCutBasedWP70) && electrons.at(index)->et() > 45) {
-			//Et > 35GeV, d0 < 0.02cm, |z-vertex.z} < 1cm, Electron ID WP 70 (no isolation)
-			// get on the plateau of the electron turn-on curve
+		const ElectronPointer electron(electrons.at(index));
+		bool passesID = electron->passesElectronID(ElectronID::SimpleCutBasedWP70);
+			bool passesEt = electron->et() > 45;
+			bool passesEta = fabs(electron->eta()) < 2.5 && !electron->isInCrack();
+			bool passesD0 = fabs(electron->d0()) < 0.02; //cm
+		//	//since H/E is used at trigger level, use the same cut here:
+			bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
+		if (passesEt && passesEta && passesD0 && passesID && passesHOverE) {
 			goodElectrons.push_back(electrons.at(index));
 		}
 	}
@@ -71,7 +77,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 		const JetPointer jet = jets.at(index);
 		bool noElectronInVicinity = !jet->isWithinDeltaR(0.3, mostIsolatedElectron);
 		bool passesEta = fabs(jet->eta()) < 2.4;
-		bool passesBTag = jet->isBJet(Globals::btagAlgorithm, Globals::btagWorkingPoint);
+		bool passesBTag = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM);
 		if (noElectronInVicinity && passesEta) {
 			cleanedJets.push_back(jet);
 			if (passesBTag)
@@ -396,7 +402,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 			//only in the range it was used as a signal trigger
 			if ((isData && event->runnumber() > 160404 && event->runnumber() <= 165633) || !isData)
 				analyseTriggerEfficiency((AnalysisReference::value) analysis,
-						"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30", passesTrigger, ttbarCand);
+						"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30", passesTrigger, event);
 		}
 
 		passesTrigger = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
@@ -405,7 +411,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			if ((isData && event->runnumber() > 165633 && event->runnumber() <= 178380) || !isData)
 				analyseTriggerEfficiency((AnalysisReference::value) analysis,
-						"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30", passesTrigger, ttbarCand);
+						"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30", passesTrigger, event);
 		}
 	}
 	if ((isData && event->runnumber() > 178380) || !isData) {
@@ -415,7 +421,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
 				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			analyseTriggerEfficiency((AnalysisReference::value) analysis, "HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFJet30",
-					passesTrigger, ttbarCand);
+					passesTrigger, event);
 		}
 
 		if (isData)
@@ -429,7 +435,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 		for (unsigned int analysis = AnalysisReference::Ele30_TriPFJet30;
 				analysis < AnalysisReference::NUMBER_OF_TRIGGEREFFICIENCY_CASES; analysis++) {
 			analyseTriggerEfficiency((AnalysisReference::value) analysis,
-					"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30", passesTrigger, ttbarCand);
+					"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30", passesTrigger, event);
 		}
 	}
 	//restore normal jet binning
@@ -517,7 +523,7 @@ void HLTriggerTurnOnAnalyser::analyseTrigger(bool passesPreCondition, bool passe
 }
 
 void HLTriggerTurnOnAnalyser::analyseTriggerEfficiency(AnalysisReference::value analysis, std::string triggerName,
-		bool passesTrigger, const TopPairEventCandidatePtr event) {
+		bool passesTrigger, const EventPtr event) {
 
 	double triggerResult = passesTrigger ? 1.0 : 0.;
 
@@ -530,43 +536,44 @@ void HLTriggerTurnOnAnalyser::analyseTriggerEfficiency(AnalysisReference::value 
 	histMan_->setCurrentHistogramFolder("HLTStudy/" + triggerName + "/TriggerEfficiency");
 	bool passesCuts = true;
 	//all common cuts except HLT
-	for (unsigned int cut = TTbarEPlusJetsSelection::GoodPrimaryvertex;
-			cut <= TTbarEPlusJetsSelection::AtLeastThreeGoodJets; cut++) {
-		passesCuts = passesCuts && event->passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut);
+	for (unsigned int cut = TTbarEPlusJetsReferenceSelection::OneIsolatedElectron;
+			cut <= TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets; cut++) {
+		passesCuts = passesCuts
+				&& topEplusJetsRefSelection_->passesSelectionStep(event, (TTbarEPlusJetsReferenceSelection::Step) cut);
 	}
 	bool passesRequired = false;
 
 	switch (analysis) {
 	case AnalysisReference::Ele30_TriPFJet30:
 		//require == 3 jets
-		passesRequired = !event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+		passesRequired = !topEplusJetsRefSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
 			histMan_->H1D("Ele30_TriPFJet30")->Fill(triggerResult, weight);
 		break;
 	case AnalysisReference::Ele30_QuadPFJet30:
-		passesRequired = event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+		passesRequired = topEplusJetsRefSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets);
 		if (passesRequired && passesCuts)
 			histMan_->H1D("Ele30_QuadPFJet30")->Fill(triggerResult, weight);
 		break;
 
-	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30:
-		//require == 3 jets
-		passesRequired = !event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
-		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
-		passesRequired = passesRequired
-				&& event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
-		if (passesRequired && passesCuts)
-			histMan_->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(triggerResult, weight);
-		break;
+//	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30:
+//		//require == 3 jets
+//		passesRequired = !topEplusJetsRefSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets);
+//		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
+//		passesRequired = passesRequired
+//				&& event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
+//		if (passesRequired && passesCuts)
+//			histMan_->H1D("Ele30_PFJet70_PFJet50_PFJet30")->Fill(triggerResult, weight);
+//		break;
 
-	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30_PFJet30:
-		passesRequired = event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
-		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
-		passesRequired = passesRequired
-				&& event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
-		if (passesRequired && passesCuts)
-			histMan_->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(triggerResult, weight);
-		break;
+//	case AnalysisReference::Ele30_PFJet70_PFJet50_PFJet30_PFJet30:
+//		passesRequired = event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AtLeastFourGoodJets);
+//		//require  >= 1 jet above 70GeV and >=2 jets above 50GeV
+//		passesRequired = passesRequired
+//				&& event->passesEPlusJetsSelectionStep(TTbarEPlusJetsSelection::AsymmetricJetCuts);
+//		if (passesRequired && passesCuts)
+//			histMan_->H1D("Ele30_PFJet70_PFJet50_PFJet30_PFJet30")->Fill(triggerResult, weight);
+//		break;
 
 	default:
 		return;

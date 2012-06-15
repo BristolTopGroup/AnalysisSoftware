@@ -225,11 +225,11 @@ bool TopPairEPlusJetsReferenceSelection::hasAtLeastFourGoodJets(const EventPtr e
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodBJet(const EventPtr event) const {
-	return event->GoodElectronCleanedBJets().size() > 0;
+	return cleanedBJets(event).size() > 0;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastTwoGoodBJets(const EventPtr event) const {
-	return event->GoodElectronCleanedBJets().size() > 1;
+	return cleanedBJets(event).size() > 1;
 }
 
 const LeptonPointer TopPairEPlusJetsReferenceSelection::signalLepton(const EventPtr event) const {

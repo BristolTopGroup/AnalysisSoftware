@@ -4,7 +4,7 @@
  *  Created on: 5 Sep 2011
  *      Author: kreczko
  */
-#include "../../interface/TopPairEventCandidate.h"
+//#include "../../interface/TopPairEventCandidate.h"
 #include "../../interface/Analysers/MTtbarAnalyser.h"
 #include "../../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 #include "../../interface/ReconstructionModules/ChiSquaredThreeJetsTopPairReconstruction.h"
@@ -15,23 +15,24 @@
 namespace BAT {
 
 void MTtbarAnalyser::analyse(const EventPtr event) {
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
+//	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 	weight = event->weight();
-	analyseFourJetChi2(ttbarCand);
-	analyseThreeJetChi2(ttbarCand);
-	analyseFourJetTopMassDifference(ttbarCand);
-	analyseFourJetChi2QCDConversionBackground(ttbarCand);
+	analyseFourJetChi2(event);
+	analyseThreeJetChi2(event);
+	analyseFourJetTopMassDifference(event);
+	analyseFourJetChi2QCDConversionBackground(event);
 }
 
-void MTtbarAnalyser::analyseFourJetChi2(const TopPairEventCandidatePtr event) {
+void MTtbarAnalyser::analyseFourJetChi2(const EventPtr event) {
 	string type("ElectronPlusJets");
-	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
 
-	if (event->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
-		LeptonPointer selectedElectron = event->GoodPFIsolatedElectrons().front();
+	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		LeptonPointer selectedElectron = topEplusJetsRefSelection_->signalLepton(event);
 		METPointer met = event->MET();
-		JetCollection jets = event->GoodElectronCleanedJets();
+		JetCollection jets = topEplusJetsRefSelection_->cleanedJets(event);
+		JetCollection bJets = topEplusJetsRefSelection_->cleanedBJets(event);
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 
 		boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
 				new ChiSquaredBasedTopPairReconstruction(selectedElectron, met, jets));
@@ -41,45 +42,48 @@ void MTtbarAnalyser::analyseFourJetChi2(const TopPairEventCandidatePtr event) {
 		}
 		allSolutions = chi2Reco->getAllSolutions();
 		fillHistograms(type + "/FourJetChi2");
-		if (event->passesMETCut() && event->passesAsymmetricElectronCleanedJetCuts())
-			fillHistograms(type + "/FourJetChi2", "_withMETAndAsymJets");
 	}
 
-	type = "MuonPlusJets";
-	histMan_->setCurrentJetBin(event->GoodMuonCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodMuonCleanedBJets().size());
-
-	if (event->passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::AtLeastFourGoodJets)) {
-		LeptonPointer selectedLepton = event->GoodPFIsolatedMuons().front();
-		METPointer met = event->MET();
-		JetCollection jets = event->GoodMuonCleanedJets();
-
-		boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
-				new ChiSquaredBasedTopPairReconstruction(selectedLepton, met, jets));
-		if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
-			cout << chi2Reco->getDetailsOnFailure();
-			return;
-		}
-		allSolutions = chi2Reco->getAllSolutions();
-		fillHistograms(type + "/FourJetChi2");
-		if (event->passesMETCut() && event->passesAsymmetricMuonCleanedJetCuts())
-			fillHistograms(type + "/FourJetChi2", "_withMETAndAsymJets");
-	}
-	//soon to be removed
-	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
+//	type = "MuonPlusJets";
+//	histMan_->setCurrentJetBin(event->GoodMuonCleanedJets().size());
+//	histMan_->setCurrentBJetBin(event->GoodMuonCleanedBJets().size());
+//
+//	if (event->passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::AtLeastFourGoodJets)) {
+//		LeptonPointer selectedLepton = event->GoodPFIsolatedMuons().front();
+//		METPointer met = event->MET();
+//		JetCollection jets = event->GoodMuonCleanedJets();
+//
+//		boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
+//				new ChiSquaredBasedTopPairReconstruction(selectedLepton, met, jets));
+//		if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
+//			cout << chi2Reco->getDetailsOnFailure();
+//			return;
+//		}
+//		allSolutions = chi2Reco->getAllSolutions();
+//		fillHistograms(type + "/FourJetChi2");
+//		if (event->passesMETCut() && event->passesAsymmetricMuonCleanedJetCuts())
+//			fillHistograms(type + "/FourJetChi2", "_withMETAndAsymJets");
+//	}
+//	//soon to be removed
+//	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
+//	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
 }
 
-void MTtbarAnalyser::analyseThreeJetChi2(const TopPairEventCandidatePtr event) {
+void MTtbarAnalyser::analyseThreeJetChi2(const EventPtr event) {
 	string type("ElectronPlusJets");
-	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
 
-	if (event->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastTwoGoodJets)
-			&& event->GoodElectronCleanedJets().size() == 3) {
-		LeptonPointer selectedElectron = event->GoodPFIsolatedElectrons().front();
+	if (topEplusJetsRefSelection_->passesSelectionUpToStep(event,
+			TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets)) {
+		JetCollection jets = topEplusJetsRefSelection_->cleanedJets(event);
+		if (jets.size() != 3) //only consider 3 jet events
+			return;
+
+		JetCollection bJets = topEplusJetsRefSelection_->cleanedBJets(event);
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
+
+		LeptonPointer selectedElectron = topEplusJetsRefSelection_->signalLepton(event);
 		METPointer met = event->MET();
-		JetCollection jets = event->GoodElectronCleanedJets();
 
 		boost::scoped_ptr<ChiSquaredThreeJetsTopPairReconstruction> chi2Reco(
 				new ChiSquaredThreeJetsTopPairReconstruction(selectedElectron, met, jets));
@@ -89,46 +93,45 @@ void MTtbarAnalyser::analyseThreeJetChi2(const TopPairEventCandidatePtr event) {
 		}
 		allSolutions = chi2Reco->getAllSolutions();
 		fillHistograms(type + "/ThreeJetChi2");
-		if (event->passesMETCut() && event->passesAsymmetricElectronCleanedJetCuts())
-			fillHistograms(type + "/ThreeJetChi2", "_withMETAndAsymJets");
 	}
 
-	type = "MuonPlusJets";
-	histMan_->setCurrentJetBin(event->GoodMuonCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodMuonCleanedBJets().size());
-
-	if (event->passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::AtLeastTwoGoodJets)
-			&& event->GoodMuonCleanedJets().size() == 3) {
-		LeptonPointer selectedLepton = event->GoodPFIsolatedMuons().front();
-		METPointer met = event->MET();
-		JetCollection jets = event->GoodMuonCleanedJets();
-
-		boost::scoped_ptr<ChiSquaredThreeJetsTopPairReconstruction> chi2Reco(
-				new ChiSquaredThreeJetsTopPairReconstruction(selectedLepton, met, jets));
-		if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
-			cout << chi2Reco->getDetailsOnFailure();
-			return;
-		}
-		allSolutions = chi2Reco->getAllSolutions();
-		fillHistograms(type + "/ThreeJetChi2");
-		if (event->passesMETCut() && event->passesAsymmetricMuonCleanedJetCuts())
-			fillHistograms(type + "/ThreeJetChi2", "_withMETAndAsymJets");
-	}
-
-	//soon to be removed
-	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
+//	type = "MuonPlusJets";
+//	histMan_->setCurrentJetBin(event->GoodMuonCleanedJets().size());
+//	histMan_->setCurrentBJetBin(event->GoodMuonCleanedBJets().size());
+//
+//	if (event->passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::AtLeastTwoGoodJets)
+//			&& event->GoodMuonCleanedJets().size() == 3) {
+//		LeptonPointer selectedLepton = event->GoodPFIsolatedMuons().front();
+//		METPointer met = event->MET();
+//		JetCollection jets = event->GoodMuonCleanedJets();
+//
+//		boost::scoped_ptr<ChiSquaredThreeJetsTopPairReconstruction> chi2Reco(
+//				new ChiSquaredThreeJetsTopPairReconstruction(selectedLepton, met, jets));
+//		if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
+//			cout << chi2Reco->getDetailsOnFailure();
+//			return;
+//		}
+//		allSolutions = chi2Reco->getAllSolutions();
+//		fillHistograms(type + "/ThreeJetChi2");
+//		if (event->passesMETCut() && event->passesAsymmetricMuonCleanedJetCuts())
+//			fillHistograms(type + "/ThreeJetChi2", "_withMETAndAsymJets");
+//	}
+//
+//	//soon to be removed
+//	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
+//	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
 }
 
-void MTtbarAnalyser::analyseFourJetTopMassDifference(const TopPairEventCandidatePtr event) {
+void MTtbarAnalyser::analyseFourJetTopMassDifference(const EventPtr event) {
 	string type("ElectronPlusJets");
-	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
 
-	if (event->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::AtLeastFourGoodJets)) {
-		LeptonPointer selectedElectron = event->GoodPFIsolatedElectrons().front();
+	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		LeptonPointer selectedElectron = topEplusJetsRefSelection_->signalLepton(event);
 		METPointer met = event->MET();
-		JetCollection jets = event->GoodElectronCleanedJets();
+		JetCollection jets = topEplusJetsRefSelection_->cleanedJets(event);
+		JetCollection bJets = topEplusJetsRefSelection_->cleanedBJets(event);
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 
 		boost::scoped_ptr<TopMassDifferenceTTbarReco> topMassDiffReco(
 				new TopMassDifferenceTTbarReco(selectedElectron, met, jets));
@@ -138,45 +141,39 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const TopPairEventCandidate
 		}
 		allSolutions = topMassDiffReco->getAllSolutions();
 		fillHistograms(type + "/FourJetTopMassDifference");
-		if (event->passesMETCut() && event->passesAsymmetricElectronCleanedJetCuts())
-			fillHistograms(type + "/FourJetTopMassDifference", "_withMETAndAsymJets");
 	}
 
-	type = "MuonPlusJets";
-	histMan_->setCurrentJetBin(event->GoodMuonCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodMuonCleanedBJets().size());
-
-	if (event->passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::AtLeastFourGoodJets)) {
-		LeptonPointer selectedLepton = event->GoodPFIsolatedMuons().front();
-		METPointer met = event->MET();
-		JetCollection jets = event->GoodMuonCleanedJets();
-
-		boost::scoped_ptr<TopMassDifferenceTTbarReco> topMassDiffReco(
-				new TopMassDifferenceTTbarReco(selectedLepton, met, jets));
-		if (!topMassDiffReco->meetsInitialCriteria()) { //reports details on failure and skips event
-			cout << topMassDiffReco->getDetailsOnFailure();
-			return;
-		}
-		allSolutions = topMassDiffReco->getAllSolutions();
-		fillHistograms(type + "/FourJetTopMassDifference");
-		if (event->passesMETCut() && event->passesAsymmetricMuonCleanedJetCuts())
-			fillHistograms(type + "/FourJetTopMassDifference", "_withMETAndAsymJets");
-	}
-
-	//soon to be removed
-	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
-
+//	type = "MuonPlusJets";
+//	histMan_->setCurrentJetBin(event->GoodMuonCleanedJets().size());
+//	histMan_->setCurrentBJetBin(event->GoodMuonCleanedBJets().size());
+//
+//	if (event->passesMuPlusJetsSelectionStepUpTo(TTbarMuPlusJetsSelection::AtLeastFourGoodJets)) {
+//		LeptonPointer selectedLepton = event->GoodPFIsolatedMuons().front();
+//		METPointer met = event->MET();
+//		JetCollection jets = event->GoodMuonCleanedJets();
+//
+//		boost::scoped_ptr<TopMassDifferenceTTbarReco> topMassDiffReco(
+//				new TopMassDifferenceTTbarReco(selectedLepton, met, jets));
+//		if (!topMassDiffReco->meetsInitialCriteria()) { //reports details on failure and skips event
+//			cout << topMassDiffReco->getDetailsOnFailure();
+//			return;
+//		}
+//		allSolutions = topMassDiffReco->getAllSolutions();
+//		fillHistograms(type + "/FourJetTopMassDifference");
+//		if (event->passesMETCut() && event->passesAsymmetricMuonCleanedJetCuts())
+//			fillHistograms(type + "/FourJetTopMassDifference", "_withMETAndAsymJets");
+//	}
 }
 
-void MTtbarAnalyser::analyseFourJetChi2QCDConversionBackground(const TopPairEventCandidatePtr event) {
-	histMan_->setCurrentJetBin(event->GoodElectronCleanedJets().size());
-	histMan_->setCurrentBJetBin(event->GoodElectronCleanedBJets().size());
+void MTtbarAnalyser::analyseFourJetChi2QCDConversionBackground(const EventPtr event) {
 
-	if (event->passesConversionSelection() && event->GoodElectronCleanedJets().size() >= 4) {
-		LeptonPointer selectedElectron = event->MostPFIsolatedElectron(event->Electrons());
+	if (qcdConversionSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
+		LeptonPointer selectedElectron = qcdConversionSelection_->signalLepton(event);
 		METPointer met = event->MET();
-		JetCollection jets = event->GoodElectronCleanedJets();
+		JetCollection jets = qcdConversionSelection_->cleanedJets(event);
+		JetCollection bJets = qcdConversionSelection_->cleanedBJets(event);
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 
 		boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
 				new ChiSquaredBasedTopPairReconstruction(selectedElectron, met, jets));
@@ -186,8 +183,8 @@ void MTtbarAnalyser::analyseFourJetChi2QCDConversionBackground(const TopPairEven
 		}
 		allSolutions = chi2Reco->getAllSolutions();
 		fillHistograms("ElectronPlusJets/QCDConversionsBackground");
-		if (event->passesMETCut() && event->passesAsymmetricElectronCleanedJetCuts())
-			fillHistograms("ElectronPlusJets/QCDConversionsBackground", "_withMETAndAsymJets");
+//		if (event->passesMETCut() && event->passesAsymmetricElectronCleanedJetCuts())
+//			fillHistograms("ElectronPlusJets/QCDConversionsBackground", "_withMETAndAsymJets");
 	}
 }
 
@@ -256,8 +253,11 @@ void MTtbarAnalyser::createHistograms() {
 }
 
 void MTtbarAnalyser::createHistogramsFor(std::string collection) {
-	boost::array<std::string, 4> histTypes = { { "", "_withMETAndAsymJets", "_allSolutions",
-			"_allSolutions_withMETAndAsymJets" } };
+	boost::array<std::string, 4> histTypes = { { "",
+//			"_withMETAndAsymJets",
+			"_allSolutions",
+//			"_allSolutions_withMETAndAsymJets"
+			} };
 
 	histMan_->setCurrentHistogramFolder("MttbarAnalysis/" + collection);
 
@@ -269,13 +269,13 @@ void MTtbarAnalyser::createHistogramsFor(std::string collection) {
 				1000, 0, 1000);
 		histMan_->addH1D_BJetBinned("hadronicTopMass" + suffix, "hadronic Top Mass; m(t_{had}) [GeV]; events/1 GeV",
 				1000, 0, 1000);
-		histMan_->addH1D_BJetBinned("allTopMasses" + suffix, "all Top Masses;m(t) [GeV]; events'1 GeV", 1000, 0, 1000);
+		histMan_->addH1D_BJetBinned("allTopMasses" + suffix, "all Top Masses;m(t) [GeV]; events/1 GeV", 1000, 0, 1000);
 		histMan_->addH1D_BJetBinned("m3" + suffix, "m3;m(jjj) [GeV]; events/1 GeV", 5000, 0, 5000);
 		histMan_->addH1D_BJetBinned("ttbar_pt" + suffix, "p_{T,t#bar{t}};p_{T,t#bar{t}} [GeV]; events/1 GeV", 1000, 0,
 				1000);
-		histMan_->addH1D_BJetBinned("leptonicWMass" + suffix, "leptonic W mass; m(W_{lep}) [GeV]; events'1 GeV", 500, 0,
+		histMan_->addH1D_BJetBinned("leptonicWMass" + suffix, "leptonic W mass; m(W_{lep}) [GeV]; events/1 GeV", 500, 0,
 				500);
-		histMan_->addH1D_BJetBinned("hadronicWMass" + suffix, "hadronic W mass; m(W_{had}) [GeV]; events'1 GeV", 500, 0,
+		histMan_->addH1D_BJetBinned("hadronicWMass" + suffix, "hadronic W mass; m(W_{had}) [GeV]; events/1 GeV", 500, 0,
 				500);
 		histMan_->addH1D_BJetBinned("discriminant" + suffix, "discriminant;discriminant; events/0.1", 1000, 0, 100);
 
@@ -287,9 +287,12 @@ MTtbarAnalyser::MTtbarAnalyser(boost::shared_ptr<HistogramManager> histMan, std:
 		BasicAnalyser(histMan, histogramFolder), //
 		weight(0), //
 		currentType("ElectronPlusJets"), //
-		allSolutions() {
-	histMan_->setCurrentHistogramFolder("MttbarAnalysis");
-
+		allSolutions(), //
+		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
+		qcdAntiIDSelection_(new QCDAntiIDEPlusJetsSelection()), //
+		qcdConversionSelection_(new QCDConversionsSelection()), //
+		qcdNonIsoSelection_(new QCDNonIsolatedElectronSelection()) {
+	qcdAntiIDSelection_->useMVAID(true);
 }
 
 MTtbarAnalyser::~MTtbarAnalyser() {

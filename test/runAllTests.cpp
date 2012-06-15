@@ -23,7 +23,6 @@
 #include "TestROOT.h"
 #include "TestStringOperations.h"
 #include "TestTHCollection.h"
-#include "TestTopPairEventCandidate.h"
 #include "TestTrack.h"
 #include "TestTrackReader.h"
 #include "TestTTbarSolution.h"
@@ -62,7 +61,6 @@ void runSuite() {
     s += make_suite_ROOTLearnTests();
     s += make_suite_TestStringOperations();
     s += make_suite_TestTHCollection();
-    s += make_suite_TestTopPairEventCandidate();
     s += make_suite_TestTrack();
     s += make_suite_TestTTbarSolution();
     s += make_suite_TestVariableReader();

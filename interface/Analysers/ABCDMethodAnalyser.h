@@ -8,6 +8,8 @@
 #ifndef ABCDMethodANALYSER_H_
 #define ABCDMethodANALYSER_H_
 #include "BasicAnalyser.h"
+#include "../Selections/QCDPFRelIsoEPlusJetsSelection.h"
+#include "../Selections/QCDAntiIDEPlusJetsSelection.h"
 
 namespace BAT {
 
@@ -25,7 +27,7 @@ public:
 
 private:
 	//signal selections
-	SelectionPointer qcdSelection_;
+	SelectionPointer qcdPFRelIsoSelection_;
 };
 
 typedef boost::scoped_ptr<ABCDMethodAnalyser> ABCDMethodAnalyserLocalPtr;

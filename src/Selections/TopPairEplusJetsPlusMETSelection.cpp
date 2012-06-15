@@ -32,7 +32,7 @@ bool TopPairEplusJetsRefAsymJetsSelection::passesSelectionStep(const EventPtr ev
 }
 
 bool TopPairEplusJetsRefAsymJetsSelection::passesAsymmetricJetCuts(const EventPtr event) const {
-	const JetCollection goodElectronCleanedJets = event->GoodElectronCleanedJets();
+	const JetCollection goodElectronCleanedJets = cleanedJets(event);
 	if (goodElectronCleanedJets.size() < 3) // good jets have a cut of 30 GeV!
 		return false;
 	JetPointer leadingJet = goodElectronCleanedJets.front();

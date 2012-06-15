@@ -36,8 +36,8 @@ public:
 	Muon();
 	Muon(double energy, double px, double py, double pz);
 	virtual ~Muon();
-	bool isGood(short leptonID = 0) const;
-	bool isLoose() const;
+//	bool isGood(short leptonID = 0) const;
+//	bool isLoose() const;
 	bool isGlobal() const;
 	void setUsedAlgorithm(MuonAlgorithm::value algorithm);
 	bool isPFLepton() const;

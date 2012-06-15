@@ -36,6 +36,10 @@ void TTbarPlusMETAnalyser::analyse(const EventPtr event) {
 void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 
 	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(topEplusJetsRefSelection_->cleanedJets(event));
+		const JetCollection bJets(topEplusJetsRefSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
@@ -49,6 +53,10 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 	}
 
 	if (topEplusAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(topEplusAsymJetsMETSelection_->cleanedJets(event));
+		const JetCollection bJets(topEplusAsymJetsMETSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		const LeptonPointer signalLepton = topEplusAsymJetsMETSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
@@ -60,6 +68,10 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 	}
 
 	if (topEplusAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(topEplusAsymJetsSelection_->cleanedJets(event));
+		const JetCollection bJets(topEplusAsymJetsSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		const LeptonPointer signalLepton = topEplusAsymJetsSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
@@ -76,6 +88,10 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 	//selection with respect to reference selection
 	if (qcdNonIsoElectronSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		const JetCollection jets(qcdNonIsoElectronSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdNonIsoElectronSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		//in case of prescaled triggers
 		unsigned int prescale(qcdNonIsoElectronSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronSelection_->signalLepton(event);
@@ -92,6 +108,10 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 	if (qcdNonIsoElectronNonIsoTriggerSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		const JetCollection jets(qcdNonIsoElectronNonIsoTriggerSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdNonIsoElectronNonIsoTriggerSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		//in case of prescaled triggers
 		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerSelection_->signalLepton(event);
@@ -108,6 +128,10 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 	if (qcdConversionSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		const JetCollection jets(qcdConversionSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdConversionSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdConversionSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdConversionSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -122,6 +146,10 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 	}
 
 	if (qcdPFRelIsoSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		const JetCollection jets(qcdPFRelIsoSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdPFRelIsoSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdPFRelIsoSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -134,6 +162,10 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 	if (qcdPFRelIsoNonIsoTriggerSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+		const JetCollection jets(qcdPFRelIsoNonIsoTriggerSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdPFRelIsoNonIsoTriggerSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdPFRelIsoNonIsoTriggerSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoNonIsoTriggerSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -144,13 +176,15 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 	}
 
-	//selection with respect to reference selection + asymmetric jet cuts
-
 }
 
 void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 	//selection with respect to reference selection + asym. jet cuts
 	if (qcdNonIsoElectronAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdNonIsoElectronAsymJetsSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdNonIsoElectronAsymJetsSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		//in case of prescaled triggers
 		unsigned int prescale(qcdNonIsoElectronAsymJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronAsymJetsSelection_->signalLepton(event);
@@ -166,6 +200,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 	}
 
 	if (qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		//in case of prescaled triggers
 		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->signalLepton(event);
@@ -181,6 +219,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 	}
 
 	if (qcdConversionAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdConversionAsymJetsSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdConversionAsymJetsSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdConversionAsymJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdConversionAsymJetsSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -195,6 +237,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 	}
 
 	if (qcdPFRelIsoAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdPFRelIsoAsymJetsSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdPFRelIsoAsymJetsSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdPFRelIsoAsymJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoAsymJetsSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -206,6 +252,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 	}
 
 	if (qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -221,6 +271,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJets(const EventPtr event) {
 void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 	//selection with respect to reference selection + asym. jet cuts
 	if (qcdNonIsoElectronAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdNonIsoElectronAsymJetsMETSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdNonIsoElectronAsymJetsMETSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		//in case of prescaled triggers
 		unsigned int prescale(qcdNonIsoElectronAsymJetsMETSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronAsymJetsMETSelection_->signalLepton(event);
@@ -236,6 +290,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 	}
 
 	if (qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		//in case of prescaled triggers
 		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_->signalLepton(event);
@@ -251,6 +309,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 	}
 
 	if (qcdConversionAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdConversionAsymJetsMETSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdConversionAsymJetsMETSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdConversionAsymJetsMETSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdConversionAsymJetsMETSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -265,6 +327,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 	}
 
 	if (qcdPFRelIsoAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdPFRelIsoAsymJetsMETSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdPFRelIsoAsymJetsMETSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdPFRelIsoAsymJetsMETSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoAsymJetsMETSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -276,6 +342,10 @@ void TTbarPlusMETAnalyser::qcdAnalysisAsymJetsMET(const EventPtr event) {
 	}
 
 	if (qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+		const JetCollection jets(qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->cleanedBJets(event));
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		unsigned int prescale(qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -371,8 +441,7 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 				new ElectronAnalyser(histMan, histogramFolder + "/Ref + AsymJets + MET selection/Electron")), //
 		electronAnalyserRefAsymJetsSelection_(
 				new ElectronAnalyser(histMan, histogramFolder + "/Ref + AsymJets selection/Electron")), //
-		vertexAnalyserRefSelection_(
-				new VertexAnalyser(histMan, histogramFolder + "/Ref selection/Vertices")), //
+		vertexAnalyserRefSelection_(new VertexAnalyser(histMan, histogramFolder + "/Ref selection/Vertices")), //
 //QCD region
 		metAnalyserqcdNonIsoSelection_(
 				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/MET")), //

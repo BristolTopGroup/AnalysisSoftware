@@ -28,29 +28,13 @@ bool Globals::useHitFit = false;
 bool Globals::produceFitterASCIIoutput = false;
 
 //electrons
-double Globals::maxElectronPFIsolation = 0.1;
-double Globals::maxElectronLoosePFIsolation = 0.2;
-double Globals::maxElectronRelativeIsolation = 0.1;
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
-ElectronID::value Globals::electronID = ElectronID::MVAIDTrigger;
-double Globals::MaxAbsoluteElectronEta = 2.5;
-double Globals::minElectronET = 30;
-double Globals::electronIsolationCone = 0.3;
 
 //muons
-double Globals::maxMuonRelativeIsolation = 0.1;
-double Globals::maxMuonPFIsolation = 0.1;
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
-double Globals::maxAbsoluteMuonEta = 2.1;
-double Globals::minMuonPt = 20.;
-double Globals::muonIsolationCone = 0.3;
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
-BtagAlgorithm::value Globals::btagAlgorithm = BtagAlgorithm::CombinedSecondaryVertex;
-BtagAlgorithm::workingPoint Globals::btagWorkingPoint = BtagAlgorithm::MEDIUM;
-double Globals::maxAbsoluteJetEta = 2.4;
-double Globals::minJetPt = 20.;//GeV//other cuts are imposed by the selection
 
 //Level7 JEC arrays
 boost::array< boost::shared_ptr<TF1>, 12 > Globals::bL7Corrections = {{
@@ -63,5 +47,4 @@ boost::array< boost::shared_ptr<TF1>, 12 > Globals::lightL7Corrections = {{
 
 //MET
 METAlgorithm::value Globals::metAlgorithm = METAlgorithm::patMETsPFlow;
-double Globals::METCut = 20.; //GeV
 }

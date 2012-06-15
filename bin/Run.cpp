@@ -37,16 +37,10 @@ int main(int argc, char **argv) {
 	watch.Reset();
 
 	watch.Start();
-	Analysis::useCustomConversionTagger(false);
-	Analysis::usePFIsolation(true);
 
 	boost::scoped_ptr<Analysis> myAnalysis(new Analysis(config.datasetInfoFile()));
 
 	myAnalysis->setMaximalNumberOfEvents(Globals::maxEvents);
-
-
-	//@DEPRECATED
-	myAnalysis->setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::chi2);
 
 	vector<string> inputFiles = config.inputFiles();
 
@@ -112,18 +106,10 @@ void setConfiguration(ConfigFile config) {
 	//@Deprecated: move to selections
 	//jets
 	Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
-	Globals::minJetPt = 30.;
-	Globals::maxAbsoluteJetEta = 2.4;
 	//electrons
 	Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
-	Globals::electronID = ElectronID::MVAIDTrigger;
-	Globals::minElectronET = 30.;
-	Globals::MaxAbsoluteElectronEta = 2.5;
 	//muons
 	Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
-	Globals::maxAbsoluteMuonEta = 2.1;
-	Globals::minMuonPt = 20.;
 	//mets
 	Globals::metAlgorithm = METAlgorithm::patMETsPFlow;
-	Globals::METCut = 20.;
 }

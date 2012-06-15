@@ -11,7 +11,7 @@ namespace BAT {
 
 void DiElectronAnalyser::analyse(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder("DiElectronAnalysis");
-	ElectronCollection electrons =  event->GoodElectrons();
+	ElectronCollection electrons =  event->Electrons();
 	double weight =  event->weight();
 	if (electrons.size() == 2) {
 		ElectronPointer leadingElectron = electrons.front();
@@ -19,7 +19,13 @@ void DiElectronAnalyser::analyse(const EventPtr event) {
 		histMan_->H1D_JetBinned("diElectronMass")->Fill(leadingElectron->invariantMass(secondElectron), weight);
 	}
 
-	ElectronCollection isolatedElectrons =  event->GoodPFIsolatedElectrons();
+	ElectronCollection isolatedElectrons;
+
+	for(unsigned int index = 0; index < electrons.size(); ++index){
+		const ElectronPointer electron(electrons.at(index));
+		if(electron->pfRelativeIsolation(0.3) < 0.1)
+			isolatedElectrons.push_back(electron);
+	}
 	if (isolatedElectrons.size() == 2) {
 		ElectronPointer leadingElectron = isolatedElectrons.front();
 		ElectronPointer secondElectron = isolatedElectrons.at(1);

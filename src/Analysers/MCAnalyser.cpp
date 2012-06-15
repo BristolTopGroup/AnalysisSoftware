@@ -7,7 +7,7 @@
 
 #include "../../interface/Analysers/MCAnalyser.h"
 #include <boost/scoped_ptr.hpp>
-#include "../../interface/TopPairEventCandidate.h"
+#include "../../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 
 #include <iostream>
 
@@ -16,7 +16,6 @@ using namespace std;
 namespace BAT {
 
 void MCAnalyser::analyse(const EventPtr event) {
-	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 
 	histMan_->setCurrentHistogramFolder("MCStudy");
 	MCParticlePointer top, antitop, b_from_top, b_from_antitop, W_plus, W_minus, electron, neutrino, quark_from_W,
@@ -239,28 +238,28 @@ void MCAnalyser::analyse(const EventPtr event) {
 		histMan_->H1D("m3_mc")->Fill(mcEvent.M3());
 
 		// comparing truth and reco objects
-		if (ttbarCand->passesFullTTbarEPlusJetSelection()) {
-			histMan_->H1D("m3_diff")->Fill(fabs(mcEvent.M3() - ttbarCand->M3()));
+		if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+			const JetCollection jets = topEplusJetsRefSelection_->cleanedJets(event);
+			LeptonPointer selectedElectron = topEplusJetsRefSelection_->signalLepton(event);
+			METPointer met = event->MET();
 
-			try {
-				if (Event::usePFIsolation)
-					ttbarCand->reconstructTTbarToEPlusJets(ttbarCand->GoodPFIsolatedElectrons().front());
-				else
-					ttbarCand->reconstructTTbarToEPlusJets(ttbarCand->GoodIsolatedElectrons().front());
-			} catch (ReconstructionException &e) {
-				cout << e.what() << endl;
+			histMan_->H1D("m3_diff")->Fill(fabs(mcEvent.M3() - TtbarHypothesis::M3(jets)));
+
+			boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
+					new ChiSquaredBasedTopPairReconstruction(selectedElectron, met, jets));
+			if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
+				cout << chi2Reco->getDetailsOnFailure();
 				return;
 			}
+			TtbarHypothesisPointer bestTopHypothesis = chi2Reco->getBestSolution();
 
-			if (!ttbarCand->hasBeenReconstructed())
-				cout << "WRONG" << endl;
-			double deltaRElectron = mcEvent.leptonFromW->deltaR(ttbarCand->getElectronFromWDecay());
-			double deltaRLeptonicBjet = mcEvent.leptonicBjet->deltaR(ttbarCand->getLeptonicBJet());
-			double deltaRHadronicBjet = mcEvent.hadronicBJet->deltaR(ttbarCand->getHadronicBJet());
-			double deltaRjet11fromW = mcEvent.jet1FromW->deltaR(ttbarCand->getJet1FromHadronicW());
-			double deltaRjet12fromW = mcEvent.jet1FromW->deltaR(ttbarCand->getJet2FromHadronicW());
-			double deltaRjet21fromW = mcEvent.jet2FromW->deltaR(ttbarCand->getJet1FromHadronicW());
-			double deltaRjet22fromW = mcEvent.jet2FromW->deltaR(ttbarCand->getJet2FromHadronicW());
+			double deltaRElectron = mcEvent.leptonFromW->deltaR(bestTopHypothesis->leptonFromW);
+			double deltaRLeptonicBjet = mcEvent.leptonicBjet->deltaR(bestTopHypothesis->leptonicBjet);
+			double deltaRHadronicBjet = mcEvent.hadronicBJet->deltaR(bestTopHypothesis->hadronicBJet);
+			double deltaRjet11fromW = mcEvent.jet1FromW->deltaR(bestTopHypothesis->jet1FromW);
+			double deltaRjet12fromW = mcEvent.jet1FromW->deltaR(bestTopHypothesis->jet2FromW);
+			double deltaRjet21fromW = mcEvent.jet2FromW->deltaR(bestTopHypothesis->jet1FromW);
+			double deltaRjet22fromW = mcEvent.jet2FromW->deltaR(bestTopHypothesis->jet2FromW);
 
 			double deltaRjet1fromW = 0;
 			double deltaRjet2fromW = 0;
@@ -274,8 +273,8 @@ void MCAnalyser::analyse(const EventPtr event) {
 			else
 				deltaRjet2fromW = deltaRjet22fromW;
 
-			double deltaEtaNeutrino = mcEvent.neutrinoFromW->deltaEta(ttbarCand->getNeutrinoFromWDecay());
-			double deltaPhiNeutrino = mcEvent.neutrinoFromW->deltaPhi(ttbarCand->getNeutrinoFromWDecay());
+			double deltaEtaNeutrino = mcEvent.neutrinoFromW->deltaEta(bestTopHypothesis->neutrinoFromW);
+			double deltaPhiNeutrino = mcEvent.neutrinoFromW->deltaPhi(bestTopHypothesis->neutrinoFromW);
 			histMan_->H1D("deltaEtaNeutrino")->Fill(deltaEtaNeutrino);
 			histMan_->H1D("deltaPhiNeutrino")->Fill(deltaPhiNeutrino);
 
@@ -291,8 +290,9 @@ void MCAnalyser::analyse(const EventPtr event) {
 	}
 }
 
-MCAnalyser::MCAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder ) :
-		BasicAnalyser(histMan, histogramFolder) {
+MCAnalyser::MCAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
+		BasicAnalyser(histMan, histogramFolder), //
+		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()) {
 
 }
 
@@ -317,8 +317,8 @@ void MCAnalyser::createHistograms() {
 	histMan_->addH1D("deltaEtaNeutrino", "delta Eta between truth and reco neutrino", 100, -4, 4);
 	histMan_->addH1D("deltaPhiNeutrino", "delta Phi between truth and reco neutrino", 100, -4, 4);
 
-	histMan_->addH2D("deltaR_genJets_partons", "delta R between genJets from W as opposed to partons", 100, 0, 5, 100, 0,
-			5);
+	histMan_->addH2D("deltaR_genJets_partons", "delta R between genJets from W as opposed to partons", 100, 0, 5, 100,
+			0, 5);
 
 	histMan_->addH1D("W_inv_mass_from_truth_partons", "W inv. mass from truth partons", 100, 0, 120);
 	histMan_->addH1D("W_inv_mass_from_genJets", "W inv. mass from genJets", 100, 0, 120);

@@ -24,7 +24,7 @@ bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron)
 }
 
 bool QCDAntiIDEPlusJetsSelection::isIsolated(const LeptonPointer lepton) const {
-	return lepton->pfRelativeIsolation(Globals::electronIsolationCone) < 0.2;
+	return lepton->pfRelativeIsolation(0.3) < 0.2;
 }
 
 QCDAntiIDEPlusJetsSelection::~QCDAntiIDEPlusJetsSelection() {

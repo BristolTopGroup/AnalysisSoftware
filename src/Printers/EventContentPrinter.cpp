@@ -77,17 +77,17 @@ extern void printElectron(const ElectronPointer electron) {
 	cout << setw(30) << electron->sigmaIEtaIEta() << setw(30) << fabs(electron->dPhiIn()) << setw(30)
 			<< fabs(electron->dEtaIn()) << setw(30) << electron->HadOverEm() << endl;
 
-	cout << setw(30) << "isLoose" << setw(30) << "rel. iso." << setw(30) << "isFromConversion" << setw(30)
+	cout << setw(30) << "" << setw(30) << "rel. iso." << setw(30) << "" << setw(30)
 			<< "superClusterEta" << endl;
 
-	cout << setw(30) << electron->isLoose() << setw(30) << electron->relativeIsolation() << setw(30)
-			<< electron->isFromConversion() << setw(30) << electron->superClusterEta() << endl;
+	cout << setw(30) << "" << setw(30) << electron->relativeIsolation() << setw(30)
+			<< "" << setw(30) << electron->superClusterEta() << endl;
 
 	cout << setw(30) << "dCotTheta" << setw(30) << "pf rel. iso." << setw(30) << "dist" << setw(30)
-				<< "has partnertrack" << endl;
+				<< " " << endl;
 
 		cout << setw(30) << electron->dCotThetaToClosestTrack()<< setw(30) << electron->pfRelativeIsolation(0.3) << setw(30)
-				<< electron->distToClosestTrack() << setw(30) << electron->isTaggedAsConversion(0.02, 0.02) << endl;
+				<< electron->distToClosestTrack() << setw(30) << "" << endl;
 
 	//    cout << setw(30) << "isTrackerDriven" << setw(30) << "swiss_cross" << setw(30) << "isLoose" << setw(30)
 	//            << "isEcalDriven" << endl;

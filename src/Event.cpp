@@ -24,27 +24,27 @@ Event::Event() : //
 		goodVertices(), //
 		tracks(), //
 		allElectrons(), //
-		goodElectrons(), //
-		goodIsolatedElectrons(), //
-		goodPFIsolatedElectrons(), //
-		goodPFNonIsolatedElectrons(), //
-		looseElectrons(), //
-		qcdElectrons(), //
+//		goodElectrons(), //
+//		goodIsolatedElectrons(), //
+//		goodPFIsolatedElectrons(), //
+//		goodPFNonIsolatedElectrons(), //
+//		looseElectrons(), //
+//		qcdElectrons(), //
 		allJets(), //
 		genJets(), //
-		goodJets(), //
-		goodBJets(), //
-		goodElectronCleanedJets(), //
-		goodElectronCleanedBJets(), //
-		goodMuonCleanedJets(), //
-		goodMuonCleanedBJets(), //
+//		goodJets(), //
+//		goodBJets(), //
+//		goodElectronCleanedJets(), //
+//		goodElectronCleanedBJets(), //
+//		goodMuonCleanedJets(), //
+//		goodMuonCleanedBJets(), //
 		allMuons(), //
-		goodMuons(), //
-		goodIsolatedMuons(), //
-		goodPFIsolatedMuons(), //
-		looseMuons(), //
+//		goodMuons(), //
+//		goodIsolatedMuons(), //
+//		goodPFIsolatedMuons(), //
+//		looseMuons(), //
 		genParticles(), //
-		mets_(),//
+		mets_(), //
 		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
@@ -62,8 +62,14 @@ Event::Event() : //
 		genNumberOfPileUpVertices(0), //
 		trueNumberOfPileUpVertices_(0), //
 		pdfWeights(), //
-		ptdensityRho(0.),//
-		file_(""){
+		ptdensityRho(0.), //
+		file_(""), //
+		passesCSCTightBeamHaloFilter_(false), //
+		passesHBHENoiseFilter_(false), //
+		passesHCALLaserFilter_(false), //
+		passesECALDeadCellFilter_(false), //
+		passesTrackingFailureFilter_(false), //
+		passesNoisySCFilter_(false) {
 }
 
 Event::~Event() {
@@ -85,17 +91,17 @@ void Event::setVertices(VertexCollection vertices) {
 	this->vertices.clear();
 	this->vertices = vertices;
 
-	selectVerticesByQuality();
+//	selectVerticesByQuality();
 }
 
-void Event::selectVerticesByQuality() {
-	goodVertices.clear();
-
-	for (unsigned int i = 0; i < vertices.size(); ++i) {
-		if (vertices.at(i)->isGood())
-			goodVertices.push_back(vertices.at(i));
-	}
-}
+//void Event::selectVerticesByQuality() {
+//	goodVertices.clear();
+//
+//	for (unsigned int i = 0; i < vertices.size(); ++i) {
+//		if (vertices.at(i)->isGood())
+//			goodVertices.push_back(vertices.at(i));
+//	}
+//}
 
 void Event::setTracks(TrackCollection tracks) {
 	this->tracks.clear();
@@ -114,53 +120,53 @@ void Event::setGenParticles(MCParticleCollection genParticles) {
 void Event::setElectrons(ElectronCollection electrons) {
 	allElectrons.clear();
 	allElectrons = electrons;
-	selectElectronsByQuality();
+//	selectElectronsByQuality();
 }
 
-void Event::selectElectronsByQuality() {
-	goodElectrons.clear();
-	goodIsolatedElectrons.clear();
-	goodPFIsolatedElectrons.clear();
-	goodPFNonIsolatedElectrons.clear();
-	for (unsigned int index = 0; index < allElectrons.size(); ++index) {
-		ElectronPointer electron = allElectrons.at(index);
-
-		bool isGood(electron->isGood((short) Globals::electronID));
-		bool isIsolated = electron->relativeIsolation() < Globals::maxElectronRelativeIsolation;
-		bool isPFIsolated = electron->isPFLepton()
-				&& electron->pfRelativeIsolation(Globals::electronIsolationCone) < Globals::maxElectronPFIsolation;
-		bool isPFNonIsolated = electron->isPFLepton()
-				&& electron->pfRelativeIsolation(Globals::electronIsolationCone) > Globals::maxElectronLoosePFIsolation;
-
-		if (isGood)
-			goodElectrons.push_back(electron);
-
-		if (isGood && isIsolated)
-			goodIsolatedElectrons.push_back(electron);
-
-		if (isGood && isPFIsolated)
-			goodPFIsolatedElectrons.push_back(electron);
-
-		if (isGood && isPFNonIsolated)
-			goodPFNonIsolatedElectrons.push_back(electron);
-
-		if (electron->isLoose())
-			looseElectrons.push_back(electron);
-	}
-}
+//void Event::selectElectronsByQuality() {
+//	goodElectrons.clear();
+//	goodIsolatedElectrons.clear();
+//	goodPFIsolatedElectrons.clear();
+//	goodPFNonIsolatedElectrons.clear();
+//	for (unsigned int index = 0; index < allElectrons.size(); ++index) {
+//		ElectronPointer electron = allElectrons.at(index);
+//
+//		bool isGood(electron->isGood((short) Globals::electronID));
+//		bool isIsolated = electron->relativeIsolation() < Globals::maxElectronRelativeIsolation;
+//		bool isPFIsolated = electron->isPFLepton()
+//				&& electron->pfRelativeIsolation(Globals::electronIsolationCone) < Globals::maxElectronPFIsolation;
+//		bool isPFNonIsolated = electron->isPFLepton()
+//				&& electron->pfRelativeIsolation(Globals::electronIsolationCone) > Globals::maxElectronLoosePFIsolation;
+//
+//		if (isGood)
+//			goodElectrons.push_back(electron);
+//
+//		if (isGood && isIsolated)
+//			goodIsolatedElectrons.push_back(electron);
+//
+//		if (isGood && isPFIsolated)
+//			goodPFIsolatedElectrons.push_back(electron);
+//
+//		if (isGood && isPFNonIsolated)
+//			goodPFNonIsolatedElectrons.push_back(electron);
+//
+//		if (electron->isLoose())
+//			looseElectrons.push_back(electron);
+//	}
+//}
 
 void Event::setJets(JetCollection jets) {
 	allJets.clear();
-	goodJets.clear();
-	goodElectronCleanedJets.clear();
-	goodMuonCleanedJets.clear();
+//	goodJets.clear();
+//	goodElectronCleanedJets.clear();
+//	goodMuonCleanedJets.clear();
 
-	goodBJets.clear();
-	goodElectronCleanedBJets.clear();
-	goodMuonCleanedBJets.clear();
+//	goodBJets.clear();
+//	goodElectronCleanedBJets.clear();
+//	goodMuonCleanedBJets.clear();
 
 	allJets = jets;
-	selectGoodJets();
+//	selectGoodJets();
 }
 
 void Event::setGenJets(JetCollection jets) {
@@ -168,24 +174,24 @@ void Event::setGenJets(JetCollection jets) {
 	genJets = jets;
 }
 
-void Event::selectGoodJets() {
-
-	for (unsigned int index = 0; index < allJets.size(); ++index) {
-		const JetPointer jet = allJets.at(index);
-		if (jet->isGood()) {
-			goodJets.push_back(jet);
-		}
-	}
-
-	goodBJets = GetBJetCollection(goodJets, Globals::btagAlgorithm, Globals::btagWorkingPoint);
-
-	cleanGoodJets();
-
-	goodElectronCleanedBJets = GetBJetCollection(goodElectronCleanedJets, Globals::btagAlgorithm,
-			Globals::btagWorkingPoint);
-	goodMuonCleanedBJets = GetBJetCollection(goodMuonCleanedJets, Globals::btagAlgorithm, Globals::btagWorkingPoint);
-
-}
+//void Event::selectGoodJets() {
+//
+//	for (unsigned int index = 0; index < allJets.size(); ++index) {
+//		const JetPointer jet = allJets.at(index);
+//		if (jet->isGood()) {
+//			goodJets.push_back(jet);
+//		}
+//	}
+//
+//	goodBJets = GetBJetCollection(goodJets, Globals::btagAlgorithm, Globals::btagWorkingPoint);
+//
+//	cleanGoodJets();
+//
+//	goodElectronCleanedBJets = GetBJetCollection(goodElectronCleanedJets, Globals::btagAlgorithm,
+//			Globals::btagWorkingPoint);
+//	goodMuonCleanedBJets = GetBJetCollection(goodMuonCleanedJets, Globals::btagAlgorithm, Globals::btagWorkingPoint);
+//
+//}
 
 JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
 		BtagAlgorithm::workingPoint WP) const {
@@ -199,82 +205,82 @@ JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm:
 	return bjets;
 }
 
-void Event::cleanGoodJets() {
-
-	if (goodJets.size() > 0) {
-		if (goodIsolatedElectrons.size() > 0 || goodPFIsolatedElectrons.size() > 0) {
-			if (Event::usePFIsolation)
-				goodElectronCleanedJets = cleanGoodJetsAgainstIsolatedElectrons(goodPFIsolatedElectrons);
-			else
-				goodElectronCleanedJets = cleanGoodJetsAgainstIsolatedElectrons(goodIsolatedElectrons);
-		} else if (allElectrons.size() > 0)
-			goodElectronCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(
-					MostIsolatedElectron(allElectrons, Event::usePFIsolation));
-
-		if (goodIsolatedMuons.size() > 0 || goodPFIsolatedMuons.size() > 0) {
-			if (Event::usePFIsolation)
-				goodMuonCleanedJets = cleanGoodJetsAgainstIsolatedMuons(goodPFIsolatedMuons);
-			else
-				goodMuonCleanedJets = cleanGoodJetsAgainstIsolatedMuons(goodIsolatedMuons);
-		} else if (allMuons.size() > 0) {
-			goodMuonCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(
-					MostIsolatedMuon(allMuons, Event::usePFIsolation));
-		}
-
-	}
-
-}
-
-JetCollection Event::cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollection& electrons) const {
-	JetCollection cleanedJets;
-	set<unsigned int> cleanedJetsIndices;
-
-	for (unsigned int jetIndex = 0; jetIndex < goodJets.size(); ++jetIndex) {
-		for (unsigned int electronIndex = 0; electronIndex < electrons.size(); ++electronIndex) {
-			if (!goodJets.at(jetIndex)->isWithinDeltaR(0.3, electrons.at(electronIndex))) {
-				cleanedJetsIndices.insert(jetIndex);
-			}
-		}
-	}
-
-	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end();
-			++jetIndex) {
-		cleanedJets.push_back(goodJets.at(*jetIndex));
-	}
-
-	return cleanedJets;
-}
-
-JetCollection Event::cleanGoodJetsAgainstIsolatedMuons(const MuonCollection& muons) const {
-	JetCollection cleanedJets;
-	set<unsigned int> cleanedJetsIndices;
-
-	for (unsigned int jetIndex = 0; jetIndex < goodJets.size(); ++jetIndex) {
-		for (unsigned int muonIndex = 0; muonIndex < muons.size(); ++muonIndex) {
-			if (!goodJets.at(jetIndex)->isWithinDeltaR(0.3, muons.at(muonIndex))) {
-				cleanedJetsIndices.insert(jetIndex);
-			}
-		}
-	}
-
-	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end();
-			++jetIndex) {
-		cleanedJets.push_back(goodJets.at(*jetIndex));
-	}
-
-	return cleanedJets;
-}
-
-JetCollection Event::cleanGoodJetsAgainstMostIsolatedLepton(const LeptonPointer mostIsolatedLepton) const {
-	JetCollection cleanedJets;
-
-	for (unsigned int jetIndex = 0; jetIndex < goodJets.size(); ++jetIndex) {
-		if (!goodJets.at(jetIndex)->isWithinDeltaR(0.3, mostIsolatedLepton)) {
-			cleanedJets.push_back(goodJets.at(jetIndex));
-		}
-	}
-	return cleanedJets;
-}
+//void Event::cleanGoodJets() {
+//
+//	if (goodJets.size() > 0) {
+//		if (goodIsolatedElectrons.size() > 0 || goodPFIsolatedElectrons.size() > 0) {
+//			if (Event::usePFIsolation)
+//				goodElectronCleanedJets = cleanGoodJetsAgainstIsolatedElectrons(goodPFIsolatedElectrons);
+//			else
+//				goodElectronCleanedJets = cleanGoodJetsAgainstIsolatedElectrons(goodIsolatedElectrons);
+//		} else if (allElectrons.size() > 0)
+//			goodElectronCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(
+//					MostIsolatedElectron(allElectrons, Event::usePFIsolation));
+//
+//		if (goodIsolatedMuons.size() > 0 || goodPFIsolatedMuons.size() > 0) {
+//			if (Event::usePFIsolation)
+//				goodMuonCleanedJets = cleanGoodJetsAgainstIsolatedMuons(goodPFIsolatedMuons);
+//			else
+//				goodMuonCleanedJets = cleanGoodJetsAgainstIsolatedMuons(goodIsolatedMuons);
+//		} else if (allMuons.size() > 0) {
+//			goodMuonCleanedJets = cleanGoodJetsAgainstMostIsolatedLepton(
+//					MostIsolatedMuon(allMuons, Event::usePFIsolation));
+//		}
+//
+//	}
+//
+//}
+//
+//JetCollection Event::cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollection& electrons) const {
+//	JetCollection cleanedJets;
+//	set<unsigned int> cleanedJetsIndices;
+//
+//	for (unsigned int jetIndex = 0; jetIndex < goodJets.size(); ++jetIndex) {
+//		for (unsigned int electronIndex = 0; electronIndex < electrons.size(); ++electronIndex) {
+//			if (!goodJets.at(jetIndex)->isWithinDeltaR(0.3, electrons.at(electronIndex))) {
+//				cleanedJetsIndices.insert(jetIndex);
+//			}
+//		}
+//	}
+//
+//	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end();
+//			++jetIndex) {
+//		cleanedJets.push_back(goodJets.at(*jetIndex));
+//	}
+//
+//	return cleanedJets;
+//}
+//
+//JetCollection Event::cleanGoodJetsAgainstIsolatedMuons(const MuonCollection& muons) const {
+//	JetCollection cleanedJets;
+//	set<unsigned int> cleanedJetsIndices;
+//
+//	for (unsigned int jetIndex = 0; jetIndex < goodJets.size(); ++jetIndex) {
+//		for (unsigned int muonIndex = 0; muonIndex < muons.size(); ++muonIndex) {
+//			if (!goodJets.at(jetIndex)->isWithinDeltaR(0.3, muons.at(muonIndex))) {
+//				cleanedJetsIndices.insert(jetIndex);
+//			}
+//		}
+//	}
+//
+//	for (set<unsigned int>::iterator jetIndex = cleanedJetsIndices.begin(); jetIndex != cleanedJetsIndices.end();
+//			++jetIndex) {
+//		cleanedJets.push_back(goodJets.at(*jetIndex));
+//	}
+//
+//	return cleanedJets;
+//}
+//
+//JetCollection Event::cleanGoodJetsAgainstMostIsolatedLepton(const LeptonPointer mostIsolatedLepton) const {
+//	JetCollection cleanedJets;
+//
+//	for (unsigned int jetIndex = 0; jetIndex < goodJets.size(); ++jetIndex) {
+//		if (!goodJets.at(jetIndex)->isWithinDeltaR(0.3, mostIsolatedLepton)) {
+//			cleanedJets.push_back(goodJets.at(jetIndex));
+//		}
+//	}
+//	return cleanedJets;
+//}
 
 const ElectronPointer Event::MostIsolatedElectron(const ElectronCollection& electrons, bool usePFIso) const {
 	float bestIsolation = 999999999;
@@ -331,43 +337,43 @@ const MuonPointer Event::MostPFIsolatedMuon(const MuonCollection& muons) const {
 void Event::setMuons(MuonCollection muons) {
 	allMuons.clear();
 	allMuons = muons;
-	selectMuonsByQuality();
+//	selectMuonsByQuality();
 }
 
-void Event::selectMuonsByQuality() {
-	goodMuons.clear();
-	goodIsolatedMuons.clear();
-	goodPFIsolatedMuons.clear();
-	looseMuons.clear();
-	for (unsigned int index = 0; index < allMuons.size(); ++index) {
-		MuonPointer muon = allMuons.at(index);
-
-		bool isGood(muon->isGood());
-		bool isPFIsolated = muon->isPFLepton() && muon->pfRelativeIsolation() < Globals::maxMuonPFIsolation;
-		if (isGood)
-			goodMuons.push_back(muon);
-
-		if (isGood && muon->relativeIsolation() < Globals::maxMuonRelativeIsolation)
-			goodIsolatedMuons.push_back(muon);
-
-		if (isGood && isPFIsolated)
-			goodPFIsolatedMuons.push_back(muon);
-
-		if (muon->isLoose())
-			looseMuons.push_back(muon);
-
-	}
-}
+//void Event::selectMuonsByQuality() {
+//	goodMuons.clear();
+//	goodIsolatedMuons.clear();
+//	goodPFIsolatedMuons.clear();
+//	looseMuons.clear();
+//	for (unsigned int index = 0; index < allMuons.size(); ++index) {
+//		MuonPointer muon = allMuons.at(index);
+//
+//		bool isGood(muon->isGood());
+//		bool isPFIsolated = muon->isPFLepton() && muon->pfRelativeIsolation() < Globals::maxMuonPFIsolation;
+//		if (isGood)
+//			goodMuons.push_back(muon);
+//
+//		if (isGood && muon->relativeIsolation() < Globals::maxMuonRelativeIsolation)
+//			goodIsolatedMuons.push_back(muon);
+//
+//		if (isGood && isPFIsolated)
+//			goodPFIsolatedMuons.push_back(muon);
+//
+//		if (muon->isLoose())
+//			looseMuons.push_back(muon);
+//
+//	}
+//}
 
 void Event::setHLTs(const boost::shared_ptr<std::vector<int> > triggers) {
 	HLTs = triggers;
 }
 
-void Event::setMETs(const std::vector<METPointer> mets){
+void Event::setMETs(const std::vector<METPointer> mets) {
 	mets_ = mets;
 }
 
-void Event::setFile(string file){
+void Event::setFile(string file) {
 	file_ = file;
 }
 void Event::setRunNumber(unsigned long number) {
@@ -406,9 +412,9 @@ const VertexCollection& Event::Vertices() const {
 	return vertices;
 }
 
-const VertexCollection& Event::GoodVertices() const {
-	return goodVertices;
-}
+//const VertexCollection& Event::GoodVertices() const {
+//	return goodVertices;
+//}
 
 const TrackCollection& Event::Tracks() const {
 	return tracks;
@@ -418,73 +424,73 @@ const ElectronCollection& Event::Electrons() const {
 	return allElectrons;
 }
 
-const ElectronCollection& Event::GoodElectrons() const {
-	return goodElectrons;
-}
-
-const ElectronCollection& Event::GoodIsolatedElectrons() const {
-	return goodIsolatedElectrons;
-}
-
-const ElectronCollection& Event::GoodPFIsolatedElectrons() const {
-	return goodPFIsolatedElectrons;
-}
-
-const ElectronCollection& Event::GoodPFNonIsolatedElectrons() const {
-	return goodPFNonIsolatedElectrons;
-}
-
-const ElectronCollection& Event::QCDElectrons() const {
-	return qcdElectrons;
-}
+//const ElectronCollection& Event::GoodElectrons() const {
+//	return goodElectrons;
+//}
+//
+//const ElectronCollection& Event::GoodIsolatedElectrons() const {
+//	return goodIsolatedElectrons;
+//}
+//
+//const ElectronCollection& Event::GoodPFIsolatedElectrons() const {
+//	return goodPFIsolatedElectrons;
+//}
+//
+//const ElectronCollection& Event::GoodPFNonIsolatedElectrons() const {
+//	return goodPFNonIsolatedElectrons;
+//}
+//
+//const ElectronCollection& Event::QCDElectrons() const {
+//	return qcdElectrons;
+//}
 
 const JetCollection& Event::Jets() const {
 	return allJets;
 }
 
-const JetCollection& Event::GoodJets() const {
-	return goodJets;
-}
+//const JetCollection& Event::GoodJets() const {
+//	return goodJets;
+//}
 
 const JetCollection& Event::GenJets() const {
 	return genJets;
 }
 
-const JetCollection& Event::GoodElectronCleanedJets() const {
-	return goodElectronCleanedJets;
-}
-
-const JetCollection& Event::GoodMuonCleanedJets() const {
-	return goodMuonCleanedJets;
-}
-
-const JetCollection& Event::GoodBJets() const {
-	return goodBJets;
-}
-
-const JetCollection& Event::GoodElectronCleanedBJets() const {
-	return goodElectronCleanedBJets;
-}
-
-const JetCollection& Event::GoodMuonCleanedBJets() const {
-	return goodMuonCleanedBJets;
-}
+//const JetCollection& Event::GoodElectronCleanedJets() const {
+//	return goodElectronCleanedJets;
+//}
+//
+//const JetCollection& Event::GoodMuonCleanedJets() const {
+//	return goodMuonCleanedJets;
+//}
+//
+//const JetCollection& Event::GoodBJets() const {
+//	return goodBJets;
+//}
+//
+//const JetCollection& Event::GoodElectronCleanedBJets() const {
+//	return goodElectronCleanedBJets;
+//}
+//
+//const JetCollection& Event::GoodMuonCleanedBJets() const {
+//	return goodMuonCleanedBJets;
+//}
 
 const MuonCollection& Event::Muons() const {
 	return allMuons;
 }
 
-const MuonCollection& Event::GoodMuons() const {
-	return goodMuons;
-}
-
-const MuonCollection& Event::GoodIsolatedMuons() const {
-	return goodIsolatedMuons;
-}
-
-const MuonCollection& Event::GoodPFIsolatedMuons() const {
-	return goodPFIsolatedMuons;
-}
+//const MuonCollection& Event::GoodMuons() const {
+//	return goodMuons;
+//}
+//
+//const MuonCollection& Event::GoodIsolatedMuons() const {
+//	return goodIsolatedMuons;
+//}
+//
+//const MuonCollection& Event::GoodPFIsolatedMuons() const {
+//	return goodPFIsolatedMuons;
+//}
 
 const MCParticleCollection& Event::GenParticles() const {
 	return genParticles;
@@ -496,13 +502,13 @@ const METPointer Event::MET() const {
 
 const METPointer Event::MET(METAlgorithm::value type) const {
 	unsigned int index(type);
-	if(index >= mets_.size())
+	if (index >= mets_.size())
 		throw "Trying to access non-available MET at " + index;
 
 	return mets_.at(index);
 }
 
-std::string Event::file() const{
+std::string Event::file() const {
 	return file_;
 }
 
@@ -538,14 +544,14 @@ void Event::inspect() const {
 
 	cout << "number of jets: " << allJets.size() << endl;
 	EventContentPrinter::printJets(allJets);
-	cout << "number of good jets: " << goodJets.size() << endl;
-	EventContentPrinter::printJets(goodJets);
-
-	cout << "number of good isolated electrons: " << goodIsolatedElectrons.size() << endl;
-	EventContentPrinter::printElectrons(goodIsolatedElectrons);
-
-	cout << "number of good electrons: " << goodElectrons.size() << endl;
-	EventContentPrinter::printElectrons(goodElectrons);
+//	cout << "number of good jets: " << goodJets.size() << endl;
+//	EventContentPrinter::printJets(goodJets);
+//
+//	cout << "number of good isolated electrons: " << goodIsolatedElectrons.size() << endl;
+//	EventContentPrinter::printElectrons(goodIsolatedElectrons);
+//
+//	cout << "number of good electrons: " << goodElectrons.size() << endl;
+//	EventContentPrinter::printElectrons(goodElectrons);
 
 	cout << "number of electrons: " << allElectrons.size() << endl;
 	EventContentPrinter::printElectrons(allElectrons);
@@ -681,13 +687,60 @@ double Event::PUWeightShiftDown() const {
 	return PUWeightShiftDown_;
 }
 
-double Event::getBTagCorrectionFactor(const JetCollection jets) const{
+double Event::getBTagCorrectionFactor(const JetCollection jets) const {
 	double correction(1.);
-	if(!isRealData()){
+	if (!isRealData()) {
 
 	}
 
 	return correction;
 }
 
+void Event::setCSCTightBeamHaloFilter(bool result) {
+	passesCSCTightBeamHaloFilter_ = result;
+}
+
+void Event::setHBHENoiseFilter(bool result) {
+	passesHBHENoiseFilter_ = result;
+}
+
+void Event::setHCALLaserFilter(bool result) {
+	passesHCALLaserFilter_ = result;
+}
+
+void Event::setECALDeadCellFilter(bool result) {
+	passesECALDeadCellFilter_ = result;
+}
+
+void Event::setTrackingFailureFilter(bool result) {
+	passesTrackingFailureFilter_ = result;
+}
+
+void Event::setNoisySCFilter(bool result) {
+	passesNoisySCFilter_ = result;
+}
+
+bool Event::passesCSCTightBeamHaloFilter() const {
+	return passesCSCTightBeamHaloFilter_;
+}
+
+bool Event::passesHBHENoiseFilter() const {
+	return passesHBHENoiseFilter_;
+}
+
+bool Event::passesHCALLaserFilter() const {
+	return passesHCALLaserFilter_;
+}
+
+bool Event::passesECALDeadCellFilter() const {
+	return passesECALDeadCellFilter_;
+}
+
+bool Event::passesTrackingFailureFilter() const {
+	return passesTrackingFailureFilter_;
+}
+
+bool Event::passesNoisySCFilter() const {
+	return passesNoisySCFilter_;
+}
 }

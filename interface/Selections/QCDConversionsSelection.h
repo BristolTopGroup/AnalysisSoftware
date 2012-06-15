@@ -20,6 +20,6 @@ public:
 
 	virtual bool passesConversionVeto(const EventPtr event) const;
 };
-
+typedef boost::shared_ptr<QCDConversionsSelection> QCDConversionsSelectionPointer;
 } /* namespace BAT */
 #endif /* QCDCONVERSIONSELECTION_H_ */

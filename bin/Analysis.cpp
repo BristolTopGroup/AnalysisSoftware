@@ -21,7 +21,6 @@
 using namespace reweight;
 using namespace BAT;
 using namespace std;
-//float Analysis::luminosity = 882.;
 
 void Analysis::analyse() {
 	createHistograms();
@@ -34,8 +33,6 @@ void Analysis::analyse() {
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
-
-//		selectionCommissioning_->analyse(currentEvent);
 
 		abcdMethodAnalyser_->analyse(currentEvent);
 		bjetAnalyser->analyse(currentEvent);
@@ -63,18 +60,10 @@ void Analysis::analyse() {
 		muonAnalyser->analyse(currentEvent);
 //		mvAnalyser->analyse(currentEvent);
 //		neutrinoRecoAnalyser->analyse(currentEvent);
-//		qcdAnalyser->analyse(currentEvent);
 		ttbarPlusMETAnalyser_->analyse(currentEvent);
 		vertexAnalyser->analyse(currentEvent);
 
-//TODO: move to TTbarAnalysis
-//		doTTbarCutFlow();
-//        if(currentEvent->getDataType() == DataType::DATA)
-//            eventCheck[currentEvent->runnumber()].push_back(currentEvent->eventnumber());
-//        checkForBrokenEvents();
 	}
-//    checkForDuplicatedEvents();
-//    printInterestingEvents();
 }
 
 void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
@@ -89,7 +78,6 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 
 void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
-//	ttbarCandidate = TopPairEventCandidatePtr(new TopPairEventCandidate(*currentEvent.get()));
 	weight = weights->getWeight(currentEvent->getDataType());
 	if (!currentEvent->isRealData()) {
 		//TODO: fix this dirty little thing
@@ -102,12 +90,10 @@ void Analysis::initiateEvent() {
 
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);
-//	ttbarCandidate->setEventWeight(weight);
-//	ttbarCandidate->setPileUpWeight(pileUpWeight);
 
 	histMan->setCurrentDataType(currentEvent->getDataType());
-	histMan->setCurrentJetBin(currentEvent->GoodElectronCleanedJets().size());
-	histMan->setCurrentBJetBin(currentEvent->GoodElectronCleanedBJets().size());
+	histMan->setCurrentJetBin(currentEvent->Jets().size());
+	histMan->setCurrentBJetBin(0);
 }
 
 void Analysis::inspectEvents() {
@@ -122,49 +108,6 @@ void Analysis::inspectEvents() {
 	}
 
 }
-
-//void Analysis::doSynchExercise() {
-//	if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo(TTbarEPlusJetsSelection::ConversionFinder)) {
-//		cout << ttbarCandidate->runnumber() << ":" << ttbarCandidate->eventnumber() << ":" << endl; //electron->et() << endl;
-//		if (ttbarCandidate->eventnumber() == 450622) {
-//			ttbarCandidate->inspect();
-//		}
-//	}
-//}
-
-//void Analysis::doTTbarCutFlow() {
-//	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-//		if (ttbarCandidate->passesEPlusJetsSelectionStep((TTbarEPlusJetsSelection::Step) cut)) {
-//			++ePlusJetsSingleCuts[cut];
-//			ePlusJetsSingleCutsPerFile[eventReader->getCurrentFile()][cut]++;
-//		}
-//
-//		if (ttbarCandidate->passesEPlusJetsSelectionStepUpTo((TTbarEPlusJetsSelection::Step) cut)) {
-//			ePlusJetsCutflow[cut] += 1;
-//			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-//			unsigned int njet = ttbarCandidate->GoodElectronCleanedJets().size();
-//			if (njet >= JetBin::NUMBER_OF_JET_BINS)
-//				njet = JetBin::NUMBER_OF_JET_BINS - 1;
-//			ePlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
-//		}
-//	}
-//
-//	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-//		if (ttbarCandidate->passesMuPlusJetsSelectionStep((TTbarMuPlusJetsSelection::Step) cut)) {
-//			++muPlusJetsSingleCuts[cut];
-////			ePlusJetsSingleCutsPerFile[eventReader->getCurrentFile()][cut]++;
-//		}
-//
-//		if (ttbarCandidate->passesMuPlusJetsSelectionStepUpTo((TTbarMuPlusJetsSelection::Step) cut)) {
-//			muPlusJetsCutFlow[cut] += 1;
-////			ePlusJetsCutflowPerFile[eventReader->getCurrentFile()][cut]++;
-//			unsigned int njet = ttbarCandidate->GoodMuonCleanedJets().size();
-//			if (njet >= JetBin::NUMBER_OF_JET_BINS)
-//				njet = JetBin::NUMBER_OF_JET_BINS - 1;
-//			muPlusJetsCutflowPerSample.increase(ttbarCandidate->getDataType(), cut, njet, weight);
-//		}
-//	}
-//}
 
 void Analysis::printInterestingEvents() {
 	cout << "Interesting events:" << endl;
@@ -265,11 +208,6 @@ void Analysis::createHistograms() {
 //	cout << "Number of histograms added by neutrinoRecoAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 //	lastNumberOfHistograms = numberOfHistograms;
 
-//	qcdAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by qcdAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-
 	ttbarPlusMETAnalyser_->createHistograms();
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by ttbarPlusMETAnalyser: " << numberOfHistograms - lastNumberOfHistograms
@@ -321,10 +259,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		muonAnalyser(new MuonAnalyser(histMan)), //
 		mvAnalyser(new MVAnalyser(histMan)), //
 		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
-		qcdAnalyser(new QCDAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
-		vertexAnalyser(new VertexAnalyser(histMan)), //
-		selectionCommissioning_(new Selections(histMan)) {
+		vertexAnalyser(new VertexAnalyser(histMan)){
 	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
 		ePlusJetsCutflow[cut] = 0;
 		ePlusJetsSingleCuts[cut] = 0;
@@ -356,14 +292,6 @@ void Analysis::setMaximalNumberOfEvents(long maxEvents) {
 	}
 }
 
-void Analysis::setUsedNeutrinoSelectionForTopPairReconstruction(NeutrinoSelectionCriterion::value selection) {
-	TopPairEventCandidate::usedNeutrinoSelection = selection;
-}
-
-void Analysis::setUsedTTbarReconstructionCriterion(TTbarReconstructionCriterion::value selection) {
-	TopPairEventCandidate::usedTTbarReconstruction = selection;
-}
-
 void Analysis::checkForDuplicatedEvents() {
 	map<unsigned long, std::vector<unsigned long> >::const_iterator iter;
 	std::vector<pair<unsigned long, unsigned long> > duplicateEvents;
@@ -385,17 +313,6 @@ void Analysis::checkForDuplicatedEvents() {
 		}
 	}
 }
-
-//void Analysis::checkForBrokenEvents() {
-//	if (ttbarCandidate->Electrons().size() == 0) {
-//		brokenEvents.push_back(InterestingEvent(currentEvent, eventReader->getCurrentFile()));
-//	}
-//
-//	if (currentEvent->eventnumber() == 1019245) {
-//		cout << "broken event" << endl;
-//		ttbarCandidate->inspect();
-//	}
-//}
 
 unsigned long Analysis::getNumberOfProccessedEvents() const {
 	return eventReader->getNumberOfProccessedEvents();

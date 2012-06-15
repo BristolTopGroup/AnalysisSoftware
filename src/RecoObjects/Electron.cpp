@@ -147,31 +147,10 @@ void Electron::setHadOverEm(double HoverE) {
 	hadOverEm = HoverE;
 }
 
-bool Electron::isLoose() const {
-	bool passesEt = et() > 20;
-	bool passesEta = fabs(eta()) < 2.5 && !isInCrack();
-	bool passesID = passesElectronID(ElectronID::CiCLooseMC); //VBTF_WP95_ElectronID()
-	return passesEt && passesEta && passesID;
-
-}
-
-bool Electron::isGood(short leptonID) const {
-	bool passesID = passesElectronID(leptonID);
-	bool passesEt = et() > Globals::minElectronET;
-	bool passesEta = fabs(eta()) < Globals::MaxAbsoluteElectronEta && !isInCrack();
-
-	// use d0 wrt primary vertex for
-	bool passesD0 = fabs(d0()) < 0.02; //cm
-	bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex_) < 1;
-	//since H/E is used at trigger level, use the same cut here:
-	bool passesHOverE = hadOverEm < 0.05; // same for EE and EB
-	return passesEt && passesEta && passesD0 && passesID && passesDistanceToPV && passesHOverE;
-}
-
 bool Electron::passesElectronID(short leptonID) const {
 	using namespace std;
 
-	ElectronID::value electronID = Globals::electronID;
+	ElectronID::value electronID(ElectronID::MVAIDTrigger);
 	try {
 		electronID = (ElectronID::value) leptonID;
 	} catch (exception& e) {
@@ -195,19 +174,6 @@ bool Electron::passesElectronID(short leptonID) const {
 	}
 }
 
-bool Electron::isQCDElectron(short leptonID) const {
-	bool passesID = passesElectronID(leptonID);
-	bool passesEt = et() > Globals::minElectronET;
-	bool passesEta = fabs(eta()) < Globals::MaxAbsoluteElectronEta && !isInCrack();
-
-	// use d0 wrt primary vertex for
-	bool passesD0 = fabs(d0()) < 0.02; //cm
-	bool passesDistanceToPV = fabs(zDistanceToPrimaryVertex_) < 1;
-	//since H/E is used at trigger level, use the same cut here:
-	bool passesHOverE = hadOverEm < 0.05; // same for EE and EB
-	return passesEt && passesEta && passesD0 && !passesID && passesDistanceToPV && passesHOverE;
-}
-
 bool Electron::isInBarrelRegion() const {
 	return fabs(superClusterEta()) < 1.4442;
 }
@@ -220,16 +186,8 @@ bool Electron::isInEndCapRegion() const {
 	return fabs(superClusterEta()) > 1.5660;
 }
 
-bool Electron::isFromConversion() const {
-	return innerLayerMissingHits_ > 0;
-}
-
 bool Electron::passConversionVeto() const {
 	return passConversionVeto_;
-}
-
-bool Electron::isTaggedAsConversion(double maxDist, double maxDCotTheta) const {
-	return fabs(distToNextTrack_) < maxDist && fabs(dCotThetaToNextTrack_) < maxDCotTheta;
 }
 
 /* Electron ID cuts (without isolation) from:

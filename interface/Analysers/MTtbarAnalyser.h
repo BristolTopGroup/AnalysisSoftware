@@ -9,6 +9,11 @@
 #define MTTBARANALYSER_H_
 
 #include "BasicAnalyser.h"
+#include "../TtbarHypothesis.h"
+#include "../Selections/TopPairEPlusJetsReferenceSelection.h"
+#include "../Selections/QCDAntiIDEPlusJetsSelection.h"
+#include "../Selections/QCDConversionsSelection.h"
+#include "../Selections/QCDNonIsolatedElectronSelection.h"
 #include <string>
 namespace BAT {
 
@@ -27,10 +32,10 @@ public:
 	void createHistograms();
 
 protected:
-	void analyseFourJetChi2(const TopPairEventCandidatePtr);
-	void analyseThreeJetChi2(const TopPairEventCandidatePtr);
-	void analyseFourJetTopMassDifference(const TopPairEventCandidatePtr);
-	void analyseFourJetChi2QCDConversionBackground(const TopPairEventCandidatePtr);
+	void analyseFourJetChi2(const EventPtr);
+	void analyseThreeJetChi2(const EventPtr);
+	void analyseFourJetTopMassDifference(const EventPtr);
+	void analyseFourJetChi2QCDConversionBackground(const EventPtr);
 	void fillHistograms(std::string subcollection, std::string suffix = "");
 
 	void createHistogramsFor(std::string collection);
@@ -39,6 +44,10 @@ protected:
 	double weight;
 	std::string currentType;
 	TtbarHypothesisCollection allSolutions;
+	TopPairEPlusJetsReferenceSelectionPointer topEplusJetsRefSelection_;
+	QCDAntiIDEPlusJetsSelectionPointer qcdAntiIDSelection_;
+	QCDConversionsSelectionPointer qcdConversionSelection_;
+	QCDNonIsolatedElectronSelectionPointer qcdNonIsoSelection_;
 
 };
 

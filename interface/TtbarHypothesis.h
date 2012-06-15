@@ -43,6 +43,7 @@ public:
 	Decay::value decayChannel;
 
 	double M3() const;
+	static double M3(const JetCollection jets);
 
 	double sumPt() const;
 	double PtTtbarSystem() const;

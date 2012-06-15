@@ -77,33 +77,6 @@ void Muon::setNumberOfMatches(int nMatches){
 	numberOfMatches = nMatches;
 }
 
-bool Muon::isGood(short leptonID) const {
-	bool passesPt = pt() > Globals::minMuonPt;
-	bool passesEta = fabs(eta()) < Globals::maxAbsoluteMuonEta;
-	bool passesMuonID = is_GlobalMuon && is_TrackerMuon;
-	bool passesNormChi2 = normalisedChi2 < 10;
-
-	bool passesD0 = d0() < 0.02;
-	bool passesDistanceToVertex = fabs(zDistanceToPrimaryVertex_) < 1;
-
-	bool passesNTrackerHits = numberOfValidHits > 10;
-	bool passesNMuonHit = numberOfValidMuonHits > 0;
-	bool passesNPixelLayersWithMeasurement = pixelLayersWithMeasurement >= 1;
-	//are these two identical?
-	bool passesNumberOfMatchedStations = numberOfMatchedStations > 1;
-	bool passesNumberOfMatches = numberOfMatches > 1;
-
-	return passesPt && passesEta && passesMuonID && passesNormChi2 && passesD0 && passesDistanceToVertex
-			&& passesNTrackerHits && passesNMuonHit && passesNMuonHit && passesNPixelLayersWithMeasurement
-			&& passesNumberOfMatchedStations && passesNumberOfMatches;
-}
-
-bool Muon::isLoose() const {
-	bool passesPt = pt() > 10;
-	bool passesEta = fabs(eta()) < 2.5;
-	return passesPt && passesEta && is_GlobalMuon;
-}
-
 bool Muon::isPFLepton() const {
 	return usedAlgorithm == MuonAlgorithm::ParticleFlow;
 }

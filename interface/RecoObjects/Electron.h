@@ -85,13 +85,13 @@ public:
     Electron();
     Electron(double energy, double px, double py, double pz);
     virtual ~Electron();
-    bool isGood(short leptonID) const;
+//    bool isGood(short leptonID) const;
     bool isHEEPIsolated() const;
-    bool isTaggedAsConversion(double maxDist = 0.02, double maxDCotTheta = 0.02) const;
-    bool isFromConversion() const;
+//    bool isTaggedAsConversion(double maxDist = 0.02, double maxDCotTheta = 0.02) const;
+//    bool isFromConversion() const;
     bool passConversionVeto() const;
-    bool isLoose() const;
-    bool isQCDElectron(short) const;
+//    bool isLoose() const;
+//    bool isQCDElectron(short) const;
 
     ElectronAlgorithm::value algorithm() const;
     double ecalIsolationPUCorrected(double rho) const;
@@ -147,7 +147,7 @@ public:
     double relativeIsolationPUCorrected(double rho) const;
     virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
 
-    bool isInBarrelRegion() const;
+    virtual bool isInBarrelRegion() const;
     bool isInCrack() const;
     bool isInEndCapRegion() const;
     bool isPFLepton() const;
