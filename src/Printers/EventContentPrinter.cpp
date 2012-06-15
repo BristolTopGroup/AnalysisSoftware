@@ -29,6 +29,8 @@ extern void printJet(const JetPointer jet) {
 	cout << setw(30) << "ptRaw" << setw(30) << "pxRaw" << setw(30) << "pyRaw" << setw(30) << "pzRaw" << endl;
 	cout << setw(30) << sqrt(jet->PxRaw() * jet->PxRaw() + jet->PyRaw() * jet->PyRaw()) << setw(30) << jet->PxRaw()
 			<< setw(30) << jet->PyRaw() << setw(30) << jet->PzRaw() << endl;
+	cout << setw(30) << "L1OffJEC" << setw(30) << "L2L3ResJEC" << setw(30) << "L2RelJEC" << setw(30) << "L3AbsJEC" << endl;
+	cout << setw(30) << jet->L1OffJEC() << setw(30) << jet->L2L3ResJEC() << setw(30) << jet->L2RelJEC() << setw(30) << jet->L3AbsJEC()  << endl;;
 
 	cout << setw(30) << "emf" << setw(30) << "n90Hits" << setw(30) << "fHPD" << setw(30) << "B tag(SSV)" << endl;
 	cout << setw(30) << jet->emf() << setw(30) << jet->n90Hits() << setw(30) << jet->fHPD() << setw(30)

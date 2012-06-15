@@ -116,6 +116,22 @@ double Jet::JECUnc() const {
 	return JECUncertainty;
 }
 
+double Jet::L1OffJEC() const {
+	return l1OffJEC;
+}
+
+double Jet::L2L3ResJEC() const {
+	return l2l3ResJEC;
+}
+
+double Jet::L2RelJEC() const {
+	return l2RelJEC;
+}
+
+double Jet::L3AbsJEC() const {
+	return l3AbsJEC;
+}
+
 void Jet::setPxRaw(double px) {
 	pxRaw = px;
 }
@@ -130,6 +146,22 @@ void Jet::setPzRaw(double pz) {
 
 void Jet::setJECUnc(double JECUnc) {
 	JECUncertainty = JECUnc;
+}
+
+void Jet::setL1OffJEC(double JEC) {
+	l1OffJEC = JEC;
+}
+
+void Jet::setL2L3ResJEC(double JEC) {
+	l2l3ResJEC = JEC;
+}
+
+void Jet::setL2RelJEC(double JEC) {
+	l2RelJEC = JEC;
+}
+
+void Jet::setL3AbsJEC(double JEC) {
+	l3AbsJEC = JEC;
 }
 
 void Jet::setUsedAlgorithm(JetAlgorithm::value algo) {

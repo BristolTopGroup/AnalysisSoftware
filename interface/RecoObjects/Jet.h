@@ -97,12 +97,20 @@ public:
 	double PyRaw() const;
 	double PzRaw() const;
 	double JECUnc() const;
+	double L1OffJEC() const;
+	double L2L3ResJEC() const;
+	double L2RelJEC() const;
+	double L3AbsJEC() const;
 	double getBTagDiscriminator(BtagAlgorithm::value type) const;
 
 	void setPxRaw(double px);
 	void setPyRaw(double py);
 	void setPzRaw(double pz);
 	void setJECUnc(double JECUnc);
+	void setL1OffJEC(double JEC);
+	void setL2L3ResJEC(double JEC);
+	void setL2RelJEC(double JEC);
+	void setL3AbsJEC(double JEC);
 	void setUsedAlgorithm(JetAlgorithm::value algo);
 	void setEMF(double emf);
 	void setN90Hits(int n90Hits);
@@ -130,6 +138,7 @@ private:
 	double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;
 	double chargedHadronEnergyFraction, chargedMultiplicity;
 	double pxRaw, pyRaw, pzRaw, JECUncertainty;
+	double l1OffJEC, l2l3ResJEC, l2RelJEC, l3AbsJEC;
 	int partonFlavour_;
 };
 

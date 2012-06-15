@@ -12,6 +12,10 @@ namespace BAT {
 JetReader::JetReader() : //
 		energyReader(), ////
 		JECUncReader(),
+		L1OffJECReader(),
+		L2L3ResJECReader(),
+		L2RelJECReader(),
+		L3AbsJECReader(),
 		pxReader(), ////
 		pyReader(), ////
 		pzReader(), ////
@@ -48,6 +52,10 @@ JetReader::JetReader() : //
 JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		energyReader(input, JetAlgorithm::prefixes.at(algo) + ".Energy"), //
 		JECUncReader(input, JetAlgorithm::prefixes.at(algo) + ".JECUnc"), //
+		L1OffJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L1OffJEC"),
+		L2L3ResJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L2L3ResJEC"),
+		L2RelJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L2RelJEC"),
+		L3AbsJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L3AbsJEC"),
 		pxReader(input, JetAlgorithm::prefixes.at(algo) + ".Px"), //
 		pyReader(input, JetAlgorithm::prefixes.at(algo) + ".Py"), //
 		pzReader(input, JetAlgorithm::prefixes.at(algo) + ".Pz"), //
@@ -106,6 +114,10 @@ void JetReader::readJets() {
 		jet->setPyRaw(pyRawReader.getVariableAt(jetIndex));
 		jet->setPzRaw(pzRawReader.getVariableAt(jetIndex));
 		jet->setJECUnc(JECUncReader.getVariableAt(jetIndex));
+		jet->setL1OffJEC(L1OffJECReader.getVariableAt(jetIndex));
+		jet->setL2L3ResJEC(L2L3ResJECReader.getVariableAt(jetIndex));
+		jet->setL2RelJEC(L2RelJECReader.getVariableAt(jetIndex));
+		jet->setL3AbsJEC(L3AbsJECReader.getVariableAt(jetIndex));
 
 		if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 			jet->setEMF(emfReader.getVariableAt(jetIndex));
@@ -162,6 +174,10 @@ void JetReader::readJets() {
 void JetReader::initialise() {
 	energyReader.initialise();
 	JECUncReader.initialise();
+	L1OffJECReader.initialise();
+	L2L3ResJECReader.initialise();
+	L2RelJECReader.initialise();
+	L3AbsJECReader.initialise();
 	pxReader.initialise();
 	pyReader.initialise();
 	pzReader.initialise();
