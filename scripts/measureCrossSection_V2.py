@@ -17,6 +17,7 @@ files = FILES.files
 lumi = FILES.luminosity
 
 normalisation = None
+qcdError = 1 
 vectors = None
 vector_errors = None
 
@@ -27,7 +28,7 @@ def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
     vectors = vectors_
         
     #setup minuit
-    numberOfParameters = 4
+    numberOfParameters = 5
     gMinuit = TMinuit(numberOfParameters)
     gMinuit.SetFCN(fitFunction)
     
@@ -44,9 +45,10 @@ def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
     #how stupid is this? void function but uses a reference to one of the input parameters to 'return' an int!!!!
 #    mnparm(paramNumber, paramName, startingValue, startingStepSizeOrUncertainty,physicalLowerLimit, physicalUpperLimit, errorFlagOutput)  
     gMinuit.mnparm(0, "N_signal(ttbar+single_top)", N_signal, 10.0, 0, N_total, errorFlag)
-    gMinuit.mnparm(1, "W+Jets", normalisation['WJetsToLNu'], 10.0, 0, N_total, errorFlag)
+    gMinuit.mnparm(1, "W+Jets", normalisation['W+Jets'], 10.0, 0, N_total, errorFlag)
     gMinuit.mnparm(2, "Z+Jets", normalisation['DYJetsToLL'], 10.0, 0, N_total, errorFlag)
     gMinuit.mnparm(3, "QCD", normalisation['QCD'], 10.0, 0, N_total, errorFlag)
+    gMinuit.mnparm(4, "Di-Boson", normalisation['Di-Boson'], 10.0, 0, N_total, errorFlag)
 
     
     
@@ -85,27 +87,31 @@ def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
 
 # fcn returns back f = - 2*ln(L), the function to be minimised
 def fitFunction(nParameters, gin, f, par, iflag):
-    global normalisation, vectors
+    global normalisation, vectors, qcdError
     lnL = 0.0
-    for data, signal, ttjet, singleTop, wjets, zjets, qcd in zip(vectors['ElectronHad'], vectors['Signal'], vectors['TTJet'], vectors['SingleTop'], vectors['WJetsToLNu'], vectors['DYJetsToLL'], vectors['QCDFromData']):
+    input = zip(vectors['ElectronHad'], vectors['Signal'],
+                 vectors['W+Jets'], vectors['DYJetsToLL'], 
+                vectors['QCDFromData'],vectors['Di-Boson'])
+    
+    for data, signal, wjets, zjets, qcd, diBoson in input:
         #signal = ttjet + singleTop
-        x_i = par[0] * signal + par[1] * wjets + par[2] * zjets + par[3] * qcd #expected number of events in each bin
+        x_i = par[0] * signal + par[1] * wjets + par[2] * zjets + par[3] * qcd + par[4]*diBoson#expected number of events in each bin
         data = data * normalisation['ElectronHad']
         if (data != 0) and (x_i != 0):
             L = TMath.Poisson(data, x_i)
             lnL += log(L)
     f[0] = -2.0 * lnL
     
-    Nqcd_err = normalisation['QCD'] * 1.0
-    
-    ratio_Z_W = normalisation['DYJetsToLL'] / normalisation['WJetsToLNu']
-#    constrain ratio of Z/W to 5%
+    #constrains
+    ratio_Z_W = normalisation['DYJetsToLL'] / normalisation['W+Jets']
+#    ratio of Z/W to 5%
     f[0] += ((par[2] / par[1] - ratio_Z_W) / (0.05 * ratio_Z_W)) ** 2
-#    #constrain W/Z+jets normalisation to 30%
-#    f[0] += ((par[1] - normalisation['W+Jets']) / (0.3 * normalisation['W+Jets'])) ** 2
-#    f[0] += ((par[2] - normalisation['DYJetsToLL']) / (0.3 * normalisation['DYJetsToLL'])) ** 2
-#    #constrain QCD to the error (100% atm)
-#    f[0] += ((par[3] - normalisation['QCD']) / Nqcd_err) ** 2
+    #constrain W/Z+jets normalisation to 30%
+    f[0] += ((par[1] - normalisation['W+Jets']) / (0.3 * normalisation['W+Jets'])) ** 2
+    f[0] += ((par[2] - normalisation['DYJetsToLL']) / (0.3 * normalisation['DYJetsToLL'])) ** 2
+    f[0] += ((par[4] - normalisation['Di-Boson']) / (0.3 * normalisation['Di-Boson'])) ** 2
+    #constrain QCD to the error 
+    f[0] += ((par[3] - normalisation['QCD']) / qcdError) ** 2
 
 def prepareHistograms(histograms):
     return histograms
@@ -164,12 +170,13 @@ def sumSamples(hists):
     return hists
 
 def rescaleSamples(hists):
-    totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233 # = 163625908
-    hists['WJetsToLNu'].Scale(totalWPlusJets/47896878)
-    hists['W1Jet'].Scale(totalWPlusJets / 76048786.*4480.0 / 31314.)
-    hists['W2Jets'].Scale(totalWPlusJets / 25400440.*1674. / 31314.)
-    hists['W3Jets'].Scale(totalWPlusJets / 7685939.*484.7 / 31314.)
-    hists['W4Jets'].Scale(totalWPlusJets / 12998049.*211.7 / 31314.)    
+    #renormalise W+N jet MC due to bug
+#    totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233 # = 163625908
+#    hists['WJetsToLNu'].Scale(totalWPlusJets/47896878)
+#    hists['W1Jet'].Scale(totalWPlusJets / 76048786.*4480.0 / 31314.)
+#    hists['W2Jets'].Scale(totalWPlusJets / 25400440.*1674. / 31314.)
+#    hists['W3Jets'].Scale(totalWPlusJets / 7685939.*484.7 / 31314.)
+#    hists['W4Jets'].Scale(totalWPlusJets / 12998049.*211.7 / 31314.)    
     return hists    
 
 def performMeasurement(listOfDistributions, listOfQCDDistributions, listOfFiles, rebin):
@@ -199,17 +206,30 @@ def performMeasurement(listOfDistributions, listOfQCDDistributions, listOfFiles,
         vectors, vector_errors = vectorise(templates)
         qcdVectors, qcdVector_errors = vectorise(qcdTemplates)
         vectors['QCDFromData'] = qcdVectors['ElectronHad']
+        qcdHistForEstimation = QCDRateEstimation.defaultHistogram
+        #replace QCD bin
+        qcdHistForEstimation = qcdHistForEstimation.replace(qcdHistForEstimation.split('_')[-1], distribution.split('_')[-1])
+        global qcdError
+        qcdNormalisation, qcdError = QCDRateEstimation.estimateQCDWithRelIso(FILES.files['ElectronHad'], qcdHistForEstimation)
+        
         print '*' * 120
         print "Input parameters:"
         print 'signal (ttbar+single top):', normalisation['TTJet'] + normalisation['SingleTop']
         print 'W+Jets:', normalisation['WJetsToLNu']
         print 'Z+Jets:', normalisation['DYJetsToLL'] 
-        print 'QCD:', normalisation['QCD'] 
+        print 'QCD (from data):', qcdNormalisation, '+-',   qcdError, '(', qcdError/qcdNormalisation*100, '%)'
         print 'SingleTop:', normalisation['SingleTop'] 
         print 'TTJet:', normalisation['TTJet']  
+        print 'Di-Boson:', normalisation['Di-Boson']
+        sumMC = normalisation['SumMC'] - normalisation['QCD'] + qcdNormalisation
+        print 'SumMC:', sumMC
+        print 'Total data', normalisation['ElectronHad']
+        print '(data-SumMC)/data', (normalisation['ElectronHad'] - sumMC)/normalisation['ElectronHad']
         print '*' * 120
+        normalisation['QCD'] = qcdNormalisation
         
         fit, value, error, fitvalues, fitErrors = getTtbarCrossSection(vectors, normalisation)
+        
         print '*' * 120
         print "Fit values:"
         print 'signal (ttbar+single top):', fitvalues[0], '+-', fitErrors[0]
@@ -217,7 +237,12 @@ def performMeasurement(listOfDistributions, listOfQCDDistributions, listOfFiles,
         print 'Z+Jets:', fitvalues[2], '+-', fitErrors[2]
         print 'QCD:', fitvalues[3], '+-', fitErrors[3]
         print 'SingleTop (no fit):', normalisation['SingleTop'] 
-        print 'TTJet (signal fit - SingleTop):', fitvalues[0] - normalisation['SingleTop']   
+        print 'TTJet (signal fit - SingleTop):', fitvalues[0] - normalisation['SingleTop'] 
+        print 'Di-Boson:', fitvalues[4], '+-', fitErrors[4]
+        sumMC = fitvalues[0] + fitvalues[1] + fitvalues[2] + fitvalues[3] + fitvalues[4]
+        print 'SumMC:', sumMC
+        print 'Total data', normalisation['ElectronHad']
+        print '(data-SumMC)/data', (normalisation['ElectronHad'] - sumMC)/normalisation['ElectronHad']
         print '*' * 120
         print "\n TTbar cross-section = ", value, " +/- ", error, "(fit) pb \n"
         
@@ -225,22 +250,29 @@ def performMeasurement(listOfDistributions, listOfQCDDistributions, listOfFiles,
 
 if __name__ == "__main__":
     btagBins = [
-                #'0btag',
-                #'1btag',
+#                '0orMoreBtag',
+#                '1btag',
                 '2orMoreBtags'
                 ]
     mets = ['patMETsPFlow',
             
             ]
-    distribution = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/MET'
+    distribution = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patType1CorrectedPFMet/MET'
    #should always use 0-btag region!!                  
-    qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET_2orMoreBtags'
+    qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patType1CorrectedPFMet/MET_0btag'
                     
     histograms = [distribution + '_' + btagBin for btagBin in btagBins]
     qcdHistograms = [qcdDistribution]*len(btagBins)
     print '=' * 60
     print 'Starting Top-pair cross section measurement'
     print '=' * 60
+    performMeasurement(histograms,qcdHistograms, FILES.files, 5)
+    
+    print '=' * 60
+    print 'Starting Top-pair cross section measurement - Systematic Error, QCD Shape'
+    print '=' * 60
+    qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET_0btag'
+    qcdHistograms = [qcdDistribution]*len(btagBins)
     performMeasurement(histograms,qcdHistograms, FILES.files, 5)
     
     
