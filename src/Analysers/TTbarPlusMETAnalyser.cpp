@@ -427,6 +427,12 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_->createHistograms();
 	qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_->createHistograms();
 
+	for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+		binnedElectronAnalysers_.at(index)->createHistograms();
+		qcdConversionBinnedElectronAnalysers_.at(index)->createHistograms();
+		qcdNonIsoBinnedElectronAnalysers_.at(index)->createHistograms();
+	}
+
 }
 
 TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
@@ -518,7 +524,11 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_(new ElectronAnalyser(histMan, histogramFolder
 					+ "/Ref + AsymJets + MET selection/QCD e+jets PFRelIso, non iso trigger/Electron", true)),//
 			metBins_(),//
-			binnedElectronAnalysers_() {
+			binnedElectronAnalysers_(),//
+			qcdConversionBinnedElectronAnalysers_(),//
+			qcdNonIsoBinnedElectronAnalysers_()
+
+			{
 	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdPFRelIsoNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_->useNonIsoTrigger(true);
