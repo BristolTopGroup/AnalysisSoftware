@@ -73,6 +73,10 @@ private:
 	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyserAsymJetsMET_;
 	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_,
 			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_;
+	std::vector<double> metBins_;
+	std::vector<ElectronAnalyserPtr> binnedElectronAnalysers_;
+	std::vector<ElectronAnalyserPtr> qcdConversionBinnedElectronAnalysers_;
+	std::vector<ElectronAnalyserPtr> qcdNonIsoBinnedElectronAnalysers_;
 
 };
 

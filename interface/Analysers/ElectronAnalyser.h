@@ -8,12 +8,14 @@
 #ifndef ELECTRONANALYSER_H_
 #define ELECTRONANALYSER_H_
 #include "BasicAnalyser.h"
+#include <boost/shared_ptr.hpp>
 
 namespace BAT {
 
 class ElectronAnalyser: public BasicAnalyser {
 public:
-	ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "ElectronAnalysis");
+	ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "ElectronAnalysis",
+			bool singleElectronOnly = false);
 	virtual ~ElectronAnalyser();
 
 	/**
@@ -25,8 +27,11 @@ public:
 	 */
 	void analyseElectron(const ElectronPointer electron, double weight);
 	void createHistograms();
+private:
+	bool singleElectronOnly_;
 };
 typedef boost::scoped_ptr<ElectronAnalyser> ElectronAnalyserLocalPtr;
+typedef boost::shared_ptr<ElectronAnalyser> ElectronAnalyserPtr;
 }
 
 #endif /* ELECTRONANALYSER_H_ */
