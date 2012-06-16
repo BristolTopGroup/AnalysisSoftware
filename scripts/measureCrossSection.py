@@ -8,6 +8,7 @@ import FILES
 import tools.ROOTFileReader as FileReader
 from array import array
 from tools import Styles
+import tools.PlottingUtilities as plotting
 
 availableSamples = FILES.samplesToLoad
 files= FILES.files
@@ -48,6 +49,15 @@ histSignal = histSingleTop + hists['TTJet']
 histWjets = hists['WJetsToLNu']
 histZjets = hists['DYJetsToLL']
 histQCD = histsQCD['ElectronHad']
+histQCD_v2 = plotting.sumSamples(hists, [ 'QCD_Pt-20to30_BCtoE',
+                 'QCD_Pt-30to80_BCtoE',
+                 'QCD_Pt-80to170_BCtoE',
+                 'QCD_Pt-20to30_EMEnriched',
+                 'QCD_Pt-30to80_EMEnriched',
+                 'QCD_Pt-80to170_EMEnriched',
+                 'GJets_HT-40To100',
+                 'GJets_HT-100To200',
+                 'GJets_HT-200'])
 histTTbar = hists['TTJet']
 
 Ndata = histData.Integral()
@@ -55,6 +65,10 @@ Nsignal = histSignal.Integral()
 Nwjets = histWjets.Integral()
 Nzjets = histZjets.Integral()
 Nqcd = QCD_scale_factor * histQCD.Integral()
+#bug fix no 1
+Nqcd_v2  = histQCD_v2.Integral()
+Nqcd = Nqcd_v2
+                 
 Nsingle_t = histSingleTop.Integral()
 Nttbar = histTTbar.Integral() 
 
@@ -98,8 +112,15 @@ def fcn( npar, gin, f, par, iflag ):
     
 def tempFit():
     global data_vector, signal_template, wjets_template, zjets_template, qcd_template, signal_err, wjets_err, zjets_err, qcd_err
-
-    print "Input parameters: signal (ttbar+single top): ", Nsignal, " wjets: ", Nwjets, " zjets: ", Nzjets, " QCD: ", Nqcd, " single_t: ", Nsingle_t,  " ttbar: ", Nttbar
+    print '*'*120
+    print "Input parameters:"
+    print "signal (ttbar+single top):", Nsignal, '+-', signal_err 
+    print "W+Jets:", Nwjets, '+-', wjets_err
+    print "Z+Jets:", Nzjets, '+-', zjets_err
+    print "QCD:", Nqcd, '+-', qcd_err
+    print "SingleTop:", Nsingle_t
+    print "TTJet:", Nttbar
+    print '*'*120
     getDataFromHistograms()
     getTemplatesFromHistograms(histSignal, signal_template, signal_err)
     getTemplatesFromHistograms(histWjets, wjets_template, wjets_err)
@@ -110,7 +131,7 @@ def tempFit():
     gMinuit = TMinuit(n_par)
     gMinuit.SetFCN( fcn )
     
-    gMinuit.SetPrintLevel(1)
+    gMinuit.SetPrintLevel(-1)
     
     #Error definition: 1 for chi-squared, 0.5 for negative log likelihood
     gMinuit.SetErrorDef(1)
@@ -152,6 +173,16 @@ def tempFit():
     xs_fit_minus = (outpar[0]-err[0] - Nsingle_t) / (Nttbar/theorXsect)
     xs_fit_error = (abs(xs_fit_plus-xs_fit) + abs(xs_fit-xs_fit_minus))/2
     
+    print '*' * 120
+    print "Fit values:"
+    print 'signal (ttbar+single top):', outpar[0], '+-', err[0]
+    print 'W+Jets:', outpar[1], '+-', err[1]
+    print 'Z+Jets:', outpar[2], '+-', err[2]
+    print 'QCD:', outpar[3], '+-', err[3]
+    print 'SingleTop (no fit):', Nsingle_t 
+    print 'TTJet (signal fit - SingleTop):', outpar[0] - Nsingle_t   
+    print '*' * 120
+
     print "\n TTbar cross-section = ", xs_fit, " +/- ", xs_fit_error, "(fit) pb \n"
     
 
@@ -197,9 +228,9 @@ def plotResult():
         zjets_temp.SetBinContent(i+1,zjets_template[i])
         qcd_temp.SetBinContent(i+1,qcd_template[i])
     
-    print "Total number of events after the fit:"
-    print "TTbar+single top & w+jets & zjets & qcd"
-    print outpar[0], "+-", err[0], " & ",  outpar[1], "+-", err[1], " & ",  outpar[2], "+-", err[2], " & ",  outpar[3], "+-", err[3] 
+    #print "Total number of events after the fit:"
+    #print "TTbar+single top & w+jets & zjets & qcd"
+    #print outpar[0], "+-", err[0], " & ",  outpar[1], "+-", err[1], " & ",  outpar[2], "+-", err[2], " & ",  outpar[3], "+-", err[3] 
         
     canvasTemp = TCanvas("canvasTemp", "canvasTemp", 700, 500)
     canvasTemp.cd()
@@ -319,4 +350,4 @@ def add_cms_label(lumi, njet="4orMoreJets", nbjet="0orMoreBtag"):
 
 #Running the fit and plotting the results
 tempFit()
-plotResult()
+#plotResult()
