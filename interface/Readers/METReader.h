@@ -19,6 +19,7 @@ public:
     const METPointer getMET();
     virtual ~METReader();
     void initialise();
+    void initialiseBlindly();
 private:
     VariableReader<double> exReader;
     VariableReader<double> eyReader;

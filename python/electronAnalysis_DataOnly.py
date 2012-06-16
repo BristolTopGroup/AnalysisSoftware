@@ -14,8 +14,8 @@ inputFiles = []
 data_path = '/storage/TopQuarkGroup/data/2011/ElectronHad/'
 filetype = '*.root'
 
-dataFiles = ['nTuple_v7a_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
-              'nTuple_v7a_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets']
+dataFiles = ['nTuple_v7b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
+              'nTuple_v7b_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets']
 
 dataFiles = [data_path + path + '/' + filetype for path in dataFiles]
 
@@ -28,7 +28,7 @@ inputFiles.extend(dataFiles)
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5048.#pb-1
+lumi = 5050.#pb-1
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....

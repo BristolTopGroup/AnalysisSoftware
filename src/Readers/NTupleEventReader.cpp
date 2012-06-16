@@ -19,37 +19,37 @@ const char * NTupleEventReader::EVENT_CHAIN = "rootTupleTree/tree";
 bool NTupleEventReader::loadTracks = false;
 
 NTupleEventReader::NTupleEventReader() :
-		processedEvents(0), //
-		maximalNumberOfEvents(999999999999), //
-		currentEventEntry(0), //
-		numberOfFiles(0), //
-		input(new TChain(NTupleEventReader::EVENT_CHAIN)), //
-		hltReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTResults")), //
-		hltPrescaleReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTPrescales")), //
-		vertexReader(new VertexReader(input)), //
-		trackReader(new TrackReader(input)), //
-		electronReader(new ElectronReader(input, Globals::electronAlgorithm)), //
-		genParticleReader(new GenParticleReader(input)), //
-		jetReader(new JetReader(input, Globals::jetAlgorithm)), //
-		genJetReader(new GenJetReader(input)), //
-		muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
-		metReaders(), //
-		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
-		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
-		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
-		PDFWeightsReader(new VariableReader<MultiDoublePointer>(input, "Event.PDFWeights")), //
-		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
-		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
-		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
-		PUWeight3BX_(new VariableReader<double>(input, "Event.PUWeight3BX")), //
-		PUWeight3D_(new VariableReader<double>(input, "Event.PUWeight3D")), //
-		PUWeightShiftUp_(new VariableReader<double>(input, "Event.PUWeightShiftUp")), //
-		PUWeightShiftDown_(new VariableReader<double>(input, "Event.PUWeightShiftDown")), //
-		sumETReader_(new VariableReader<double>(input, "Event.SumET")), //
-		areReadersSet(false), //
-		areDatatypesKnown(false), //
-		currentEvent(), //
-		seenDataTypes() {
+	processedEvents(0), //
+			maximalNumberOfEvents(999999999999), //
+			currentEventEntry(0), //
+			numberOfFiles(0), //
+			input(new TChain(NTupleEventReader::EVENT_CHAIN)), //
+			hltReader(new VariableReader<MultiIntPointer> (input, "Trigger.HLTResults")), //
+			hltPrescaleReader(new VariableReader<MultiIntPointer> (input, "Trigger.HLTPrescales")), //
+			vertexReader(new VertexReader(input)), //
+			trackReader(new TrackReader(input)), //
+			electronReader(new ElectronReader(input, Globals::electronAlgorithm)), //
+			genParticleReader(new GenParticleReader(input)), //
+			jetReader(new JetReader(input, Globals::jetAlgorithm)), //
+			genJetReader(new GenJetReader(input)), //
+			muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
+			metReaders(), //
+			runNumberReader(new VariableReader<unsigned int> (input, "Event.Run")), //
+			eventNumberReader(new VariableReader<unsigned int> (input, "Event.Number")), //
+			lumiBlockReader(new VariableReader<unsigned int> (input, "Event.LumiSection")), //
+			PDFWeightsReader(new VariableReader<MultiDoublePointer> (input, "Event.PDFWeights")), //
+			PileupInfoReader(new VariableReader<MultiIntPointer> (input, "Event.PileUpInteractions")), //
+			TruePileupInfoReader(new VariableReader<MultiIntPointer> (input, "Event.NumberOfTrueInteractions")), //
+			PUWeightInTimeOnly_(new VariableReader<double> (input, "Event.PUWeightInTimeOnly")), //
+			PUWeight3BX_(new VariableReader<double> (input, "Event.PUWeight3BX")), //
+			PUWeight3D_(new VariableReader<double> (input, "Event.PUWeight3D")), //
+			PUWeightShiftUp_(new VariableReader<double> (input, "Event.PUWeightShiftUp")), //
+			PUWeightShiftDown_(new VariableReader<double> (input, "Event.PUWeightShiftDown")), //
+			sumETReader_(new VariableReader<double> (input, "Event.SumET")), //
+			areReadersSet(false), //
+			areDatatypesKnown(false), //
+			currentEvent(), //
+			seenDataTypes() {
 	metReaders.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
 
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
@@ -80,7 +80,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
 	boost::shared_ptr<std::vector<int> > triggerPrescales(new std::vector<int>());
 
-//    assert(hltReader->size() == HLTriggers::NUMBER_OF_TRIGGERS);
+	//    assert(hltReader->size() == HLTriggers::NUMBER_OF_TRIGGERS);
 	for (unsigned int i = 0; i < hltReader->size(); i++) {
 		triggers->push_back(hltReader->getIntVariableAt(i));
 		triggerPrescales->push_back(hltPrescaleReader->getIntVariableAt(i));
@@ -121,6 +121,9 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	mets.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
+			if ((index == METAlgorithm::patType1p2CorrectedPFMetJetResUp || index
+					== METAlgorithm::patType1p2CorrectedPFMetJetResDown) && currentEvent->isRealData())
+				continue;
 			const METPointer met(metReaders.at(index)->getMET());
 			if (Globals::NTupleVersion >= 7)
 				met->setSumET(sumETReader_->getVariable());
@@ -168,7 +171,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
-//		metReader->initialise();
+		//		metReader->initialise();
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();
@@ -186,8 +189,14 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			sumETReader_->initialise();
 
 		for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
-			if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7)
-				metReaders.at(index)->initialise();
+			if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
+				if (index == METAlgorithm::patType1p2CorrectedPFMetJetResUp || index
+						== METAlgorithm::patType1p2CorrectedPFMetJetResDown)
+					metReaders.at(index)->initialiseBlindly();
+				else
+					metReaders.at(index)->initialise();
+			}
+
 		}
 		areReadersSet = true;
 	}

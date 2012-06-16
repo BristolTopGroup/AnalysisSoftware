@@ -18,9 +18,7 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
 mcFolders = [
-#           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           #only a subset (first 3 files of complete samples. Remember to change the weight as well (DataSetInfo.py)!
-           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset',
+           'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
@@ -31,7 +29,7 @@ inputFiles.extend(mcFolders)
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5048.#pb-1
+lumi = 5050.#pb-1
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....

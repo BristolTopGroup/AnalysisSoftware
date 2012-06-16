@@ -20,6 +20,9 @@ void METAnalyser::analyse(const EventPtr event) {
 			const METPointer met(event->MET(metType));
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 			histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);
+			//do not fill other histograms for met systematics
+			if (index > METAlgorithm::patType1p2CorrectedPFMet)
+				continue;
 			histMan_->H1D_BJetBinned("MET_phi")->Fill(met->phi(), weight_);
 			histMan_->H1D_BJetBinned("METsignificance")->Fill(met->significance(), weight_);
 			histMan_->H2D_BJetBinned("METsignificance_vs_MET")->Fill(met->et(), met->significance(), weight_);
@@ -36,6 +39,9 @@ void METAnalyser::analyseTransverseMass(const EventPtr event, const ParticlePoin
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
+			//do not fill histograms for met systematics
+			if (index > METAlgorithm::patType1p2CorrectedPFMet)
+				continue;
 			const METPointer met(event->MET(metType));
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 
@@ -68,11 +74,14 @@ void METAnalyser::createHistograms() {
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 			histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0,
 					1000);
-			histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80,
-					-4, 4);
-			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0,
-					1000);
-			histMan_->addH2D_BJetBinned("METsignificance_vs_MET",
+			//do not create other histograms for met systematics
+			if (index > METAlgorithm::patType1p2CorrectedPFMet)
+				continue;
+			histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1",
+					80, -4, 4);
+			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0, 1000);
+			histMan_->addH2D_BJetBinned(
+					"METsignificance_vs_MET",
 					"Missing transverse energy vs Missing transverse energy significance;#slash{E}_{T}/GeV; #slash{E}_{T} significance",
 					200, 0, 1000, 1000, 0, 1000);
 
@@ -86,7 +95,7 @@ void METAnalyser::createHistograms() {
 }
 
 METAnalyser::METAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, histogramFolder) {
+	BasicAnalyser(histMan, histogramFolder) {
 
 }
 

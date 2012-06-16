@@ -18,17 +18,17 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 mcFolders = [
              #b-quark -> X e nu enriched samples
-           'QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #EM enriched samples
-           'QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #photon + jets
-           'GJets_TuneZ2_40_HT_100_7TeV-madgraph/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'GJets_TuneZ2_100_HT_200_7TeV-madgraph/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'GJets_TuneZ2_200_HT_inf_7TeV-madgraph/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
+           'GJets_TuneZ2_40_HT_100_7TeV-madgraph/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'GJets_TuneZ2_100_HT_200_7TeV-madgraph/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'GJets_TuneZ2_200_HT_inf_7TeV-madgraph/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
@@ -39,7 +39,7 @@ inputFiles.extend(mcFolders)
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5048.#pb-1
+lumi = 5050.#pb-1
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....

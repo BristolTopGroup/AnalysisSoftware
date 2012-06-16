@@ -30,6 +30,12 @@ void METReader::initialise() {
 	significanceReader.initialise();
 }
 
+void METReader::initialiseBlindly() {
+	exReader.initialiseBlindly();
+	eyReader.initialiseBlindly();
+	significanceReader.initialiseBlindly();
+}
+
 const METPointer METReader::getMET() {
 	readMET();
 	return met;

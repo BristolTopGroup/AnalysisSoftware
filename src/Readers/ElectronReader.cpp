@@ -37,13 +37,14 @@ ElectronReader::ElectronReader() : //
 		PFGammaIsolationReader_DR05_(), //
 		PFChargedHadronIsolationReader_DR05_(), //
 		PFNeutralHadronIsolationReader_DR05_(), //
+		PFPUChargedHadron_Isolation_DR05_(), //
 		DirectionalIsolationReader_DR02_(), //
 		DirectionalIsolationReader_DR03_(), //
 		DirectionalIsolationReaderWithGaussianFallOff_DR02_(), //
 		DirectionalIsolationReaderWithGaussianFallOff_DR03_(), //
 		PFIsolationReaderWithGaussianFallOff_DR02_(), //
 		PFIsolationReaderWithGaussianFallOff_DR03_(), //
-		PFPUChargedHadron_Isolation_DR05_(), sigmaIEtaIEtaReader(), //
+		sigmaIEtaIEtaReader(), //
 		dPhiInReader(), //
 		dEtaInReader(), //
 		hadOverEmReader(), //

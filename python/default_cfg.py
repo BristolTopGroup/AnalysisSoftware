@@ -11,13 +11,13 @@ useHitFit = False
 produceFitterASCIIoutput = False
 
 #input files for analysis
-inputFiles = ['/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v7a_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/ElectronHad_*001.root']
+inputFiles = ['/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v7b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/ElectronHad_*001.root']
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
 TQAFPath = ""
 
 #integrated luminosity in pb-1 the MC simulation will be scaled to
-lumi = 5048.
+lumi = 5050.
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
