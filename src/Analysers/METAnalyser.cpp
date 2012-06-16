@@ -17,6 +17,10 @@ void METAnalyser::analyse(const EventPtr event) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
+			if (index == METAlgorithm::patType1p2CorrectedPFMetJetResUp || index
+					== METAlgorithm::patType1p2CorrectedPFMetJetResDown)
+				if (event->isRealData())//these METs are MC only (Jet resolution systematics)
+					continue;
 			const METPointer met(event->MET(metType));
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 			histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);
