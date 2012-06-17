@@ -13,6 +13,7 @@
 #include "ElectronAnalyser.h"
 #include "VertexAnalyser.h"
 #include "../Selections/BasicSelection.h"
+#include "../../interface/Selections/QCDNoIsoNoIDSelection.h"
 
 #include <string>
 
@@ -31,52 +32,66 @@ public:
 
 private:
 	//signal selections
-	SelectionPointer topEplusJetsRefSelection_, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_;
+	SelectionPointer topEplusJetsRefSelection_;//, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_;
 	//QCD selections with respect to reference selection
 	SelectionPointer qcdNonIsoElectronSelection_, qcdNonIsoElectronNonIsoTriggerSelection_;
 	SelectionPointer qcdConversionSelection_;
 	SelectionPointer qcdPFRelIsoSelection_, qcdPFRelIsoNonIsoTriggerSelection_;
+	SelectionPointer qcdAntiIDSelection_;
+	QCDNoIsoNoIDSelectionPointer qcdNoIsoNoIDSelection_;
 	//QCD selections with respect to reference selection + asymmetric jet cuts
-	SelectionPointer qcdNonIsoElectronAsymJetsSelection_, qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_;
-	SelectionPointer qcdConversionAsymJetsSelection_;
-	SelectionPointer qcdPFRelIsoAsymJetsSelection_, qcdPFRelIsoNonIsoTriggerAsymJetsSelection_;
-	//QCD selections with respect to reference selection + MET + asymmetric jet cuts
-	SelectionPointer qcdNonIsoElectronAsymJetsMETSelection_, qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_;
-	SelectionPointer qcdConversionAsymJetsMETSelection_;
-	SelectionPointer qcdPFRelIsoAsymJetsMETSelection_, qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_;
+	//	SelectionPointer qcdNonIsoElectronAsymJetsSelection_, qcdNonIsoElectronNonIsoTriggerAsymJetsSelection_;
+	//	SelectionPointer qcdConversionAsymJetsSelection_;
+	//	SelectionPointer qcdPFRelIsoAsymJetsSelection_, qcdPFRelIsoNonIsoTriggerAsymJetsSelection_;
+	//	//QCD selections with respect to reference selection + MET + asymmetric jet cuts
+	//	SelectionPointer qcdNonIsoElectronAsymJetsMETSelection_, qcdNonIsoElectronNonIsoTriggerAsymJetsMETSelection_;
+	//	SelectionPointer qcdConversionAsymJetsMETSelection_;
+	//	SelectionPointer qcdPFRelIsoAsymJetsMETSelection_, qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_;
 
 	/**
 	 * Analysers
 	 */
 	//signal regions
-	METAnalyserLocalPtr metAnalyserRefSelection_, metAnalyserRefAsymJetsMETSelection_, metAnalyserRefAsymJetsSelection_;
-	ElectronAnalyserLocalPtr electronAnalyserRefSelection_, electronAnalyserRefAsymJetsMETSelection_, electronAnalyserRefAsymJetsSelection_;
+	METAnalyserLocalPtr metAnalyserRefSelection_;//, metAnalyserRefAsymJetsMETSelection_, metAnalyserRefAsymJetsSelection_;
+	ElectronAnalyserLocalPtr electronAnalyserRefSelection_;//, electronAnalyserRefAsymJetsMETSelection_,
+			//electronAnalyserRefAsymJetsSelection_;
 	BasicAnalyserLocalPtr vertexAnalyserRefSelection_;
 
-	//QCD region
+	//QCD region Non-isolated electrons
 	METAnalyserLocalPtr metAnalyserqcdNonIsoSelection_, metAnalyserqcdNonIsoNonIsoTriggerSelection_;
 	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyser_, qcdNonIsoNonIsoTriggerElectronAnalyser_;
+	//QCD region electrons from conversions
 	METAnalyserLocalPtr metAnalyserqcdConversionSelection_;
 	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyser_;
+	//No iso
 	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyser_, qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_;
+	//Anti ID
+	METAnalyserLocalPtr metAnalyserqcdAntiIDSelection_;
+	ElectronAnalyserLocalPtr qcdAntiIDElectronAnalyser_;
+	//Anti ID
+	METAnalyserLocalPtr metAnalyserqcdNoIsoNoIDSelection_;
+	ElectronAnalyserLocalPtr qcdNoIsoNoIDElectronAnalyser_;
 	//QCD region with asym. jets
-	METAnalyserLocalPtr metAnalyserqcdNonIsoAsymJetsSelection_, metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_;
-	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyserAsymJets_, qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_;
-	METAnalyserLocalPtr metAnalyserqcdConversionAsymJetsSelection_;
-	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyserAsymJets_;
-	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyserAsymJets_,
-			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJets_;
-	//QCD region with asym. jets + MET
-	METAnalyserLocalPtr metAnalyserqcdNonIsoAsymJetsMETSelection_, metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_;
-	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyserAsymJetsMET_, qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_;
-	METAnalyserLocalPtr metAnalyserqcdConversionAsymJetsMETSelection_;
-	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyserAsymJetsMET_;
-	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_,
-			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_;
+	//	METAnalyserLocalPtr metAnalyserqcdNonIsoAsymJetsSelection_, metAnalyserqcdNonIsoNonIsoTriggerAsymJetsSelection_;
+	//	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyserAsymJets_, qcdNonIsoNonIsoTriggerElectronAnalyserAsymJets_;
+	//	METAnalyserLocalPtr metAnalyserqcdConversionAsymJetsSelection_;
+	//	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyserAsymJets_;
+	//	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyserAsymJets_,
+	//			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJets_;
+	//	//QCD region with asym. jets + MET
+	//	METAnalyserLocalPtr metAnalyserqcdNonIsoAsymJetsMETSelection_, metAnalyserqcdNonIsoNonIsoTriggerAsymJetsMETSelection_;
+	//	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyserAsymJetsMET_, qcdNonIsoNonIsoTriggerElectronAnalyserAsymJetsMET_;
+	//	METAnalyserLocalPtr metAnalyserqcdConversionAsymJetsMETSelection_;
+	//	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyserAsymJetsMET_;
+	//	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyserAsymJetsMET_,
+	//			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyserAsymJetsMET_;
 	std::vector<double> metBins_;
 	std::vector<ElectronAnalyserPtr> binnedElectronAnalysers_;
 	std::vector<ElectronAnalyserPtr> qcdConversionBinnedElectronAnalysers_;
 	std::vector<ElectronAnalyserPtr> qcdNonIsoBinnedElectronAnalysers_;
+	std::vector<ElectronAnalyserPtr> qcdPFRelIsoBinnedElectronAnalysers_;
+	std::vector<ElectronAnalyserPtr> qcdAntiIDBinnedElectronAnalysers_;
+	std::vector<ElectronAnalyserPtr> qcdNoIsoNoIDBinnedElectronAnalysers_;
 
 };
 

@@ -24,6 +24,11 @@ public:
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
 	virtual const LeptonPointer signalLepton(const EventPtr event) const;
 	virtual bool isIsolated(const LeptonPointer lepton) const;
+
+	virtual bool passesSelectionUpToStep(const EventPtr, unsigned int) const;
+	virtual unsigned int prescale(const EventPtr event) const;
+	virtual const JetCollection cleanedJets(const EventPtr event) const;
+	virtual const JetCollection cleanedBJets(const EventPtr event) const;
 };
 
 typedef boost::shared_ptr<QCDNoIsoNoIDSelection> QCDNoIsoNoIDSelectionPointer;

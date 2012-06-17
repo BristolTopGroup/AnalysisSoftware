@@ -11,6 +11,8 @@
 #include "TChainElement.h"
 #include <iostream>
 #include <boost/shared_ptr.hpp>
+#include "../../interface/HighLevelTriggers.h"
+
 using namespace std;
 namespace BAT {
 
@@ -84,6 +86,11 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	for (unsigned int i = 0; i < hltReader->size(); i++) {
 		triggers->push_back(hltReader->getIntVariableAt(i));
 		triggerPrescales->push_back(hltPrescaleReader->getIntVariableAt(i));
+	}
+
+	while (triggers->size() < HLTriggers::NUMBER_OF_TRIGGERS){
+		triggers->push_back(0);
+		triggerPrescales->push_back(0);
 	}
 
 	currentEvent->setDataType(getDataType(getCurrentFile()));

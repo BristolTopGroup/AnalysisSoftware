@@ -92,7 +92,7 @@ void ElectronAnalyser::createHistograms() {
 		histMan_->addH1D("All_Electron_dB", "Electron dB(PV); dB/cm; Events/(0.001)", 200, 0, 0.2);
 	}
 	//single electron histograms for analyseElectron
-	histMan_->addH1D("electron_pT", "Electron p_{T}; p_{T} (GeV); Events/(1 GeV)", 2000, 0, 2000);
+	histMan_->addH1D("electron_pT", "Electron p_{T}; p_{T} (GeV); Events/(1 GeV)", 1000, 0, 1000);
 	histMan_->addH1D_BJetBinned("electron_eta", "Electron #eta; #eta(e); Events/(0.05)", 300, -3, 3);
 	histMan_->addH1D("electron_phi", "Electron #phi; #phi(e); Events/(0.05)", 400, -4, 4);
 
