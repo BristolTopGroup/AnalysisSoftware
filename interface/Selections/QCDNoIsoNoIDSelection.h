@@ -26,6 +26,7 @@ public:
 	virtual bool isIsolated(const LeptonPointer lepton) const;
 
 	virtual bool passesSelectionUpToStep(const EventPtr, unsigned int) const;
+	virtual bool passesSelectionStep(const EventPtr event, unsigned int selectionStep) const;
 	virtual unsigned int prescale(const EventPtr event) const;
 	virtual const JetCollection cleanedJets(const EventPtr event) const;
 	virtual const JetCollection cleanedBJets(const EventPtr event) const;

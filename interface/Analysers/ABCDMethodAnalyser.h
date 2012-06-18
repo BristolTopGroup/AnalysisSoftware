@@ -8,8 +8,8 @@
 #ifndef ABCDMethodANALYSER_H_
 #define ABCDMethodANALYSER_H_
 #include "BasicAnalyser.h"
-#include "../Selections/QCDPFRelIsoEPlusJetsSelection.h"
-#include "../Selections/QCDAntiIDEPlusJetsSelection.h"
+#include "../Selections/QCDNoIsoNoIDSelection.h"
+#include <boost/scoped_ptr.hpp>
 
 namespace BAT {
 
@@ -22,12 +22,12 @@ public:
 	virtual ~ABCDMethodAnalyser();
 	//analyse function: takes as arguments: constant event pointer to a particular event and reads its content. Carried out once for each event.
 	void analyse(const EventPtr);
-	//createHistograms function: funtion to create histograms folder and the histograms themselves.
+	//createHistograms function: function to create histograms folder and the histograms themselves.
 	void createHistograms();
 
 private:
 	//signal selections
-	SelectionPointer qcdPFRelIsoSelection_;
+	QCDNoIsoNoIDSelectionPointer qcdNoIsoNoIDSelection_;
 };
 
 typedef boost::scoped_ptr<ABCDMethodAnalyser> ABCDMethodAnalyserLocalPtr;

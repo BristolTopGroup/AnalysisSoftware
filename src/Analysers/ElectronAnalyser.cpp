@@ -52,7 +52,7 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 	histMan_->H1D("electron_dPhi_in")->Fill(electron->dPhiIn(), weight_);
 	histMan_->H1D("electron_dEta_in")->Fill(electron->dEtaIn(), weight_);
 	histMan_->H1D("electron_HadOverEM")->Fill(electron->HadOverEm(), weight_);
-	histMan_->H1D("electron_mvaTrigV0")->Fill(electron->mvaTrigV0(), weight_);
+	histMan_->H1D_BJetBinned("electron_mvaTrigV0")->Fill(electron->mvaTrigV0(), weight_);
 	histMan_->H1D("electron_mvaNonTrigV0")->Fill(electron->mvaNonTrigV0(), weight_);
 	histMan_->H1D("electron_dB")->Fill(electron->d0(), weight_);
 }
@@ -93,7 +93,7 @@ void ElectronAnalyser::createHistograms() {
 	}
 	//single electron histograms for analyseElectron
 	histMan_->addH1D("electron_pT", "Electron p_{T}; p_{T} (GeV); Events/(1 GeV)", 1000, 0, 1000);
-	histMan_->addH1D_BJetBinned("electron_eta", "Electron #eta; #eta(e); Events/(0.05)", 300, -3, 3);
+	histMan_->addH1D_BJetBinned("electron_eta", "Electron #eta; #eta(e); Events/(0.02)", 300, -3, 3);
 	histMan_->addH1D("electron_phi", "Electron #phi; #phi(e); Events/(0.05)", 400, -4, 4);
 
 	//b-jet binning useful for QCD estimates
@@ -109,7 +109,7 @@ void ElectronAnalyser::createHistograms() {
 	histMan_->addH1D("electron_dPhi_in", "Electron #Delta#Phi_{in}; #Delta#Phi_{in}; Events/(0.01)", 200, -1, 1);
 	histMan_->addH1D("electron_dEta_in", "Electron #Delta#eta_{in}; #Delta#eta_{in}; Events/(0.001)", 1000, -0.5, 0.5);
 	histMan_->addH1D("electron_HadOverEM", "Electron HadronicOverEM; HadOverEM; Events/(0.01)", 500, 0, 5);
-	histMan_->addH1D("electron_mvaTrigV0", "Electron mvaTrigV0; mvaTrigV0; Events/(0.01)", 240, -1.2, 1.2);
+	histMan_->addH1D_BJetBinned("electron_mvaTrigV0", "Electron mvaTrigV0; mvaTrigV0; Events/(0.01)", 240, -1.2, 1.2);
 	histMan_->addH1D("electron_mvaNonTrigV0", "Electron mvaNonTrigV0; mvaNonTrigV0; Events/(0.01)", 240, -1.2, 1.2);
 	histMan_->addH1D("electron_dB", "Electron dB(PV); dB/cm; Events/(0.001 cm)", 200, 0, 0.2);
 

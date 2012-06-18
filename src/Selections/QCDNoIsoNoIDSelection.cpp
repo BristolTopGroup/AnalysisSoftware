@@ -39,6 +39,10 @@ bool QCDNoIsoNoIDSelection::passesSelectionUpToStep(const EventPtr event, unsign
 	return QCDPFRelIsoEPlusJetsSelection::passesSelectionUpToStep(event, step);
 }
 
+bool QCDNoIsoNoIDSelection::passesSelectionStep(const EventPtr event, unsigned int selectionStep) const{
+	return QCDPFRelIsoEPlusJetsSelection::passesSelectionStep(event, selectionStep);
+}
+
 unsigned int QCDNoIsoNoIDSelection::prescale(const EventPtr event) const {
 	return QCDPFRelIsoEPlusJetsSelection::prescale(event);
 }
