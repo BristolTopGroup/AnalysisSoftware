@@ -1,7 +1,7 @@
 
 placeholder = 'SAMPLE'
 pathToFiles = '/storage/results/histogramfiles/2012/7TeV'
-luminosity = 5048#pb-1
+luminosity = 5050#pb-1
 suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET.root'
 
 template = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles, 'lumi':luminosity, 'suffix':suffix, 'placeholder':placeholder}

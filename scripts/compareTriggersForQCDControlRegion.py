@@ -12,10 +12,10 @@ gROOT.ProcessLine('gErrorIgnoreLevel = 5001;')
     
     
 availableSamples = FILES.samplesToLoad
-files = {'SingleElectron': '/home/kreczko/Workspace/Analysis/AnalysisTools/ElectronHad_99999pb_PFElectron_PFMuon_PF2PATJets_PFMET_inclusive.root'}
+files = {'SingleElectron': '/home/kreczko/Workspace/Analysis/AnalysisTools/ElectronHad_2752.4pb_PFElectron_PFMuon_PF2PATJets_PFMET_193834-194225.root'}
 #folder where the plots will be placed
-outputFolder = '/storage/results/plots/HLTQCDAnalysis/ExclusiveEvents/'
-outputFolder = '/storage/results/plots/HLTQCDAnalysis/InclusiveEvents/'
+outputFolder = '/storage/results/plots/HLTQCDAnalysis/193834-194225/inclusive'
+#outputFolder = '/storage/results/plots/HLTQCDAnalysis/194270-195396/inclusive'
 outputFormats = [
                  'png',
                  #'pdf'
@@ -92,7 +92,7 @@ titles = {
              'electron_sigma_ietaieta':'Events/(0.001)'
           }
 
-histograms = ['HLTQCDStudy/' + trigger + '/' + variable for variable in variables for trigger in triggers]
+histograms = ['HLTQCDAnalyser_inclusive/' + trigger + '/' + variable for variable in variables for trigger in triggers]
 
 hists = FileReader.getHistogramsFromFiles(histograms, files)
 plotting.setStyle()
@@ -143,7 +143,7 @@ variables = [
               'Transverse_Mass_0orMoreBtag'
               ]
 selections = ['QCDAntiID', 'QCDNonIso']
-histograms = ['HLTQCDStudy/' + selection + '/' + trigger + '/patMETsPFlow/' + variable for variable in variables for trigger in triggers for selection in selections]
+histograms = ['HLTQCDAnalyser_inclusive/' + selection + '/' + trigger + '/patMETsPFlow/' + variable for variable in variables for trigger in triggers for selection in selections]
 hists = FileReader.getHistogramsFromFiles(histograms, files)
 hists = plotting.rebin(hists, 5, '*MET_')
 hists = plotting.rebin(hists, 5, '*Transverse_Mass')

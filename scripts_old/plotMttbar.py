@@ -14,6 +14,7 @@ canvases = []
 scanvases = []
 setLogY = False
 normalise = False
+drawQCDError = False
 
 def plotMttbar():
     saveAs = HistPlotter.saveAs
@@ -70,7 +71,11 @@ def plotMttbar():
 #    hists.append('MttbarAnalysis/ElectronPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/ttbar_pt_withMETAndAsymJets')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_0-30/electron_eta')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_30-50/electron_eta')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_50-75/electron_eta')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_75-inf/electron_eta')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET_phi')
@@ -92,7 +97,7 @@ def plotMttbar():
     
     
     files = inputFiles.files
-    hists = HistGetter.getHistsFromFiles(hists, files, bJetBins=HistPlotter.allBjetBins)
+    hists = HistGetter.getHistsFromFiles(hists, files, bJetBins=['0btag', '1btag', '2orMoreBtags'])
     suffixes = HistPlotter.allBjetBins
 #    suffixes = ["0orMoreBtag", '0btag',
 #        "1orMoreBtag",
@@ -112,7 +117,6 @@ def plotMttbar():
     
     otherHists = []
 #    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/Electron/electron_pT')
-    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron/All_Electron_mvaTrigV0')
     otherHists.append('ElectronAnalysis/All_Electron_mvaTrigV0')
 #    otherHists.append('VertexAnalyser/nVertex')
 #    otherHists.append('VertexAnalyser/nVertex_reweighted')
@@ -137,14 +141,14 @@ def plotMttbar():
         hist_data = hists['data'][histname]
 
         hist_ttbar = hists['ttbar'][histname]
-        totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233 # = 163625908
-        hists['wjets'][histname].Scale(0)
-#        hists['wjets'][histname].Scale(totalWPlusJets/47896878.)
-        hists['W1Jet'][histname].Scale(totalWPlusJets/76048786.*4480.0/31314.)
-        hists['W2Jets'][histname].Scale(totalWPlusJets/25400440.*1674./31314.)
-        hists['W3Jets'][histname].Scale(totalWPlusJets/7685939.*484.7/31314.)
-        hists['W4Jets'][histname].Scale(totalWPlusJets/12998049.*211.7/31314.)
-        hist_wjets = hists['wjets'][histname] + hists['W1Jet'][histname]
+#        totalWPlusJets = 47896878 + 71828418 + 25400440 + 7685939 + 10814233 # = 163625908
+#        hists['wjets'][histname].Scale(0)
+##        hists['wjets'][histname].Scale(totalWPlusJets/47896878.)
+#        hists['W1Jet'][histname].Scale(totalWPlusJets/76048786.*4480.0/31314.)
+#        hists['W2Jets'][histname].Scale(totalWPlusJets/25400440.*1674./31314.)
+#        hists['W3Jets'][histname].Scale(totalWPlusJets/7685939.*484.7/31314.)
+#        hists['W4Jets'][histname].Scale(totalWPlusJets/12998049.*211.7/31314.)
+        hist_wjets = hists['W1Jet'][histname]
         hist_wjets += hists['W2Jets'][histname] 
         hist_wjets += hists['W3Jets'][histname] 
         hist_wjets += hists['W4Jets'][histname]
@@ -439,6 +443,10 @@ def plotMttbar():
             hist_data.SetYTitle("Events/(5 GeV)");
             rebin = 5
             Urange = (20, 1000)
+        elif 'electron_eta' in histname:
+            hist_data.SetYTitle("Events/(0.2)");
+            rebin = 10
+            Urange = (-3, 3)
         
         hist_data.Rebin(rebin);
         hist_ttbar.Rebin(rebin);
@@ -599,7 +607,7 @@ def plotMttbar():
 #        hist_Zprime1000.Draw("same");
 #        hist_Zprime1250.Draw("same");
 #        hist_Zprime4000.Draw("same");
-        if errorHist:
+        if errorHist and drawQCDError:
             gStyle.SetErrorX(0.5);
             errorHist.SetFillColor(kGray + 3)
             errorHist.SetMarkerStyle(0)

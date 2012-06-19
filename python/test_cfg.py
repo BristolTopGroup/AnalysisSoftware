@@ -1,5 +1,6 @@
 toolsFolder = 'BristolAnalysis/Tools/'
 #toolsFolder = ''
+#toolsFolder = ''
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
@@ -11,11 +12,9 @@ maxEvents = 50000
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-              '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v7c_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/*.root',
-#              '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v7a_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
-#              '/storage/TopQuarkGroup/data/2011/MuHad/nTuple_v7a_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root',
-#              '/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset/*.root'
-#              '/storage/TopQuarkGroup/mc/7TeV/TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
+              '/storage/TopQuarkGroup/mc/7TeV/W4Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
+#'/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v7c_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/SingleElectron_nTuple_52X_data_merged_001.root'
+#              '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v7b_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/*.root',
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
