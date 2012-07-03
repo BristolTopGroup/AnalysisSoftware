@@ -22,7 +22,7 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 		const ElectronPointer electron(electrons.at(index));
 
 		histMan_->H1D("All_Electron_Pt")->Fill(electron->pt(), weight_);
-		histMan_->H1D("All_Electron_Eta")->Fill(fabs(electron->eta()), weight_);
+		histMan_->H1D("All_Electron_Eta")->Fill(electron->eta(), weight_);
 		histMan_->H1D("All_Electron_Phi")->Fill(electron->phi(), weight_);
 		histMan_->H1D_BJetBinned("All_Electron_pfIsolation_03")->Fill(electron->pfRelativeIsolation(0.3), weight_);
 		histMan_->H1D_BJetBinned("All_Electron_pfIsolation_04")->Fill(electron->pfRelativeIsolation(0.4), weight_);
@@ -42,7 +42,7 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = weight * prescale_;
 
-	histMan_->H1D_BJetBinned("electron_eta")->Fill(fabs(electron->eta()), weight_);
+	histMan_->H1D_BJetBinned("electron_eta")->Fill(electron->eta(), weight_);
 	histMan_->H1D_BJetBinned("electron_pfIsolation_03")->Fill(electron->pfRelativeIsolation(0.3), weight_);
 
 	if (!ttbarPlusMETAnalysisSetup_) {
@@ -79,7 +79,7 @@ void ElectronAnalyser::createHistograms() {
 		if (!singleElectronOnly_) {
 			histMan_->addH1D("Number_Of_Electrons", "Number of electrons;N(e);Events ", 6, -0.5, 5.5);
 			histMan_->addH1D("All_Electron_Pt", "Electron p_{T};p_{T}(e)/GeV;Events/2GeV ", 500, 0, 1000);
-			histMan_->addH1D("All_Electron_Eta", "Electron #eta; #eta(e); Events/(0.05)", 150, 0, 3);
+			histMan_->addH1D("All_Electron_Eta", "Electron #eta; #eta(e); Events/(0.05)", 300, -3, 3);
 			histMan_->addH1D("All_Electron_Phi", "Electron #phi; #phi(e); Events/(0.05)", 400, -4, 4);
 			histMan_->addH1D_BJetBinned("All_Electron_pfIsolation_03",
 					"Electron relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
@@ -121,7 +121,7 @@ void ElectronAnalyser::createHistograms() {
 		histMan_->addH1D("electron_mvaNonTrigV0", "Electron mvaNonTrigV0; mvaNonTrigV0; Events/(0.01)", 240, -1.2, 1.2);
 		histMan_->addH1D("electron_dB", "Electron dB(PV); dB/cm; Events/(0.001 cm)", 200, 0, 0.2);
 	}
-	histMan_->addH1D_BJetBinned("electron_eta", "Electron #eta; #eta(e); Events/(0.02)", 150, 0, 3);
+	histMan_->addH1D_BJetBinned("electron_eta", "Electron #eta; #eta(e); Events/(0.02)", 300, -3, 3);
 	histMan_->addH1D_BJetBinned("electron_pfIsolation_03",
 			"Electron relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
 
