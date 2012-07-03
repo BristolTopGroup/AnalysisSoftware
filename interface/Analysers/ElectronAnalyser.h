@@ -27,8 +27,11 @@ public:
 	 */
 	void analyseElectron(const ElectronPointer electron, double weight);
 	void createHistograms();
+
+	void useTTbarPlusMETSetup(bool use);
 private:
 	bool singleElectronOnly_;
+	bool ttbarPlusMETAnalysisSetup_;
 };
 typedef boost::scoped_ptr<ElectronAnalyser> ElectronAnalyserLocalPtr;
 typedef boost::shared_ptr<ElectronAnalyser> ElectronAnalyserPtr;

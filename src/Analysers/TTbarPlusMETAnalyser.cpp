@@ -30,8 +30,6 @@ namespace BAT {
 void TTbarPlusMETAnalyser::analyse(const EventPtr event) {
 	signalAnalysis(event);
 	qcdAnalysis(event);
-//	qcdAnalysisAsymJets(event);
-//	qcdAnalysisAsymJetsMET(event);
 }
 
 void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
@@ -51,12 +49,17 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
 
 		vertexAnalyserRefSelection_->analyse(event);
-		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-			double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-			double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-			const METPointer met(event->MET(METAlgorithm::patType1CorrectedPFMet));
-			if (met->et() > lowerCut && met->et() < upperCut)
-				binnedElectronAnalysers_.at(index)->analyseElectron(signalElectron, event->weight());
+
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			string metPrefix = METAlgorithm::names.at(metIndex);
+			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				const METPointer met(event->MET((METAlgorithm::value) metIndex));
+				if (met->et() > lowerCut && met->et() < upperCut)
+					binnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron, event->weight());
+			}
 		}
 	}
 }
@@ -81,13 +84,17 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdNonIsoSelection_->analyse(event);
 		metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event, signalLepton);
-
-		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-			double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-			double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-			const METPointer met(event->MET(METAlgorithm::patType1CorrectedPFMet));
-			if (met->et() > lowerCut && met->et() < upperCut)
-				qcdNonIsoBinnedElectronAnalysers_.at(index)->analyseElectron(signalElectron, event->weight());
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			string metPrefix = METAlgorithm::names.at(metIndex);
+			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				const METPointer met(event->MET((METAlgorithm::value) metIndex));
+				if (met->et() > lowerCut && met->et() < upperCut)
+					qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+							event->weight());
+			}
 		}
 	}
 
@@ -111,7 +118,8 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyseTransverseMass(event, signalLepton);
 	}
 
-	if (qcdConversionSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+	if (qcdConversionSelection_->passesSelectionUpToStep(event,
+			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdConversionSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdConversionSelection_->cleanedBJets(event));
 		histMan_->setCurrentJetBin(jets.size());
@@ -128,12 +136,17 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdConversionSelection_->analyse(event);
 		metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
 
-		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-			double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-			double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-			const METPointer met(event->MET(METAlgorithm::patType1CorrectedPFMet));
-			if (met->et() > lowerCut && met->et() < upperCut)
-				qcdConversionBinnedElectronAnalysers_.at(index)->analyseElectron(signalElectron, event->weight());
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			string metPrefix = METAlgorithm::names.at(metIndex);
+			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				const METPointer met(event->MET((METAlgorithm::value) metIndex));
+				if (met->et() > lowerCut && met->et() < upperCut)
+					qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+							event->weight());
+			}
 		}
 	}
 
@@ -150,12 +163,18 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyse(event);
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-			double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-			double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-			const METPointer met(event->MET(METAlgorithm::patType1CorrectedPFMet));
-			if (met->et() > lowerCut && met->et() < upperCut)
-				qcdPFRelIsoBinnedElectronAnalysers_.at(index)->analyseElectron(signalElectron, event->weight());
+
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			string metPrefix = METAlgorithm::names.at(metIndex);
+			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				const METPointer met(event->MET((METAlgorithm::value) metIndex));
+				if (met->et() > lowerCut && met->et() < upperCut)
+					qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+							event->weight());
+			}
 		}
 	}
 
@@ -192,12 +211,17 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdAntiIDSelection_->analyse(event);
 		metAnalyserqcdAntiIDSelection_->analyseTransverseMass(event, signalLepton);
 
-		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-			double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-			double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-			const METPointer met(event->MET(METAlgorithm::patType1CorrectedPFMet));
-			if (met->et() > lowerCut && met->et() < upperCut)
-				qcdAntiIDBinnedElectronAnalysers_.at(index)->analyseElectron(signalElectron, event->weight());
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			string metPrefix = METAlgorithm::names.at(metIndex);
+			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				const METPointer met(event->MET((METAlgorithm::value) metIndex));
+				if (met->et() > lowerCut && met->et() < upperCut)
+					qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+							event->weight());
+			}
 		}
 	}
 
@@ -218,18 +242,21 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdNoIsoNoIDSelection_->analyse(event);
 		metAnalyserqcdNoIsoNoIDSelection_->analyseTransverseMass(event, signalLepton);
 
-		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-			double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-			double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-			const METPointer met(event->MET(METAlgorithm::patType1CorrectedPFMet));
-			if (met->et() > lowerCut && met->et() < upperCut)
-				qcdNoIsoNoIDBinnedElectronAnalysers_.at(index)->analyseElectron(signalElectron, event->weight());
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			string metPrefix = METAlgorithm::names.at(metIndex);
+			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				const METPointer met(event->MET((METAlgorithm::value) metIndex));
+				if (met->et() > lowerCut && met->et() < upperCut)
+					qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+							event->weight());
+			}
 		}
 	}
 
 }
-
-
 
 void TTbarPlusMETAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
@@ -256,97 +283,115 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	metAnalyserqcdNoIsoNoIDSelection_->createHistograms();
 	qcdNoIsoNoIDElectronAnalyser_->createHistograms();
 
-	for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-		binnedElectronAnalysers_.at(index)->createHistograms();
-		qcdConversionBinnedElectronAnalysers_.at(index)->createHistograms();
-		qcdNonIsoBinnedElectronAnalysers_.at(index)->createHistograms();
-		qcdPFRelIsoBinnedElectronAnalysers_.at(index)->createHistograms();
-		qcdAntiIDBinnedElectronAnalysers_.at(index)->createHistograms();
-		qcdNoIsoNoIDBinnedElectronAnalysers_.at(index)->createHistograms();
+	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+			unsigned int analyserIndex = index + metIndex * metBins_.size();
+			binnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+			qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+			qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+			qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+			qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+			qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+		}
 	}
 
 }
 
 TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
-	BasicAnalyser(histMan, histogramFolder), //
-			topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
-			//QCD selections with respect to reference selection
-			qcdNonIsoElectronSelection_(new QCDNonIsolatedElectronSelection()), //
-			qcdNonIsoElectronNonIsoTriggerSelection_(new QCDNonIsolatedElectronSelection()), //
-			qcdConversionSelection_(new QCDConversionsSelection()), //
-			qcdPFRelIsoSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
-			qcdPFRelIsoNonIsoTriggerSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
-			qcdAntiIDSelection_(new QCDAntiIDEPlusJetsSelection()),//
-			qcdNoIsoNoIDSelection_(new QCDNoIsoNoIDSelection()),//
-			//analysers
-			//signal regions
-			metAnalyserRefSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/MET")), //
-			electronAnalyserRefSelection_(new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/Electron",
-					true)), //
-			vertexAnalyserRefSelection_(new VertexAnalyser(histMan, histogramFolder + "/Ref selection/Vertices")), //
-			//QCD region
-			metAnalyserqcdNonIsoSelection_(new METAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCD non iso e+jets/MET")), //
-			metAnalyserqcdNonIsoNonIsoTriggerSelection_(new METAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCD non iso e+jets, non iso trigger/MET")), //
-			qcdNonIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCD non iso e+jets/Electron")), //
-			qcdNonIsoNonIsoTriggerElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCD non iso e+jets, non iso trigger/Electron", true)), //
-			metAnalyserqcdConversionSelection_(new METAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCDConversions/MET")), //
-			qcdConversionsElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCDConversions/Electron", true)), //
-			qcdEPlusjetsPFRelIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCD e+jets PFRelIso/Electron")), //
-			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCD e+jets PFRelIso, non iso trigger/Electron", true)), //
-			metAnalyserqcdAntiIDSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDAntiID/MET")), //
-			qcdAntiIDElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCDAntiID/Electron", true)), //
-			metAnalyserqcdNoIsoNoIDSelection_(new METAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCDNoIsoNoID/MET")), //
-			qcdNoIsoNoIDElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
-					+ "/Ref selection/QCDNoIsoNoID/Electron", true)), //
-			metBins_(),//
-			binnedElectronAnalysers_(),//
-			qcdConversionBinnedElectronAnalysers_(),//
-			qcdNonIsoBinnedElectronAnalysers_(),//
-			qcdPFRelIsoBinnedElectronAnalysers_(),//
-			qcdAntiIDBinnedElectronAnalysers_(),//
-			qcdNoIsoNoIDBinnedElectronAnalysers_() {
+		BasicAnalyser(histMan, histogramFolder), //
+		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
+		//QCD selections with respect to reference selection
+		qcdNonIsoElectronSelection_(new QCDNonIsolatedElectronSelection()), //
+		qcdNonIsoElectronNonIsoTriggerSelection_(new QCDNonIsolatedElectronSelection()), //
+		qcdConversionSelection_(new QCDConversionsSelection()), //
+		qcdPFRelIsoSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
+		qcdPFRelIsoNonIsoTriggerSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
+		qcdAntiIDSelection_(new QCDAntiIDEPlusJetsSelection()), //
+		qcdNoIsoNoIDSelection_(new QCDNoIsoNoIDSelection()), //
+		//analysers
+		//signal regions
+		metAnalyserRefSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/MET")), //
+		electronAnalyserRefSelection_(new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/Electron", true)), //
+		vertexAnalyserRefSelection_(new VertexAnalyser(histMan, histogramFolder + "/Ref selection/Vertices")), //
+		//QCD region
+		metAnalyserqcdNonIsoSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/MET")), //
+		metAnalyserqcdNonIsoNonIsoTriggerSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/MET")), //
+		qcdNonIsoElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/Electron")), //
+		qcdNonIsoNonIsoTriggerElectronAnalyser_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/Electron", true)), //
+		metAnalyserqcdConversionSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/MET")), //
+		qcdConversionsElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/Electron", true)), //
+		qcdEPlusjetsPFRelIsoElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCD e+jets PFRelIso/Electron")), //
+		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_(
+				new ElectronAnalyser(histMan,
+						histogramFolder + "/Ref selection/QCD e+jets PFRelIso, non iso trigger/Electron", true)), //
+		metAnalyserqcdAntiIDSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDAntiID/MET")), //
+		qcdAntiIDElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDAntiID/Electron", true)), //
+		metAnalyserqcdNoIsoNoIDSelection_(
+				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDNoIsoNoID/MET")), //
+		qcdNoIsoNoIDElectronAnalyser_(
+				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDNoIsoNoID/Electron", true)), //
+		metBins_(), //
+		binnedElectronAnalysers_(), //
+		qcdConversionBinnedElectronAnalysers_(), //
+		qcdNonIsoBinnedElectronAnalysers_(), //
+		qcdPFRelIsoBinnedElectronAnalysers_(), //
+		qcdAntiIDBinnedElectronAnalysers_(), //
+		qcdNoIsoNoIDBinnedElectronAnalysers_() {
 	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdPFRelIsoNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	metBins_.push_back(23.);
 	metBins_.push_back(44.);
 	metBins_.push_back(68.);
 	metBins_.push_back(96.);
-	for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-		string bin = index < metBins_.size() ? boost::lexical_cast<std::string>(metBins_.at(index)) : "inf";
-		string previousBin = index == 0 ? "0" : boost::lexical_cast<std::string>(metBins_.at(index - 1));
-		string folder = histogramFolder_ + "/Ref selection/Electron_METbin_" + previousBin + "-" + bin;
-		string qcdConversionFolder = histogramFolder_ + "/Ref selection/QCDConversions/Electron_METbin_" + previousBin
-				+ "-" + bin;
-		string qcdNonIsoFolder = histogramFolder_ + "/Ref selection/QCD non iso e+jets/Electron_METbin_" + previousBin
-				+ "-" + bin;
-		string qcdPFRelIsoFolder = histogramFolder_ + "/Ref selection/QCD e+jets PFRelIso/Electron_METbin_"
-				+ previousBin + "-" + bin;
-		string qcdAntiIDFolder = histogramFolder_ + "/Ref selection/QCDAntiID/Electron_METbin_" + previousBin + "-"
-				+ bin;
-		string qcdNoIsoNoIDFolder = histogramFolder_ + "/Ref selection/QCDNoIsoNoID/Electron_METbin_" + previousBin
-				+ "-" + bin;
-		ElectronAnalyserPtr analyser(new ElectronAnalyser(histMan_, folder, true));
-		ElectronAnalyserPtr qcdConversionAnalyser(new ElectronAnalyser(histMan_, qcdConversionFolder, true));
-		ElectronAnalyserPtr qcdNonIsoAnalyser(new ElectronAnalyser(histMan_, qcdNonIsoFolder, true));
-		ElectronAnalyserPtr qcdPFRelIsoAnalyser(new ElectronAnalyser(histMan_, qcdPFRelIsoFolder, true));
-		ElectronAnalyserPtr qcdAntiIDAnalyser(new ElectronAnalyser(histMan_, qcdAntiIDFolder, true));
-		ElectronAnalyserPtr qcdNoIsoNoIDAnalyser(new ElectronAnalyser(histMan_, qcdNoIsoNoIDFolder, true));
-		binnedElectronAnalysers_.push_back(analyser);
-		qcdConversionBinnedElectronAnalysers_.push_back(qcdConversionAnalyser);
-		qcdNonIsoBinnedElectronAnalysers_.push_back(qcdNonIsoAnalyser);
-		qcdPFRelIsoBinnedElectronAnalysers_.push_back(qcdPFRelIsoAnalyser);
-		qcdAntiIDBinnedElectronAnalysers_.push_back(qcdAntiIDAnalyser);
-		qcdNoIsoNoIDBinnedElectronAnalysers_.push_back(qcdNoIsoNoIDAnalyser);
+
+	//for all MET types!!
+	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+		string metPrefix = METAlgorithm::names.at(metIndex);
+		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+			string bin = index < metBins_.size() ? boost::lexical_cast<std::string>(metBins_.at(index)) : "inf";
+			string previousBin = index == 0 ? "0" : boost::lexical_cast<std::string>(metBins_.at(index - 1));
+			string folder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/Electron_" + metPrefix + "bin_"
+					+ previousBin + "-" + bin;
+			string qcdConversionFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCDConversions/Electron_"
+					+ metPrefix + "bin_" + previousBin + "-" + bin;
+			string qcdNonIsoFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCD non iso e+jets/Electron_"
+					+ metPrefix + "bin_" + previousBin + "-" + bin;
+			string qcdPFRelIsoFolder = histogramFolder_
+					+ "/Ref selection/BinnedMETAnalysis/QCD e+jets PFRelIso/Electron_" + metPrefix + "bin_"
+					+ previousBin + "-" + bin;
+			string qcdAntiIDFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCDAntiID/Electron_"
+					+ metPrefix + "bin_" + previousBin + "-" + bin;
+			string qcdNoIsoNoIDFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCDNoIsoNoID/Electron_"
+					+ metPrefix + "bin_" + previousBin + "-" + bin;
+			ElectronAnalyserPtr analyser(new ElectronAnalyser(histMan_, folder, true));
+			ElectronAnalyserPtr qcdConversionAnalyser(new ElectronAnalyser(histMan_, qcdConversionFolder, true));
+			ElectronAnalyserPtr qcdNonIsoAnalyser(new ElectronAnalyser(histMan_, qcdNonIsoFolder, true));
+			ElectronAnalyserPtr qcdPFRelIsoAnalyser(new ElectronAnalyser(histMan_, qcdPFRelIsoFolder, true));
+			ElectronAnalyserPtr qcdAntiIDAnalyser(new ElectronAnalyser(histMan_, qcdAntiIDFolder, true));
+			ElectronAnalyserPtr qcdNoIsoNoIDAnalyser(new ElectronAnalyser(histMan_, qcdNoIsoNoIDFolder, true));
+			analyser->useTTbarPlusMETSetup(true);
+			qcdConversionAnalyser->useTTbarPlusMETSetup(true);
+			qcdNonIsoAnalyser->useTTbarPlusMETSetup(true);
+			qcdPFRelIsoAnalyser->useTTbarPlusMETSetup(true);
+			qcdAntiIDAnalyser->useTTbarPlusMETSetup(true);
+			qcdNoIsoNoIDAnalyser->useTTbarPlusMETSetup(true);
+
+			binnedElectronAnalysers_.push_back(analyser);
+			qcdConversionBinnedElectronAnalysers_.push_back(qcdConversionAnalyser);
+			qcdNonIsoBinnedElectronAnalysers_.push_back(qcdNonIsoAnalyser);
+			qcdPFRelIsoBinnedElectronAnalysers_.push_back(qcdPFRelIsoAnalyser);
+			qcdAntiIDBinnedElectronAnalysers_.push_back(qcdAntiIDAnalyser);
+			qcdNoIsoNoIDBinnedElectronAnalysers_.push_back(qcdNoIsoNoIDAnalyser);
+		}
 	}
 }
 
