@@ -55,9 +55,9 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
 #        normConv = dataHists['topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_' + bin]
 #        normContr = dataHists['topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets_' + bin]
 #        normAnti = dataHists['topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets_' + bin]
-        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET_' + bin]
+        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET_' + bin]
 #        normContr = dataHists['topReconstruction/backgroundShape/mttbar_3jets_antiID_withMETAndAsymJets_' + bin]
-        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET_' + bin]
+        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET_' + bin]
         
 #        normConv =  dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_' + bin]
 #        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03_' + bin]
@@ -65,8 +65,8 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
 #        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET_' + bin]
 #        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET/patMETsPFlow/MET_' + bin]
         
-        normConv.SetYTitle("a.u/0.05GeV");
-        normConv.SetYTitle("a.u/0.05");
+        normConv.SetYTitle("normalised to unit area/(5 GeV)");
+#        normConv.SetYTitle("normalised to unit area/0.05");
     
         normConv.Sumw2()
 #        normContr.Sumw2()
@@ -681,11 +681,11 @@ if __name__ == '__main__':
     hltFiles['ttbar'] = inputFiles.files['ttbar']
 
     qcdPlots = [#MET
-                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET',
-                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET',
-                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET/patMETsPFlow/MET',
-                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03',
-                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03'
+                'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET',
+                'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET',
+#                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET/patMETsPFlow/MET',
+#                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03',
+#                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03'
                 ]
     triggerPlots = ['HLTStudy/' + trigger + '/' + variable + '_' + modifier for trigger in triggers for variable in triggerVariables for modifier in triggerModifiers]
     
@@ -708,9 +708,9 @@ if __name__ == '__main__':
     hists = HistPlotter.rebin(hists, 5, 'MET*')
     hists = HistPlotter.setXTitle(hists, 'MET/GeV', 'MET*')
     hists = HistPlotter.setYTitle(hists, 'Events/(5 GeV)', 'MET*')
-    hists = HistPlotter.rebin(hists, 5, '*pfIsolation*')
-    hists = HistPlotter.setXTitle(hists, 'pf rel. iso', '*pfIsolation*')
-    hists = HistPlotter.setYTitle(hists, 'Events/(0.05)', '*pfIsolation*')
+#    hists = HistPlotter.rebin(hists, 5, '*pfIsolation*')
+#    hists = HistPlotter.setXTitle(hists, 'pf rel. iso', '*pfIsolation*')
+#    hists = HistPlotter.setYTitle(hists, 'Events/(0.05)', '*pfIsolation*')
     compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
     compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.exclusiveBjetBins)
 #    compareShapesTwoData(
