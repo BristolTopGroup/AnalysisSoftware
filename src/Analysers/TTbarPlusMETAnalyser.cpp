@@ -348,10 +348,10 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		qcdNoIsoNoIDBinnedElectronAnalysers_() {
 	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdPFRelIsoNonIsoTriggerSelection_->useNonIsoTrigger(true);
-	metBins_.push_back(23.);
-	metBins_.push_back(44.);
-	metBins_.push_back(68.);
-	metBins_.push_back(96.);
+	metBins_.push_back(24.);
+	metBins_.push_back(45.);
+	metBins_.push_back(69.);
+	metBins_.push_back(97.);
 
 	//for all MET types!!
 	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
