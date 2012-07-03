@@ -359,19 +359,19 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 			string bin = index < metBins_.size() ? boost::lexical_cast<std::string>(metBins_.at(index)) : "inf";
 			string previousBin = index == 0 ? "0" : boost::lexical_cast<std::string>(metBins_.at(index - 1));
-			string folder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/Electron_" + metPrefix + "bin_"
+			string folder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/Electron_" + metPrefix + "_bin_"
 					+ previousBin + "-" + bin;
 			string qcdConversionFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCDConversions/Electron_"
-					+ metPrefix + "bin_" + previousBin + "-" + bin;
+					+ metPrefix + "_bin_" + previousBin + "-" + bin;
 			string qcdNonIsoFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCD non iso e+jets/Electron_"
-					+ metPrefix + "bin_" + previousBin + "-" + bin;
+					+ metPrefix + "_bin_" + previousBin + "-" + bin;
 			string qcdPFRelIsoFolder = histogramFolder_
-					+ "/Ref selection/BinnedMETAnalysis/QCD e+jets PFRelIso/Electron_" + metPrefix + "bin_"
+					+ "/Ref selection/BinnedMETAnalysis/QCD e+jets PFRelIso/Electron_" + metPrefix + "_bin_"
 					+ previousBin + "-" + bin;
 			string qcdAntiIDFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCDAntiID/Electron_"
-					+ metPrefix + "bin_" + previousBin + "-" + bin;
+					+ metPrefix + "_bin_" + previousBin + "-" + bin;
 			string qcdNoIsoNoIDFolder = histogramFolder_ + "/Ref selection/BinnedMETAnalysis/QCDNoIsoNoID/Electron_"
-					+ metPrefix + "bin_" + previousBin + "-" + bin;
+					+ metPrefix + "_bin_" + previousBin + "-" + bin;
 			ElectronAnalyserPtr analyser(new ElectronAnalyser(histMan_, folder, true));
 			ElectronAnalyserPtr qcdConversionAnalyser(new ElectronAnalyser(histMan_, qcdConversionFolder, true));
 			ElectronAnalyserPtr qcdNonIsoAnalyser(new ElectronAnalyser(histMan_, qcdNonIsoFolder, true));
