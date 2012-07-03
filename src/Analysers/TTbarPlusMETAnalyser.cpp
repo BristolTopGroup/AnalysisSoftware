@@ -51,6 +51,11 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		vertexAnalyserRefSelection_->analyse(event);
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+			//skip MC only MET entries
+			if (isJetRes && event->isRealData())
+				continue;
 			string metPrefix = METAlgorithm::names.at(metIndex);
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
@@ -85,6 +90,11 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdNonIsoSelection_->analyse(event);
 		metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event, signalLepton);
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+			//skip MC only MET entries
+			if (isJetRes && event->isRealData())
+				continue;
 			string metPrefix = METAlgorithm::names.at(metIndex);
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
@@ -137,6 +147,11 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+			//skip MC only MET entries
+			if (isJetRes && event->isRealData())
+				continue;
 			string metPrefix = METAlgorithm::names.at(metIndex);
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
@@ -165,6 +180,11 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+			//skip MC only MET entries
+			if (isJetRes && event->isRealData())
+				continue;
 			string metPrefix = METAlgorithm::names.at(metIndex);
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
@@ -212,6 +232,11 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdAntiIDSelection_->analyseTransverseMass(event, signalLepton);
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+			//skip MC only MET entries
+			if (isJetRes && event->isRealData())
+				continue;
 			string metPrefix = METAlgorithm::names.at(metIndex);
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
@@ -243,6 +268,11 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdNoIsoNoIDSelection_->analyseTransverseMass(event, signalLepton);
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+			//skip MC only MET entries
+			if (isJetRes && event->isRealData())
+				continue;
 			string metPrefix = METAlgorithm::names.at(metIndex);
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
@@ -348,10 +378,10 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		qcdNoIsoNoIDBinnedElectronAnalysers_() {
 	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdPFRelIsoNonIsoTriggerSelection_->useNonIsoTrigger(true);
-	metBins_.push_back(24.);
+	metBins_.push_back(25.);
 	metBins_.push_back(45.);
-	metBins_.push_back(69.);
-	metBins_.push_back(97.);
+	metBins_.push_back(70.);
+	metBins_.push_back(100.);
 
 	//for all MET types!!
 	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
