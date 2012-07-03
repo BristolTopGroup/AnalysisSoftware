@@ -57,7 +57,7 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
 				unsigned int analyserIndex = index + metIndex * metBins_.size();
 				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() > lowerCut && met->et() < upperCut)
+				if (met->et() >= lowerCut && met->et() < upperCut)
 					binnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron, event->weight());
 			}
 		}
