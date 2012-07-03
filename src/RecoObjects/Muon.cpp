@@ -45,6 +45,10 @@ bool Muon::isGlobal() const {
 	return is_GlobalMuon;
 }
 
+bool Muon::isTracker() const {
+	return is_TrackerMuon;
+}
+
 void Muon::makeGlobal(bool global) {
 	is_GlobalMuon = global;
 }

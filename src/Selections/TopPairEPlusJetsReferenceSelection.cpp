@@ -143,6 +143,8 @@ bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer el
 
 bool TopPairEPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
 	const ElectronPointer electron(boost::static_pointer_cast<Electron>(lepton));
+	//TODO: switch to rho-based isolation
+//	return electron->pfRelativeIsolationRhoCorrected(0.3, rho);
 	return electron->pfRelativeIsolation(0.3) < 0.1;
 }
 
@@ -162,10 +164,10 @@ bool TopPairEPlusJetsReferenceSelection::passesLooseLeptonVeto(const EventPtr ev
 bool TopPairEPlusJetsReferenceSelection::isLooseMuon(const MuonPointer muon) const {
 	bool passesPt = muon->pt() > 10;
 	bool passesEta = fabs(muon->eta()) < 2.5;
-	bool isGlobal = muon->isGlobal();
-	bool isLooselyIsolated = muon->pfRelativeIsolation(0.3) < 0.2;
+	bool isGlobalOrTracker = muon->isGlobal() || muon->isTracker();
+	bool isLooselyIsolated = muon->pfRelativeIsolation(0.4) < 0.2;
 
-	return passesPt && passesEta && isGlobal && isLooselyIsolated;
+	return passesPt && passesEta && isGlobalOrTracker && isLooselyIsolated;
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesDileptonVeto(const EventPtr event) const {

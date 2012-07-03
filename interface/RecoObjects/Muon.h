@@ -39,6 +39,7 @@ public:
 //	bool isGood(short leptonID = 0) const;
 //	bool isLoose() const;
 	bool isGlobal() const;
+	bool isTracker() const;
 	void setUsedAlgorithm(MuonAlgorithm::value algorithm);
 	bool isPFLepton() const;
 

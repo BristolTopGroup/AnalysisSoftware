@@ -26,8 +26,8 @@ public:
 	virtual void analyse(const EventPtr);
 	virtual void createHistograms();
 	void qcdAnalysis(const EventPtr);
-	void qcdAnalysisAsymJets(const EventPtr event);
-	void qcdAnalysisAsymJetsMET(const EventPtr event);
+//	void qcdAnalysisAsymJets(const EventPtr event);
+//	void qcdAnalysisAsymJetsMET(const EventPtr event);
 	void signalAnalysis(const EventPtr);
 
 private:
