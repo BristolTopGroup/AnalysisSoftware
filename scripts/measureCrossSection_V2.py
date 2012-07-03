@@ -21,7 +21,9 @@ qcdError = 1
 vectors = None
 vector_errors = None
 DEBUG = False
+unbinnedTTbarEvents = 0
 
+#DO NOT USE theory x-section but rather just the total luminosity*selection efficiency
 def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
     #at the moment store the values in the global variables. Not good but the only way it works with current setup
     global normalisation, vectors
@@ -78,7 +80,7 @@ def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
     signalFit = fitvalues[0]
     signalFitError = fitErrors[0]
     ttbarFit = signalFit - normalisation['SingleTop']
-    normfactor = normalisation['TTJet'] / theoryXsection
+    normfactor = unbinnedTTbarEvents / theoryXsection
     
     value = ttbarFit / normfactor
     value_plusError = value + (signalFitError / normfactor)
@@ -248,39 +250,75 @@ def performMeasurement(listOfDistributions, listOfQCDDistributions, listOfFiles,
             print 'Total data', normalisation['ElectronHad']
             print '(data-SumMC)/data', (normalisation['ElectronHad'] - sumMC)/normalisation['ElectronHad']
             print '*' * 120
-        print "\n TTbar cross-section = ", value, " +/- ", error, "(fit) pb \n"
+        return value, error
+        
         
             
 
 if __name__ == "__main__":
+    DEBUG = False
     btagBins = [
 #                '0orMoreBtag',
 #                '1btag',
                 '2orMoreBtags'
                 ]
-    mets = ['patMETsPFlow',
-            
-            ]
-    distribution = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET'
-    distribution = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_75-inf/electron_eta'
-   #should always use 0-btag region!!                  
-    qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET_0btag'
-    qcdDistribution = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/Electron_METbin_75-inf/electron_eta_0btag'
-    qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron_METbin_75-inf/electron_eta_0btag'                    
-    histograms = [distribution + '_' + btagBin for btagBin in btagBins]
-    qcdHistograms = [qcdDistribution]*len(btagBins)
-    print '=' * 60
-    print 'Starting Top-pair cross section measurement'
-    print '=' * 60
-    performMeasurement(histograms,qcdHistograms, FILES.files, 10)
+    metBins = ['0-30',
+               '30-50',
+               '50-75',
+               '75-inf'
+               ]
     
-#    print '=' * 60
-#    print 'Starting Top-pair cross section measurement - Systematic Error, QCD Shape'
-#    print '=' * 60
-#    qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET_0btag'
-#    qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron_METbin_75-inf/electron_eta_0btag'
-#    qcdHistograms = [qcdDistribution]*len(btagBins)
-#    performMeasurement(histograms,qcdHistograms, FILES.files, 10)
+    distribution = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET_2orMoreBtags'
+    unbinnedTtbarHist = FileReader.getHistogramFromFile(distribution, FILES.files['TTJet']) 
+    unbinnedTTbarEvents = unbinnedTtbarHist.Integral()
+    results = {}
+    
+    for metbin in metBins:
+        metbin = str(metbin)
+        distribution = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_%s/electron_eta' %metbin
+       #should always use 0-btag region!!                  
+        qcdDistribution = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/Electron_METbin_%s/electron_eta_0btag'  %metbin
+        histograms = [distribution + '_' + btagBin for btagBin in btagBins]
+        qcdHistograms = [qcdDistribution]*len(btagBins)
+#        print '=' * 60
+#        print 'Starting Top-pair cross section measurement'
+#        print '=' * 60
+        value, error = performMeasurement(histograms,qcdHistograms, FILES.files, 10)
+#        print "\n TTbar cross-section = %.2f \pm %.2f (fit) pb \n" %( value, error)
+#        
+#        print '=' * 60
+#        print 'Starting Top-pair cross section measurement - Systematic Error, QCD Shape'
+#        print '=' * 60
+        qcdDistribution ='TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron_METbin_%s/electron_eta_0btag' %metbin
+        qcdHistograms = [qcdDistribution]*len(btagBins)
+        value2, error2 = performMeasurement(histograms,qcdHistograms, FILES.files, 10)
+#        print "\n TTbar cross-section = %.2f \pm %.2f (fit) pb \n" %( value2, error2)
+        
+#        print '=' * 60
+#        print 'Starting Top-pair cross section measurement - Final result'
+#        print '=' * 60
+        systematic = abs(value2 - value)
+#        print "\n TTbar cross-section = %.2f \pm %.2f (stat) \pm %.2f (syst) pb \n" %( value, error, systematic)
+        
+        results[metbin] = ( value, error, systematic)
+    print '=' * 60
+    print 'Result for \geq 2 b-tag region'
+    print '=' * 60
+    print '\met bin & cross-section \\\\'
+    print '\hline'
+    total = 0
+    totalStatError = 0
+    totalSystError = 0
+    for metbin, result in results.iteritems():
+        total += result[0]
+        totalStatError += result[1]**2
+        totalSystError += result[2]**2 
+        print metbin + '~\GeV & %.2f $\pm$ %.2f (stat) $\pm$ %.2f (syst) pb \\\\' % result
+    totalStatError = sqrt(totalStatError)
+    totalSystError = sqrt(totalSystError)
+    print '\hline'
+    print 'Total & %.2f $\pm$ %.2f (stat) $\pm$ %.2f (syst) pb\\\\' % (total, totalStatError, totalSystError)
+        
     
     
     
