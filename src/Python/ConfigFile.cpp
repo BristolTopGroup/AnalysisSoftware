@@ -37,7 +37,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		tqafPath_(PythonParser::getAttributeFromPyObject<string>(config, "TQAFPath")), //
 		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")),//
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")),//
-		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")){
+		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")),//
+		jesSystematic_(PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic")){
 
 }
 
@@ -60,7 +61,8 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("fitterASCIIoutput", value<bool>(), "produce full kinematic fit output in ASCII format");
 	desc.add_options()("TQAFPath", value<std::string>(),
 			"path to TopQuarkAnalysis folder (the folder itself not included).");
-	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to.");
+	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to");
+	desc.add_options()("JESsystematic", value<int>(), "JES systematic, the +/- number of uncertainties to vary the jet with");
 
 	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	notify(vm);
@@ -178,6 +180,13 @@ double ConfigFile::lumi() const {
 		return lumi_;
 }
 
+int ConfigFile::jesSystematic() const {
+	if (programOptions.count("JESsystematic"))
+		return programOptions["JESsystematic"].as<int>();
+	else
+		return jesSystematic_;
+}
+
 ConfigFile::~ConfigFile() {
 }
 
@@ -230,6 +239,9 @@ void ConfigFile::loadIntoMemory() {
 	Globals::produceFitterASCIIoutput = fitterOutputFlag();
 
 	Globals::estimatedPileup = getPileUpHistogram(PUFile());
+
+	//JES systematic
+	Globals::JESsystematic = jesSystematic();
 
 	//Loading l7 JEC
 	Globals::bL7Corrections = getL7Correction(bJetResoFile());

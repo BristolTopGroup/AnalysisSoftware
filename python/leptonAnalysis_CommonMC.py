@@ -4,6 +4,8 @@ PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
+#JES Systematic, the +/- number of uncertainties to vary the jet with
+JESsystematic = 0
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis

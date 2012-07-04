@@ -60,6 +60,7 @@ struct Globals {
 //	static BtagAlgorithm::workingPoint btagWorkingPoint;
 	static boost::array<boost::shared_ptr<TF1>, 12> bL7Corrections;
 	static boost::array<boost::shared_ptr<TF1>, 12> lightL7Corrections;
+	static int JESsystematic;
 
 	//good jet definition
 //	static double maxAbsoluteJetEta;

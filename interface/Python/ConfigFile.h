@@ -42,6 +42,7 @@ public:
 	bool isOptionSetInConfig(std::string option) const;
 	unsigned int centerOfMassEnergy() const;
 	unsigned int nTupleVersion() const;
+	int jesSystematic() const;
 
 private:
 	boost::program_options::variables_map programOptions;
@@ -58,6 +59,7 @@ private:
 	double lumi_;
 	unsigned int centerOfMassEnergy_;
 	unsigned int nTupleVersion_;
+	int jesSystematic_;
 //	PileUpReweightingMethod::value pileUpReweightingMethod_;
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);

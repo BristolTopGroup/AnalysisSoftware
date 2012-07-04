@@ -6,6 +6,7 @@
  */
 
 #include "../../interface/Readers/JetReader.h"
+#include "../../interface/GlobalVariables.h"
 
 namespace BAT {
 
@@ -106,6 +107,14 @@ void JetReader::readJets() {
 		double px = pxReader.getVariableAt(jetIndex);
 		double py = pyReader.getVariableAt(jetIndex);
 		double pz = pzReader.getVariableAt(jetIndex);
+		double JECUnc = JECUncReader.getVariableAt(jetIndex);
+
+		//applying JES + or - systematic, 0 by default)
+		energy = energy * (1+JECUnc*Globals::JESsystematic);
+		px = px * (1+JECUnc*Globals::JESsystematic);
+		py = py * (1+JECUnc*Globals::JESsystematic);
+		pz = pz * (1+JECUnc*Globals::JESsystematic);
+
 		JetPointer jet(new Jet(energy, px, py, pz));
 		jet->setUsedAlgorithm(usedAlgorithm);
 		jet->setMass(massReader.getVariableAt(jetIndex));
