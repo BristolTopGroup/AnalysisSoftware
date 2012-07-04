@@ -52,7 +52,7 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
 			//skip MC only MET entries
 			if (isJetRes && event->isRealData())
 				continue;
@@ -91,7 +91,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event, signalLepton);
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
 			//skip MC only MET entries
 			if (isJetRes && event->isRealData())
 				continue;
@@ -148,7 +148,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
 			//skip MC only MET entries
 			if (isJetRes && event->isRealData())
 				continue;
@@ -181,7 +181,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
 			//skip MC only MET entries
 			if (isJetRes && event->isRealData())
 				continue;
@@ -233,7 +233,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
 			//skip MC only MET entries
 			if (isJetRes && event->isRealData())
 				continue;
@@ -269,7 +269,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| METAlgorithm::patType1p2CorrectedPFMetJetResDown;
+					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
 			//skip MC only MET entries
 			if (isJetRes && event->isRealData())
 				continue;
