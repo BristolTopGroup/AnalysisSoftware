@@ -90,6 +90,8 @@ void setConfiguration(ConfigFile config) {
 	cout << "Using pileup-file '" << config.PUFile() << endl;
 	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
 	cout << config.lightJetResoFile() << endl;
+	if (config.jesSystematic()!=0)
+		cout << "Varying all the jets by " << config.jesSystematic() << " sigma(s) (JEC uncertainty)\n";
 	long maxEvents(config.maxEvents());
 	cout << "Maximal number of events to be processed: ";
 	if (maxEvents > 0)
