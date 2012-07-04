@@ -60,7 +60,7 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
 				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 				const METPointer met(event->MET((METAlgorithm::value) metIndex));
 				if (met->et() >= lowerCut && met->et() < upperCut)
 					binnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron, event->weight());
@@ -99,9 +99,9 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
 				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() > lowerCut && met->et() < upperCut)
+				if (met->et() >= lowerCut && met->et() < upperCut)
 					qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 							event->weight());
 			}
@@ -156,9 +156,9 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
 				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() > lowerCut && met->et() < upperCut)
+				if (met->et() >= lowerCut && met->et() < upperCut)
 					qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 							event->weight());
 			}
@@ -189,9 +189,9 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
 				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() > lowerCut && met->et() < upperCut)
+				if (met->et() >= lowerCut && met->et() < upperCut)
 					qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 							event->weight());
 			}
@@ -241,9 +241,9 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
 				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() > lowerCut && met->et() < upperCut)
+				if (met->et() >= lowerCut && met->et() < upperCut)
 					qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 							event->weight());
 			}
@@ -277,9 +277,9 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
 				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
 				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * metBins_.size();
+				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() > lowerCut && met->et() < upperCut)
+				if (met->et() >= lowerCut && met->et() < upperCut)
 					qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 							event->weight());
 			}
@@ -313,16 +313,25 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	metAnalyserqcdNoIsoNoIDSelection_->createHistograms();
 	qcdNoIsoNoIDElectronAnalyser_->createHistograms();
 
-	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-			unsigned int analyserIndex = index + metIndex * metBins_.size();
-			binnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-			qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-			qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-			qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-			qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-			qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-		}
+//	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+//		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+//			unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
+//			binnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+//			qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+//			qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+//			qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+//			qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+//			qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
+//		}
+//	}
+
+	for (unsigned int index = 0; index < binnedElectronAnalysers_.size(); ++ index){
+		binnedElectronAnalysers_.at(index)->createHistograms();
+					qcdConversionBinnedElectronAnalysers_.at(index)->createHistograms();
+					qcdNonIsoBinnedElectronAnalysers_.at(index)->createHistograms();
+					qcdPFRelIsoBinnedElectronAnalysers_.at(index)->createHistograms();
+					qcdAntiIDBinnedElectronAnalysers_.at(index)->createHistograms();
+					qcdNoIsoNoIDBinnedElectronAnalysers_.at(index)->createHistograms();
 	}
 
 }
