@@ -5,7 +5,7 @@ PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 #JES Systematic, the +/- number of uncertainties to vary the jets with
-JESsystematic = 0
+JESsystematic = -1
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis
@@ -20,11 +20,13 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
 mcFolders = [
-           'ZJetsToLL_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           ]
+             #remove the inclusive sample for now as we are not using it
+#           'WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'W1Jet_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'W2Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'W3Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'W4Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
+          ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
 
@@ -47,4 +49,3 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 nTuple_version = 7
-    

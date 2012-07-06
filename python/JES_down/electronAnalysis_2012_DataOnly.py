@@ -5,40 +5,36 @@ PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 #JES Systematic, the +/- number of uncertainties to vary the jets with
-JESsystematic = 0
+JESsystematic = -1
 #number of events to be processed
 maxEvents = 0
 #use HitFit for analysis
 useHitFit = False
 produceFitterASCIIoutput = False
 
-inputFiles = []
+inputFiles = [
+'/storage/TopQuarkGroup/data/2012/ElectronHad/nTuple_v7c_Run2012A-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/*.root'
+]
+
+data_path = '/storage/TopQuarkGroup/data/2012/SingleElectron/'
 filetype = '*.root'
 
+dataFiles = ['nTuple_v7c_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets',
+             'nTuple_v7c_Run2012B-PromptReco-v1_GoldenJSON_Runs_195016-195396_LeptonPlus3Jets'
+              ]
 
-mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
-
-
-mcFolders = [
-           'ZJetsToLL_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           ]
-
-mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
-
-inputFiles.extend(mcFolders)
+dataFiles = [data_path + path + '/' + filetype for path in dataFiles]
+inputFiles.extend(dataFiles)
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5050.#pb-1
+lumi = 2752.4#pb-1
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
-centerOfMassEnergy = 7
+centerOfMassEnergy = 8
 
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
@@ -47,4 +43,3 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 nTuple_version = 7
-    
