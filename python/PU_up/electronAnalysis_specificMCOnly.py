@@ -56,4 +56,4 @@ elif centerOfMassEnergy == 8:
     
 nTuple_version = 7
 
-custom_file_suffix = "_PU_71400mb"
+custom_file_suffix = "PU_71400mb"
