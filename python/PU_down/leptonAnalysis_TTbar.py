@@ -45,3 +45,4 @@ elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 nTuple_version = 7
     
+custom_file_suffix = "_PU_64600mb"

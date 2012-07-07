@@ -68,7 +68,9 @@ struct Globals {
 
 	//MET
 	static METAlgorithm::value metAlgorithm;
-//	static double METCut;
+
+	//miscellaneous
+	static std::string custom_file_suffix;
 };
 
 }

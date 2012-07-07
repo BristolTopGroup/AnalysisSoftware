@@ -278,10 +278,16 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 	std::string jetAlgo = JetAlgorithm::names[Globals::jetAlgorithm];
 	std::string metAlgo = METAlgorithm::names[Globals::metAlgorithm];
 	std::string muonAlgo = MuonAlgorithm::names[Globals::muonAlgorithm];
-	std::string jesSyst = (Globals::JESsystematic>0) ? "_plusJES" : "_minusJES";
-	if (Globals::JESsystematic==0) jesSyst = "";
+	std::string jesSyst = (Globals::JESsystematic > 0) ? "_plusJES" : "_minusJES";
+	std::string suffix = Globals::custom_file_suffix;
+	if (Globals::JESsystematic == 0)
+		jesSyst = "";
+	if (suffix != "")
+		suffix = "_" + suffix;
+
 	str << name << "_" << Globals::luminosity << "pb";
-	str << "_" << electronAlgo << "_" << muonAlgo << "_" << jetAlgo << "_" << metAlgo << jesSyst << ".root";
+	str << "_" << electronAlgo << "_" << muonAlgo << "_" << jetAlgo << "_" << metAlgo;
+	str << jesSyst << suffix << ".root";
 	return str.str();
 
 }

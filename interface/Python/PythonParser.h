@@ -31,6 +31,8 @@ public:
 
 	template<typename T> static T getObjectFromPyDictionary(const boost::python::dict pydict,
 			const std::string key);
+
+	static bool hasAttribute(const boost::python::object pyObject, const std::string attribute);
 };
 
 template<typename T>

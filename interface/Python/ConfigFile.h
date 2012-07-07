@@ -43,6 +43,7 @@ public:
 	unsigned int centerOfMassEnergy() const;
 	unsigned int nTupleVersion() const;
 	int jesSystematic() const;
+	std::string custom_file_suffix() const;
 
 private:
 	boost::program_options::variables_map programOptions;
@@ -60,6 +61,7 @@ private:
 	unsigned int centerOfMassEnergy_;
 	unsigned int nTupleVersion_;
 	int jesSystematic_;
+	std::string custom_file_suffix_;
 //	PileUpReweightingMethod::value pileUpReweightingMethod_;
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);

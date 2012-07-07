@@ -11,7 +11,7 @@ using namespace std;
 
 namespace BAT {
 
-PythonParser::PythonParser(){
+PythonParser::PythonParser() {
 
 }
 
@@ -21,7 +21,7 @@ PythonParser::~PythonParser() {
 boost::python::object PythonParser::parse_python_file(const string configPath) {
 	Py_Initialize();
 	boost::python::object configuration;
-	if(!boost::filesystem::exists(configPath)){
+	if (!boost::filesystem::exists(configPath)) {
 		cerr << "PythonParser::parse_python_file(" << configPath << "): could not find file" << endl;
 		throw "PythonParser::parse_python_file(" + configPath + "): could not find file";
 	}
@@ -57,7 +57,8 @@ boost::python::object PythonParser::parse_python_file(const string configPath) {
 	return configuration;
 }
 
-const vector<string> PythonParser::getVectorFromPythonObject(const boost::python::object pyObject, const string vectorName) {
+const vector<string> PythonParser::getVectorFromPythonObject(const boost::python::object pyObject,
+		const string vectorName) {
 	vector<string> ret;
 	try {
 		boost::python::list myList = boost::python::extract<boost::python::list>(pyObject.attr(vectorName.c_str()));
@@ -114,5 +115,8 @@ string PythonParser::parse_python_exception() {
 	return ret;
 }
 
+bool PythonParser::hasAttribute(const boost::python::object pyObject, const std::string attribute) {
+	return PyObject_HasAttrString(pyObject.ptr(), attribute.c_str());
+}
 
 } /* namespace BAT */

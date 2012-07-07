@@ -35,11 +35,13 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		fitterOutputFlag_(PythonParser::getAttributeFromPyObject<bool>(config, "produceFitterASCIIoutput")), //
 		inputFiles_(PythonParser::getVectorFromPythonObject(config, "inputFiles")), //
 		tqafPath_(PythonParser::getAttributeFromPyObject<string>(config, "TQAFPath")), //
-		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")),//
-		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")),//
-		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")),//
-		jesSystematic_(PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic")){
-
+		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")), //
+		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
+		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
+		jesSystematic_(PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic")), //
+		custom_file_suffix_("") {
+	if(PythonParser::hasAttribute(config, "custom_file_suffix"))
+		custom_file_suffix_ = PythonParser::getAttributeFromPyObject<string>(config, "custom_file_suffix");
 }
 
 boost::program_options::variables_map ConfigFile::getParameters(int argc, char** argv) {
@@ -53,7 +55,8 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("help,h", "produce help message");
 	desc.add_options()("maxEvents", value<unsigned long>(), "set maximal number of events to be processed");
 	desc.add_options()("config-file", value<std::string>(), "Configuration file for BAT");
-	desc.add_options()("datasetInfoFile", value<std::string>(), "Dataset information file for event weight calculation");
+	desc.add_options()("datasetInfoFile", value<std::string>(),
+			"Dataset information file for event weight calculation");
 	desc.add_options()("PUFile", value<std::string>(), "set input PU file for PU re-weighting");
 	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
 	desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
@@ -62,7 +65,10 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("TQAFPath", value<std::string>(),
 			"path to TopQuarkAnalysis folder (the folder itself not included).");
 	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to");
-	desc.add_options()("JESsystematic", value<int>(), "JES systematic, the +/- number of uncertainties to vary the jet with");
+	desc.add_options()("JESsystematic", value<int>(),
+			"JES systematic, the +/- number of uncertainties to vary the jet with");
+	desc.add_options()("custom_file_suffix", value<std::string>(),
+			"Custom file suffix, will be appended to file name.");
 
 	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	notify(vm);
@@ -80,7 +86,7 @@ boost::array<boost::shared_ptr<TF1>, 12> ConfigFile::getL7Correction(std::string
 
 	boost::array<double, 12> towerBinning = { { 0., 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74,
 			2.5 } };
-	if (!boost::filesystem::exists(correctionFile)){
+	if (!boost::filesystem::exists(correctionFile)) {
 		cerr << "ConfigFile::getL7Correction(" << correctionFile << "): could not find file" << endl;
 		throw "Could not find L7 correction path in " + correctionFile;
 	}
@@ -157,9 +163,9 @@ bool ConfigFile::useHitFit() const {
 
 unsigned int ConfigFile::centerOfMassEnergy() const {
 	if (programOptions.count("centerOfMassEnergy"))
-			return programOptions["centerOfMassEnergy"].as<unsigned int>();
-		else
-			return centerOfMassEnergy_;
+		return programOptions["centerOfMassEnergy"].as<unsigned int>();
+	else
+		return centerOfMassEnergy_;
 }
 
 bool ConfigFile::fitterOutputFlag() const {
@@ -185,6 +191,13 @@ int ConfigFile::jesSystematic() const {
 		return programOptions["JESsystematic"].as<int>();
 	else
 		return jesSystematic_;
+}
+
+string ConfigFile::custom_file_suffix() const {
+	if (programOptions.count("custom_file_suffix"))
+		return programOptions["custom_file_suffix"].as<string>();
+	else
+		return custom_file_suffix_;
 }
 
 ConfigFile::~ConfigFile() {
@@ -249,16 +262,17 @@ void ConfigFile::loadIntoMemory() {
 
 	Globals::NTupleVersion = nTupleVersion();
 	Globals::energyInTeV = centerOfMassEnergy();
+
+	Globals::custom_file_suffix = custom_file_suffix();
 }
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
 	using namespace std;
 
-	if (!boost::filesystem::exists(pileUpEstimationFile)){
+	if (!boost::filesystem::exists(pileUpEstimationFile)) {
 		cerr << "ConfigFile::getPileUpHistogram(" << pileUpEstimationFile << "): could not find file" << endl;
 		throw "Could not find pile-up histogram file in " + pileUpEstimationFile;
 	}
-
 
 	boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
 	boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
@@ -270,4 +284,5 @@ boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimat
 unsigned int ConfigFile::nTupleVersion() const {
 	return nTupleVersion_;
 }
+
 } /* namespace BAT */
