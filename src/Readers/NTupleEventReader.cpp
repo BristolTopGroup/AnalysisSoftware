@@ -180,8 +180,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
-		//		metReader->initialise();
-		genMetReader->initialiseBlindly();
+		genMetReader->initialise();
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();

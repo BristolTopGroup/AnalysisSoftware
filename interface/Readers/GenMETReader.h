@@ -20,11 +20,11 @@ public:
     const METPointer getGenMET();
     virtual ~GenMETReader();
     void initialise();
-    void initialiseBlindly();
+//    void initialiseBlindly();
 private:
-    VariableReader<double> exReader;
-    VariableReader<double> eyReader;
-    METPointer GenMet;
+    VariableReader<MultiDoublePointer> exReader;
+    VariableReader<MultiDoublePointer> eyReader;
+    METPointer genMET_;
     void readGenMET();
 };
 

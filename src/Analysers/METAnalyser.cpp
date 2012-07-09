@@ -15,6 +15,8 @@ void METAnalyser::analyse(const EventPtr event) {
 
 	if (!event->isRealData()) {
 		histMan_->H1D("GenMET")->Fill(event->GenMET()->et(), weight_);
+		histMan_->H1D("GenMET_Ex")->Fill(event->GenMET()->px(), weight_);
+		histMan_->H1D("GenMET_Ey")->Fill(event->GenMET()->py(), weight_);
 		histMan_->H1D("GenMET_phi")->Fill(event->GenMET()->phi(), weight_);
 	}
 
@@ -22,9 +24,9 @@ void METAnalyser::analyse(const EventPtr event) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
-			if (index == METAlgorithm::patType1p2CorrectedPFMetJetResUp || index
-					== METAlgorithm::patType1p2CorrectedPFMetJetResDown)
-				if (event->isRealData())//these METs are MC only (Jet resolution systematics)
+			if (index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown)
+				if (event->isRealData()) //these METs are MC only (Jet resolution systematics)
 					continue;
 			const METPointer met(event->MET(metType));
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
@@ -78,10 +80,13 @@ double METAnalyser::transverseMass(const METPointer met, const ParticlePointer p
 void METAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
-	histMan_->addH1D("GenMET", "Generated Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0,
-			1000);
-	histMan_->addH1D("GenMET_phi", "#phi(Generated Missing transverse energy);#phi(#slash{E}_{T});Events/0.1",
-			80, -4, 4);
+	histMan_->addH1D("GenMET", "Generated Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0, 1000);
+	histMan_->addH1D("GenMET_Ex", "Generated Missing energy y-component; #slash{E}_{X}/GeV; events/1 GeV", 1000, -500,
+			500);
+	histMan_->addH1D("GenMET_Ey", "Generated Missing energy y-component; #slash{E}_{Y}/GeV; events/1 GeV", 1000, -500,
+			500);
+	histMan_->addH1D("GenMET_phi", "#phi(Generated Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80, -4,
+			4);
 
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
@@ -92,11 +97,11 @@ void METAnalyser::createHistograms() {
 			//do not create other histograms for met systematics
 			if (index > METAlgorithm::patType1p2CorrectedPFMet)
 				continue;
-			histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1",
-					80, -4, 4);
-			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0, 1000);
-			histMan_->addH2D_BJetBinned(
-					"METsignificance_vs_MET",
+			histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80,
+					-4, 4);
+			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0,
+					1000);
+			histMan_->addH2D_BJetBinned("METsignificance_vs_MET",
 					"Missing transverse energy vs Missing transverse energy significance;#slash{E}_{T}/GeV; #slash{E}_{T} significance",
 					200, 0, 1000, 1000, 0, 1000);
 
@@ -110,7 +115,7 @@ void METAnalyser::createHistograms() {
 }
 
 METAnalyser::METAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
-	BasicAnalyser(histMan, histogramFolder) {
+		BasicAnalyser(histMan, histogramFolder) {
 
 }
 

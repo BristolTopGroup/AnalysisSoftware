@@ -10,7 +10,9 @@
 namespace BAT {
 
 METReader::METReader() :
-		exReader(), eyReader(), met() {
+		exReader(),//
+		eyReader(),//
+		met() {
 
 }
 

@@ -10,36 +10,34 @@
 namespace BAT {
 
 GenMETReader::GenMETReader() :
-		exReader(), eyReader(), GenMet() {
+		exReader(),//
+		eyReader(),//
+		genMET_() {
 
 }
 
 GenMETReader::GenMETReader(TChainPointer input) :
 		exReader(input, "GenMET.ExTrue"), //
-		eyReader(input, "GenMET.EyTrue") //
-		{
+		eyReader(input, "GenMET.EyTrue"), //
+		genMET_() {
 
 }
 
 GenMETReader::~GenMETReader() {
 }
 
+//MC content only
 void GenMETReader::initialise() {
-	exReader.initialise();
-	eyReader.initialise();
-}
-
-void GenMETReader::initialiseBlindly() {
 	exReader.initialiseBlindly();
 	eyReader.initialiseBlindly();
 }
 
 const METPointer GenMETReader::getGenMET() {
 	readGenMET();
-	return GenMet;
+	return genMET_;
 }
 
 void GenMETReader::readGenMET() {
-	GenMet = METPointer(new MET(exReader.getVariable(), eyReader.getVariable()));
+	genMET_ = METPointer(new MET(exReader.getVariableAt(0), eyReader.getVariableAt(0)));
 }
 }
