@@ -35,6 +35,7 @@ NTupleEventReader::NTupleEventReader() :
 			jetReader(new JetReader(input, Globals::jetAlgorithm)), //
 			genJetReader(new GenJetReader(input)), //
 			muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
+			genMetReader(new GenMETReader(input)), //
 			metReaders(), //
 			runNumberReader(new VariableReader<unsigned int> (input, "Event.Run")), //
 			eventNumberReader(new VariableReader<unsigned int> (input, "Event.Number")), //
@@ -108,6 +109,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	if (!currentEvent->isRealData()) {
 		currentEvent->setGenParticles(genParticleReader->getGenParticles());
 		currentEvent->setGenJets(genJetReader->getGenJets());
+		currentEvent->setGenMET(genMetReader->getGenMET());
 		currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 		currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
 
@@ -179,6 +181,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		genJetReader->initialise();
 		muonReader->initialise();
 		//		metReader->initialise();
+		genMetReader->initialiseBlindly();
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();

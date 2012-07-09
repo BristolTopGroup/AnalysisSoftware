@@ -13,6 +13,11 @@ void METAnalyser::analyse(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = event->weight() * prescale_;
 
+	if (!event->isRealData()) {
+		histMan_->H1D("GenMET")->Fill(event->GenMET()->et(), weight_);
+		histMan_->H1D("GenMET_phi")->Fill(event->GenMET()->phi(), weight_);
+	}
+
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
@@ -72,6 +77,12 @@ double METAnalyser::transverseMass(const METPointer met, const ParticlePointer p
 
 void METAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
+
+	histMan_->addH1D("GenMET", "Generated Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0,
+			1000);
+	histMan_->addH1D("GenMET_phi", "#phi(Generated Missing transverse energy);#phi(#slash{E}_{T});Events/0.1",
+			80, -4, 4);
+
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {

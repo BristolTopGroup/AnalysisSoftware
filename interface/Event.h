@@ -63,6 +63,7 @@ protected:
 	MCParticleCollection genParticles;
 
 	METCollection mets_;
+	METPointer genMet_;
 
 	DataType::value dataType;
 	unsigned long runNumber;
@@ -101,6 +102,7 @@ public:
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
 	void setMETs(const std::vector<METPointer> mets);
+	void setGenMET(const METPointer met);
 	void setHLTs(const boost::shared_ptr<std::vector<int> >);
 	void setHLTPrescales(const boost::shared_ptr<std::vector<int> >);
 	void setFile(std::string file);
@@ -152,6 +154,7 @@ public:
 //	const MuonCollection& GoodPFIsolatedMuons() const;
 	const METPointer MET() const;
 	const METPointer MET(METAlgorithm::value type) const;
+	const METPointer GenMET() const;
 
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&, bool usePFIso) const;
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;

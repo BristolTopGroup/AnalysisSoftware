@@ -45,6 +45,7 @@ Event::Event() : //
 //		looseMuons(), //
 		genParticles(), //
 		mets_(), //
+		genMet_(), //
 		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
@@ -373,6 +374,10 @@ void Event::setMETs(const std::vector<METPointer> mets) {
 	mets_ = mets;
 }
 
+void Event::setGenMET(const METPointer met) {
+	genMet_ = met;
+}
+
 void Event::setFile(string file) {
 	file_ = file;
 }
@@ -498,6 +503,10 @@ const MCParticleCollection& Event::GenParticles() const {
 
 const METPointer Event::MET() const {
 	return MET(Globals::metAlgorithm);
+}
+
+const METPointer Event::GenMET() const {
+	return genMet_;
 }
 
 const METPointer Event::MET(METAlgorithm::value type) const {

@@ -55,7 +55,7 @@ void Analysis::analyse() {
 		if (Globals::useHitFit) {
 			hitfitAnalyser->analyse(currentEvent);
 		}
-//		metAnalyser->analyse(currentEvent);
+		metAnalyser->analyse(currentEvent);
 		mttbarAnalyser->analyse(currentEvent);
 		muonAnalyser->analyse(currentEvent);
 //		mvAnalyser->analyse(currentEvent);
@@ -183,10 +183,10 @@ void Analysis::createHistograms() {
 	cout << "Number of histograms added by mcAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-//	metAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by metAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
+	metAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by metAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
 
 	mttbarAnalyser->createHistograms();
 	numberOfHistograms = histMan->size();
