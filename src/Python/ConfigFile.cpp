@@ -38,9 +38,11 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")), //
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
 		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
-		jesSystematic_(PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic")), //
+		jesSystematic_(0), //
 		custom_file_suffix_(""), //
 		pdfWeightNumber_(0){
+	if(PythonParser::hasAttribute(config, "JESsystematic"))
+		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
 	if(PythonParser::hasAttribute(config, "custom_file_suffix"))
 		custom_file_suffix_ = PythonParser::getAttributeFromPyObject<string>(config, "custom_file_suffix");
 	if(PythonParser::hasAttribute(config, "pdfWeightNumber"))

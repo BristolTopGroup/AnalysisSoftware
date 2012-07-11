@@ -280,6 +280,7 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 	std::string muonAlgo = MuonAlgorithm::names[Globals::muonAlgorithm];
 	std::string jesSyst = (Globals::JESsystematic > 0) ? "_plusJES" : "_minusJES";
 	std::string suffix = Globals::custom_file_suffix;
+	std::string pdfWeight = (Globals::pdfWeightNumber != 0) ? "_PDF_" + boost::lexical_cast<std::string>(Globals::pdfWeightNumber) : "";
 	if (Globals::JESsystematic == 0)
 		jesSyst = "";
 	if (suffix != "")
@@ -287,7 +288,7 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 
 	str << name << "_" << Globals::luminosity << "pb";
 	str << "_" << electronAlgo << "_" << muonAlgo << "_" << jetAlgo << "_" << metAlgo;
-	str << jesSyst << suffix << ".root";
+	str << jesSyst << pdfWeight << suffix << ".root";
 	return str.str();
 
 }
