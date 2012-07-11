@@ -44,6 +44,7 @@ public:
 	unsigned int nTupleVersion() const;
 	int jesSystematic() const;
 	std::string custom_file_suffix() const;
+	unsigned int pdfWeightNumber() const;
 
 private:
 	boost::program_options::variables_map programOptions;
@@ -62,6 +63,7 @@ private:
 	unsigned int nTupleVersion_;
 	int jesSystematic_;
 	std::string custom_file_suffix_;
+	unsigned int pdfWeightNumber_;
 //	PileUpReweightingMethod::value pileUpReweightingMethod_;
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);

@@ -86,6 +86,14 @@ void Analysis::initiateEvent() {
 		else
 			pileUpWeight = 1.;
 		weight *= pileUpWeight;
+		if (Globals::pdfWeightNumber != 0){
+			try {
+				weight *= currentEvent->PDFWeights().at(Globals::pdfWeightNumber)/currentEvent->PDFWeights().at(0);
+			}
+			catch( exception& e ){
+				cout << "PDF weight assigning exception: " << e.what() << endl;
+			}
+		}
 	}
 
 	currentEvent->setEventWeight(weight);

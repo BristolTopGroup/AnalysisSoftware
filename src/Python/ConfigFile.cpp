@@ -39,9 +39,12 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
 		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
 		jesSystematic_(PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic")), //
-		custom_file_suffix_("") {
+		custom_file_suffix_(""), //
+		pdfWeightNumber_(0){
 	if(PythonParser::hasAttribute(config, "custom_file_suffix"))
 		custom_file_suffix_ = PythonParser::getAttributeFromPyObject<string>(config, "custom_file_suffix");
+	if(PythonParser::hasAttribute(config, "pdfWeightNumber"))
+		pdfWeightNumber_ = PythonParser::getAttributeFromPyObject<unsigned int>(config, "pdfWeightNumber");
 }
 
 boost::program_options::variables_map ConfigFile::getParameters(int argc, char** argv) {
@@ -68,7 +71,9 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("JESsystematic", value<int>(),
 			"JES systematic, the +/- number of uncertainties to vary the jet with");
 	desc.add_options()("custom_file_suffix", value<std::string>(),
-			"Custom file suffix, will be appended to file name.");
+			"Custom file suffix, will be appended to file name");
+	desc.add_options()("pdfWeightNumber", value<unsigned int>(),
+			"Number of PDF weight to multiply the event weight with");
 
 	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	notify(vm);
@@ -200,6 +205,13 @@ string ConfigFile::custom_file_suffix() const {
 		return custom_file_suffix_;
 }
 
+unsigned int ConfigFile::pdfWeightNumber() const {
+	if (programOptions.count("pdfWeightNumber"))
+		return programOptions["pdfWeightNumber"].as<unsigned int>();
+	else
+		return pdfWeightNumber_;
+}
+
 ConfigFile::~ConfigFile() {
 }
 
@@ -264,6 +276,7 @@ void ConfigFile::loadIntoMemory() {
 	Globals::energyInTeV = centerOfMassEnergy();
 
 	Globals::custom_file_suffix = custom_file_suffix();
+	Globals::pdfWeightNumber = pdfWeightNumber();
 }
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {

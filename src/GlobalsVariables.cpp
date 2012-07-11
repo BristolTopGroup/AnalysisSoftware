@@ -50,4 +50,6 @@ boost::array< boost::shared_ptr<TF1>, 12 > Globals::lightL7Corrections = {{
 METAlgorithm::value Globals::metAlgorithm = METAlgorithm::patType1CorrectedPFMet;
 
 std::string Globals::custom_file_suffix = "";
+unsigned int Globals::pdfWeightNumber = 0;
+
 }
