@@ -25,10 +25,9 @@ def plotMttbar():
     HistPlotter.setStyle()
     lumi = 5050.0#1959.75#1611.95
 #    lumi = 1091.45
-    oldLumi = 5050
+    oldLumi = 5050#/(0.95**2)
     scale = lumi / oldLumi;
-    prefix = 'CiCID_'
-    prefix = 'EPlusJets_'
+    
     outputFormats = [
                      'pdf', 
                      'png']
@@ -41,23 +40,6 @@ def plotMttbar():
     print 'W+jets scale', wjetScale
     hists = [];
     
-#    hists.append("jetStudy/AllJetMass");
-#    hists.append("jetStudy/AllGoodJetMass");
-#    hists.append("jetStudy/GoodJetMass_atLeastOneJets");
-#    hists.append("jetStudy/GoodJetMass_atLeastTwoJets");
-#    hists.append("jetStudy/GoodJetMass_atLeastThreeJets");
-#    hists.append("jetStudy/GoodJetMass_atLeastFourJets");
-#    hists.append("topReconstruction/mtW_withMETAndAsymJets");
-#    hists.append("topReconstruction/neutrino_pz");
-#    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR03")
-#    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR04")
-#    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR05")
-#    hists.append("QCDStudy/PFIsolation_WithMETCutAndAsymJetCuts_DR03")
-#    hists.append("QCDStudy/DirectionalIsolation_WithMETCutAndAsymJetCuts_DR02")
-#    hists.append("QCDStudy/DirectionalIsolation_WithMETCutAndAsymJetCuts_DR03")
-#    hists.append("QCDStudy/DirectionalIsolationWithGaussianFallOff_WithMETCutAndAsymJetCuts_DR02")
-#    hists.append("QCDStudy/DirectionalIsolationWithGaussianFallOff_WithMETCutAndAsymJetCuts_DR03")
-#    hists.append("QCDStudy/PFIsolation_controlRegion")
 #    hists.append('VertexAnalyser/nVertex_withMETAndAsymJets')
 #    hists.append('VertexAnalyser/nVertex_reweighted_withMETAndAsymJets')
 #    hists.append('VertexAnalyser/nVertex_reweighted_PUWeightInTimeOnly_withMETAndAsymJets')
@@ -72,34 +54,38 @@ def plotMttbar():
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/ttbar_pt_withMETAndAsymJets')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_0-30/electron_eta')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_30-50/electron_eta')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_50-75/electron_eta')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron_METbin_75-inf/electron_eta')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET')
-    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/Electron/electron_eta')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron/electron_eta')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron/electron_eta')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/Electron/electron_eta')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron/electron_eta')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron/electron_pfIsolation_03')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Electron/electron_pt')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_0-25/electron_eta')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_25-45/electron_eta')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_45-70/electron_eta')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_70-100/electron_eta')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_100-inf/electron_eta')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET')
+    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/MET_phi')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET_phi')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET')
+    
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/Transverse_Mass')
 #    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patMETsPFlow/Angle_lepton_MET')
-#    hists.append('MttbarAnalysis/MuonPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
-#    hists.append('MttbarAnalysis/MuonPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/MET_phi')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/MET/patMETsPFlow/Transverse_Mass')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/Transverse_Mass')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCDConversions/MET/patMETsPFlow/MET')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/Transverse_Mass')
-#    hists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03')
     
     
     
     files = inputFiles.files
-    hists = HistGetter.getHistsFromFiles(hists, files, bJetBins=['0btag', '1btag', '2orMoreBtags'])
+    hists = HistGetter.getHistsFromFiles(hists, files, bJetBins=['0orMoreBtag',
+                                                                 '0btag', 
+                                                                 '1btag', 
+                                                                 '2orMoreBtags'])
     suffixes = HistPlotter.allBjetBins
 #    suffixes = ["0orMoreBtag", '0btag',
 #        "1orMoreBtag",
@@ -118,8 +104,9 @@ def plotMttbar():
     jetBinnedhists = HistGetter.getHistsFromFiles(jetBinnedhists, files, jetBins=HistPlotter.allJetBins)
     
     otherHists = []
-#    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/Electron/electron_pT')
-    otherHists.append('ElectronAnalysis/All_Electron_mvaTrigV0')
+    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Vertices/nVertex')
+    otherHists.append('TTbarEplusJetsPlusMetAnalysis/Ref selection/Vertices/nVertex_reweighted')
+#    otherHists.append('ElectronAnalysis/All_Electron_mvaTrigV0')
 #    otherHists.append('VertexAnalyser/nVertex')
 #    otherHists.append('VertexAnalyser/nVertex_reweighted')
 #    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeightInTimeOnly')
@@ -221,18 +208,7 @@ def plotMttbar():
             hist_qcd = qcdHists['data'][qcd3JetsFromData]
         
                 
-#        if not 'background' in histname and not 'QCDStudy' in histname and 'withMETAndAsymJets' in histname:  
-#            currentBin = HistPlotter.getBjetBin(histname)
-#              
-#            estimate, err = QCDEstimation.getQCDEstimate(files['data'], bjetBin=currentBin,histogramForEstimation = )
-#            if not estimate == 0:
-#                relativeQCDEstimationError = err / estimate
-#                
-#            print 'Estimated QCD background: %.1f +- %.1f' % (estimate, err)
-#            if(hist_qcd.Integral() > 0 and estimate >= 0):
-#                hist_qcd.Scale(estimate / hist_qcd.Integral())
-        
-        if 'TTbarEplusJetsPlusMetAnalysis' in histname and not 'QCD' in histname:
+        if 'TTbarEplusJetsPlusMetAnalysis' in histname and not 'QCD' in histname and not 'Vertices' in histname:
             qcdRateEstimate = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03'
 #            qcdRateEstimate = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03'
             currentBin = HistPlotter.getBjetBin(histname)
@@ -256,8 +232,16 @@ def plotMttbar():
             if 'btag' in histname.lower():#always use 0 b-tag bin if available
                 currentBin = HistPlotter.getBjetBin(histname)
                 variable = variable.replace(currentBin, '0btag')
+                
             qcdShapeFromData = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/' + analyser + '/' + variable
             qcdShapeComparison = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/' + analyser + '/' + variable
+            
+            if 'BinnedMETAnalysis' in histname:
+                qcdShapeFromData = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/QCDConversions/' + analyser + '/' + variable
+                qcdShapeComparison = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/QCD non iso e+jets/' + analyser + '/' + variable
+            
+#            qcdShapeFromData = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/QCD non iso e+jets/' + analyser + '/' + variable
+#            qcdShapeComparison = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/QCDConversions/' + analyser + '/' + variable
             print 'QCD shape from Data:', qcdShapeFromData
             qcdHists = HistGetter.getHistsFromFiles([qcdShapeFromData], {'data':files['data']})
             
@@ -638,8 +622,22 @@ def plotMttbar():
             postfix = '_log'
         if normalise:
             postfix = postfix + '_norm'
-        name = ''.join(histname[:histname.rfind('/') + 1]) + prefix + ''.join(histname[histname.rfind('/') + 1:])
-        saveAs(canvas=canvases[-1], name=name + postfix, outputFormats=outputFormats, outputFolder=savePath)
+            
+        prefix = 'EPlusJets_'
+        selectionLabel = ''
+        if 'Ref' in histname:
+            selectionLabel = 'Ref_'
+        if 'QCDConversions' in histname:
+            selectionLabel = 'QCDConversions_'
+        if 'QCD non iso e+jets' in histname:
+            selectionLabel = 'AntiIsolated_'
+            
+        name = ''.join(histname[:histname.rfind('/') + 1]) + prefix + selectionLabel + ''.join(histname[histname.rfind('/') + 1:]) + postfix
+        #specific selections
+        
+        
+#        fullName = name.replace('EPlusJets', 'EPlusJets' + selectionLabel) + postfix
+        saveAs(canvas=canvases[-1], name=name, outputFormats=outputFormats, outputFolder=savePath)
         del canvases[-1]
 
         cu_hist_data = getCumulativePlot(hist_data, "data_" + histname);

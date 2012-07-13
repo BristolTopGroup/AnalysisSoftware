@@ -1,13 +1,15 @@
 lumi = 5050
-folder = '/storage/results/histogramfiles/2012/7TeV'
+folder = '/storage/results/histogramfiles/2012/7TeV/PU_up'
 #folder = '/scratch/results/histogramFiles/NewCode'
 identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET'
+#identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_64600mb'
+identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_71400mb'
 
 files = {
 #    'data':"%s/MuHad_%dpb_%s.root" % (folder, lumi, identifier),
     'data':"%s/ElectronHad_%dpb_%s.root" % (folder, lumi, identifier),
     'ttbar' : "%s/TTJet_%dpb_%s.root" %(folder, lumi, identifier),
-    'wjets' : "%s/WJetsToLNu_%dpb_%s.root" %(folder, lumi, identifier),
+#    'wjets' : "%s/WJetsToLNu_%dpb_%s.root" %(folder, lumi, identifier),
     'W1Jet' : "%s/W1Jet_%dpb_%s.root" %(folder, lumi, identifier),
     'W2Jets' : "%s/W2Jets_%dpb_%s.root" %(folder, lumi, identifier),
     'W3Jets' : "%s/W3Jets_%dpb_%s.root" %(folder, lumi, identifier),

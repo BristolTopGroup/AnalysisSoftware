@@ -337,9 +337,9 @@ if __name__ == '__main__':
     function = 'expo'
     hist = 'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03'
     
-    doEstimation(files, function, hist)
-    print "MC performance"
-    doMCPerformance(files, function, hist)
+#    doEstimation(files, function, hist)
+#    print "MC performance"
+#    doMCPerformance(files, function, hist)
     
 #    doComparisonFitFunctions(files)
     
