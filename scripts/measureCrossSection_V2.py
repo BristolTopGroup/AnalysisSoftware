@@ -12,11 +12,9 @@ from tools import Styles
 import tools.PlottingUtilities as plotting
 import QCDRateEstimation
 from copy import deepcopy
+from decimal import *
+import numpy
 savePath = "/storage/results/plots/DiffMETMeasurement/"
-
-availableSamples = FILES.samplesToLoad
-files = FILES.files
-lumi = FILES.luminosity
 
 normalisation = None
 qcdError = 1 
@@ -49,7 +47,9 @@ wjetsScaleFactor = 1
 zjetsScaleFactor = 1
 
 fit_index = 0
-rebin = 1
+
+use_fit_errors_only = False
+measure_normalised_crossection = False
 
 qcd_samples = [ 'QCD_Pt-20to30_BCtoE',
                  'QCD_Pt-30to80_BCtoE',
@@ -71,10 +71,13 @@ diboson_samples = [ 'WWtoAnything', 'WZtoAnything', 'ZZtoAnything']
 signal_samples = [ 'TTJet', 'SingleTop']
 allMC_samples = [ 'TTJet', 'DYJetsToLL', 'QCD', 'Di-Boson', 'W+Jets', 'SingleTop']
 
+theoryXsection = 157.5
+
 #DO NOT USE theory x-section but rather just the total luminosity*selection efficiency
-def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
+def getTtbarCrossSection(vectors_={}, normalisation_={}):
+    
     #at the moment store the values in the global variables. Not good but the only way it works with current setup
-    global normalisation, vectors
+    global normalisation, vectors, theoryXsection
     normalisation = normalisation_
     vectors = vectors_
         
@@ -135,7 +138,15 @@ def getTtbarCrossSection(vectors_={}, normalisation_={}, theoryXsection=157.5):
     value_minusError = value - (signalFitError / normfactor)
     error = (abs(value_plusError - value) + abs(value - value_minusError)) / 2
     fit = makeFit(fitvalues, vectors)
-    return fit, value, error, fitvalues, fitErrors
+    result = {
+              'fit' : fit,
+              'value' : value,
+              'error':error,
+              'fitvalues' : fitvalues,
+              'fiterrors': fitErrors
+              }
+    return result
+#    return fit, value, error, fitvalues, fitErrors
 
 def makeFit(fitvalues, templates):
     global fit_index
@@ -207,7 +218,7 @@ def getTemplates(histograms):
     for sample in histograms.keys():
         hist = histograms[sample].Clone()
         hist.Sumw2()
-        templates[sample] = plotting.normalise(hist)
+        templates[sample] = plotting.normalise(deepcopy(hist))
     return templates 
 
 def vectorise(histograms):
@@ -237,10 +248,7 @@ def sumSamples(hists):
     hists['Signal'] = plotting.sumSamples(hists, signal_samples)
     return hists
 
-def rescaleSamples(hists):
-    return hists    
-
-def performMeasurement(distribution, qcdDistribution, listOfFiles, rebin, data_distribution = '', data_qcdDistribution = ''):
+def performMeasurement(distribution, qcdDistribution, listOfFiles, rebin, data_distribution='', data_qcdDistribution=''):
     if data_distribution == '':
         data_distribution = distribution
     if data_qcdDistribution == '':
@@ -266,8 +274,8 @@ def performMeasurement(distribution, qcdDistribution, listOfFiles, rebin, data_d
     qcdHists = plotting.rebin(qcdHists, rebin)#rebin to 200 bins
     qcdHists = plotting.setYTitle(qcdHists, title="events/5 GeV")
     #rescale hists if needed
-    hists = rescaleSamples(hists)
-    qcdHists = rescaleSamples(qcdHists)
+#    hists = rescaleSamples(hists)
+#    qcdHists = rescaleSamples(qcdHists)
     #add samples together: QCD, SumMC, singleTOP, W+Jets
     hists = sumSamples(hists)
     qcdHists = sumSamples(qcdHists)
@@ -304,8 +312,9 @@ def performMeasurement(distribution, qcdDistribution, listOfFiles, rebin, data_d
         print '*' * 120
     normalisation['QCD'] = qcdNormalisation
     
-    fit, value, error, fitvalues, fitErrors = getTtbarCrossSection(vectors, normalisation)
-    
+    result = getTtbarCrossSection(vectors, normalisation)
+    fitvalues = result['fitvalues']
+    fitErrors = result['fiterrors']
     sumMC = fitvalues[0] + fitvalues[1] + fitvalues[2] + fitvalues[3] + fitvalues[4]
     if DEBUG:
         print '*' * 120
@@ -330,7 +339,17 @@ def performMeasurement(distribution, qcdDistribution, listOfFiles, rebin, data_d
                       'ElectronHad': normalisation['ElectronHad'],
                       'SingleTop': normalisation['SingleTop']
                       }
-    return value, error, fit, fitvalues_dict, fitErrors
+    
+    fiterrors_dict = {'Signal': fitErrors[0],
+                      'W+Jets': fitErrors[1],
+                      'DYJetsToLL': fitErrors[2],
+                      'QCDFromData': fitErrors[3],
+                      'Di-Boson': fitErrors[4],
+                      'TTJet': fitErrors[0],
+                      'ElectronHad': 0,
+                      'SingleTop': 0
+                      }
+    return value, error, fit, fitvalues_dict, fiterrors_dict
         
 def makeMeasurementPlot(metbins, results, btagBin):
     gROOT.SetBatch(True)
@@ -350,7 +369,8 @@ def makeMeasurementPlot(metbins, results, btagBin):
     bin = 1
     for metbin in metbins:
         result = results[metbin]
-        error = sqrt(result['statError'] ** 2 + result['totalSystematic'] ** 2)
+        totalUncertainty, totalUncertainty_minus, totalUncertainty_plus = calculateTotalUncertainty(result)
+        error = sqrt(result['statError'] ** 2 + totalUncertainty ** 2)
         plot.SetBinContent(bin, result['centralValue'])
         plot.SetBinError(bin, error)
         plotMC.SetBinContent(bin, result['theoryXsection'])
@@ -360,7 +380,7 @@ def makeMeasurementPlot(metbins, results, btagBin):
     plotMC.Draw('hist same')
     plot.Draw('error same')
     legend.Draw()
-    c.SaveAs(savePath +'EPlusJets_diff_MET_xsection_%s.png' % btagBin)
+    c.SaveAs(savePath + 'EPlusJets_diff_MET_xsection_%s.png' % btagBin)
     c.SaveAs(savePath + 'EPlusJets_diff_MET_xsection_%s.pdf' % btagBin)
     
 def printMetSystematics(metbins, results, btagBin):
@@ -370,282 +390,655 @@ def printMetSystematics(metbins, results, btagBin):
     rows = {}
     total = {}
     for metbin in metbins:
-        totalUp = 0
-        totalDown = 0
         header += ' & ' + 'MET %s~\GeV' % metbin 
         result = results[metbin]
+        centralvalue = result['centralValue']
         metsystematics = result['systematics']
+        errors_on_systematics = result['errors_on_systematics']
+        totalUncertainty, totalUncertainty_minus, totalUncertainty_plus = calculateTotalUncertainty(result)
+        values = result['values']
+        statErrors = result['statErrors']
+        pdfweight_minus, pdfweight_plus = calculatePDFErrors(values, statErrors)
+        metsystematics['PDFWeightsPlus'] = pdfweight_plus
+        metsystematics['PDFWeightsMinus'] = pdfweight_minus
+        
+        errors_on_systematics['PDFWeightsPlus'] = 0
+        errors_on_systematics['PDFWeightsMinus'] = 0
         
         for source in sorted(metsystematics.keys()):
-#            if 'lumi' in source or 'QCD' in source or 'singleTop' in source:
-#                continue
             systematic = metsystematics[source]
+            error_on_systematic = errors_on_systematics[source]
             source = source.replace(prefix, '')
-            if 'up' in source.lower() or 'plus' in source.lower():
-                 totalUp += systematic ** 2
-            else:
-                totalDown += systematic ** 2
-                if 'QCDShape' in source:
-                    totalUp += systematic ** 2
+            if 'PDFWeights_' in source:
+                continue
+
             if not rows.has_key(source):
-                rows[source] = '%.2f' % systematic
+                rows[source] = '(%.2f \pm %.2f)' % (systematic, error_on_systematic)
             else:
-                rows[source] += '& %.2f' % systematic
-        totalUp = sqrt(totalUp)
-        totalDown = sqrt(totalDown)
+                rows[source] += '& (%.2f \pm %.2f)' % (systematic, error_on_systematic)
+        
+        if not rows.has_key('PDFWeights'):
+            rows['PDFWeights'] = '(%.2f \pm %.2f)' % (totalPDF, totalPDFError*100) 
+        else:
+            rows['PDFWeights'] += '(%.2f \pm %.2f)' % (totalPDF*100, totalPDFError*100)
+            
         if not rows.has_key('TotalUp'):
-            rows['TotalUp'] = '%.2f' % totalUp
+            rows['TotalUp'] = '%.2f' % (totalUncertainty_plus) 
         else:
-            rows['TotalUp'] += '& %.2f' % totalUp
+            rows['TotalUp'] += '& %.2f' % (totalUncertainty_plus)
         if not rows.has_key('TotalDown'):
-            rows['TotalDown'] = '%.2f' % totalDown
+            rows['TotalDown'] = '-%.2f' % (totalUncertainty_minus)
         else:
-            rows['TotalDown'] += '& %.2f' % totalDown
+            rows['TotalDown'] += '&-%.2f' % (totalUncertainty_minus)
     
     printout += header + '\\\\\n'
     printout += '\hline\n'
-    for source, value in rows.iteritems():
+    for source in sorted(rows.keys()):
+        value = rows[source]
+        if 'Total' in source:
+            continue
         printout += source + ' & ' + value + '\\\\\n'
-    systematics_file = open(savePath + 'systematics_%s.tex' %btagBin, 'w' )
+    printout += 'PDFWeights' + ' & ' + rows['PDFWeights'] + '\\\\\n'
+    printout += 'TotalUp' + ' & ' + rows['TotalUp'] + '\\\\\n'
+    printout += 'TotalDown' + ' & ' + rows['TotalDown'] + '\\\\\n'
+    systematics_file = open(savePath + 'systematics_%s.tex' % btagBin, 'w')
     systematics_file.write(printout)
     systematics_file.close()
         
 def doBinnedAnalysis(metBins, btagBin):
     print "Performing measurement in", btagBin
-    global lumiScaleFactor, singleTopScaleFactor, ttbarScaleFactor, unbinnedTTbarEvents, vectors
-    global rebin
+    global lumiScaleFactor, singleTopScaleFactor, ttbarScaleFactor, unbinnedTTbarEvents, vectors, theoryXsection
     results = {}
     base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
     
-    rebin = 1
+    rebin = 10
     fit, fitvalues, fiterrors, templates = (None, None, None, None)
     for metbin in metBins:
+        values = {}
+        statErrors = {}
+        fits = {}
+        fitvalues_dict = {}
+        fiterrors_dict = {}
+        templates_dict = {}
         systematics = {}
+        errors_on_systematics = {}
+        
+        
         print "Performing central measurement in", btagBin, 'MET:', metbin
         #central measurement
         distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, btagBin)
        #should always use 0-btag region!!                  
         qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
         centralValue, statError, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['central'] = centralValue
+        statErrors['central'] = statError
+        fits['central'] = fit
+        fitvalues_dict['central'] = fitvalues
+        fiterrors_dict['central'] = fiterrors
+        templates_dict['central'] = vectors
+        centralRelativeError = getRelativeError(centralValue, statError)
         templates = vectors
         #get x-section from simulation only
         distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, btagBin)
         ttbarHist = FileReader.getHistogramFromFile(distribution, FILES.files['TTJet'])
-        theoryXsection = ttbarHist.Integral() / unbinnedTTbarEvents * 157.5
+        theoryXsection_inBin = ttbarHist.Integral() / unbinnedTTbarEvents * theoryXsection
         print "Performing measurements for systematics in", btagBin, 'MET:', metbin
         #electron efficiency, flat 3% on ratem re-use lumiScaleFactor
         lumiScaleFactor = 1. + 0.03
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['electronEfficiencyPlus'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors  = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['electronEfficiencyPlus'] = value
+        statErrors['electronEfficiencyPlus'] = error
+        fits['electronEfficiencyPlus'] = fit
+        fitvalues_dict['electronEfficiencyPlus'] = fitvalues
+        fiterrors_dict['electronEfficiencyPlus'] = fiterrors
+        templates_dict['electronEfficiencyPlus'] = vectors
+        
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['electronEfficiencyPlus'] = value - centralValue
+        errors_on_systematics['electronEfficiencyPlus'] = systematics['electronEfficiencyPlus'] * relativeError
         lumiScaleFactor = 1. - 0.03
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['electronEfficiencyMinus'] = abs(value - centralValue)
+        
+        value, error, fit, fitvalues, fiterrors  = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['electronEfficiencyMinus'] = value
+        statErrors['electronEfficiencyMinus'] = error
+        fits['electronEfficiencyMinus'] = fit
+        fitvalues_dict['electronEfficiencyMinus'] = fitvalues
+        fiterrors_dict['electronEfficiencyMinus'] = fiterrors
+        templates_dict['electronEfficiencyMinus'] = vectors
+        
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['electronEfficiencyMinus'] = value - centralValue
+        errors_on_systematics['electronEfficiencyMinus'] = systematics['electronEfficiencyMinus'] * relativeError
         lumiScaleFactor = 1.
         #luminosity systematic 2.2%
         lumiScaleFactor = 1. + 0.022 
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['lumiPlus'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['lumiPlus'] = value
+        statErrors['lumiPlus'] = error
+        fits['lumiPlus'] = fit
+        fitvalues_dict['lumiPlus'] = fitvalues
+        fiterrors_dict['lumiPlus'] = fiterrors
+        templates_dict['lumiPlus'] = vectors
+        
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['lumiPlus'] = value - centralValue
+        errors_on_systematics['lumiPlus'] = systematics['lumiPlus'] * relativeError
         lumiScaleFactor = 1. - 0.022
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['lumiMinus'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['lumiMinus'] = value
+        statErrors['lumiMinus'] = error
+        fits['lumiMinus'] = fit
+        fitvalues_dict['lumiMinus'] = fitvalues
+        fiterrors_dict['lumiMinus'] = fiterrors
+        templates_dict['lumiMinus'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['lumiMinus'] = value - centralValue
+        errors_on_systematics['lumiMinus'] = systematics['lumiMinus'] * relativeError
         lumiScaleFactor = 1.
         #singleTop x-section 30%
         singleTopScaleFactor = 1. + 0.3
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['singleTopPlus'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['singleTopPlus'] = value
+        statErrors['singleTopPlus'] = error
+        fits['singleTopPlus'] = fit
+        fitvalues_dict['singleTopPlus'] = fitvalues
+        fiterrors_dict['singleTopPlus'] = fiterrors
+        templates_dict['singleTopPlus'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['singleTopPlus'] = value - centralValue
+        errors_on_systematics['singleTopPlus'] = systematics['singleTopPlus'] * relativeError
         singleTopScaleFactor = 1. - 0.3
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['singleTopMinus'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['singleTopMinus'] = value
+        statErrors['singleTopMinus'] = error
+        fits['singleTopMinus'] = fit
+        fitvalues_dict['singleTopMinus'] = fitvalues
+        fiterrors_dict['singleTopMinus'] = fiterrors
+        templates_dict['singleTopMinus'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['singleTopMinus'] = value - centralValue
+        errors_on_systematics['singleTopMinus'] = systematics['singleTopMinus'] * relativeError
         singleTopScaleFactor = 1
         #ttbar x-section 15%
         #TODO: this has to be changed, not working as intended!
-        ttbarScaleFactor = 1. + 0.15
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['ttbarPlus'] = abs(value - centralValue)
-        ttbarScaleFactor = 1. - 0.15
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['ttbarMinus'] = abs(value - centralValue)
-        ttbarScaleFactor = 1
+#        theoryXsection_temp = theoryXsection
+#        theoryXsection = theoryXsection_temp * (1.0 + 0.15)
+#        ttbarScaleFactor = 1. + 0.15
+#        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+#        values['ttbarPlus'] = value
+#        statErrors['ttbarPlus'] = error
+#        fits['ttbarPlus'] = fit
+#        fitvalues_dict['ttbarPlus'] = fitvalues
+#        fiterrors_dict['ttbarPlus'] = fiterrors
+#        templates_dict['ttbarPlus'] = vectors
+#        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+#        systematics['ttbarPlus'] = value - centralValue
+#        errors_on_systematics['ttbarPlus'] = systematics['ttbarPlus'] * relativeError
+#        ttbarScaleFactor = 1.0 - 0.15
+##        theoryXsection = theoryXsection_temp * (1.0 - 0.15)
+#        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+#        values['ttbarMinus'] = value
+#        statErrors['ttbarMinus'] = error
+#        fits['ttbarMinus'] = fit
+#        fitvalues_dict['ttbarMinus'] = fitvalues
+#        fiterrors_dict['ttbarMinus'] = fiterrors
+#        templates_dict['ttbarMinus'] = vectors
+#        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+#        systematics['ttbarMinus'] = value - centralValue
+#        errors_on_systematics['ttbarMinus'] = systematics['ttbarMinus'] * relativeError
+#        theoryXsection = theoryXsection_temp
+#        ttbarScaleFactor = 1
         #QCD shape systematic
         qcdDistribution = base + 'QCD non iso e+jets/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-        systematics['QCDShape'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
+        values['QCDShape'] = value
+        statErrors['QCDShape'] = error
+        fits['QCDShape'] = fit
+        fitvalues_dict['QCDShape'] = fitvalues
+        fiterrors_dict['QCDShape'] = fiterrors
+        templates_dict['QCDShape'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['QCDShape'] = value - centralValue
+        errors_on_systematics['QCDShape'] = systematics['QCDShape'] * relativeError
         qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
         #JES down
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files_JES_down, rebin)[:2]
-        systematics['JES_down'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files_JES_down, rebin)
+        values['JES_down'] = value
+        statErrors['JES_down'] = error
+        fits['JES_down'] = fit
+        fitvalues_dict['JES_down'] = fitvalues
+        fiterrors_dict['JES_down'] = fiterrors
+        templates_dict['JES_down'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['JES_down'] = value - centralValue
+        errors_on_systematics['JES_down'] = systematics['JES_down'] * relativeError
         #JES up
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files_JES_up, rebin)[:2]
-        systematics['JES_up'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files_JES_up, rebin)
+        values['JES_up'] = value
+        statErrors['JES_up'] = error
+        fits['JES_up'] = fit
+        fitvalues_dict['JES_up'] = fitvalues
+        fiterrors_dict['JES_up'] = fiterrors
+        templates_dict['JES_up'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['JES_up'] = value - centralValue
+        errors_on_systematics['JES_up'] = systematics['JES_up'] * relativeError
         #PU down
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files_PU_down, rebin)[:2]
-        systematics['PU_down'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files_PU_down, rebin)
+        values['PU_down'] = value
+        statErrors['PU_down'] = error
+        fits['PU_down'] = fit
+        fitvalues_dict['PU_down'] = fitvalues
+        fiterrors_dict['PU_down'] = fiterrors
+        templates_dict['PU_down'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['PU_down'] = value - centralValue
+        errors_on_systematics['PU_down'] = systematics['PU_down'] * relativeError
         #PU up
-        value, error = performMeasurement(distribution, qcdDistribution, FILES.files_PU_up, rebin)[:2]
-        systematics['PU_up'] = abs(value - centralValue)
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files_PU_up, rebin)
+        values['PU_up'] = value
+        statErrors['PU_up'] = error
+        fits['PU_up'] = fit
+        fitvalues_dict['PU_up'] = fitvalues
+        fiterrors_dict['PU_up'] = fiterrors
+        templates_dict['PU_up'] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics['PU_up'] = value - centralValue
+        errors_on_systematics['PU_up'] = systematics['PU_up'] * relativeError
         
         print "Q^2 and matching systematics", btagBin, 'MET:', metbin
         #Q^2 scale and matching threshold systematics
-        systematics.update(doTTbarSystematics(centralValue, metbin, btagBin))
-        systematics.update(doWJetsSystematics(centralValue, metbin, btagBin))
-        systematics.update(doZJetsSystematics(centralValue, metbin, btagBin))
+        vars = doTTbarSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin)
+        for source in vars[0].keys():
+            systematics[source] = vars[0][source]
+            errors_on_systematics[source] = vars[1]
+            values[source] = vars[2][source]
+            statErrors[source] = vars[3][source]
+            fits[source] = vars[4][source]
+            fitvalues_dict[source] = vars[5][source]
+            fiterrors_dict[source] = vars[6][source]
+            templates_dict[source] = vars[7][source]
+        
+        vars = doWJetsSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin)
+        for source in vars[0].keys():
+            systematics[source] = vars[0][source]
+            errors_on_systematics[source] = vars[1]
+            values[source] = vars[2][source]
+            statErrors[source] = vars[3][source]
+            fits[source] = vars[4][source]
+            fitvalues_dict[source] = vars[5][source]
+            fiterrors_dict[source] = vars[6][source]
+            templates_dict[source] = vars[7][source]
+        
+        vars = doZJetsSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin)
+        for source in vars[0].keys():
+            systematics[source] = vars[0][source]
+            errors_on_systematics[source] = vars[1]
+            values[source] = vars[2][source]
+            statErrors[source] = vars[3][source]
+            fits[source] = vars[4][source]
+            fitvalues_dict[source] = vars[5][source]
+            fiterrors_dict[source] = vars[6][source]
+            templates_dict[source] = vars[7][source]
+        
         print "MET systematics", btagBin, 'MET:', metbin
-        systematics.update(doMETSystematics(centralValue, metbin, btagBin))
-
+        vars = doMETSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin)
+        for source in vars[0].keys():
+            systematics[source] = vars[0][source]
+            errors_on_systematics[source] = vars[1]
+            values[source] = vars[2][source]
+            statErrors[source] = vars[3][source]
+            fits[source] = vars[4][source]
+            fitvalues_dict[source] = vars[5][source]
+            fiterrors_dict[source] = vars[6][source]
+            templates_dict[source] = vars[7][source]
+        
+        print "PDF weight systematics", btagBin, 'MET:', metbin
+        vars = doPDFSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin)
+        for source in vars[0].keys():
+            systematics[source] = vars[0][source]
+            errors_on_systematics[source] = vars[1]
+            values[source] = vars[2][source]
+            statErrors[source] = vars[3][source]
+            fits[source] = vars[4][source]
+            fitvalues_dict[source] = vars[5][source]
+            fiterrors_dict[source] = vars[6][source]
+            templates_dict[source] = vars[7][source]
         #add systematics in squares
         totalSystematic = 0
         for source, syst in systematics.iteritems():    
             totalSystematic += syst ** 2
         totalSystematic = sqrt(totalSystematic)
         
-        results[metbin] = {'centralValue':centralValue,
-                           'statError':statError,
+        results[metbin] = {'centralValue':values['central'],
+                           'statError':statErrors['central'],
                            'totalSystematic':totalSystematic,
-                           'theoryXsection':theoryXsection,
+                           'theoryXsection':theoryXsection_inBin,
                            'systematics':systematics,
-                           'fit':fit,
-                           'fitvalues':fitvalues,
-                           'fiterrors': fiterrors,
-                           'templates': templates}
+                           'errors_on_systematics':errors_on_systematics,
+                           'fit':fits['central'],
+                           'fitvalues':fitvalues_dict['central'],
+                           'fiterrors': fiterrors_dict['central'],
+                           'templates': templates_dict['central'],
+                           'values':values,
+                           'statErrors':statErrors,
+                           'fits': fits,
+                           'allFitvalues':fitvalues_dict,
+                           'allFiterrors':fiterrors_dict,
+                           'allTemplates':templates_dict }
     return results
 
-def doTTbarSystematics(centralValue, metbin, btagBin):
+def doTTbarSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin):
     base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
     distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, btagBin)
        #should always use 0-btag region!!                  
     qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
+    values = {}
+    statErrors = {}
+    fits = {}
+    fitvalues_dict = {}
+    fiterrors_dict = {}
+    templates_dict = {}
     systematics = {}
+    errors_on_systematics = {}
     #matching threshold scale down (ttbar)
     temp_files = deepcopy(FILES.files)
     temp_files['TTJet'] = FILES.files['TTJets-matchingdown']#replace distribution
-    ttbarScaleFactor = unbinnedTTbarEvents/unbinnedTTbarEvents_matchingDown#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['TTJets_matchingDown'] = abs(value - centralValue)
+    ttbarScaleFactor = unbinnedTTbarEvents / unbinnedTTbarEvents_matchingDown#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['TTJets_matchingDown'] = value
+    statErrors['TTJets_matchingDown'] = error
+    fits['TTJets_matchingDown'] = fit
+    fitvalues_dict['TTJets_matchingDown'] = fitvalues
+    fiterrors_dict['TTJets_matchingDown'] = fiterrors
+    templates_dict['TTJets_matchingDown'] = vectors
+
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['TTJets_matchingDown'] = value - centralValue
+    errors_on_systematics['TTJets_matchingDown'] = systematics['TTJets_matchingDown'] * relativeError
     ttbarScaleFactor = 1
     #matching threshold scale up
     temp_files = deepcopy(FILES.files)
     temp_files['TTJet'] = FILES.files['TTJets-matchingup']#replace distribution
-    ttbarScaleFactor = unbinnedTTbarEvents/unbinnedTTbarEvents_matchingUp#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['TTJets_matchingUp'] = abs(value - centralValue)
+    ttbarScaleFactor = unbinnedTTbarEvents / unbinnedTTbarEvents_matchingUp#normalise to same number of events
+    ttbarScaleFactor = unbinnedTTbarEvents / unbinnedTTbarEvents_matchingDown#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['TTJets_matchingUp'] = value
+    statErrors['TTJets_matchingUp'] = error
+    fits['TTJets_matchingUp'] = fit
+    fitvalues_dict['TTJets_matchingUp'] = fitvalues
+    fiterrors_dict['TTJets_matchingUp'] = fiterrors
+    templates_dict['TTJets_matchingUp'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['TTJets_matchingUp'] = value - centralValue
+    errors_on_systematics['TTJets_matchingUp'] = systematics['TTJets_matchingUp'] * relativeError
     ttbarScaleFactor = 1
     #Q2 (ttbar) scale up
     temp_files = deepcopy(FILES.files)
     temp_files['TTJet'] = FILES.files['TTJets-scaledown']#replace distribution
-    ttbarScaleFactor = unbinnedTTbarEvents/unbinnedTTbarEvents_scaleDown#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['TTJets_scaleDown'] = abs(value - centralValue)
+    ttbarScaleFactor = unbinnedTTbarEvents / unbinnedTTbarEvents_scaleDown#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['TTJets_scaleDown'] = value
+    statErrors['TTJets_scaleDown'] = error
+    fits['TTJets_scaleDown'] = fit
+    fitvalues_dict['TTJets_scaleDown'] = fitvalues
+    fiterrors_dict['TTJets_scaleDown'] = fiterrors
+    templates_dict['TTJets_scaleDown'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['TTJets_scaleDown'] = value - centralValue
+    errors_on_systematics['TTJets_scaleDown'] = systematics['TTJets_scaleDown'] * relativeError
     ttbarScaleFactor = 1
     #Q2 (ttbar) scale up
     temp_files = deepcopy(FILES.files)
     temp_files['TTJet'] = FILES.files['TTJets-scaleup']#replace distribution
-    ttbarScaleFactor = unbinnedTTbarEvents/unbinnedTTbarEvents_scaleUp#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['TTJets_scaleUp'] = abs(value - centralValue)
+    ttbarScaleFactor = unbinnedTTbarEvents / unbinnedTTbarEvents_scaleUp#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['TTJets_scaleUp'] = value
+    statErrors['TTJets_scaleUp'] = error
+    fits['TTJets_scaleUp'] = fit
+    fitvalues_dict['TTJets_scaleUp'] = fitvalues
+    fiterrors_dict['TTJets_scaleUp'] = fiterrors
+    templates_dict['TTJets_scaleUp'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['TTJets_scaleUp'] = value - centralValue
+    errors_on_systematics['TTJets_scaleUp'] = systematics['TTJets_scaleUp'] * relativeError
     ttbarScaleFactor = 1
     
-    return systematics
+    return systematics, errors_on_systematics, values, statErrors, fits, fitvalues_dict, fiterrors_dict, templates_dict
 
-def doWJetsSystematics(centralValue, metbin, btagBin):
+def doWJetsSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin):
     global wplusjets_samples, unbinnedWJetsEvents_matchingDown, unbinnedWJetsEvents_matchingUp
     global unbinnedWJetsEvents_scaleDown, unbinnedWJetsEvents_scaleUp, unbinnedWJetsEvents
     base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
     distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, btagBin)
     #should always use 0-btag region!!                  
     qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
+    values = {}
+    statErrors = {}
+    fits = {}
+    fitvalues_dict = {}
+    fiterrors_dict = {}
+    templates_dict = {}
     systematics = {}
+    errors_on_systematics = {}
     temp_wjets_sum = deepcopy(wplusjets_samples)
     wplusjets_samples = ['WJetsToLNu']
     #matching threshold scale down (ttbar)
     temp_files = deepcopy(FILES.files)
     temp_files['WJetsToLNu'] = FILES.files['WJets-matchingdown']#replace distribution
     
-    wjetsScaleFactor = unbinnedWJetsEvents/unbinnedWJetsEvents_matchingDown#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['WJets_matchingDown'] = abs(value - centralValue)
+    wjetsScaleFactor = unbinnedWJetsEvents / unbinnedWJetsEvents_matchingDown#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['WJets_matchingDown'] = value
+    statErrors['WJets_matchingDown'] = error
+    fits['WJets_matchingDown'] = fit
+    fitvalues_dict['WJets_matchingDown'] = fitvalues
+    fiterrors_dict['WJets_matchingDown'] = fiterrors
+    templates_dict['WJets_matchingDown'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['WJets_matchingDown'] = value - centralValue
+    errors_on_systematics['WJets_matchingDown'] = systematics['WJets_matchingDown'] * relativeError
     wjetsScaleFactor = 1
     #matching threshold scale up
     temp_files = deepcopy(FILES.files)
     temp_files['WJetsToLNu'] = FILES.files['WJets-matchingup']#replace distribution
-    wjetsScaleFactor = unbinnedWJetsEvents/unbinnedWJetsEvents_matchingUp#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['WJets_matchingUp'] = abs(value - centralValue)
+    wjetsScaleFactor = unbinnedWJetsEvents / unbinnedWJetsEvents_matchingUp#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['WJets_matchingUp'] = value
+    statErrors['WJets_matchingUp'] = error
+    fits['WJets_matchingUp'] = fit
+    fitvalues_dict['WJets_matchingUp'] = fitvalues
+    fiterrors_dict['WJets_matchingUp'] = fiterrors
+    templates_dict['WJets_matchingUp'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['WJets_matchingUp'] = value - centralValue
+    errors_on_systematics['WJets_matchingUp'] = systematics['WJets_matchingUp'] * relativeError
     wjetsScaleFactor = 1
     #Q2 (ttbar) scale up
     temp_files = deepcopy(FILES.files)
     temp_files['WJetsToLNu'] = FILES.files['WJets-scaledown']#replace distribution
-    wjetsScaleFactor = unbinnedWJetsEvents/unbinnedWJetsEvents_scaleDown#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['WJets_scaleDown'] = abs(value - centralValue)
+    wjetsScaleFactor = unbinnedWJetsEvents / unbinnedWJetsEvents_scaleDown#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['WJets_scaleDown'] = value
+    statErrors['WJets_scaleDown'] = error
+    fits['WJets_scaleDown'] = fit
+    fitvalues_dict['WJets_scaleDown'] = fitvalues
+    fiterrors_dict['WJets_scaleDown'] = fiterrors
+    templates_dict['WJets_scaleDown'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['WJets_scaleDown'] = value - centralValue
+    errors_on_systematics['WJets_scaleDown'] = systematics['WJets_scaleDown'] * relativeError
     wjetsScaleFactor = 1
     #Q2 (ttbar) scale up
     temp_files = deepcopy(FILES.files)
     temp_files['WJetsToLNu'] = FILES.files['WJets-scaleup']#replace distribution
-    wjetsScaleFactor = unbinnedWJetsEvents/unbinnedWJetsEvents_scaleUp#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['WJets_scaleUp'] = abs(value - centralValue)
+    wjetsScaleFactor = unbinnedWJetsEvents / unbinnedWJetsEvents_scaleUp#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['WJets_scaleUp'] = value
+    statErrors['WJets_scaleUp'] = error
+    fits['WJets_scaleUp'] = fit
+    fitvalues_dict['WJets_scaleUp'] = fitvalues
+    fiterrors_dict['WJets_scaleUp'] = fiterrors
+    templates_dict['WJets_scaleUp'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['WJets_scaleUp'] = value - centralValue
+    errors_on_systematics['WJets_scaleUp'] = systematics['WJets_scaleUp'] * relativeError
     wjetsScaleFactor = 1
     #restore sum definition
     wplusjets_samples = temp_wjets_sum
     
-    return systematics
+    return systematics, errors_on_systematics, values, statErrors, fits, fitvalues_dict, fiterrors_dict, templates_dict
 
-def doZJetsSystematics(centralValue, metbin, btagBin):
+def doZJetsSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin):
     global unbinnedZJetsEvents_matchingDown, unbinnedZJetsEvents_matchingUp
     global unbinnedZJetsEvents_scaleDown, unbinnedZJetsEvents_scaleUp, unbinnedZJetsEvents
     base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
     distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, btagBin)
     #should always use 0-btag region!!                  
     qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
+    values = {}
+    statErrors = {}
+    fits = {}
+    fitvalues_dict = {}
+    fiterrors_dict = {}
+    templates_dict = {}
     systematics = {}
+    errors_on_systematics = {}
     #matching threshold scale down (ttbar)
     temp_files = deepcopy(FILES.files)
     temp_files['DYJetsToLL'] = FILES.files['ZJets-matchingdown']#replace distribution
     
-    zjetsScaleFactor = unbinnedZJetsEvents/unbinnedZJetsEvents_matchingDown#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['ZJets_matchingDown'] = abs(value - centralValue)
+    zjetsScaleFactor = unbinnedZJetsEvents / unbinnedZJetsEvents_matchingDown#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['ZJets_matchingDown'] = value
+    statErrors['ZJets_matchingDown'] = error
+    fits['ZJets_matchingDown'] = fit
+    fitvalues_dict['ZJets_matchingDown'] = fitvalues
+    fiterrors_dict['ZJets_matchingDown'] = fiterrors
+    templates_dict['ZJets_matchingDown'] = vectors
+    
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['ZJets_matchingDown'] = value - centralValue
+    errors_on_systematics['ZJets_matchingDown'] = systematics['ZJets_matchingDown'] * relativeError
     zjetsScaleFactor = 1
     #matching threshold scale up
     temp_files = deepcopy(FILES.files)
     temp_files['DYJetsToLL'] = FILES.files['ZJets-matchingup']#replace distribution
-    zjetsScaleFactor = unbinnedZJetsEvents/unbinnedZJetsEvents_matchingUp#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['ZJets_matchingUp'] = abs(value - centralValue)
+    zjetsScaleFactor = unbinnedZJetsEvents / unbinnedZJetsEvents_matchingUp#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['ZJets_matchingUp'] = value
+    statErrors['ZJets_matchingUp'] = error
+    fits['ZJets_matchingUp'] = fit
+    fitvalues_dict['ZJets_matchingUp'] = fitvalues
+    fiterrors_dict['ZJets_matchingUp'] = fiterrors
+    templates_dict['ZJets_matchingUp'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['ZJets_matchingUp'] = value - centralValue
+    errors_on_systematics['ZJets_matchingUp'] = systematics['ZJets_matchingUp'] * relativeError
     zjetsScaleFactor = 1
     #Q2 (ttbar) scale up
     temp_files = deepcopy(FILES.files)
     temp_files['DYJetsToLL'] = FILES.files['ZJets-scaledown']#replace distribution
-    zjetsScaleFactor = unbinnedZJetsEvents/unbinnedZJetsEvents_scaleDown#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['ZJets_scaleDown'] = abs(value - centralValue)
+    zjetsScaleFactor = unbinnedZJetsEvents / unbinnedZJetsEvents_scaleDown#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['ZJets_scaleDown'] = value
+    statErrors['ZJets_scaleDown'] = error
+    fits['ZJets_scaleDown'] = fit
+    fitvalues_dict['ZJets_scaleDown'] = fitvalues
+    fiterrors_dict['ZJets_scaleDown'] = fiterrors
+    templates_dict['ZJets_scaleDown'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['ZJets_scaleDown'] = value - centralValue
+    errors_on_systematics['ZJets_scaleDown'] = systematics['ZJets_scaleDown'] * relativeError
     zjetsScaleFactor = 1
     #Q2 (ttbar) scale up
     temp_files = deepcopy(FILES.files)
     temp_files['DYJetsToLL'] = FILES.files['ZJets-scaleup']#replace distribution
-    zjetsScaleFactor = unbinnedZJetsEvents/unbinnedZJetsEvents_scaleUp#normalise to same number of events
-    value, error = performMeasurement(distribution, qcdDistribution, temp_files, rebin)[:2]
-    systematics['ZJets_scaleUp'] = abs(value - centralValue)
+    zjetsScaleFactor = unbinnedZJetsEvents / unbinnedZJetsEvents_scaleUp#normalise to same number of events
+    value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+    values['ZJets_scaleUp'] = value
+    statErrors['ZJets_scaleUp'] = error
+    fits['ZJets_scaleUp'] = fit
+    fitvalues_dict['ZJets_scaleUp'] = fitvalues
+    fiterrors_dict['ZJets_scaleUp'] = fiterrors
+    templates_dict['ZJets_scaleUp'] = vectors
+    relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+    systematics['ZJets_scaleUp'] = value - centralValue
+    errors_on_systematics['ZJets_scaleUp'] = systematics['ZJets_scaleUp'] * relativeError
     zjetsScaleFactor = 1
     
-    return systematics
+    return systematics, errors_on_systematics, values, statErrors, fits, fitvalues_dict, fiterrors_dict, templates_dict
 
-def doMETSystematics(centralValue, metbin, btagBin):
+def doMETSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin):
     base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
     systematics = {}
+    errors_on_systematics = {}
+    values = {}
+    statErrors = {}
+    fits = {}
+    fitvalues_dict = {}
+    fiterrors_dict = {}
+    templates_dict = {}
     for source in metsystematics_sources:
+        value, error, fit, fitvalues, fiterrors, relativeError = 0,0,0,0,0,0
         if not 'JetRes' in source:
             distribution = base + 'Electron_%s_bin_%s/electron_eta_%s' % (source, metbin, btagBin)
             qcdDistribution = base + 'QCDConversions/Electron_%s_bin_%s/electron_eta_0btag' % (source, metbin)
-            value, error = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)[:2]
-            systematics[source] = abs(value - centralValue)
+            value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, rebin)
         else:
+            distribution = base + 'Electron_%s_bin_%s/electron_eta_%s' % (source, metbin, btagBin)
+            qcdDistribution = base + 'QCDConversions/Electron_%s_bin_%s/electron_eta_0btag' % (source, metbin)
             data_distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, btagBin)
             #should always use 0-btag region!!                  
             data_qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
             #JET change for MC only, not for data. 
-            pass
-    return systematics
+            value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, FILES.files, 
+                                              rebin, data_distribution, data_qcdDistribution)
+            
+        values[source] = value
+        statErrors[source] = error
+        fits[source] = fit
+        fitvalues_dict[source] = fitvalues
+        fiterrors_dict[source] = fiterrors
+        templates_dict[source] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics[source] = value - centralValue
+        errors_on_systematics[source] = systematics[source] * relativeError
+    
+    return systematics, errors_on_systematics, values, statErrors, fits, fitvalues_dict, fiterrors_dict, templates_dict
+
+def doPDFSystematics(centralValue, centralRelativeError, metbin, btagBin, rebin):
+    base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
+    distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, btagBin)
+    #should always use 0-btag region!!                  
+    qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
+        
+    systematics = {}
+    errors_on_systematics = {}
+    values = {}
+    statErrors = {}
+    fits = {}
+    fitvalues_dict = {}
+    fiterrors_dict = {}
+    templates_dict = {}
+    for index in range(1,45):
+        temp_files = deepcopy(FILES.files)
+        temp_files['TTJet'] = FILES.files_PDF_weights['TTJet_%d' % index]#replace distribution
+        ttbarScaleFactor = 7490162/6093274
+        value, error, fit, fitvalues, fiterrors = performMeasurement(distribution, qcdDistribution, temp_files, rebin)
+        
+        source = 'PDFWeights_%d' % index    
+        values[source] = value
+        statErrors[source] = error
+        fits[source] = fit
+        fitvalues_dict[source] = fitvalues
+        fiterrors_dict[source] = fiterrors
+        templates_dict[source] = vectors
+        relativeError = sqrt(getRelativeError(value, error) ** 2 + centralRelativeError ** 2)
+        systematics[source] = value - centralValue
+        errors_on_systematics[source] = systematics[source] * relativeError
+    
+    return systematics, errors_on_systematics, values, statErrors, fits, fitvalues_dict, fiterrors_dict, templates_dict
          
 def printResults(metBins, results, btagBin):
     printout = '\n'
@@ -659,19 +1052,22 @@ def printResults(metBins, results, btagBin):
     totalSystError = 0
     for metbin in metBins:#, result in results.iteritems():
         result = results[metbin]
+        totalUncertainty, totalUncertainty_minus, totalUncertainty_plus = calculateTotalUncertainty(result)
         total += result['centralValue']
         totalStatError += result['statError'] ** 2
-        totalSystError += result['totalSystematic'] ** 2 
-        printout += metbin + '~\GeV & %.2f $\pm$ %.2f (stat) $\pm$ %.2f (syst) pb \\\\\n' % (result['centralValue'], result['statError'], result['totalSystematic'])
+        totalSystError += totalUncertainty ** 2 
+        formatting = (result['centralValue'], result['statError'], totalUncertainty)
+        printout += metbin + '~\GeV & %.2f $\pm$ %.2f (stat) $\pm$ %.2f (syst) pb \\\\\n' % formatting
     totalStatError = sqrt(totalStatError)
     totalSystError = sqrt(totalSystError)
     printout += '\hline'
     printout += 'Total & %.2f $\pm$ %.2f (stat) $\pm$ %.2f (syst) pb\\\\\n' % (total, totalStatError, totalSystError)
-    result_file = open(savePath + 'results_%s.tex' %btagBin, 'w' )
+    result_file = open(savePath + 'results_%s.tex' % btagBin, 'w')
     result_file.write(printout)
     result_file.close()
     
 def plotFits(metBins, results, btagBin):
+    global rebin
     for metbin in metBins:
         result = results[metbin]
         fit = result['fit']
@@ -705,13 +1101,13 @@ def plotFits(metBins, results, btagBin):
                 plot.SetBinContent(bin, value)
                 bin += 1
             plot.Scale(fitvalues[sample])
-            plot.Rebin(10)
+#            plot.Rebin(rebin)
             plot.SetYTitle('Events/0.2')
             plot.SetXTitle('#eta(e)')
             if not sample == 'ElectronHad':
                 plot.SetFillColor(colors[sample])
             plots[sample] = plot
-        fit.Rebin(10)
+#        fit.Rebin(10)
         fit.SetLineColor(kViolet - 3)
         fit.SetLineWidth(5)
         c = TCanvas("Fit_" + metbin, "Differential cross section", 1600, 1200)
@@ -740,16 +1136,88 @@ def plotFits(metBins, results, btagBin):
         legend.Draw()
         c.SaveAs(savePath + 'EPlusJets_electron_eta_fit_' + metbin + '_' + btagBin + '.png')
         c.SaveAs(savePath + 'EPlusJets_electron_eta_fit_' + metbin + '_' + btagBin + '.pdf')
-        
-        
 
+def getRelativeError(value, error):
+    relativeError = 0
+    if not value == 0:
+        relativeError = error / value
+    return relativeError
+
+def calculateTotalUncertainty(result):
+    values = result['values']
+    statErrors = result['statErrors']
+    pdfweight_minus, pdfweight_plus = calculatePDFErrors(values, statErrors)
+#    values['PDFWeightsPlus'] = pdfweight_plus
+#    values['PDFWeightsMinus'] = pdfweight_minus
+    centralvalue = values['central']
+    centralerror = statErrors['central']
+    
+    totalUp = 0
+    totalDown = 0
+    total = 0
+    
+    for source, value in values.iteritems():
+        if 'PDFWeights' in source:
+            continue
+        diff = centralvalue - value
+        if diff > 0:
+            totalUp += diff**2
+        else:
+            totalDown += diff**2
+        total += diff**2
+    totalUp = sqrt(totalUp + pdfweight_plus**2)
+    totalDown = sqrt(totalDown + pdfweight_minus**2)
+    total = sqrt(total + pdfweight_plus**2 + pdfweight_minus**2)
+    
+    return total, totalDown, totalUp
+        
+    
+def calculatePDFErrors(values, errors):
+    centralvalue = values['central']
+    centralerror = errors['central']
+    negative = []
+    positive = []
+    
+    for index in range(1, 45):
+        value = values['PDFWeights_%d' % index]
+        if index % 2 == 0: #even == negative
+            negative.append(value)
+        else:
+            positive.append(value)
+    pdf_max = numpy.sqrt(sum(max(x-centralvalue, y-centralvalue, 0) for x,y in zip(negative, positive)))
+    pdf_min = numpy.sqrt(sum(max(centralvalue - x, centralvalue -y, 0) for x,y in zip(negative, positive)))
+    return pdf_min, pdf_max
+    
+            
+def doNormalisedMeasurement(metBins, btagBin, results):
+    results = {}
+    totalFitValue = 0
+    totalFitError = 0
+    for metbin in metBins:
+        fitvalues = results[metbin]['fitvalues']
+        fiterrors = results[metbin]['fiterrors']
+        nTTbar = fitvalues['TTJet']
+        totalFitValue += nTTbar
+        totalFitError += fiterrors['TTJet']**2
+    totalFitError = sqrt(totalFitError)
+    
+    for metbin in metBins:
+        fitvalues = results[metbin]['fitvalues']
+        fiterrors = results[metbin]['fiterrors']
+        
+        nTTbar = fitvalues['TTJet']
+        results[metbin]['centralValue_normalised'] = nTTbar/totalFitValue
+        
 
 if __name__ == "__main__":
+    #TODO: implemet switchex (program options for
+    #b-jet bin
+    #do systematics or not
     DEBUG = False
     btagBins = [
-                '0orMoreBtag',
-                '0btag',
-                '1btag',
+#                '0orMoreBtag',
+#                '0btag',
+#                '1btag',
                 '2orMoreBtags'
                 ]
     metBins = ['0-25',
@@ -767,8 +1235,8 @@ if __name__ == "__main__":
         "patType1p2CorrectedPFMetMuonEnDown",
         "patType1p2CorrectedPFMetTauEnUp",
         "patType1p2CorrectedPFMetTauEnDown",
-        "patType1p2CorrectedPFMetJetResUp", 
-        "patType1p2CorrectedPFMetJetResDown", 
+        "patType1p2CorrectedPFMetJetResUp",
+        "patType1p2CorrectedPFMetJetResDown",
         "patType1p2CorrectedPFMetJetEnUp",
         "patType1p2CorrectedPFMetJetEnDown",
         "patType1p2CorrectedPFMetUnclusteredEnUp",
@@ -786,7 +1254,7 @@ if __name__ == "__main__":
         unbinnedTTbarEvents_scaleDown = FileReader.getHistogramFromFile(distribution, FILES.files['TTJets-scaledown']).Integral()
         unbinnedTTbarEvents_scaleUp = FileReader.getHistogramFromFile(distribution, FILES.files['TTJets-scaleup']).Integral()
         
-        w1jet =FileReader.getHistogramFromFile(distribution, FILES.files['W1Jet']).Integral()
+        w1jet = FileReader.getHistogramFromFile(distribution, FILES.files['W1Jet']).Integral()
         w2jets = FileReader.getHistogramFromFile(distribution, FILES.files['W2Jets']).Integral()
         w3jets = FileReader.getHistogramFromFile(distribution, FILES.files['W3Jets']).Integral()
         w4jets = FileReader.getHistogramFromFile(distribution, FILES.files['W4Jets']).Integral()
@@ -802,7 +1270,19 @@ if __name__ == "__main__":
         unbinnedZJetsEvents_scaleDown = FileReader.getHistogramFromFile(distribution, FILES.files['ZJets-scaledown']).Integral()
         unbinnedZJetsEvents_scaleUp = FileReader.getHistogramFromFile(distribution, FILES.files['ZJets-scaleup']).Integral()
         
+#        print "Stats:"
+#        print "TTbar Central:", unbinnedTTbarEvents
+#        print "TTbar Q^2 up/down:", unbinnedTTbarEvents_scaleUp, '/', unbinnedTTbarEvents_scaleDown
+#        print "TTbar matching up/down:", unbinnedTTbarEvents_matchingUp, '/', unbinnedTTbarEvents_matchingDown
+#        print "WJets Central:", unbinnedWJetsEvents
+#        print "WJets Q^2 up/down:", unbinnedWJetsEvents_scaleUp, '/', unbinnedWJetsEvents_scaleDown
+#        print "WJets matching up/down:", unbinnedWJetsEvents_matchingUp, '/', unbinnedWJetsEvents_matchingDown
+#        print "ZJets Central:", unbinnedZJetsEvents
+#        print "ZJets Q^2 up/down:", unbinnedZJetsEvents_scaleUp, '/', unbinnedZJetsEvents_scaleDown
+#        print "ZJets matching up/down:", unbinnedZJetsEvents_matchingUp, '/', unbinnedZJetsEvents_matchingDown
+        
         results = doBinnedAnalysis(metBins, btagBin)
+#        results_normalised = doNormalisedMeasurement(metBins, btagBin, results)
     
         printResults(metBins, results, btagBin)
         printMetSystematics(metBins, results, btagBin)
