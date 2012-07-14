@@ -49,6 +49,8 @@ public:
 	virtual const JetCollection cleanedBJets(const EventPtr event) const = 0;
 
 	virtual bool passesFullSelectionExceptLastTwoSteps(const EventPtr event) const;
+	//returns a vector of weights for the different b-tag multiplicities
+//	virtual std::vector<double> bjetScaleFactorNBtag(const JetCollection cleanedJets) const;//N=0,1,2,3, >= 4
 
 
 protected:
