@@ -25,7 +25,7 @@ N_Events = {}
 N_ttbar_by_source = {}
 DEBUG = False
 constrains = {
-              qcdLabel: {'enabled':False, 'value': 1},
+              qcdLabel: {'enabled':True, 'value': 1},
               'ratio_Z_W': {'enabled':True, 'value': 0.05},
               'W+Jets': {'enabled':False, 'value': 0.3},
               'DYJetsToLL': {'enabled':False, 'value': 0.3},
@@ -38,7 +38,10 @@ scale_factors = {
                  'singleTop':1,
                  'TTJet':1,
                  'W+Jets':1,
-                 'DYJetsToLL':1
+                 'DYJetsToLL':1,
+                 'POWHEG':7490162/4262961,
+                 'PYTHIA6':7490162/1089625,
+                 'noCorr-mcatnlo':7490162/6683859,
                  }
 
 qcd_samples = [ 'QCD_Pt-20to30_BCtoE',
@@ -88,6 +91,8 @@ metsystematics_sources = [
 use_fit_errors_only = False
 measure_normalised_crossection = False
 
+N_QCD = 14856
+
 def MinuitFitFunction(nParameters, gin, f, par, iflag):
     global normalisation, vectors, qcdLabel
     lnL = 0.0
@@ -122,7 +127,7 @@ def MinuitFitFunction(nParameters, gin, f, par, iflag):
     if constrains['DYJetsToLL']['enabled']:
         f[0] += ((par[2] - normalisation['DYJetsToLL']) / (constrains['DYJetsToLL']['value'] * normalisation['DYJetsToLL'])) ** 2
     if constrains[qcdLabel]['enabled']:
-        f[0] += ((par[3] - normalisation[qcdLabel]) / constrains[qcdLabel]['enabled'] * normalisation[qcdLabel]) ** 2
+        f[0] += ((par[3] - N_QCD) / (constrains[qcdLabel]['value'] * N_QCD)) ** 2
 #    if constrains['Di-Boson']['enabled']:
 #        f[0] += ((par[4] - normalisation['Di-Boson']) / (constrains['Di-Boson']['value'] * normalisation['Di-Boson'])) ** 2
         
@@ -160,15 +165,16 @@ def getFittedNormalisation(vectors_={}, normalisation_={}):
     errorFlag = ROOT.Long(2)
     
     N_total = normalisation['ElectronHad']
-    N_QCD = normalisation['QCD']
+#    N_total = 1e6
+    N_min = 0
     if DEBUG:
         print len(vectors['ElectronHad']), len(vectors['Signal']), len(vectors['W+Jets']), len(vectors['DYJetsToLL']), len(vectors['QCDFromData'])
         print "Total number of data events before the fit: ", N_total
     N_signal = normalisation['TTJet'] + normalisation['SingleTop']
-    gMinuit.mnparm(0, "N_signal(ttbar+single_top)", N_signal, 10.0, 0, N_total, errorFlag)
-    gMinuit.mnparm(1, "W+Jets", normalisation['W+Jets'], 10.0, 0, N_total, errorFlag)
-    gMinuit.mnparm(2, "DYJetsToLL", normalisation['DYJetsToLL'], 10.0, 0, N_total, errorFlag)
-    gMinuit.mnparm(3, "QCD", N_QCD, 10.0, 0, N_total, errorFlag)
+    gMinuit.mnparm(0, "N_signal(ttbar+single_top)", N_signal, 10.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(1, "W+Jets", normalisation['W+Jets'], 10.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(2, "DYJetsToLL", normalisation['DYJetsToLL'], 10.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(3, "QCD", N_QCD, 10.0, N_min, N_total, errorFlag)
 #    gMinuit.mnparm(4, "Di-Boson", normalisation['Di-Boson'], 10.0, 0, N_total, errorFlag)
     
     arglist = array('d', 10 * [0.])
@@ -201,7 +207,11 @@ def getFittedNormalisation(vectors_={}, normalisation_={}):
               'W+Jets BeforeFit': {'value': normalisation['W+Jets'], 'error':0},
               'DYJetsToLL Before Fit': {'value': normalisation['DYJetsToLL'], 'error':0},
               'fit': createFitHistogram(fitvalues, vectors),
-              'vectors':vectors
+              'vectors':vectors,
+              #other generators
+              'POWHEG': {'value': normalisation['POWHEG']*scale_factors['POWHEG'], 'error':0},
+              'PYTHIA6': {'value': normalisation['PYTHIA6']*scale_factors['PYTHIA6'], 'error':0},
+              'noCorr-mcatnlo': {'value': normalisation['noCorr-mcatnlo']*scale_factors['noCorr-mcatnlo'], 'error':0},
               }
     return result
 
@@ -390,7 +400,12 @@ def CrossSectionAnalysis(input, bjetbin):
             value, error = result_ttbar['value'], result_ttbar['error']
             n_ttbar = N_ttbar_by_source[measurement]
             scale = theoryXsection / n_ttbar
-            result[metbin][measurement] = {'value': value * scale, 'error':error * scale, 'MADGRAPH':madgraph_ttbar * scale}
+            result[metbin][measurement] = {'value': value * scale, 
+                                           'error':error * scale, 
+                                           'MADGRAPH':madgraph_ttbar * scale,
+                                           'POWHEG':input[metbin][measurement]['POWHEG']['value'] * scale,
+                                           'PYTHIA6':input[metbin][measurement]['PYTHIA6']['value'] * scale,
+                                           'noCorr-mcatnlo':input[metbin][measurement]['POWHEG']['value'] * scale}
     return result
         
 
@@ -398,17 +413,22 @@ def NormalisedCrossSectionAnalysis(input, bjetbin):
     global N_ttbar_by_source
     result = {}
     theoryXsection = 157.5
-    sums = {}
-    madgraph_sums = {}
+    sums = {'central':{},'MADGRAPH':{},'POWHEG':{},'PYTHIA6':{},'noCorr-mcatnlo':{} }
     for metbin in metbins:
         result[metbin] = {}
         for measurement in input[metbin].keys():
-            if not sums.has_key(measurement):
-                sums[measurement] = input[metbin][measurement]['TTJet']['value']
-                madgraph_sums[measurement] = input[metbin][measurement]['TTJet Before Fit']['value']
+            if not sums['central'].has_key(measurement):
+                sums['central'][measurement] = input[metbin][measurement]['TTJet']['value']
+                sums['MADGRAPH'][measurement] = input[metbin][measurement]['TTJet Before Fit']['value']
+                sums['POWHEG'][measurement] = input[metbin][measurement]['POWHEG']['value']
+                sums['PYTHIA6'][measurement] = input[metbin][measurement]['PYTHIA6']['value']
+                sums['noCorr-mcatnlo'][measurement] = input[metbin][measurement]['noCorr-mcatnlo']['value']
             else:
-                sums[measurement] += input[metbin][measurement]['TTJet']['value']
-                madgraph_sums[measurement] += input[metbin][measurement]['TTJet Before Fit']['value']
+                sums['central'][measurement] += input[metbin][measurement]['TTJet']['value']
+                sums['MADGRAPH'][measurement] += input[metbin][measurement]['TTJet Before Fit']['value']
+                sums['POWHEG'][measurement] += input[metbin][measurement]['POWHEG']['value']
+                sums['PYTHIA6'][measurement] += input[metbin][measurement]['PYTHIA6']['value']
+                sums['noCorr-mcatnlo'][measurement] += input[metbin][measurement]['noCorr-mcatnlo']['value']
     
     for metbin in metbins:
         result[metbin] = {}
@@ -416,11 +436,16 @@ def NormalisedCrossSectionAnalysis(input, bjetbin):
             result_ttbar = input[metbin][measurement]['TTJet']
             madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit']['value']
             value, error = result_ttbar['value'], result_ttbar['error']
-            sumOverAllMETBins = sums[measurement]
-            sumOverAllMETBins_mad = madgraph_sums[measurement]
-            scale = 1 / sumOverAllMETBins
+#            sumOverAllMETBins = sums[measurement]
+#            sumOverAllMETBins_mad = madgraph_sums[measurement]
+#            scale = 1 / sumOverAllMETBins
             
-            result[metbin][measurement] = {'value': value * scale, 'error':error * scale, 'MADGRAPH':madgraph_ttbar/sumOverAllMETBins_mad}
+            result[metbin][measurement] = {'value': value/sums['central'][measurement], 
+                                           'error':error/sums['central'][measurement], 
+                                           'MADGRAPH':input[metbin][measurement]['TTJet Before Fit']['value']/sums['MADGRAPH'][measurement],
+                                           'POWHEG':input[metbin][measurement]['POWHEG']['value']/sums['POWHEG'][measurement],
+                                           'PYTHIA6':input[metbin][measurement]['PYTHIA6']['value']/sums['PYTHIA6'][measurement],
+                                           'noCorr-mcatnlo':input[metbin][measurement]['noCorr-mcatnlo']['value']/sums['noCorr-mcatnlo'][measurement]}
     return result
 
 def getHistograms(bjetbin, metbin):
@@ -676,7 +701,7 @@ def sumSamples(hists):
     return hists
 
 #change to calculate uncertainties
-def calculateTotalUncertainty(results):
+def calculateTotalUncertainty(results, ommitTTJetsSystematics = False):
     pdf_min, pdf_max = calculatePDFErrors(results)
     centralResult = results['central']
     if centralResult.has_key('TTJet'):
@@ -687,6 +712,8 @@ def calculateTotalUncertainty(results):
     uncertainty = {}
     for source in results.keys():
         if source == 'central' or 'PDFWeights_' in source:
+            continue
+        if ommitTTJetsSystematics and source in ['TTJet scale -', 'TTJet scale +', 'TTJet matching -', 'TTJet matching +']:
             continue
         result = results[source]
         if result.has_key('TTJet'):
@@ -842,8 +869,8 @@ def plotNormalisationResults(results, bjetbin):
     global metbins
     for metbin in metbins:
         for measurement, result in results[metbin].iteritems():
-            if not measurement == 'central' and not measurement == 'QCD shape':
-                continue
+#            if not measurement == 'central' and not measurement == 'QCD shape':
+#                continue
 #        result = results[metbin]['central']
             fit = result['fit']
     #        fitvalues = result['fitvalues']
@@ -914,34 +941,77 @@ def plotNormalisationResults(results, bjetbin):
                             savePath + measurement)
 #            c.SaveAs(savePath + measurement + 'EPlusJets_electron_eta_fit_' + measurement + '_' + metbin + '_' + bjetbin + '.png')
 #            c.SaveAs(savePath + 'EPlusJets_electron_eta_fit_' + 'central' + '_' + metbin + '_' + bjetbin + '.pdf')
-def plotCrossSectionResults(result, bjetbin):
+def plotCrossSectionResults(result, bjetbin, compareToSystematic = False):
     
     arglist = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
     plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotMADGRAPH = TH1F("measurement_MC_MADGRAPH" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plotPOWHEG = TH1F("measurement_MC_POWHEG" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plotPYTHIA6 = TH1F("measurement_MC_PYTHIA6" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plotnoCorr_mcatnlo = TH1F("measurement_MC_noCorr-mcatnlo" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plot.SetMinimum(0)
     plot.SetMaximum(60)
-    plotMADGRAPH.SetFillColor(kRed + 1)
+    plotMADGRAPH.SetLineColor(kRed + 1)
+    plotMADGRAPH.SetLineWidth(2)
+    plotPOWHEG.SetLineColor(kBlue)
+    plotPOWHEG.SetLineWidth(2)
+    plotPYTHIA6.SetLineColor(kGreen + 4)
+    plotPYTHIA6.SetLineWidth(2)
+    plotnoCorr_mcatnlo.SetLineColor(kMagenta + 3)
+    plotnoCorr_mcatnlo.SetLineWidth(2)
+    
     legend = plotting.create_legend()
     legend.AddEntry(plot, 'measured', 'LEP')
-    legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'f')
+    if compareToSystematic:
+        legend.AddEntry(plotMADGRAPH, 't#bar{t} (Q^{2} down)', 'l')
+        legend.AddEntry(plotPOWHEG, 't#bar{t} (Q^{2} up)', 'l')
+        legend.AddEntry(plotPYTHIA6, 't#bar{t} (matching threshold 10 GeV)', 'l')
+        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (matching threshold 40 GeV)', 'l')
+    else:
+        legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'l')
+        legend.AddEntry(plotPOWHEG, 't#bar{t} (POWHEG)', 'l')
+        legend.AddEntry(plotPYTHIA6, 't#bar{t} (PYTHIA6)', 'l')
+        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (noCorr-mcatnlo)', 'l')
+    
     bin = 1
     for metbin in metbins:
         centralresult = result[metbin]['central']
-        uncertainty = calculateTotalUncertainty(result[metbin])
-        error = sqrt(centralresult['error'] ** 2 + uncertainty['Total']['value'] ** 2)
         plot.SetBinContent(bin, centralresult['value'])
-        plot.SetBinError(bin, error)
-        plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH'])
-        bin += 1    
-    plot.Draw('e1')
+        if compareToSystematic:
+            plotMADGRAPH.SetBinContent(bin, result[metbin]['TTJet scale -']['MADGRAPH'])
+            plotPOWHEG.SetBinContent(bin, result[metbin]['TTJet scale +']['MADGRAPH'])
+            plotPYTHIA6.SetBinContent(bin, result[metbin]['TTJet matching -']['MADGRAPH'])
+            plotnoCorr_mcatnlo.SetBinContent(bin, result[metbin]['TTJet matching +']['MADGRAPH'])
+        else:
+            plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH'])
+            plotPOWHEG.SetBinContent(bin, centralresult['POWHEG'])
+            plotPYTHIA6.SetBinContent(bin, centralresult['PYTHIA6'])
+            plotnoCorr_mcatnlo.SetBinContent(bin, centralresult['noCorr-mcatnlo'])
+        bin += 1
+    plotAsym = TGraphAsymmErrors(plot)    
+    bin = 0
+    for metbin in metbins:
+        centralresult = result[metbin]['central']
+        uncertainty = calculateTotalUncertainty(result[metbin], compareToSystematic)
+        error_up = sqrt(centralresult['error'] ** 2 + uncertainty['Total+']['value'] ** 2)
+        error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2)
+        plotAsym.SetPointEYhigh(bin, error_up)
+        plotAsym.SetPointEYlow(bin, error_down)
+        bin += 1
+    plot.Draw('P')
     gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
-    plot.Draw('error same')
+    plotPOWHEG.Draw('hist same')
+    plotPYTHIA6.Draw('hist same')
+    plotnoCorr_mcatnlo.Draw('hist same')
+    plotAsym.Draw('same P')
     legend.Draw()
-    plotting.saveAs(c, 'EPlusJets_diff_MET_xsection_' + bjetbin, outputFormat_plots, savePath)
-    
+    if compareToSystematic:
+        plotting.saveAs(c, 'EPlusJets_diff_MET_xsection_compareSystematics_' + bjetbin, outputFormat_plots, savePath)
+    else:
+        plotting.saveAs(c, 'EPlusJets_diff_MET_xsection_' + bjetbin, outputFormat_plots, savePath)
+        
 def printNormalisedCrossSectionResult(result, bjetbin,toFile = True):
     global metbins
     printout = '\n'
@@ -1012,30 +1082,57 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, bjetbin, 
     else:
         print printout
         
-def plotNormalisedCrossSectionResults(result, bjetbin):
+def plotNormalisedCrossSectionResults(result, bjetbin, compareToSystematic = False):
     
     arglist = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
     plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotMADGRAPH = TH1F("measurement_MC_MADGRAPH" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plotPOWHEG = TH1F("measurement_MC_POWHEG" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plotPYTHIA6 = TH1F("measurement_MC_PYTHIA6" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plotnoCorr_mcatnlo = TH1F("measurement_MC_noCorr-mcatnlo" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plot.SetMinimum(0)
     plot.SetMaximum(1)
     plotMADGRAPH.SetLineColor(kRed + 1)
     plotMADGRAPH.SetLineWidth(2)
+    plotPOWHEG.SetLineColor(kBlue)
+    plotPOWHEG.SetLineWidth(2)
+    plotPYTHIA6.SetLineColor(kGreen + 4)
+    plotPYTHIA6.SetLineWidth(2)
+    plotnoCorr_mcatnlo.SetLineColor(kMagenta + 3)
+    plotnoCorr_mcatnlo.SetLineWidth(2)
     legend = plotting.create_legend()
     legend.AddEntry(plot, 'measured', 'LEP')
-    legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'f')
+    if compareToSystematic:
+        legend.AddEntry(plotMADGRAPH, 't#bar{t} (Q^{2} down)', 'l')
+        legend.AddEntry(plotPOWHEG, 't#bar{t} (Q^{2} up)', 'l')
+        legend.AddEntry(plotPYTHIA6, 't#bar{t} (matching threshold 10 GeV)', 'l')
+        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (matching threshold 40 GeV)', 'l')
+    else:
+        legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'l')
+        legend.AddEntry(plotPOWHEG, 't#bar{t} (POWHEG)', 'l')
+        legend.AddEntry(plotPYTHIA6, 't#bar{t} (PYTHIA6)', 'l')
+        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (noCorr-mcatnlo)', 'l')
     bin = 1
     for metbin in metbins:
         centralresult = result[metbin]['central']
         plot.SetBinContent(bin, centralresult['value'])
-        plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH'])
+        if compareToSystematic:
+            plotMADGRAPH.SetBinContent(bin, result[metbin]['TTJet scale -']['MADGRAPH'])
+            plotPOWHEG.SetBinContent(bin, result[metbin]['TTJet scale +']['MADGRAPH'])
+            plotPYTHIA6.SetBinContent(bin, result[metbin]['TTJet matching -']['MADGRAPH'])
+            plotnoCorr_mcatnlo.SetBinContent(bin, result[metbin]['TTJet matching +']['MADGRAPH'])
+        else:
+            plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH'])
+            plotPOWHEG.SetBinContent(bin, centralresult['POWHEG'])
+            plotPYTHIA6.SetBinContent(bin, centralresult['PYTHIA6'])
+            plotnoCorr_mcatnlo.SetBinContent(bin, centralresult['noCorr-mcatnlo'])
         bin += 1    
-    plotAsym = TGraphAsymmErrors(plot);
+    plotAsym = TGraphAsymmErrors(plot)
     bin = 0
     for metbin in metbins:
         centralresult = result[metbin]['central']
-        uncertainty = calculateTotalUncertainty(result[metbin])
+        uncertainty = calculateTotalUncertainty(result[metbin],compareToSystematic)
         error_up = sqrt(centralresult['error'] ** 2 + uncertainty['Total+']['value'] ** 2)
         error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2)
         if DEBUG:
@@ -1045,11 +1142,17 @@ def plotNormalisedCrossSectionResults(result, bjetbin):
         plotAsym.SetPointEYlow(bin, error_down)
         bin += 1 
     plot.Draw('P')
-#    gStyle.SetErrorX(0.4)
+    gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
+    plotPOWHEG.Draw('hist same')
+    plotPYTHIA6.Draw('hist same')
+    plotnoCorr_mcatnlo.Draw('hist same')
     plotAsym.Draw('same P')
     legend.Draw()
-    plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection_' + bjetbin, outputFormat_plots, savePath)
+    if compareToSystematic:
+        plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection_compareSystematics_' + bjetbin, outputFormat_plots, savePath)
+    else:
+        plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection_' + bjetbin, outputFormat_plots, savePath)
     
 if __name__ == '__main__':
     gROOT.SetBatch(True)
@@ -1058,22 +1161,29 @@ if __name__ == '__main__':
     plotting.setStyle()
     
 #    bjetbin = '0orMoreBtag'
-#    bjetbin = '0btag'
+#    N_QCD = 14856
+    bjetbin = '0btag'
+    N_QCD = 10802
+    bjetbin = '1btag'
+    N_QCD = 3422
     bjetbin = '2orMoreBtags'
+    N_QCD = 758
     
     normalisation_result = NormalisationAnalysis(bjetbin=bjetbin)
     printNormalisationResult(result=normalisation_result, bjetbin=bjetbin)
     printNormalisationResultsForTTJetWithUncertanties(result=normalisation_result, bjetbin=bjetbin)
-    plotNormalisationResults(normalisation_result, bjetbin)
+#    plotNormalisationResults(normalisation_result, bjetbin)
     
     crosssection_result = CrossSectionAnalysis(normalisation_result, bjetbin=bjetbin)
     printCrossSectionResult(result=crosssection_result, bjetbin=bjetbin)
     printCrossSectionResultsForTTJetWithUncertanties(result=crosssection_result, bjetbin=bjetbin)
     plotCrossSectionResults(result=crosssection_result, bjetbin=bjetbin)
+    plotCrossSectionResults(result=crosssection_result, bjetbin=bjetbin, compareToSystematic=True)
     
     normalised_crosssection_result = NormalisedCrossSectionAnalysis(normalisation_result, bjetbin='2orMoreBtags')
     printNormalisedCrossSectionResult(result=normalised_crosssection_result, bjetbin=bjetbin)
     printNormalisedCrossSectionResultsForTTJetWithUncertanties(result=normalised_crosssection_result, bjetbin=bjetbin)
     plotNormalisedCrossSectionResults(result=normalised_crosssection_result, bjetbin=bjetbin)
+    plotNormalisedCrossSectionResults(result=normalised_crosssection_result, bjetbin=bjetbin, compareToSystematic=True)
     
     
