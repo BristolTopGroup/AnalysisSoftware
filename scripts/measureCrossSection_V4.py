@@ -26,7 +26,7 @@ N_Events = {}
 N_ttbar_by_source = {}
 DEBUG = False
 constrains = {
-              qcdLabel: {'enabled':True, 'value': 1},
+              qcdLabel: {'enabled':False, 'value': 1},
               'ratio_Z_W': {'enabled':True, 'value': 0.05},
               'W+Jets': {'enabled':False, 'value': 0.3},
               'DYJetsToLL': {'enabled':False, 'value': 0.3},
@@ -67,10 +67,10 @@ allMC_samples = [ 'TTJet', 'DYJetsToLL', 'QCD', 'Di-Boson', 'W+Jets', 'SingleTop
 
 metbins = [
            '0-25',
-               '25-45',
-               '45-70',
-               '70-100',
-               '100-inf'
+#               '25-45',
+#               '45-70',
+#               '70-100',
+#               '100-inf'
                ]
 metbin_widths = {
            '0-25':25,
@@ -105,9 +105,10 @@ metsystematics_sources = [
 use_fit_errors_only = False
 measure_normalised_crossection = False
 
-N_QCD = 0
+N_QCD = 14856
 bjetbin = '0orMoreBtag'
 metbin = metbins[0]
+current_source = 'None'
 
 def MinuitFitFunction(nParameters, gin, f, par, iflag):
     global normalisation, vectors, qcdLabel
@@ -143,6 +144,7 @@ def MinuitFitFunction(nParameters, gin, f, par, iflag):
     if constrains['DYJetsToLL']['enabled']:
         f[0] += ((par[2] - normalisation['DYJetsToLL']) / (constrains['DYJetsToLL']['value'] * normalisation['DYJetsToLL'])) ** 2
     if constrains[qcdLabel]['enabled']:
+        print 'yes!'
         f[0] += ((par[3] - N_QCD) / (constrains[qcdLabel]['value'] * N_QCD)) ** 2
 #    if constrains['Di-Boson']['enabled']:
 #        f[0] += ((par[4] - normalisation['Di-Boson']) / (constrains['Di-Boson']['value'] * normalisation['Di-Boson'])) ** 2
@@ -183,20 +185,17 @@ def getFittedNormalisation(vectors_={}, normalisation_={}):
     N_total = normalisation['ElectronHad']
 #    N_total = 1e6
     N_min = 0
-    qcdHistForEstimation = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/QCD e+jets PFRelIso/Electron_patType1CorrectedPFMet_bin_%s/electron_pfIsolation_03_%s'
-    qcdHistForEstimation = qcdHistForEstimation % (metbin, bjetbin)
-    qcdResult = QCDRateEstimation.estimateQCDWithRelIso(FILES.files, qcdHistForEstimation)
-    N_QCD = qcdResult['estimate']
-#    N_QCD = 14000
+    
+    N_QCD = normalisation[qcdLabel]
 #    N_QCD = normalisation['QCD']
     if DEBUG:
         print len(vectors['ElectronHad']), len(vectors['Signal']), len(vectors['W+Jets']), len(vectors['DYJetsToLL']), len(vectors['QCDFromData'])
         print "Total number of data events before the fit: ", N_total
     N_signal = normalisation['TTJet'] + normalisation['SingleTop']
-    gMinuit.mnparm(0, "N_signal(ttbar+single_top)", N_signal, 1.0, N_min, N_total, errorFlag)
-    gMinuit.mnparm(1, "W+Jets", normalisation['W+Jets'], 1.0, N_min, N_total, errorFlag)
-    gMinuit.mnparm(2, "DYJetsToLL", normalisation['DYJetsToLL'], 1.0, N_min, N_total, errorFlag)
-    gMinuit.mnparm(3, "QCD", N_QCD, 1.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(0, "N_signal(ttbar+single_top)", N_signal, 10.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(1, "W+Jets", normalisation['W+Jets'], 10.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(2, "DYJetsToLL", normalisation['DYJetsToLL'], 10.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(3, "QCD", N_QCD, 10.0, N_min, N_total, errorFlag)
 #    gMinuit.mnparm(4, "Di-Boson", normalisation['Di-Boson'], 10.0, 0, N_total, errorFlag)
     
     arglist = array('d', 10 * [0.])
@@ -242,6 +241,10 @@ def measureNormalisationIn(histogram):
     normalisation = getNormalisation(histogram)
     templates = getTemplates(histogram)
     vectors = vectorise(templates)
+    qcdHistForEstimation = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/QCD e+jets PFRelIso/Electron_patType1CorrectedPFMet_bin_%s/electron_pfIsolation_03_%s'
+    qcdHistForEstimation = qcdHistForEstimation % (metbin, bjetbin)
+    qcdResult = QCDRateEstimation.estimateQCDWithRelIso(FILES.files, qcdHistForEstimation)
+    normalisation[qcdLabel] = qcdResult['estimate']
     
     if DEBUG:
         printNormalisation(normalisation)
@@ -251,6 +254,7 @@ def measureNormalisationIn(histogram):
     return fitted_result
 
 def measureNormalisationIncludingSystematics(histograms):
+    global current_source
     fitted_results = {}
     print 'Performing central measurement'
     timer = Timer()
@@ -261,17 +265,20 @@ def measureNormalisationIncludingSystematics(histograms):
     timer.restart()
     print 'Performing measurement of systematic uncertainties (lumi, electron efficiency, single top cross-section)'
     #electron efficiency += 3%
+    current_source = 'Electron Efficiency'
     scale_factors['luminosity'] = 1. + 0.03
     fitted_results['Electron Efficiency +'] = measureNormalisationIn(histogram)
     scale_factors['luminosity'] = 1. - 0.03
     fitted_results['Electron Efficiency -'] = measureNormalisationIn(histogram)
     #luminosity uncertainty +- 2.2%
+    current_source = 'luminosity'
     scale_factors['luminosity'] = 1. + 0.022
     fitted_results['Luminosity +'] = measureNormalisationIn(histogram)
     scale_factors['luminosity'] = 1. - 0.022
     fitted_results['Luminosity -'] = measureNormalisationIn(histogram)
     scale_factors['luminosity'] = 1.#reset
     #single top cross-section: +-30%
+    current_source = 'singleTop'
     scale_factors['singleTop'] = 1. + 0.3
     fitted_results['SingleTop +'] = measureNormalisationIn(histogram)
     scale_factors['singleTop'] = 1. - 0.3
@@ -281,10 +288,12 @@ def measureNormalisationIncludingSystematics(histograms):
     timer.restart()
     print 'Performing measurement of QCD shape uncertainty, JES and PU uncertainties'
     #QCD shape
+    current_source = 'QCD shape'
     histogram['QCDFromData'] = histogram['QCDFromData_AntiIsolated']
     fitted_results['QCD shape'] = measureNormalisationIn(histogram)
     timer.restart()
     #jet energy scale
+    current_source = 'JES'
     histogram = histograms['JES+']
     histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
     fitted_results['JES+'] = measureNormalisationIn(histogram)
@@ -292,6 +301,7 @@ def measureNormalisationIncludingSystematics(histograms):
     histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
     fitted_results['JES-'] = measureNormalisationIn(histogram)
     #inelastic cross-section for pile-up calculation +- 5%
+    current_source = 'PileUp'
     histogram = histograms['PileUp+']
     histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
     fitted_results['PileUp+'] = measureNormalisationIn(histogram)
@@ -303,6 +313,7 @@ def measureNormalisationIncludingSystematics(histograms):
     
     print 'Performing measurement of matching and scale systematic uncertainties'
     #matching threshold ttbar: 20 GeV -> 10 GeV & 40GeV
+    current_source = 'TTJet matching'
     histogram = histograms['central']
     histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
     ttjet_temp = deepcopy(histogram['TTJet'])
@@ -313,6 +324,7 @@ def measureNormalisationIncludingSystematics(histograms):
     scale_factors['TTJet'] = N_Events['TTJet'] / N_Events['TTJets-matchingdown']
     fitted_results['TTJet matching -'] = measureNormalisationIn(histogram)
     #Q^2 scale ttbar
+    current_source = 'TTJet scale'
     histogram['TTJet'] = histogram['TTJets-scaleup']
     scale_factors['TTJet'] = N_Events['TTJet'] / N_Events['TTJets-scaleup']
     fitted_results['TTJet scale +'] = measureNormalisationIn(histogram)
@@ -323,6 +335,7 @@ def measureNormalisationIncludingSystematics(histograms):
     scale_factors['TTJet'] = 1
     histogram['TTJet'] = ttjet_temp
     #matching threshold W+Jets
+    current_source = 'W+Jets matching'
     wjets_temp = deepcopy(histogram['W+Jets'])
     histogram['W+Jets'] = histogram['WJets-matchingup']
     scale_factors['W+Jets'] = N_Events['W+Jets'] / N_Events['WJets-matchingup']
@@ -331,6 +344,7 @@ def measureNormalisationIncludingSystematics(histograms):
     scale_factors['W+Jets'] = N_Events['W+Jets'] / N_Events['WJets-matchingdown']
     fitted_results['W+Jets matching -'] = measureNormalisationIn(histogram)
     #Q^2 scale W+Jets
+    current_source = 'W+Jets scale'
     histogram['W+Jets'] = histogram['WJets-scaleup']
     scale_factors['W+Jets'] = N_Events['W+Jets'] / N_Events['WJets-scaleup']
     fitted_results['W+Jets scale +'] = measureNormalisationIn(histogram)
@@ -341,6 +355,7 @@ def measureNormalisationIncludingSystematics(histograms):
     scale_factors['W+Jets'] = 1
     histogram['W+Jets'] = wjets_temp
     #matching threshold Z+Jets
+    current_source = 'Z+Jets matching'
     zjets_temp = deepcopy(histogram['DYJetsToLL'])
     histogram['DYJetsToLL'] = histogram['ZJets-matchingup']
     scale_factors['DYJetsToLL'] = N_Events['DYJetsToLL'] / N_Events['ZJets-matchingup']
@@ -349,6 +364,7 @@ def measureNormalisationIncludingSystematics(histograms):
     scale_factors['DYJetsToLL'] = N_Events['DYJetsToLL'] / N_Events['ZJets-matchingdown']
     fitted_results['Z+Jets matching -'] = measureNormalisationIn(histogram)
     #Q^2 scale Z+Jets
+    current_source = 'Z+Jets scale'
     histogram['DYJetsToLL'] = histogram['ZJets-scaleup']
     scale_factors['DYJetsToLL'] = N_Events['DYJetsToLL'] / N_Events['ZJets-scaleup']
     fitted_results['Z+Jets scale +'] = measureNormalisationIn(histogram)
@@ -362,8 +378,12 @@ def measureNormalisationIncludingSystematics(histograms):
     timer.restart()
     print 'Performing measurement of MET systematic uncertainties'
     for source in metsystematics_sources:
+        current_source = source
         histogram = histograms[source]
         histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
+        if 'JetRes' in source:
+            histogram['QCDFromData'] = histograms['central']['QCDFromData_Conversions']
+            histogram['ElectronHad'] = histograms['central']['ElectronHad']
         fitted_results[source] = measureNormalisationIn(histogram)
     print '>' * 60, 'completed in %.2fs' % timer.elapsedTime()
     timer.restart()
@@ -375,6 +395,7 @@ def measureNormalisationIncludingSystematics(histograms):
     scale_factors['TTJet'] = 7490162 / 6093274
     for index in range(1, 45):
         pdf = 'TTJet_%d' % index
+        current_source = pdf
         histogram['TTJet'] = histogram_pdf[pdf]
         fitted_results['PDFWeights_%d' % index] = measureNormalisationIn(histogram)
     scale_factors['TTJet'] = 1.   
@@ -568,9 +589,11 @@ def prepareHistogramCollections(histogramCollection):
     global metsystematics_sources
     
 def printNormalisation(normalisation_):
-    global qcdLabel
-    sumMC = normalisation_['SumMC'] - normalisation + ['QCD'] + normalisation_[qcdLabel]
+    global qcdLabel, metbin, current_source
+    sumMC = normalisation_['SumMC'] - normalisation_['QCD'] + normalisation_[qcdLabel]
     print '*' * 120
+    print 'MET bin: ', metbin
+    print 'source:', current_source
     print "Input parameters:"
     print 'signal (ttbar+single top):', normalisation_['TTJet'] + normalisation_['SingleTop']
     print 'W+Jets:', normalisation_['W+Jets']
@@ -581,10 +604,12 @@ def printNormalisation(normalisation_):
 #    print 'Di-Boson:', normalisation_['Di-Boson']
     print 'SumMC:', sumMC
     print 'Total data', normalisation_['ElectronHad']
-    print '(N_{data} - N_{SumMC})/N_{data}', (normalisation_['ElectronHad'] - sumMC) / normalisation_['ElectronHad']
+    if not normalisation_['ElectronHad'] == 0:
+        print '(N_{data} - N_{SumMC})/N_{data}', (normalisation_['ElectronHad'] - sumMC) / normalisation_['ElectronHad']
     print '*' * 120
     
 def printFittedResult(fitted_result):
+    global current_source
     sumMC = sum([fitted_result['Signal']['value'],
                  fitted_result['W+Jets']['value'],
                  fitted_result['DYJetsToLL']['value'],
@@ -593,6 +618,8 @@ def printFittedResult(fitted_result):
                 ]
                 )
     print '*' * 120
+    print 'MET bin: ', metbin
+    print 'source:', current_source
     print "Fit values:"
     print 'signal (ttbar+single top):', fitted_result['Signal']['value'], '+-', fitted_result['Signal']['error']
     print 'W+Jets:', fitted_result['W+Jets']['value'], '+-', fitted_result['W+Jets']['error']
@@ -1294,6 +1321,7 @@ def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
         plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection_' + bjetbin, outputFormat_plots, savePath)
     
 if __name__ == '__main__':
+#    DEBUG = True
     completeAnalysisTimer = Timer()
     gROOT.SetBatch(True)
     gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
