@@ -26,7 +26,7 @@ N_Events = {}
 N_ttbar_by_source = {}
 DEBUG = False
 constrains = {
-              qcdLabel: {'enabled':False, 'value': 1},
+              qcdLabel: {'enabled':True, 'value': 1},
               'ratio_Z_W': {'enabled':True, 'value': 0.05},
               'W+Jets': {'enabled':False, 'value': 0.3},
               'DYJetsToLL': {'enabled':False, 'value': 0.3},
@@ -67,10 +67,10 @@ allMC_samples = [ 'TTJet', 'DYJetsToLL', 'QCD', 'Di-Boson', 'W+Jets', 'SingleTop
 
 metbins = [
            '0-25',
-#               '25-45',
-#               '45-70',
-#               '70-100',
-#               '100-inf'
+               '25-45',
+               '45-70',
+               '70-100',
+               '100-inf'
                ]
 metbin_widths = {
            '0-25':25,
@@ -144,7 +144,6 @@ def MinuitFitFunction(nParameters, gin, f, par, iflag):
     if constrains['DYJetsToLL']['enabled']:
         f[0] += ((par[2] - normalisation['DYJetsToLL']) / (constrains['DYJetsToLL']['value'] * normalisation['DYJetsToLL'])) ** 2
     if constrains[qcdLabel]['enabled']:
-        print 'yes!'
         f[0] += ((par[3] - N_QCD) / (constrains[qcdLabel]['value'] * N_QCD)) ** 2
 #    if constrains['Di-Boson']['enabled']:
 #        f[0] += ((par[4] - normalisation['Di-Boson']) / (constrains['Di-Boson']['value'] * normalisation['Di-Boson'])) ** 2
