@@ -44,17 +44,17 @@ void Analysis::analyse() {
 //		hltriggerQCDAnalyserInclusive_->analyse(currentEvent);
 //		hltriggerQCDAnalyserExclusive_->analyse(currentEvent);
 		jetAnalyser->analyse(currentEvent);
-		if (currentEvent->getDataType() == DataType::TTJets) {
-			mcAnalyser->analyse(currentEvent);
-			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
-			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
-			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
-			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
-		}
+//		if (currentEvent->getDataType() == DataType::TTJets) {
+//			mcAnalyser->analyse(currentEvent);
+//			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
+//			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
+//			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
+//			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
+//		}
 		//hitfit analyser has to be after mcAnalyser as it depends on it
-		if (Globals::useHitFit) {
-			hitfitAnalyser->analyse(currentEvent);
-		}
+//		if (Globals::useHitFit) {
+//			hitfitAnalyser->analyse(currentEvent);
+//		}
 		metAnalyser->analyse(currentEvent);
 		mttbarAnalyser->analyse(currentEvent);
 		muonAnalyser->analyse(currentEvent);
