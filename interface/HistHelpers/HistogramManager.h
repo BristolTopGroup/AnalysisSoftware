@@ -17,6 +17,7 @@
 #include <boost/multi_array.hpp>
 #include "TFile.h"
 #include <string>
+#include <vector>
 
 namespace BAT {
 typedef boost::array<TH1CollectionRef, DataType::NUMBER_OF_DATA_TYPES> TH1Array;
@@ -169,6 +170,7 @@ public:
 
 	void beginDataType(DataType::value type);
 	void endDataType();
+
 private:
 
 	void add1DHistogramFolder(std::string folder);
@@ -188,6 +190,7 @@ private:
 	boost::unordered_map<std::string, TH3Array> collection3D;
 
 	bool debugMode;
+	std::vector<double> bjetbin_weights_;
 
 	const std::string assembleFilename(DataType::value) const;
 	void createJetSummedHistograms(DataType::value);

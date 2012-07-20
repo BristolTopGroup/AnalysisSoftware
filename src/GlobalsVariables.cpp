@@ -36,6 +36,8 @@ MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
 int Globals::JESsystematic = 0;
+int Globals::BJetSystematic = 0;
+int Globals::LightJetSystematic = 0;
 
 //Level7 JEC arrays
 boost::array< boost::shared_ptr<TF1>, 12 > Globals::bL7Corrections = {{

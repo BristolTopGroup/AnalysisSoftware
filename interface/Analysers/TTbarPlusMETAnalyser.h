@@ -12,6 +12,7 @@
 #include "METAnalyser.h"
 #include "ElectronAnalyser.h"
 #include "VertexAnalyser.h"
+#include "JetAnalyser.h"
 #include "../Selections/BasicSelection.h"
 #include "../../interface/Selections/QCDNoIsoNoIDSelection.h"
 
@@ -92,7 +93,7 @@ private:
 	std::vector<ElectronAnalyserPtr> qcdPFRelIsoBinnedElectronAnalysers_;
 	std::vector<ElectronAnalyserPtr> qcdAntiIDBinnedElectronAnalysers_;
 	std::vector<ElectronAnalyserPtr> qcdNoIsoNoIDBinnedElectronAnalysers_;
-
+	JetAnalyserLocalPtr jetAnalyserRefSelection_, jetAnalyserRefSelection_noBtagWeights_;
 };
 
 typedef boost::scoped_ptr<BAT::TTbarPlusMETAnalyser> TTbarPlusMETAnalyserLocalPtr;

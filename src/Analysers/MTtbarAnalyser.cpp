@@ -15,7 +15,6 @@
 namespace BAT {
 
 void MTtbarAnalyser::analyse(const EventPtr event) {
-//	TopPairEventCandidatePtr ttbarCand(new TopPairEventCandidate(*event.get()));
 	weight = event->weight();
 	analyseFourJetChi2(event);
 	analyseThreeJetChi2(event);

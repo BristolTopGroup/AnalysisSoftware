@@ -24,8 +24,7 @@ HistogramManager::HistogramManager() : //
 		collection1D(), //
 		collection2D(), //
 		collection3D(), //
-		debugMode(false) //
-{
+		debugMode(false) {
 }
 
 HistogramManager::~HistogramManager() {
@@ -279,16 +278,23 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 	std::string metAlgo = METAlgorithm::names[Globals::metAlgorithm];
 	std::string muonAlgo = MuonAlgorithm::names[Globals::muonAlgorithm];
 	std::string jesSyst = (Globals::JESsystematic > 0) ? "_plusJES" : "_minusJES";
+	std::string bjetSyst = (Globals::BJetSystematic > 0) ? "_plusBjet" : "_minusBJet";
+	std::string lightJetSyst = (Globals::LightJetSystematic > 0) ? "_plusLightJet" : "_minusLightJet";
 	std::string suffix = Globals::custom_file_suffix;
-	std::string pdfWeight = (Globals::pdfWeightNumber != 0) ? "_PDF_" + boost::lexical_cast<std::string>(Globals::pdfWeightNumber) : "";
+	std::string pdfWeight =
+			(Globals::pdfWeightNumber != 0) ? "_PDF_" + boost::lexical_cast<std::string>(Globals::pdfWeightNumber) : "";
 	if (Globals::JESsystematic == 0)
 		jesSyst = "";
+	if (Globals::BJetSystematic == 0)
+		bjetSyst = "";
+	if (Globals::LightJetSystematic == 0)
+		lightJetSyst = "";
 	if (suffix != "")
 		suffix = "_" + suffix;
 
 	str << name << "_" << Globals::luminosity << "pb";
 	str << "_" << electronAlgo << "_" << muonAlgo << "_" << jetAlgo << "_" << metAlgo;
-	str << jesSyst << pdfWeight << suffix << ".root";
+	str << jesSyst << pdfWeight << bjetSyst << lightJetSyst << suffix << ".root";
 	return str.str();
 
 }

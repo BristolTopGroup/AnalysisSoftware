@@ -61,6 +61,8 @@ struct Globals {
 	static boost::array<boost::shared_ptr<TF1>, 12> bL7Corrections;
 	static boost::array<boost::shared_ptr<TF1>, 12> lightL7Corrections;
 	static int JESsystematic;
+	static int BJetSystematic;
+	static int LightJetSystematic;
 
 	//good jet definition
 //	static double maxAbsoluteJetEta;

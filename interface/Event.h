@@ -72,6 +72,7 @@ protected:
 	unsigned long lumiBlock;
 	double eventWeight;
 	double pileUpWeight_;
+	std::vector<double> bjetWeights_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, PUWeight3D_, PUWeightShiftUp_, PUWeightShiftDown_;
 
@@ -173,6 +174,7 @@ public:
 	unsigned long lumiblock() const;
 	double weight() const;
 	double PileUpWeight() const;
+	std::vector<double> BjetWeights(const JetCollection bjets) const;
 	void inspect() const;
 	bool HLT(HLTriggers::value trigger) const;
 	int HLTPrescale(HLTriggers::value trigger) const;

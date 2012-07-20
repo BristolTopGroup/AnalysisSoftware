@@ -18,8 +18,11 @@ public:
 	virtual ~JetAnalyser();
 
 	void analyse(const EventPtr);
+//	void analyseJets(JetCollection jets, double weight);
 	void createHistograms();
 };
+
+typedef boost::scoped_ptr<JetAnalyser> JetAnalyserLocalPtr;
 
 } /* namespace BAT */
 #endif /* JETANALYSER_H_ */

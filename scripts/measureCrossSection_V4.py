@@ -101,6 +101,21 @@ metsystematics_sources = [
         "patType1p2CorrectedPFMetUnclusteredEnUp",
         "patType1p2CorrectedPFMetUnclusteredEnDown"
                       ]
+
+metsystematics_sources_latex = {
+ "patType1p2CorrectedPFMetElectronEnUp":'Electron energy $+1\sigma$',
+        "patType1p2CorrectedPFMetElectronEnDown":'Electron energy $-1\sigma$',
+        "patType1p2CorrectedPFMetMuonEnUp":'Muon energy $+1\sigma$',
+        "patType1p2CorrectedPFMetMuonEnDown":'Muon energy $-1\sigma$',
+        "patType1p2CorrectedPFMetTauEnUp":'Tau energy $+1\sigma$',
+        "patType1p2CorrectedPFMetTauEnDown":'Tau energy $-1\sigma$',
+        "patType1p2CorrectedPFMetJetResUp":'Jet resolution $+1\sigma$',
+        "patType1p2CorrectedPFMetJetResDown":'Jet resolution $-1\sigma$',
+        "patType1p2CorrectedPFMetJetEnUp":'Jet energy $+1\sigma$',
+        "patType1p2CorrectedPFMetJetEnDown":'Jet energy $-1\sigma$',
+        "patType1p2CorrectedPFMetUnclusteredEnUp":'Unclustered energy $+1\sigma$',
+        "patType1p2CorrectedPFMetUnclusteredEnDown":'Unclustered energy $-1\sigma$'
+                      }
 #steering variables:
 use_fit_errors_only = False
 measure_normalised_crossection = False
@@ -496,6 +511,10 @@ def getHistograms(bjetbin, metbin):
     distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, bjetbin)
     qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
     qcdDistribution2 = base + 'QCD non iso e+jets/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
+    
+#    distribution = base + 'Electron_patType1p2CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, bjetbin)
+#    qcdDistribution = base + 'QCDConversions/Electron_patType1p2CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
+#    qcdDistribution2 = base + 'QCD non iso e+jets/Electron_patType1p2CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
 
     histogramCollection = {}
     histogramCollection['central'] = FileReader.getHistogramDictionary(distribution, FILES.files)
@@ -768,7 +787,7 @@ def calculateTotalUncertainty(results, ommitTTJetsSystematics = False):
         if result.has_key('TTJet'):
             result = results['central']['TTJet']
         value, error = result['value'], result['error']
-        diff = value - centralvalue
+        diff = abs(value) - abs(centralvalue)
         diff_error = sqrt((centralerror / centralvalue) ** 2 + (error / value) ** 2) * abs(diff)
         uncertainty[source] = {'value':diff, 'error':diff_error}
         if diff > 0:
@@ -962,8 +981,8 @@ def calculatePDFErrors(results):
             negative.append(value)
         else:
             positive.append(value)
-    pdf_max = numpy.sqrt(sum(max(x - centralvalue, y - centralvalue, 0) for x, y in zip(negative, positive)))
-    pdf_min = numpy.sqrt(sum(max(centralvalue - x, centralvalue - y, 0) for x, y in zip(negative, positive)))
+    pdf_max = numpy.sqrt(sum(max(x - centralvalue, y - centralvalue, 0)**2 for x, y in zip(negative, positive)))
+    pdf_min = numpy.sqrt(sum(max(centralvalue - x, centralvalue - y, 0)**2 for x, y in zip(negative, positive)))
     return pdf_min, pdf_max   
     
     
@@ -971,8 +990,8 @@ def plotNormalisationResults(results):
     global metbins
     for metbin in metbins:
         for measurement, result in results[metbin].iteritems():
-            if not measurement == 'central' and not measurement == 'QCD shape':
-                continue
+#            if not measurement == 'central' and not measurement == 'QCD shape':
+#                continue
 #        result = results[metbin]['central']
             fit = result['fit']
     #        fitvalues = result['fitvalues']
@@ -1163,8 +1182,8 @@ def printNormalisedCrossSectionResult(result,toFile = True):
             fitresult = result[metbin][source]
             scale = 100/width
             relativeError = getRelativeError(fitresult['value'], fitresult['error'])
-            text = ' $(%.2f \pm %.2f) \cdot 10^{-2}$ ' % (fitresult['value']*scale,fitresult['error']*scale) + '(%.2f' % (relativeError * 100) + '\%)'
-            text = ' $%.2f \pm %.2f $ ' % (fitresult['value']*scale,fitresult['error']*scale) + '(%.2f' % (relativeError * 100) + '\%)'
+            text = ' $(%.2f \pm %.2f) \cdot 10^{-2}$ ' % (fitresult['value'] * scale, fitresult['error'] * scale) + '(%.2f' % (relativeError * 100) + '\%)'
+#            text = ' $%.2f \pm %.2f $ ' % (fitresult['value']*scale,fitresult['error']*scale) + '(%.2f' % (relativeError * 100) + '\%)'
             if rows.has_key(source):
                 rows[source].append(text)
             else:
@@ -1222,7 +1241,10 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile = 
         for source in uncertainty.keys():
             unc_result = uncertainty[source]
             if not uncertainties.has_key(source):
-                uncertainties[source] = source + ' & '
+                if source in metsystematics_sources:
+                    uncertainties[source] = metsystematics_sources_latex[source] + ' & '
+                else:
+                    uncertainties[source] = source + ' & '
             relativeError = getRelativeError(centralresult['value'], unc_result['value'])
 #            text = ' $(%.2f \pm %.2f) \cdot 10^{-2} $ ' % (unc_result['value']*scale,unc_result['error']*scale) + '(%.2f' % (relativeError * 100) + '\%) &'
             text = '%.2f' % (relativeError * 100) + '\% &'
@@ -1262,7 +1284,7 @@ def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
     plotPYTHIA6.SetLineWidth(2)
     plotnoCorr_mcatnlo.SetLineColor(kMagenta + 3)
     plotnoCorr_mcatnlo.SetLineWidth(2)
-    legend = plotting.create_legend()
+    legend = plotting.create_legend(x0=0.6, y1 = 0.5)
     legend.AddEntry(plot, 'measured', 'LEP')
     if compareToSystematic:
         legend.AddEntry(plotMADGRAPH, 't#bar{t} (Q^{2} down)', 'l')
@@ -1328,14 +1350,15 @@ if __name__ == '__main__':
     plotting.setStyle()
     
     bjetbin = '0orMoreBtag'
-#    bjetbin = '0btag'
-#    bjetbin = '1btag'
-#    bjetbin = '2orMoreBtags'
+    bjetbin = '0btag'
+    bjetbin = '1btag'
+    bjetbin = '2orMoreBtags'
+#    bjetbin = '1orMoreBtag'
     
     normalisation_result = NormalisationAnalysis()
     printNormalisationResult(normalisation_result)
     printNormalisationResultsForTTJetWithUncertanties(normalisation_result)
-    plotNormalisationResults(normalisation_result)
+#    plotNormalisationResults(normalisation_result)
     
     crosssection_result = CrossSectionAnalysis(normalisation_result)
     printCrossSectionResult(crosssection_result)

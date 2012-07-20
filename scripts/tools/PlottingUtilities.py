@@ -84,6 +84,15 @@ def create_cms_label(lumiInInvPb, njet="4orMoreJets", nbjet="0orMoreBtag", chann
     
     return mytext
 
+def create_legend(x0=0.696, y0 = 0.95, x1=0.94, y1=0.55):
+#    legend = TLegend(0.6, 0.7, 0.94, 0.92);
+    legend = TLegend(x0, y0, x1, y1)
+    legend.SetBorderSize(0);
+    legend.SetLineStyle(0);
+    legend.SetTextFont(42);
+    legend.SetFillStyle(0);
+    return legend
+
 def saveAs(canvas, name, outputFormats=['png'], outputFolder=''):
     canvas.RedrawAxis()
     if not outputFolder == '' and not outputFolder.endswith('/'):
