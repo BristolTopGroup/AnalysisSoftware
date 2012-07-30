@@ -506,7 +506,8 @@ const METPointer Event::MET() const {
 }
 
 const METPointer Event::GenMET() const {
-	return genMet_;
+	return MET(METAlgorithm::GenMET);
+//	return genMet_;
 }
 
 const METPointer Event::MET(METAlgorithm::value type) const {
@@ -755,8 +756,7 @@ bool Event::passesNoisySCFilter() const {
 
 std::vector<double> Event::BjetWeights(const JetCollection bjets) const {
 	std::vector<double> bjetWeights;
-	unsigned int numberOfBjets(bjets.size());
-	for (unsigned int index = 0; index < numberOfBjets; ++index) {
+	for (unsigned int index = 0; index < 5; ++index) {
 		bjetWeights.push_back(0);
 	}
 
@@ -767,7 +767,7 @@ std::vector<double> Event::BjetWeights(const JetCollection bjets) const {
 
 	const boost::array<double, 15> ptbins = { { 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500 } };
 
-
+	unsigned int numberOfBjets(bjets.size());
 	for (unsigned int index = 0; index < numberOfBjets; ++index) {
 		const JetPointer jet(bjets.at(index));
 //		if (jet->isBJet(bjetAlgo, WP) && fabs(jet->eta()) < 2.4) {

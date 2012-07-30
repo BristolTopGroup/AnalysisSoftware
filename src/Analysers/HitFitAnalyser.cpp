@@ -16,7 +16,7 @@
 using namespace BAT;
 
 void HitFitAnalyser::analyse(const EventPtr event) {
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	//fit only the events that pass full ttbar selection
 	if (!topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event))
 		;
@@ -103,7 +103,6 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	}
 
 	std::sort(jetCopy.begin(), jetCopy.end(), jetPtComp);
-
 
 	jetsForFitting.clear();
 	unsigned numJetsToFit = jetCopy.size();
@@ -361,7 +360,6 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 				*newWj2 = newJet;
 		}
 	}
-
 
 	BAT::TtbarHypothesis hyp(newEle, newMet, newLep, newHad, newWj1, newWj2);
 

@@ -13,7 +13,7 @@ namespace BAT {
 void VertexAnalyser::analyse(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
-	double weight = event->weight()*prescale_;
+	double weight = event->weight() * prescale_ * scale_;
 	double pileUpWeight = event->PileUpWeight();
 	double lumiWeightOnly = weight / pileUpWeight;
 	unsigned int nVertices = event->Vertices().size();

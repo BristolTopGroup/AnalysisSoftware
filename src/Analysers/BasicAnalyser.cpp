@@ -12,7 +12,8 @@ BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan, std::string histogramF
 		histMan_(histMan), //
 		histogramFolder_(histogramFolder), //
 		weight_(1.),//
-		prescale_(1){
+		prescale_(1),//
+		scale_(1){
 
 }
 
@@ -22,5 +23,9 @@ BasicAnalyser::~BasicAnalyser() {
 
 void BasicAnalyser::setPrescale(unsigned int prescale){
 	prescale_ = prescale;
+}
+
+void BasicAnalyser::setScale(double scale){
+	scale_ = scale;
 }
 }

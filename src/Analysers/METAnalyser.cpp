@@ -11,23 +11,16 @@ namespace BAT {
 
 void METAnalyser::analyse(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight() * prescale_;
-
-	if (!event->isRealData()) {
-		histMan_->H1D("GenMET")->Fill(event->GenMET()->et(), weight_);
-		histMan_->H1D("GenMET_Ex")->Fill(event->GenMET()->px(), weight_);
-		histMan_->H1D("GenMET_Ey")->Fill(event->GenMET()->py(), weight_);
-		histMan_->H1D("GenMET_phi")->Fill(event->GenMET()->phi(), weight_);
-	}
+	weight_ = event->weight() * prescale_ * scale_;
 
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
-			if (index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown)
-				if (event->isRealData()) //these METs are MC only (Jet resolution systematics)
-					continue;
+			bool isMCOnlyMET = index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown || index == METAlgorithm::GenMET;
+			if (isMCOnlyMET && event->isRealData()) //these METs are MC only (Jet resolution systematics)
+				continue;
 			const METPointer met(event->MET(metType));
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 			histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);
@@ -44,12 +37,16 @@ void METAnalyser::analyse(const EventPtr event) {
 
 void METAnalyser::analyseTransverseMass(const EventPtr event, const ParticlePointer particle) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight() * prescale_;
+	weight_ = event->weight() * prescale_ * scale_;
 
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
 		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
+			bool isMCOnlyMET = index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+					|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown || index == METAlgorithm::GenMET;
+			if (isMCOnlyMET && event->isRealData())
+				continue; //skip MC only METs for real data
 			//do not fill histograms for met systematics
 			if (index > METAlgorithm::patType1p2CorrectedPFMet)
 				continue;
@@ -79,14 +76,6 @@ double METAnalyser::transverseMass(const METPointer met, const ParticlePointer p
 
 void METAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-
-	histMan_->addH1D("GenMET", "Generated Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0, 1000);
-	histMan_->addH1D("GenMET_Ex", "Generated Missing energy y-component; #slash{E}_{X}/GeV; events/1 GeV", 1000, -500,
-			500);
-	histMan_->addH1D("GenMET_Ey", "Generated Missing energy y-component; #slash{E}_{Y}/GeV; events/1 GeV", 1000, -500,
-			500);
-	histMan_->addH1D("GenMET_phi", "#phi(Generated Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80, -4,
-			4);
 
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);

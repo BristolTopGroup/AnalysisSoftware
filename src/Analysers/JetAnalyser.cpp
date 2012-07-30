@@ -12,7 +12,7 @@ namespace BAT {
 void JetAnalyser::analyse(const EventPtr event) {
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight() * prescale_;
+	weight_ = event->weight() * prescale_ * scale_;
 	const JetCollection jets = event->Jets();
 
 	unsigned int numberOfBJets(0);
@@ -37,34 +37,6 @@ void JetAnalyser::analyse(const EventPtr event) {
 	histMan_->H1D("N_Jets")->Fill(jets.size(), weight_);
 	histMan_->H1D("N_BJets")->Fill(numberOfBJets, weight_);
 }
-
-//void JetAnalyser::analyseJets(const JetCollection jets, double weight) {
-//
-//	histMan_->setCurrentHistogramFolder(histogramFolder_);
-//	weight_ = weight * prescale_;
-//
-//	unsigned int numberOfBJets(0);
-//	for (unsigned int index = 0; index < jets.size(); ++index) {
-//		const JetPointer jet(jets.at(index));
-//		histMan_->H1D("all_jet_pT")->Fill(jet->pt(), weight_);
-//		histMan_->H1D("all_jet_phi")->Fill(jet->phi(), weight_);
-//		histMan_->H1D("all_jet_eta")->Fill(jet->eta(), weight_);
-//		if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM))
-//			++numberOfBJets;
-//
-//		if (index < 7) {
-//			stringstream temp;
-//			temp << "jet" << (index + 1);
-//			string nthJet = temp.str();
-//			histMan_->H1D(nthJet + "_pT")->Fill(jet->pt(), weight_);
-//			histMan_->H1D(nthJet + "_phi")->Fill(jet->phi(), weight_);
-//			histMan_->H1D(nthJet + "_eta")->Fill(jet->eta(), weight_);
-//		}
-//
-//	}
-//	histMan_->H1D("N_Jets")->Fill(jets.size(), weight_);
-//	histMan_->H1D("N_BJets")->Fill(numberOfBJets, weight_);
-//}
 
 void JetAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);

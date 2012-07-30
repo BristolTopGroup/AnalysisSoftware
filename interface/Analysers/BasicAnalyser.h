@@ -26,6 +26,7 @@ protected:
 	std::string histogramFolder_;
 	double weight_;
 	unsigned int prescale_;
+	double scale_;
 
 public:
 	/**
@@ -51,6 +52,7 @@ public:
 	virtual void createHistograms() = 0;
 
 	virtual void setPrescale(unsigned int prescale);
+	virtual void setScale(double scale);
 };
 
 typedef boost::scoped_ptr<BasicAnalyser> BasicAnalyserLocalPtr;

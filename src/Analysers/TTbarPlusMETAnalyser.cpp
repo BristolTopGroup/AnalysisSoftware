@@ -6,6 +6,7 @@
  */
 
 #include "../../interface/Analysers/TTbarPlusMETAnalyser.h"
+#include "../../interface/BTagWeight.h"
 //#include "../../interface/TopPairEventCandidate.h"
 //signal selections
 #include "../../interface/Selections/TopPairEplusJetsRefAsymJetsSelection.h"
@@ -37,48 +38,65 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		const JetCollection jets(topEplusJetsRefSelection_->cleanedJets(event));
 		const JetCollection bJets(topEplusJetsRefSelection_->cleanedBJets(event));
-//		vector<double> bjetWeights = event->BjetWeights(bJets);
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
 		const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-		//		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
-		//			double bjetWeight = bjetWeights.at(weightIndex);
-		//			histMan_->setCurrentBJetBin(weightIndex);
-		//
-		//			metAnalyserRefSelection_->setPrescale(bjetWeight);
-		//			electronAnalyserRefSelection_->setPrescale(bjetWeight);
-		//			vertexAnalyserRefSelection_->setPrescale(bjetWeight);
-		//			jetAnalyserRefSelection_->setPrescale(bjetWeight);
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			histMan_->setCurrentHistogramFolder(histogramFolder_);
+			histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * bjetWeight);
 
-		metAnalyserRefSelection_->analyse(event);
-		metAnalyserRefSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserRefSelection_->setScale(bjetWeight);
+			electronAnalyserRefSelection_->setScale(bjetWeight);
+			vertexAnalyserRefSelection_->setScale(bjetWeight);
+			jetAnalyserRefSelection_->setScale(bjetWeight);
 
-		electronAnalyserRefSelection_->analyse(event);
-		electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
+			metAnalyserRefSelection_->analyse(event);
+			metAnalyserRefSelection_->analyseTransverseMass(event, signalLepton);
 
-		vertexAnalyserRefSelection_->analyse(event);
-		jetAnalyserRefSelection_->analyse(event);
+			electronAnalyserRefSelection_->analyse(event);
+			electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
 
-		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp || metIndex
-					== METAlgorithm::patType1p2CorrectedPFMetJetResDown;
-			//skip MC only MET entries
-			if (isJetRes && event->isRealData())
-				continue;
-			string metPrefix = METAlgorithm::names.at(metIndex);
-			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
-				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() >= lowerCut && met->et() < upperCut)
-					binnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron, event->weight());
+			vertexAnalyserRefSelection_->analyse(event);
+			jetAnalyserRefSelection_->analyse(event);
+
+			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
+						|| metIndex == METAlgorithm::GenMET;
+				//skip MC only MET entries
+				if (isMCOnlyMET && event->isRealData())
+					continue;
+				string metPrefix = METAlgorithm::names.at(metIndex);
+				for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+					double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+					double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
+					const METPointer met(event->MET((METAlgorithm::value) metIndex));
+					if (met->et() >= lowerCut && met->et() < upperCut) {
+						binnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						binnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron, event->weight());
+					}
+				}
 			}
 		}
-		//		}
-		//		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(bJets.size());
 		jetAnalyserRefSelection_noBtagWeights_->analyse(event);
 	}
 
@@ -90,7 +108,19 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdNonIsoElectronSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdNonIsoElectronSelection_->cleanedBJets(event));
-
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
 		histMan_->setCurrentBJetBin(bJets.size());
 		//in case of prescaled triggers
@@ -101,25 +131,35 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoSelection_->setPrescale(prescale);
 
-		qcdNonIsoElectronAnalyser_->analyse(event);
-		qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-		metAnalyserqcdNonIsoSelection_->analyse(event);
-		metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event, signalLepton);
-		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
-			//skip MC only MET entries
-			if (isJetRes && event->isRealData())
-				continue;
-			string metPrefix = METAlgorithm::names.at(metIndex);
-			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
-				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() >= lowerCut && met->et() < upperCut)
-					qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
-							event->weight());
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdNonIsoElectronAnalyser_->setScale(bjetWeight);
+			metAnalyserqcdNonIsoSelection_->setScale(bjetWeight);
+
+			qcdNonIsoElectronAnalyser_->analyse(event);
+			qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+			metAnalyserqcdNonIsoSelection_->analyse(event);
+			metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event, signalLepton);
+			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
+						|| metIndex == METAlgorithm::GenMET;
+				//skip MC only MET entries
+				if (isMCOnlyMET && event->isRealData())
+					continue;
+				string metPrefix = METAlgorithm::names.at(metIndex);
+				for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+					double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+					double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
+					const METPointer met(event->MET((METAlgorithm::value) metIndex));
+					if (met->et() >= lowerCut && met->et() < upperCut) {
+						qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+								event->weight());
+					}
+				}
 			}
 		}
 	}
@@ -128,8 +168,21 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdNonIsoElectronNonIsoTriggerSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdNonIsoElectronNonIsoTriggerSelection_->cleanedBJets(event));
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
 		//in case of prescaled triggers
 		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerSelection_->signalLepton(event);
@@ -138,18 +191,37 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdNonIsoNonIsoTriggerElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoNonIsoTriggerSelection_->setPrescale(prescale);
 
-		qcdNonIsoNonIsoTriggerElectronAnalyser_->analyse(event);
-		qcdNonIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyse(event);
-		metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyseTransverseMass(event, signalLepton);
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdNonIsoNonIsoTriggerElectronAnalyser_->setScale(bjetWeight);
+			metAnalyserqcdNonIsoNonIsoTriggerSelection_->setScale(bjetWeight);
+			qcdNonIsoNonIsoTriggerElectronAnalyser_->analyse(event);
+			qcdNonIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+			metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyse(event);
+			metAnalyserqcdNonIsoNonIsoTriggerSelection_->analyseTransverseMass(event, signalLepton);
+		}
 	}
 
 	if (qcdConversionSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdConversionSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdConversionSelection_->cleanedBJets(event));
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
 		unsigned int prescale(qcdConversionSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdConversionSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -157,26 +229,36 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		qcdConversionsElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdConversionSelection_->setPrescale(prescale);
 
-		qcdConversionsElectronAnalyser_->analyse(event);
-		qcdConversionsElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-		metAnalyserqcdConversionSelection_->analyse(event);
-		metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdConversionsElectronAnalyser_->setScale(bjetWeight);
+			metAnalyserqcdConversionSelection_->setScale(bjetWeight);
 
-		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
-			//skip MC only MET entries
-			if (isJetRes && event->isRealData())
-				continue;
-			string metPrefix = METAlgorithm::names.at(metIndex);
-			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
-				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() >= lowerCut && met->et() < upperCut)
-					qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
-							event->weight());
+			qcdConversionsElectronAnalyser_->analyse(event);
+			qcdConversionsElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+			metAnalyserqcdConversionSelection_->analyse(event);
+			metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
+
+			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
+						|| metIndex == METAlgorithm::GenMET;
+				//skip MC only MET entries
+				if (isMCOnlyMET && event->isRealData())
+					continue;
+				string metPrefix = METAlgorithm::names.at(metIndex);
+				for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+					double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+					double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
+					const METPointer met(event->MET((METAlgorithm::value) metIndex));
+					if (met->et() >= lowerCut && met->et() < upperCut) {
+						qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+								event->weight() * bjetWeight);
+					}
+				}
 			}
 		}
 	}
@@ -184,32 +266,53 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 	if (qcdPFRelIsoSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdPFRelIsoSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdPFRelIsoSelection_->cleanedBJets(event));
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
 		unsigned int prescale(qcdPFRelIsoSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->setPrescale(prescale);
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdEPlusjetsPFRelIsoElectronAnalyser_->setScale(bjetWeight);
 
-		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyse(event);
-		qcdEPlusjetsPFRelIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+			qcdEPlusjetsPFRelIsoElectronAnalyser_->analyse(event);
+			qcdEPlusjetsPFRelIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 
-		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
-			//skip MC only MET entries
-			if (isJetRes && event->isRealData())
-				continue;
-			string metPrefix = METAlgorithm::names.at(metIndex);
-			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
-				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() >= lowerCut && met->et() < upperCut)
-					qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
-							event->weight());
+			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
+						|| metIndex == METAlgorithm::GenMET;
+				//skip MC only MET entries
+				if (isMCOnlyMET && event->isRealData())
+					continue;
+				string metPrefix = METAlgorithm::names.at(metIndex);
+				for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+					double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+					double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
+					const METPointer met(event->MET((METAlgorithm::value) metIndex));
+					if (met->et() >= lowerCut && met->et() < upperCut) {
+						qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+								event->weight());
+					}
+				}
 			}
 		}
 	}
@@ -218,50 +321,90 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdPFRelIsoNonIsoTriggerSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdPFRelIsoNonIsoTriggerSelection_->cleanedBJets(event));
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
 		unsigned int prescale(qcdPFRelIsoNonIsoTriggerSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoNonIsoTriggerSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->setPrescale(prescale);
 
-		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyse(event);
-		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->setScale(bjetWeight);
+			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyse(event);
+			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+		}
 	}
 
 	if (qcdAntiIDSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdAntiIDSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdAntiIDSelection_->cleanedBJets(event));
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
 		unsigned int prescale(qcdAntiIDSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdAntiIDSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		qcdAntiIDElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdAntiIDSelection_->setPrescale(prescale);
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdAntiIDElectronAnalyser_->setScale(bjetWeight);
+			metAnalyserqcdAntiIDSelection_->setScale(bjetWeight);
 
-		qcdAntiIDElectronAnalyser_->analyse(event);
-		qcdAntiIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-		metAnalyserqcdAntiIDSelection_->analyse(event);
-		metAnalyserqcdAntiIDSelection_->analyseTransverseMass(event, signalLepton);
+			qcdAntiIDElectronAnalyser_->analyse(event);
+			qcdAntiIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+			metAnalyserqcdAntiIDSelection_->analyse(event);
+			metAnalyserqcdAntiIDSelection_->analyseTransverseMass(event, signalLepton);
 
-		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
-			//skip MC only MET entries
-			if (isJetRes && event->isRealData())
-				continue;
-			string metPrefix = METAlgorithm::names.at(metIndex);
-			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
-				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() >= lowerCut && met->et() < upperCut)
-					qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
-							event->weight());
+			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
+						|| metIndex == METAlgorithm::GenMET;
+				//skip MC only MET entries
+				if (isMCOnlyMET && event->isRealData())
+					continue;
+				string metPrefix = METAlgorithm::names.at(metIndex);
+				for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+					double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+					double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
+					const METPointer met(event->MET((METAlgorithm::value) metIndex));
+					if (met->et() >= lowerCut && met->et() < upperCut) {
+						qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+								event->weight());
+					}
+				}
 			}
 		}
 	}
@@ -269,35 +412,56 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 	if (qcdNoIsoNoIDSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdNoIsoNoIDSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdNoIsoNoIDSelection_->cleanedBJets(event));
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= 5; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+			if (numberOfBjets > 4)
+				bjetWeights.at(bjetWeights.size()) = 1;
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
 		unsigned int prescale(qcdNoIsoNoIDSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNoIsoNoIDSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		qcdNoIsoNoIDElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNoIsoNoIDSelection_->setPrescale(prescale);
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdNoIsoNoIDElectronAnalyser_->setScale(bjetWeight);
+			metAnalyserqcdNoIsoNoIDSelection_->setScale(bjetWeight);
+			qcdNoIsoNoIDElectronAnalyser_->analyse(event);
+			qcdNoIsoNoIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
+			metAnalyserqcdNoIsoNoIDSelection_->analyse(event);
+			metAnalyserqcdNoIsoNoIDSelection_->analyseTransverseMass(event, signalLepton);
 
-		qcdNoIsoNoIDElectronAnalyser_->analyse(event);
-		qcdNoIsoNoIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-		metAnalyserqcdNoIsoNoIDSelection_->analyse(event);
-		metAnalyserqcdNoIsoNoIDSelection_->analyseTransverseMass(event, signalLepton);
-
-		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-			bool isJetRes = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown;
-			//skip MC only MET entries
-			if (isJetRes && event->isRealData())
-				continue;
-			string metPrefix = METAlgorithm::names.at(metIndex);
-			for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-				double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
-				double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
-				unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
-				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				if (met->et() >= lowerCut && met->et() < upperCut)
-					qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
-							event->weight());
+			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
+						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
+						|| metIndex == METAlgorithm::GenMET;
+				//skip MC only MET entries
+				if (isMCOnlyMET && event->isRealData())
+					continue;
+				string metPrefix = METAlgorithm::names.at(metIndex);
+				for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
+					double upperCut = index < metBins_.size() ? metBins_.at(index) : 999999.;
+					double lowerCut = index == 0 ? 0. : metBins_.at(index - 1);
+					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
+					const METPointer met(event->MET((METAlgorithm::value) metIndex));
+					if (met->et() >= lowerCut && met->et() < upperCut) {
+						qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
+								event->weight());
+					}
+				}
 			}
 		}
 	}
@@ -306,7 +470,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 
 void TTbarPlusMETAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-
+	histMan_->addH1D("N_BJets", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
 	//signal
 	metAnalyserRefSelection_->createHistograms();
 	electronAnalyserRefSelection_->createHistograms();
@@ -328,18 +492,6 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	qcdAntiIDElectronAnalyser_->createHistograms();
 	metAnalyserqcdNoIsoNoIDSelection_->createHistograms();
 	qcdNoIsoNoIDElectronAnalyser_->createHistograms();
-
-//	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-//		for (unsigned int index = 0; index < metBins_.size() + 1; ++index) {
-//			unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
-//			binnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-//			qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-//			qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-//			qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-//			qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-//			qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->createHistograms();
-//		}
-//	}
 
 	for (unsigned int index = 0; index < binnedElectronAnalysers_.size(); ++index) {
 		binnedElectronAnalysers_.at(index)->createHistograms();
@@ -413,7 +565,6 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 	metBins_.push_back(45.);
 	metBins_.push_back(70.);
 	metBins_.push_back(100.);
-	metBins_.push_back(200.);
 
 	//for all MET types!!
 	for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {

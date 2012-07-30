@@ -25,7 +25,7 @@ void EventCountAnalyser::analyse(const EventPtr event) {
 
 void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	for (unsigned int step = 0; step < TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
 		bool passesStep = topEplusJetsRefSelection_->passesSelectionStep(event, step);
 		bool passesStepUpTo = topEplusJetsRefSelection_->passesSelectionUpToStep(event, step);
@@ -38,7 +38,7 @@ void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
 
 void EventCountAnalyser::topEplusJetsPlusMETSelection(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	for (unsigned int step = 0; step < TTbarEPlusJetsRefAsymJetsSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
 		bool passesStep = topEplusAsymJetsSelection_->passesSelectionStep(event, step);
 		bool passesStepUpTo = topEplusAsymJetsSelection_->passesSelectionUpToStep(event, step);
@@ -51,7 +51,7 @@ void EventCountAnalyser::topEplusJetsPlusMETSelection(const EventPtr event) {
 
 void EventCountAnalyser::topEplusJetsZprimeSelection(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	for (unsigned int step = 0; step < TTbarEPlusJetsRefAsymJetsMETSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
 		bool passesStep = topEplusAsymJetsMETSelection_->passesSelectionStep(event, step);
 		bool passesStepUpTo = topEplusAsymJetsMETSelection_->passesSelectionUpToStep(event, step);
@@ -64,7 +64,7 @@ void EventCountAnalyser::topEplusJetsZprimeSelection(const EventPtr event) {
 
 void EventCountAnalyser::qcdSelections(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	for (unsigned int step = 0; step < TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
 		bool passesStep = qcdNonIsoElectronSelection_->passesSelectionStep(event, step);
 		bool passesStepUpTo = qcdNonIsoElectronSelection_->passesSelectionUpToStep(event, step);
@@ -92,7 +92,7 @@ void EventCountAnalyser::qcdSelections(const EventPtr event) {
 
 void EventCountAnalyser::qcdAsymJetsSelections(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	for (unsigned int step = 0; step < TTbarEPlusJetsRefAsymJetsSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
 		bool passesStep = qcdNonIsoElectronAsymJetsSelection_->passesSelectionStep(event, step);
 		bool passesStepUpTo = qcdNonIsoElectronAsymJetsSelection_->passesSelectionUpToStep(event, step);
@@ -120,7 +120,7 @@ void EventCountAnalyser::qcdAsymJetsSelections(const EventPtr event) {
 
 void EventCountAnalyser::qcdAsymJetsMETSelections(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	for (unsigned int step = 0; step < TTbarEPlusJetsRefAsymJetsSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
 		bool passesStep = qcdNonIsoElectronAsymJetsMETSelection_->passesSelectionStep(event, step);
 		bool passesStepUpTo = qcdNonIsoElectronAsymJetsMETSelection_->passesSelectionUpToStep(event, step);
@@ -148,7 +148,7 @@ void EventCountAnalyser::qcdAsymJetsMETSelections(const EventPtr event) {
 
 void EventCountAnalyser::qcdNonIsoTriggerSelections(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	unsigned int prescale(qcdNonIsoElectronNonIsoTriggerSelection_->prescale(event));
 
 	for (unsigned int step = 0; step < TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
@@ -171,7 +171,7 @@ void EventCountAnalyser::qcdNonIsoTriggerSelections(const EventPtr event) {
 
 void EventCountAnalyser::qcdNonIsoTriggerAsymJetsSelections(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	unsigned int prescale(qcdNonIsoElectronAsymJetsNonIsoTriggerSelection_->prescale(event));
 
 	for (unsigned int step = 0; step < TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
@@ -180,7 +180,8 @@ void EventCountAnalyser::qcdNonIsoTriggerAsymJetsSelections(const EventPtr event
 		if (passesStepUpTo)
 			histMan_->H1D("QCDNonIsoEplusJetsNonIsoTriggerAsymJetsSelection")->Fill(step, weight_ * prescale);
 		if (passesStep)
-			histMan_->H1D("QCDNonIsoEplusJetsNonIsoTriggerAsymJetsSelection_singleCuts")->Fill(step, weight_ * prescale);
+			histMan_->H1D("QCDNonIsoEplusJetsNonIsoTriggerAsymJetsSelection_singleCuts")->Fill(step,
+					weight_ * prescale);
 
 		//selection for particle based relative isolation distribution
 		passesStep = qcdPFRelIsoNonIsoTriggerAsymJetsSelection_->passesSelectionStep(event, step);
@@ -188,13 +189,14 @@ void EventCountAnalyser::qcdNonIsoTriggerAsymJetsSelections(const EventPtr event
 		if (passesStepUpTo)
 			histMan_->H1D("QCDPFRelIsoEPlusJetsNonIsoTriggerAsymJetsSelection")->Fill(step, weight_ * prescale);
 		if (passesStep)
-			histMan_->H1D("QCDPFRelIsoEPlusJetsNonIsoTriggerAsymJetsSelection_singleCuts")->Fill(step, weight_ * prescale);
+			histMan_->H1D("QCDPFRelIsoEPlusJetsNonIsoTriggerAsymJetsSelection_singleCuts")->Fill(step,
+					weight_ * prescale);
 	}
 }
 
 void EventCountAnalyser::qcdNonIsoTriggerAsymJetsMETSelections(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight();
+	weight_ = event->weight() * prescale_ * scale_;
 	unsigned int prescale(qcdNonIsoElectronAsymJetsMETNonIsoTriggerSelection_->prescale(event));
 
 	for (unsigned int step = 0; step < TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
@@ -203,7 +205,8 @@ void EventCountAnalyser::qcdNonIsoTriggerAsymJetsMETSelections(const EventPtr ev
 		if (passesStepUpTo)
 			histMan_->H1D("QCDNonIsoEplusJetsNonIsoTriggerAsymJetsMETSelection")->Fill(step, weight_ * prescale);
 		if (passesStep)
-			histMan_->H1D("QCDNonIsoEplusJetsNonIsoTriggerAsymJetsMETSelection_singleCuts")->Fill(step, weight_ * prescale);
+			histMan_->H1D("QCDNonIsoEplusJetsNonIsoTriggerAsymJetsMETSelection_singleCuts")->Fill(step,
+					weight_ * prescale);
 
 		//selection for particle based relative isolation distribution
 		passesStep = qcdPFRelIsoNonIsoTriggerAsymJetsMETSelection_->passesSelectionStep(event, step);

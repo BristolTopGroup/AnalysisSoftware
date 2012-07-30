@@ -12,7 +12,7 @@ namespace BAT {
 
 void ElectronAnalyser::analyse(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = event->weight() * prescale_;
+	weight_ = event->weight() * prescale_ * scale_;
 	const ElectronCollection electrons = event->Electrons();
 
 	if (singleElectronOnly_)
@@ -41,7 +41,7 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 
 void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double weight) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	weight_ = weight * prescale_;
+	weight_ = weight * prescale_ * scale_;
 
 	histMan_->H1D_BJetBinned("electron_eta")->Fill(electron->eta(), weight_);
 	histMan_->H1D_BJetBinned("electron_AbsEta")->Fill(fabs(electron->eta()), weight_);

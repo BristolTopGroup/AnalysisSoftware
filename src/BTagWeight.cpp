@@ -3,8 +3,43 @@
 
 #include <functional>
 #include <numeric>
+#include <boost/scoped_ptr.hpp>
 
 namespace BAT {
+
+std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfBtags) {
+	boost::scoped_ptr<BTagWeight> btagwWeight(new BTagWeight());
+	//get b-jets
+	const JetCollection bjets(btagwWeight->getBJets(jets));
+	//get c-jets
+	const JetCollection cjets(btagwWeight->getCJets(jets));
+	//get udsg jets
+	const JetCollection udsgjets(btagwWeight->getUDSGJets(jets));
+
+	//get mean scale factors
+	double SF_b = btagwWeight->getAverageBScaleFactor(bjets);
+	double SF_c = btagwWeight->getAverageCScaleFactor(cjets);
+	double SF_udsg = btagwWeight->getAverageUDSGScaleFactor(udsgjets);
+	//get mean efficiencies
+	double mean_bJetEfficiency = btagwWeight->getAverageBEfficiency();
+	double mean_cJetEfficiency = btagwWeight->getAverageCEfficiency();
+	double mean_udsgJetEfficiency = btagwWeight->getAverageUDSGEfficiency(udsgjets);
+
+	std::vector<double> event_weights;
+	for (unsigned int nTag = 0; nTag <= 4; ++nTag) { // >= 4 is our last b-tag bin!
+		btagwWeight->setNumberOfBtags(nTag, 20);
+		double event_weight = btagwWeight->weight(bjets.size(), cjets.size(), udsgjets.size(), mean_bJetEfficiency,
+				mean_cJetEfficiency, mean_udsgJetEfficiency, SF_b, SF_c, SF_udsg, numberOfBtags);
+		event_weights.push_back(event_weight);
+	}
+	//all weights are inclusive. To get the weight for exclusive N b-tags ones has to subtract:
+	for (unsigned int nTag = 0; nTag < 4; ++nTag) {
+		// w(N b-tags) = w(>= N) - w(>= N+1)
+		event_weights.at(nTag) = event_weights.at(nTag) - event_weights.at(nTag + 1);
+		//last weight, >= 4 jets, stays inclusive
+	}
+	return event_weights;
+}
 
 unsigned int fact(unsigned int n) {
 	if (n < 1)
@@ -20,9 +55,9 @@ unsigned int comb(unsigned int n, unsigned int k) {
 	return fact(n) / fact(k) / fact(n - k);
 }
 
-BTagWeight::BTagWeight(unsigned int minNumberOfTags, unsigned int maxNumberOfTags) :
-		minNumberOfTags_(minNumberOfTags), //
-		maxNumberOfTags_(maxNumberOfTags) {
+BTagWeight::BTagWeight() :
+		minNumberOfTags_(0), //
+		maxNumberOfTags_(0) {
 
 }
 
@@ -120,52 +155,33 @@ std::vector<double> BTagWeight::weights(double averageScaleFactor, unsigned int 
 		event_weights.push_back(0);
 	event_weights.at(0) = pow(1 - averageScaleFactor, numberOfTags);
 
-	for (unsigned int i = 1; i <= numberOfTags; ++i) {
-		double prod = 1;
-		for (unsigned int j = 1; j <= numberOfTags; ++j) {
-			if (j != i)
-				prod *= 1 - averageScaleFactor;
-		}
-		event_weights.at(1) += averageScaleFactor * prod;
-	}
-
-	for (unsigned int i = 1; i <= numberOfTags; ++i) {
-		double sum(0);
-		for (unsigned int j = 1; j <= numberOfTags; ++j) {
-			double prod(1);
-			for (unsigned int k = 1; k <= numberOfTags; ++k) {
-				if (k != i && k != j)
+	if (numberOfTags > 0) {
+		for (unsigned int i = 1; i <= numberOfTags; ++i) {
+			double prod = 1;
+			for (unsigned int j = 1; j <= numberOfTags; ++j) {
+				if (j != i)
 					prod *= 1 - averageScaleFactor;
 			}
-			sum += averageScaleFactor * prod;
+			event_weights.at(1) += averageScaleFactor * prod;
 		}
-		event_weights.at(2) += averageScaleFactor * sum;
 	}
-	return event_weights;
-}
 
-std::vector<double> BTagWeight::BjetWeights(const JetCollection jets, unsigned int numberOfBtags) const {
-	//get b-jets
-	const JetCollection bjets(getBJets(jets));
-	//get c-jets
-	const JetCollection cjets(getCJets(jets));
-	//get udsg jets
-	const JetCollection udsgjets(getUDSGJets(jets));
-
-	//get mean scale factors
-	double SF_b = getAverageBScaleFactor(bjets);
-	double SF_c = getAverageCScaleFactor(cjets);
-	double SF_udsg = getAverageUDSGScaleFactor(udsgjets);
-	//get mean efficiencies
-	double mean_bJetEfficiency = getAverageBEfficiency();
-	double mean_cJetEfficiency = getAverageCEfficiency();
-	double mean_udsgJetEfficiency = getAverageUDSGEfficiency(udsgjets);
-
-	std::vector<double> event_weights;
-	for (unsigned int nTag = 0; nTag < numberOfBtags; ++nTag) {
-		double event_weight = weight(bjets.size(), cjets.size(), udsgjets.size(), mean_bJetEfficiency,
-				mean_cJetEfficiency, mean_udsgJetEfficiency, SF_b, SF_c, SF_udsg, nTag);
-		event_weights.push_back(event_weight);
+	if (numberOfTags > 1) {
+		for (unsigned int i = 1; i <= numberOfTags; ++i) {
+			double sum(0);
+			for (unsigned int j = 1; j <= numberOfTags; ++j) {
+				if (j == i)
+					continue;
+				double prod(1);
+				for (unsigned int k = 1; k <= numberOfTags; ++k) {
+					if (k != i && k != j)
+						prod *= 1 - averageScaleFactor;
+				}
+				sum += averageScaleFactor * prod;
+			}
+			event_weights.at(2) += averageScaleFactor * sum;
+		}
+		event_weights.at(2) = event_weights.at(2) / 2;
 	}
 	return event_weights;
 }
@@ -215,7 +231,7 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 	const boost::array<double, 14> SFb_error = { { 0.0295675, 0.0295095, 0.0210867, 0.0219349, 0.0227033, 0.0204062,
 			0.0185857, 0.0256242, 0.0383341, 0.0409675, 0.0420284, 0.0541299, 0.0578761, 0.0655432 } };
 
-	const boost::array<double, 15> ptbins = { { 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500 } };
+	const boost::array<double, 14> ptbins = { { 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500 } };
 
 	double SFb(0);
 	double sf_error(0);
@@ -232,10 +248,10 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 		SFb = 0.6981 * (1. + 0.414063 * pt) / (1. + 0.300155 * pt);
 		unsigned int ptbin(0);
 		for (unsigned int bin = 0; bin < ptbins.size() + 1; ++bin) {
-			double upperCut = bin < ptbins.size() ? ptbins.at(bin) : 670.;
-			double lowerCut = bin == 0 ? 0. : ptbins.at(bin - 1);
+			double upperCut = bin + 1 < ptbins.size() ? ptbins.at(bin + 1) : 670.;
+			double lowerCut = ptbins.at(bin);
 
-			if (pt > lowerCut && pt < upperCut) {
+			if (pt > lowerCut && pt <= upperCut) {
 				ptbin = bin;
 				break;
 			}
@@ -346,6 +362,12 @@ double BTagWeight::getAverageUDSGEfficiency(const JetCollection jets) const {
 
 double BTagWeight::getMeanUDSGEfficiency(double jetPT) const {
 	return 0.0113428 + 5.18983e-05 * jetPT - 2.59881e-08 * pow(jetPT, 2);
+}
+
+void BTagWeight::setNumberOfBtags(unsigned int min, unsigned int max) {
+	minNumberOfTags_ = min;
+	maxNumberOfTags_ = max;
+
 }
 
 }

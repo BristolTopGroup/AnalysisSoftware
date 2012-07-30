@@ -21,7 +21,7 @@ ABCDMethodAnalyser::~ABCDMethodAnalyser() {
 
 //defining what the analyse function in the class ABCDMethodAnalyser from ABCDMethodAnalyser.h should carry out
 void ABCDMethodAnalyser::analyse(const EventPtr event) {
-	double weight = event->weight();
+	double weight = event->weight() * prescale_ * scale_;
 	histMan_->setCurrentHistogramFolder(histogramFolder_); //setCurrentHistogramFolder from HistogramManager.h?
 
 	//from TTbarPlusMETAnalyser

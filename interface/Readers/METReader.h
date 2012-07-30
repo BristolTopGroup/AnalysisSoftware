@@ -14,19 +14,22 @@ namespace BAT {
 
 class METReader {
 public:
-    METReader();
-    METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::patMETsPFlow);
-    const METPointer getMET();
-    virtual ~METReader();
-    void initialise();
-    void initialiseBlindly();
+	METReader();
+	METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::patMETsPFlow);
+	const METPointer getMET();
+	virtual ~METReader();
+	void initialise();
+	void initialiseBlindly();
 private:
-    VariableReader<double> exReader;
-    VariableReader<double> eyReader;
-    VariableReader<double> significanceReader;
-    METPointer met;
-    METAlgorithm::value usedAlgorithm;
-    void readMET();
+	VariableReader<double> exReader;
+	VariableReader<double> eyReader;
+	//temporarily
+	VariableReader<MultiDoublePointer> multiExReader;
+	VariableReader<MultiDoublePointer> multiEyReader;
+	VariableReader<double> significanceReader;
+	METPointer met;
+	METAlgorithm::value usedAlgorithm;
+	void readMET();
 };
 
 }

@@ -7,7 +7,7 @@ namespace BAT {
 
 class BTagWeight {
 public:
-	BTagWeight(unsigned int minNumberOfTags, unsigned int maxNumberOfTags);
+	BTagWeight();
 
 	double weight(unsigned int numberOf_b_Jets, unsigned int numberOf_c_Jets, unsigned int numberOf_udsg_Jets,
 			double mean_bJetEfficiency, double mean_cFJetEfficiency, double mean_udsgJetEfficiency,
@@ -21,11 +21,7 @@ public:
 
 	std::vector<double> weights(double averageScaleFactor, unsigned int numberOfTags) const;
 
-	std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfBtags) const;
-
-private:
-	unsigned int minNumberOfTags_;
-	unsigned int maxNumberOfTags_;
+	void setNumberOfBtags(unsigned int min, unsigned int max);
 
 	JetCollection getBJets(const JetCollection jets) const;
 	JetCollection getCJets(const JetCollection jets) const;
@@ -48,7 +44,13 @@ private:
 	double getMaxUDSGScaleFactor(double jetPT) const;
 
 	double getMeanUDSGEfficiency(double jetPT) const;
+private:
+	unsigned int minNumberOfTags_;
+	unsigned int maxNumberOfTags_;
+
 };
+
+std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfBtags);
 }
 #endif
 
