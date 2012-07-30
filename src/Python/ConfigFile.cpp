@@ -39,13 +39,19 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
 		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
 		jesSystematic_(0), //
+		btagSystematic_(0), //
+		lightTagSystematic_(0), //
 		custom_file_suffix_(""), //
-		pdfWeightNumber_(0){
-	if(PythonParser::hasAttribute(config, "JESsystematic"))
+		pdfWeightNumber_(0) {
+	if (PythonParser::hasAttribute(config, "JESsystematic"))
 		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
-	if(PythonParser::hasAttribute(config, "custom_file_suffix"))
+	if (PythonParser::hasAttribute(config, "BtagSystematic"))
+		btagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "BtagSystematic");
+	if (PythonParser::hasAttribute(config, "LightTagSystematic"))
+		lightTagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "LightTagSystematic");
+	if (PythonParser::hasAttribute(config, "custom_file_suffix"))
 		custom_file_suffix_ = PythonParser::getAttributeFromPyObject<string>(config, "custom_file_suffix");
-	if(PythonParser::hasAttribute(config, "pdfWeightNumber"))
+	if (PythonParser::hasAttribute(config, "pdfWeightNumber"))
 		pdfWeightNumber_ = PythonParser::getAttributeFromPyObject<unsigned int>(config, "pdfWeightNumber");
 }
 
@@ -70,10 +76,13 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("TQAFPath", value<std::string>(),
 			"path to TopQuarkAnalysis folder (the folder itself not included).");
 	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to");
+	desc.add_options()("BtagSystematic", value<int>(),
+			"B-tag scale factor systematic, the +/- number of uncertainties to vary the scale factor with");
+	desc.add_options()("LightTagSystematic", value<int>(),
+			"Light-tag scale factor systematic, the +/- number of uncertainties to vary the scale factor with");
 	desc.add_options()("JESsystematic", value<int>(),
 			"JES systematic, the +/- number of uncertainties to vary the jet with");
-	desc.add_options()("custom_file_suffix", value<std::string>(),
-			"Custom file suffix, will be appended to file name");
+	desc.add_options()("custom_file_suffix", value<std::string>(), "Custom file suffix, will be appended to file name");
 	desc.add_options()("pdfWeightNumber", value<unsigned int>(),
 			"Number of PDF weight to multiply the event weight with");
 
@@ -200,6 +209,19 @@ int ConfigFile::jesSystematic() const {
 		return jesSystematic_;
 }
 
+int ConfigFile::BtagSystematic() const {
+	if (programOptions.count("BtagSystematic"))
+		return programOptions["BtagSystematic"].as<int>();
+	else
+		return btagSystematic_;
+}
+int ConfigFile::LightTagSystematic() const {
+	if (programOptions.count("LightTagSystematic"))
+		return programOptions["LightTagSystematic"].as<int>();
+	else
+		return lightTagSystematic_;
+}
+
 string ConfigFile::custom_file_suffix() const {
 	if (programOptions.count("custom_file_suffix"))
 		return programOptions["custom_file_suffix"].as<string>();
@@ -269,6 +291,10 @@ void ConfigFile::loadIntoMemory() {
 
 	//JES systematic
 	Globals::JESsystematic = jesSystematic();
+
+	//b-tag systematics
+	Globals::BJetSystematic = BtagSystematic();
+	Globals::LightJetSystematic = LightTagSystematic();
 
 	//Loading l7 JEC
 	Globals::bL7Corrections = getL7Correction(bJetResoFile());
