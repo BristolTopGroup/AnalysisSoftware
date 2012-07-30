@@ -1,6 +1,6 @@
 toolsFolder = 'BristolAnalysis/Tools/'
 #File for pile-up re-weighting
-PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_64600microbarn.root"
+PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_68000microbarn.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
@@ -61,4 +61,4 @@ elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 nTuple_version = 7
 
-custom_file_suffix = "PU_64600mb"    
+LightTagSystematic = -1    
