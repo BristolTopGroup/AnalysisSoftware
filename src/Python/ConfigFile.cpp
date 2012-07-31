@@ -45,8 +45,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		pdfWeightNumber_(0) {
 	if (PythonParser::hasAttribute(config, "JESsystematic"))
 		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
-	if (PythonParser::hasAttribute(config, "BtagSystematic"))
-		btagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "BtagSystematic");
+	if (PythonParser::hasAttribute(config, "BTagSystematic"))
+		btagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "BTagSystematic");
 	if (PythonParser::hasAttribute(config, "LightTagSystematic"))
 		lightTagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "LightTagSystematic");
 	if (PythonParser::hasAttribute(config, "custom_file_suffix"))
@@ -76,7 +76,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("TQAFPath", value<std::string>(),
 			"path to TopQuarkAnalysis folder (the folder itself not included).");
 	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to");
-	desc.add_options()("BtagSystematic", value<int>(),
+	desc.add_options()("BTagSystematic", value<int>(),
 			"B-tag scale factor systematic, the +/- number of uncertainties to vary the scale factor with");
 	desc.add_options()("LightTagSystematic", value<int>(),
 			"Light-tag scale factor systematic, the +/- number of uncertainties to vary the scale factor with");
@@ -210,8 +210,8 @@ int ConfigFile::jesSystematic() const {
 }
 
 int ConfigFile::BtagSystematic() const {
-	if (programOptions.count("BtagSystematic"))
-		return programOptions["BtagSystematic"].as<int>();
+	if (programOptions.count("BTagSystematic"))
+		return programOptions["BTagSystematic"].as<int>();
 	else
 		return btagSystematic_;
 }

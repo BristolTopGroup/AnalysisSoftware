@@ -41,14 +41,14 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -111,14 +111,14 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -171,14 +171,14 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -210,14 +210,14 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -269,14 +269,14 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -324,14 +324,14 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -357,14 +357,14 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -415,14 +415,14 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 5; ++index) {
+			for (unsigned int index = 0; index <= 4; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
 			if (numberOfBjets > 4)
-				bjetWeights.at(bjetWeights.size()) = 1;
+				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
