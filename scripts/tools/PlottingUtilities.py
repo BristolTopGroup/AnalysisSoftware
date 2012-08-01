@@ -73,7 +73,7 @@ def create_cms_label(lumiInInvPb, njet="4orMoreJets", nbjet="0orMoreBtag", chann
 
     mytext = TPaveText(0.35, 0.7, 0.7, 0.93, "NDC")
     mytext.AddText("CMS Preliminary")
-    mytext.AddText("%.2f fb^{-1} at  #sqrt{s} = 7 TeV" % (lumiInInvPb / 1000))
+    mytext.AddText("%.2f fb^{-1} at #sqrt{s} = 7 TeV" % (lumiInInvPb / 1000))
     if njet != "":
         mytext.AddText(channel + ", %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet]))   
              

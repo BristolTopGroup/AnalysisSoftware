@@ -1,9 +1,9 @@
 lumi = 5050
-folder = '/storage/results/histogramfiles/2012/7TeV/PU_up'
+folder = '/storage/results/histogramfiles/2012/7TeV/central'
 #folder = '/scratch/results/histogramFiles/NewCode'
 identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET'
 #identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_64600mb'
-identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_71400mb'
+#identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_71400mb'
 
 files = {
 #    'data':"%s/MuHad_%dpb_%s.root" % (folder, lumi, identifier),

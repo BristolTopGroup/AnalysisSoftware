@@ -8,14 +8,21 @@ JES_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusJES.root'
 PU_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_64600mb.root'
 PU_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_71400mb.root'
 PDFWeights_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PDF_%d.root'
+BJet_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusBJet.root'
+BJet_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusBjet.root'
+LightJet_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusLightJet.root'
+LightJet_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusLightJet.root'
 
-
-template = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles, 'lumi':luminosity, 'suffix':suffix, 'placeholder':placeholder}
+template = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/central', 'lumi':luminosity, 'suffix':suffix, 'placeholder':placeholder}
 template_JES_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/JES_down', 'lumi':luminosity, 'suffix':JES_down_suffix, 'placeholder':placeholder}
 template_JES_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/JES_up', 'lumi':luminosity, 'suffix':JES_up_suffix, 'placeholder':placeholder}
 template_PU_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/PU_down', 'lumi':luminosity, 'suffix':PU_down_suffix, 'placeholder':placeholder}
 template_PU_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles+ '/PU_up', 'lumi':luminosity, 'suffix':PU_up_suffix, 'placeholder':placeholder}
 template_PDFWeights = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles+ '/PDFWeights', 'lumi':luminosity, 'suffix':PDFWeights_suffix, 'placeholder':'TTJet'}
+template_BJet_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/BJet_down', 'lumi':luminosity, 'suffix':BJet_down_suffix, 'placeholder':placeholder}
+template_BJet_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles+ '/BJet_up', 'lumi':luminosity, 'suffix':BJet_up_suffix, 'placeholder':placeholder}
+template_LightJet_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/LightJet_down', 'lumi':luminosity, 'suffix':LightJet_down_suffix, 'placeholder':placeholder}
+template_LightJet_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles+ '/LightJet_up', 'lumi':luminosity, 'suffix':LightJet_up_suffix, 'placeholder':placeholder}
 
 samplesToLoad = ['ElectronHad',
                  'TTJet', 
@@ -67,11 +74,20 @@ files_JES_up = {}
 files_PU_down = {}
 files_PU_up = {}
 files_PDF_weights = {}
+files_BJet_down = {}
+files_BJet_up = {}
+files_LightJet_down = {}
+files_LightJet_up = {}
+
 rpl = template.replace
 rpl_JES_down = template_JES_down.replace
 rpl_JES_up = template_JES_up.replace
 rpl_PU_down = template_PU_down.replace
 rpl_PU_up = template_PU_up.replace
+rpl_BJet_down = template_BJet_down.replace
+rpl_BJet_up = template_BJet_up.replace
+rpl_LightJet_down = template_LightJet_down.replace
+rpl_LightJet_up = template_LightJet_up.replace
 
 for sample in samplesToLoad:
     files[sample] = rpl(placeholder, sample)
@@ -79,17 +95,25 @@ for sample in samplesToLoad:
     files_JES_up[sample] = rpl_JES_up(placeholder, sample)
     files_PU_down[sample] = rpl_PU_down(placeholder, sample)
     files_PU_up[sample] = rpl_PU_up(placeholder, sample)
+    files_BJet_down[sample] = rpl_BJet_down(placeholder, sample)
+    files_BJet_up[sample] = rpl_BJet_up(placeholder, sample)
+    files_LightJet_down[sample] = rpl_LightJet_down(placeholder, sample)
+    files_LightJet_up[sample] = rpl_LightJet_up(placeholder, sample)
     
 for sample in additionalSamples:
     files[sample] = rpl(placeholder, sample)
     
-for sample in ['POWHEG', 'PYTHIA6', 'noCorr-mcatnlo']:
-    formatting = {'path':pathToFiles, 'lumi':luminosity, 'suffix':'PFElectron_PFMuon_PF2PATJets_PFMET_%s.root'%sample, 'placeholder':'TTJet'}
+for sample in ['POWHEG', 'PYTHIA6', 'MCatNLO']:
+    formatting = {'path':pathToFiles + '/central', 'lumi':luminosity, 'suffix':'PFElectron_PFMuon_PF2PATJets_PFMET_%s.root'%sample, 'placeholder':'TTJet'}
     files[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     files_JES_down[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     files_JES_up[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     files_PU_down[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     files_PU_up[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
+    files_BJet_down[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
+    files_BJet_up[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
+    files_LightJet_down[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
+    files_LightJet_up[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     
 for index in range(1,45):
     files_PDF_weights['TTJet_%d' % index] = template_PDFWeights % index

@@ -82,8 +82,8 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
     
         diff = normConv.Clone()
         diff.Divide(normAnti)
-        line = TLine(0, 1, 500, 1)
-#        line = TLine(0, 1, 2, 1)
+#        line = TLine(0, 1, 500, 1)
+        line = TLine(-3, 1, 3, 1)
         line.SetLineColor(1)
         line.SetLineWidth(4)
     

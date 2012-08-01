@@ -38,6 +38,7 @@ def addSampleSum( hists = {} ):
         qcdList = {}
         mc_all_list = {}
         singleTopList = {}
+        wjets = {}
 
         qcdSamples = ['bce1', 'bce2', 'bce3', 'enri1', 'enri2', 'enri3', 'pj1', 'pj2', 'pj3']
         allMCSamples = ['ttbar', 'wjets', 'zjets', 'bce1', 'bce2', 'bce3', 'enri1',
@@ -45,6 +46,7 @@ def addSampleSum( hists = {} ):
                             'Tbar_TuneZ2_tW-channel', 'Tbar_TuneZ2_t-channel', 'Tbar_TuneZ2_s-channel']
         singleTopSamples = ['T_TuneZ2_tW-channel', 'T_TuneZ2_t-channel', 'T_TuneZ2_s-channel', 
                             'Tbar_TuneZ2_tW-channel', 'Tbar_TuneZ2_t-channel', 'Tbar_TuneZ2_s-channel']
+        wjetsSamples = ['W1Jet', 'W2Jets', 'W3Jets', 'W4Jets']
 
 
         for sample, histlist in hists.iteritems():
@@ -66,11 +68,16 @@ def addSampleSum( hists = {} ):
                         singleTopList[histname] = hist.Clone( 'singleTop' )
                     else:
                         singleTopList[histname].Add( hist )
+                if sample in wjetsSamples:
+                    if not wjets.has_key( histname ):
+                        wjets[histname] = hist.Clone( 'wjets' )
+                    else:
+                        wjets[histname].Add( hist )
 
         hists['qcd'] = qcdList
         hists['allMC'] = mc_all_list
         hists['singleTop'] = singleTopList
-
+        hists['wjets'] = wjets
         return hists
 
 def makeDetailedMCStack( hists ):

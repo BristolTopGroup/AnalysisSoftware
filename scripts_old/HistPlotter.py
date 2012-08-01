@@ -167,18 +167,25 @@ def applyDefaultStylesAndColors( hists ):
     return hists
 
 def get_cms_label( lumiInInvPb, njet = "4orMoreJets", nbjet = "0orMoreBtag", channel = "e" ):
-    mytext = TPaveText( 0.35, 0.7, 0.7, 0.93, "NDC" );
-    mytext.AddText( "CMS Preliminary" );
-    mytext.AddText( "%.2f fb^{-1} at  #sqrt{s} = 7 TeV" % (lumiInInvPb/1000) );
-    if njet != "":
-        mytext.AddText( channel + ", %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet] ))   
+    mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
+    channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
+    channelLabel.AddText(channel + ", %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet] ))
+    mytext.AddText( "CMS Preliminary, L = %d fb^{-1} at #sqrt{s} = 7 TeV" % (lumiInInvPb/1000));
+#    mytext.AddText( "%.1f fb^{-1} at  #sqrt{s} = 7 TeV" % (lumiInInvPb/1000) );
+#    if njet != "":
+#        mytext.AddText( channel + ", %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet] ))   
              
     mytext.SetFillStyle( 0 );
     mytext.SetBorderSize( 0 );
     mytext.SetTextFont( 42 );
     mytext.SetTextAlign( 13 );
     
-    return mytext
+    channelLabel.SetFillStyle( 0 );
+    channelLabel.SetBorderSize( 0 );
+    channelLabel.SetTextFont( 42 );
+    channelLabel.SetTextAlign( 13 );
+    
+    return mytext, channelLabel
 
 def getJetBin(histname):
     for bin in allJetBins:

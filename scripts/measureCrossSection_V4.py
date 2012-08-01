@@ -14,12 +14,13 @@ from tools.Timer import Timer
 from tools.Table import Table
 import QCDRateEstimation
 
-savePath = "/storage/results/plots/DiffMETMeasurement/"
+savePath = "/storage/results/plots/DiffMETMeasurement/binCorrection/"
 outputFormat_tables = 'latex' #other option: twiki
 outputFormat_plots = ['png', 'pdf']
 
-rebin = 10
+rebin = 20
 qcdLabel = 'QCDFromData'
+metType = 'patType1p2CorrectedPFMet'
 normalisation = None
 vectors = None
 N_Events = {}
@@ -79,6 +80,35 @@ metbin_widths = {
                '70-100':30,
                '100-inf':50
                }  
+metbin_correctionFactors = {
+           '0-25':1.16576209551,# 1.245567818023413
+               '25-45':1.07671415947,#1.157104521213356
+               '45-70':0.906459241098,#0.93356776297393
+               '70-100':0.871675787468,#0.823557153805341
+               '100-inf':0.980634258825#0.829501404622485
+               }  
+metbin_correctionFactors_POWHEG = {
+           '0-25':1.18843544049,
+               '25-45':1.05489139546,
+               '45-70':0.913794459958,
+               '70-100':0.882307308269,
+               '100-inf':0.966059824883
+               }  
+metbin_correctionFactors_PYTHIA = {
+           '0-25':1.1680723092,
+               '25-45':1.05929621431,
+               '45-70':0.912394946271,
+               '70-100':0.87619776161,
+               '100-inf':0.997322692662
+               }  
+metbin_correctionFactors_MCATNLO = {
+           '0-25':1.1544304752,
+               '25-45':1.08511518936,
+               '45-70':0.902025521284,
+               '70-100':0.87568333211,
+               '100-inf':0.969530542891
+               }  
+doBinByBinUnfolding = True
 #metbin_widths = {
 #           '0-25':1,
 #               '25-45':1,
@@ -116,6 +146,12 @@ metsystematics_sources_latex = {
         "patType1p2CorrectedPFMetUnclusteredEnUp":'Unclustered energy $+1\sigma$',
         "patType1p2CorrectedPFMetUnclusteredEnDown":'Unclustered energy $-1\sigma$'
                       }
+
+BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags', 
+                    '1orMoreBtag':'#geq 1 b-tags',
+                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags', 
+                    '3btags':'3 b-tags', '3orMoreBtags':'#geq 3 b-tags',
+                    '4orMoreBtags':'#geq 4 b-tags'}
 #steering variables:
 use_fit_errors_only = False
 measure_normalised_crossection = False
@@ -242,12 +278,14 @@ def getFittedNormalisation(vectors_={}, normalisation_={}):
               'W+Jets BeforeFit': {'value': normalisation['W+Jets'], 'error':0},
               'DYJetsToLL Before Fit': {'value': normalisation['DYJetsToLL'], 'error':0},
               'fit': createFitHistogram(fitvalues, vectors),
-              'vectors':vectors,
+              'vectors':vectors}
+    if current_source == 'central':
+        result.update( {
               #other generators
               'POWHEG': {'value': normalisation['POWHEG']*scale_factors['POWHEG'], 'error':0},
               'PYTHIA6': {'value': normalisation['PYTHIA6']*scale_factors['PYTHIA6'], 'error':0},
               'MCatNLO': {'value': normalisation['MCatNLO']*scale_factors['MCatNLO'], 'error':0},
-              }
+              })
     return result
 
 def measureNormalisationIn(histogram):
@@ -272,6 +310,7 @@ def measureNormalisationIncludingSystematics(histograms):
     fitted_results = {}
     print 'Performing central measurement'
     timer = Timer()
+    current_source = 'central'
     histogram = histograms['central']
     histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
     fitted_results['central'] = measureNormalisationIn(histogram)
@@ -322,6 +361,24 @@ def measureNormalisationIncludingSystematics(histograms):
     histogram = histograms['PileUp-']
     histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
     fitted_results['PileUp-'] = measureNormalisationIn(histogram)
+    print '>' * 60, 'completed in %.2fs' % timer.elapsedTime()
+    timer.restart()
+    
+    print 'Performing measurement of B-tag and light jet uncertainties'
+    current_source = 'BJets'
+    histogram = histograms['BJet+']
+    histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
+    fitted_results['BJet+'] = measureNormalisationIn(histogram)
+    histogram = histograms['BJet-']
+    histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
+    fitted_results['BJet-'] = measureNormalisationIn(histogram)
+    current_source = 'LightJets'
+    histogram = histograms['LightJet+']
+    histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
+    fitted_results['LightJet+'] = measureNormalisationIn(histogram)
+    histogram = histograms['LightJet-']
+    histogram['QCDFromData'] = histogram['QCDFromData_Conversions']
+    fitted_results['LightJet-'] = measureNormalisationIn(histogram)
     print '>' * 60, 'completed in %.2fs' % timer.elapsedTime()
     timer.restart()
     
@@ -419,7 +476,7 @@ def measureNormalisationIncludingSystematics(histograms):
 
 
 def NormalisationAnalysis():
-    global metbins, metsystematics_sources, N_Events, metbin
+    global metbins, metsystematics_sources, N_Events, metbin, doBinByBinUnfolding
     analysisTimer = Timer()
     base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
     
@@ -437,10 +494,35 @@ def NormalisationAnalysis():
         histogramCollection['JES+'] = sumSamples(histogramCollection['JES+'])
         histogramCollection['PileUp-'] = sumSamples(histogramCollection['PileUp-'])
         histogramCollection['PileUp+'] = sumSamples(histogramCollection['PileUp+'])
+        histogramCollection['BJet-'] = sumSamples(histogramCollection['BJet-'])
+        histogramCollection['BJet+'] = sumSamples(histogramCollection['BJet+'])
+        histogramCollection['LightJet-'] = sumSamples(histogramCollection['LightJet-'])
+        histogramCollection['LightJet+'] = sumSamples(histogramCollection['LightJet+'])
         for source in metsystematics_sources:
             histogramCollection[source] = sumSamples(histogramCollection[source])
         print 'Getting fitted normalisation for metbin=', metbin
         result[metbin] = measureNormalisationIncludingSystematics(histogramCollection)
+        
+        if doBinByBinUnfolding:
+            #corrections for bin migration
+            correctionFactor = metbin_correctionFactors[metbin]
+            correctionFactor_POWHEG = metbin_correctionFactors_POWHEG[metbin]
+            correctionFactor_PYTHIA = metbin_correctionFactors_PYTHIA[metbin]
+            correctionFactor_MCATNLO = metbin_correctionFactors_MCATNLO[metbin]
+            for measurement in result[metbin].keys():
+#                result[metbin][measurement]['TTJet_Corr'] = deepcopy(result[metbin][measurement]['TTJet'])
+#                result[metbin][measurement]['TTJet Before Fit corr'] = deepcopy(result[metbin][measurement]['TTJet Before Fit'])
+#                result[metbin][measurement]['TTJet_Corr']['value'] = result[metbin][measurement]['TTJet']['value']*correctionFactor
+#                result[metbin][measurement]['TTJet_Corr']['error'] = result[metbin][measurement]['TTJet']['error']*correctionFactor
+#                result[metbin][measurement]['TTJet Before Fit corr']['value'] = result[metbin][measurement]['TTJet Before Fit']['value']*correctionFactor
+                #more simple
+                result[metbin][measurement]['TTJet']['value'] = result[metbin][measurement]['TTJet']['value']*correctionFactor
+                result[metbin][measurement]['TTJet']['error'] = result[metbin][measurement]['TTJet']['error']*correctionFactor
+                result[metbin][measurement]['TTJet Before Fit']['value'] = result[metbin][measurement]['TTJet Before Fit']['value']*correctionFactor
+                if measurement == 'central':
+                    result[metbin][measurement]['POWHEG']['value'] = result[metbin][measurement]['POWHEG']['value']*correctionFactor_POWHEG
+                    result[metbin][measurement]['PYTHIA6']['value'] = result[metbin][measurement]['PYTHIA6']['value']*correctionFactor_PYTHIA
+                    result[metbin][measurement]['MCatNLO']['value'] = result[metbin][measurement]['MCatNLO']['value']*correctionFactor_MCATNLO
         print 'Result for metbin=', metbin, 'completed in %.2fs' % metbinTimer.elapsedTime()
     print 'Analysis in bjetbin=', bjetbin, 'finished in %.2fs' % analysisTimer.elapsedTime()
     return result
@@ -456,65 +538,80 @@ def CrossSectionAnalysis(input):
         for measurement in input[metbin].keys():
             result_ttbar = input[metbin][measurement]['TTJet']
             madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit']['value']
+#            if doBinByBinUnfolding:
+#                result_ttbar = input[metbin][measurement]['TTJet_Corr']
+#                madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit corr']['value']
             value, error = result_ttbar['value'], result_ttbar['error']
             n_ttbar = N_ttbar_by_source[measurement]
             scale = theoryXsection / n_ttbar
             result[metbin][measurement] = {'value': value * scale, 
                                            'error':error * scale, 
-                                           'MADGRAPH':madgraph_ttbar * scale,
-                                           'POWHEG':input[metbin][measurement]['POWHEG']['value'] * scale,
+                                           #replace these with GenMET
+                                           'MADGRAPH':madgraph_ttbar * scale}
+            if measurement == 'central':
+                result[metbin][measurement].update(
+                                            {'POWHEG':input[metbin][measurement]['POWHEG']['value'] * scale,
                                            'PYTHIA6':input[metbin][measurement]['PYTHIA6']['value'] * scale,
-                                           'MCatNLO':input[metbin][measurement]['POWHEG']['value'] * scale}
+                                           'MCatNLO':input[metbin][measurement]['POWHEG']['value'] * scale})
     return result
         
 
 def NormalisedCrossSectionAnalysis(input):
-    global N_ttbar_by_source
+    global N_ttbar_by_source, doBinByBinUnfolding
     result = {}
     theoryXsection = 157.5
     sums = {'central':{},'MADGRAPH':{},'POWHEG':{},'PYTHIA6':{},'MCatNLO':{} }
     for metbin in metbins:
         result[metbin] = {}
         for measurement in input[metbin].keys():
+#            ttbar = input[metbin][measurement]['TTJet']['value']
+#            madgraph = input[metbin][measurement]['TTJet Before Fit']['value']
+#            if doBinByBinUnfolding:
+#                ttbar = input[metbin][measurement]['TTJet_Corr']['value']
+#                madgraph = input[metbin][measurement]['TTJet Before Fit corr']['value']
             if not sums['central'].has_key(measurement):
                 sums['central'][measurement] = input[metbin][measurement]['TTJet']['value']
                 sums['MADGRAPH'][measurement] = input[metbin][measurement]['TTJet Before Fit']['value']
-                sums['POWHEG'][measurement] = input[metbin][measurement]['POWHEG']['value']
-                sums['PYTHIA6'][measurement] = input[metbin][measurement]['PYTHIA6']['value']
-                sums['MCatNLO'][measurement] = input[metbin][measurement]['MCatNLO']['value']
+                if measurement == 'central':
+                    sums['POWHEG'][measurement] = input[metbin][measurement]['POWHEG']['value']
+                    sums['PYTHIA6'][measurement] = input[metbin][measurement]['PYTHIA6']['value']
+                    sums['MCatNLO'][measurement] = input[metbin][measurement]['MCatNLO']['value']
             else:
                 sums['central'][measurement] += input[metbin][measurement]['TTJet']['value']
                 sums['MADGRAPH'][measurement] += input[metbin][measurement]['TTJet Before Fit']['value']
-                sums['POWHEG'][measurement] += input[metbin][measurement]['POWHEG']['value']
-                sums['PYTHIA6'][measurement] += input[metbin][measurement]['PYTHIA6']['value']
-                sums['MCatNLO'][measurement] += input[metbin][measurement]['MCatNLO']['value']
+                if measurement == 'central':
+                    sums['POWHEG'][measurement] += input[metbin][measurement]['POWHEG']['value']
+                    sums['PYTHIA6'][measurement] += input[metbin][measurement]['PYTHIA6']['value']
+                    sums['MCatNLO'][measurement] += input[metbin][measurement]['MCatNLO']['value']
     
     for metbin in metbins:
         result[metbin] = {}
         for measurement in input[metbin].keys():            
             result_ttbar = input[metbin][measurement]['TTJet']
             madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit']['value']
+#            if doBinByBinUnfolding:
+#                result_ttbar = input[metbin][measurement]['TTJet_Corr']
+#                madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit corr']['value']
             value, error = result_ttbar['value'], result_ttbar['error']
             
             result[metbin][measurement] = {'value': value/sums['central'][measurement], 
                                            'error':error/sums['central'][measurement], 
-                                           'MADGRAPH':input[metbin][measurement]['TTJet Before Fit']['value']/sums['MADGRAPH'][measurement],
-                                           'POWHEG':input[metbin][measurement]['POWHEG']['value']/sums['POWHEG'][measurement],
+                                           'MADGRAPH':madgraph_ttbar/sums['MADGRAPH'][measurement]}
+            if measurement == 'central':
+                result[metbin][measurement].update(
+                                           {'POWHEG':input[metbin][measurement]['POWHEG']['value']/sums['POWHEG'][measurement],
                                            'PYTHIA6':input[metbin][measurement]['PYTHIA6']['value']/sums['PYTHIA6'][measurement],
-                                           'MCatNLO':input[metbin][measurement]['MCatNLO']['value']/sums['MCatNLO'][measurement]}
+                                           'MCatNLO':input[metbin][measurement]['MCatNLO']['value']/sums['MCatNLO'][measurement]})
     return result
 
 def getHistograms(bjetbin, metbin):
     print 'Getting histograms for bjetbin =', bjetbin, 'and metbin=', metbin
-    global metsystematics_sources, rebin
+    global metsystematics_sources, rebin, metType
     base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
-    distribution = base + 'Electron_patType1CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, bjetbin)
-    qcdDistribution = base + 'QCDConversions/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
-    qcdDistribution2 = base + 'QCD non iso e+jets/Electron_patType1CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
     
-#    distribution = base + 'Electron_patType1p2CorrectedPFMet_bin_%s/electron_eta_%s' % (metbin, bjetbin)
-#    qcdDistribution = base + 'QCDConversions/Electron_patType1p2CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
-#    qcdDistribution2 = base + 'QCD non iso e+jets/Electron_patType1p2CorrectedPFMet_bin_%s/electron_eta_0btag' % metbin
+    distribution = base + 'Electron_%s_bin_%s/electron_AbsEta_%s' % (metType, metbin, bjetbin)
+    qcdDistribution = base + 'QCDConversions/Electron_%s_bin_%s/electron_AbsEta_0btag' % (metType, metbin)
+    qcdDistribution2 = base + 'QCD non iso e+jets/Electron_%s_bin_%s/electron_AbsEta_0btag' % (metType, metbin)
 
     histogramCollection = {}
     histogramCollection['central'] = FileReader.getHistogramDictionary(distribution, FILES.files)
@@ -528,11 +625,19 @@ def getHistograms(bjetbin, metbin):
     histogramCollection['PileUp-']['QCDFromData_Conversions'] = deepcopy(histogramCollection['central']['QCDFromData_Conversions'])
     histogramCollection['PileUp+'] = FileReader.getHistogramDictionary(distribution, FILES.files_PU_up)
     histogramCollection['PileUp+']['QCDFromData_Conversions'] = deepcopy(histogramCollection['central']['QCDFromData_Conversions'])
-    histogramCollection['PDFWeights'] = FileReader.getHistogramDictionary(distribution, FILES.files_PDF_weights)  
+    histogramCollection['PDFWeights'] = FileReader.getHistogramDictionary(distribution, FILES.files_PDF_weights)
+    histogramCollection['BJet-'] = FileReader.getHistogramDictionary(distribution, FILES.files_BJet_down)
+    histogramCollection['BJet-']['QCDFromData_Conversions'] = deepcopy(histogramCollection['central']['QCDFromData_Conversions']) 
+    histogramCollection['BJet+'] = FileReader.getHistogramDictionary(distribution, FILES.files_BJet_up)
+    histogramCollection['BJet+']['QCDFromData_Conversions'] = deepcopy(histogramCollection['central']['QCDFromData_Conversions']) 
+    histogramCollection['LightJet-'] = FileReader.getHistogramDictionary(distribution, FILES.files_LightJet_down)
+    histogramCollection['LightJet-']['QCDFromData_Conversions'] = deepcopy(histogramCollection['central']['QCDFromData_Conversions']) 
+    histogramCollection['LightJet+'] = FileReader.getHistogramDictionary(distribution, FILES.files_LightJet_up)
+    histogramCollection['LightJet+']['QCDFromData_Conversions'] = deepcopy(histogramCollection['central']['QCDFromData_Conversions'])   
     
     for source in metsystematics_sources:
-        distribution = base + 'Electron_%s_bin_%s/electron_eta_%s' % (source, metbin, bjetbin)
-        qcdDistribution = base + 'QCDConversions/Electron_%s_bin_%s/electron_eta_0btag' % (source, metbin)
+        distribution = base + 'Electron_%s_bin_%s/electron_AbsEta_%s' % (source, metbin, bjetbin)
+        qcdDistribution = base + 'QCDConversions/Electron_%s_bin_%s/electron_AbsEta_0btag' % (source, metbin)
         if not 'JER' in source:
             histogramCollection[source] = FileReader.getHistogramDictionary(distribution, FILES.files)
             histogramCollection[source]['QCDFromData_Conversions'] = FileReader.getHistogramFromFile(qcdDistribution, FILES.files['ElectronHad'])
@@ -549,8 +654,11 @@ def getHistograms(bjetbin, metbin):
     return histogramCollection
 
 def setNEvents(bjetbin):
-    global N_Events, wplusjets_samples
-    unbinnedHist = FileReader.getHistogramDictionary('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET_' + bjetbin,
+    global N_Events, wplusjets_samples, metType
+    met = metType
+    if metType == 'PFMET':
+        met = 'patMETsPFlow'
+    unbinnedHist = FileReader.getHistogramDictionary('TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/' + met + '/MET_' + bjetbin,
                                                      FILES.files)
     unbinnedHist['W+Jets'] = plotting.sumSamples(unbinnedHist, wplusjets_samples)
     N_Events['TTJet'] = unbinnedHist['TTJet'].Integral()
@@ -573,8 +681,11 @@ def setNEvents(bjetbin):
     N_Events['ZJets-scaledown'] = unbinnedHist['ZJets-scaledown'].Integral()
     
 def setNTtbar(bjetbin):
-    global N_ttbar_by_source
-    histname = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/patType1CorrectedPFMet/MET_' + bjetbin
+    global N_ttbar_by_source, metType
+    met = metType
+    if metType == 'PFMET':
+        met = 'patMETsPFlow'
+    histname = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/MET/' + met + '/MET_' + bjetbin
     getHist = FileReader.getHistogramFromFile
     central = getHist(histname, FILES.files['TTJet']).Integral()
     sameAsCentral = ['central', 'SingleTop +', 'SingleTop -', 'QCD shape', 'TTJet matching +', 'TTJet matching -',
@@ -591,6 +702,10 @@ def setNTtbar(bjetbin):
     N_ttbar_by_source['JES+'] = getHist(histname, FILES.files_JES_up['TTJet']).Integral()
     N_ttbar_by_source['PileUp-'] = getHist(histname, FILES.files_PU_down['TTJet']).Integral()
     N_ttbar_by_source['PileUp+'] = getHist(histname, FILES.files_PU_up['TTJet']).Integral()
+    N_ttbar_by_source['BJet-'] = getHist(histname, FILES.files_BJet_down['TTJet']).Integral()
+    N_ttbar_by_source['BJet+'] = getHist(histname, FILES.files_BJet_up['TTJet']).Integral()
+    N_ttbar_by_source['LightJet-'] = getHist(histname, FILES.files_LightJet_down['TTJet']).Integral()
+    N_ttbar_by_source['LightJet+'] = getHist(histname, FILES.files_LightJet_up['TTJet']).Integral()
     
     
     for index in range(1, 45):
@@ -711,7 +826,6 @@ def printNormalisationResult(result, toFile=True):
                     continue
                 fitresult = results[sample]
                 row = rows[source]
-                
                 text = ' $%(value).2f \pm %(error).2f$' % fitresult + '(%.2f' % (getRelativeError(fitresult['value'], fitresult['error']) * 100) + '\%)'
                 if row.has_key(sample): 
                     row[sample].append(text)
@@ -744,7 +858,10 @@ def printNormalisationResult(result, toFile=True):
         printout += '\hline \n\n'
         
     if toFile:
-        file = open(savePath + 'normalisation_result_' + bjetbin + '.tex', 'w')
+        unfolding = '_unfolded'
+        if not doBinByBinUnfolding:
+            unfolding = ''
+        file = open(savePath + 'normalisation_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         file.write(printout)
         file.close()
     else:
@@ -861,7 +978,10 @@ def printNormalisationResultsForTTJetWithUncertanties(result, toFile=True):
             uncertainties[source] += text
         
     if toFile:
-        file = open(savePath + 'normalisation_TTJet_result_' + bjetbin + '.tex', 'w')
+        unfolding = '_unfolded'
+        if not doBinByBinUnfolding:
+            unfolding = ''
+        file = open(savePath + 'normalisation_TTJet_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         file.write(printout)
         for source, value in uncertainties.iteritems():
             file.write(value)
@@ -910,7 +1030,10 @@ def printCrossSectionResult(result, toFile=True):
     printout += '\hline \n\n'
         
     if toFile:
-        file = open(savePath + 'crosssection_result_' + bjetbin + '.tex', 'w')
+        unfolding = '_unfolded'
+        if not doBinByBinUnfolding:
+            unfolding = ''
+        file = open(savePath + 'crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         file.write(printout)
         file.close()
     else:
@@ -955,7 +1078,10 @@ def printCrossSectionResultsForTTJetWithUncertanties(result, toFile=True):
             uncertainties[source] += text
         
     if toFile:
-        file = open(savePath + 'crosssection_main_result_' + bjetbin + '.tex', 'w')
+        unfolding = '_unfolded'
+        if not doBinByBinUnfolding:
+            unfolding = ''
+        file = open(savePath + 'crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         file.write(printout)
         for source, value in uncertainties.iteritems():
             file.write(value)
@@ -990,8 +1116,8 @@ def plotNormalisationResults(results):
     global metbins
     for metbin in metbins:
         for measurement, result in results[metbin].iteritems():
-#            if not measurement == 'central' and not measurement == 'QCD shape':
-#                continue
+            if not measurement == 'central' and not measurement == 'QCD shape':
+                continue
 #        result = results[metbin]['central']
             fit = result['fit']
     #        fitvalues = result['fitvalues']
@@ -1019,8 +1145,8 @@ def plotNormalisationResults(results):
                       }
             for sample in samples:
                 template = templates[sample]
-                plot = TH1F(sample + metbin + bjetbin + measurement, sample, len(template), -3, 3)
-                plot_template = TH1F(sample + metbin + bjetbin + measurement + '_template', sample, len(template), -3, 3)
+                plot = TH1F(sample + metbin + bjetbin + measurement, sample, 13, 0, 2.6)
+                plot_template = TH1F(sample + metbin + bjetbin + measurement + '_template', sample, 13, 0, 2.6)
                 bin = 1
                 for value in template:
                     plot.SetBinContent(bin, value)
@@ -1028,12 +1154,15 @@ def plotNormalisationResults(results):
                     bin += 1
                 plot.Scale(result[sample]['value'])
     #            plot.Rebin(rebin)
-                plot.SetYTitle('Events/%.2f' % (0.02 * rebin))
-                plot_template.SetYTitle('normalised to unit area/%.2f' % (0.02 * rebin))
-                plot.SetXTitle('#eta(e)')
-                plot_template.SetXTitle('#eta(e)')
+                plot.SetYTitle('Events/0.2')
+                plot_template.SetYTitle('normalised to unit area/0.2')
+                plot.SetXTitle('|#eta(e)|')
+                plot.SetMarkerStyle(20)
+                
+                plot_template.SetXTitle('|#eta(e)|')
                 if not sample == 'ElectronHad':
                     plot.SetFillColor(colors[sample])
+                    plot.SetLineColor(colors[sample])
                     plot_template.SetLineColor(colors[sample])
                     plot_template.SetLineWidth(3)
                 plots[sample] = plot
@@ -1053,24 +1182,41 @@ def plotNormalisationResults(results):
             mcStack.Add(plots['SingleTop']);
             mcStack.Add(plots['TTJet']);
             mcStack.Draw('hist same')
-            fit.Draw('same')
+#            fit.Draw('same')
             plots['ElectronHad'].Draw('error same')
             
             legend = plotting.create_legend()
             legend.AddEntry(plots['ElectronHad'], "data `11", 'P')
             legend.AddEntry(plots['TTJet'], 't#bar{t}', 'F')
+            legend.AddEntry(plots['SingleTop'], 'Single-Top', 'F')
             legend.AddEntry(plots['W+Jets'], 'W#rightarrowl#nu', 'F')
             legend.AddEntry(plots['DYJetsToLL'], 'Z/#gamma*#rightarrowl^{+}l^{-}', 'F')
             legend.AddEntry(plots[qcdLabel], 'QCD/#gamma + jets', 'F')
-            legend.AddEntry(plots['SingleTop'], 'Single-Top', 'F')
+            
     #        legend.AddEntry(plots['Di-Boson'], 'VV + X', 'F')
             legend.Draw()
-            plotting.saveAs(c, 'EPlusJets_electron_eta_fit_' + measurement + '_' + metbin + '_' + bjetbin,
+            mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
+            channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
+            channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin] ))
+            mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} @ #sqrt{s} = 7 TeV" % (5000/1000));
+                     
+            mytext.SetFillStyle( 0 )
+            mytext.SetBorderSize( 0 )
+            mytext.SetTextFont( 42 )
+            mytext.SetTextAlign( 13 )
+            
+            channelLabel.SetFillStyle( 0 )
+            channelLabel.SetBorderSize( 0 )
+            channelLabel.SetTextFont( 42 )
+            channelLabel.SetTextAlign( 13 )
+            mytext.Draw()
+            channelLabel.Draw()
+            
+            plotting.saveAs(c, 'EPlusJets_electron_AbsEta_fit_' + measurement + '_' + metbin + '_' + bjetbin,
                             outputFormat_plots,
                             savePath + measurement)
-            c = TCanvas("EPlusJets_electron_eta_templates_" + metbin + bjetbin + measurement, "Differential cross section", 1600, 1200)
-            max = 1
-            
+            c = TCanvas("EPlusJets_electron_AbsEta_templates_" + metbin + bjetbin + measurement, "Differential cross section", 1600, 1200)
+            plot_templates[qcdLabel].SetMaximum(0.15)
             plot_templates[qcdLabel].Draw('hist')
             plot_templates['DYJetsToLL'].Draw('hist same')
             plot_templates['W+Jets'].Draw('hist same')
@@ -1079,22 +1225,25 @@ def plotNormalisationResults(results):
             
             legend = plotting.create_legend()
             legend.AddEntry(plot_templates['TTJet'], 't#bar{t}', 'L')
+            legend.AddEntry(plot_templates['SingleTop'], 'Single-Top', 'L')
             legend.AddEntry(plot_templates['W+Jets'], 'W#rightarrowl#nu', 'L')
             legend.AddEntry(plot_templates['DYJetsToLL'], 'Z/#gamma*#rightarrowl^{+}l^{-}', 'L')
             legend.AddEntry(plot_templates[qcdLabel], 'QCD/#gamma + jets', 'L')
-            legend.AddEntry(plot_templates['SingleTop'], 'Single-Top', 'L')
+            
     #        legend.AddEntry(plots['Di-Boson'], 'VV + X', 'F')
             legend.Draw()
-            plotting.saveAs(c, 'EPlusJets_electron_eta_templates_' + measurement + '_' + metbin + '_' + bjetbin,
+            mytext.Draw()
+            channelLabel.Draw()
+    
+            plotting.saveAs(c, 'EPlusJets_electron_AbsEta_templates_' + measurement + '_' + metbin + '_' + bjetbin,
                             outputFormat_plots,
                             savePath + measurement)
-#            c.SaveAs(savePath + measurement + 'EPlusJets_electron_eta_fit_' + measurement + '_' + metbin + '_' + bjetbin + '.png')
-#            c.SaveAs(savePath + 'EPlusJets_electron_eta_fit_' + 'central' + '_' + metbin + '_' + bjetbin + '.pdf')
+
 def plotCrossSectionResults(result, compareToSystematic = False):
     
     arglist = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
-    plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET} [pb GeV^{-1}]', len(arglist) - 1, arglist)
     plotMADGRAPH = TH1F("measurement_MC_MADGRAPH" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotPOWHEG = TH1F("measurement_MC_POWHEG" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotPYTHIA6 = TH1F("measurement_MC_PYTHIA6" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
@@ -1102,13 +1251,13 @@ def plotCrossSectionResults(result, compareToSystematic = False):
     plot.SetMinimum(0)
     plot.SetMaximum(3)
     plotMADGRAPH.SetLineColor(kRed + 1)
-    plotMADGRAPH.SetLineWidth(2)
+    plotMADGRAPH.SetLineStyle(7)
     plotPOWHEG.SetLineColor(kBlue)
-    plotPOWHEG.SetLineWidth(2)
+    plotPOWHEG.SetLineStyle(7)
     plotPYTHIA6.SetLineColor(kGreen + 4)
-    plotPYTHIA6.SetLineWidth(2)
+    plotPYTHIA6.SetLineStyle(7)
     plotnoCorr_mcatnlo.SetLineColor(kMagenta + 3)
-    plotnoCorr_mcatnlo.SetLineWidth(2)
+    plotnoCorr_mcatnlo.SetLineStyle(7)
     
     legend = plotting.create_legend()
     legend.AddEntry(plot, 'measured', 'LEP')
@@ -1153,17 +1302,37 @@ def plotCrossSectionResults(result, compareToSystematic = False):
         plotAsym.SetPointEYlow(bin, error_down)
         bin += 1
     plot.Draw('P')
-    gStyle.SetErrorX(0.4)
+#    gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
     plotPOWHEG.Draw('hist same')
     plotPYTHIA6.Draw('hist same')
     plotnoCorr_mcatnlo.Draw('hist same')
     plotAsym.Draw('same P')
     legend.Draw()
+    mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
+    channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
+    channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin] ))
+    mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000/1000));
+             
+    mytext.SetFillStyle( 0 )
+    mytext.SetBorderSize( 0 )
+    mytext.SetTextFont( 42 )
+    mytext.SetTextAlign( 13 )
+    
+    channelLabel.SetFillStyle( 0 )
+    channelLabel.SetBorderSize( 0 )
+    channelLabel.SetTextFont( 42 )
+    channelLabel.SetTextAlign( 13 )
+    mytext.Draw()
+    channelLabel.Draw()
+    
+    unfolding = '_unfolded'
+    if not doBinByBinUnfolding:
+        unfolding = ''
     if compareToSystematic:
-        plotting.saveAs(c, 'EPlusJets_diff_MET_xsection_compareSystematics_' + bjetbin, outputFormat_plots, savePath)
+        plotting.saveAs(c, 'EPlusJets_diff_MET_xsection_compareSystematics' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
     else:
-        plotting.saveAs(c, 'EPlusJets_diff_MET_xsection_' + bjetbin, outputFormat_plots, savePath)
+        plotting.saveAs(c, 'EPlusJets_diff_MET_xsection' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
         
 def printNormalisedCrossSectionResult(result,toFile = True):
     global metbins
@@ -1207,14 +1376,17 @@ def printNormalisedCrossSectionResult(result,toFile = True):
     printout += '\hline \n\n'
         
     if toFile:
-        file = open(savePath + 'normalised_crosssection_result_' + bjetbin + '.tex', 'w')
+        unfolding = '_unfolded'
+        if not doBinByBinUnfolding:
+            unfolding = ''
+        file = open(savePath + 'normalised_crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         file.write(printout)
         file.close()
     else:
         print printout
         
 def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile = True):
-    global metbins
+    global metbins, doBinByBinUnfolding
     printout = '\n'
     printout += '=' * 60
     printout = '\n'
@@ -1252,7 +1424,10 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile = 
             uncertainties[source] += text
         
     if toFile:
-        file = open(savePath + 'normalised_crosssection_main_result_' + bjetbin + '.tex', 'w')
+        unfolding = '_unfolded'
+        if not doBinByBinUnfolding:
+            unfolding = ''
+        file = open(savePath + 'normalised_crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         file.write(printout)
         header += '\\\\ \n'
         file.write(header)
@@ -1269,21 +1444,25 @@ def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
     
     arglist = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
-    plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma_{meas}} * #frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma_{meas}}#frac{#partial#sigma}{#partial MET}[GeV^{-1}]', len(arglist) - 1, arglist)
     plotMADGRAPH = TH1F("measurement_MC_MADGRAPH" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotPOWHEG = TH1F("measurement_MC_POWHEG" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotPYTHIA6 = TH1F("measurement_MC_PYTHIA6" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotnoCorr_mcatnlo = TH1F("measurement_MC_MCatNLO" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plot.SetMinimum(0)
-    plot.SetMaximum(0.03)
+    plot.SetMaximum(0.02)
     plotMADGRAPH.SetLineColor(kRed + 1)
-    plotMADGRAPH.SetLineWidth(2)
+#    plotMADGRAPH.SetLineWidth(2)
+    plotMADGRAPH.SetLineStyle(7)
     plotPOWHEG.SetLineColor(kBlue)
-    plotPOWHEG.SetLineWidth(2)
+    plotPOWHEG.SetLineStyle(7)
+#    plotPOWHEG.SetLineWidth(2)
     plotPYTHIA6.SetLineColor(kGreen + 4)
-    plotPYTHIA6.SetLineWidth(2)
+    plotPYTHIA6.SetLineStyle(7)
+#    plotPYTHIA6.SetLineWidth(2)
     plotnoCorr_mcatnlo.SetLineColor(kMagenta + 3)
-    plotnoCorr_mcatnlo.SetLineWidth(2)
+#    plotnoCorr_mcatnlo.SetLineWidth(2)
+    plotnoCorr_mcatnlo.SetLineStyle(7)
     legend = plotting.create_legend(x0=0.6, y1 = 0.5)
     legend.AddEntry(plot, 'measured', 'LEP')
     if compareToSystematic:
@@ -1329,17 +1508,36 @@ def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
         plotAsym.SetPointEYlow(bin, error_down)
         bin += 1 
     plot.Draw('P')
-    gStyle.SetErrorX(0.4)
+#    gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
     plotPOWHEG.Draw('hist same')
     plotPYTHIA6.Draw('hist same')
     plotnoCorr_mcatnlo.Draw('hist same')
     plotAsym.Draw('same P')
     legend.Draw()
+    mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
+    channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
+    channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin] ))
+    mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000/1000));
+             
+    mytext.SetFillStyle( 0 )
+    mytext.SetBorderSize( 0 )
+    mytext.SetTextFont( 42 )
+    mytext.SetTextAlign( 13 )
+    
+    channelLabel.SetFillStyle( 0 )
+    channelLabel.SetBorderSize( 0 )
+    channelLabel.SetTextFont( 42 )
+    channelLabel.SetTextAlign( 13 )
+    mytext.Draw()
+    channelLabel.Draw()
+    unfolding = '_unfolded'
+    if not doBinByBinUnfolding:
+        unfolding = ''
     if compareToSystematic:
-        plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection_compareSystematics_' + bjetbin, outputFormat_plots, savePath)
+        plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection_compareSystematics' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
     else:
-        plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection_' + bjetbin, outputFormat_plots, savePath)
+        plotting.saveAs(c, 'EPlusJets_diff_MET_norm_xsection' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
     
 if __name__ == '__main__':
 #    DEBUG = True
@@ -1349,16 +1547,22 @@ if __name__ == '__main__':
    
     plotting.setStyle()
     
-    bjetbin = '0orMoreBtag'
+#    bjetbin = '0orMoreBtag'
     bjetbin = '0btag'
-    bjetbin = '1btag'
+#    bjetbin = '1btag'
     bjetbin = '2orMoreBtags'
 #    bjetbin = '1orMoreBtag'
+    metType = 'PFMET'
+#    metType = 'patType1CorrectedPFMet'
+#    metType = 'patType1p2CorrectedPFMet'
+    
+    savePath = "/storage/results/plots/DiffMETMeasurement/binCorrection/%s/" % metType  
+    doBinByBinUnfolding = True
     
     normalisation_result = NormalisationAnalysis()
     printNormalisationResult(normalisation_result)
     printNormalisationResultsForTTJetWithUncertanties(normalisation_result)
-#    plotNormalisationResults(normalisation_result)
+    plotNormalisationResults(normalisation_result)
     
     crosssection_result = CrossSectionAnalysis(normalisation_result)
     printCrossSectionResult(crosssection_result)
