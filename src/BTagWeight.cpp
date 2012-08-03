@@ -26,17 +26,17 @@ std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfB
 	double mean_udsgJetEfficiency = btagwWeight->getAverageUDSGEfficiency(udsgjets);
 
 	std::vector<double> event_weights;
-	for (unsigned int nTag = 0; nTag <= 4; ++nTag) { // >= 4 is our last b-tag bin!
+	for (unsigned int nTag = 0; nTag <= numberOfBtags; ++nTag) { // >= 4 is our last b-tag bin!
 		btagwWeight->setNumberOfBtags(nTag, 20);
 		double event_weight = btagwWeight->weight(bjets.size(), cjets.size(), udsgjets.size(), mean_bJetEfficiency,
 				mean_cJetEfficiency, mean_udsgJetEfficiency, SF_b, SF_c, SF_udsg, numberOfBtags);
 		event_weights.push_back(event_weight);
 	}
 	//all weights are inclusive. To get the weight for exclusive N b-tags ones has to subtract:
-	for (unsigned int nTag = 0; nTag < 4; ++nTag) {
+	for (unsigned int nTag = 0; nTag < numberOfBtags; ++nTag) {
 		// w(N b-tags) = w(>= N) - w(>= N+1)
 		event_weights.at(nTag) = event_weights.at(nTag) - event_weights.at(nTag + 1);
-		//last weight, >= 4 jets, stays inclusive
+		//last weight, >= numberOfBjets jets, stays inclusive
 	}
 	return event_weights;
 }

@@ -41,14 +41,14 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= 4; ++index) {
+			for (unsigned int index = 0; index <= numberOfBjets; ++index) {
 				if (index == numberOfBjets)
 					bjetWeights.push_back(1);
 				else
 					bjetWeights.push_back(0);
 			}
-			if (numberOfBjets > 4)
-				bjetWeights.at(4) = 1;
+//			if (numberOfBjets > 4)
+//				bjetWeights.at(4) = 1;
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
@@ -59,7 +59,7 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			histMan_->setCurrentHistogramFolder(histogramFolder_);
+			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/Ref selection");
 			histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * bjetWeight);
 
 			metAnalyserRefSelection_->setScale(bjetWeight);
@@ -77,9 +77,8 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 			jetAnalyserRefSelection_->analyse(event);
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
-						|| metIndex == METAlgorithm::GenMET;
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp || metIndex
+						== METAlgorithm::patType1p2CorrectedPFMetJetResDown || metIndex == METAlgorithm::GenMET;
 				//skip MC only MET entries
 				if (isMCOnlyMET && event->isRealData())
 					continue;
@@ -92,6 +91,22 @@ void TTbarPlusMETAnalyser::signalAnalysis(const EventPtr event) {
 					if (met->et() >= lowerCut && met->et() < upperCut) {
 						binnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
 						binnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron, event->weight());
+					}
+				}
+			}
+
+			//bbar analysis part
+			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/Ref selection");
+			if (numberOfBjets > 1) {
+				unsigned int numberOfCombinations(1);
+				for (unsigned int i = 2; i < numberOfBjets; ++i)
+					numberOfCombinations += i;
+				for (unsigned int i = 0; i < numberOfBjets; ++i) {
+					for (unsigned int j =  i + 1; j < numberOfBjets; ++j) {
+						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
+						//conserve event weight by normalising the number of combinations
+						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
 			}
@@ -142,9 +157,8 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			metAnalyserqcdNonIsoSelection_->analyse(event);
 			metAnalyserqcdNonIsoSelection_->analyseTransverseMass(event, signalLepton);
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
-						|| metIndex == METAlgorithm::GenMET;
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp || metIndex
+						== METAlgorithm::patType1p2CorrectedPFMetJetResDown || metIndex == METAlgorithm::GenMET;
 				//skip MC only MET entries
 				if (isMCOnlyMET && event->isRealData())
 					continue;
@@ -158,6 +172,21 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 						qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
 						qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 								event->weight());
+					}
+				}
+			}
+			//bbar analysis part
+			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/Ref selection/QCD non iso e+jets");
+			if (numberOfBjets > 1) {
+				unsigned int numberOfCombinations(1);
+				for (unsigned int i = 2; i < numberOfBjets; ++i)
+					numberOfCombinations += i;
+				for (unsigned int i = 0; i < numberOfBjets; ++i) {
+					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
+						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
+						//conserve event weight by normalising the number of combinations
+						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
 			}
@@ -203,8 +232,7 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 		}
 	}
 
-	if (qcdConversionSelection_->passesSelectionUpToStep(event,
-			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+	if (qcdConversionSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdConversionSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdConversionSelection_->cleanedBJets(event));
 		unsigned int numberOfBjets(bJets.size());
@@ -241,9 +269,8 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
-						|| metIndex == METAlgorithm::GenMET;
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp || metIndex
+						== METAlgorithm::patType1p2CorrectedPFMetJetResDown || metIndex == METAlgorithm::GenMET;
 				//skip MC only MET entries
 				if (isMCOnlyMET && event->isRealData())
 					continue;
@@ -257,6 +284,21 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 						qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
 						qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 								event->weight() * bjetWeight);
+					}
+				}
+			}
+			//bbar analysis part
+			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/Ref selection/QCDConversions");
+			if (numberOfBjets > 1) {
+				unsigned int numberOfCombinations(1);
+				for (unsigned int i = 2; i < numberOfBjets; ++i)
+					numberOfCombinations += i;
+				for (unsigned int i = 0; i < numberOfBjets; ++i) {
+					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
+						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
+						//conserve event weight by normalising the number of combinations
+						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
 			}
@@ -295,9 +337,8 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			qcdEPlusjetsPFRelIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
-						|| metIndex == METAlgorithm::GenMET;
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp || metIndex
+						== METAlgorithm::patType1p2CorrectedPFMetJetResDown || metIndex == METAlgorithm::GenMET;
 				//skip MC only MET entries
 				if (isMCOnlyMET && event->isRealData())
 					continue;
@@ -387,9 +428,8 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			metAnalyserqcdAntiIDSelection_->analyseTransverseMass(event, signalLepton);
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
-						|| metIndex == METAlgorithm::GenMET;
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp || metIndex
+						== METAlgorithm::patType1p2CorrectedPFMetJetResDown || metIndex == METAlgorithm::GenMET;
 				//skip MC only MET entries
 				if (isMCOnlyMET && event->isRealData())
 					continue;
@@ -444,9 +484,8 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 			metAnalyserqcdNoIsoNoIDSelection_->analyseTransverseMass(event, signalLepton);
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-						|| metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResDown
-						|| metIndex == METAlgorithm::GenMET;
+				bool isMCOnlyMET = metIndex == METAlgorithm::patType1p2CorrectedPFMetJetResUp || metIndex
+						== METAlgorithm::patType1p2CorrectedPFMetJetResDown || metIndex == METAlgorithm::GenMET;
 				//skip MC only MET entries
 				if (isMCOnlyMET && event->isRealData())
 					continue;
@@ -469,8 +508,16 @@ void TTbarPlusMETAnalyser::qcdAnalysis(const EventPtr event) {
 }
 
 void TTbarPlusMETAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/Ref selection");
 	histMan_->addH1D("N_BJets", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
+	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
+			5000);
+	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/Ref selection/QCD non iso e+jets");
+	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
+			5000);
+	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/Ref selection/QCDConversions");
+	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
+			5000);
 	//signal
 	metAnalyserRefSelection_->createHistograms();
 	electronAnalyserRefSelection_->createHistograms();
@@ -508,57 +555,56 @@ void TTbarPlusMETAnalyser::createHistograms() {
 }
 
 TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, histogramFolder), //
-		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
-		//QCD selections with respect to reference selection
-		qcdNonIsoElectronSelection_(new QCDNonIsolatedElectronSelection()), //
-		qcdNonIsoElectronNonIsoTriggerSelection_(new QCDNonIsolatedElectronSelection()), //
-		qcdConversionSelection_(new QCDConversionsSelection()), //
-		qcdPFRelIsoSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
-		qcdPFRelIsoNonIsoTriggerSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
-		qcdAntiIDSelection_(new QCDAntiIDEPlusJetsSelection()), //
-		qcdNoIsoNoIDSelection_(new QCDNoIsoNoIDSelection()), //
-		//analysers
-		//signal regions
-		metAnalyserRefSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/MET")), //
-		electronAnalyserRefSelection_(new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/Electron", true)), //
-		vertexAnalyserRefSelection_(new VertexAnalyser(histMan, histogramFolder + "/Ref selection/Vertices")), //
-		//QCD region
-		metAnalyserqcdNonIsoSelection_(
-				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/MET")), //
-		metAnalyserqcdNonIsoNonIsoTriggerSelection_(
-				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/MET")), //
-		qcdNonIsoElectronAnalyser_(
-				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCD non iso e+jets/Electron")), //
-		qcdNonIsoNonIsoTriggerElectronAnalyser_(
-				new ElectronAnalyser(histMan,
-						histogramFolder + "/Ref selection/QCD non iso e+jets, non iso trigger/Electron", true)), //
-		metAnalyserqcdConversionSelection_(
-				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/MET")), //
-		qcdConversionsElectronAnalyser_(
-				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDConversions/Electron", true)), //
-		qcdEPlusjetsPFRelIsoElectronAnalyser_(
-				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCD e+jets PFRelIso/Electron")), //
-		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_(
-				new ElectronAnalyser(histMan,
-						histogramFolder + "/Ref selection/QCD e+jets PFRelIso, non iso trigger/Electron", true)), //
-		metAnalyserqcdAntiIDSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDAntiID/MET")), //
-		qcdAntiIDElectronAnalyser_(
-				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDAntiID/Electron", true)), //
-		metAnalyserqcdNoIsoNoIDSelection_(
-				new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDNoIsoNoID/MET")), //
-		qcdNoIsoNoIDElectronAnalyser_(
-				new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/QCDNoIsoNoID/Electron", true)), //
-		metBins_(), //
-		binnedElectronAnalysers_(), //
-		qcdConversionBinnedElectronAnalysers_(), //
-		qcdNonIsoBinnedElectronAnalysers_(), //
-		qcdPFRelIsoBinnedElectronAnalysers_(), //
-		qcdAntiIDBinnedElectronAnalysers_(), //
-		qcdNoIsoNoIDBinnedElectronAnalysers_(), //
-		jetAnalyserRefSelection_(new JetAnalyser(histMan, histogramFolder + "/Ref selection/Jets")), //
-		jetAnalyserRefSelection_noBtagWeights_(
-				new JetAnalyser(histMan, histogramFolder + "/Ref selection/Jets_noBtagWeights")) {
+	BasicAnalyser(histMan, histogramFolder), //
+			topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
+			//QCD selections with respect to reference selection
+			qcdNonIsoElectronSelection_(new QCDNonIsolatedElectronSelection()), //
+			qcdNonIsoElectronNonIsoTriggerSelection_(new QCDNonIsolatedElectronSelection()), //
+			qcdConversionSelection_(new QCDConversionsSelection()), //
+			qcdPFRelIsoSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
+			qcdPFRelIsoNonIsoTriggerSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
+			qcdAntiIDSelection_(new QCDAntiIDEPlusJetsSelection()), //
+			qcdNoIsoNoIDSelection_(new QCDNoIsoNoIDSelection()), //
+			//analysers
+			//signal regions
+			metAnalyserRefSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/MET")), //
+			electronAnalyserRefSelection_(new ElectronAnalyser(histMan, histogramFolder + "/Ref selection/Electron",
+					true)), //
+			vertexAnalyserRefSelection_(new VertexAnalyser(histMan, histogramFolder + "/Ref selection/Vertices")), //
+			//QCD region
+			metAnalyserqcdNonIsoSelection_(new METAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCD non iso e+jets/MET")), //
+			metAnalyserqcdNonIsoNonIsoTriggerSelection_(new METAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCD non iso e+jets, non iso trigger/MET")), //
+			qcdNonIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCD non iso e+jets/Electron")), //
+			qcdNonIsoNonIsoTriggerElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCD non iso e+jets, non iso trigger/Electron", true)), //
+			metAnalyserqcdConversionSelection_(new METAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCDConversions/MET")), //
+			qcdConversionsElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCDConversions/Electron", true)), //
+			qcdEPlusjetsPFRelIsoElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCD e+jets PFRelIso/Electron")), //
+			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCD e+jets PFRelIso, non iso trigger/Electron", true)), //
+			metAnalyserqcdAntiIDSelection_(new METAnalyser(histMan, histogramFolder + "/Ref selection/QCDAntiID/MET")), //
+			qcdAntiIDElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCDAntiID/Electron", true)), //
+			metAnalyserqcdNoIsoNoIDSelection_(new METAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCDNoIsoNoID/MET")), //
+			qcdNoIsoNoIDElectronAnalyser_(new ElectronAnalyser(histMan, histogramFolder
+					+ "/Ref selection/QCDNoIsoNoID/Electron", true)), //
+			metBins_(), //
+			binnedElectronAnalysers_(), //
+			qcdConversionBinnedElectronAnalysers_(), //
+			qcdNonIsoBinnedElectronAnalysers_(), //
+			qcdPFRelIsoBinnedElectronAnalysers_(), //
+			qcdAntiIDBinnedElectronAnalysers_(), //
+			qcdNoIsoNoIDBinnedElectronAnalysers_(), //
+			jetAnalyserRefSelection_(new JetAnalyser(histMan, histogramFolder + "/Ref selection/Jets")), //
+			jetAnalyserRefSelection_noBtagWeights_(new JetAnalyser(histMan, histogramFolder
+					+ "/Ref selection/Jets_noBtagWeights")) {
 	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdPFRelIsoNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	metBins_.push_back(25.);
