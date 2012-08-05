@@ -253,3 +253,5 @@ def sumSamples(histograms = {}, samplesToSum = []):
         return summedHist
             
         
+def plot(histogram, file, ):
+    pass

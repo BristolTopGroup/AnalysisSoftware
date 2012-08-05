@@ -1,19 +1,20 @@
 from __future__ import division
 from ROOT import *
+from math import log, sqrt
 import ROOT
 import FILES
 import tools.ROOTFileReader as FileReader
 from array import array
-from tools import Styles
 import tools.PlottingUtilities as plotting
 #import QCDRateEstimation
 from copy import deepcopy
 from decimal import *
 import numpy
 from tools.Timer import Timer
-from tools.Table import Table
 import QCDRateEstimation
 from optparse import OptionParser
+from data import correctionFactors
+from tools.ColorPrinter import colorstr
 
 savePath = "/storage/results/plots/DiffMETMeasurement/binCorrection/"
 outputFormat_tables = 'latex' #other option: twiki
@@ -32,7 +33,7 @@ constrains = {
               'ratio_Z_W': {'enabled':True, 'value': 0.05},
               'W+Jets': {'enabled':False, 'value': 0.3},
               'DYJetsToLL': {'enabled':False, 'value': 0.3},
-#              'Di-Boson': {'enabled':False, 'value': 0.3},
+              'Di-Boson': {'enabled':False, 'value': 0.3},
               }
 fit_index = 0
 
@@ -42,9 +43,9 @@ scale_factors = {
                  'TTJet':1,
                  'W+Jets':1,
                  'DYJetsToLL':1,
-                 'POWHEG':7490162/4262961,
-                 'PYTHIA6':7490162/1089625,
-                 'MCatNLO':7490162/10504532,
+                 'POWHEG':7490162 / 4262961,
+                 'PYTHIA6':7490162 / 1089625,
+                 'MCatNLO':7490162 / 10504532,
                  }
 
 qcd_samples = [ 'QCD_Pt-20to30_BCtoE',
@@ -81,34 +82,7 @@ metbin_widths = {
                '70-100':30,
                '100-inf':50
                }  
-metbin_correctionFactors = {
-           '0-25':1.16576209551,# 1.245567818023413
-               '25-45':1.07671415947,#1.157104521213356
-               '45-70':0.906459241098,#0.93356776297393
-               '70-100':0.871675787468,#0.823557153805341
-               '100-inf':0.980634258825#0.829501404622485
-               }  
-metbin_correctionFactors_POWHEG = {
-           '0-25':1.18843544049,
-               '25-45':1.05489139546,
-               '45-70':0.913794459958,
-               '70-100':0.882307308269,
-               '100-inf':0.966059824883
-               }  
-metbin_correctionFactors_PYTHIA = {
-           '0-25':1.1680723092,
-               '25-45':1.05929621431,
-               '45-70':0.912394946271,
-               '70-100':0.87619776161,
-               '100-inf':0.997322692662
-               }  
-metbin_correctionFactors_MCATNLO = {
-           '0-25':1.1544304752,
-               '25-45':1.08511518936,
-               '45-70':0.902025521284,
-               '70-100':0.87568333211,
-               '100-inf':0.969530542891
-               }  
+
 doBinByBinUnfolding = True
 #metbin_widths = {
 #           '0-25':1,
@@ -148,9 +122,9 @@ metsystematics_sources_latex = {
         "patType1p2CorrectedPFMetUnclusteredEnDown":'Unclustered energy $-1\sigma$'
                       }
 
-BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags', 
+BjetBinsLatex = {'0btag':'0 b-tags', '0orMoreBtag':'#geq 0 b-tags', '1btag':'1 b-tags',
                     '1orMoreBtag':'#geq 1 b-tags',
-                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags', 
+                    '2btags':'2 b-tags', '2orMoreBtags':'#geq 2 b-tags',
                     '3btags':'3 b-tags', '3orMoreBtags':'#geq 3 b-tags',
                     '4orMoreBtags':'#geq 4 b-tags'}
 #steering variables:
@@ -165,7 +139,7 @@ current_source = 'None'
 def MinuitFitFunction(nParameters, gin, f, par, iflag):
     global normalisation, vectors, qcdLabel
     lnL = 0.0
-    input = zip(vectors['ElectronHad'],
+    input_vectors = zip(vectors['ElectronHad'],
                 vectors['Signal'],
                 vectors['W+Jets'],
                 vectors['DYJetsToLL'],
@@ -174,12 +148,12 @@ def MinuitFitFunction(nParameters, gin, f, par, iflag):
                 )
     
 #    for data, signal, wjets, zjets, qcd, diBoson in input:
-    for data, signal, wjets, zjets, qcd in input:
+    for data, signal, wjets, zjets, qcd in input_vectors:
         #signal = ttjet + singleTop
         x_i = par[0] * signal + par[1] * wjets + par[2] * zjets + par[3] * qcd# + par[4] * diBoson#expected number of events in each bin
         data = data * normalisation['ElectronHad']
         if (data != 0) and (x_i != 0):
-            L = TMath.Poisson(data, x_i)
+            L = ROOT.TMath.Poisson(data, x_i)
             lnL += log(L)
     f[0] = -2.0 * lnL
     
@@ -281,11 +255,11 @@ def getFittedNormalisation(vectors_={}, normalisation_={}):
               'fit': createFitHistogram(fitvalues, vectors),
               'vectors':vectors}
     if current_source == 'central':
-        result.update( {
+        result.update({
               #other generators
-              'POWHEG': {'value': normalisation['POWHEG']*scale_factors['POWHEG'], 'error':0},
-              'PYTHIA6': {'value': normalisation['PYTHIA6']*scale_factors['PYTHIA6'], 'error':0},
-              'MCatNLO': {'value': normalisation['MCatNLO']*scale_factors['MCatNLO'], 'error':0},
+              'POWHEG': {'value': normalisation['POWHEG'] * scale_factors['POWHEG'], 'error':0},
+              'PYTHIA6': {'value': normalisation['PYTHIA6'] * scale_factors['PYTHIA6'], 'error':0},
+              'MCatNLO': {'value': normalisation['MCatNLO'] * scale_factors['MCatNLO'], 'error':0},
               })
     return result
 
@@ -477,9 +451,8 @@ def measureNormalisationIncludingSystematics(histograms):
 
 
 def NormalisationAnalysis():
-    global metbins, metsystematics_sources, N_Events, metbin, doBinByBinUnfolding
+    global metbins, metsystematics_sources, N_Events, metbin, doBinByBinUnfolding, metType
     analysisTimer = Timer()
-    base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
     
     setNEvents(bjetbin)
     setNTtbar(bjetbin)
@@ -506,10 +479,10 @@ def NormalisationAnalysis():
         
         if doBinByBinUnfolding:
             #corrections for bin migration
-            correctionFactor = metbin_correctionFactors[metbin]
-            correctionFactor_POWHEG = metbin_correctionFactors_POWHEG[metbin]
-            correctionFactor_PYTHIA = metbin_correctionFactors_PYTHIA[metbin]
-            correctionFactor_MCATNLO = metbin_correctionFactors_MCATNLO[metbin]
+            correctionFactor_MADGRAPH = correctionFactors.correctionFactors_MADGRAPH[metType][metbin]
+            correctionFactor_POWHEG = correctionFactors.correctionFactors_POWHEG[metType][metbin]
+            correctionFactor_PYTHIA = correctionFactors.correctionFactors_PYTHIA[metType][metbin]
+            correctionFactor_MCATNLO = correctionFactors.correctionFactors_MCATNLO[metType][metbin]
             for measurement in result[metbin].keys():
 #                result[metbin][measurement]['TTJet_Corr'] = deepcopy(result[metbin][measurement]['TTJet'])
 #                result[metbin][measurement]['TTJet Before Fit corr'] = deepcopy(result[metbin][measurement]['TTJet Before Fit'])
@@ -517,92 +490,83 @@ def NormalisationAnalysis():
 #                result[metbin][measurement]['TTJet_Corr']['error'] = result[metbin][measurement]['TTJet']['error']*correctionFactor
 #                result[metbin][measurement]['TTJet Before Fit corr']['value'] = result[metbin][measurement]['TTJet Before Fit']['value']*correctionFactor
                 #more simple
-                result[metbin][measurement]['TTJet']['value'] = result[metbin][measurement]['TTJet']['value']*correctionFactor
-                result[metbin][measurement]['TTJet']['error'] = result[metbin][measurement]['TTJet']['error']*correctionFactor
-                result[metbin][measurement]['TTJet Before Fit']['value'] = result[metbin][measurement]['TTJet Before Fit']['value']*correctionFactor
+                result[metbin][measurement]['TTJet']['value'] = result[metbin][measurement]['TTJet']['value'] * correctionFactor_MADGRAPH
+                result[metbin][measurement]['TTJet']['error'] = result[metbin][measurement]['TTJet']['error'] * correctionFactor_MADGRAPH
+                result[metbin][measurement]['TTJet Before Fit']['value'] = result[metbin][measurement]['TTJet Before Fit']['value'] * correctionFactor_MADGRAPH
                 if measurement == 'central':
-                    result[metbin][measurement]['POWHEG']['value'] = result[metbin][measurement]['POWHEG']['value']*correctionFactor_POWHEG
-                    result[metbin][measurement]['PYTHIA6']['value'] = result[metbin][measurement]['PYTHIA6']['value']*correctionFactor_PYTHIA
-                    result[metbin][measurement]['MCatNLO']['value'] = result[metbin][measurement]['MCatNLO']['value']*correctionFactor_MCATNLO
+                    result[metbin][measurement]['POWHEG']['value'] = result[metbin][measurement]['POWHEG']['value'] * correctionFactor_POWHEG
+                    result[metbin][measurement]['PYTHIA6']['value'] = result[metbin][measurement]['PYTHIA6']['value'] * correctionFactor_PYTHIA
+                    result[metbin][measurement]['MCatNLO']['value'] = result[metbin][measurement]['MCatNLO']['value'] * correctionFactor_MCATNLO
         print 'Result for metbin=', metbin, 'completed in %.2fs' % metbinTimer.elapsedTime()
     print 'Analysis in bjetbin=', bjetbin, 'finished in %.2fs' % analysisTimer.elapsedTime()
     return result
 
 
-def CrossSectionAnalysis(input):
+def CrossSectionAnalysis(input_results):
     global N_ttbar_by_source
     result = {}
     theoryXsection = 157.5
     
     for metbin in metbins:
         result[metbin] = {}
-        for measurement in input[metbin].keys():
-            result_ttbar = input[metbin][measurement]['TTJet']
-            madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit']['value']
+        for measurement in input_results[metbin].keys():
+            result_ttbar = input_results[metbin][measurement]['TTJet']
+            madgraph_ttbar = input_results[metbin][measurement]['TTJet Before Fit']['value']
 #            if doBinByBinUnfolding:
-#                result_ttbar = input[metbin][measurement]['TTJet_Corr']
-#                madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit corr']['value']
+#                result_ttbar = input_results[metbin][measurement]['TTJet_Corr']
+#                madgraph_ttbar = input_results[metbin][measurement]['TTJet Before Fit corr']['value']
             value, error = result_ttbar['value'], result_ttbar['error']
             n_ttbar = N_ttbar_by_source[measurement]
             scale = theoryXsection / n_ttbar
-            result[metbin][measurement] = {'value': value * scale, 
-                                           'error':error * scale, 
+            result[metbin][measurement] = {'value': value * scale,
+                                           'error':error * scale,
                                            #replace these with GenMET
                                            'MADGRAPH':madgraph_ttbar * scale}
             if measurement == 'central':
                 result[metbin][measurement].update(
-                                            {'POWHEG':input[metbin][measurement]['POWHEG']['value'] * scale,
-                                           'PYTHIA6':input[metbin][measurement]['PYTHIA6']['value'] * scale,
-                                           'MCatNLO':input[metbin][measurement]['POWHEG']['value'] * scale})
+                                            {'POWHEG':input_results[metbin][measurement]['POWHEG']['value'] * scale,
+                                           'PYTHIA6':input_results[metbin][measurement]['PYTHIA6']['value'] * scale,
+                                           'MCatNLO':input_results[metbin][measurement]['POWHEG']['value'] * scale})
     return result
         
 
-def NormalisedCrossSectionAnalysis(input):
+def NormalisedCrossSectionAnalysis(input_results):
     global N_ttbar_by_source, doBinByBinUnfolding
     result = {}
-    theoryXsection = 157.5
-    sums = {'central':{},'MADGRAPH':{},'POWHEG':{},'PYTHIA6':{},'MCatNLO':{} }
+    sums = {'central':{}, 'MADGRAPH':{}, 'POWHEG':{}, 'PYTHIA6':{}, 'MCatNLO':{} }
     for metbin in metbins:
         result[metbin] = {}
-        for measurement in input[metbin].keys():
-#            ttbar = input[metbin][measurement]['TTJet']['value']
-#            madgraph = input[metbin][measurement]['TTJet Before Fit']['value']
-#            if doBinByBinUnfolding:
-#                ttbar = input[metbin][measurement]['TTJet_Corr']['value']
-#                madgraph = input[metbin][measurement]['TTJet Before Fit corr']['value']
+        for measurement in input_results[metbin].keys():
             if not sums['central'].has_key(measurement):
-                sums['central'][measurement] = input[metbin][measurement]['TTJet']['value']
-                sums['MADGRAPH'][measurement] = input[metbin][measurement]['TTJet Before Fit']['value']
+                sums['central'][measurement] = input_results[metbin][measurement]['TTJet']['value']
+                sums['MADGRAPH'][measurement] = input_results[metbin][measurement]['TTJet Before Fit']['value']
                 if measurement == 'central':
-                    sums['POWHEG'][measurement] = input[metbin][measurement]['POWHEG']['value']
-                    sums['PYTHIA6'][measurement] = input[metbin][measurement]['PYTHIA6']['value']
-                    sums['MCatNLO'][measurement] = input[metbin][measurement]['MCatNLO']['value']
+                    sums['POWHEG'][measurement] = input_results[metbin][measurement]['POWHEG']['value']
+                    sums['PYTHIA6'][measurement] = input_results[metbin][measurement]['PYTHIA6']['value']
+                    sums['MCatNLO'][measurement] = input_results[metbin][measurement]['MCatNLO']['value']
             else:
-                sums['central'][measurement] += input[metbin][measurement]['TTJet']['value']
-                sums['MADGRAPH'][measurement] += input[metbin][measurement]['TTJet Before Fit']['value']
+                sums['central'][measurement] += input_results[metbin][measurement]['TTJet']['value']
+                sums['MADGRAPH'][measurement] += input_results[metbin][measurement]['TTJet Before Fit']['value']
                 if measurement == 'central':
-                    sums['POWHEG'][measurement] += input[metbin][measurement]['POWHEG']['value']
-                    sums['PYTHIA6'][measurement] += input[metbin][measurement]['PYTHIA6']['value']
-                    sums['MCatNLO'][measurement] += input[metbin][measurement]['MCatNLO']['value']
+                    sums['POWHEG'][measurement] += input_results[metbin][measurement]['POWHEG']['value']
+                    sums['PYTHIA6'][measurement] += input_results[metbin][measurement]['PYTHIA6']['value']
+                    sums['MCatNLO'][measurement] += input_results[metbin][measurement]['MCatNLO']['value']
     
     for metbin in metbins:
         result[metbin] = {}
-        for measurement in input[metbin].keys():            
-            result_ttbar = input[metbin][measurement]['TTJet']
-            madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit']['value']
-#            if doBinByBinUnfolding:
-#                result_ttbar = input[metbin][measurement]['TTJet_Corr']
-#                madgraph_ttbar = input[metbin][measurement]['TTJet Before Fit corr']['value']
+        for measurement in input_results[metbin].keys():            
+            result_ttbar = input_results[metbin][measurement]['TTJet']
+            madgraph_ttbar = input_results[metbin][measurement]['TTJet Before Fit']['value']
             value, error = result_ttbar['value'], result_ttbar['error']
             
-            result[metbin][measurement] = {'value': value/sums['central'][measurement], 
-                                           'error':error/sums['central'][measurement], 
-                                           'MADGRAPH':madgraph_ttbar/sums['MADGRAPH'][measurement]}
+            result[metbin][measurement] = {'value': value / sums['central'][measurement],
+                                           'error':error / sums['central'][measurement],
+                                           'MADGRAPH':madgraph_ttbar / sums['MADGRAPH'][measurement]}
             if measurement == 'central':
                 result[metbin][measurement].update(
-                                           {'POWHEG':input[metbin][measurement]['POWHEG']['value']/sums['POWHEG'][measurement],
-                                           'PYTHIA6':input[metbin][measurement]['PYTHIA6']['value']/sums['PYTHIA6'][measurement],
-                                           'MCatNLO':input[metbin][measurement]['MCatNLO']['value']/sums['MCatNLO'][measurement]})
+                                           {'POWHEG':input_results[metbin][measurement]['POWHEG']['value'] / sums['POWHEG'][measurement],
+                                           'PYTHIA6':input_results[metbin][measurement]['PYTHIA6']['value'] / sums['PYTHIA6'][measurement],
+                                           'MCatNLO':input_results[metbin][measurement]['MCatNLO']['value'] / sums['MCatNLO'][measurement]})
     return result
 
 def getHistograms(bjetbin, metbin):
@@ -710,9 +674,9 @@ def setNTtbar(bjetbin):
     
     
     for index in range(1, 45):
-        file = 'TTJet_%d' % index
+        filename = 'TTJet_%d' % index
         pdf = 'PDFWeights_%d' % index
-        N_ttbar_by_source[pdf] = getHist(histname, FILES.files_PDF_weights[file]).Integral()
+        N_ttbar_by_source[pdf] = getHist(histname, FILES.files_PDF_weights[filename]).Integral()
     
     
     for source in metsystematics_sources:
@@ -774,7 +738,7 @@ def getNormalisation(histograms):
     for sample in histograms.keys():
         normalisation_[sample] = histograms[sample].Integral()
         if not sample == 'ElectronHad' or sample == 'QCDFromData':
-           normalisation_[sample] = normalisation_[sample] * scale_factors['luminosity']
+            normalisation_[sample] = normalisation_[sample] * scale_factors['luminosity']
         if sample == 'SingleTop':
             normalisation_[sample] = normalisation_[sample] * scale_factors['singleTop']
         if sample == 'TTJet':
@@ -799,10 +763,10 @@ def vectorise(histograms):
     for sample in histograms.keys():
         hist = histograms[sample]
         nBins = hist.GetNbinsX()
-        for bin in range(1, nBins + 1):
+        for bin_i in range(1, nBins + 1):
             if not values.has_key(sample):
                 values[sample] = []
-            values[sample].append(hist.GetBinContent(bin))
+            values[sample].append(hist.GetBinContent(bin_i))
     return values
 
 def printNormalisationResult(result, toFile=True):
@@ -827,7 +791,7 @@ def printNormalisationResult(result, toFile=True):
                     continue
                 fitresult = results[sample]
                 row = rows[source]
-                text = ' $%(value).2f \pm %(error).2f$' % fitresult + '(%.2f' % (getRelativeError(fitresult['value'], fitresult['error']) * 100) + '\%)'
+                text = ' $%(value)d \pm %(error)d$' % fitresult + '(%.2f' % (getRelativeError(fitresult['value'], fitresult['error']) * 100) + '\%)'
                 if row.has_key(sample): 
                     row[sample].append(text)
                 else:
@@ -862,9 +826,9 @@ def printNormalisationResult(result, toFile=True):
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        file = open(savePath + 'normalisation_result' + unfolding + '_' + bjetbin + '.tex', 'w')
-        file.write(printout)
-        file.close()
+        output_file = open(savePath + 'normalisation_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file.write(printout)
+        output_file.close()
     else:
         print printout
 
@@ -885,7 +849,7 @@ def sumSamples(hists):
     return hists
 
 #change to calculate uncertainties
-def calculateTotalUncertainty(results, ommitTTJetsSystematics = False):
+def calculateTotalUncertainty(results, ommitTTJetsSystematics=False):
     pdf_min, pdf_max = calculatePDFErrors(results)
     centralResult = results['central']
     if centralResult.has_key('TTJet'):
@@ -893,8 +857,8 @@ def calculateTotalUncertainty(results, ommitTTJetsSystematics = False):
     centralvalue, centralerror = centralResult['value'], centralResult['error']
     totalMinus, totalPlus = pdf_min ** 2 , pdf_max ** 2
     totalMinus_err, totalPlus_err = 0, 0
-    totalMETMinus, totalMETPlus = 0,0
-    totalMETMinus_err, totalMETPlus_err = 0,0
+    totalMETMinus, totalMETPlus = 0, 0
+    totalMETMinus_err, totalMETPlus_err = 0, 0
     uncertainty = {}
     for source in results.keys():
         if source == 'central' or 'PDFWeights_' in source:
@@ -925,10 +889,10 @@ def calculateTotalUncertainty(results, ommitTTJetsSystematics = False):
         
     total = sqrt(totalPlus + totalMinus)
     total_error = sqrt(totalPlus_err + totalMinus_err)
-    totalPlus, totalMinus, totalPlus_err,  totalMinus_err = (sqrt(totalPlus), sqrt(totalMinus), 
+    totalPlus, totalMinus, totalPlus_err, totalMinus_err = (sqrt(totalPlus), sqrt(totalMinus),
                                                              sqrt(totalPlus_err), sqrt(totalMinus_err))
     
-    totalMETPlus, totalMETMinus, totalMETPlus_err,  totalMETMinus_err = (sqrt(totalMETPlus), sqrt(totalMETMinus), 
+    totalMETPlus, totalMETMinus, totalMETPlus_err, totalMETMinus_err = (sqrt(totalMETPlus), sqrt(totalMETMinus),
                                                              sqrt(totalMETPlus_err), sqrt(totalMETMinus_err))
     uncertainty['Total+'] = {'value':totalPlus, 'error':totalPlus_err}
     uncertainty['Total-'] = {'value':totalMinus, 'error':totalMinus_err}
@@ -951,7 +915,7 @@ def printNormalisationResultsForTTJetWithUncertanties(result, toFile=True):
     printout += 'Results for %s region\n' % bjetbin
     printout += '=' * 60
     printout += '\n'
-    rows = {}
+#    rows = {}
     printout += '\met bin & N_{t\\bar{t}}^{fit} \\\\ \n'
     printout += '\hline\n'
     uncertainties = {}
@@ -959,7 +923,7 @@ def printNormalisationResultsForTTJetWithUncertanties(result, toFile=True):
         centralresult = result[metbin]['central']['TTJet']
         uncertainty = calculateTotalUncertainty(result[metbin])
         formatting = (metbin, centralresult['value'], centralresult['error'], uncertainty['Total+']['value'], uncertainty['Total-']['error'])
-        text = '%s~\GeV & $%.2f \pm %.2f (fit)^{+%.2f}_{-%.2f} (sys)$ \\\\ \n' % formatting
+        text = '%s~\GeV & $%d \pm %.d (fit)^{+%d}_{-%.d} (sys)$ \\\\ \n' % formatting
         printout += text
         
         for source, value in uncertainty.iteritems():
@@ -971,22 +935,22 @@ def printNormalisationResultsForTTJetWithUncertanties(result, toFile=True):
                 uncertainties[source] += 'Results for %s region, source = %s\n' % (bjetbin, source)
                 uncertainties[source] += '=' * 60
                 uncertainties[source] += '\n'
-            formatting = (metbin, 
-                          unc_result['value'],   
-                          unc_result['error'], 
-                          ('%.2f' % (unc_result['value']/centralresult['value']*100))+ '\%')
-            text = '%s~\GeV & $%.2f \pm %.2f (fit) (%s of central result)$ \\\\ \n' % formatting
+            formatting = (metbin,
+                          unc_result['value'],
+                          unc_result['error'],
+                          ('%.2f' % (unc_result['value'] / centralresult['value'] * 100)) + '\%')
+            text = '%s~\GeV & $%d \pm %d (fit) (%s of central result)$ \\\\ \n' % formatting
             uncertainties[source] += text
         
     if toFile:
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        file = open(savePath + 'normalisation_TTJet_result' + unfolding + '_' + bjetbin + '.tex', 'w')
-        file.write(printout)
+        output_file = open(savePath + 'normalisation_TTJet_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file.write(printout)
         for source, value in uncertainties.iteritems():
-            file.write(value)
-        file.close()
+            output_file.write(value)
+        output_file.close()
     else:
         print printout
 
@@ -1002,12 +966,12 @@ def printCrossSectionResult(result, toFile=True):
     header = 'Measurement'
     for metbin in metbins:
         width = metbin_widths[metbin]
-        scale = 1/width
+        scale = 1 / width
         header += '& $\sigma_{meas}$ \met bin %s~\GeV' % metbin
         for source in result[metbin].keys():
             fitresult = result[metbin][source]
             relativeError = getRelativeError(fitresult['value'], fitresult['error'])
-            text = ' $%.2f \pm %.2f$  pb' % (fitresult['value']*scale, fitresult['error']*scale) + '(%.2f' % (relativeError * 100) + '\%)'
+            text = ' $%.2f \pm %.2f$  pb' % (fitresult['value'] * scale, fitresult['error'] * scale) + '(%.2f' % (relativeError * 100) + '\%)'
             if rows.has_key(source):
                 rows[source].append(text)
             else:
@@ -1034,9 +998,9 @@ def printCrossSectionResult(result, toFile=True):
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        file = open(savePath + 'crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
-        file.write(printout)
-        file.close()
+        output_file = open(savePath + 'crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file.write(printout)
+        output_file.close()
     else:
         print printout
 
@@ -1048,17 +1012,17 @@ def printCrossSectionResultsForTTJetWithUncertanties(result, toFile=True):
     printout += 'Results for %s region\n' % bjetbin
     printout += '=' * 60
     printout += '\n'
-    rows = {}
+#    rows = {}
     printout += '\met bin & $\sigma{meas}$ \\\\ \n'
     printout += '\hline\n'
     uncertainties = {}
     for metbin in metbins:
         width = metbin_widths[metbin]
-        scale = 1/width
+        scale = 1 / width
         centralresult = result[metbin]['central']
         uncertainty = calculateTotalUncertainty(result[metbin])
-        formatting = (metbin, centralresult['value']*scale, centralresult['error']*scale, 
-                      uncertainty['Total+']['value']*scale, uncertainty['Total-']['value']*scale)
+        formatting = (metbin, centralresult['value'] * scale, centralresult['error'] * scale,
+                      uncertainty['Total+']['value'] * scale, uncertainty['Total-']['value'] * scale)
         text = '%s~\GeV & $%.2f \pm %.2f (fit)^{+%.2f}_{-%.2f} (sys)$ pb \\\\ \n' % formatting
         printout += text
         
@@ -1071,10 +1035,10 @@ def printCrossSectionResultsForTTJetWithUncertanties(result, toFile=True):
                 uncertainties[source] += 'Results for %s region, source = %s\n' % (bjetbin, source)
                 uncertainties[source] += '=' * 60
                 uncertainties[source] += '\n'
-            formatting = (metbin, 
-                          unc_result['value']*scale,   
-                          unc_result['error']*scale, 
-                          ('%.2f' % (unc_result['value']/centralresult['value']*100))+ '\%')
+            formatting = (metbin,
+                          unc_result['value'] * scale,
+                          unc_result['error'] * scale,
+                          ('%.2f' % (unc_result['value'] / centralresult['value'] * 100)) + '\%')
             text = '%s~\GeV & $%.2f \pm %.2f (fit) (%s of central result)$ \\\\ \n' % formatting
             uncertainties[source] += text
         
@@ -1082,11 +1046,11 @@ def printCrossSectionResultsForTTJetWithUncertanties(result, toFile=True):
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        file = open(savePath + 'crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
-        file.write(printout)
+        output_file = open(savePath + 'crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file.write(printout)
         for source, value in uncertainties.iteritems():
-            file.write(value)
-        file.close()
+            output_file.write(value)
+        output_file.close()
     else:
         print printout
         
@@ -1094,7 +1058,7 @@ def calculatePDFErrors(results):
     centralResult = results['central']
     if centralResult.has_key('TTJet'):
         centralResult = results['central']['TTJet']
-    centralvalue, centralerror = centralResult['value'], centralResult['error']
+    centralvalue = centralResult['value']
     negative = []
     positive = []
     
@@ -1103,13 +1067,13 @@ def calculatePDFErrors(results):
         result = results[weight]
         if result.has_key('TTJet'):
             result = results[weight]['TTJet']
-        value, error = result['value'], result['error']
+        value = result['value']
         if index % 2 == 0: #even == negative
             negative.append(value)
         else:
             positive.append(value)
-    pdf_max = numpy.sqrt(sum(max(x - centralvalue, y - centralvalue, 0)**2 for x, y in zip(negative, positive)))
-    pdf_min = numpy.sqrt(sum(max(centralvalue - x, centralvalue - y, 0)**2 for x, y in zip(negative, positive)))
+    pdf_max = numpy.sqrt(sum(max(x - centralvalue, y - centralvalue, 0) ** 2 for x, y in zip(negative, positive)))
+    pdf_min = numpy.sqrt(sum(max(centralvalue - x, centralvalue - y, 0) ** 2 for x, y in zip(negative, positive)))
     return pdf_min, pdf_max   
     
     
@@ -1196,20 +1160,20 @@ def plotNormalisationResults(results):
             
     #        legend.AddEntry(plots['Di-Boson'], 'VV + X', 'F')
             legend.Draw()
-            mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
-            channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
-            channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin] ))
-            mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} @ #sqrt{s} = 7 TeV" % (5000/1000));
+            mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
+            channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+            channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+            mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} @ #sqrt{s} = 7 TeV" % (5000 / 1000));
                      
-            mytext.SetFillStyle( 0 )
-            mytext.SetBorderSize( 0 )
-            mytext.SetTextFont( 42 )
-            mytext.SetTextAlign( 13 )
+            mytext.SetFillStyle(0)
+            mytext.SetBorderSize(0)
+            mytext.SetTextFont(42)
+            mytext.SetTextAlign(13)
             
-            channelLabel.SetFillStyle( 0 )
-            channelLabel.SetBorderSize( 0 )
-            channelLabel.SetTextFont( 42 )
-            channelLabel.SetTextAlign( 13 )
+            channelLabel.SetFillStyle(0)
+            channelLabel.SetBorderSize(0)
+            channelLabel.SetTextFont(42)
+            channelLabel.SetTextAlign(13)
             mytext.Draw()
             channelLabel.Draw()
             
@@ -1240,7 +1204,7 @@ def plotNormalisationResults(results):
                             outputFormat_plots,
                             savePath + measurement)
 
-def plotCrossSectionResults(result, compareToSystematic = False):
+def plotCrossSectionResults(result, compareToSystematic=False):
     
     arglist = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
@@ -1276,29 +1240,29 @@ def plotCrossSectionResults(result, compareToSystematic = False):
     bin = 1
     for metbin in metbins:
         width = metbin_widths[metbin]
-        scale = 1/width
+        scale = 1 / width
         centralresult = result[metbin]['central']
-        plot.SetBinContent(bin, centralresult['value']*scale)
+        plot.SetBinContent(bin, centralresult['value'] * scale)
         if compareToSystematic:
-            plotMADGRAPH.SetBinContent(bin, result[metbin]['TTJet scale -']['MADGRAPH']*scale)
-            plotPOWHEG.SetBinContent(bin, result[metbin]['TTJet scale +']['MADGRAPH']*scale)
-            plotPYTHIA6.SetBinContent(bin, result[metbin]['TTJet matching -']['MADGRAPH']*scale)
-            plotnoCorr_mcatnlo.SetBinContent(bin, result[metbin]['TTJet matching +']['MADGRAPH']*scale)
+            plotMADGRAPH.SetBinContent(bin, result[metbin]['TTJet scale -']['MADGRAPH'] * scale)
+            plotPOWHEG.SetBinContent(bin, result[metbin]['TTJet scale +']['MADGRAPH'] * scale)
+            plotPYTHIA6.SetBinContent(bin, result[metbin]['TTJet matching -']['MADGRAPH'] * scale)
+            plotnoCorr_mcatnlo.SetBinContent(bin, result[metbin]['TTJet matching +']['MADGRAPH'] * scale)
         else:
-            plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH']*scale)
-            plotPOWHEG.SetBinContent(bin, centralresult['POWHEG']*scale)
-            plotPYTHIA6.SetBinContent(bin, centralresult['PYTHIA6']*scale)
-            plotnoCorr_mcatnlo.SetBinContent(bin, centralresult['MCatNLO']*scale)
+            plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH'] * scale)
+            plotPOWHEG.SetBinContent(bin, centralresult['POWHEG'] * scale)
+            plotPYTHIA6.SetBinContent(bin, centralresult['PYTHIA6'] * scale)
+            plotnoCorr_mcatnlo.SetBinContent(bin, centralresult['MCatNLO'] * scale)
         bin += 1
     plotAsym = TGraphAsymmErrors(plot)    
     bin = 0
     for metbin in metbins:
         width = metbin_widths[metbin]
-        scale = 1/width
+        scale = 1 / width
         centralresult = result[metbin]['central']
         uncertainty = calculateTotalUncertainty(result[metbin], compareToSystematic)
-        error_up = sqrt(centralresult['error'] ** 2 + uncertainty['Total+']['value'] ** 2)*scale
-        error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2)*scale
+        error_up = sqrt(centralresult['error'] ** 2 + uncertainty['Total+']['value'] ** 2) * scale
+        error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2) * scale
         plotAsym.SetPointEYhigh(bin, error_up)
         plotAsym.SetPointEYlow(bin, error_down)
         bin += 1
@@ -1310,20 +1274,20 @@ def plotCrossSectionResults(result, compareToSystematic = False):
     plotnoCorr_mcatnlo.Draw('hist same')
     plotAsym.Draw('same P')
     legend.Draw()
-    mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
-    channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
-    channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin] ))
-    mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000/1000));
+    mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
+    channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+    channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000 / 1000));
              
-    mytext.SetFillStyle( 0 )
-    mytext.SetBorderSize( 0 )
-    mytext.SetTextFont( 42 )
-    mytext.SetTextAlign( 13 )
+    mytext.SetFillStyle(0)
+    mytext.SetBorderSize(0)
+    mytext.SetTextFont(42)
+    mytext.SetTextAlign(13)
     
-    channelLabel.SetFillStyle( 0 )
-    channelLabel.SetBorderSize( 0 )
-    channelLabel.SetTextFont( 42 )
-    channelLabel.SetTextAlign( 13 )
+    channelLabel.SetFillStyle(0)
+    channelLabel.SetBorderSize(0)
+    channelLabel.SetTextFont(42)
+    channelLabel.SetTextAlign(13)
     mytext.Draw()
     channelLabel.Draw()
     
@@ -1335,7 +1299,7 @@ def plotCrossSectionResults(result, compareToSystematic = False):
     else:
         plotting.saveAs(c, 'EPlusJets_diff_MET_xsection' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
         
-def printNormalisedCrossSectionResult(result,toFile = True):
+def printNormalisedCrossSectionResult(result, toFile=True):
     global metbins
     printout = '\n'
     printout += '=' * 60
@@ -1350,7 +1314,7 @@ def printNormalisedCrossSectionResult(result,toFile = True):
         width = metbin_widths[metbin]
         for source in result[metbin].keys():
             fitresult = result[metbin][source]
-            scale = 100/width
+            scale = 100 / width
             relativeError = getRelativeError(fitresult['value'], fitresult['error'])
             text = ' $(%.2f \pm %.2f) \cdot 10^{-2}$ ' % (fitresult['value'] * scale, fitresult['error'] * scale) + '(%.2f' % (relativeError * 100) + '\%)'
 #            text = ' $%.2f \pm %.2f $ ' % (fitresult['value']*scale,fitresult['error']*scale) + '(%.2f' % (relativeError * 100) + '\%)'
@@ -1380,13 +1344,13 @@ def printNormalisedCrossSectionResult(result,toFile = True):
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        file = open(savePath + 'normalised_crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
-        file.write(printout)
-        file.close()
+        output_file = open(savePath + 'normalised_crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file.write(printout)
+        output_file.close()
     else:
         print printout
         
-def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile = True):
+def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile=True):
     global metbins, doBinByBinUnfolding
     printout = '\n'
     printout += '=' * 60
@@ -1394,7 +1358,7 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile = 
     printout += 'Results for %s region\n' % bjetbin
     printout += '=' * 60
     printout += '\n'
-    rows = {}
+#    rows = {}
     printout += '\met bin & $\sigma{meas}$ \\\\ \n'
     printout += '\hline\n'
     uncertainties = {}
@@ -1404,10 +1368,10 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile = 
         width = metbin_widths[metbin]
         centralresult = result[metbin]['central']
         uncertainty = calculateTotalUncertainty(result[metbin])
-        scale = 100/width
-        formatting = (metbin, centralresult['value']*scale, 
-                      centralresult['error']*scale, uncertainty['Total+']['value']*scale, 
-                      uncertainty['Total-']['value']*scale)
+        scale = 100 / width
+        formatting = (metbin, centralresult['value'] * scale,
+                      centralresult['error'] * scale, uncertainty['Total+']['value'] * scale,
+                      uncertainty['Total-']['value'] * scale)
         text = '%s~\GeV & $%.2f \pm %.2f (fit)^{+%.2f}_{-%.2f} (sys) \cdot 10^{-2}$\\\\ \n' % formatting
 #        text = '%s~\GeV & $%.2f \pm %.2f (fit)^{+%.2f}_{-%.2f} (sys)$\\\\ \n' % formatting
         printout += text
@@ -1428,20 +1392,20 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile = 
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        file = open(savePath + 'normalised_crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
-        file.write(printout)
+        output_file = open(savePath + 'normalised_crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file.write(printout)
         header += '\\\\ \n'
-        file.write(header)
+        output_file.write(header)
         for source in sorted(uncertainties.keys()):
             value = uncertainties[source]
             value = value.rstrip('&')
             value += '\\\\ \n'
-            file.write(value)
-        file.close()
+            output_file.write(value)
+        output_file.close()
     else:
         print printout
         
-def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
+def plotNormalisedCrossSectionResults(result, compareToSystematic=False):
     
     arglist = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
@@ -1464,7 +1428,7 @@ def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
     plotnoCorr_mcatnlo.SetLineColor(kMagenta + 3)
 #    plotnoCorr_mcatnlo.SetLineWidth(2)
     plotnoCorr_mcatnlo.SetLineStyle(7)
-    legend = plotting.create_legend(x0=0.6, y1 = 0.5)
+    legend = plotting.create_legend(x0=0.6, y1=0.5)
     legend.AddEntry(plot, 'measured', 'LEP')
     if compareToSystematic:
         legend.AddEntry(plotMADGRAPH, 't#bar{t} (Q^{2} down)', 'l')
@@ -1476,38 +1440,38 @@ def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
         legend.AddEntry(plotPOWHEG, 't#bar{t} (POWHEG)', 'l')
         legend.AddEntry(plotPYTHIA6, 't#bar{t} (PYTHIA6)', 'l')
         legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (MC@NLO)', 'l')
-    bin = 1
+    bin_i = 1
     for metbin in metbins:
         width = metbin_widths[metbin]
-        scale = 1/width
+        scale = 1 / width
         centralresult = result[metbin]['central']
-        plot.SetBinContent(bin, centralresult['value']*scale)
+        plot.SetBinContent(bin_i, centralresult['value'] * scale)
         if compareToSystematic:
-            plotMADGRAPH.SetBinContent(bin, result[metbin]['TTJet scale -']['MADGRAPH']*scale)
-            plotPOWHEG.SetBinContent(bin, result[metbin]['TTJet scale +']['MADGRAPH']*scale)
-            plotPYTHIA6.SetBinContent(bin, result[metbin]['TTJet matching -']['MADGRAPH']*scale)
-            plotnoCorr_mcatnlo.SetBinContent(bin, result[metbin]['TTJet matching +']['MADGRAPH']*scale)
+            plotMADGRAPH.SetBinContent(bin_i, result[metbin]['TTJet scale -']['MADGRAPH'] * scale)
+            plotPOWHEG.SetBinContent(bin_i, result[metbin]['TTJet scale +']['MADGRAPH'] * scale)
+            plotPYTHIA6.SetBinContent(bin_i, result[metbin]['TTJet matching -']['MADGRAPH'] * scale)
+            plotnoCorr_mcatnlo.SetBinContent(bin_i, result[metbin]['TTJet matching +']['MADGRAPH'] * scale)
         else:
-            plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH']*scale)
-            plotPOWHEG.SetBinContent(bin, centralresult['POWHEG']*scale)
-            plotPYTHIA6.SetBinContent(bin, centralresult['PYTHIA6']*scale)
-            plotnoCorr_mcatnlo.SetBinContent(bin, centralresult['MCatNLO']*scale)
-        bin += 1    
+            plotMADGRAPH.SetBinContent(bin_i, centralresult['MADGRAPH'] * scale)
+            plotPOWHEG.SetBinContent(bin_i, centralresult['POWHEG'] * scale)
+            plotPYTHIA6.SetBinContent(bin_i, centralresult['PYTHIA6'] * scale)
+            plotnoCorr_mcatnlo.SetBinContent(bin_i, centralresult['MCatNLO'] * scale)
+        bin_i += 1    
     plotAsym = TGraphAsymmErrors(plot)
-    bin = 0
+    bin_i = 0
     for metbin in metbins:
         width = metbin_widths[metbin]
-        scale = 1/width
+        scale = 1 / width
         centralresult = result[metbin]['central']
-        uncertainty = calculateTotalUncertainty(result[metbin],compareToSystematic)
-        error_up = sqrt(centralresult['error'] ** 2 + uncertainty['Total+']['value'] ** 2)*scale
-        error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2)*scale
+        uncertainty = calculateTotalUncertainty(result[metbin], compareToSystematic)
+        error_up = sqrt(centralresult['error'] ** 2 + uncertainty['Total+']['value'] ** 2) * scale
+        error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2) * scale
         if DEBUG:
             print centralresult['error'], uncertainty['Total+']['value'], error_up
             print centralresult['error'], uncertainty['Total-']['value'], error_down
-        plotAsym.SetPointEYhigh(bin, error_up)
-        plotAsym.SetPointEYlow(bin, error_down)
-        bin += 1 
+        plotAsym.SetPointEYhigh(bin_i, error_up)
+        plotAsym.SetPointEYlow(bin_i, error_down)
+        bin_i += 1 
     plot.Draw('P')
 #    gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
@@ -1516,20 +1480,20 @@ def plotNormalisedCrossSectionResults(result, compareToSystematic = False):
     plotnoCorr_mcatnlo.Draw('hist same')
     plotAsym.Draw('same P')
     legend.Draw()
-    mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
-    channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
-    channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin] ))
-    mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000/1000));
+    mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
+    channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+    channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000 / 1000));
              
-    mytext.SetFillStyle( 0 )
-    mytext.SetBorderSize( 0 )
-    mytext.SetTextFont( 42 )
-    mytext.SetTextAlign( 13 )
+    mytext.SetFillStyle(0)
+    mytext.SetBorderSize(0)
+    mytext.SetTextFont(42)
+    mytext.SetTextAlign(13)
     
-    channelLabel.SetFillStyle( 0 )
-    channelLabel.SetBorderSize( 0 )
-    channelLabel.SetTextFont( 42 )
-    channelLabel.SetTextAlign( 13 )
+    channelLabel.SetFillStyle(0)
+    channelLabel.SetBorderSize(0)
+    channelLabel.SetTextFont(42)
+    channelLabel.SetTextAlign(13)
     mytext.Draw()
     channelLabel.Draw()
     unfolding = '_unfolded'
@@ -1559,6 +1523,10 @@ if __name__ == '__main__':
     parser.add_option("-t", "--test",
                   action="store_true", dest="test", default=False,
                   help="Test analysis on first met bin only")
+    parser.add_option("-c", "--constrain", dest="constrain", default='QCD,Z/W',
+                  help="Sets which constrains to use. Constrains separated by commas: QCD, Z/W, ZJets, WJets, VV")
+    
+    
     #more for: plot templates, plot fits
     translateOptions = {
                         '0':'0btag',
@@ -1581,24 +1549,26 @@ if __name__ == '__main__':
     metType = translateOptions[options.metType]
     doBinByBinUnfolding = options.unfolding
     test = options.test
+    constrains[qcdLabel]['enabled'] = ('QCD' in options.constrain)
+    constrains['ratio_Z_W']['enabled'] = ('Z/W' in options.constrain)
+    constrains['W+Jets']['enabled'] = ('WJets' in options.constrain)
+    constrains['DYJetsToLL']['enabled'] = ('ZJets' in options.constrain)
+    constrains['Di-Boson']['enabled'] = ('VV' in options.constrain)
+    
     if test:
         metbins = ['0-25']
-##    bjetbin = '0orMoreBtag'
-#    bjetbin = '0btag'
-##    bjetbin = '1btag'
-#    bjetbin = '2orMoreBtags'
-#    bjetbin = '1orMoreBtag'
-#    metType = 'PFMET'
-#    metType = 'patType1CorrectedPFMet'
-#    metType = 'patType1p2CorrectedPFMet'
     
     savePath = "/storage/results/plots/DiffMETMeasurement/binCorrection/%s/" % metType  
+    savePath = "/storage/results/plots/testing2/%s/" % metType  
 #    doBinByBinUnfolding = True
-    print 'Analysis options:'
-    print 'B-tag bin:', bjetbin
-    print 'MET type:', metType
-    print 'Use unfolding:', doBinByBinUnfolding
-    print 'Test only:', test
+    print colorstr('Analysis options:','BLINK')
+    print colorstr('B-tag bin:','RED'), bjetbin
+    print colorstr('MET type:','RED'), metType
+    print colorstr('Use unfolding:','RED'), doBinByBinUnfolding
+    print colorstr('Test only:','RED'), test
+    print 'Constrains on fit:', options.constrain
+    for sample, constrain in constrains.iteritems():
+        print sample, ': enabled =', constrain['enabled'], 'value =', constrain['value'] * 100, '%'
     normalisation_result = NormalisationAnalysis()
     printNormalisationResult(normalisation_result)
     printNormalisationResultsForTTJetWithUncertanties(normalisation_result)
