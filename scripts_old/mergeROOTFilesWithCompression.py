@@ -3,16 +3,22 @@
 import os
 import sys
 from fileInfo import *
+from optparse import OptionParser
+import time
 
 skipGroupsUntil = 0
 startWithGroup = 1
+sizePerFile = 1024 * 1024 * 1024 * 2
+timeCut = 0
 
-def groupFilesToSize(files, finalSize=1024 * 1024 * 1024 * 2):# < 3 GB
+def groupFilesToSize(files, finalSize=1024 * 1024 * 1024 * 2):# < 2 GB
     getsize = os.path.getsize
     groupSize = 0
     groups = [[]]
     groupIndex = 0
     for file in sorted(files):
+        if os.path.getmtime(file) < timeCut:
+            continue
         size = getsize(file)
         if (groupSize + size) > finalSize:#start new group
             groupIndex += 1
@@ -79,12 +85,27 @@ def readMergeLog(mergeLog):
             number = outputfile.replace('.root', '')
             number = number.split('_')[-1]
             lastOutputFileNumber = int(number)
-    print lastOutputFileNumber
     global startWithGroup
     startWithGroup = lastOutputFileNumber + 1
     return usedFiles
     
 if __name__ == "__main__":
+    
+    parser = OptionParser()
+    parser.add_option("-s", "--size", dest="sizePerFile", default=1024 * 2,
+                  help="Set maximum size of output files in MB. Default 2 GB (2048 MB)")
+    parser.add_option("-t", "--time", dest="timeCut", default='01 01 2000',
+                      help="Cut on creation time. Only consider files for merging after a certain date. Format: DD MM YYYY. Default: 01 Jan 2000")
+    parser.add_option("-c", "--continue",
+                  action="store_true", dest="continue", default=False,
+                  help="Continue merging in the current directory. Merge log must be specified!")
+    parser.add_option("-l", "--log", dest="mergeLog", default='merge.log',
+                      help="Merge log to be used for continuation.")
+                    
+    (options, args) = parser.parse_args()
+    sizePerFile = 1024 * 1024 * options.sizePerFile
+    timeCut = time.mktime(time.strptime(options.timeCut, '%d %m %Y'))
+    
     continueLastMerge = False
     allButUsedFiles = []
     groupedFiles = []
@@ -105,9 +126,9 @@ if __name__ == "__main__":
         allButUsedFiles = removeUsedFiles(uniqueFiles, usedFiles)
         
     if not continueLastMerge:
-        groupedFiles = groupFilesToSize(uniqueFiles)
+        groupedFiles = groupFilesToSize(uniqueFiles, sizePerFile)
     else:
-        groupedFiles = groupFilesToSize(allButUsedFiles)
+        groupedFiles = groupFilesToSize(allButUsedFiles, sizePerFile)
     
     print 'Total number of files:', len(files)
     print 'Total number of unique files:', len(uniqueFiles)
