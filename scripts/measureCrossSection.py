@@ -154,7 +154,7 @@ def MinuitFitFunction(nParameters, gin, f, par, iflag):
         data = data * normalisation['ElectronHad']
         if (data != 0) and (x_i != 0):
             L = ROOT.TMath.Poisson(data, x_i)
-            lnL += log(L)
+            lnL += ROOT.TMath.log(L)
     f[0] = -2.0 * lnL
     
     #constrains
@@ -1554,12 +1554,12 @@ if __name__ == '__main__':
     constrains['W+Jets']['enabled'] = ('WJets' in options.constrain)
     constrains['DYJetsToLL']['enabled'] = ('ZJets' in options.constrain)
     constrains['Di-Boson']['enabled'] = ('VV' in options.constrain)
-    
+
+    savePath = "/storage/results/plots/DiffMETMeasurement/binCorrection/%s/" % metType    
     if test:
         metbins = ['0-25']
-    
-    savePath = "/storage/results/plots/DiffMETMeasurement/binCorrection/%s/" % metType  
-    savePath = "/storage/results/plots/testing2/%s/" % metType  
+        savePath = "/storage/results/plots/testing/%s/" % metType    
+    #savePath = "/storage/results/plots/testing2/%s/" % metType
 #    doBinByBinUnfolding = True
     print colorstr('Analysis options:','BLINK')
     print colorstr('B-tag bin:','RED'), bjetbin
