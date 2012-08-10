@@ -45,6 +45,7 @@ private:
 	VariableReader<MultiIntPointer> NumberOfValidHits;
 	VariableReader<MultiIntPointer> NumberOfValidMuonHits;
 	VariableReader<MultiIntPointer> PixelLayersWithMeasurement;
+//	VariableReader<MultiIntPointer> TrackerLayersWithMeasurement;
 	VariableReader<MultiIntPointer> NumberOfMatchedStations;
 	VariableReader<MultiIntPointer> NumberOfMatches;
 

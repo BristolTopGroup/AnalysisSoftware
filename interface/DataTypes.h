@@ -15,6 +15,8 @@ namespace DataType {
 enum value {
 	ElectronHad,
 	MuHad,
+	SingleElectron,
+	SingleMu,
 	TTJets,
 	Wjets,
 	W1Jet,
@@ -85,6 +87,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 //
 		"ElectronHad",//
 		"MuHad", //
+		"SingleElectron",//
+		"SingleMu",//
 		"TTJet", //
 		"WJetsToLNu", //
 		"W1Jet", //

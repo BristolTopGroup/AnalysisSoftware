@@ -5,9 +5,6 @@
  *      Author: kreczko
  */
 #include "../../interface/Analysers/ElectronAnalyser.h"
-#include "../../interface/GlobalVariables.h"
-#include "../../interface/Selections/TopPairEPlusJetsReferenceSelection.h"
-#include "../../interface/TopPairEventCandidate.h"
 namespace BAT {
 
 void ElectronAnalyser::analyse(const EventPtr event) {

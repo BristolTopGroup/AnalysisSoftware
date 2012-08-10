@@ -19,8 +19,6 @@ public:
 	virtual ~Lepton() = 0;
 
 	//flags
-//	virtual bool isGood(short leptonID) const = 0;
-//	virtual bool isLoose() const = 0;
 	virtual bool isPFLepton() const = 0;
 
 	//setters

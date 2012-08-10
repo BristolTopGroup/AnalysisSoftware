@@ -77,7 +77,8 @@ Event::~Event() {
 }
 
 bool Event::isRealData() const {
-	return dataType == DataType::ElectronHad || dataType == DataType::MuHad;
+	return dataType == DataType::ElectronHad || dataType == DataType::MuHad || dataType == DataType::SingleElectron
+			|| dataType == DataType::SingleMu;
 }
 
 const DataType::value Event::getDataType() const {
@@ -818,7 +819,7 @@ std::vector<double> Event::BjetWeights(const JetCollection bjets) const {
 			bjetWeights[4] = index == 4 ? sf * sf * sf * sf : bjetWeights[4] * (1 - sf);
 		}
 	}
-	if(numberOfBjets == 0)
+	if (numberOfBjets == 0)
 		bjetWeights[0] = 1.;
 
 	return bjetWeights;
