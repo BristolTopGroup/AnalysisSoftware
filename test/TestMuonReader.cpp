@@ -48,8 +48,55 @@ void TestMuonReader::testLeadingMuonRelativeIsolation() {
 	ASSERT_EQUAL_DELTA(0, leadingMuon->relativeIsolation(), 0.00001);
 }
 
-void TestMuonReader::testLeadingMuonIsGlobal() {
+void TestMuonReader::testNormalisedChi2() {
+	ASSERT_EQUAL_DELTA(0.729266, leadingMuon->normChi2(), 0.000001);
+}
+
+void TestMuonReader::testNumberOfMatchedStations() {
+	ASSERT_EQUAL(3, leadingMuon->numberOfMatchedStations());
+}
+
+void TestMuonReader::testNumberOfMatches() {
+	ASSERT_EQUAL(3, leadingMuon->numberOfMatches());
+}
+
+void TestMuonReader::testNumberOfValidHits() {
+	ASSERT_EQUAL(24, leadingMuon->numberOfValidHits());
+}
+
+void TestMuonReader::testNumberOfValidMuonHits() {
+	ASSERT_EQUAL(19, leadingMuon->numberOfValidMuonHits());
+}
+
+void TestMuonReader::testNumberOfValidPixelHits() {
+	//TODO: this needs fixing. Not included in the current version of the nTuple
+	ASSERT_EQUAL(19, leadingMuon->numberOfValidPixelHits());
+}
+
+void TestMuonReader::testTrackerLayersWithMeasurement() {
+	//TODO: this needs fixing. Not included in the current version of the nTuple
+	ASSERT_EQUAL(111, leadingMuon->trackerLayersWithMeasurement());
+}
+
+void TestMuonReader::testPixelLayersWithMeasurement() {
+	ASSERT_EQUAL(4, leadingMuon->pixelLayersWithMeasurement());
+}
+
+void TestMuonReader::testZDistanceToPrimaryVertex() {
+	ASSERT_EQUAL_DELTA(-0.00279323, leadingMuon->ZDistanceToPrimaryVertex(), 0.00000001);
+}
+
+void TestMuonReader::testGlobalMuon() {
 	ASSERT_EQUAL(true, leadingMuon->isGlobal());
+}
+
+void TestMuonReader::testPFMuon() {
+	//TODO: this needs fixing. Not included in the current version of the nTuple
+	ASSERT_EQUAL(true, leadingMuon->isPFMuon());
+}
+
+void TestMuonReader::testTrackerMuon() {
+	ASSERT_EQUAL(true, leadingMuon->isTracker());
 }
 
 cute::suite make_suite_TestMuonReader() {
@@ -61,7 +108,20 @@ cute::suite make_suite_TestMuonReader() {
 	s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonPy));
 	s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonPz));
 	s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonRelativeIsolation));
-	s.push_back(CUTE_SMEMFUN(TestMuonReader, testLeadingMuonIsGlobal));
+
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testNormalisedChi2));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testNumberOfMatchedStations));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testNumberOfMatches));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testNumberOfValidHits));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testNumberOfValidMuonHits));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testNumberOfValidPixelHits));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testTrackerLayersWithMeasurement));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testPixelLayersWithMeasurement));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testZDistanceToPrimaryVertex));
+
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testGlobalMuon));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testPFMuon));
+	s.push_back(CUTE_SMEMFUN(TestMuonReader, testTrackerMuon));
 
 	return s;
 }

@@ -249,7 +249,7 @@ void TestEvent::testGoodJetCleaningNoGoodJets() {
 }
 
 void TestEvent::testMET() {
-	ASSERT_EQUAL(50, ttbarEvent.MET()->et());
+	ASSERT_EQUAL(50, ttbarEvent.MET(METAlgorithm::patMETsPFlow)->et());
 }
 
 cute::suite make_suite_TestEvent() {

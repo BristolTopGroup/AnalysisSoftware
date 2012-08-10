@@ -8,17 +8,13 @@
 #include "cute/cute.h"
 #include "cute/cute_suite.h"
 #include "../interface/HistHelpers/HistogramManager.h"
-#include <boost/array.hpp>
-#include "../interface/DataTypes.h"
-#include <boost/filesystem.hpp>
-
-using namespace BAT;
+#include <string>
 
 struct TestHistogramManager {
 private:
-	HistogramManager man;
+	BAT::HistogramManager man;
 	float lumi;
-	string expectedTtbarFile, expectedDataFile;
+	std::string expectedTtbarFile, expectedDataFile;
 public:
 	TestHistogramManager();
 	~TestHistogramManager();

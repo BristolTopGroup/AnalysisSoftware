@@ -5,13 +5,10 @@
  *      Author: kreczko
  */
 
-#include "cute/cute.h"
-#include "cute/cute_suite.h"
-#include "../interface/HistHelpers/HistogramManager.h"
+#include "TestHistogramManager.h"
 #include <boost/array.hpp>
 #include "../interface/DataTypes.h"
 #include <boost/filesystem.hpp>
-#include "TestHistogramManager.h"
 #include "../interface/GlobalVariables.h"
 
 using namespace BAT;
@@ -19,8 +16,8 @@ using namespace BAT;
 TestHistogramManager::TestHistogramManager() :
 		man(), //
 		lumi(1.5), //
-		expectedTtbarFile("TTJet_1.5pb_PFElectron_PFMuon_PF2PATJets_PFMET.root"), //
-		expectedDataFile("ElectronHad_1.5pb_PFElectron_PFMuon_PF2PATJets_PFMET.root") {
+		expectedTtbarFile("TTJet_1.5pb_PFElectron_PFMuon_PF2PATJets_patType1CorrectedPFMet.root"), //
+		expectedDataFile("ElectronHad_1.5pb_PFElectron_PFMuon_PF2PATJets_patType1CorrectedPFMet.root") {
 	man.enableDebugMode(true);
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes =
 			boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>();
@@ -174,32 +171,32 @@ void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn1DJetColl
 
 void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn2DCollection() {
 	man.setCurrentHistogramFolder("test");
-	ASSERT_THROWS(man.H2D("tfdgsdf")->Fill(12), HistogramAccessException);
+	ASSERT_THROWS(man.H2D("tfdgsdf")->Fill(12,12), HistogramAccessException);
 }
 
 void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn2DBJetCollection() {
 	man.setCurrentHistogramFolder("test");
-	ASSERT_THROWS(man.H2D_BJetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+	ASSERT_THROWS(man.H2D_BJetBinned("tfdgsdf")->Fill(12,12), HistogramAccessException);
 }
 
 void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn2DJetCollection() {
 	man.setCurrentHistogramFolder("test");
-	ASSERT_THROWS(man.H2D_JetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+	ASSERT_THROWS(man.H2D_JetBinned("tfdgsdf")->Fill(12,12), HistogramAccessException);
 }
 
 void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn3DCollection() {
 	man.setCurrentHistogramFolder("test");
-	ASSERT_THROWS(man.H3D("tfdgsdf")->Fill(12), HistogramAccessException);
+	ASSERT_THROWS(man.H3D("tfdgsdf")->Fill(12,12,12), HistogramAccessException);
 }
 
 void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn3DBJetCollection() {
 	man.setCurrentHistogramFolder("test");
-	ASSERT_THROWS(man.H3D_BJetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+	ASSERT_THROWS(man.H3D_BJetBinned("tfdgsdf")->Fill(12,12,12), HistogramAccessException);
 }
 
 void TestHistogramManager::throwExceptionWhenAccessingNonExistentHistIn3DJetCollection() {
 	man.setCurrentHistogramFolder("test");
-	ASSERT_THROWS(man.H3D_JetBinned("tfdgsdf")->Fill(12), HistogramAccessException);
+	ASSERT_THROWS(man.H3D_JetBinned("tfdgsdf")->Fill(12,12,12), HistogramAccessException);
 }
 
 extern cute::suite make_suite_TestHistogramManager() {

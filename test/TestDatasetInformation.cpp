@@ -24,7 +24,7 @@ void TestDatasetInformation::testCrossSectionTTJets() {
 }
 
 void TestDatasetInformation::testGetNumberOfProcessedEventsTTJets() {
-	ASSERT_EQUAL(4438282, datasetInfo_.getNumberOfProcessedEvents(DataType::TTJets));
+	ASSERT_EQUAL(7490162, datasetInfo_.getNumberOfProcessedEvents(DataType::TTJets));
 }
 
 void TestDatasetInformation::testCrossSectionTTJetsFromArray() {
@@ -34,7 +34,7 @@ void TestDatasetInformation::testCrossSectionTTJetsFromArray() {
 
 void TestDatasetInformation::testGetNumberOfProcessedEventsTTJetsFromArray() {
 	boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfProcessedEvents = datasetInfo_.getArrayOfProcessedEvents();
-	ASSERT_EQUAL(4438282, numberOfProcessedEvents.at(DataType::TTJets));
+	ASSERT_EQUAL(7490162, numberOfProcessedEvents.at(DataType::TTJets));
 }
 
 cute::suite make_suite_TestDatasetInformation() {

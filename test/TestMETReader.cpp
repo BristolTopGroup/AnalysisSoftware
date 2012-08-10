@@ -28,16 +28,17 @@ void TestMETReader::testPFSignificance() {
 	ASSERT_EQUAL_DELTA(14.231, pfmet->significance(), 0.0001);
 }
 
-void TestMETReader::testPFSumET() {
-	ASSERT_EQUAL_DELTA(440.114, pfmet->sumET(), 0.001);
-}
+//SumET is no longer set by METReader
+//void TestMETReader::testPFSumET() {
+//	ASSERT_EQUAL_DELTA(440.114, pfmet->sumET(), 0.001);
+//}
 
 cute::suite make_suite_TestMETReader() {
 	cute::suite s;
 
 	s.push_back(CUTE_SMEMFUN(TestMETReader, testPFMET));
 	s.push_back(CUTE_SMEMFUN(TestMETReader, testPFSignificance));
-	s.push_back(CUTE_SMEMFUN(TestMETReader, testPFSumET));
+//	s.push_back(CUTE_SMEMFUN(TestMETReader, testPFSumET));
 
 	return s;
 }

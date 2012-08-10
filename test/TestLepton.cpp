@@ -164,7 +164,7 @@ void TestLepton::testPFRelativeIsolation04() {
 void TestLepton::testPFRelativeIsolation05() {
 	float relativeIsolation = (muon_->PFGammaIsolation(0.5) + muon_->PFNeutralHadronIsolation(0.5)
 			+ muon_->PFChargedHadronIsolation(0.5)) / muon_->pt();
-	ASSERT_EQUAL(relativeIsolation, muon_->pfRelativeIsolation(0.5));
+	ASSERT_EQUAL(relativeIsolation, muon_->pfRelativeIsolation(0.5, false));
 }
 
 void TestLepton::testDirectionalIsolation02() {

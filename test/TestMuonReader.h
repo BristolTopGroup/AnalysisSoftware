@@ -24,9 +24,21 @@ public:
 	void testLeadingMuonEnergy();
 	void testLeadingMuonPx();
 	void testLeadingMuonPy();
-    void testLeadingMuonPz();
-    void testLeadingMuonRelativeIsolation();
-    void testLeadingMuonIsGlobal();
+	void testLeadingMuonPz();
+	void testLeadingMuonRelativeIsolation();
+
+	void testNormalisedChi2();
+	void testNumberOfMatchedStations();
+	void testNumberOfMatches();
+	void testNumberOfValidHits();
+	void testNumberOfValidMuonHits();
+	void testNumberOfValidPixelHits();
+	void testTrackerLayersWithMeasurement();
+	void testPixelLayersWithMeasurement();
+	void testZDistanceToPrimaryVertex();
+	void testGlobalMuon();
+	void testPFMuon();
+	void testTrackerMuon();
 };
 
 extern cute::suite make_suite_TestMuonReader();
