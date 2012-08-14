@@ -37,7 +37,7 @@ centerOfMassEnergy = 7
 
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
-nTuple_version = 8
+nTuple_version = 7
 if centerOfMassEnergy == 7:
     if nTuple_version == 7:
         datasetInfoFile = toolsFolder + "python/DataSetInfo_V7.py"
