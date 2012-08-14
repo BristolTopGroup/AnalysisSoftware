@@ -7,6 +7,9 @@
 
 #include "../../interface/Readers/ElectronReader.h"
 #include "../../interface/GlobalVariables.h"
+#include <iostream>
+
+using namespace std;
 
 namespace BAT {
 
@@ -246,6 +249,11 @@ void ElectronReader::initialise() {
 			DirectionalIsolationReaderWithGaussianFallOff_DR03_.initialise();
 			PFIsolationReaderWithGaussianFallOff_DR02_.initialise();
 			PFIsolationReaderWithGaussianFallOff_DR03_.initialise();
+		} else {
+			cout << "Using an old nTuple version. Following variables will not be available:" << endl;
+			cout
+					<< "Electron::directionalIsolation(), Electron::directionalIsolationWithGaussianFallOff(), Electron::pfIsolationWithGaussianFallOff()"
+					<< endl;
 		}
 	}
 
@@ -256,6 +264,11 @@ void ElectronReader::initialise() {
 		PFPUChargedHadron_Isolation_DR03_.initialise();
 		PFPUChargedHadron_Isolation_DR04_.initialise();
 		PFPUChargedHadron_Isolation_DR05_.initialise();
+	} else {
+		cout << "Using an old nTuple version. Following variables will not be available:" << endl;
+		cout
+				<< "Electron::PfPUChargedHadronIso(), Electron::mvaTrigV0(), Electron::mvaNonTrigV0(), Electron::passConversionVeto()"
+				<< endl;
 	}
 }
 

@@ -5,8 +5,8 @@
  *      Author: kreczko
  */
 
-#ifndef TOPPAIRREFERENCESELECTION_H_
-#define TOPPAIRREFERENCESELECTION_H_
+#ifndef TOPPAIRMUPLUSJETSREFERENCESELECTION_H_
+#define TOPPAIRMUPLUSJETSREFERENCESELECTION_H_
 
 #include "BasicSelection.h"
 
@@ -14,7 +14,10 @@ namespace BAT {
 
 namespace TTbarMuPlusJetsReferenceSelection {
 enum Step {
-	EventCleaningAndTrigger, OneIsolatedElectron, LooseMuonVeto, DiLeptonVeto, ConversionVeto,
+	EventCleaningAndTrigger,
+	OneIsolatedMuon,
+	LooseLeptonVeto,
+	DiLeptonVeto,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
 	AtLeastOneBtag,
@@ -24,8 +27,8 @@ enum Step {
 
 const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 		"Event cleaning and High Level Trigger", //
-				"exactly one isolated electron", //
-				"loose muon veto", //
+				"exactly one isolated muon", //
+				"loose lepton veto", //
 				"di-lepton veto", //
 				">= 3 jets", //
 				">= 4 jets", //
@@ -71,4 +74,4 @@ public:
 typedef boost::shared_ptr<TopPairMuPlusJetsReferenceSelection> TopPairMuPlusJetsReferenceSelectionPointer;
 
 } /* namespace BAT */
-#endif /* TOPPAIRREFERENCESELECTION_H_ */
+#endif /* TOPPAIRMUPLUSJETSREFERENCESELECTION_H_ */

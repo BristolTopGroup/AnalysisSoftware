@@ -74,7 +74,8 @@ protected:
 	double pileUpWeight_;
 	std::vector<double> bjetWeights_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
-	double PUWeightInTimeOnly_, PUWeight3BX_, PUWeight3D_, PUWeightShiftUp_, PUWeightShiftDown_;
+	double PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
+			PUWeightShiftUp_, PUWeightShiftDown_;
 
 	unsigned int numberOfHighPurityTracks_;
 	bool isBeamScraping_;
@@ -86,8 +87,8 @@ protected:
 	double ptdensityRho;
 	std::string file_;
 
-	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_, passesTrackingFailureFilter_,
-			passesNoisySCFilter_;
+	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_,
+			passesTrackingFailureFilter_, passesNoisySCFilter_;
 
 public:
 	Event();
@@ -120,7 +121,7 @@ public:
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
 	void setPUWeight3BX(double puweight);
-	void setPUWeight3D(double puweight);
+//	void setPUWeight3D(double puweight);
 	void setPUWeightShiftUp(double puweight);
 	void setPUWeightShiftDown(double puweight);
 	void setCSCTightBeamHaloFilter(bool result);
@@ -136,23 +137,10 @@ public:
 	const TrackCollection& Tracks() const;
 	const MCParticleCollection& GenParticles() const;
 	const ElectronCollection& Electrons() const;
-//	const ElectronCollection& GoodElectrons() const;
-//	const ElectronCollection& GoodIsolatedElectrons() const;
-//	const ElectronCollection& GoodPFIsolatedElectrons() const;
-//	const ElectronCollection& GoodPFNonIsolatedElectrons() const;
 	const ElectronCollection& QCDElectrons() const;
 	const JetCollection& Jets() const;
 	const JetCollection& GenJets() const;
-//	const JetCollection& GoodJets() const;
-//	const JetCollection& GoodElectronCleanedJets() const;
-//	const JetCollection& GoodMuonCleanedJets() const;
-//	const JetCollection& GoodBJets() const;
-//	const JetCollection& GoodElectronCleanedBJets() const;
-//	const JetCollection& GoodMuonCleanedBJets() const;
 	const MuonCollection& Muons() const;
-//	const MuonCollection& GoodMuons() const;
-//	const MuonCollection& GoodIsolatedMuons() const;
-//	const MuonCollection& GoodPFIsolatedMuons() const;
 	const METPointer MET() const;
 	const METPointer MET(METAlgorithm::value type) const;
 	const METPointer GenMET() const;
@@ -174,7 +162,7 @@ public:
 	unsigned long lumiblock() const;
 	double weight() const;
 	double PileUpWeight() const;
-	std::vector<double> BjetWeights(const JetCollection bjets) const;
+//	std::vector<double> BjetWeights(const JetCollection bjets) const;
 	void inspect() const;
 	bool HLT(HLTriggers::value trigger) const;
 	int HLTPrescale(HLTriggers::value trigger) const;
@@ -182,13 +170,10 @@ public:
 	static bool usePFIsolation;
 	static bool useCiCElectronID;
 
-//	double averageNumberOfGeneratedPileUpVertices() const;
 	const std::vector<int> GeneratedPileUpVertices() const;
 	const std::vector<double> PDFWeights() const;
 	double averageNumberOfVertices() const;
-	double inTimeOnlyNUmberOfVertices() const;
-//	double numberOfGeneratedPileUpVertices(PileUpReweightingMethod::value method =
-//			Globals::pileUpReweightingMethod) const;
+	double inTimeOnlyNumberOfVertices() const;
 	double rho() const;
 	unsigned int numberOfHighPurityTracks() const;
 	bool isBeamScraping() const;
@@ -196,10 +181,9 @@ public:
 
 	double PUWeightInTimeOnly() const;
 	double PUWeight3BX() const;
-	double PUWeight3D() const;
 	double PUWeightShiftUp() const;
 	double PUWeightShiftDown() const;
-	double getBTagCorrectionFactor(const JetCollection jets) const;
+//	double getBTagCorrectionFactor(const JetCollection jets) const;
 
 	bool passesCSCTightBeamHaloFilter() const;
 	bool passesHBHENoiseFilter() const;
@@ -208,15 +192,6 @@ public:
 	bool passesTrackingFailureFilter() const;
 	bool passesNoisySCFilter() const;
 
-private:
-//	void selectElectronsByQuality();
-//	void cleanGoodJets();
-//	JetCollection cleanGoodJetsAgainstIsolatedElectrons(const ElectronCollection& electrons) const;
-//	JetCollection cleanGoodJetsAgainstIsolatedMuons(const MuonCollection& muons) const;
-//	JetCollection cleanGoodJetsAgainstMostIsolatedLepton(const LeptonPointer mostIsolatedLepton) const;
-//	void selectGoodJets();
-//	void selectMuonsByQuality();
-//	void selectVerticesByQuality();
 };
 
 }

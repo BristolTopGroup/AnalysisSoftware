@@ -29,27 +29,27 @@ void TestMuonReader::testNumberOfMuons() {
 }
 
 void TestMuonReader::testLeadingMuonEnergy() {
-	ASSERT_EQUAL_DELTA(95.381, leadingMuon->energy(), 0.0001);
+	ASSERT_EQUAL_DELTA(46.6053, leadingMuon->energy(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonPx() {
-	ASSERT_EQUAL_DELTA(5.70759, leadingMuon->px(), 0.0001);
+	ASSERT_EQUAL_DELTA(-10.782, leadingMuon->px(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonPy() {
-	ASSERT_EQUAL_DELTA(30.843, leadingMuon->py(), 0.0001);
+	ASSERT_EQUAL_DELTA(31.1576, leadingMuon->py(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonPz() {
-	ASSERT_EQUAL_DELTA(-90.0759, leadingMuon->pz(), 0.0001);
+	ASSERT_EQUAL_DELTA(-32.9392, leadingMuon->pz(), 0.0001);
 }
 
 void TestMuonReader::testLeadingMuonRelativeIsolation() {
-	ASSERT_EQUAL_DELTA(0, leadingMuon->relativeIsolation(), 0.00001);
+	ASSERT_EQUAL_DELTA(1.56243, leadingMuon->relativeIsolation(), 0.00001);
 }
 
 void TestMuonReader::testNormalisedChi2() {
-	ASSERT_EQUAL_DELTA(0.729266, leadingMuon->normChi2(), 0.000001);
+	ASSERT_EQUAL_DELTA(1.65566, leadingMuon->normChi2(), 0.000001);
 }
 
 void TestMuonReader::testNumberOfMatchedStations() {
@@ -61,29 +61,29 @@ void TestMuonReader::testNumberOfMatches() {
 }
 
 void TestMuonReader::testNumberOfValidHits() {
-	ASSERT_EQUAL(24, leadingMuon->numberOfValidHits());
+	ASSERT_EQUAL(18, leadingMuon->numberOfValidHits());
 }
 
 void TestMuonReader::testNumberOfValidMuonHits() {
-	ASSERT_EQUAL(19, leadingMuon->numberOfValidMuonHits());
+	ASSERT_EQUAL(34, leadingMuon->numberOfValidMuonHits());
 }
 
 void TestMuonReader::testNumberOfValidPixelHits() {
-	//TODO: this needs fixing. Not included in the current version of the nTuple
-	ASSERT_EQUAL(19, leadingMuon->numberOfValidPixelHits());
+	if (Globals::NTupleVersion >= 8)
+		ASSERT_EQUAL(3, leadingMuon->numberOfValidPixelHits());
 }
 
 void TestMuonReader::testTrackerLayersWithMeasurement() {
-	//TODO: this needs fixing. Not included in the current version of the nTuple
-	ASSERT_EQUAL(111, leadingMuon->trackerLayersWithMeasurement());
+	if (Globals::NTupleVersion >= 8)
+		ASSERT_EQUAL(13, leadingMuon->trackerLayersWithMeasurement());
 }
 
 void TestMuonReader::testPixelLayersWithMeasurement() {
-	ASSERT_EQUAL(4, leadingMuon->pixelLayersWithMeasurement());
+	ASSERT_EQUAL(3, leadingMuon->pixelLayersWithMeasurement());
 }
 
 void TestMuonReader::testZDistanceToPrimaryVertex() {
-	ASSERT_EQUAL_DELTA(-0.00279323, leadingMuon->ZDistanceToPrimaryVertex(), 0.00000001);
+	ASSERT_EQUAL_DELTA(-0.0106531, leadingMuon->ZDistanceToPrimaryVertex(), 0.00000001);
 }
 
 void TestMuonReader::testGlobalMuon() {
@@ -91,8 +91,8 @@ void TestMuonReader::testGlobalMuon() {
 }
 
 void TestMuonReader::testPFMuon() {
-	//TODO: this needs fixing. Not included in the current version of the nTuple
-	ASSERT_EQUAL(true, leadingMuon->isPFMuon());
+	if (Globals::NTupleVersion >= 8)
+		ASSERT_EQUAL(true, leadingMuon->isPFMuon());
 }
 
 void TestMuonReader::testTrackerMuon() {

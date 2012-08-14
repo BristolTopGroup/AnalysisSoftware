@@ -53,7 +53,7 @@ bool TopPairMuPlusJetsReferenceSelection::isBJet(const JetPointer jet) const {
 }
 
 bool TopPairMuPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) const {
-	bool passesEtAndEta = muon->et() > 26 && fabs(muon->eta()) < 2.1;
+	bool passesEtAndEta = muon->pt() > 26 && fabs(muon->eta()) < 2.1;
 	bool passesD0 = fabs(muon->d0()) < 0.02; //cm
 	bool passesDistanceToPV = fabs(muon->ZDistanceToPrimaryVertex()) < 1;
 	bool passesID(muon->isTracker() && muon->isGlobal());
@@ -71,9 +71,9 @@ bool TopPairMuPlusJetsReferenceSelection::passesSelectionStep(const EventPtr eve
 	switch (step) {
 	case TTbarMuPlusJetsReferenceSelection::EventCleaningAndTrigger:
 		return passesEventCleaning(event) && passesTriggerSelection(event);
-	case TTbarMuPlusJetsReferenceSelection::OneIsolatedElectron:
+	case TTbarMuPlusJetsReferenceSelection::OneIsolatedMuon:
 		return hasExactlyOneIsolatedLepton(event);
-	case TTbarMuPlusJetsReferenceSelection::LooseMuonVeto:
+	case TTbarMuPlusJetsReferenceSelection::LooseLeptonVeto:
 		return passesLooseLeptonVeto(event);
 	case TTbarMuPlusJetsReferenceSelection::DiLeptonVeto:
 		return passesDileptonVeto(event);
@@ -103,22 +103,17 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr event) const {
-	//TODO: trigger selection only temporary!!!
 	unsigned int runNumber(event->runnumber());
 	if (event->isRealData()) {
-		if (runNumber >= 160404 && runNumber <= 167914)
-			return event->HLT(HLTriggers::HLT_IsoMu17);
-		else if (runNumber > 167914 && runNumber <= 173198)
-			return event->HLT(HLTriggers::HLT_IsoMu17_TriCentralJet30);
-		else if (runNumber > 173198 && runNumber <= 178419)
-			return event->HLT(HLTriggers::HLT_IsoMu17_eta2p1_TriCentralJet30);
-		else if (runNumber > 178419)
-			return event->HLT(HLTriggers::HLT_IsoMu17_eta2p1_TriCentralPFJet30);
+		if (runNumber >= 160404 && runNumber < 173236)
+			return event->HLT(HLTriggers::HLT_IsoMu24);
+		else if (runNumber >= 173236)
+			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
 		else
 			return false;
 	} else {
 		//Fall11 MC
-		return event->HLT(HLTriggers::HLT_IsoMu17_eta2p1_TriCentralJet30);
+		return event->HLT(HLTriggers::HLT_IsoMu24);
 	}
 }
 
@@ -137,8 +132,6 @@ bool TopPairMuPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Even
 bool TopPairMuPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
 	bool passesEtAndEta = electron->et() > 30 && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
-//	bool passesDistanceToPV = fabs(electron->ZDistanceToPrimaryVertex()) < 1;
-			//since H/E is used at trigger level, use the same cut here:
 	bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
 	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
 	return passesEtAndEta && passesD0 &&

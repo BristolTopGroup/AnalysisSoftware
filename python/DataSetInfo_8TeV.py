@@ -104,5 +104,6 @@ datasetInfo['ZJets-scaleup'] = {"cross-section": 3048., "NumberOfProcessedEvents
 #Data and not used samples
 datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 datasetInfo['MuHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['TTJetsFall11'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleElectron'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMu'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 

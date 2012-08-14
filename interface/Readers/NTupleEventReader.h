@@ -26,16 +26,16 @@
 
 namespace BAT {
 struct NoFileFoundException: public std::exception {
-    TString msg;
-    NoFileFoundException(TString message) :
-        msg(message) {
-    }
-    ~NoFileFoundException() throw () {
-    }
+	TString msg;
+	NoFileFoundException(TString message) :
+			msg(message) {
+	}
+	~NoFileFoundException() throw () {
+	}
 
-    const char* what() const throw () {
-        return msg;
-    }
+	const char* what() const throw () {
+		return msg;
+	}
 };
 
 class NTupleEventReader {
@@ -82,7 +82,8 @@ private:
 	boost::scoped_ptr<VariableReader<MultiDoublePointer> > PDFWeightsReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;
-	boost::scoped_ptr<VariableReader<double> > PUWeightInTimeOnly_, PUWeight3BX_, PUWeight3D_, PUWeightShiftUp_, PUWeightShiftDown_;
+	boost::scoped_ptr<VariableReader<double> > PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
+			PUWeightShiftUp_, PUWeightShiftDown_;
 	boost::scoped_ptr<VariableReader<double> > sumETReader_;
 
 	bool areReadersSet, areDatatypesKnown;
@@ -97,7 +98,6 @@ private:
 
 typedef boost::scoped_ptr<NTupleEventReader> NTupleEventReaderLocalPtr;
 
-
-}//end namespace BAT
+} //end namespace BAT
 
 #endif /* NTUPLEEVENTREADER_H_ */

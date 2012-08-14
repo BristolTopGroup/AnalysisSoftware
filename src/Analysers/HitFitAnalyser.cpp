@@ -68,7 +68,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 					|| Globals::pileUpReweightingMethod == PileUpReweightingMethod::threeDReweighting)
 				nVertices = event->averageNumberOfVertices();
 			if (Globals::pileUpReweightingMethod == PileUpReweightingMethod::inTimePileUpOnly)
-				nVertices = event->inTimeOnlyNUmberOfVertices();
+				nVertices = event->inTimeOnlyNumberOfVertices();
 			float lumiWeightUp = lumiWeight * PShiftUp.ShiftWeight(nVertices);
 			float lumiWeightDown = lumiWeight * PShiftDown.ShiftWeight(nVertices);
 			outFile << lumiWeight << "  " << lumiWeightUp << "  " << lumiWeightDown;

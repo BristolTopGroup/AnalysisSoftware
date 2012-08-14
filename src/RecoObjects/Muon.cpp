@@ -68,6 +68,10 @@ void Muon::setTrackerMuon(bool isTrackerMuon) {
 	isTrackerMuon_ = isTrackerMuon;
 }
 
+void Muon::setPFMuon(bool pf){
+	isPFMuon_ = pf;
+}
+
 void Muon::setNormalisedChi2(double normChi2) {
 	normalisedChi2_ = normChi2;
 }

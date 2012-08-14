@@ -12,10 +12,13 @@
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
 #include "../Selections/TopPairEplusJetsRefAsymJetsSelection.h"
 #include "../Selections/TopPairEPlusJetsRefAsymJetsMETSelection.h"
+#include "../Selections/TopPairMuPlusJetsReferenceSelection.h"
 //QCD selections
 #include "../Selections/QCDNonIsolatedElectronSelection.h"
+#include "../Selections/QCDNonIsolatedMuonSelection.h"
 #include "../Selections/QCDConversionsSelection.h"
 #include "../Selections/QCDPFRelIsoEPlusJetsSelection.h"
+#include "../Selections/QCDPFRelIsoMuPlusJetsSelection.h"
 //QCD selections with AsymJets
 #include "../Selections/QCDNonIsolatedElectronAsymJetsSelection.h"
 #include "../Selections/QCDPFRelIsoEPlusAsymJetsSelection.h"
@@ -35,10 +38,12 @@ public:
 	void setHistogramLabels();
 
 	void topEPlusJetsReferenceSelection(const EventPtr event);
+	void topMuPlusJetsReferenceSelection(const EventPtr event);
 	void topEplusJetsPlusMETSelection(const EventPtr event);
 	void topEplusJetsZprimeSelection(const EventPtr event);
 
 	void qcdSelections(const EventPtr event);
+	void qcdMuPlusJetsSelections(const EventPtr event);
 	void qcdAsymJetsSelections(const EventPtr event);
 	void qcdAsymJetsMETSelections(const EventPtr event);
 	void qcdNonIsoTriggerSelections(const EventPtr event);
@@ -46,12 +51,12 @@ public:
 	void qcdNonIsoTriggerAsymJetsMETSelections(const EventPtr event);
 
 private:
-	SelectionPointer topEplusJetsRefSelection_, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_;
+	SelectionPointer topEplusJetsRefSelection_, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_, topMuPlusJetsRefSelection_;
 
 	//QCD selections with respect to reference selection
-	SelectionPointer qcdNonIsoElectronSelection_, qcdNonIsoElectronNonIsoTriggerSelection_;
+	SelectionPointer qcdNonIsoElectronSelection_, qcdNonIsoElectronNonIsoTriggerSelection_, qcdNonIsoMuonSelection_;
 	SelectionPointer qcdConversionSelection_;
-	SelectionPointer qcdPFRelIsoSelection_, qcdPFRelIsoNonIsoTriggerSelection_;
+	SelectionPointer qcdPFRelIsoEPlusJetsSelection_, qcdPFRelIsoNonIsoTriggerSelection_, qcdPFRelIsoMuPlusJetsSelection_;
 	//QCD selections with respect to reference selection + asymmetric jet cuts
 	SelectionPointer qcdNonIsoElectronAsymJetsSelection_, qcdNonIsoElectronAsymJetsNonIsoTriggerSelection_;
 	SelectionPointer qcdConversionAsymJetsSelection_;

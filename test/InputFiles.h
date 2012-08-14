@@ -10,7 +10,7 @@
 namespace InputFile {
 const char
 		* const TTJets =
-				"/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets_subset/TTJets_nTuple_44X_mc_merged_001.root";
+				"/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/TTJets_nTuple_44X_mc_merged_001.root";
 const char
 		* const WJets =
 				"/storage/TopQuarkGroup/mc/7TeV/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/nTuple_v7a_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/WJetsToLNu_nTuple_44X_mc_merged_001.root";

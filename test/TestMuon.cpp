@@ -15,6 +15,7 @@ TestMuon::TestMuon() :
 	testMuon->setZDistanceToPrimaryVertex(0.5);
 	testMuon->makeGlobal(true);
 	testMuon->setTrackerMuon(true);
+	testMuon->setPFMuon(true);
 }
 
 void TestMuon::testNormalisedChi2() {

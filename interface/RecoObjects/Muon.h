@@ -55,6 +55,7 @@ public:
 	//setters
 	void makeGlobal(bool global);
 	void setTrackerMuon(bool isTrackerMuon);
+	void setPFMuon(bool pf);
 	void setNormalisedChi2(double normChi2);
 	void setNumberOfValidHits(int nValidHits);
 	void setNumberOfValidMuonHits(int nValidHits);

@@ -45,7 +45,7 @@ NTupleEventReader::NTupleEventReader() :
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
 		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
 		PUWeight3BX_(new VariableReader<double>(input, "Event.PUWeight3BX")), //
-		PUWeight3D_(new VariableReader<double>(input, "Event.PUWeight3D")), //
+//		PUWeight3D_(new VariableReader<double>(input, "Event.PUWeight3D")), //
 		PUWeightShiftUp_(new VariableReader<double>(input, "Event.PUWeightShiftUp")), //
 		PUWeightShiftDown_(new VariableReader<double>(input, "Event.PUWeightShiftDown")), //
 		sumETReader_(new VariableReader<double>(input, "Event.SumET")), //
@@ -56,8 +56,9 @@ NTupleEventReader::NTupleEventReader() :
 	metReaders.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
 
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
-		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7)
-			metReaders.at(index) = boost::shared_ptr<METReader>(new METReader(input, (METAlgorithm::value) index));
+		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
+			continue;
+		metReaders.at(index) = boost::shared_ptr<METReader>(new METReader(input, (METAlgorithm::value) index));
 	}
 
 }
@@ -109,7 +110,6 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	if (!currentEvent->isRealData()) {
 		currentEvent->setGenParticles(genParticleReader->getGenParticles());
 		currentEvent->setGenJets(genJetReader->getGenJets());
-//		currentEvent->setGenMET(genMetReader->getGenMET());
 		currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 		currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
 
@@ -117,7 +117,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 			currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
 			currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
 			currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
-			currentEvent->setPUWeight3D(PUWeight3D_->getVariable());
+//			currentEvent->setPUWeight3D(PUWeight3D_->getVariable());
 			currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
 			currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
 		}
@@ -129,16 +129,15 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	METCollection mets;
 	mets.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
-		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
-			bool isMCOnlyMet = (index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-									|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown || index == METAlgorithm::GenMET);
-			if (isMCOnlyMet && currentEvent->isRealData())
-				continue;
-			const METPointer met(metReaders.at(index)->getMET());
-			if (Globals::NTupleVersion >= 7)
-				met->setSumET(sumETReader_->getVariable());
-			mets.at(index) = met;
-		}
+		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
+			continue;
+		bool isMCOnlyMET = MET::isMCOnlyMETType(index);
+		if (isMCOnlyMET && currentEvent->isRealData())
+			continue;
+		const METPointer met(metReaders.at(index)->getMET());
+		if (Globals::NTupleVersion >= 7)
+			met->setSumET(sumETReader_->getVariable());
+		mets.at(index) = met;
 	}
 
 	currentEvent->setMETs(mets);
@@ -181,7 +180,6 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
-//		genMetReader->initialise();
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();
@@ -191,7 +189,6 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			TruePileupInfoReader->initialiseBlindly();
 			PUWeightInTimeOnly_->initialiseBlindly();
 			PUWeight3BX_->initialiseBlindly();
-			PUWeight3D_->initialiseBlindly();
 			PUWeightShiftUp_->initialiseBlindly();
 			PUWeightShiftDown_->initialiseBlindly();
 		}
@@ -199,14 +196,13 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			sumETReader_->initialise();
 
 		for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
-			if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
-				bool isMCOnlyMet = (index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-						|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown || index == METAlgorithm::GenMET);
-				if (isMCOnlyMet)
-					metReaders.at(index)->initialiseBlindly();
-				else
-					metReaders.at(index)->initialise();
-			}
+			if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
+				continue;
+			bool isMCOnlyMET = MET::isMCOnlyMETType(index);
+			if (isMCOnlyMET)
+				metReaders.at(index)->initialiseBlindly();
+			else
+				metReaders.at(index)->initialise();
 
 		}
 		areReadersSet = true;

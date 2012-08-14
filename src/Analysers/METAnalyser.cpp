@@ -16,21 +16,21 @@ void METAnalyser::analyse(const EventPtr event) {
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
-		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
-			bool isMCOnlyMET = index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown || index == METAlgorithm::GenMET;
-			if (isMCOnlyMET && event->isRealData()) //these METs are MC only (Jet resolution systematics)
-				continue;
-			const METPointer met(event->MET(metType));
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
-			histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);
-			//do not fill other histograms for met systematics
-			if (index > METAlgorithm::patType1p2CorrectedPFMet)
-				continue;
-			histMan_->H1D_BJetBinned("MET_phi")->Fill(met->phi(), weight_);
-			histMan_->H1D_BJetBinned("METsignificance")->Fill(met->significance(), weight_);
-			histMan_->H2D_BJetBinned("METsignificance_vs_MET")->Fill(met->et(), met->significance(), weight_);
-		}
+		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
+			continue;
+		bool isMCOnlyMET = MET::isMCOnlyMETType(index);
+
+		if (isMCOnlyMET && event->isRealData()) //these METs are MC only (Jet resolution systematics)
+			continue;
+		const METPointer met(event->MET(metType));
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
+		histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);
+		//do not fill other histograms for met systematics
+		if (index > METAlgorithm::patType1p2CorrectedPFMet)
+			continue;
+		histMan_->H1D_BJetBinned("MET_phi")->Fill(met->phi(), weight_);
+		histMan_->H1D_BJetBinned("METsignificance")->Fill(met->significance(), weight_);
+		histMan_->H2D_BJetBinned("METsignificance_vs_MET")->Fill(met->et(), met->significance(), weight_);
 	}
 
 }
@@ -42,24 +42,23 @@ void METAnalyser::analyseTransverseMass(const EventPtr event, const ParticlePoin
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		METAlgorithm::value metType = (METAlgorithm::value) index;
-		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
-			bool isMCOnlyMET = index == METAlgorithm::patType1p2CorrectedPFMetJetResUp
-					|| index == METAlgorithm::patType1p2CorrectedPFMetJetResDown || index == METAlgorithm::GenMET;
-			if (isMCOnlyMET && event->isRealData())
-				continue; //skip MC only METs for real data
-			//do not fill histograms for met systematics
-			if (index > METAlgorithm::patType1p2CorrectedPFMet)
-				continue;
-			const METPointer met(event->MET(metType));
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
+		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
+			continue;
+		bool isMCOnlyMET = MET::isMCOnlyMETType(index);
+		if (isMCOnlyMET && event->isRealData())
+			continue; //skip MC only METs for real data
+		//do not fill histograms for met systematics
+		if (index > METAlgorithm::patType1p2CorrectedPFMet)
+			continue;
+		const METPointer met(event->MET(metType));
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 
-			double MT = transverseMass(met, particle);
-			double angle = met->angle(particle);
-			histMan_->H1D_BJetBinned("Transverse_Mass")->Fill(MT, weight_);
-			histMan_->H1D_BJetBinned("Angle_lepton_MET")->Fill(angle, weight_);
-			if (met->et() < 20)
-				histMan_->H1D_BJetBinned("Transverse_Mass_MET20")->Fill(MT, weight_);
-		}
+		double MT = transverseMass(met, particle);
+		double angle = met->angle(particle);
+		histMan_->H1D_BJetBinned("Transverse_Mass")->Fill(MT, weight_);
+		histMan_->H1D_BJetBinned("Angle_lepton_MET")->Fill(angle, weight_);
+		if (met->et() < 20)
+			histMan_->H1D_BJetBinned("Transverse_Mass_MET20")->Fill(MT, weight_);
 	}
 }
 
@@ -78,28 +77,26 @@ void METAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
+		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
+			continue;
 		std::string prefix = METAlgorithm::prefixes.at(index);
-		if (index == METAlgorithm::patMETsPFlow || Globals::NTupleVersion >= 7) {
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
-			histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0,
-					1000);
-			//do not create other histograms for met systematics
-			if (index > METAlgorithm::patType1p2CorrectedPFMet)
-				continue;
-			histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80,
-					-4, 4);
-			histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0,
-					1000);
-			histMan_->addH2D_BJetBinned("METsignificance_vs_MET",
-					"Missing transverse energy vs Missing transverse energy significance;#slash{E}_{T}/GeV; #slash{E}_{T} significance",
-					200, 0, 1000, 1000, 0, 1000);
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
+		histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0, 1000);
+		//do not create other histograms for met systematics
+		if (index > METAlgorithm::patType1p2CorrectedPFMet)
+			continue;
+		histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80, -4,
+				4);
+		histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0, 1000);
+		histMan_->addH2D_BJetBinned("METsignificance_vs_MET",
+				"Missing transverse energy vs Missing transverse energy significance;#slash{E}_{T}/GeV; #slash{E}_{T} significance",
+				200, 0, 1000, 1000, 0, 1000);
 
-			histMan_->addH1D_BJetBinned("Transverse_Mass", "Transverse Mass(lepton,MET);M_{T}(l,MET)/GeV; Events/1GeV",
-					1000, 0, 1000);
-			histMan_->addH1D_BJetBinned("Transverse_Mass_MET20",
-					"Transverse Mass(lepton,MET);M_{T}(l,MET)/GeV; Events/1GeV", 1000, 0, 1000);
-			histMan_->addH1D_BJetBinned("Angle_lepton_MET", "angle(lepton,MET);angle(l,MET); Events/0.01", 320, 0, 3.2);
-		}
+		histMan_->addH1D_BJetBinned("Transverse_Mass", "Transverse Mass(lepton,MET);M_{T}(l,MET)/GeV; Events/1GeV",
+				1000, 0, 1000);
+		histMan_->addH1D_BJetBinned("Transverse_Mass_MET20",
+				"Transverse Mass(lepton,MET);M_{T}(l,MET)/GeV; Events/1GeV", 1000, 0, 1000);
+		histMan_->addH1D_BJetBinned("Angle_lepton_MET", "angle(lepton,MET);angle(l,MET); Events/0.01", 320, 0, 3.2);
 	}
 }
 

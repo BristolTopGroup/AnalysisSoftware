@@ -34,18 +34,29 @@ private:
 	VariableReader<MultiDoublePointer> hcalIsolationReader;
 	VariableReader<MultiDoublePointer> trackerIsolationReader;
 
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader;
-	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader;
-	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader;
+	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR03_;
+	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR03_;
+	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR04_;
+	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR04_;
+	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR05_;
+	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR05_;
+	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR05_;
+	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR05_;
 
-	VariableReader<MultiBoolPointer> isGlobalMuonReader;
-	VariableReader<MultiBoolPointer> isTrackerMuonReader;
+	VariableReader<MultiBoolPointer> isGlobalMuon;
+	VariableReader<MultiBoolPointer> isTrackerMuon;
+	VariableReader<MultiBoolPointer> isPFMuon;
 	VariableReader<MultiDoublePointer> vertex_dist_z;
 	VariableReader<MultiDoublePointer> normalisedChi2;
 	VariableReader<MultiIntPointer> NumberOfValidHits;
 	VariableReader<MultiIntPointer> NumberOfValidMuonHits;
 	VariableReader<MultiIntPointer> PixelLayersWithMeasurement;
-//	VariableReader<MultiIntPointer> TrackerLayersWithMeasurement;
+	VariableReader<MultiIntPointer> TrackerLayersWithMeasurement;
+	VariableReader<MultiIntPointer> NumberOfValidPixelHits;
 	VariableReader<MultiIntPointer> NumberOfMatchedStations;
 	VariableReader<MultiIntPointer> NumberOfMatches;
 

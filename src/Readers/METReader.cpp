@@ -6,6 +6,7 @@
  */
 
 #include "../../interface/Readers/METReader.h"
+#include "../../interface/GlobalVariables.h"
 
 namespace BAT {
 
@@ -39,7 +40,7 @@ void METReader::initialise() {
 }
 
 void METReader::initialiseBlindly() {
-	if (usedAlgorithm != METAlgorithm::GenMET) {
+	if (usedAlgorithm != METAlgorithm::GenMET || Globals::NTupleVersion >= 8) {
 		exReader.initialiseBlindly();
 		eyReader.initialiseBlindly();
 		significanceReader.initialiseBlindly();
@@ -56,7 +57,7 @@ const METPointer METReader::getMET() {
 }
 
 void METReader::readMET() {
-	if (usedAlgorithm != METAlgorithm::GenMET) {
+	if (usedAlgorithm != METAlgorithm::GenMET || Globals::NTupleVersion >= 8) {
 		met = METPointer(new MET(exReader.getVariable(), eyReader.getVariable()));
 		met->setSignificance(significanceReader.getVariable());
 	} else
