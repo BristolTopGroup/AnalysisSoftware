@@ -65,11 +65,11 @@ void MuonAnalyser::createHistograms() {
 	if (!ttbarPlusMETAnalysisSetup_) {
 		//analyse all muons
 		if (!singleMuonOnly_) {
-			histMan_->addH1D("Number_Of_Muons", "Number of muons;N(e);Events ", 6, -0.5, 5.5);
-			histMan_->addH1D("All_Muon_Pt", "Muon p_{T};p_{T}(e)/GeV;Events/2GeV ", 500, 0, 1000);
-			histMan_->addH1D("All_Muon_Eta", "Muon #eta; #eta(e); Events/(0.02)", 300, -3, 3);
-			histMan_->addH1D("All_Muon_AbsEta", "Muon |#eta|; |#eta(e)|; Events/(0.01)", 300, 0, 3);
-			histMan_->addH1D("All_Muon_Phi", "Muon #phi; #phi(e); Events/(0.02)", 400, -4, 4);
+			histMan_->addH1D("Number_Of_Muons", "Number of muons;N(#mu);Events ", 6, -0.5, 5.5);
+			histMan_->addH1D("All_Muon_Pt", "Muon p_{T};p_{T}(#mu)/GeV;Events/2GeV ", 500, 0, 1000);
+			histMan_->addH1D("All_Muon_Eta", "Muon #eta; #eta(#mu); Events/(0.02)", 300, -3, 3);
+			histMan_->addH1D("All_Muon_AbsEta", "Muon |#eta|; |#eta(#mu)|; Events/(0.01)", 300, 0, 3);
+			histMan_->addH1D("All_Muon_Phi", "Muon #phi; #phi(#mu); Events/(0.02)", 400, -4, 4);
 			histMan_->addH1D_BJetBinned("All_Muon_pfIsolation_03",
 					"Muon relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D_BJetBinned("All_Muon_pfIsolation_04",
@@ -80,7 +80,7 @@ void MuonAnalyser::createHistograms() {
 		}
 		//single muon histograms for analyseMuon
 		histMan_->addH1D("muon_pT", "Muon p_{T}; p_{T} (GeV); Events/(1 GeV)", 1000, 0, 1000);
-		histMan_->addH1D("muon_phi", "Muon #phi; #phi(e); Events/(0.05)", 400, -4, 4);
+		histMan_->addH1D("muon_phi", "Muon #phi; #phi(#mu); Events/(0.05)", 400, -4, 4);
 
 		//b-jet binning useful for QCD estimates
 
@@ -89,8 +89,8 @@ void MuonAnalyser::createHistograms() {
 
 		histMan_->addH1D("muon_dB", "Muon dB(PV); dB/cm; Events/(0.001 cm)", 200, 0, 0.2);
 	}
-	histMan_->addH1D_BJetBinned("muon_eta", "Muon #eta; #eta(e); Events/(0.02)", 300, -3, 3);
-	histMan_->addH1D_BJetBinned("muon_AbsEta", "Muon |#eta|; |#eta(e)|; Events/(0.01)", 300, 0, 3);
+	histMan_->addH1D_BJetBinned("muon_eta", "Muon #eta; #eta(#mu); Events/(0.02)", 300, -3, 3);
+	histMan_->addH1D_BJetBinned("muon_AbsEta", "Muon |#eta|; |#eta(#mu)|; Events/(0.01)", 300, 0, 3);
 	histMan_->addH1D_BJetBinned("muon_pfIsolation_03",
 			"Muon relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
 	histMan_->addH1D_BJetBinned("muon_pfIsolation_04",
