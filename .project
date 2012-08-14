@@ -79,6 +79,11 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>ch.hsr.ifs.cute.gcov.gcovBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>ch.hsr.ifs.cute.ui.cutenature</nature>
@@ -87,5 +92,6 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.python.pydev.pythonNature</nature>
+		<nature>ch.hsr.ifs.cute.gcov.GcovNature</nature>
 	</natures>
 </projectDescription>

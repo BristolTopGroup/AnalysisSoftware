@@ -16,7 +16,7 @@ Muon::Muon() :
 		usedAlgorithm_(MuonAlgorithm::Default), //
 		isGlobalMuon_(false), //
 		isTrackerMuon_(false), //
-		isPFMuon_(false),//
+		isPFMuon_(false), //
 		normalisedChi2_(initialBigValue), //
 		numberOfValidMuonHits_(-1), //
 		numberOfValidPixelHits_(-1), //
@@ -33,7 +33,7 @@ Muon::Muon(double energy, double px, double py, double pz) :
 		usedAlgorithm_(MuonAlgorithm::Default), //
 		isGlobalMuon_(false), //
 		isTrackerMuon_(false), //
-		isPFMuon_(false),//
+		isPFMuon_(false), //
 		normalisedChi2_(initialBigValue), //
 		numberOfValidMuonHits_(-1), //
 		numberOfValidPixelHits_(-1), //
@@ -68,7 +68,7 @@ void Muon::setTrackerMuon(bool isTrackerMuon) {
 	isTrackerMuon_ = isTrackerMuon;
 }
 
-void Muon::setPFMuon(bool pf){
+void Muon::setPFMuon(bool pf) {
 	isPFMuon_ = pf;
 }
 
@@ -132,7 +132,7 @@ int Muon::numberOfValidMuonHits() const {
 	return numberOfValidMuonHits_;
 }
 
-int Muon::numberOfValidPixelHits() const{
+int Muon::numberOfValidPixelHits() const {
 	return numberOfValidPixelHits_;
 }
 
@@ -140,8 +140,31 @@ int Muon::pixelLayersWithMeasurement() const {
 	return pixelLayersWithMeasurement_;
 }
 
-double Muon::normChi2() const{
+double Muon::normChi2() const {
 	return normalisedChi2_;
+}
+
+double Muon::getEfficiencyCorrection() const {
+	double correction(1.);
+	double muEta(eta());
+	if (muEta < -1.5)
+		correction = 1.003;
+	else if (muEta >= -1.5 && muEta < -1.2)
+		correction = 0.980;
+	else if (muEta >= -1.2 && muEta < -0.9)
+		correction = 0.941;
+	else if (muEta >= -0.9 && muEta < 0)
+		correction = 0.974;
+	else if (muEta >= 0 && muEta < 0.9)
+		correction = 0.977;
+	else if (muEta >= 0.9 && muEta < 1.2)
+		correction = 0.939;
+	else if (muEta >= 1.2 && muEta < 1.5)
+		correction = 0.967;
+	else if (muEta >= 1.5)
+		correction = 1.023;
+
+	return correction;
 }
 
 }

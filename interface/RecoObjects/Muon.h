@@ -65,6 +65,9 @@ public:
 	void setNumberOfMatchedStations(int nMatchedStations);
 	void setNumberOfMatches(int nMatches);
 
+	//other
+	double getEfficiencyCorrection() const;
+
 private:
 	MuonAlgorithm::value usedAlgorithm_;
 	bool isGlobalMuon_, isTrackerMuon_, isPFMuon_;

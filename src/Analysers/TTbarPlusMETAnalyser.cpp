@@ -515,17 +515,18 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		const LeptonPointer signalLepton = topMuplusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
-			histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * bjetWeight);
+			histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * bjetWeight * efficiencyCorrection);
 
-			metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight);
-			muonAnalyserRefSelection_->setScale(bjetWeight);
-			vertexAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight);
-			jetAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight);
+			metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+			muonAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+			vertexAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+			jetAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 
 			metAnalyserMuPlusJetsRefSelection_->analyse(event);
 			metAnalyserMuPlusJetsRefSelection_->analyseTransverseMass(event, signalLepton);
@@ -550,7 +551,7 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						binnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						binnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						binnedMuonAnalysers_.at(analyserIndex)->analyseMuon(signalMuon, event->weight());
 					}
 				}
@@ -566,7 +567,7 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
 						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
 						//conserve event weight by normalising the number of combinations
-						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						double weight = event->weight() * bjetWeight * efficiencyCorrection / numberOfCombinations;
 						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
@@ -601,6 +602,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNonIsoMuonSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoMuonSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
 
 		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoElectronSelection_->setPrescale(prescale);
@@ -608,8 +610,8 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdNonIsoMuonAnalyser_->setScale(bjetWeight);
-			metAnalyserqcdNonIsoMuonSelection_->setScale(bjetWeight);
+			qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+			metAnalyserqcdNonIsoMuonSelection_->setScale(bjetWeight * efficiencyCorrection);
 
 			qcdNonIsoMuonAnalyser_->analyse(event);
 			qcdNonIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
@@ -629,7 +631,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdNonIsoBinnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdNonIsoBinnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						qcdNonIsoBinnedMuonAnalysers_.at(analyserIndex)->analyseMuon(signalMuon, event->weight());
 					}
 				}
@@ -644,7 +646,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
 						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
 						//conserve event weight by normalising the number of combinations
-						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						double weight = event->weight() * bjetWeight * efficiencyCorrection / numberOfCombinations;
 						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
@@ -672,12 +674,13 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdPFRelIsoMuPlusJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoMuPlusJetsSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
 
 		qcdMuPlusjetsPFRelIsoMuonAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdMuPlusjetsPFRelIsoMuonAnalyser_->setScale(bjetWeight);
+			qcdMuPlusjetsPFRelIsoMuonAnalyser_->setScale(bjetWeight*efficiencyCorrection);
 
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyse(event);
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
@@ -696,7 +699,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdPFRelIsoBinnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdPFRelIsoBinnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight*efficiencyCorrection);
 						qcdPFRelIsoBinnedMuonAnalysers_.at(analyserIndex)->analyseMuon(signalMuon, event->weight());
 					}
 				}
