@@ -17,12 +17,12 @@ maxEvents = 50000
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-#              '/storage/TopQuarkGroup/mc/7TeV/W4Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
-#              '/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
+#              '/storage/TopQuarkGroup/mc/7TeV/W4Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
+#              '/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
 '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v7c_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/SingleElectron_nTuple_52X_data_merged_001.root',
 #'/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
-#              '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v7b_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/*.root',
-#'/storage/TopQuarkGroup/mc/7TeV/TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root',
+#              '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v8b_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/*.root',
+#'/storage/TopQuarkGroup/mc/7TeV/TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root',
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
@@ -37,7 +37,7 @@ centerOfMassEnergy = 7
 
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
-nTuple_version = 7
+nTuple_version = 8
 if centerOfMassEnergy == 7:
     if nTuple_version == 7:
         datasetInfoFile = toolsFolder + "python/DataSetInfo_V7.py"

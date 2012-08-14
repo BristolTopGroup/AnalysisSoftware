@@ -44,5 +44,5 @@ if centerOfMassEnergy == 7:
     datasetInfoFile = toolsFolder + "python/DataSetInfo.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
-nTuple_version = 7
+nTuple_version = 8
     

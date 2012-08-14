@@ -19,7 +19,7 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
 mcFolders = [
-                     'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
+                     'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
              ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
@@ -42,6 +42,6 @@ if centerOfMassEnergy == 7:
     datasetInfoFile = toolsFolder + "python/DataSetInfo.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
-nTuple_version = 7
+nTuple_version = 8
 
 LightTagSystematic = -1

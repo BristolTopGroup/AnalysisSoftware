@@ -18,10 +18,10 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
 mcFolders = [
-           'ZJetsToLL_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZJetsToLL_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'ZJetsToLL_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'ZJetsToLL_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'ZJetsToLL_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'ZJetsToLL_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
@@ -44,5 +44,5 @@ if centerOfMassEnergy == 7:
     datasetInfoFile = toolsFolder + "python/DataSetInfo.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
-nTuple_version = 7
+nTuple_version = 8
     

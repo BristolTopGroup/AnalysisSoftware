@@ -19,19 +19,19 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 mcFolders = [
            #single top samples
-           'Tbar_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'Tbar_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'T_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'T_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'Tbar_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'Tbar_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'T_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'T_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #di-boson samples
-           'WW_TuneZ2_7TeV_pythia6_tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'WZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'WW_TuneZ2_7TeV_pythia6_tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'WZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #rare processes
-           'TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'TTbarInclWIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v7b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
+           'TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'TTbarInclWIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]
@@ -54,4 +54,4 @@ if centerOfMassEnergy == 7:
     datasetInfoFile = toolsFolder + "python/DataSetInfo.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
-nTuple_version = 7
+nTuple_version = 8
