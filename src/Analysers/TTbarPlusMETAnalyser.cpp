@@ -810,7 +810,7 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		metAnalyserqcdNonIsoMuonSelection_(
 				new METAnalyser(histMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/MET")), //
 		qcdNonIsoElectronAnalyser_(
-				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCD non iso e+jets/Electron")), //
+				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCD non iso e+jets/Electron", true)), //
 		qcdNonIsoNonIsoTriggerElectronAnalyser_(
 				new ElectronAnalyser(histMan,
 						histogramFolder + "/EPlusJets/QCD non iso e+jets, non iso trigger/Electron", true)), //
@@ -819,7 +819,7 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		qcdConversionsElectronAnalyser_(
 				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCDConversions/Electron", true)), //
 		qcdEPlusjetsPFRelIsoElectronAnalyser_(
-				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCD e+jets PFRelIso/Electron")), //
+				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCD e+jets PFRelIso/Electron", true)), //
 		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_(
 				new ElectronAnalyser(histMan,
 						histogramFolder + "/EPlusJets/QCD e+jets PFRelIso, non iso trigger/Electron", true)), //
