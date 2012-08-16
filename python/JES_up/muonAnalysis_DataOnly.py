@@ -1,4 +1,7 @@
 toolsFolder = 'BristolAnalysis/Tools/'
+import os
+if os.environ.has_key('toolsFolder'):
+    toolsFolder = os.environ['toolsFolder']
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_68000microbarn.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
@@ -13,7 +16,7 @@ useHitFit = False
 produceFitterASCIIoutput = False
 
 inputFiles = []
-data_path = '/storage/TopQuarkGroup/data/2011/MuHad/'
+data_path = '/storage/TopQuarkGroup/data/2011/SingleMu/'
 filetype = '*.root'
 
 dataFiles = ['nTuple_v8b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',

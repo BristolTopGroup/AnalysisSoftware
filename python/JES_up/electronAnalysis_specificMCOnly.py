@@ -1,4 +1,7 @@
 toolsFolder = 'BristolAnalysis/Tools/'
+import os
+if os.environ.has_key('toolsFolder'):
+    toolsFolder = os.environ['toolsFolder']
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_68000microbarn.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
@@ -20,17 +23,17 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 mcFolders = [
              #b-quark -> X e nu enriched samples
-           'QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #EM enriched samples
-           'QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            #photon + jets
-           'GJets_TuneZ2_40_HT_100_7TeV-madgraph/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'GJets_TuneZ2_100_HT_200_7TeV-madgraph/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'GJets_TuneZ2_200_HT_inf_7TeV-madgraph/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
+           'GJets_TuneZ2_40_HT_100_7TeV-madgraph/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'GJets_TuneZ2_100_HT_200_7TeV-madgraph/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'GJets_TuneZ2_200_HT_inf_7TeV-madgraph/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'
            ]
 
 mcFolders = [mc_path + path + '/' + filetype for path in mcFolders]

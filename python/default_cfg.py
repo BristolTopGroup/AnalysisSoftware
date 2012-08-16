@@ -1,4 +1,7 @@
 toolsFolder = 'BristolAnalysis/Tools/'
+import os
+if os.environ.has_key('toolsFolder'):
+    toolsFolder = os.environ['toolsFolder']
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/PileUp_2011_truth_finebin.root"
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
@@ -11,7 +14,7 @@ useHitFit = False
 produceFitterASCIIoutput = False
 
 #input files for analysis
-inputFiles = ['/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v8b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/ElectronHad_*001.root']
+inputFiles = ['/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v8c_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/ElectronHad_*001.root']
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
 TQAFPath = ""
