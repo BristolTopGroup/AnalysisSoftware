@@ -27,6 +27,10 @@ Jet::Jet() :
 		pyRaw(-9999), //
 		pzRaw(-9999), //
 		JECUncertainty(-9999), //
+		l1OffJEC(0), //
+		l2l3ResJEC(0), //
+		l2RelJEC(0), //
+		l3AbsJEC(0), //
 		partonFlavour_(0) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
@@ -49,6 +53,10 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		pyRaw(-9999), //
 		pzRaw(-9999), //
 		JECUncertainty(-9999), //
+		l1OffJEC(0), //
+		l2l3ResJEC(0), //
+		l2RelJEC(0), //
+		l3AbsJEC(0), //
 		partonFlavour_(0) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {

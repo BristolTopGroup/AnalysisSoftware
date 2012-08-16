@@ -680,7 +680,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdMuPlusjetsPFRelIsoMuonAnalyser_->setScale(bjetWeight*efficiencyCorrection);
+			qcdMuPlusjetsPFRelIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyse(event);
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
@@ -699,7 +699,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdPFRelIsoBinnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight*efficiencyCorrection);
+						qcdPFRelIsoBinnedMuonAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						qcdPFRelIsoBinnedMuonAnalysers_.at(analyserIndex)->analyseMuon(signalMuon, event->weight());
 					}
 				}
@@ -814,7 +814,8 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		qcdNonIsoNonIsoTriggerElectronAnalyser_(
 				new ElectronAnalyser(histMan,
 						histogramFolder + "/EPlusJets/QCD non iso e+jets, non iso trigger/Electron", true)), //
-		qcdNonIsoMuonAnalyser_(new MuonAnalyser(histMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Muon", true)), //
+		qcdNonIsoMuonAnalyser_(
+				new MuonAnalyser(histMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Muon", true)), //
 		metAnalyserqcdConversionSelection_(new METAnalyser(histMan, histogramFolder + "/EPlusJets/QCDConversions/MET")), //
 		qcdConversionsElectronAnalyser_(
 				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCDConversions/Electron", true)), //

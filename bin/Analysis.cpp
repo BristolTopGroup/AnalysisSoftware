@@ -78,19 +78,17 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 
 void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
-	weight = weights->getWeight(currentEvent->getDataType());
+	weight = 1.;
+
 	if (!currentEvent->isRealData()) {
+		weight = weights->getWeight(currentEvent->getDataType());
 		//TODO: fix this dirty little thing
-		if (Globals::NTupleVersion >= 6)
-			pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
-		else
-			pileUpWeight = 1.;
+		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
 		weight *= pileUpWeight;
-		if (Globals::pdfWeightNumber != 0){
+		if (Globals::pdfWeightNumber != 0) {
 			try {
-				weight *= currentEvent->PDFWeights().at(Globals::pdfWeightNumber)/currentEvent->PDFWeights().at(0);
-			}
-			catch( exception& e ){
+				weight *= currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0);
+			} catch (exception& e) {
 				cout << "PDF weight assigning exception: " << e.what() << endl;
 			}
 		}
@@ -268,7 +266,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		mvAnalyser(new MVAnalyser(histMan)), //
 		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
-		vertexAnalyser(new VertexAnalyser(histMan)){
+		vertexAnalyser(new VertexAnalyser(histMan)) {
 	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
 		ePlusJetsCutflow[cut] = 0;
 		ePlusJetsSingleCuts[cut] = 0;

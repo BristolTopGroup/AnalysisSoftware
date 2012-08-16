@@ -21,9 +21,9 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 
 
 mcFolders = [
-           'WJetsToLNu_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'WJetsToLNu_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
-           'WJetsToLNu_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'WJetsToLNu_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'WJetsToLNu_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
+           'WJetsToLNu_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            'WJetsToLNu_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets',
            ]
 

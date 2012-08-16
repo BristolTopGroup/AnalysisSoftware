@@ -104,14 +104,6 @@ const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes 
 
 		} };
 
-const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> suffixes = { {
-//MET names as stored in the nTuples
-		"",//
-		"True", //
-		"", "", "", "", "", "", "", "", "", "", "", "", "", ""
-
-} };
-
 const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
 //MET names as used in output file for the used (central) MET
 		"PFMET",//

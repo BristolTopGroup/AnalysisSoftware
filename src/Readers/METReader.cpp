@@ -20,13 +20,17 @@ METReader::METReader() :
 }
 
 METReader::METReader(TChainPointer input, METAlgorithm::value algo) :
-		exReader(input, METAlgorithm::prefixes.at(algo) + ".Ex" + METAlgorithm::suffixes.at(algo)), //
-		eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey" + METAlgorithm::suffixes.at(algo)), //
-		multiExReader(input, METAlgorithm::prefixes.at(algo) + ".Ex" + METAlgorithm::suffixes.at(algo)), //
-		multiEyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey" + METAlgorithm::suffixes.at(algo)), //
-		significanceReader(input, METAlgorithm::prefixes.at(algo) + ".Significance" + METAlgorithm::suffixes.at(algo)), //
+		exReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"), //
+		eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"), //
+		multiExReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"), //
+		multiEyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"), //
+		significanceReader(input, METAlgorithm::prefixes.at(algo) + ".Significance"), //
 		met(), //
 		usedAlgorithm(algo) {
+	if (Globals::NTupleVersion < 8 && usedAlgorithm == METAlgorithm::GenMET) {
+		multiExReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".ExTrue");
+		multiEyReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".EyTrue");
+	}
 
 }
 

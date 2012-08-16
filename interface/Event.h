@@ -38,27 +38,11 @@ protected:
 	VertexCollection goodVertices;
 	TrackCollection tracks;
 	ElectronCollection allElectrons;
-//	ElectronCollection goodElectrons;
-//	ElectronCollection goodIsolatedElectrons;
-//	ElectronCollection goodPFIsolatedElectrons;
-//	ElectronCollection goodPFNonIsolatedElectrons;
-//	ElectronCollection looseElectrons;
-//	ElectronCollection qcdElectrons;
 
 	JetCollection allJets;
 	JetCollection genJets;
-//	JetCollection goodJets;
-//	JetCollection goodBJets;
-//	JetCollection goodElectronCleanedJets;
-//	JetCollection goodElectronCleanedBJets;
-//	JetCollection goodMuonCleanedJets;
-//	JetCollection goodMuonCleanedBJets;
 
 	MuonCollection allMuons;
-//	MuonCollection goodMuons;
-//	MuonCollection goodIsolatedMuons;
-//	MuonCollection goodPFIsolatedMuons;
-//	MuonCollection looseMuons;
 
 	MCParticleCollection genParticles;
 
@@ -121,7 +105,6 @@ public:
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
 	void setPUWeight3BX(double puweight);
-//	void setPUWeight3D(double puweight);
 	void setPUWeightShiftUp(double puweight);
 	void setPUWeightShiftDown(double puweight);
 	void setCSCTightBeamHaloFilter(bool result);
@@ -162,7 +145,6 @@ public:
 	unsigned long lumiblock() const;
 	double weight() const;
 	double PileUpWeight() const;
-//	std::vector<double> BjetWeights(const JetCollection bjets) const;
 	void inspect() const;
 	bool HLT(HLTriggers::value trigger) const;
 	int HLTPrescale(HLTriggers::value trigger) const;
@@ -183,7 +165,6 @@ public:
 	double PUWeight3BX() const;
 	double PUWeightShiftUp() const;
 	double PUWeightShiftDown() const;
-//	double getBTagCorrectionFactor(const JetCollection jets) const;
 
 	bool passesCSCTightBeamHaloFilter() const;
 	bool passesHBHENoiseFilter() const;

@@ -91,8 +91,8 @@ datasetInfo['TTJets184'] = {"cross-section": 157.5, "NumberOfProcessedEvents":0}
 #systematic samples
 datasetInfo['TTJets-matchingdown'] = {"cross-section": 764., "NumberOfProcessedEvents":1607808}
 datasetInfo['TTJets-matchingup'] = {"cross-section": 172., "NumberOfProcessedEvents":4029823}
-datasetInfo['TTJets-scaledown'] = {"cross-section": 552., "NumberOfProcessedEvents":967055}
-datasetInfo['TTJets-scaleup'] = {"cross-section": 200., "NumberOfProcessedEvents":930483}
+datasetInfo['TTJets-scaledown'] = {"cross-section": 552., "NumberOfProcessedEvents":3990597}
+datasetInfo['TTJets-scaleup'] = {"cross-section": 200., "NumberOfProcessedEvents":3603380}
 
 datasetInfo['WJets-matchingdown'] = {"cross-section": 42352, "NumberOfProcessedEvents":9954652}
 datasetInfo['WJets-matchingup'] = {"cross-section": 11439, "NumberOfProcessedEvents":10459163}
@@ -101,7 +101,7 @@ datasetInfo['WJets-scaleup'] = {"cross-section": 17859, "NumberOfProcessedEvents
 
 datasetInfo['ZJets-matchingdown'] = {"cross-section": 3048., "NumberOfProcessedEvents":1614808}
 datasetInfo['ZJets-matchingup'] = {"cross-section": 3048., "NumberOfProcessedEvents":1641121}
-datasetInfo['ZJets-scaledown'] = {"cross-section": 3048., "NumberOfProcessedEvents":1646516}
+datasetInfo['ZJets-scaledown'] = {"cross-section": 3048., "NumberOfProcessedEvents":1619875}
 datasetInfo['ZJets-scaleup'] = {"cross-section": 3048., "NumberOfProcessedEvents":1592742}
 
 #Data and not used samples
