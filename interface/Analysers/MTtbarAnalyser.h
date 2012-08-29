@@ -11,9 +11,11 @@
 #include "BasicAnalyser.h"
 #include "../TtbarHypothesis.h"
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
+#include "../Selections/TopPairMuPlusJetsReferenceSelection.h"
 #include "../Selections/QCDAntiIDEPlusJetsSelection.h"
 #include "../Selections/QCDConversionsSelection.h"
 #include "../Selections/QCDNonIsolatedElectronSelection.h"
+#include "../Selections/QCDNonIsolatedMuonSelection.h"
 #include <string>
 namespace BAT {
 
@@ -35,7 +37,9 @@ protected:
 	void analyseFourJetChi2(const EventPtr);
 	void analyseThreeJetChi2(const EventPtr);
 	void analyseFourJetTopMassDifference(const EventPtr);
-	void analyseFourJetChi2QCDConversionBackground(const EventPtr);
+	void analyseFourJetChi2QCDBackground(const EventPtr);
+	void analyseThreeJetChi2QCDBackground(const EventPtr);
+	void analyseFourJetTopMassDifferenceQCDBackground(const EventPtr);
 	void fillHistograms(std::string subcollection, std::string suffix = "");
 
 	void createHistogramsFor(std::string collection);
@@ -44,10 +48,12 @@ protected:
 	double weight;
 	std::string currentType;
 	TtbarHypothesisCollection allSolutions;
-	TopPairEPlusJetsReferenceSelectionPointer topEplusJetsRefSelection_;
-	QCDAntiIDEPlusJetsSelectionPointer qcdAntiIDSelection_;
-	QCDConversionsSelectionPointer qcdConversionSelection_;
-	QCDNonIsolatedElectronSelectionPointer qcdNonIsoSelection_;
+	TopPairEPlusJetsReferenceSelectionPointer topElectronPlusJetsRefSelection_;
+	TopPairMuPlusJetsReferenceSelectionPointer topMuonPlusJetsRefSelection_;
+	QCDAntiIDEPlusJetsSelectionPointer qcdElectronAntiIDSelection_;
+	QCDConversionsSelectionPointer qcdElectronConversionSelection_;
+	QCDNonIsolatedElectronSelectionPointer qcdElectronNonIsoSelection_;
+	QCDNonIsolatedMuonSelectionPointer qcdMuonNonIsoSelection_;
 
 };
 

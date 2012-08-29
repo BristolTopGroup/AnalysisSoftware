@@ -67,8 +67,9 @@ int main(int argc, char **argv) {
 	myAnalysis->finishAnalysis();
 	watch.Stop();
 	watch.Print();
-	cout << "Analysis finished" << endl;
-
+	cout << "==========================================================" << endl;
+	cout << "\t \t Analysis finished" << endl;
+	cout << "==========================================================" << endl;
 	return 0;
 }
 

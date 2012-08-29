@@ -31,9 +31,6 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				"loose muon veto", //
 				"di-lepton veto", //
 				"Conversion veto", //
-//				"Conversion finder (partner track)", //
-//				">= 1 jets", //
-//				">= 2 jets", //
 				">= 3 jets", //
 				">= 4 jets", //
 				">=1 CSV b-tag", //

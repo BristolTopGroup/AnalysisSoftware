@@ -204,7 +204,7 @@ def getBjetBin(histname):
     return '0orMoreBtag'
 
 def getChannel(histname):
-    if 'Muon' in histname:
+    if 'Muon' in histname or 'MuPlusJets' in histname:
         return '#mu'
     else:
         return 'e'

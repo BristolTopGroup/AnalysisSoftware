@@ -27,7 +27,7 @@ datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":
 datasetInfo['W1Jet'] = {"cross-section": 4480., "NumberOfProcessedEvents":12594068 }
 datasetInfo['W2Jets'] = {"cross-section": 1674., "NumberOfProcessedEvents":25232812}
 datasetInfo['W3Jets'] = {"cross-section": 484.7, "NumberOfProcessedEvents":7685939}
-datasetInfo['W4Jets'] = {"cross-section": 211.7, "NumberOfProcessedEvents":13063262}
+datasetInfo['W4Jets'] = {"cross-section": 211.7, "NumberOfProcessedEvents":13071340}
 
 datasetInfo['DYJetsToLL'] = {"cross-section": 3048., "NumberOfProcessedEvents":36222153}
 

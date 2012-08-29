@@ -118,7 +118,12 @@ else:
     sys.exit()
     
 settings = getAnalysisSettings(analysisMode)
-    
+if sample in ['TTJets-mcatnlo','TTJets-pythia','TTJets-powheg']:
+    suffixes = {'TTJets-mcatnlo':'MCatNLO', 'TTJets-pythia':'PYTHIA6','TTJets-powheg':'POWHEG'
+    if settings['custom_file_suffix'] == "":
+        settings['custom_file_suffix'] = suffixes[sample]
+    else:
+        settings['custom_file_suffix'] = suffixes[sample] + '_' + settings['custom_file_suffix']    
     
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']

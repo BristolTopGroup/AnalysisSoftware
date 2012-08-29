@@ -5,19 +5,36 @@ Created on Nov 23, 2011
 
 Email: Lukasz.Kreczko@cern.ch
 '''
-import os
-from ROOT import *
+from ROOT import TLegend, TCanvas, TPaveText, gROOT
 import Styles
+import FileUtilities
+qcd_samples = [ 'QCD_Pt-20to30_BCtoE',
+                 'QCD_Pt-30to80_BCtoE',
+                 'QCD_Pt-80to170_BCtoE',
+                 'QCD_Pt-20to30_EMEnriched',
+                 'QCD_Pt-30to80_EMEnriched',
+                 'QCD_Pt-80to170_EMEnriched',
+                 'GJets_HT-40To100',
+                 'GJets_HT-100To200',
+                 'GJets_HT-200']
+singleTop_samples = [ 'T_tW-channel',
+                 'T_t-channel',
+                 'T_s-channel',
+                 'Tbar_tW-channel',
+                 'Tbar_t-channel',
+                 'Tbar_s-channel']
+wplusjets_samples = [ 'W1Jet', 'W2Jets', 'W3Jets', 'W4Jets']
+diboson_samples = [ 'WWtoAnything', 'WZtoAnything', 'ZZtoAnything']
+signal_samples = [ 'TTJet', 'SingleTop']
+allMC_samples = [ 'TTJet', 'DYJetsToLL', 'QCD', 'Di-Boson', 'W+Jets', 'SingleTop']
 
-defaultCanvasWidth = 1200
-defaultCanvasHeight = 900
+defaultCanvasWidth = 1600
+defaultCanvasHeight = 1200
 
 class Plot():
     '''
     Plot unites the tuning parameters for plot style
     '''
-
-
     def __init__(self):
         self.rebin = 1
         self.scale = 1
@@ -49,10 +66,10 @@ def compareShapes(histograms=[], histogramlables=[], styles=[], maxfactor = 1.3)
         AddLegendEntry(hist, label, "f")
         
     index = 0
-    max = getMax(histograms)
+    maximum = getMax(histograms)
     for hist in histograms:
         if index == 0:
-            hist.GetYaxis().SetRangeUser(0, max*maxfactor)
+            hist.GetYaxis().SetRangeUser(0, maximum*maxfactor)
             hist.Draw('histe')
         else:
             hist.Draw('histe same')
@@ -101,13 +118,9 @@ def saveAs(canvas, name, outputFormats=['png'], outputFolder=''):
         fullFileName = outputFolder + name + '.' + outputFormat
         if '/' in fullFileName:
             path = fullFileName[:fullFileName.rfind('/')]
-            createFolderIfDoesNotExist(path)
+            FileUtilities.createFolderIfDoesNotExist(path)
         
         canvas.SaveAs(fullFileName)
-        
-def createFolderIfDoesNotExist(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
         
 def normalise(histogram):
     if histogram and histogram.Integral() > 0:
@@ -220,12 +233,10 @@ def setStyle():
 def getMax(histograms):
     maximum = 0
     for hist in histograms:
-        max = hist.GetMaximum()
-        if max > maximum:
-            maximum = max
-    return max
-
-
+        current_max = hist.GetMaximum()
+        if current_max > maximum:
+            maximum = current_max
+    return maximum
 #Usage:
 #histograms['summedSample'] = sumSamples(histograms, ['sample1','sample2', 'sample3'])
 def sumSamples(histograms = {}, samplesToSum = []):
@@ -253,5 +264,5 @@ def sumSamples(histograms = {}, samplesToSum = []):
         return summedHist
             
         
-def plot(histogram, file, ):
+def plot(histogram, outputFile, ):
     pass

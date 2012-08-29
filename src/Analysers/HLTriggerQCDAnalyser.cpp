@@ -263,45 +263,45 @@ HLTriggerQCDAnalyser::HLTriggerQCDAnalyser(HistogramManagerPtr histMan, std::str
 }
 
 HLTriggerQCDAnalyser::~HLTriggerQCDAnalyser() {
-	cout << "QCD non-iso selection" << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << QCDNonIsoRegionCount_CaloIdVT_TrkIdT_
-			<< endl;
-
-	cout << "QCD anti-id selection" << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << QCDAntiIDRegionCount_CaloIdVT_TrkIdT_
-			<< endl;
-
-	cout << "Top signal selection" << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< TopSignalRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << TopSignalRegionCount_CaloIdVT_TrkIdT_
-			<< endl;
-
-	cout << "Top signal selection (>= 2 b-tags)" << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
-			<< TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
-	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: "
-			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_ << endl;
+//	cout << "QCD non-iso selection" << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << QCDNonIsoRegionCount_CaloIdVT_TrkIdT_
+//			<< endl;
+//
+//	cout << "QCD anti-id selection" << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << QCDAntiIDRegionCount_CaloIdVT_TrkIdT_
+//			<< endl;
+//
+//	cout << "Top signal selection" << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< TopSignalRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: " << TopSignalRegionCount_CaloIdVT_TrkIdT_
+//			<< endl;
+//
+//	cout << "Top signal selection (>= 2 b-tags)" << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet30: "
+//			<< TopSignal_TwoBtagsRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_ << endl;
+//	cout << "Events passing HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30: "
+//			<< TopSignal_TwoBtagsRegionCount_CaloIdVT_TrkIdT_ << endl;
 }
 
 bool HLTriggerQCDAnalyser::passesNonIsoWithoutBtagAndHLT(const EventPtr event) const {

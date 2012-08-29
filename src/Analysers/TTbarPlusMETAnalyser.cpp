@@ -39,7 +39,7 @@ void TTbarPlusMETAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		if (event->isRealData()) {
 			for (unsigned int index = 0; index <= numberOfBjets; ++index) {
 				if (index == numberOfBjets)
-					bjetWeights.push_back(1);
+					bjetWeights.push_back(1.);
 				else
 					bjetWeights.push_back(0);
 			}
