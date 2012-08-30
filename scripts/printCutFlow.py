@@ -21,7 +21,7 @@ import FILES
 
 cuts = None
 cuts_electrons = [
-        "All events after skim"
+        "All events after skim",
         "Event cleaning and High Level Trigger", 
                 "exactly one isolated electron", 
                 "loose muon veto", 
@@ -34,7 +34,7 @@ cuts_electrons = [
         ]
 
 cuts_muons = [
-        "All events after skim"
+        "All events after skim",
         "Event cleaning and High Level Trigger", 
                 "exactly one isolated muon", 
                 "loose lepton veto", 
