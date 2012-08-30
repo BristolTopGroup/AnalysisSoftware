@@ -696,13 +696,14 @@ def combineMeasurements(measurement_A, measurement_B):
     error_A = measurement_A['error']
     error_B = measurement_B['error']
     combined_value = value_A + value_B
-    relError_A = 0
-    if not value_A == 0:
-        relError_A = error_A/value_A
-    relError_B = 0
-    if not value_B == 0:
-        relError_B = error_B/value_B
-    combined_error = sqrt(relError_A**2 + relError_B**2)*combined_value
+#    relError_A = 0
+#    if not value_A == 0:
+#        relError_A = error_A/value_A
+#    relError_B = 0
+#    if not value_B == 0:
+#        relError_B = error_B/value_B
+#    combined_error = sqrt(relError_A**2 + relError_B**2)*combined_value
+    combined_error = sqrt(error_A**2 + error_B**2)
     return {'value': combined_value, 'error':combined_error}
     
 def combineFits(measurement_A, measurement_B):
@@ -1400,12 +1401,9 @@ def printCrossSectionResultsForTTJetWithUncertanties(result,analysis, toFile=Tru
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-#        output_file = open(savePath + analysis + '_crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
-#        output_file.write(printout)
         for source, value in uncertainties.iteritems():
             printout += value
         fileutils.writeStringToFile(printout, savePath + analysis + '_crosssection_main_result' + unfolding + '_' + bjetbin + '.tex')
-#        output_file.close()
     else:
         print printout
         
@@ -1468,11 +1466,11 @@ def plotNormalisationResults(results, analysis):
                 template = templates[sample]
                 plot = TH1F(sample + metbin + bjetbin + measurement, sample, 13, 0, 2.6)
                 plot_template = TH1F(sample + metbin + bjetbin + measurement + '_template', sample, 13, 0, 2.6)
-                bin = 1
+                bin_i = 1
                 for value in template:
-                    plot.SetBinContent(bin, value)
-                    plot_template.SetBinContent(bin, value)
-                    bin += 1
+                    plot.SetBinContent(bin_i, value)
+                    plot_template.SetBinContent(bin_i, value)
+                    bin_i += 1
                 plot.Scale(result[sample]['value'])
     #            plot.Rebin(rebin)
                 plot.SetYTitle('Events/0.2')
@@ -1492,8 +1490,8 @@ def plotNormalisationResults(results, analysis):
 #            fit.SetLineColor(kViolet - 3)
 #            fit.SetLineWidth(5)
             c = TCanvas("Fit_" + metbin + bjetbin + measurement, "Differential cross section", 1600, 1200)
-            max = plots[used_data].GetMaximum()
-            plots[used_data].SetMaximum(max * 1.5)
+            max_y = plots[used_data].GetMaximum()
+            plots[used_data].SetMaximum(max_y * 1.5)
             plots[used_data].Draw('error')
             mcStack = THStack("MC", "MC")
     #        mcStack.Add(plots['Di-Boson']);
@@ -1520,8 +1518,11 @@ def plotNormalisationResults(results, analysis):
             channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
             if analysis == 'EPlusJets':
                 channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
-            else:
+            elif analysis == 'MuPlusJets':
                 channelLabel.AddText("#mu, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+            elif analysis == 'Combination':
+                channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+            
             mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} @ #sqrt{s} = 7 TeV" % (5000 / 1000));
                      
             mytext.SetFillStyle(0)
@@ -1579,6 +1580,8 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
     plotPOWHEG = TH1F("measurement_MC_POWHEG" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotPYTHIA6 = TH1F("measurement_MC_PYTHIA6" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
     plotnoCorr_mcatnlo = TH1F("measurement_MC_MCatNLO" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plot.GetXaxis().SetTitleSize(0.05)
+    plot.GetYaxis().SetTitleSize(0.05)
     plot.SetMinimum(0)
     plot.SetMaximum(80)
     plotMADGRAPH.SetLineColor(kRed + 1)
@@ -1603,25 +1606,25 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
         legend.AddEntry(plotPYTHIA6, 't#bar{t} (PYTHIA6)', 'l')
         legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (MC@NLO)', 'l')
     
-    bin = 1
+    bin_i = 1
     for metbin in metbins:
 #        width = metbin_widths[metbin]
         scale = 1# / width
         centralresult = result[metbin]['central']
-        plot.SetBinContent(bin, centralresult['value'] * scale)
+        plot.SetBinContent(bin_i, centralresult['value'] * scale)
         if compareToSystematic:
-            plotMADGRAPH.SetBinContent(bin, result[metbin]['TTJet scale -']['MADGRAPH'] * scale)
-            plotPOWHEG.SetBinContent(bin, result[metbin]['TTJet scale +']['MADGRAPH'] * scale)
-            plotPYTHIA6.SetBinContent(bin, result[metbin]['TTJet matching -']['MADGRAPH'] * scale)
-            plotnoCorr_mcatnlo.SetBinContent(bin, result[metbin]['TTJet matching +']['MADGRAPH'] * scale)
+            plotMADGRAPH.SetBinContent(bin_i, result[metbin]['TTJet scale -']['MADGRAPH'] * scale)
+            plotPOWHEG.SetBinContent(bin_i, result[metbin]['TTJet scale +']['MADGRAPH'] * scale)
+            plotPYTHIA6.SetBinContent(bin_i, result[metbin]['TTJet matching -']['MADGRAPH'] * scale)
+            plotnoCorr_mcatnlo.SetBinContent(bin_i, result[metbin]['TTJet matching +']['MADGRAPH'] * scale)
         else:
-            plotMADGRAPH.SetBinContent(bin, centralresult['MADGRAPH'] * scale)
-            plotPOWHEG.SetBinContent(bin, centralresult['POWHEG'] * scale)
-            plotPYTHIA6.SetBinContent(bin, centralresult['PYTHIA6'] * scale)
-            plotnoCorr_mcatnlo.SetBinContent(bin, centralresult['MCatNLO'] * scale)
-        bin += 1
+            plotMADGRAPH.SetBinContent(bin_i, centralresult['MADGRAPH'] * scale)
+            plotPOWHEG.SetBinContent(bin_i, centralresult['POWHEG'] * scale)
+            plotPYTHIA6.SetBinContent(bin_i, centralresult['PYTHIA6'] * scale)
+            plotnoCorr_mcatnlo.SetBinContent(bin_i, centralresult['MCatNLO'] * scale)
+        bin_i += 1
     plotAsym = TGraphAsymmErrors(plot)    
-    bin = 0
+    bin_i = 0
     for metbin in metbins:
 #        width = metbin_widths[metbin]
         scale = 1# / width
@@ -1629,9 +1632,9 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
         uncertainty = calculateTotalUncertainty(result[metbin], compareToSystematic)
         error_up = sqrt(centralresult['error'] ** 2 + uncertainty['Total+']['value'] ** 2) * scale
         error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2) * scale
-        plotAsym.SetPointEYhigh(bin, error_up)
-        plotAsym.SetPointEYlow(bin, error_down)
-        bin += 1
+        plotAsym.SetPointEYhigh(bin_i, error_up)
+        plotAsym.SetPointEYlow(bin_i, error_down)
+        bin_i += 1
     plot.Draw('P')
 #    gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
@@ -1642,10 +1645,12 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
     legend.Draw()
     mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
     channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
-    if analysis == 'MuPlusJets':
-        channelLabel.AddText("#mu, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
-    else:
+    if analysis == 'EPlusJets':
         channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+    elif analysis == 'MuPlusJets':
+        channelLabel.AddText("#mu, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+    elif analysis == 'Combination':
+        channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
     mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000 / 1000));
              
     mytext.SetFillStyle(0)
@@ -1714,14 +1719,13 @@ def printNormalisedCrossSectionResult(result, analysis, toFile=True):
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        prefix = analysis
-        output_file = open(savePath + prefix + '_normalised_crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file = open(savePath + analysis + '_normalised_crosssection_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         output_file.write(printout)
         output_file.close()
     else:
         print printout
         
-def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile=True):
+def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, analysis, toFile=True):
     global metbins, doBinByBinUnfolding
     printout = '\n'
     printout += '=' * 60
@@ -1763,10 +1767,7 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, toFile=Tr
         unfolding = '_unfolded'
         if not doBinByBinUnfolding:
             unfolding = ''
-        prefix = 'EPlusJets'
-        if not used_data == 'ElectronHad':
-            prefix = 'MuPlusJets'
-        output_file = open(savePath + prefix + '_normalised_crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
+        output_file = open(savePath + analysis + '_normalised_crosssection_main_result' + unfolding + '_' + bjetbin + '.tex', 'w')
         output_file.write(printout)
         header += '\\\\ \n'
         output_file.write(header)
@@ -1783,11 +1784,13 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
     
     arglist = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
-    plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma_{meas}}#frac{#partial#sigma}{#partial MET}[GeV^{-1}]', len(arglist) - 1, arglist)
-    plotMADGRAPH = TH1F("measurement_MC_MADGRAPH" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
-    plotPOWHEG = TH1F("measurement_MC_POWHEG" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
-    plotPYTHIA6 = TH1F("measurement_MC_PYTHIA6" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
-    plotnoCorr_mcatnlo = TH1F("measurement_MC_MCatNLO" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist) - 1, arglist)
+    plot = TH1F("measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist) - 1, arglist)
+    plotMADGRAPH = TH1F("measurement_MC_MADGRAPH" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist) - 1, arglist)
+    plotPOWHEG = TH1F("measurement_MC_POWHEG" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist) - 1, arglist)
+    plotPYTHIA6 = TH1F("measurement_MC_PYTHIA6" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist) - 1, arglist)
+    plotnoCorr_mcatnlo = TH1F("measurement_MC_MCatNLO" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist) - 1, arglist)
+    plot.GetXaxis().SetTitleSize(0.05)
+    plot.GetYaxis().SetTitleSize(0.05)
     plot.SetMinimum(0)
     plot.SetMaximum(0.02)
     plotMADGRAPH.SetLineColor(kRed + 1)
@@ -1858,8 +1861,10 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
     channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
     if analysis == 'EPlusJets':
         channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
-    else:
+    elif analysis == 'MuPlusJets':
         channelLabel.AddText("#mu, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+    elif analysis == 'Combination':
+        channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
     mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000 / 1000));
              
     mytext.SetFillStyle(0)
@@ -1881,6 +1886,121 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
     else:
         plotting.saveAs(c, analysis + '_diff_MET_norm_xsection' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
 
+def plotNormalisedCrossSectionResultsAllChannels(result_electron, result_muon, result_combined):
+    arglist_electron = array('d', [0, 20, 45, 65, 100, 145])
+    arglist_muon = array('d', [0, 30, 45, 75, 100, 155])
+    arglist_combined = array('d', [0, 25, 45, 70, 100, 150])
+    c = TCanvas("test", "Differential cross section", 1600, 1200)
+    plot_electron = TH1F("electron_measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist_electron) - 1, arglist_electron)
+    plot_muon = TH1F("muon_measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist_muon) - 1, arglist_muon)
+    plot_combined = TH1F("combined_measurement_" + bjetbin, 'Differential cross section; MET [GeV];#frac{1}{#sigma} #frac{#partial #sigma}{#partial MET} [GeV^{-1}]', len(arglist_combined) - 1, arglist_combined)
+    plotMADGRAPH = TH1F("measurement_MC_MADGRAPH" + bjetbin, 'Differential cross section; MET [GeV];#frac{#partial#sigma}{#partial MET}', len(arglist_combined) - 1, arglist_combined)
+    plot_combined.GetXaxis().SetTitleSize(0.05)
+    plot_combined.GetYaxis().SetTitleSize(0.05)
+    plot_combined.SetMinimum(0)
+    plot_combined.SetMaximum(0.02)
+    plot_combined.SetMarkerSize(1.2)
+    plot_combined.SetMarkerStyle(20)
+    
+    plot_electron.SetMarkerStyle(20);
+    plot_electron.SetMarkerColor(4)
+    plot_electron.SetLineColor(4)
+    plot_electron.SetMarkerSize(1.2)
+    
+    plot_muon.SetMarkerStyle(20);
+    plot_muon.SetMarkerColor(kAzure - 9)
+    plot_muon.SetLineColor(7)
+    plot_muon.SetMarkerSize(1.2)
+
+    plotMADGRAPH.SetLineColor(kRed + 1)
+
+    legend = plotting.create_legend(x0=0.6, y1=0.5)
+    legend.AddEntry(plot_electron, 'e+jets', 'LEP')
+    legend.AddEntry(plot_muon, '#mu+jets', 'LEP')
+    legend.AddEntry(plot_combined, 'combined', 'LEP')
+    legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'l')
+    bin_i = 1
+    for metbin in metbins:
+#        width = metbin_widths[metbin]
+        scale = 1# / width
+        centralresult_electron = result_electron[metbin]['central']
+        centralresult_muon = result_muon[metbin]['central']
+        centralresult_combined = result_combined[metbin]['central']
+        plot_electron.SetBinContent(bin_i, centralresult_electron['value'] * scale)
+        plot_muon.SetBinContent(bin_i, centralresult_muon['value'] * scale)
+        plot_combined.SetBinContent(bin_i, centralresult_combined['value'] * scale)
+        plotMADGRAPH.SetBinContent(bin_i, centralresult_combined['MADGRAPH'] * scale)
+        bin_i += 1    
+    plotAsym_electron = TGraphAsymmErrors(plot_electron)
+    plotAsym_muon = TGraphAsymmErrors(plot_muon)
+    plotAsym_combined = TGraphAsymmErrors(plot_combined)
+    
+    plotAsym_electron.SetMarkerStyle(20)
+    plotAsym_muon.SetMarkerStyle(20)
+    plotAsym_combined.SetMarkerStyle(20)
+    plotAsym_electron.SetMarkerSize(1.2)
+    plotAsym_muon.SetMarkerSize(1.2)
+    plotAsym_combined.SetMarkerSize(1.2)
+    
+    plotAsym_electron.SetLineColor(4)
+    plotAsym_muon.SetLineColor(kAzure - 9)
+    bin_i = 0
+    for metbin in metbins:
+#        width = metbin_widths[metbin]
+        scale = 1# / width
+        centralresult_electron = result_electron[metbin]['central']
+        centralresult_muon = result_muon[metbin]['central']
+        centralresult_combined = result_combined[metbin]['central']
+        
+        uncertainty_electron = calculateTotalUncertainty(result_electron[metbin])
+        error_up_electron = sqrt(centralresult_electron['error'] ** 2 + uncertainty_electron['Total+']['value'] ** 2) * scale
+        error_down_electron = sqrt(centralresult_electron['error'] ** 2 + uncertainty_electron['Total-']['value'] ** 2) * scale
+        
+        uncertainty_muon = calculateTotalUncertainty(result_muon[metbin])
+        error_up_muon = sqrt(centralresult_muon['error'] ** 2 + uncertainty_muon['Total+']['value'] ** 2) * scale
+        error_down_muon = sqrt(centralresult_muon['error'] ** 2 + uncertainty_muon['Total-']['value'] ** 2) * scale
+        
+        uncertainty_combined = calculateTotalUncertainty(result_combined[metbin])
+        error_up_combined = sqrt(centralresult_combined['error'] ** 2 + uncertainty_combined['Total+']['value'] ** 2) * scale
+        error_down_combined = sqrt(centralresult_combined['error'] ** 2 + uncertainty_combined['Total-']['value'] ** 2) * scale
+
+        plotAsym_electron.SetPointEYhigh(bin_i, error_up_electron)
+        plotAsym_electron.SetPointEYlow(bin_i, error_down_electron)
+        
+        plotAsym_muon.SetPointEYhigh(bin_i, error_up_muon)
+        plotAsym_muon.SetPointEYlow(bin_i, error_down_muon)
+        
+        plotAsym_combined.SetPointEYhigh(bin_i, error_up_combined)
+        plotAsym_combined.SetPointEYlow(bin_i, error_down_combined)
+        bin_i += 1 
+    plot_combined.Draw('P')
+#    gStyle.SetErrorX(0.4)
+    plotMADGRAPH.Draw('hist same')
+    plotAsym_electron.Draw('same P')
+    plotAsym_muon.Draw('same P')
+    plotAsym_combined.Draw('same P')
+    legend.Draw()
+    mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
+    channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+    channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
+    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5000 / 1000));
+             
+    mytext.SetFillStyle(0)
+    mytext.SetBorderSize(0)
+    mytext.SetTextFont(42)
+    mytext.SetTextAlign(13)
+    
+    channelLabel.SetFillStyle(0)
+    channelLabel.SetBorderSize(0)
+    channelLabel.SetTextFont(42)
+    channelLabel.SetTextAlign(13)
+    mytext.Draw()
+    channelLabel.Draw()
+    unfolding = '_unfolded'
+    if not doBinByBinUnfolding:
+        unfolding = ''
+    plotting.saveAs(c, 'AllChannels_diff_MET_norm_xsection' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
+    
 def getMeasurementAndErrors(input_result):
     result = {}
 #    skipErrors = ['PDFWeights_%d' % index for index in range(1, 45)]
@@ -2051,6 +2171,8 @@ if __name__ == '__main__':
     printNormalisedCrossSectionResultsForTTJetWithUncertanties(normalised_crosssection_result_combined, 'Combination')
     plotNormalisedCrossSectionResults(normalised_crosssection_result_combined, 'Combination')
     plotNormalisedCrossSectionResults(normalised_crosssection_result_combined, 'Combination', compareToSystematic=True)
+    
+    plotNormalisedCrossSectionResultsAllChannels(normalised_crosssection_result_electron, normalised_crosssection_result_muon, normalised_crosssection_result_combined)
     
     saveAsJSON(result=getMeasurementAndErrors(normalisation_result_electron), filename="EPlusJets_normalisation_result")
     saveAsJSON(result=getMeasurementAndErrors(crosssection_result_electron), filename= "EPlusJets_crosssection_result")
