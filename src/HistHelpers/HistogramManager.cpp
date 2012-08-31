@@ -302,8 +302,9 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 void HistogramManager::writeToDisk() {
 	for (unsigned type = 0; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes.at(type)) {
-			createJetSummedHistograms((DataType::value) type);
-			createBJetSummedHistograms((DataType::value) type);
+			//disable them for now
+//			createJetSummedHistograms((DataType::value) type);
+//			createBJetSummedHistograms((DataType::value) type);
 
 			for (unordered_map<std::string, TH1Array>::iterator iter = collection1D.begin(); iter != collection1D.end();
 					++iter) {
