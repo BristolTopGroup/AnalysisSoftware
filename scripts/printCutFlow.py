@@ -17,31 +17,32 @@ from ROOT import *
 import tools.ROOTFileReader as FileReader
 import tools.PlottingUtilities as plotting
 import FILES
-
+from math import sqrt
+import QCDRateEstimation
 
 cuts = None
 cuts_electrons = [
-        "All events after skim",
-        "Event cleaning and High Level Trigger", 
-                "exactly one isolated electron", 
-                "loose muon veto", 
-                "di-lepton veto", 
-                "Conversion veto", 
-                ">= 3 jets", 
-                ">= 4 jets", 
-                ">=1 CSV b-tag", 
-                ">=2 CSV b-tag" 
+        "All events after skim",#
+        "Event cleaning and High Level Trigger",#
+                "exactly one isolated electron",#
+                "loose muon veto",#
+                "di-lepton veto",#
+                "Conversion veto",#
+                ">= 3 jets",#
+                ">= 4 jets",#
+                ">=1 CSV b-tag",#
+                ">=2 CSV b-tag" #
         ]
 
 cuts_muons = [
-        "All events after skim",
-        "Event cleaning and High Level Trigger", 
-                "exactly one isolated muon", 
-                "loose lepton veto", 
-                "di-lepton veto", 
-                ">= 3 jets", 
-                ">= 4 jets", 
-                ">=1 CSV b-tag", 
+        "All events after skim",#
+        "Event cleaning and High Level Trigger",#
+                "exactly one isolated muon",#
+                "loose lepton veto",#
+                "di-lepton veto",#
+                ">= 3 jets",#
+                ">= 4 jets",#
+                ">=1 CSV b-tag",#
                 ">=2 CSV b-tag"  
         ]
 
@@ -51,53 +52,84 @@ def printCutFlow(hist, analysis):
     if 'Mu' in analysis:
         used_data = 'SingleMu'
         lepton = 'Muon/muon'
-    hist_1mBtag =  'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/' + lepton + '_AbsEta_1orMoreBtag'
+    hist_1mBtag = 'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/' + lepton + '_AbsEta_1orMoreBtag'
     hist_2mBtag = 'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/' + lepton + '_AbsEta_2orMoreBtags'
-    hists = [hist, #due to b-tag scale factors these are not as simple any more
+    hist_names = [hist, #due to b-tag scale factors these are not as simple any more
              hist_1mBtag,
              hist_2mBtag
              ]
-    hists = FileReader.getHistogramsFromFiles(hists, FILES.files)
+    hists = FileReader.getHistogramsFromFiles(hist_names, FILES.files)
+    for sample in hists.keys():
+        for histname in hists[sample].keys():
+            hists[sample][histname].Sumw2()
     hists['QCD'] = plotting.sumSamples(hists, plotting.qcd_samples)
     hists['SingleTop'] = plotting.sumSamples(hists, plotting.singleTop_samples)
     hists['Di-Boson'] = plotting.sumSamples(hists, plotting.diboson_samples)
     hists['W+Jets'] = plotting.sumSamples(hists, plotting.wplusjets_samples)
-    hists['SumMC'] = plotting.sumSamples(hists, plotting.allMC_samples)
+#    hists['SumMC'] = plotting.sumSamples(hists, plotting.allMC_samples)
     
     header = "| Step | TTJet | W+jets | DY + Jets | single top | QCD | Sum MC | Data |"
-    row = " | %s  |  %d |  %d |  %d |  %d |  %d|  %d |  %d | "
+    row = " | %s  |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d | "
     print header
     
-    numbers = getEventNumbers(hists, hist, hist_1mBtag, hist_2mBtag)# + '_0orMoreBtag')
+    numbers, errors = getEventNumbers(hists, hist, hist_1mBtag, hist_2mBtag)# + '_0orMoreBtag')
+    
+
     for step in range(len(cuts)):
         nums = numbers[step]
+        errs = errors[step]
+        if analysis == 'EPlusJets' and step >= len(cuts) - 3:#have only estimates for >= 4 jet and beyond
+            histForEstimation  = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_0orMoreBtag'
+            if step == len(cuts) - 2:
+                histForEstimation  = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_1orMoreBtag'
+            if step == len(cuts) - 1:
+                histForEstimation  = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_2orMoreBtags'
+            estimate = QCDRateEstimation.estimateQCDWithRelIso(FILES.files, histForEstimation)
+            nums['QCD'], errs['QCD'] = estimate['estimate'], estimate['absoluteError'] 
+            
         sumMC = nums['TTJet'] + nums['W+Jets'] + nums['DYJetsToLL'] + nums['SingleTop'] + nums['QCD'] + nums['Di-Boson']
-        print row % (cuts[step], nums['TTJet'], nums['W+Jets'], nums['DYJetsToLL'], nums['SingleTop'], nums['QCD'], sumMC, nums[used_data])
+        sumMC_err = errs['TTJet'] + errs['W+Jets'] + errs['DYJetsToLL'] + errs['SingleTop'] + errs['QCD'] + errs['Di-Boson']
+        print row % (cuts[step], nums['TTJet'], errs['TTJet'], nums['W+Jets'], errs['W+Jets'], nums['DYJetsToLL'], errs['DYJetsToLL'], 
+                     nums['SingleTop'], errs['SingleTop'], nums['QCD'], errs['QCD'], sumMC, sumMC_err, nums[used_data])
 
 def getEventNumbers(hists, histname, hist_1mBtag, hist_2mBtag):        
     eventNumbers = []
+    errorValues = []
     for step in range(len(cuts)):
         events = {}
+        errors = {}
         for sample in hists.keys():
             events[sample] = hists[sample][histname].GetBinContent(step + 1)
-#            if step == len(cuts) - 2:
-#                events[sample] = hists[sample][hist_1mBtag].Integral()
-#            if step == len(cuts) - 1:
-#                events[sample] = hists[sample][hist_2mBtag].Integral()
+            errors[sample] = hists[sample][histname].GetBinError(step + 1)
+            if step == len(cuts) - 2:
+                events[sample] = hists[sample][hist_1mBtag].Integral()
+                entries = hists[sample][hist_1mBtag].GetEntries()
+                if not entries == 0:
+                    errors[sample] = sqrt(entries)/entries*events[sample]
+                else:
+                    errors[sample] = 0
+            if step == len(cuts) - 1:
+                events[sample] = hists[sample][hist_2mBtag].Integral()
+                entries = hists[sample][hist_2mBtag].GetEntries()
+                if not entries == 0:
+                    errors[sample] = sqrt(entries)/entries*events[sample]
+                else:
+                    errors[sample] = 0
         eventNumbers.append(events)
-    return eventNumbers
+        errorValues.append(errors)
+    return eventNumbers, errorValues
     
 
 if __name__ == "__main__":
     gROOT.SetBatch(True)
     gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
     cuts = cuts_electrons
-    print '='*120
+    print '=' * 120
     print 'TTbarEplusJetsRefSelection'
     printCutFlow('EventCount/TTbarEplusJetsRefSelection', 'EPlusJets')
-    print '='*120
+    print '=' * 120
     cuts = cuts_muons
-    print '='*120
+    print '=' * 120
     print 'TTbarMuPlusJetsRefSelection'
     printCutFlow('EventCount/TTbarMuPlusJetsRefSelection', 'MuPlusJets')
-    print '='*120
+    print '=' * 120

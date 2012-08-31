@@ -291,7 +291,7 @@ if __name__ == '__main__':
                 ]
     
     
-    histBase = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_%s'
+    histBase = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_%s'
     results = {}
     mcresults = {}
     for btag in btagBins:
