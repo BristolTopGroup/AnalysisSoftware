@@ -47,10 +47,12 @@ cuts_muons = [
 
 def printCutFlow(hist, analysis):
     used_data = 'ElectronHad'
+    lepton = 'Electron/electron'
     if 'Mu' in analysis:
         used_data = 'SingleMu'
-    hist_1mBtag =  'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/MET/patMETsPFlow/MET_1orMoreBtag'
-    hist_2mBtag = 'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/MET/patMETsPFlow/MET_2orMoreBtags'
+        lepton = 'Muon/muon'
+    hist_1mBtag =  'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/' + lepton + '_AbsEta_1orMoreBtag'
+    hist_2mBtag = 'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/' + lepton + '_AbsEta_2orMoreBtags'
     hists = [hist, #due to b-tag scale factors these are not as simple any more
              hist_1mBtag,
              hist_2mBtag

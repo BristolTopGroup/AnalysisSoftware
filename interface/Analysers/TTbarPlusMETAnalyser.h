@@ -80,8 +80,8 @@ private:
 	std::vector<ElectronAnalyserPtr> qcdNoIsoNoIDBinnedElectronAnalysers_;
 	std::vector<MuonAnalyserPtr> qcdNonIsoBinnedMuonAnalysers_;
 	std::vector<MuonAnalyserPtr> qcdPFRelIsoBinnedMuonAnalysers_;
-	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_, jetAnalyserEPlusJetsRefSelection_noBtagWeights_;
-	JetAnalyserLocalPtr jetAnalyserMuPlusJetsRefSelection_, jetAnalyserMuPlusJetsRefSelection_noBtagWeights_;
+//	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_noBtagWeights_, jetAnalyserMuPlusJetsRefSelection_noBtagWeights_;
+	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_, jetAnalyserMuPlusJetsRefSelection_;
 };
 
 typedef boost::scoped_ptr<BAT::TTbarPlusMETAnalyser> TTbarPlusMETAnalyserLocalPtr;

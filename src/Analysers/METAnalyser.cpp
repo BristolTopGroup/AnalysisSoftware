@@ -8,7 +8,10 @@
 #include "../../interface/Analysers/METAnalyser.h"
 
 namespace BAT {
-
+void METAnalyser::analyse(const EventPtr event, const ParticlePointer particle) {
+	analyse(event);
+	analyseTransverseMass(event, particle);
+}
 void METAnalyser::analyse(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = event->weight() * prescale_ * scale_;
@@ -25,6 +28,9 @@ void METAnalyser::analyse(const EventPtr event) {
 		const METPointer met(event->MET(metType));
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 		histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);
+		if (index != METAlgorithm::GenMET && !event->isRealData()) {
+			histMan_->H2D_BJetBinned("RecoMET_vs_GenMET")->Fill(event->GenMET()->et(), met->et(), weight_);
+		}
 		//do not fill other histograms for met systematics
 		if (index > METAlgorithm::patType1p2CorrectedPFMet)
 			continue;
@@ -44,14 +50,16 @@ void METAnalyser::analyseTransverseMass(const EventPtr event, const ParticlePoin
 		METAlgorithm::value metType = (METAlgorithm::value) index;
 		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
 			continue;
-		bool isMCOnlyMET = MET::isMCOnlyMETType(index);
-		if (isMCOnlyMET && event->isRealData())
+		if (MET::isMCOnlyMETType(index) && event->isRealData())
 			continue; //skip MC only METs for real data
+
+		const METPointer met(event->MET(metType));
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
+//		histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);//alread filled in analyse
+
 		//do not fill histograms for met systematics
 		if (index > METAlgorithm::patType1p2CorrectedPFMet)
 			continue;
-		const METPointer met(event->MET(metType));
-		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 
 		double MT = transverseMass(met, particle);
 		double angle = met->angle(particle);
@@ -82,6 +90,11 @@ void METAnalyser::createHistograms() {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 		histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/1 GeV", 1000, 0, 1000);
+		if (index != METAlgorithm::GenMET) {
+			histMan_->addH2D_BJetBinned("RecoMET_vs_GenMET", "RecoMET_vs_GenMET; MET_{GEN} [GeV]; MET_{RECO} [GeV]", 60,
+					0, 300, 60, 0, 300);
+		}
+
 		//do not create other histograms for met systematics
 		if (index > METAlgorithm::patType1p2CorrectedPFMet)
 			continue;

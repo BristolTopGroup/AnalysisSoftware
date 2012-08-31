@@ -16,11 +16,12 @@ class METAnalyser: public BAT::BasicAnalyser {
 public:
 	METAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "METAnalysis");
 	virtual ~METAnalyser();
-
 	void analyse(const EventPtr);
-	void analyseTransverseMass(const EventPtr, const ParticlePointer);
+	void analyse(const EventPtr, const ParticlePointer);
 	double transverseMass(const METPointer, const ParticlePointer) const;
 	void createHistograms();
+protected:
+	void analyseTransverseMass(const EventPtr, const ParticlePointer);
 };
 
 typedef boost::scoped_ptr<METAnalyser> METAnalyserLocalPtr;

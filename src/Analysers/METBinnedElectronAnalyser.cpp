@@ -10,11 +10,17 @@
 namespace BAT {
 
 METBinnedElectronAnalyser::METBinnedElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :
-BasicAnalyser(histMan, histogramFolder){
+		BasicAnalyser(histMan, histogramFolder), //
+		metbins_() {
 
 }
 
 METBinnedElectronAnalyser::~METBinnedElectronAnalyser() {
 }
 
+void METBinnedElectronAnalyser::setMETbins(std::vector<double> metbins){
+	metbins_ = metbins;
+}
+
 } /* namespace BAT */
+

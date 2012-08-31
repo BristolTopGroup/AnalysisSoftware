@@ -6,8 +6,16 @@ Created on Aug 1, 2012
 Email: Lukasz.Kreczko@cern.ch
 '''
 
+import Styles
 import FILES
 import tools.ROOTFileReader as FileReader
+
+from ROOT import *
+#import HistGetter
+#import HistPlotter
+#import inputFiles
+from array import*
+import os
 
 samples = [
          'TTJet',
@@ -16,38 +24,140 @@ samples = [
          'MCatNLO'
          ]
 
-metbins = [
-           '0-25',
-               '25-45',
-               '45-70',
-               '70-100',
-               '100-inf'
-               ]
+metBins = [
+           '0-24',
+           '25-44',
+           '45-69',
+           '70-99',
+           '100-inf'
+           ]
 
+metTypes = [
+            'patMETsPFlow',
+            'patType1CorrectedPFMet',
+            'patType1p2CorrectedPFMet'
+            ]
+
+bJetBins = [
+           '0btag',
+           '0orMoreBtag',
+           '1btag',
+           '1orMoreBtag',
+           '2orMoreBtags'
+           ]
+
+outputFolder = "/storage/phjaj/Plots/" #REMEMBER TO CHANGE
+#saveAs = HistPlotter.saveAs
 
 if __name__ == "__main__":
-    base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
+    #base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
+    base = "METAnalysis/"
+
     
-    bjetbin = '2orMoreBtags'
-    metType = 'PFMET'
-    metType = 'patType1CorrectedPFMet'
-#    metType = 'patType1p2CorrectedPFMet'
+    gROOT.Reset()
+    gROOT.ForceStyle()
+    gROOT.SetBatch(True)
+    gROOT.ProcessLine('gErrorIgnoreLevel = 5001;')
+    
+    tdrStyle = Styles.tdrStyle()
+
+    gStyle.SetOptStat(0)
+
     for sample in samples:
+        path = outputFolder + base + sample
+        if not os.path.exists(path):
+            os.makedirs(path)
         print 'Sample = ', sample
-        for metbin in metbins:
-            genMET = base + 'Electron_%s_bin_%s/electron_eta_%s' % ('GenMET', metbin, bjetbin)
-            PFMET = base + 'Electron_%s_bin_%s/electron_eta_%s' % (metType, metbin, bjetbin)
-            genMETs = FileReader.getHistogramFromFile(genMET, FILES.files[sample])
-            PFMETs = FileReader.getHistogramFromFile(PFMET, FILES.files[sample])
-            N_gen = genMETs.Integral()
-            N_reco = PFMETs.Integral()
-            purity = (N_gen + N_reco)/N_reco
-            stability = (N_gen + N_reco)/N_gen
-            correctionFactor = N_gen/N_reco
-            print 'MET bin =', metbin
-            print 'N_gen = ', N_gen
-            print 'N_reco = ', N_reco
-            print 'p_i =', 1/purity
-            print 's_i =', 1/stability
-            print 'f_C,i =', correctionFactor
-    
+        outputFile = open(path + "/outputFile_" + str(sample) + ".txt", "w")
+        for metType in metTypes:
+            for bJetBin in bJetBins:
+                histFile = base + metType + "/RecoMET_v._GenMET_" + bJetBin
+                print histFile
+                hist = FileReader.getHistogramFromFile(histFile, FILES.files[sample])
+                print "Plotting..."
+                print "hist = ", hist
+                title1 = TPaveStats(0, 0.90, 0.5, 0.93, "NDC")
+                title1.SetFillStyle(0)
+                title1.SetBorderSize(0)
+                title1.SetTextFont(42)
+                title1.SetTextAlign(13)
+
+                title2 = TPaveStats(0.5, 0.90, 1, 0.93, "NDC")
+                title2.SetFillStyle(0)
+                title2.SetBorderSize(0)
+                title2.SetTextFont(42)
+                title2.SetTextAlign(13)
+
+                bJetBinTitles = {'0btag':'0 b-tags', '0orMoreBtag':'#geq0 b-tags', '1btag':'1 b-tags', '1orMoreBtag':'#geq1 b-tags', '2orMoreBtags':'#geq2 b-tags'}
+                title1.AddText("e, #geq4 jets, " + bJetBinTitles[bJetBin])
+                title2.AddText("CMS Preliminary, L = 5fb^{-1} @ #sqrt{s} = 7 TeV")
+
+                hist.GetXaxis().SetTitle("GenMET [GeV]")
+                hist.GetYaxis().SetTitle("RecoMET [GeV]")
+                hist.SetTitle("")
+
+                metBins = {0:[0, 24], 1:[25, 44], 2:[45, 69], 3:[70, 99], 4:[100, "inf"]}
+
+                for c in range (len(metBins)):
+                    cutBinX1 = hist.GetXaxis().FindBin(metBins[c][0])
+                    cutBinY1 = hist.GetYaxis().FindBin(metBins[c][0])
+                    if metBins[c][1] != "inf":
+                        cutBinX2 = hist.GetXaxis().FindBin(metBins[c][1]) 
+                        cutBinY2 = hist.GetYaxis().FindBin(metBins[c][1])
+                    elif metBins[c][1] == "inf":
+                        cutBinX2 = hist.GetNbinsX()+1
+                        cutBinY2 = hist.GetNbinsY()+1
+
+                    nReco = hist.Integral(0, hist.GetNbinsX()+1, cutBinY1, cutBinY2)
+                    nGen = hist.Integral(cutBinX1, cutBinX2, 0, hist.GetNbinsY()+1)
+                    nRecoPlusnGen = hist.Integral(cutBinX1, cutBinX2, cutBinY1, cutBinY2)
+
+                    purity = nRecoPlusnGen/nReco
+                    stability = nRecoPlusnGen/nGen
+                    correctionFactor1 = nGen/nReco
+                    correctionFactor2 = purity/stability
+                    
+                    outputFile.write("mettype = " + metType + "\n")
+                    outputFile.write("bin: " + str(metBins[c]) + "\n")
+                    outputFile.write("purity = " + str(purity) + "\n")
+                    outputFile.write("stability = " + str(stability) + "\n")
+                    outputFile.write("correctionFactor1 = nGen/nReco = " + str(correctionFactor1) + "\n")
+                    outputFile.write("correctionFactor2 = purity/stability = " + str(correctionFactor2) + "\n")
+
+                    if metType == "patType1p2CorrectedPFMet":
+                        bJetStart = 55
+                    elif metType == "patType1CorrectedPFMet":
+                        bJetStart = 53
+                    elif metType == "patMETsPFlow":
+                        bJetStart = 43
+
+                    outputFile.write(histFile[bJetStart:] + " nReco = " + str(nReco) + "\n")
+                    outputFile.write(histFile[bJetStart:] + " nGen = " + str(nGen) + "\n")
+                    outputFile.write(histFile[bJetStart:] + " nRecoPlusnGen = " + str(nRecoPlusnGen) + "\n\n")
+                
+                canvas = TCanvas("canvas", "canvas", 800, 600)
+                #canvas.SetRightMargin(0.04)
+                outputFilename = histFile
+                hist.Draw("COLZ")
+                title1.Draw()
+                title2.Draw()
+                print "Saving canvas", path + "/" + metType + "_RecoMET_v._GenMET_" + bJetBin + ".root"
+                canvas.SaveAs(path + "/" + metType + "_RecoMET_v._GenMET_" + bJetBin + "_withoutMETbinLines.root")
+                
+                lineX1 = TLine(24, 0, 24, 300)
+                lineX1.Draw()
+                lineX2 = TLine(44, 0, 44, 300)
+                lineX2.Draw()
+                lineX3 = TLine(69, 0, 69, 300)
+                lineX3.Draw()
+                lineX4 = TLine(99, 0, 99, 300)
+                lineX4.Draw()
+                lineY1 = TLine(0, 24, 300, 24)
+                lineY1.Draw()
+                lineY2 = TLine(0, 44, 300, 44)
+                lineY2.Draw()
+                lineY3 = TLine(0, 69, 300, 69)
+                lineY3.Draw()
+                lineY4 = TLine(0, 99, 300, 99)
+                lineY4.Draw()
+                canvas.SaveAs(path + "/" + metType + "_RecoMET_v._GenMET_" + bJetBin + "_withMETbinLines.root")

@@ -54,15 +54,16 @@ void TTbarPlusMETAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
-			histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * bjetWeight);
+			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
+			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight);
 
 			metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight);
 			electronAnalyserRefSelection_->setScale(bjetWeight);
 			vertexAnalyserEPlusJetsRefSelection_->setScale(bjetWeight);
 			jetAnalyserEPlusJetsRefSelection_->setScale(bjetWeight);
 
-			metAnalyserEPlusJetsRefSelection_->analyse(event);
-			metAnalyserEPlusJetsRefSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserEPlusJetsRefSelection_->analyse(event, signalLepton);
+//			metAnalyserEPlusJetsRefSelection_->analyseTransverseMass(event, signalLepton);
 
 			electronAnalyserRefSelection_->analyse(event);
 			electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
@@ -107,7 +108,8 @@ void TTbarPlusMETAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			}
 		}
 		histMan_->setCurrentBJetBin(bJets.size());
-		jetAnalyserEPlusJetsRefSelection_noBtagWeights_->analyse(event);
+		histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight());
+//		jetAnalyserEPlusJetsRefSelection_noBtagWeights_->analyse(event);
 	}
 
 }
@@ -147,8 +149,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 			qcdNonIsoElectronAnalyser_->analyse(event);
 			qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-			metAnalyserqcdNonIsoElectronSelection_->analyse(event);
-			metAnalyserqcdNonIsoElectronSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserqcdNonIsoElectronSelection_->analyse(event, signalLepton);
+//			metAnalyserqcdNonIsoElectronSelection_->analyseTransverseMass(event, signalLepton);
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
 					continue;
@@ -219,8 +221,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->setScale(bjetWeight);
 			qcdNonIsoNonIsoTriggerElectronAnalyser_->analyse(event);
 			qcdNonIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->analyse(event);
-			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->analyse(event, signalLepton);
+//			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->analyseTransverseMass(event, signalLepton);
 		}
 	}
 
@@ -256,8 +258,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 			qcdConversionsElectronAnalyser_->analyse(event);
 			qcdConversionsElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-			metAnalyserqcdConversionSelection_->analyse(event);
-			metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserqcdConversionSelection_->analyse(event, signalLepton);
+//			metAnalyserqcdConversionSelection_->analyseTransverseMass(event, signalLepton);
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -412,8 +414,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 			qcdAntiIDElectronAnalyser_->analyse(event);
 			qcdAntiIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-			metAnalyserqcdAntiIDSelection_->analyse(event);
-			metAnalyserqcdAntiIDSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserqcdAntiIDSelection_->analyse(event, signalLepton);
+//			metAnalyserqcdAntiIDSelection_->analyseTransverseMass(event, signalLepton);
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -467,8 +469,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			metAnalyserqcdNoIsoNoIDSelection_->setScale(bjetWeight);
 			qcdNoIsoNoIDElectronAnalyser_->analyse(event);
 			qcdNoIsoNoIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
-			metAnalyserqcdNoIsoNoIDSelection_->analyse(event);
-			metAnalyserqcdNoIsoNoIDSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserqcdNoIsoNoIDSelection_->analyse(event, signalLepton);
+//			metAnalyserqcdNoIsoNoIDSelection_->analyseTransverseMass(event, signalLepton);
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -515,21 +517,22 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		const LeptonPointer signalLepton = topMuplusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
-			histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * bjetWeight * efficiencyCorrection);
+			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
+			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight * efficiencyCorrection);
 
 			metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 			muonAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 			vertexAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 			jetAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 
-			metAnalyserMuPlusJetsRefSelection_->analyse(event);
-			metAnalyserMuPlusJetsRefSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserMuPlusJetsRefSelection_->analyse(event, signalLepton);
+//			metAnalyserMuPlusJetsRefSelection_->analyseTransverseMass(event, signalLepton);
 
 			muonAnalyserRefSelection_->analyse(event);
 			muonAnalyserRefSelection_->analyseMuon(signalMuon, event->weight());
@@ -574,7 +577,8 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			}
 		}
 		histMan_->setCurrentBJetBin(bJets.size());
-		jetAnalyserMuPlusJetsRefSelection_noBtagWeights_->analyse(event);
+//		jetAnalyserMuPlusJetsRefSelection_noBtagWeights_->analyse(event);
+		histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * efficiencyCorrection);
 	}
 
 }
@@ -615,8 +619,8 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 			qcdNonIsoMuonAnalyser_->analyse(event);
 			qcdNonIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
-			metAnalyserqcdNonIsoMuonSelection_->analyse(event);
-			metAnalyserqcdNonIsoMuonSelection_->analyseTransverseMass(event, signalLepton);
+			metAnalyserqcdNonIsoMuonSelection_->analyse(event, signalLepton);
+//			metAnalyserqcdNonIsoMuonSelection_->analyseTransverseMass(event, signalLepton);
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
 					continue;
@@ -712,8 +716,10 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 void TTbarPlusMETAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 	histMan_->addH1D("N_BJets", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
+	histMan_->addH1D("N_BJets_reweighted", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
 	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
 			5000);
+	histMan_->addH1D("BTagWeights", "BTag weights; BTag weight; Events", 300, -1, 2);
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
 	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
 			5000);
@@ -723,8 +729,10 @@ void TTbarPlusMETAnalyser::createHistograms() {
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 	histMan_->addH1D("N_BJets", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
+	histMan_->addH1D("N_BJets_reweighted", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
 	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
 			5000);
+	histMan_->addH1D("BTagWeights", "BTag weights; BTag weight; Events", 300, -1, 2);
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
 			5000);
@@ -771,9 +779,9 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	}
 
 	jetAnalyserEPlusJetsRefSelection_->createHistograms();
-	jetAnalyserEPlusJetsRefSelection_noBtagWeights_->createHistograms();
 	jetAnalyserMuPlusJetsRefSelection_->createHistograms();
-	jetAnalyserMuPlusJetsRefSelection_noBtagWeights_->createHistograms();
+//	jetAnalyserEPlusJetsRefSelection_noBtagWeights_->createHistograms();
+//	jetAnalyserMuPlusJetsRefSelection_noBtagWeights_->createHistograms();
 
 }
 
@@ -842,13 +850,12 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		qcdNoIsoNoIDBinnedElectronAnalysers_(), //
 		qcdNonIsoBinnedMuonAnalysers_(), //
 		qcdPFRelIsoBinnedMuonAnalysers_(), //
+//		jetAnalyserEPlusJetsRefSelection_noBtagWeights_(
+//				new JetAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/Jets_noBtagWeights")), //
+//		jetAnalyserMuPlusJetsRefSelection_noBtagWeights_(
+//				new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets_noBtagWeights")),//
 		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
-		jetAnalyserEPlusJetsRefSelection_noBtagWeights_(
-				new JetAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/Jets_noBtagWeights")), //
-		jetAnalyserMuPlusJetsRefSelection_(
-				new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
-		jetAnalyserMuPlusJetsRefSelection_noBtagWeights_(
-				new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets_noBtagWeights")) {
+		jetAnalyserMuPlusJetsRefSelection_(new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets")) {
 	qcdNonIsoElectronNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	qcdPFRelIsoEPlusNonIsoTriggerSelection_->useNonIsoTrigger(true);
 	metBins_.push_back(25.);

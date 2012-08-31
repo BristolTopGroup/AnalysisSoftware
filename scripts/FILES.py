@@ -1,13 +1,12 @@
-
 placeholder = 'SAMPLE'
-pathToFiles = '/storage/results/histogramfiles/2012/7TeV'
+pathToFiles = '/storage/results/histogramfiles/AN-12-241'
 luminosity = 5050#pb-1
 suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET.root'
 JES_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusJES.root'
 JES_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusJES.root'
 PU_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_64600mb.root'
 PU_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_71400mb.root'
-PDFWeights_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PDF_%d.root'
+PDFWeights_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PDFWeights_%d.root'
 BJet_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusBJet.root'
 BJet_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusBjet.root'
 LightJet_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusLightJet.root'
@@ -25,9 +24,10 @@ template_LightJet_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'pa
 template_LightJet_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles+ '/LightJet_up', 'lumi':luminosity, 'suffix':LightJet_up_suffix, 'placeholder':placeholder}
 
 samplesToLoad = ['ElectronHad',
+                 'SingleMu',
                  'TTJet', 
-#                 'WJetsToLNu', 
                  'DYJetsToLL',
+                 'QCD_Pt-20_MuEnrichedPt-15',
                  'QCD_Pt-20to30_BCtoE',
                  'QCD_Pt-30to80_BCtoE',
                  'QCD_Pt-80to170_BCtoE',
@@ -117,4 +117,18 @@ for sample in ['POWHEG', 'PYTHIA6', 'MCatNLO']:
     
 for index in range(1,45):
     files_PDF_weights['TTJet_%d' % index] = template_PDFWeights % index
-
+    
+#data is the same for:
+files_PU_down['ElectronHad'] = files['ElectronHad']
+files_PU_up['ElectronHad'] = files['ElectronHad']
+files_BJet_down['ElectronHad'] = files['ElectronHad']
+files_BJet_up['ElectronHad'] = files['ElectronHad']
+files_LightJet_down['ElectronHad'] = files['ElectronHad']
+files_LightJet_up['ElectronHad'] = files['ElectronHad']
+#muon channel
+files_PU_down['SingleMu'] = files['SingleMu']
+files_PU_up['SingleMu'] = files['SingleMu']
+files_BJet_down['SingleMu'] = files['SingleMu']
+files_BJet_up['SingleMu'] = files['SingleMu']
+files_LightJet_down['SingleMu'] = files['SingleMu']
+files_LightJet_up['SingleMu'] = files['SingleMu']

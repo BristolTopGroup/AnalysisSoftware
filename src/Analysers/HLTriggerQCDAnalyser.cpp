@@ -57,16 +57,17 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 
 		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
-			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
-			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseTransverseMass(event,
-					qcdNonIsoSelection_->signalLepton(event));
+			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event, qcdNonIsoSelection_->signalLepton(event));
+//			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseTransverseMass(event,
+//					qcdNonIsoSelection_->signalLepton(event));
 		}
 
 		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
-			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event);
-			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseTransverseMass(event,
+			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyse(event,
 					qcdAntiIDSelection_->signalLepton(event));
+//			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_->analyseTransverseMass(event,
+//					qcdAntiIDSelection_->signalLepton(event));
 		}
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_++;
@@ -92,15 +93,17 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 
 		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
-			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
-			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event,
 					qcdNonIsoSelection_->signalLepton(event));
+//			metNonIsoRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+//					qcdNonIsoSelection_->signalLepton(event));
 		}
 		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_++;
-			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event);
-			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyse(event,
 					qcdAntiIDSelection_->signalLepton(event));
+//			metAntiIDRegionAnalyser_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+//					qcdAntiIDSelection_->signalLepton(event));
 		}
 
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
@@ -127,15 +130,17 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 
 		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
-			metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
-			metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+			metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event,
 					qcdNonIsoSelection_->signalLepton(event));
+//			metNonIsoRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+//					qcdNonIsoSelection_->signalLepton(event));
 		}
 		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
-			metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event);
-			metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+			metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyse(event,
 					qcdAntiIDSelection_->signalLepton(event));
+//			metAntiIDRegionAnalyser_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_->analyseTransverseMass(event,
+//					qcdAntiIDSelection_->signalLepton(event));
 		}
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
 			TopSignalRegionCount_CaloIdVL_CaloIsoT_TrkIdVL_TrkIsoT_++;
@@ -161,15 +166,17 @@ void HLTriggerQCDAnalyser::analyse(const EventPtr event) {
 		}
 		if (passesNonIsoWithoutBtagAndHLT(event)) {
 			QCDNonIsoRegionCount_CaloIdVT_TrkIdT_++;
-			metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->analyse(event);
-			metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->analyseTransverseMass(event,
+			metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->analyse(event,
 					qcdNonIsoSelection_->signalLepton(event));
+//			metNonIsoRegionAnalyser_CaloIdVT_TrkIdT_->analyseTransverseMass(event,
+//					qcdNonIsoSelection_->signalLepton(event));
 		}
 		if (passesAntiIDWithoutBtagAndHLT(event)) {
 			QCDAntiIDRegionCount_CaloIdVT_TrkIdT_++;
-			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->analyse(event);
-			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->analyseTransverseMass(event,
+			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->analyse(event,
 					qcdAntiIDSelection_->signalLepton(event));
+//			metAntiIDRegionAnalyser_CaloIdVT_TrkIdT_->analyseTransverseMass(event,
+//					qcdAntiIDSelection_->signalLepton(event));
 		}
 
 		if (passesSignalSelectionWithoutBtagAndHLT(event)) {
