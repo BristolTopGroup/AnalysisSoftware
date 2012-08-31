@@ -73,7 +73,6 @@ void TestHistogram::test3DConstructor() {
 }
 
 void TestHistogram::testFill1D() {
-	double binsize = (hist1D_->GetMaxX() - hist1D_->GetMinX())/hist1D_->GetNumberOfXBins();
 	hist1D_->Fill(5);
 	ASSERT_EQUAL(1, hist1D_->GetEntries());
 	ASSERT_EQUAL(1, hist1D_->GetBinContent(50));
