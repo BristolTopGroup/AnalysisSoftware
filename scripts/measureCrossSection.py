@@ -21,7 +21,8 @@ import json
 from config.sampleSummations import qcd_samples, singleTop_samples, wplusjets_samples, allMC_samples,diboson_samples, signal_samples,\
     vplusjets_samples
 from sets import Set
-
+from measureCrossSection_RooFit import metType
+import sys
 correctionFactors = None
 savePath = "/storage/results/plots/AN-12-241/DiffMETMeasurement/binCorrection/"
 outputFormat_tables = 'latex' #other option: twiki
@@ -200,7 +201,7 @@ def getFittedNormalisation(vectors_={}, normalisation_={}):
     #error flag for functions passed as reference.set to as 0 is no error
     errorFlag = Long(2)
     
-    N_total = normalisation[used_data]
+    N_total = normalisation[used_data]*2
     N_min = 0
 #    N_total = 1e6
 #    N_min = -N_total
@@ -211,11 +212,11 @@ def getFittedNormalisation(vectors_={}, normalisation_={}):
         print len(vectors[used_data]), len(vectors['Signal']), len(vectors['W+Jets']), len(vectors['DYJetsToLL']), len(vectors['QCDFromData'])
         print "Total number of data events before the fit: ", N_total
     N_signal = normalisation['TTJet'] + normalisation['SingleTop']
-    gMinuit.mnparm(0, "N_signal(ttbar+single_top)", N_signal, 10.0, N_min, N_total*2, errorFlag)
-    gMinuit.mnparm(1, "V+Jets", normalisation['V+Jets'], 10.0, N_min, N_total*2, errorFlag)
+    gMinuit.mnparm(0, "N_signal(ttbar+single_top)", N_signal, 10.0, N_min, N_total, errorFlag)
+    gMinuit.mnparm(1, "V+Jets", normalisation['V+Jets'], 10.0, N_min, N_total, errorFlag)
 #    gMinuit.mnparm(1, "W+Jets", normalisation['W+Jets'], 10.0, N_min, N_total, errorFlag)
 #    gMinuit.mnparm(2, "DYJetsToLL", normalisation['DYJetsToLL'], 10.0, N_min, N_total, errorFlag)
-    gMinuit.mnparm(2, "QCD", N_QCD, 10.0, N_min, N_total*2, errorFlag)
+    gMinuit.mnparm(2, "QCD", N_QCD, 10.0, N_min, N_total, errorFlag)
 #    gMinuit.mnparm(4, "Di-Boson", normalisation['Di-Boson'], 10.0, 0, N_total, errorFlag)
     
     arglist = array('d', 10 * [0.])
@@ -332,11 +333,12 @@ def getFittedNormalisation_RooFit(histograms, normalisation_={}, vectors_ = {}):
     normalisation['Signal'] = normalisation['TTJet'] + normalisation['SingleTop']
     pdfs,leptonAbsEta, variables, vars_set, roodatahists = getPDFs(histograms)
     N_total = normalisation[used_data]
+    N_total = 2*N_total
     N_min = 0
     #variables to be fitted
-    N_VPlusJets = RooRealVar  ("nVJ", "number of Z+jets bgnd events", normalisation['V+Jets'], N_min, N_total*2, "event");
-    N_QCD = RooRealVar("nqcd", "number of QCD bgnd events", normalisation[qcdLabel], N_min, N_total*2, "event");
-    N_Signal = RooRealVar("nSignal", "number of single top + ttbar events", normalisation['Signal'], N_min, N_total*2, "event");
+    N_VPlusJets = RooRealVar  ("nVJ", "number of Z+jets bgnd events", normalisation['V+Jets'], N_min, N_total, "event");
+    N_QCD = RooRealVar("nqcd", "number of QCD bgnd events", normalisation[qcdLabel], N_min, normalisation[qcdLabel]*2, "event");
+    N_Signal = RooRealVar("nSignal", "number of single top + ttbar events", normalisation['Signal'], N_min, N_total, "event");
 
     model = RooAddPdf("model", "Signal + V+Jets + QCD",
             RooArgList(pdfs['Signal'], pdfs['V+Jets'], pdfs['QCD']),
@@ -406,7 +408,10 @@ def createFitHistogram_RooFit(histograms, normalisation, N_Signal, N_VPlusJets, 
         nQCD =  h_QCD.GetBinContent(bin_i)
         value = nSignal + nVPlusJets + nQCD
         #bin-by-bin error
-        error = sqrt((N_Signal.getError()/N_Signal.getVal() * nSignal) ** 2 + (N_VPlusJets.getError()/N_VPlusJets.getVal() * nVPlusJets) ** 2 +(N_QCD.getError()/N_QCD.getVal() * nQCD) ** 2)
+        relErrorSignal = getRelativeError(N_Signal.getVal(), N_Signal.getError()) 
+        relErrorVPlusJets = getRelativeError(N_VPlusJets.getVal(), N_VPlusJets.getError())
+        relErrorQCD = getRelativeError(N_QCD.getVal(), N_QCD.getError())
+        error = sqrt((relErrorSignal * nSignal) ** 2 + (relErrorVPlusJets* nVPlusJets) ** 2 +(relErrorQCD* nQCD) ** 2)
         fit.SetBinContent(bin_i, value)
         fit.SetBinError(bin_i, error)
     return fit.Clone()
@@ -425,7 +430,9 @@ def measureNormalisationIn(histogram, analysis):
         qcdResult = QCDRateEstimation.estimateQCDWithRelIso(FILES.files, qcdHistForEstimation)
         normalisation[qcdLabel] = qcdResult['estimate']
     else:
-        normalisation[qcdLabel] = normalisation[qcdLabel]*1.21
+        normalisation[qcdLabel] = normalisation['QCD_Pt-20_MuEnrichedPt-15']*1.21
+#        print 'MuQCD normalisation:', normalisation[qcdLabel]
+#        normalisation[qcdLabel] = normalisation[qcdLabel]*1.21
     
     if DEBUG:
         printNormalisation(normalisation)
@@ -553,44 +560,38 @@ def measureNormalisationIncludingSystematics(histograms, analysis):
     scale_factors['TTJet'] = 1
     histogram['TTJet'] = ttjet_temp
     #matching threshold W+Jets
-    current_source = 'W+Jets matching'
+    current_source = 'V+Jets matching'
+    zjets_temp = deepcopy(histogram['DYJetsToLL'])
     wjets_temp = deepcopy(histogram['W+Jets'])
+    
     histogram['W+Jets'] = histogram['WJets-matchingup']
+    histogram['DYJetsToLL'] = histogram['ZJets-matchingup']
     scale_factors['W+Jets'] = N_Events[analysis]['W+Jets'] / N_Events[analysis]['WJets-matchingup']
-    fitted_results['W+Jets matching +'] = measureNormalisationIn(histogram, analysis)
+    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-matchingup']
+    fitted_results['V+Jets matching +'] = measureNormalisationIn(histogram, analysis)
+    
     histogram['W+Jets'] = histogram['WJets-matchingdown']
+    histogram['DYJetsToLL'] = histogram['ZJets-matchingdown']
     scale_factors['W+Jets'] = N_Events[analysis]['W+Jets'] / N_Events[analysis]['WJets-matchingdown']
-    fitted_results['W+Jets matching -'] = measureNormalisationIn(histogram, analysis)
+    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-matchingdown']
+    fitted_results['V+Jets matching -'] = measureNormalisationIn(histogram, analysis)
     #Q^2 scale W+Jets
-    current_source = 'W+Jets scale'
+    current_source = 'V+Jets scale'
     histogram['W+Jets'] = histogram['WJets-scaleup']
+    histogram['DYJetsToLL'] = histogram['ZJets-scaleup']
     scale_factors['W+Jets'] = N_Events[analysis]['W+Jets'] / N_Events[analysis]['WJets-scaleup']
-    fitted_results['W+Jets scale +'] = measureNormalisationIn(histogram, analysis)
+    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-scaleup']
+    fitted_results['V+Jets scale +'] = measureNormalisationIn(histogram, analysis)
+
     histogram['W+Jets'] = histogram['WJets-scaledown']
+    histogram['DYJetsToLL'] = histogram['ZJets-scaledown']
     scale_factors['W+Jets'] = N_Events[analysis]['W+Jets'] / N_Events[analysis]['WJets-scaledown']
-    fitted_results['W+Jets scale -'] = measureNormalisationIn(histogram, analysis)
+    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-scaledown']
+    fitted_results['V+Jets scale -'] = measureNormalisationIn(histogram, analysis)
     #reset
     scale_factors['W+Jets'] = 1
-    histogram['W+Jets'] = wjets_temp
-    #matching threshold Z+Jets
-    current_source = 'Z+Jets matching'
-    zjets_temp = deepcopy(histogram['DYJetsToLL'])
-    histogram['DYJetsToLL'] = histogram['ZJets-matchingup']
-    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-matchingup']
-    fitted_results['Z+Jets matching +'] = measureNormalisationIn(histogram, analysis)
-    histogram['DYJetsToLL'] = histogram['ZJets-matchingdown']
-    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-matchingdown']
-    fitted_results['Z+Jets matching -'] = measureNormalisationIn(histogram, analysis)
-    #Q^2 scale Z+Jets
-    current_source = 'Z+Jets scale'
-    histogram['DYJetsToLL'] = histogram['ZJets-scaleup']
-    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-scaleup']
-    fitted_results['Z+Jets scale +'] = measureNormalisationIn(histogram, analysis)
-    histogram['DYJetsToLL'] = histogram['ZJets-scaledown']
-    scale_factors['DYJetsToLL'] = N_Events[analysis]['DYJetsToLL'] / N_Events[analysis]['ZJets-scaledown']
-    fitted_results['Z+Jets scale -'] = measureNormalisationIn(histogram, analysis)
-    #reset
     scale_factors['DYJetsToLL'] = 1
+    histogram['W+Jets'] = wjets_temp
     histogram['DYJetsToLL'] = zjets_temp
     print '>' * 60, 'completed in %.2fs' % timer.elapsedTime()
     timer.restart()
@@ -609,6 +610,7 @@ def measureNormalisationIncludingSystematics(histograms, analysis):
     print 'Performing measurement of PDF uncertainties'
     histogram_pdf = histograms['PDFWeights']
     histogram = histograms['central']
+    histogram['QCDFromData'] = histograms['central'][use_QCDFromData]
     ttjet_temp = deepcopy(histogram['TTJet'])
     scale_factors['TTJet'] = 7490162 / 6093274
     for index in range(1, 45):
@@ -616,10 +618,12 @@ def measureNormalisationIncludingSystematics(histograms, analysis):
         current_source = pdf
         histogram['TTJet'] = histogram_pdf[pdf]
         fitted_results['PDFWeights_%d' % index] = measureNormalisationIn(histogram, analysis)
+    #reset
     scale_factors['TTJet'] = 1.   
     histogram['TTJet'] = ttjet_temp
     print '>' * 60, 'completed in %.2fs' % timer.elapsedTime()
     return fitted_results
+    histogram = None
 
 
 def combineResults(result_A, result_B):
@@ -744,6 +748,7 @@ def NormalisationAnalysis():
         #loadfiles
         histogramCollection = getHistograms(bjetbin, metbin, 'EPlusJets')
         histogramCollection_muons = getHistograms(bjetbin, metbin, 'MuPlusJets')
+        
         #sum samples
         histogramCollection['central'] = sumSamples(histogramCollection['central'])
         histogramCollection['JES-'] = sumSamples(histogramCollection['JES-'])
@@ -766,11 +771,13 @@ def NormalisationAnalysis():
         for source in metsystematics_sources:
             histogramCollection[source] = sumSamples(histogramCollection[source])
             histogramCollection_muons[source] = sumSamples(histogramCollection_muons[source])
-        print 'Getting fitted normalisation for metbin=', metbin
+        print 'Getting fitted normalisation for metbin=', metbin, 'electron channel'
         result_electrons[metbin] = measureNormalisationIncludingSystematics(histogramCollection, 'EPlusJets')
+        print 'Getting fitted normalisation for metbin=', metbin, 'muon channel'
         result_muons[metbin] = measureNormalisationIncludingSystematics(histogramCollection_muons, 'MuPlusJets')
         
         if doBinByBinUnfolding:
+            print 'Performing unfolding'
             result_electrons[metbin] = performUnfolding(result_electrons[metbin], metbin, 'EPlusJets')
             result_muons[metbin] = performUnfolding(result_muons[metbin], metbin, 'MuPlusJets')
         #combineResults the numbers
@@ -942,10 +949,31 @@ def getHistograms(bjetbin, metbin, analysis):
             histogramCollection[source]['QCDFromData_Conversions'] = deepcopy(histogramCollection['central']['QCDFromData_Conversions'])
             histogramCollection[source]['QCDFromData_AntiIsolated'] = deepcopy(histogramCollection['central']['QCDFromData_AntiIsolated'])
     
+    muonQCD_corrections = FileReader.getHistogramFromFile('etaAbs_ge2j_tight', 'data/etaAbs_ge2j_tight.root')
+    #initial binning 0.05, target: 0.2
+    muonQCD_corrections.Rebin(4)
     for source in histogramCollection.keys():
         hists = histogramCollection[source]
         hists = plotting.rebin(hists, rebin)#rebin to 200 bins
         hists = plotting.setYTitle(hists, title="Events/%.2f" % (0.02 * rebin))
+        #correction for muon QCD
+        if analysis == "MuPlusJets" and not source in ['PDFWeights']:
+            muQCD = hists['QCDFromData_AntiIsolated']#both plots are identical
+            nbins = muQCD.GetNbinsX()
+            #check if binning is identical...plots have different xranges
+#            if not muonQCD_corrections.GetNbinsX() == nbins:
+#                print 'Something is wrong, not the same number of bins'
+#                print 'Corrections:', muonQCD_corrections.GetNbinsX() 
+#                print 'Data:', nbins
+            for bin_i in range(1, nbins+1):
+                correction = muonQCD_corrections.GetBinContent(bin_i)
+                value = muQCD.GetBinContent(bin_i)
+#                print 'old:', value
+#                print 'new:', value*correction
+                muQCD.SetBinContent(bin_i, value*correction)
+            
+            hists['QCDFromData_Conversions'] = muQCD
+            hists['QCDFromData_AntiIsolated'] = muQCD
         
     #sum samples
     histogramCollection['central'] = sumSamples(histogramCollection['central'])
@@ -963,11 +991,14 @@ def getHistograms(bjetbin, metbin, analysis):
 
 def setNEvents(bjetbin, analysis):
     global N_Events, metType
-    met = metType
-    if metType == 'PFMET':
-        met = 'patMETsPFlow'
-    unbinnedHist = FileReader.getHistogramDictionary('TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/MET/' + met + '/MET_' + bjetbin,
-                                                     FILES.files)
+
+    histname = 'TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/Electron/electron_AbsEta_' + bjetbin
+    if analysis == 'MuPlusJets':
+        histname = 'TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/Muon/muon_AbsEta_' + bjetbin
+        
+#    unbinnedHist = FileReader.getHistogramDictionary('TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/MET/' + met + '/MET_' + bjetbin,
+#                                                     FILES.files)
+    unbinnedHist = FileReader.getHistogramDictionary(histname, FILES.files)
     unbinnedHist['W+Jets'] = plotting.sumSamples(unbinnedHist, wplusjets_samples)
     unbinnedHist['V+Jets'] = plotting.sumSamples(unbinnedHist, vplusjets_samples)
     N_Events[analysis] = {}
@@ -996,15 +1027,19 @@ def setNEvents(bjetbin, analysis):
 def setNTtbar(bjetbin, analysis):
     global N_ttbar_by_source, metType
     N_ttbar_by_source[analysis] = {}
-    met = metType
-    if metType == 'PFMET':
-        met = 'patMETsPFlow'
-    histname = 'TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/MET/' + met + '/MET_' + bjetbin
+#    met = metType
+#    if metType == 'PFMET':
+#        met = 'patMETsPFlow'
+    histname = 'TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/Electron/electron_AbsEta_' + bjetbin
+    if analysis == 'MuPlusJets':
+        histname = 'TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/Muon/muon_AbsEta_' + bjetbin
+        
     getHist = FileReader.getHistogramFromFile
     central = getHist(histname, FILES.files['TTJet']).Integral()
     sameAsCentral = ['central', 'SingleTop +', 'SingleTop -', 'QCD shape', 'TTJet matching +', 'TTJet matching -',
                      'TTJet scale +', 'TTJet scale -', 'W+Jets matching +', 'W+Jets matching -', 'W+Jets scale +',
-                     'W+Jets scale -', 'Z+Jets matching +', 'Z+Jets matching -', 'Z+Jets scale +', 'Z+Jets scale -']
+                     'W+Jets scale -', 'Z+Jets matching +', 'Z+Jets matching -', 'Z+Jets scale +', 'Z+Jets scale -',
+                     'V+Jets matching +', 'V+Jets matching -', 'V+Jets scale +', 'V+Jets scale -']
     for source in sameAsCentral:
         N_ttbar_by_source[analysis][source] = central
     
@@ -1031,8 +1066,8 @@ def setNTtbar(bjetbin, analysis):
     
     
     for source in metsystematics_sources:
-        histname = 'TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/MET/%s/MET_%s' % (source, bjetbin)
-        N_ttbar_by_source[analysis][source] = getHist(histname, FILES.files['TTJet']).Integral()
+#        histname = 'TTbarPlusMetAnalysis/'+ analysis + '/Ref selection/MET/%s/MET_%s' % (source, bjetbin)
+        N_ttbar_by_source[analysis][source] = central#getHist(histname, FILES.files['TTJet']).Integral()
     
 def prepareHistogramCollections(histogramCollection):
     global metsystematics_sources
@@ -1464,8 +1499,8 @@ def plotNormalisationResults(results, analysis):
                       }
             for sample in samples:
                 template = templates[sample]
-                plot = TH1F(sample + metbin + bjetbin + measurement, sample, 13, 0, 2.6)
-                plot_template = TH1F(sample + metbin + bjetbin + measurement + '_template', sample, 13, 0, 2.6)
+                plot = TH1F(sample + metbin + bjetbin + measurement+ analysis, sample, 13, 0, 2.6)
+                plot_template = TH1F(sample + metbin + bjetbin + measurement + analysis + '_template', sample, 13, 0, 2.6)
                 bin_i = 1
                 for value in template:
                     plot.SetBinContent(bin_i, value)
@@ -1475,10 +1510,15 @@ def plotNormalisationResults(results, analysis):
     #            plot.Rebin(rebin)
                 plot.SetYTitle('Events/0.2')
                 plot_template.SetYTitle('normalised to unit area/0.2')
-                plot.SetXTitle('|#eta(e)|')
+                if analysis == 'EPlusJets':
+                    plot.SetXTitle('|#eta(e)|')
+                    plot_template.SetXTitle('|#eta(e)|')
+                else:
+                    plot.SetXTitle('|#eta(#mu)|')
+                    plot_template.SetXTitle('|#eta(#mu)|')
                 plot.SetMarkerStyle(20)
                 
-                plot_template.SetXTitle('|#eta(e)|')
+                
                 if not sample == used_data:
                     plot.SetFillColor(colors[sample])
                     plot.SetLineColor(colors[sample])
@@ -1486,10 +1526,7 @@ def plotNormalisationResults(results, analysis):
                     plot_template.SetLineWidth(3)
                 plots[sample] = plot
                 plot_templates[sample] = plot_template
-    #        fit.Rebin(10)
-#            fit.SetLineColor(kViolet - 3)
-#            fit.SetLineWidth(5)
-            c = TCanvas("Fit_" + metbin + bjetbin + measurement, "Differential cross section", 1600, 1200)
+            c = TCanvas("Fit_" + metbin + bjetbin + measurement + analysis, "Differential cross section", 1600, 1200)
             max_y = plots[used_data].GetMaximum()
             plots[used_data].SetMaximum(max_y * 1.5)
             plots[used_data].Draw('error')
@@ -1548,12 +1585,13 @@ def plotNormalisationResults(results, analysis):
                             outputFormat_plots,
                             savePath + measurement)
             c = TCanvas(prefix + '_AbsEta_templates_' + metbin + bjetbin + measurement, "Differential cross section", 1600, 1200)
-            plot_templates[qcdLabel].SetMaximum(0.15)
-            plot_templates[qcdLabel].Draw('hist')
+            max_y = plot_templates['TTJet'].GetMaximum()
+            plot_templates['TTJet'].SetMaximum(max_y * 1.5)
+            plot_templates['TTJet'].Draw('hist')
+            plot_templates[qcdLabel].Draw('hist same')
             plot_templates['DYJetsToLL'].Draw('hist same')
             plot_templates['W+Jets'].Draw('hist same')
             plot_templates['SingleTop'].Draw('hist same')
-            plot_templates['TTJet'].Draw('hist same')
             
             legend = plotting.create_legend()
             legend.AddEntry(plot_templates['TTJet'], 't#bar{t}', 'L')
@@ -2027,12 +2065,50 @@ def saveAsJSON(result, filename):
     output_file.close()
 
 def getCorrections(analysis):
-    from purityAndStability_METbins import fileTemplate
+    from purityAndStability_METbins_V0 import fileTemplate
     inputFileName = fileTemplate %(analysis, bjetbin)
     print 'Loading correction factors from:'
     print inputFileName
     return fileutils.readJSONFile(inputFileName)
-    
+
+def setMETSystematics(metType):
+    global metsystematics_sources, metsystematics_sources_latex
+    prefix = ''
+    if metType == 'PFMET':
+        prefix = 'patPFMet'
+    elif metType == 'patType1CorrectedPFMet':
+        prefix = 'patType1CorrectedPFMet'
+    else:
+        prefix = 'patType1p2CorrectedPFMet'
+    metsystematics_sources = [
+                              prefix + "ElectronEnUp",
+        prefix + "ElectronEnDown",
+        prefix + "MuonEnUp",
+        prefix + "MuonEnDown",
+        prefix + "TauEnUp",
+        prefix + "TauEnDown",
+        prefix + "JetResUp",
+        prefix + "JetResDown",
+        prefix + "JetEnUp",
+        prefix + "JetEnDown",
+        prefix + "UnclusteredEnUp",
+        prefix + "UnclusteredEnDown"
+                      ]
+
+    metsystematics_sources_latex = {
+                prefix + "ElectronEnUp":'Electron energy $+1\sigma$',
+                prefix + "ElectronEnDown":'Electron energy $-1\sigma$',
+                prefix + "MuonEnUp":'Muon energy $+1\sigma$',
+                prefix + "MuonEnDown":'Muon energy $-1\sigma$',
+                prefix + "TauEnUp":'Tau energy $+1\sigma$',
+                prefix + "TauEnDown":'Tau energy $-1\sigma$',
+                prefix + "JetResUp":'Jet resolution $+1\sigma$',
+                prefix + "JetResDown":'Jet resolution $-1\sigma$',
+                prefix + "JetEnUp":'Jet energy $+1\sigma$',
+                prefix + "JetEnDown":'Jet energy $-1\sigma$',
+                prefix + "UnclusteredEnUp":'Unclustered energy $+1\sigma$',
+                prefix + "UnclusteredEnDown":'Unclustered energy $-1\sigma$'
+                      }    
 if __name__ == '__main__':
     DEBUG = False
     completeAnalysisTimer = Timer()
@@ -2082,13 +2158,10 @@ if __name__ == '__main__':
     metType = translateOptions[options.metType]
     doBinByBinUnfolding = options.unfolding
     use_RooFit = options.useRooFit
-#    analysisType = options.analysisType
-#    if 'Mu' in analysisType:
-#        used_data = 'SingleMu'
-#    else:
-#        used_data = 'ElectronHad'
-#    analysis_folder = 'TTbarPlusMetAnalysis/'+ analysisType
-    from purityAndStability_METbins import fileTemplate
+    
+    setMETSystematics(metType)
+
+    from purityAndStability_METbins_V0 import fileTemplate
     inputFileName = fileTemplate %('EPlusJets', bjetbin)
     correctionFactors = {}
     correctionFactors['EPlusJets'] = getCorrections('EPlusJets')
@@ -2102,19 +2175,17 @@ if __name__ == '__main__':
 
     savePath = "/storage/results/plots/AN-12-241/DiffMETMeasurement/binCorrection/%s/" % metType    
     if test:
-        metbins = ['0-25']
+        metbins = ['25-45']
         savePath = "/storage/results/plots/testing2/%s/" % metType    
         if use_RooFit:
             savePath = "/storage/results/plots/testing/%s/" % metType
 #    savePath = "/storage/results/plots/testing2/%s/" % metType
 #    doBinByBinUnfolding = True
     print colorstr('Analysis options:','DARK_RED')
-#    print colorstr('Analysis type:','RED'), analysisType
     print colorstr('B-tag bin:','RED'), bjetbin
     print colorstr('MET type:','RED'), metType
     print colorstr('Use unfolding:','RED'), doBinByBinUnfolding
     print colorstr('Test only:','RED'), test
-#    print colorstr('Using PD:','RED'), used_data
     print colorstr('Using RooFit:','RED'), use_RooFit
     print 'Constrains on fit:', options.constrain
     for sample, constrain in constrains.iteritems():
