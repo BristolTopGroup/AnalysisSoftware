@@ -22,31 +22,31 @@ import QCDRateEstimation
 
 cuts = None
 cuts_electrons = [
-        "All events after skim",#
-        "Event cleaning and High Level Trigger",#
-                "exactly one isolated electron",#
-                "loose muon veto",#
-                "di-lepton veto",#
+        "Skim",#
+        "Event cleaning and HLT",#
+                "Electron",#
+                "Muon Veto",#
+                "Electron veto",#
                 "Conversion veto",#
-                ">= 3 jets",#
-                ">= 4 jets",#
-                ">=1 CSV b-tag",#
-                ">=2 CSV b-tag" #
+                "$\geq 3$ jets",#
+                "$\geq 4$ jets",#
+                "$\geq 1$ CSV b-tag",#
+                "$\geq 2$ CSV b-tag" #
         ]
 
 cuts_muons = [
-        "All events after skim",#
-        "Event cleaning and High Level Trigger",#
+        "Skim",#
+        "Event cleaning and HLT",#
                 "exactly one isolated muon",#
-                "loose lepton veto",#
-                "di-lepton veto",#
-                ">= 3 jets",#
-                ">= 4 jets",#
-                ">=1 CSV b-tag",#
-                ">=2 CSV b-tag"  
+                "Electron veto",#
+                "Muon Veto",#
+                "$\geq 3$ jets",#
+                "$\geq 4$ jets",#
+                "$\geq 1$ CSV b-tag",#
+                "$\geq 2$ CSV b-tag" #
         ]
 
-def printCutFlow(hist, analysis):
+def printCutFlow(hist, analysis, outputFormat= 'Latex'):
     used_data = 'ElectronHad'
     lepton = 'Electron/electron'
     if 'Mu' in analysis:
@@ -62,14 +62,21 @@ def printCutFlow(hist, analysis):
     for sample in hists.keys():
         for histname in hists[sample].keys():
             hists[sample][histname].Sumw2()
-    hists['QCD'] = plotting.sumSamples(hists, plotting.qcd_samples)
+    if analysis == 'EPlusJets':
+        hists['QCD'] = plotting.sumSamples(hists, plotting.qcd_samples)
+    else:
+        hists['QCD'] = hists['QCD_Pt-20_MuEnrichedPt-15']
+    
     hists['SingleTop'] = plotting.sumSamples(hists, plotting.singleTop_samples)
     hists['Di-Boson'] = plotting.sumSamples(hists, plotting.diboson_samples)
     hists['W+Jets'] = plotting.sumSamples(hists, plotting.wplusjets_samples)
 #    hists['SumMC'] = plotting.sumSamples(hists, plotting.allMC_samples)
     
-    header = "| Step | TTJet | W+jets | DY + Jets | single top | QCD | Sum MC | Data |"
-    row = " | %s  |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d | "
+    header = "| Step | TTJet | W+jets | DY + Jets | single top | Di-boson | QCD | Sum MC | Data |"
+    row = " | %s  |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d | "
+    if outputFormat == 'Latex':
+        header = "Selection step & \\ttbar & W + Jets & Z + Jets & Single-top & Di-boson & QCD~  & Sum MC & Data\\\\"
+        row = " %s  &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d \\\\ "
     print header
     
     numbers, errors = getEventNumbers(hists, hist, hist_1mBtag, hist_2mBtag)# + '_0orMoreBtag')
@@ -86,11 +93,14 @@ def printCutFlow(hist, analysis):
                 histForEstimation  = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_2orMoreBtags'
             estimate = QCDRateEstimation.estimateQCDWithRelIso(FILES.files, histForEstimation)
             nums['QCD'], errs['QCD'] = estimate['estimate'], estimate['absoluteError'] 
+        if analysis == 'MuPlusJets' and step >= len(cuts) - 3:#have only estimates for >= 4 jet and beyond
+            scale = 1.21
+            nums['QCD'], errs['QCD'] = nums['QCD']*scale, errs['QCD']*scale
             
         sumMC = nums['TTJet'] + nums['W+Jets'] + nums['DYJetsToLL'] + nums['SingleTop'] + nums['QCD'] + nums['Di-Boson']
         sumMC_err = errs['TTJet'] + errs['W+Jets'] + errs['DYJetsToLL'] + errs['SingleTop'] + errs['QCD'] + errs['Di-Boson']
         print row % (cuts[step], nums['TTJet'], errs['TTJet'], nums['W+Jets'], errs['W+Jets'], nums['DYJetsToLL'], errs['DYJetsToLL'], 
-                     nums['SingleTop'], errs['SingleTop'], nums['QCD'], errs['QCD'], sumMC, sumMC_err, nums[used_data])
+                     nums['SingleTop'], errs['SingleTop'], nums['Di-Boson'], errs['Di-Boson'], nums['QCD'], errs['QCD'], sumMC, sumMC_err, nums[used_data])
 
 def getEventNumbers(hists, histname, hist_1mBtag, hist_2mBtag):        
     eventNumbers = []
