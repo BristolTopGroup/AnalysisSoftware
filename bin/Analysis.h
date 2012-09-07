@@ -44,27 +44,27 @@
 #include "../interface/Analysers/TTbarPlusMETAnalyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
 
-typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
-typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
-typedef boost::unordered_map<std::string, ePlusJetscutarray> cutmap;
+//typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
+//typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
+//typedef boost::unordered_map<std::string, ePlusJetscutarray> cutmap;
 
 class Analysis {
 private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
     BAT::EventPtr currentEvent;
     boost::shared_ptr<BAT::HistogramManager> histMan;
-    ePlusJetscutarray ePlusJetsCutflow;
-    ePlusJetscutarray ePlusJetsSingleCuts;
-    cutmap ePlusJetsCutflowPerFile;
-    cutmap ePlusJetsSingleCutsPerFile;
-
-    muPlusJetscutarray muPlusJetsCutFlow;
-    muPlusJetscutarray muPlusJetsSingleCuts;
+//    ePlusJetscutarray ePlusJetsCutflow;
+//    ePlusJetscutarray ePlusJetsSingleCuts;
+//    cutmap ePlusJetsCutflowPerFile;
+//    cutmap ePlusJetsSingleCutsPerFile;
+//
+//    muPlusJetscutarray muPlusJetsCutFlow;
+//    muPlusJetscutarray muPlusJetsSingleCuts;
     std::vector<BAT::InterestingEvent> interestingEvents, brokenEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
     boost::shared_ptr<BAT::EventWeightProvider> weights;
     float weight, pileUpWeight;
-    BAT::Counter ePlusJetsCutflowPerSample, muPlusJetsCutflowPerSample;
+//    BAT::Counter ePlusJetsCutflowPerSample, muPlusJetsCutflowPerSample;
 
     BAT::ABCDMethodAnalyserLocalPtr abcdMethodAnalyser_;
     BAT::BJetAnalyserLocalPtr bjetAnalyser;

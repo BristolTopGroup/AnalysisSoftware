@@ -17,6 +17,7 @@
 #include "../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 #include "../interface/LumiReWeighting.h"
 #include "../interface/GlobalVariables.h"
+#include "../interface/BTagWeight.h"
 
 using namespace reweight;
 using namespace BAT;
@@ -33,35 +34,73 @@ void Analysis::analyse() {
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
+		const JetCollection jets(currentEvent->Jets());
+		unsigned int numberOfJets(jets.size());
+		unsigned int numberOfBJets(0);
+		for (unsigned int index = 0; index < numberOfJets; ++index) {
+			const JetPointer jet(currentEvent->Jets().at(index));
+			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM))
+				++numberOfBJets;
+		}
+		histMan->setCurrentBJetBin(numberOfBJets);
+		histMan->setCurrentJetBin(numberOfJets);
 
-		abcdMethodAnalyser_->analyse(currentEvent);
+		vector<double> bjetWeights;
+		if (currentEvent->isRealData()) {
+			for (unsigned int index = 0; index <= numberOfBJets; ++index) {
+				if (index == numberOfBJets)
+					bjetWeights.push_back(1.);
+				else
+					bjetWeights.push_back(0);
+			}
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBJets);
+
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan->setCurrentBJetBin(weightIndex);
+			abcdMethodAnalyser_->setScale(bjetWeight);
+			diElectronAnalyser->setScale(bjetWeight);
+			electronAnalyser->setScale(bjetWeight);
+			jetAnalyser->setScale(bjetWeight);
+			metAnalyser->setScale(bjetWeight);
+			muonAnalyser->setScale(bjetWeight);
+//			mvAnalyser->setScale(bjetWeight);
+//			neutrinoRecoAnalyser->setScale(bjetWeight);
+			vertexAnalyser->setScale(bjetWeight);
+
+			abcdMethodAnalyser_->analyse(currentEvent);
+			diElectronAnalyser->analyse(currentEvent);
+			electronAnalyser->analyse(currentEvent);
+
+			jetAnalyser->analyse(currentEvent);
+			metAnalyser->analyse(currentEvent);
+			muonAnalyser->analyse(currentEvent);
+			//		mvAnalyser->analyse(currentEvent);
+			//		neutrinoRecoAnalyser->analyse(currentEvent);
+			vertexAnalyser->analyse(currentEvent);
+		}
+		//should not use btag reweighting (or unknown if shoud)
 		bjetAnalyser->analyse(currentEvent);
-		diElectronAnalyser->analyse(currentEvent);
-		electronAnalyser->analyse(currentEvent);
-		eventcountAnalyser->analyse(currentEvent);
-
-//		hltriggerAnalyser->analyse(currentEvent);
-//		hltriggerQCDAnalyserInclusive_->analyse(currentEvent);
-//		hltriggerQCDAnalyserExclusive_->analyse(currentEvent);
-		jetAnalyser->analyse(currentEvent);
-//		if (currentEvent->getDataType() == DataType::TTJets) {
-//			mcAnalyser->analyse(currentEvent);
-//			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
-//			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
-//			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
-//			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
-//		}
+		//		if (currentEvent->getDataType() == DataType::TTJets) {
+		//			mcAnalyser->analyse(currentEvent);
+		//			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
+		//			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
+		//			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
+		//			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
+		//		}
 		//hitfit analyser has to be after mcAnalyser as it depends on it
-//		if (Globals::useHitFit) {
-//			hitfitAnalyser->analyse(currentEvent);
-//		}
-		metAnalyser->analyse(currentEvent);
+		//		if (Globals::useHitFit) {
+		//			hitfitAnalyser->analyse(currentEvent);
+		//		}
+
+		//complex analysers use their own reweighting
+		//		hltriggerAnalyser->analyse(currentEvent);
+		//		hltriggerQCDAnalyserInclusive_->analyse(currentEvent);
+		//		hltriggerQCDAnalyserExclusive_->analyse(currentEvent);
+		eventcountAnalyser->analyse(currentEvent);
 		mttbarAnalyser->analyse(currentEvent);
-		muonAnalyser->analyse(currentEvent);
-//		mvAnalyser->analyse(currentEvent);
-//		neutrinoRecoAnalyser->analyse(currentEvent);
 		ttbarPlusMETAnalyser_->analyse(currentEvent);
-		vertexAnalyser->analyse(currentEvent);
 
 	}
 }
@@ -231,24 +270,23 @@ void Analysis::createHistograms() {
 Analysis::Analysis(std::string datasetInfoFile) : //
 		eventReader(new NTupleEventReader()), //
 		currentEvent(), //
-//		ttbarCandidate(), //
 		histMan(new BAT::HistogramManager()), //
-		ePlusJetsCutflow(), //
-		ePlusJetsSingleCuts(), //
-		ePlusJetsCutflowPerFile(), //
-		ePlusJetsSingleCutsPerFile(), //
-		muPlusJetsCutFlow(), //
-		muPlusJetsSingleCuts(), //
+//		ePlusJetsCutflow(), //
+//		ePlusJetsSingleCuts(), //
+//		ePlusJetsCutflowPerFile(), //
+//		ePlusJetsSingleCutsPerFile(), //
+//		muPlusJetsCutFlow(), //
+//		muPlusJetsSingleCuts(), //
 		interestingEvents(), //
 		brokenEvents(), //
 		eventCheck(), //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-		ePlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
-				JetBin::NUMBER_OF_JET_BINS), //
-		muPlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
-				JetBin::NUMBER_OF_JET_BINS), //
+//		ePlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
+//				JetBin::NUMBER_OF_JET_BINS), //
+//		muPlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
+//				JetBin::NUMBER_OF_JET_BINS), //
 		abcdMethodAnalyser_(new ABCDMethodAnalyser(histMan)), //
 		bjetAnalyser(new BJetAnalyser(histMan)), //
 		diElectronAnalyser(new DiElectronAnalyser(histMan)), //
@@ -267,15 +305,15 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)) {
-	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		ePlusJetsCutflow[cut] = 0;
-		ePlusJetsSingleCuts[cut] = 0;
-	}
-
-	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-		muPlusJetsCutFlow[cut] = 0;
-		muPlusJetsSingleCuts[cut] = 0;
-	}
+//	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
+//		ePlusJetsCutflow[cut] = 0;
+//		ePlusJetsSingleCuts[cut] = 0;
+//	}
+//
+//	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
+//		muPlusJetsCutFlow[cut] = 0;
+//		muPlusJetsSingleCuts[cut] = 0;
+//	}
 	histMan->enableDebugMode(true);
 }
 
