@@ -101,13 +101,6 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
 	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
 	return passesAllFilters;
-//	unsigned int numberOfTracks = event->Tracks().size();
-//	if (numberOfTracks > 10) {
-//		//more then 25% of the tracks are high purity
-//		double fractionOfGoodTracks(event->numberOfHighPurityTracks() / numberOfTracks);
-//		return fractionOfGoodTracks > 0.25;
-//	} else
-//		return event->isBeamScraping() == false;
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr event) const {
