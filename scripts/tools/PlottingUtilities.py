@@ -227,7 +227,7 @@ def setStyle():
     #tdrStyle.SetOptStat(1110);//off title
     tdrStyle.SetOptStat(0);#off title
     tdrStyle.SetOptFit(0);#off title
-    tdrStyle.SetTitleYOffset(1.6);
+#    tdrStyle.SetTitleYOffset(1.6);
     tdrStyle.cd();
     gROOT.ForceStyle();     
     

@@ -37,7 +37,7 @@ cuts_electrons = [
 cuts_muons = [
         "Skim",#
         "Event cleaning and HLT",#
-                "exactly one isolated muon",#
+                "Muon",#
                 "Electron veto",#
                 "Muon Veto",#
                 "$\geq 3$ jets",#
@@ -98,7 +98,7 @@ def printCutFlow(hist, analysis, outputFormat= 'Latex'):
             nums['QCD'], errs['QCD'] = nums['QCD']*scale, errs['QCD']*scale
             
         sumMC = nums['TTJet'] + nums['W+Jets'] + nums['DYJetsToLL'] + nums['SingleTop'] + nums['QCD'] + nums['Di-Boson']
-        sumMC_err = errs['TTJet'] + errs['W+Jets'] + errs['DYJetsToLL'] + errs['SingleTop'] + errs['QCD'] + errs['Di-Boson']
+        sumMC_err = sqrt(errs['TTJet']**2 + errs['W+Jets']**2 + errs['DYJetsToLL']**2 + errs['SingleTop']**2 + errs['QCD']**2 + errs['Di-Boson']**2)
         print row % (cuts[step], nums['TTJet'], errs['TTJet'], nums['W+Jets'], errs['W+Jets'], nums['DYJetsToLL'], errs['DYJetsToLL'], 
                      nums['SingleTop'], errs['SingleTop'], nums['Di-Boson'], errs['Di-Boson'], nums['QCD'], errs['QCD'], sumMC, sumMC_err, nums[used_data])
 

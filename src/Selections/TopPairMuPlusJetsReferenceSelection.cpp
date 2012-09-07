@@ -93,13 +93,21 @@ bool TopPairMuPlusJetsReferenceSelection::passesSelectionStep(const EventPtr eve
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr event) const {
-	unsigned int numberOfTracks = event->Tracks().size();
-	if (numberOfTracks > 10) {
-		//more then 25% of the tracks are high purity
-		double fractionOfGoodTracks(event->numberOfHighPurityTracks() / numberOfTracks);
-		return fractionOfGoodTracks > 0.25;
-	} else
-		return event->isBeamScraping() == false;
+	bool passesAllFilters(!event->isBeamScraping());
+	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
+	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
+	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
+	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
+	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
+	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
+	return passesAllFilters;
+//	unsigned int numberOfTracks = event->Tracks().size();
+//	if (numberOfTracks > 10) {
+//		//more then 25% of the tracks are high purity
+//		double fractionOfGoodTracks(event->numberOfHighPurityTracks() / numberOfTracks);
+//		return fractionOfGoodTracks > 0.25;
+//	} else
+//		return event->isBeamScraping() == false;
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr event) const {

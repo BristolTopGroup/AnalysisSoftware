@@ -1,13 +1,14 @@
 lumi = 5050
-folder = '/storage/results/histogramfiles/AN-12-241/central'
-#folder = '/scratch/results/histogramFiles/NewCode'
+folder = '/storage/results/histogramfiles/AN-12-241/central2'
+#folder = '/storage/results/histogramfiles/AN-12-241/PU_down'
+#folder = '/storage/results/histogramfiles/AN-12-241/PU_up'
 identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET'
 #identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_64600mb'
 #identifier = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_71400mb'
 
 files = {
-    'data':"%s/SingleMu_%dpb_%s.root" % (folder, lumi, identifier),
-#    'data':"%s/ElectronHad_%dpb_%s.root" % (folder, lumi, identifier),
+    'data':"%s/ElectronHad_%dpb_%s.root" % (folder, lumi, identifier),
+#    'data':"%s/SingleMu_%dpb_%s.root" % (folder, lumi, identifier),
     'ttbar' : "%s/TTJet_%dpb_%s.root" %(folder, lumi, identifier),
 #    'wjets' : "%s/WJetsToLNu_%dpb_%s.root" %(folder, lumi, identifier),
     'W1Jet' : "%s/W1Jet_%dpb_%s.root" %(folder, lumi, identifier),
@@ -35,6 +36,6 @@ files = {
     'Tbar_TuneZ2_tW-channel' : "%s/Tbar_tW-channel_%dpb_%s.root" %(folder, lumi, identifier),
     'Tbar_TuneZ2_t-channel' : "%s/Tbar_t-channel_%dpb_%s.root" %(folder, lumi, identifier),
     'Tbar_TuneZ2_s-channel' : "%s/Tbar_s-channel_%dpb_%s.root" %(folder, lumi, identifier),
-    'TTbarZIncl' : "%s/TTbarZIncl_%dpb_%s.root" %(folder, lumi, identifier),
-    'TTbarInclWIncl' : "%s/TTbarInclWIncl_%dpb_%s.root" %(folder, lumi, identifier),
+#    'TTbarZIncl' : "%s/TTbarZIncl_%dpb_%s.root" %(folder, lumi, identifier),
+#    'TTbarInclWIncl' : "%s/TTbarInclWIncl_%dpb_%s.root" %(folder, lumi, identifier),
              }

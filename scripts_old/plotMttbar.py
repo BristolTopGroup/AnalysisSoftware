@@ -2,6 +2,7 @@ from __future__ import division
 from numpy import arange
 from tdrStyle import *
 from ROOT import *
+from ROOT import kAzure, kYellow, kViolet, kRed, gROOT, kMagenta, kGreen, TLegend, THStack, TCanvas, gStyle, kGray, TH1F, gPad
 #from QCDEstimation import getQCDEstimate#, estimateQCDFor
 import QCDEstimation
 
@@ -20,95 +21,99 @@ def plotMttbar():
     saveAs = HistPlotter.saveAs
     
     performRescale = False
-#    tdrstyle = setTDRStyle();
-#    gStyle.SetHatchesSpacing(1.0);
     HistPlotter.setStyle()
-    lumi = 5000#5050.0#1959.75#1611.95
-#    lumi = 1091.45
-    oldLumi = 5000#5050#/(0.95**2)
+    lumi = 5100#5050.0#1959.75#1611.95
+    oldLumi = 5100#5050#/(0.95**2)
     scale = lumi / oldLumi;
     
     outputFormats = [
-                     'pdf', 
+                     'pdf',
                      'png']
     reverseMCOrder = False
     qcdFromData = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_0orMoreBtag'
     wjetScale = 1.#0.75#*81268812/81345381
     topScale = 1.#*3701947/59038455
-    savePath = "/storage/results/plots/ElectronHad/"
+    savePath = "/storage/results/plots/AN-12-241/"
     print 'Top scale', topScale
     print 'W+jets scale', wjetScale
     hists = [];
     
-#    hists.append('VertexAnalyser/nVertex_withMETAndAsymJets')
-#    hists.append('VertexAnalyser/nVertex_reweighted_withMETAndAsymJets')
-#    hists.append('VertexAnalyser/nVertex_reweighted_PUWeightInTimeOnly_withMETAndAsymJets')
-#    hists.append('VertexAnalyser/nVertex_reweighted_PUWeight3BX_withMETAndAsymJets')
-#    hists.append('VertexAnalyser/nVertex_reweighted_PUWeight3D_withMETAndAsymJets')
-#    hists.append('EventCount/TTbarEplusJetsSelection')
-#    hists.append('EventCount/TTbarEplusJetsSelection_3jets')
-#    hists.append('EventCount/TTbarEplusJetsSelection_noMETCut_3jets')
-#    hists.append('EventCount/TTbarEplusJetsSelection_noMETCut')
 
-#    hists.append('MttbarAnalysis/ElectronPlusJets/ThreeJetChi2/mttbar_withMETAndAsymJets')
-#    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/mttbar_withMETAndAsymJets')
-#    hists.append('MttbarAnalysis/ElectronPlusJets/FourJetChi2/ttbar_pt_withMETAndAsymJets')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDConversions/Electron/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/Electron/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Electron/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDConversions/Electron/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/Electron/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets, non iso trigger/Electron/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDAntiID/Electron/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDNoIsoNoID/Electron/electron_eta')
-#    
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Electron/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDConversions/Electron/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/Electron/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets, non iso trigger/Electron/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDAntiID/Electron/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDNoIsoNoID/Electron/electron_AbsEta')
-#    
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/Electron/electron_pfIsolation_03')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets, non iso trigger/Electron/electron_pfIsolation_03')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_0-25/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_25-45/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_45-70/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_70-100/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_100-inf/electron_eta')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Electron/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets, non iso trigger/Electron/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDAntiID/Electron/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDNoIsoNoID/Electron/electron_AbsEta')
+
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_pfIsolation_03')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_0-25/electron_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_25-45/electron_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_45-70/electron_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_70-100/electron_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_PFMET_bin_100-inf/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_0-25/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_25-45/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_45-70/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_70-100/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_100-inf/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_0-25/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_25-45/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_45-70/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_70-100/electron_eta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_100-inf/electron_eta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_0-25/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_25-45/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_45-70/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_70-100/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1CorrectedPFMet_bin_100-inf/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_0-25/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_25-45/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_45-70/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_70-100/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/Electron_patType1p2CorrectedPFMet_bin_100-inf/electron_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/bjet_invariant_mass')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/MET')
-    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patMETsPFlow/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/MET_phi')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET_phi')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDConversions/MET/patMETsPFlow/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/MET/patMETsPFlow/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDConversions/MET/patType1p2CorrectedPFMet/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/MET/patType1p2CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/MET/patMETsPFlow/MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/MET/patMETsPFlow/MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/MET/patType1p2CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/MET/patType1p2CorrectedPFMet/MET')
 #    
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/Transverse_Mass')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/Angle_lepton_MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/Transverse_Mass')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/Angle_lepton_MET')
+    
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Muon/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/Muon/muon_AbsEta')
+#
+##    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_PFMET_bin_0-25/muon_AbsEta')
+##    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_PFMET_bin_25-45/muon_AbsEta')
+##    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_PFMET_bin_45-70/muon_AbsEta')
+##    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_PFMET_bin_70-100/muon_AbsEta')
+##    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_PFMET_bin_100-inf/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_0-25/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_25-45/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_45-70/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_70-100/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_100-inf/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1p2CorrectedPFMet_bin_0-25/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1p2CorrectedPFMet_bin_25-45/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1p2CorrectedPFMet_bin_45-70/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1p2CorrectedPFMet_bin_70-100/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1p2CorrectedPFMet_bin_100-inf/muon_AbsEta')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/bjet_invariant_mass')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patMETsPFlow/MET')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patMETsPFlow/MET_phi')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET_phi')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/MET/patMETsPFlow/MET')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/MET/patType1p2CorrectedPFMet/MET')
+##    
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/Muon/muon_pfIsolation_04')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD mu+jets PFRelIso/Muon/muon_pfIsolation_04')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1CorrectedPFMet/Transverse_Mass')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1CorrectedPFMet/Angle_lepton_MET')
+    
     
     
     
@@ -117,7 +122,9 @@ def plotMttbar():
 #                                                                 '0orMoreBtag',
 #                                                                 '0btag', 
 #                                                                 '1btag', 
-                                                                 '2orMoreBtags'])
+                                                                 '2orMoreBtags',
+#                                                                 '4orMoreBtags'
+                                                                 ])
     suffixes = HistPlotter.allBjetBins
 #    suffixes = ["0orMoreBtag", '0btag',
 #        "1orMoreBtag",
@@ -125,23 +132,19 @@ def plotMttbar():
 #        "3orMoreBtags", '4orMoreBtags' ]
 #    hists = [hist + '_' + suffix for hist in hists for suffix in suffixes]
 #    
-    jetBinned = HistPlotter.allJetBins
-    jetBinnedhists = []
-#    jetBinnedhists.append('diElectronAnalysis/diElectronMass')
-#    jetBinnedhists.append('diElectronAnalysis/diElectronMass_iso')
-#    jetBinnedhists.append("QCDStudy/QCDest_PFIsolation_WithMETCutAndAsymJetCuts")
-#    jetBinnedhists.append("QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts")
-#    
-    
-    jetBinnedhists = HistGetter.getHistsFromFiles(jetBinnedhists, files, jetBins=HistPlotter.allJetBins)
-    
     otherHists = []
 #    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Vertices/nVertex')
 #    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Vertices/nVertex_reweighted')
+#    
 #    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/N_BJets')
-    otherHists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/N_BJets')
-#    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Jets_noBtagWeights/N_BJets')
-    otherHists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Jets_noBtagWeights/N_BJets')
+#    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/N_BJets_reweighted')
+    
+##    otherHists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Vertices/nVertex')
+#    otherHists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Vertices/nVertex_reweighted')
+    
+#    otherHists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/N_BJets')
+#    otherHists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/N_BJets_reweighted')
+
 #    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Electron/electron_pT')
 #    otherHists.append('ElectronAnalysis/All_Electron_mvaTrigV0')
 #    otherHists.append('VertexAnalyser/nVertex')
@@ -151,9 +154,9 @@ def plotMttbar():
 #    otherHists.append('VertexAnalyser/nVertex_reweighted_PUWeight3D')
     
 #    otherHists.append('QCDStudy/QCDest_PFIsolation_1btag_WithMETCutAndAsymJetCuts_3jets')
-    otherHists = HistGetter.getHistsFromFiles(otherHists, files)
-    hists = HistGetter.joinHistogramDictionaries([hists,
-#                                                  #jetBinnedhists, 
+    if len(otherHists) > 0:
+        otherHists = HistGetter.getHistsFromFiles(otherHists, files)
+        hists = HistGetter.joinHistogramDictionaries([hists,
                                                   otherHists])
     gcd = gROOT.cd
 
@@ -195,8 +198,8 @@ def plotMttbar():
         
         hist_diboson = hists['ww'][histname] + hists['wz'][histname] + hists['zz'][histname]
         
-        hist_ttbarZ = hists['TTbarZIncl'][histname]
-        hist_ttbarW = hists['TTbarInclWIncl'][histname]
+#        hist_ttbarZ = hists['TTbarZIncl'][histname]
+#        hist_ttbarW = hists['TTbarInclWIncl'][histname]
 
         hist_ttbar.Scale(scale);
         hist_ttbar.Scale(topScale);
@@ -209,8 +212,8 @@ def plotMttbar():
         hist_bce2.Scale(scale);
         hist_bce3.Scale(scale);
 #        hist_muQCD.Scale(scale);
-        hist_ttbarZ.Scale(scale * 100)
-        hist_ttbarW.Scale(scale * 100)
+#        hist_ttbarZ.Scale(scale * 100)
+#        hist_ttbarW.Scale(scale * 100)
         hist_enri1.Scale(scale);
         hist_enri2.Scale(scale);
         hist_enri3.Scale(scale);
@@ -247,8 +250,8 @@ def plotMttbar():
             
             
             qcdFromMCPlots = 'QCD' in histname or 'Vertices' in histname or 'jets' in histname.split('/')[-1].lower()         
-            if 'TTbarPlusMetAnalysis' in histname and not qcdFromMCPlots:
-                qcdRateEstimate = 'TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03'
+            if 'TTbarPlusMetAnalysis' in histname and not qcdFromMCPlots and not 'bjet_invariant_mass' in histname:
+                qcdRateEstimate = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03'
     #            qcdRateEstimate = 'TTbarPlusMetAnalysis/EPlusJets/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03'
                 currentBin = HistPlotter.getBjetBin(histname)
                 estimate, err = QCDEstimation.getQCDEstimate(files['data'],
@@ -272,12 +275,12 @@ def plotMttbar():
                     currentBin = HistPlotter.getBjetBin(histname)
                     variable = variable.replace(currentBin, '0btag')
                     
-                qcdShapeFromData = 'TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCDConversions/' + analyser + '/' + variable
-                qcdShapeComparison = 'TTbarPlusMetAnalysis/EPlusJets/Ref selection/QCD non iso e+jets/' + analyser + '/' + variable
+                qcdShapeFromData = 'TTbarPlusMetAnalysis/EPlusJets/QCDConversions/' + analyser + '/' + variable
+                qcdShapeComparison = 'TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/' + analyser + '/' + variable
                 
                 if 'BinnedMETAnalysis' in histname:
-                    qcdShapeFromData = 'TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/QCDConversions/' + analyser + '/' + variable
-                    qcdShapeComparison = 'TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/QCD non iso e+jets/' + analyser + '/' + variable
+                    qcdShapeFromData = 'TTbarPlusMetAnalysis/EPlusJets/QCDConversions/BinnedMETAnalysis/' + analyser + '/' + variable
+                    qcdShapeComparison = 'TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/BinnedMETAnalysis/' + analyser + '/' + variable
                 
     #            qcdShapeFromData = 'TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/QCD non iso e+jets/' + analyser + '/' + variable
     #            qcdShapeComparison = 'TTbarPlusMetAnalysis/EPlusJets/Ref selection/BinnedMETAnalysis/QCDConversions/' + analyser + '/' + variable
@@ -292,13 +295,38 @@ def plotMttbar():
                 shapeErrorHist = QCDEstimation.getShapeErrorHistogram(files,
                                                                       histogramForShape=qcdShapeFromData,
                                                                       histogramForComparison=qcdShapeComparison)
-                
-               
-                    
     #            errorHist = QCDEstimation.createErrorHistogram([hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_diboson, hist_qcd],
     #                                                       hist_qcd, relativeQCDEstimationError, shapeErrorHist)
-            
-            
+                
+        if 'MuPlusJets' in histname or 'Muon' in histname:
+            nMuQCD = hist_muQCD.Integral()
+            #scale by factor
+            nMuQCD = nMuQCD*1.21
+            #get template from anti-isolated region
+            qcdFromMCPlots = 'QCD' in histname or 'Vertices' in histname or 'jets' in histname.split('/')[-1].lower()   
+            if 'TTbarPlusMetAnalysis' in histname and not qcdFromMCPlots and not 'bjet_invariant_mass' in histname:
+                variable = histname.split('/')[-1]
+                analyser = histname.split('/')[-2]
+                if 'MET' in variable or 'Transverse_Mass' in variable or 'Angle_lepton_MET' in variable:
+                    variable = histname.split('/')[-2] + '/' + histname.split('/')[-1]
+                    analyser = histname.split('/')[-3]
+                
+                print 'Using QCD shape from data for %s/%s' % (analyser, variable)
+                if 'btag' in histname.lower():#always use 0 b-tag bin if available
+                    currentBin = HistPlotter.getBjetBin(histname)
+                    variable = variable.replace(currentBin, '0btag')
+                    
+                qcdShapeFromData = 'TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/' + analyser + '/' + variable
+                
+                if 'BinnedMETAnalysis' in histname:
+                    qcdShapeFromData = 'TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/BinnedMETAnalysis/' + analyser + '/' + variable
+                
+                print 'QCD shape from Data:', qcdShapeFromData
+                qcdHists = HistGetter.getHistsFromFiles([qcdShapeFromData], {'data':files['data']})
+                hist_muQCD = qcdHists['data'][qcdShapeFromData]
+                nShape = hist_muQCD.Integral()
+                if nShape > 0:
+                    hist_muQCD.Scale(nMuQCD / nShape)
             
             
                 
@@ -323,7 +351,7 @@ def plotMttbar():
         if ("mttbar" in histname):
             hist_data.SetXTitle("m(t#bar{t}) [GeV]");
             rebin = 50;
-            hist_data.SetYTitle("Events/(%f GeV)" % hist_data.GetBinWidth(1)*rebin);
+            hist_data.SetYTitle("Events/(%f GeV)" % hist_data.GetBinWidth(1) * rebin);
             if setLogY:
                 Urange = (300, 3000)
             else:
@@ -377,7 +405,7 @@ def plotMttbar():
             hist_data.SetXTitle("number of b-tagged jets (SSVHE medium)");
             hist_data.SetYTitle("Events");
         elif ('MET_' in histname and not 'phi' in histname and not 'Angle_lepton_MET' in histname):
-            hist_data.SetXTitle("MET [GeV]");
+            hist_data.SetXTitle("E_{T}^{miss} [GeV]");
             hist_data.SetYTitle("Events/(5 GeV)");
             rebin = 5
             if setLogY:
@@ -387,12 +415,12 @@ def plotMttbar():
             else:
                 Urange = (0, 195)
         elif ('MET_phi' in histname):
-            hist_data.SetXTitle("#phi(MET)");
+            hist_data.SetXTitle("#phi(E_{T}^{miss})");
             hist_data.SetYTitle("Events/(0.1)");
             rebin = 1;
             Urange = (-4, 4)
         elif 'Angle_lepton_MET' in histname:
-            hist_data.SetXTitle("angle(l,MET)");
+            hist_data.SetXTitle("angle(l,E_{T}^{miss})");
             hist_data.SetYTitle("Events/0.05");
             rebin = 5;
             Urange = (0, 3.2)
@@ -476,19 +504,33 @@ def plotMttbar():
             Urange = (-3, 3)
         elif 'N_BJets' in histname:
             Urange = (0, 5)
+        elif 'bjet_invariant_mass' in histname:
+            Urange = (0, 600)
+            rebin = 20
+            hist_data.SetYTitle("Events/(20 GeV)");
+            hist_data.SetXTitle("m(b,b)");
         if 'electron_AbsEta' in histname:
             hist_data.SetYTitle("Events/(0.1)");
             hist_data.SetXTitle("|#eta(e)|");
             rebin = 10
             Urange = (0, 2.5)
-        
+        if 'muon_AbsEta' in histname:
+            hist_data.SetYTitle("Events/(0.1)");
+            hist_data.SetXTitle("|#eta(#mu)|");
+            rebin = 10
+            Urange = (0, 2.5)
+        if normalise:
+            title = hist_data.GetYaxis().GetTitle()
+            title = title.replace('Events', 'normalised to unit area')
+            title = title.replace('events', 'normalised to unit area')
+            hist_data.SetYTitle(title);
         hist_data.Rebin(rebin);
         hist_ttbar.Rebin(rebin);
         hist_wjets.Rebin(rebin);
         hist_zjets.Rebin(rebin);
         hist_qcd.Rebin(rebin);
-        hist_ttbarW.Rebin(rebin)
-        hist_ttbarZ.Rebin(rebin)
+#        hist_ttbarW.Rebin(rebin)
+#        hist_ttbarZ.Rebin(rebin)
         hist_muQCD.Rebin(rebin);
         hist_singleTop.Rebin(rebin)
         hist_diboson.Rebin(rebin)
@@ -528,34 +570,14 @@ def plotMttbar():
         hist_diboson.SetFillColor(kWhite)
 #        hist_diboson.SetLineColor(kWhite)
         
-        hist_ttbarZ.SetLineColor(kCyan-4)
-        hist_ttbarZ.SetFillStyle(4000)
-        hist_ttbarZ.SetLineWidth(3)
-        hist_ttbarZ.SetLineStyle(4);
-        hist_ttbarW.SetLineColor(kBlue +2)
-        hist_ttbarW.SetFillStyle(4000)
-        hist_ttbarW.SetLineWidth(3)
-        hist_ttbarW.SetLineStyle(4);
-
-#        hist_Zprime500.SetLineColor(kTeal - 9);
-#        hist_Zprime500.SetFillStyle(0);
-#        hist_Zprime500.SetFillColor(kWhite);
-#
-#        hist_Zprime750.SetLineColor(kBlue - 6);
-#        hist_Zprime750.SetFillStyle(0);
-#        hist_Zprime750.SetFillColor(kWhite);
-#
-#        hist_Zprime1000.SetLineColor(28);
-#        hist_Zprime1000.SetFillStyle(0);
-#        hist_Zprime1000.SetFillColor(kWhite);
-#
-#        hist_Zprime1250.SetLineColor(kCyan - 5);
-#        hist_Zprime1250.SetFillStyle(0);
-#        hist_Zprime1250.SetFillColor(kWhite);
-#
-#        hist_Zprime4000.SetLineColor(kOrange + 1);
-#        hist_Zprime4000.SetFillStyle(0);
-#        hist_Zprime4000.SetFillColor(kWhite);
+#        hist_ttbarZ.SetLineColor(kCyan-4)
+#        hist_ttbarZ.SetFillStyle(4000)
+#        hist_ttbarZ.SetLineWidth(3)
+#        hist_ttbarZ.SetLineStyle(4);
+#        hist_ttbarW.SetLineColor(kBlue +2)
+#        hist_ttbarW.SetFillStyle(4000)
+#        hist_ttbarW.SetLineWidth(3)
+#        hist_ttbarW.SetLineStyle(4);
 
         leg = TLegend(0.696, 0.95, 0.94, 0.55);
         leg.SetBorderSize(0);
@@ -563,7 +585,7 @@ def plotMttbar():
         leg.SetTextFont(42);
         leg.SetFillStyle(0);
 
-        leg.AddEntry(hist_data, "data '11", "P");
+        leg.AddEntry(hist_data, "data", "P");
         #        leg.AddEntry(hist_data2, "data(no HLT)", "P");
         leg.AddEntry(hist_ttbar, "t#bar{t}", "f")
         leg.AddEntry(hist_singleTop, "Single-Top", "f")
@@ -574,8 +596,8 @@ def plotMttbar():
         else:
             leg.AddEntry(hist_qcd, "QCD/#gamma + jets", "f");
         leg.AddEntry(hist_diboson, "VV + X", "f")
-        leg.AddEntry(hist_ttbarW, "t#bar{t} + W x 100", "f")
-        leg.AddEntry(hist_ttbarZ, "t#bar{t} + Z x 100", "f")
+#        leg.AddEntry(hist_ttbarW, "t#bar{t} + W x 100", "f")
+#        leg.AddEntry(hist_ttbarZ, "t#bar{t} + Z x 100", "f")
         
 #        leg.AddEntry(hist_Zprime500, "Z' 0.5TeV (50pb)");
 #        leg.AddEntry(hist_Zprime750, "Z' 0.75TeV (50pb)");
@@ -583,19 +605,22 @@ def plotMttbar():
 #        leg.AddEntry(hist_Zprime1250, "Z' 1.25TeV (50pb)");
 #        leg.AddEntry(hist_Zprime4000, "Z' 4TeV (50pb)");
         if normalise:
-            normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd, hist_diboson)
-            nTTW = hist_ttbarW.Integral()
-            nTTZ = hist_ttbarZ.Integral()
-            if nTTW > 0:
-                hist_ttbarW.Scale(1 / nTTW)
-            if nTTZ > 0:
-                hist_ttbarZ.Scale(1 / nTTZ)
+            if 'EPlusJets' in histname:
+                normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd, hist_diboson)
+            else:
+                normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_muQCD, hist_diboson)
+#            nTTW = hist_ttbarW.Integral()
+#            nTTZ = hist_ttbarZ.Integral()
+#            if nTTW > 0:
+#                hist_ttbarW.Scale(1 / nTTW)
+#            if nTTZ > 0:
+#                hist_ttbarZ.Scale(1 / nTTZ)
             
 
         
         canvases.append(TCanvas("cname" + histname, histname, 1600, 1200))
         canvases[-1].cd().SetRightMargin(0.04);
-        if 'TTbarPlusMetAnalysis' in histname and not 'QCD' in histname:
+        if 'TTbarPlusMetAnalysis' in histname and not 'QCD' in histname and 'EPlusJets' in histname:
 #            relativeQCDEstimationError = 0
             errorHist = QCDEstimation.createErrorHistogram([hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_diboson, hist_qcd],
                                                        hist_qcd, relativeQCDEstimationError, shapeErrorHist)
@@ -606,7 +631,7 @@ def plotMttbar():
             hs.Add(hist_wjets);
             hs.Add(hist_zjets);
             hs.Add(hist_singleTop);
-            if 'Muon' in histname:
+            if 'MuPlusJets' in histname:
                 hs.Add(hist_muQCD);
             else:
                 hs.Add(hist_qcd);
@@ -614,7 +639,7 @@ def plotMttbar():
         
         else:
             hs.Add(hist_diboson);
-            if 'Muon' in histname:
+            if 'MuPlusJets' in histname:
                 hs.Add(hist_muQCD);
             else:
                 hs.Add(hist_qcd);
@@ -641,8 +666,8 @@ def plotMttbar():
             hist_data.GetYaxis().SetRangeUser(0.1, max);
         hist_data.Draw('error');
         hs.Draw("hist same");
-        hist_ttbarW.Draw("same")
-        hist_ttbarZ.Draw("same")
+#        hist_ttbarW.Draw("same")
+#        hist_ttbarZ.Draw("same")
 #        hist_Zprime500.Draw("same");
 #        hist_Zprime750.Draw("same");
 #        hist_Zprime1000.Draw("same");
@@ -706,8 +731,8 @@ def plotMttbar():
         cu_hist_muQCD = getCumulativePlot(hist_qcd, "MUqcd_" + histname);
         cu_hist_singleTop = getCumulativePlot(hist_singleTop, "singleTop_" + histname);
         cu_hist_diboson = getCumulativePlot(hist_diboson, "di-boson_" + histname);
-        cu_hist_ttbarW = getCumulativePlot(hist_ttbarW, "ttbarW_" + histname);
-        cu_hist_ttbarZ = getCumulativePlot(hist_ttbarZ, "ttbarZ_" + histname);
+#        cu_hist_ttbarW = getCumulativePlot(hist_ttbarW, "ttbarW_" + histname);
+#        cu_hist_ttbarZ = getCumulativePlot(hist_ttbarZ, "ttbarZ_" + histname);
 ##        cu_hist_Zprime500 = getCumulativePlot(hist_Zprime500, "Zprime500");
 ##        cu_hist_Zprime750 = getCumulativePlot(hist_Zprime750, "Zprime750");
 ##        cu_hist_Zprime1000 = getCumulativePlot(hist_Zprime1000, "Zprime1000");
@@ -724,8 +749,8 @@ def plotMttbar():
         cu_hist_muQCD.SetAxisRange(Urange[0], Urange[1]);
         cu_hist_singleTop.SetAxisRange(Urange[0], Urange[1]);
         cu_hist_diboson.SetAxisRange(Urange[0], Urange[1]);
-        cu_hist_ttbarW.SetAxisRange(Urange[0], Urange[1]);
-        cu_hist_ttbarZ.SetAxisRange(Urange[0], Urange[1]);
+#        cu_hist_ttbarW.SetAxisRange(Urange[0], Urange[1]);
+#        cu_hist_ttbarZ.SetAxisRange(Urange[0], Urange[1]);
         
         cu_hs = THStack("cu_MC", "cu_MC");
         cu_hs.Add(cu_hist_diboson);
@@ -743,8 +768,8 @@ def plotMttbar():
         
         cu_hist_data.Draw("error");
         cu_hs.Draw("hist same");
-        cu_hist_ttbarW.Draw("same");
-        cu_hist_ttbarZ.Draw("same");
+#        cu_hist_ttbarW.Draw("same");
+#        cu_hist_ttbarZ.Draw("same");
 ###        cu_hist_Zprime500.Draw("same");
 ###        cu_hist_Zprime750.Draw("same");
 ###        cu_hist_Zprime1000.Draw("same");

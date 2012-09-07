@@ -49,6 +49,10 @@ NTupleEventReader::NTupleEventReader() :
 		PUWeightShiftUp_(new VariableReader<double>(input, "Event.PUWeightShiftUp")), //
 		PUWeightShiftDown_(new VariableReader<double>(input, "Event.PUWeightShiftDown")), //
 		sumETReader_(new VariableReader<double>(input, "Event.SumET")), //
+		HCALLaserFilter(new VariableReader<bool>(input, "Event.HCALLaserFilter")), //
+		ECALDeadCellFilter(new VariableReader<bool>(input, "Event.ECALDeadCellFilter")), //
+		TrackingFailureFilter(new VariableReader<bool>(input, "Event.TrackingFailureFilter")), //
+		CSCTightHaloId(new VariableReader<bool>(input, "Event.CSCTightHaloId")), //
 		areReadersSet(false), //
 		areDatatypesKnown(false), //
 		currentEvent(), //
@@ -117,7 +121,6 @@ const EventPtr NTupleEventReader::getNextEvent() {
 			currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
 			currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
 			currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
-//			currentEvent->setPUWeight3D(PUWeight3D_->getVariable());
 			currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
 			currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
 		}
@@ -135,8 +138,15 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		if (isMCOnlyMET && currentEvent->isRealData())
 			continue;
 		const METPointer met(metReaders.at(index)->getMET());
-		if (Globals::NTupleVersion >= 7)
+		if (Globals::NTupleVersion >= 7){
 			met->setSumET(sumETReader_->getVariable());
+			currentEvent->setHCALLaserFilter(HCALLaserFilter->getVariable());
+			currentEvent->setECALDeadCellFilter(ECALDeadCellFilter->getVariable());
+			currentEvent->setTrackingFailureFilter(TrackingFailureFilter->getVariable());
+			currentEvent->setCSCTightBeamHaloFilter(!CSCTightHaloId->getVariable());
+			currentEvent->setHBHENoiseFilter(true);//we filter on this for the skim
+			currentEvent->setNoisySCFilter(true);//not available for current nTuples, 2012 data only
+		}
 		mets.at(index) = met;
 	}
 
@@ -192,8 +202,13 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			PUWeightShiftUp_->initialiseBlindly();
 			PUWeightShiftDown_->initialiseBlindly();
 		}
-		if (Globals::NTupleVersion >= 7)
+		if (Globals::NTupleVersion >= 7) {
 			sumETReader_->initialise();
+			HCALLaserFilter->initialise();
+			ECALDeadCellFilter->initialise();
+			TrackingFailureFilter->initialise();
+			CSCTightHaloId->initialise();
+		}
 
 		for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 			if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
