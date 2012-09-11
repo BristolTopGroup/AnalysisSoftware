@@ -45,7 +45,6 @@ protected:
 	void createHistogramsFor(std::string collection);
 
 protected:
-	double weight;
 	std::string currentType;
 	TtbarHypothesisCollection allSolutions;
 	TopPairEPlusJetsReferenceSelectionPointer topElectronPlusJetsRefSelection_;
