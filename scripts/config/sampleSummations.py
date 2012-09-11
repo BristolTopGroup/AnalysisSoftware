@@ -21,3 +21,11 @@ vplusjets_samples.append('DYJetsToLL')
 diboson_samples = [ 'WWtoAnything', 'WZtoAnything', 'ZZtoAnything']
 signal_samples = [ 'TTJet', 'SingleTop']
 allMC_samples = [ 'TTJet', 'DYJetsToLL', 'QCD', 'Di-Boson', 'W+Jets', 'SingleTop']
+
+btag_bins_inclusive = ['0orMoreBtag', '1orMoreBtag', '2orMoreBtags', '3orMoreBtags']
+btag_sums = {
+             '0orMoreBtag':['0btag', '1btag', '2btags', '3btags', '4orMoreBtags'],
+             '1orMoreBtag':['1btag', '2btags', '3btags', '4orMoreBtags'],
+             '2orMoreBtags':['2btags', '3btags', '4orMoreBtags'],
+             '3orMoreBtags':['3btags', '4orMoreBtags']
+             }

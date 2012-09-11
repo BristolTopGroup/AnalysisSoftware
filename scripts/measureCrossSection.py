@@ -26,7 +26,7 @@ import sys
 correctionFactors = None
 acceptanceFactors = None
 contaminationFactors = None
-savePath = "/storage/results/plots/AN-12-241/DiffMETMeasurement/binCorrection/"
+savePath = "/storage/results/plots/AN-12-241_V3/DiffMETMeasurement/binCorrection/"
 outputFormat_tables = 'latex' #other option: twiki
 outputFormat_plots = ['png', 'pdf']
 
@@ -87,13 +87,6 @@ metbin_latex = {
                }  
 
 doBinByBinUnfolding = True
-#metbin_widths = {
-#           '0-25':1,
-#               '25-45':1,
-#               '45-70':1,
-#               '70-100':1,
-#               '100-inf':1
-#               }      
     
 metsystematics_sources = [
  "patType1p2CorrectedPFMetElectronEnUp",
@@ -1059,9 +1052,6 @@ def setNEvents(bjetbin, analysis):
 def setNTtbar(bjetbin, analysis):
     global N_ttbar_by_source, metType
     N_ttbar_by_source[analysis] = {}
-#    met = metType
-#    if metType == 'PFMET':
-#        met = 'patMETsPFlow'
     histname = 'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/Electron/electron_AbsEta_' + bjetbin
     if analysis == 'MuPlusJets':
         histname = 'TTbarPlusMetAnalysis/' + analysis + '/Ref selection/Muon/muon_AbsEta_' + bjetbin
@@ -2114,7 +2104,7 @@ def saveAsJSON(result, filename):
     output_file.close()
 
 def getCorrections(analysis):
-    from purityAndStability_METbins_V0 import fileTemplate
+    from purityAndStability_METbins import fileTemplate
     inputFileName = fileTemplate % (analysis, bjetbin)
     print 'Loading correction factors from:'
     print inputFileName
@@ -2137,7 +2127,7 @@ def loadContaminationCorrections(analysis):
 def setMETSystematics(metType):
     global metsystematics_sources, metsystematics_sources_latex
     prefix = ''
-    if metType == 'PFMET':
+    if metType == 'patMETsPFlow':
         prefix = 'patPFMet'
     elif metType == 'patType1CorrectedPFMet':
         prefix = 'patType1CorrectedPFMet'
@@ -2222,7 +2212,7 @@ if __name__ == '__main__':
                         '3m':'3orMoreBtags',
                         '4m':'4orMoreBtags',
                         #mettype:
-                        'pf':'PFMET',
+                        'pf':'patMETsPFlow',
                         'type1':'patType1CorrectedPFMet',
                         'type1p2':'patType1p2CorrectedPFMet'
                         }
@@ -2235,7 +2225,7 @@ if __name__ == '__main__':
     
     setMETSystematics(metType)
 
-    from purityAndStability_METbins_V0 import fileTemplate
+    from purityAndStability_METbins import fileTemplate
     inputFileName = fileTemplate % ('EPlusJets', bjetbin)
     correctionFactors, acceptanceFactors, contaminationFactors = {}, {}, {}
     correctionFactors['EPlusJets'] = getCorrections('EPlusJets')
@@ -2251,7 +2241,7 @@ if __name__ == '__main__':
     constrains['DYJetsToLL']['enabled'] = ('ZJets' in options.constrain)
     constrains['Di-Boson']['enabled'] = ('VV' in options.constrain)
 
-    savePath = "/storage/results/plots/AN-12-241/DiffMETMeasurement/binCorrection/%s/" % metType    
+    savePath = "/storage/results/plots/AN-12-241_V3/DiffMETMeasurement/binCorrection/%s/" % metType    
     if test:
         metbins = ['25-45']
         savePath = "/storage/results/plots/testing2/%s/" % metType    

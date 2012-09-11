@@ -1,5 +1,5 @@
 placeholder = 'SAMPLE'
-pathToFiles = '/storage/results/histogramfiles/AN-12-241'
+pathToFiles = '/storage/results/histogramfiles/AN-12-241_V3'
 luminosity = 5050#pb-1
 suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET.root'
 JES_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusJES.root'
@@ -12,7 +12,7 @@ BJet_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusBjet.root'
 LightJet_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusLightJet.root'
 LightJet_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusLightJet.root'
 
-template = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/central2', 'lumi':luminosity, 'suffix':suffix, 'placeholder':placeholder}
+template = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/central', 'lumi':luminosity, 'suffix':suffix, 'placeholder':placeholder}
 template_JES_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/JES_down', 'lumi':luminosity, 'suffix':JES_down_suffix, 'placeholder':placeholder}
 template_JES_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/JES_up', 'lumi':luminosity, 'suffix':JES_up_suffix, 'placeholder':placeholder}
 template_PU_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/PU_down', 'lumi':luminosity, 'suffix':PU_down_suffix, 'placeholder':placeholder}
@@ -104,7 +104,7 @@ for sample in additionalSamples:
     files[sample] = rpl(placeholder, sample)
     
 for sample in ['POWHEG', 'PYTHIA6', 'MCatNLO']:
-    formatting = {'path':pathToFiles + '/central2', 'lumi':luminosity, 'suffix':'PFElectron_PFMuon_PF2PATJets_PFMET_%s.root'%sample, 'placeholder':'TTJet'}
+    formatting = {'path':pathToFiles + '/central', 'lumi':luminosity, 'suffix':'PFElectron_PFMuon_PF2PATJets_PFMET_%s.root'%sample, 'placeholder':'TTJet'}
     files[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     files_JES_down[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     files_JES_up[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting

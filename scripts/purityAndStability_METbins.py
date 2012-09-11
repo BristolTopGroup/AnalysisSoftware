@@ -6,158 +6,194 @@ Created on Aug 1, 2012
 Email: Lukasz.Kreczko@cern.ch
 '''
 
-import Styles
 import FILES
 import tools.ROOTFileReader as FileReader
+from ROOT import gROOT
+import tools.FileUtilities as FileUtils
 
-from ROOT import *
-#import HistGetter
-#import HistPlotter
-#import inputFiles
-from array import*
-import os
-
+fileTemplate = 'data/correctionFactors/correctionFactors_%s_%s_JSON.txt'
 samples = [
-         'TTJet',
-         'POWHEG',
-         'PYTHIA6',
-         'MCatNLO'
+        'TTJet',
+        'POWHEG',
+        'PYTHIA6',
+        'MCatNLO',
+        'TTJets-matchingdown',
+        'TTJets-matchingup',
+        'TTJets-scaledown',
+        'TTJets-scaleup',
          ]
 
-metBins = [
-           '0-24',
-           '25-44',
-           '45-69',
-           '70-99',
-           '100-inf'
-           ]
+metbins = [
+        '0-25',
+        '25-45',
+        '45-70',
+        '70-100',
+        '100-inf'
+        ]
 
-metTypes = [
-            'patMETsPFlow',
-            'patType1CorrectedPFMet',
-            'patType1p2CorrectedPFMet'
-            ]
+metTypes = ['patMETsPFlow', 'patType1CorrectedPFMet', 'patType1p2CorrectedPFMet' ]
+metsystematics_sources = [
+        "patType1p2CorrectedPFMetElectronEnUp",
+        "patType1p2CorrectedPFMetElectronEnDown",
+        "patType1p2CorrectedPFMetMuonEnUp",
+        "patType1p2CorrectedPFMetMuonEnDown",
+        "patType1p2CorrectedPFMetTauEnUp",
+        "patType1p2CorrectedPFMetTauEnDown",
+        "patType1p2CorrectedPFMetJetResUp",
+        "patType1p2CorrectedPFMetJetResDown",
+        "patType1p2CorrectedPFMetJetEnUp",
+        "patType1p2CorrectedPFMetJetEnDown",
+        "patType1p2CorrectedPFMetUnclusteredEnUp",
+        "patType1p2CorrectedPFMetUnclusteredEnDown",
+        "patType1CorrectedPFMetElectronEnUp",
+        "patType1CorrectedPFMetElectronEnDown",
+        "patType1CorrectedPFMetMuonEnUp",
+        "patType1CorrectedPFMetMuonEnDown",
+        "patType1CorrectedPFMetTauEnUp",
+        "patType1CorrectedPFMetTauEnDown",
+        "patType1CorrectedPFMetJetResUp",
+        "patType1CorrectedPFMetJetResDown",
+        "patType1CorrectedPFMetJetEnUp",
+        "patType1CorrectedPFMetJetEnDown",
+        "patType1CorrectedPFMetUnclusteredEnUp",
+        "patType1CorrectedPFMetUnclusteredEnDown",
+        "patPFMetElectronEnUp",
+        "patPFMetElectronEnDown",
+        "patPFMetMuonEnUp",
+        "patPFMetMuonEnDown",
+        "patPFMetTauEnUp",
+        "patPFMetTauEnDown",
+        "patPFMetJetResUp",
+        "patPFMetJetResDown",
+        "patPFMetJetEnUp",
+        "patPFMetJetEnDown",
+        "patPFMetUnclusteredEnUp",
+        "patPFMetUnclusteredEnDown",
+                      ]
+metTypes.extend(metsystematics_sources)
 
-bJetBins = [
-           '0btag',
-           '0orMoreBtag',
-           '1btag',
-           '1orMoreBtag',
-           '2orMoreBtags'
-           ]
+def getMETVariablesFrom2DPlot(analysisType, sample, metType, bjetbin):
+    hist = 'TTbarPlusMetAnalysis/' + analysisType + '/Ref selection/MET/%s/RecoMET_vs_GenMET_%s' % (metType, bjetbin)
+    correctionFactors = {}
+    purities = {}
+    stabilities = {}
+    numberOfGenEvents = {}
+    numberOfRecoEvents = {}
+    recoMETvsGenMET = FileReader.getHistogramFromFile(hist, FILES.files[sample])
+    for metbin in metbins:
+        lowerLimit, upperLimit = metbin.split('-')
+        lowerLimit, upperLimit = float(lowerLimit), float(upperLimit)
+        lowerXbin = recoMETvsGenMET.GetXaxis().FindBin(lowerLimit + 0.001)
+        lowerYbin = recoMETvsGenMET.GetYaxis().FindBin(lowerLimit + 0.001)
+        upperXbin, upperYbin = 0,0
+        overflowX, overflowY = recoMETvsGenMET.GetNbinsX()+1, recoMETvsGenMET.GetNbinsY()+1
+        if not upperLimit == 'inf':
+            upperXbin = recoMETvsGenMET.GetXaxis().FindBin(upperLimit - 0.001)
+            upperYbin = recoMETvsGenMET.GetYaxis().FindBin(upperLimit - 0.001)
+        else:
+            upperXbin = overflowX
+            upperYbin = overflowY
+        
+        N_reco = recoMETvsGenMET.Integral(0, overflowX, lowerYbin, upperYbin)
+        N_gen = recoMETvsGenMET.Integral(lowerXbin, upperXbin, 0, overflowY)
+        nRecoPlusnGen = recoMETvsGenMET.Integral(lowerXbin, upperXbin, lowerYbin, upperYbin)
+        purity = nRecoPlusnGen/N_reco
+        stability = nRecoPlusnGen/N_gen
+        correctionFactor = N_gen/N_reco
+        correctionFactors[metbin] = correctionFactor
+        purities[metbin] = purity
+        stabilities[metbin] = stability
+        numberOfGenEvents[metbin] = N_gen
+        numberOfRecoEvents[metbin] = N_reco
+    result = {
+              'correctionFactors': correctionFactors,
+              'purities': purities,
+              'stabilities': stabilities,
+              'numberOfGenEvents': numberOfGenEvents,
+              'numberOfRecoEvents':numberOfRecoEvents
+              }
+    return result
 
-outputFolder = "/storage/phjaj/Plots/" #REMEMBER TO CHANGE
-#saveAs = HistPlotter.saveAs
+def getMETVariables(analysisType, sample, metType, bjetbin):
+    base = 'TTbarPlusMetAnalysis/' + analysisType + '/Ref selection/BinnedMETAnalysis/'
+    analyser = 'Electron_%s_bin_%s/electron_AbsEta_%s'
+    if 'Mu' in analysisType:
+        analyser = 'Muon_%s_bin_%s/muon_AbsEta_%s'
+    correctionFactors = {}
+    purities = {}
+    stabilities = {}
+    numberOfGenEvents = {}
+    numberOfRecoEvents = {}
+    for metbin in metbins:
+            genMET = base + analyser % ('GenMET', metbin, bjetbin)
+            PFMET = base + analyser % (metType, metbin, bjetbin)
+            genMETs = FileReader.getHistogramFromFile(genMET, FILES.files[sample])
+            PFMETs = FileReader.getHistogramFromFile(PFMET, FILES.files[sample])
+            N_gen = genMETs.Integral()
+            N_reco = PFMETs.Integral()
+            purity = (N_gen + N_reco) / N_reco
+            stability = (N_gen + N_reco) / N_gen
+            correctionFactor = N_gen / N_reco
+            
+            correctionFactors[metbin] = correctionFactor
+            purities[metbin] = purity
+            stabilities[metbin] = stability
+            numberOfGenEvents[metbin] = N_gen
+            numberOfRecoEvents[metbin] = N_reco
+    result = {
+              'correctionFactors': correctionFactors,
+              'purities': purities,
+              'stabilities': stabilities,
+              'numberOfGenEvents': numberOfGenEvents,
+              'numberOfRecoEvents':numberOfRecoEvents
+              }
+    return result
 
+def saveToFile(correctionFactors, analysisType, bjetbin):
+    stringForFile = ''
+    fileName = fileTemplate % (analysisType, bjetbin)
+    stringForFile += str(correctionFactors) + '\n'
+    import json
+    stringForFile =  json.dumps(correctionFactors, sort_keys=True, indent=4)
+    FileUtils.writeStringToFile(stringForFile, fileName)
+        
+    
 if __name__ == "__main__":
-    #base = 'TTbarEplusJetsPlusMetAnalysis/Ref selection/BinnedMETAnalysis/'
-    base = "METAnalysis/"
-
-    
-    gROOT.Reset()
-    gROOT.ForceStyle()
+    from optparse import OptionParser
     gROOT.SetBatch(True)
-    gROOT.ProcessLine('gErrorIgnoreLevel = 5001;')
+    gROOT.ProcessLine('gErrorIgnoreLevel = 1001;')
+   
     
-    tdrStyle = Styles.tdrStyle()
-
-    gStyle.SetOptStat(0)
-
+    parser = OptionParser()
+    parser.add_option("-b", "--bjetbin", dest="bjetbin", default='2m',
+                  help="set b-jet multiplicity for analysis. Options: exclusive: 0-3, inclusive (N or more): 0m, 1m, 2m, 3m, 4m")
+    parser.add_option("-a", "--analysisType", dest="analysisType", default='EPlusJets',
+                  help="set analysis type: EPlusJets or MuPlusJets")
+    parser.add_option("-t", "--test",
+                  action="store_true", dest="test", default=False,
+                  help="Run test")
+    translateOptions = {
+                        '0':'0btag',
+                        '1':'1btag',
+                        '2':'2btags',
+                        '3':'3btags',
+                        '0m':'0orMoreBtag',
+                        '1m':'1orMoreBtag',
+                        '2m':'2orMoreBtags',
+                        '3m':'3orMoreBtags',
+                        '4m':'4orMoreBtags',
+                        }
+    
+    (options, args) = parser.parse_args()
+    bjetbin = translateOptions[options.bjetbin]
+    analysisType = options.analysisType
+    
+    correctionFactors = {}
     for sample in samples:
-        path = outputFolder + base + sample
-        if not os.path.exists(path):
-            os.makedirs(path)
-        print 'Sample = ', sample
-        outputFile = open(path + "/outputFile_" + str(sample) + ".txt", "w")
+        correctionFactors[sample] = {}
         for metType in metTypes:
-            for bJetBin in bJetBins:
-                histFile = base + metType + "/RecoMET_v._GenMET_" + bJetBin
-                print histFile
-                hist = FileReader.getHistogramFromFile(histFile, FILES.files[sample])
-                print "Plotting..."
-                print "hist = ", hist
-                title1 = TPaveStats(0, 0.90, 0.5, 0.93, "NDC")
-                title1.SetFillStyle(0)
-                title1.SetBorderSize(0)
-                title1.SetTextFont(42)
-                title1.SetTextAlign(13)
-
-                title2 = TPaveStats(0.5, 0.90, 1, 0.93, "NDC")
-                title2.SetFillStyle(0)
-                title2.SetBorderSize(0)
-                title2.SetTextFont(42)
-                title2.SetTextAlign(13)
-
-                bJetBinTitles = {'0btag':'0 b-tags', '0orMoreBtag':'#geq0 b-tags', '1btag':'1 b-tags', '1orMoreBtag':'#geq1 b-tags', '2orMoreBtags':'#geq2 b-tags'}
-                title1.AddText("e, #geq4 jets, " + bJetBinTitles[bJetBin])
-                title2.AddText("CMS Preliminary, L = 5fb^{-1} @ #sqrt{s} = 7 TeV")
-
-                hist.GetXaxis().SetTitle("GenMET [GeV]")
-                hist.GetYaxis().SetTitle("RecoMET [GeV]")
-                hist.SetTitle("")
-
-                metBins = {0:[0, 24], 1:[25, 44], 2:[45, 69], 3:[70, 99], 4:[100, "inf"]}
-
-                for c in range (len(metBins)):
-                    cutBinX1 = hist.GetXaxis().FindBin(metBins[c][0])
-                    cutBinY1 = hist.GetYaxis().FindBin(metBins[c][0])
-                    if metBins[c][1] != "inf":
-                        cutBinX2 = hist.GetXaxis().FindBin(metBins[c][1]) 
-                        cutBinY2 = hist.GetYaxis().FindBin(metBins[c][1])
-                    elif metBins[c][1] == "inf":
-                        cutBinX2 = hist.GetNbinsX()+1
-                        cutBinY2 = hist.GetNbinsY()+1
-
-                    nReco = hist.Integral(0, hist.GetNbinsX()+1, cutBinY1, cutBinY2)
-                    nGen = hist.Integral(cutBinX1, cutBinX2, 0, hist.GetNbinsY()+1)
-                    nRecoPlusnGen = hist.Integral(cutBinX1, cutBinX2, cutBinY1, cutBinY2)
-
-                    purity = nRecoPlusnGen/nReco
-                    stability = nRecoPlusnGen/nGen
-                    correctionFactor1 = nGen/nReco
-                    correctionFactor2 = purity/stability
-                    
-                    outputFile.write("mettype = " + metType + "\n")
-                    outputFile.write("bin: " + str(metBins[c]) + "\n")
-                    outputFile.write("purity = " + str(purity) + "\n")
-                    outputFile.write("stability = " + str(stability) + "\n")
-                    outputFile.write("correctionFactor1 = nGen/nReco = " + str(correctionFactor1) + "\n")
-                    outputFile.write("correctionFactor2 = purity/stability = " + str(correctionFactor2) + "\n")
-
-                    if metType == "patType1p2CorrectedPFMet":
-                        bJetStart = 55
-                    elif metType == "patType1CorrectedPFMet":
-                        bJetStart = 53
-                    elif metType == "patMETsPFlow":
-                        bJetStart = 43
-
-                    outputFile.write(histFile[bJetStart:] + " nReco = " + str(nReco) + "\n")
-                    outputFile.write(histFile[bJetStart:] + " nGen = " + str(nGen) + "\n")
-                    outputFile.write(histFile[bJetStart:] + " nRecoPlusnGen = " + str(nRecoPlusnGen) + "\n\n")
-                
-                canvas = TCanvas("canvas", "canvas", 800, 600)
-                #canvas.SetRightMargin(0.04)
-                outputFilename = histFile
-                hist.Draw("COLZ")
-                title1.Draw()
-                title2.Draw()
-                print "Saving canvas", path + "/" + metType + "_RecoMET_v._GenMET_" + bJetBin + ".root"
-                canvas.SaveAs(path + "/" + metType + "_RecoMET_v._GenMET_" + bJetBin + "_withoutMETbinLines.root")
-                
-                lineX1 = TLine(24, 0, 24, 300)
-                lineX1.Draw()
-                lineX2 = TLine(44, 0, 44, 300)
-                lineX2.Draw()
-                lineX3 = TLine(69, 0, 69, 300)
-                lineX3.Draw()
-                lineX4 = TLine(99, 0, 99, 300)
-                lineX4.Draw()
-                lineY1 = TLine(0, 24, 300, 24)
-                lineY1.Draw()
-                lineY2 = TLine(0, 44, 300, 44)
-                lineY2.Draw()
-                lineY3 = TLine(0, 69, 300, 69)
-                lineY3.Draw()
-                lineY4 = TLine(0, 99, 300, 99)
-                lineY4.Draw()
-                canvas.SaveAs(path + "/" + metType + "_RecoMET_v._GenMET_" + bJetBin + "_withMETbinLines.root")
+#            variables = getMETVariables(analysisType, sample, metType, bjetbin)
+            variables = getMETVariablesFrom2DPlot(analysisType, sample, metType, bjetbin)
+            correctionFactors[sample][metType] = variables['correctionFactors']
+    saveToFile(correctionFactors, analysisType, bjetbin)
+    

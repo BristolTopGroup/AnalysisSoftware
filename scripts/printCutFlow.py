@@ -58,7 +58,10 @@ def printCutFlow(hist, analysis, outputFormat= 'Latex'):
              hist_1mBtag,
              hist_2mBtag
              ]
-    hists = FileReader.getHistogramsFromFiles(hist_names, FILES.files)
+    inputfiles = {}
+    for sample in FILES.samplesToLoad:
+        inputfiles[sample] = FILES.files[sample]
+    hists = FileReader.getHistogramsFromFiles(hist_names, inputfiles)
     for sample in hists.keys():
         for histname in hists[sample].keys():
             hists[sample][histname].Sumw2()
