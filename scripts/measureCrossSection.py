@@ -86,6 +86,13 @@ metbin_latex = {
                '100-inf':'%s #geq 100 GeV' % MET_LATEX,
                }  
 
+metbin_latex_tables = {
+           '0-25':'0--25~\GeV',
+               '25-45':'25--45~\GeV',
+               '45-70':'45--70~\GeV',
+               '70-100':'70--100~\GeV',
+               '100-inf':'$\\geq 100$~\GeV'
+               }  
 doBinByBinUnfolding = True
     
 metsystematics_sources = [
@@ -1505,21 +1512,25 @@ def plotNormalisationResults(results, analysis):
             used_data = data_label[analysis]
             samples = [
                        used_data,
-                       'W+Jets',
-                       'DYJetsToLL',
+                       'V+Jets',
+#                       'W+Jets',
+#                       'DYJetsToLL',
                        qcdLabel,
     #                   'Di-Boson',
-                       'TTJet',
-                       'SingleTop'
+                        'Signal'
+#                       'TTJet',
+#                       'SingleTop'
                        ]
             colors = {
                       used_data:0,
-                       'W+Jets':kGreen - 3,
-                       'DYJetsToLL':kAzure - 2,
+                      'V+Jets':kGreen - 3,
+#                       'W+Jets':kGreen - 3,
+#                       'DYJetsToLL':kAzure - 2,
                        qcdLabel:kYellow,
     #                   'Di-Boson':kWhite,
-                       'TTJet':kRed + 1,
-                       'SingleTop': kMagenta
+                        'Signal':kRed + 1,
+#                       'TTJet':kRed + 1,
+#                       'SingleTop': kMagenta
                       }
             for sample in samples:
                 template = templates[sample]
@@ -1545,9 +1556,9 @@ def plotNormalisationResults(results, analysis):
                 
                 if not sample == used_data:
                     plot.SetFillColor(colors[sample])
-                    plot.SetLineColor(colors[sample])
+#                    plot.SetLineColor(colors[sample])
                     plot_template.SetLineColor(colors[sample])
-                    plot_template.SetLineWidth(3)
+                    plot_template.SetLineWidth(5)
                 plots[sample] = plot
                 plot_templates[sample] = plot_template
             c = TCanvas("Fit_" + metbin + bjetbin + measurement + analysis, "Differential cross section", 1600, 1200)
@@ -1557,20 +1568,24 @@ def plotNormalisationResults(results, analysis):
             mcStack = THStack("MC", "MC")
     #        mcStack.Add(plots['Di-Boson']);
             mcStack.Add(plots[qcdLabel]);
-            mcStack.Add(plots['DYJetsToLL']);
-            mcStack.Add(plots['W+Jets']);
-            mcStack.Add(plots['SingleTop']);
-            mcStack.Add(plots['TTJet']);
+            mcStack.Add(plots['V+Jets']);
+            mcStack.Add(plots['Signal']);
+#            mcStack.Add(plots['DYJetsToLL']);
+#            mcStack.Add(plots['W+Jets']);
+#            mcStack.Add(plots['SingleTop']);
+#            mcStack.Add(plots['TTJet']);
             mcStack.Draw('hist same')
 #            fit.Draw('same')
             plots[used_data].Draw('error same')
             
             legend = plotting.create_legend()
             legend.AddEntry(plots[used_data], "data", 'P')
-            legend.AddEntry(plots['TTJet'], 't#bar{t}', 'F')
-            legend.AddEntry(plots['SingleTop'], 'Single-Top', 'F')
-            legend.AddEntry(plots['W+Jets'], 'W#rightarrowl#nu', 'F')
-            legend.AddEntry(plots['DYJetsToLL'], 'Z/#gamma*#rightarrowl^{+}l^{-}', 'F')
+            legend.AddEntry(plots['Signal'], 't#bar{t} + Single-Top', 'F')
+#            legend.AddEntry(plots['TTJet'], 't#bar{t}', 'F')
+#            legend.AddEntry(plots['SingleTop'], 'Single-Top', 'F')
+            legend.AddEntry(plots['V+Jets'], 'V+Jets', 'F')
+#            legend.AddEntry(plots['W+Jets'], 'W#rightarrowl#nu', 'F')
+#            legend.AddEntry(plots['DYJetsToLL'], 'Z/#gamma*#rightarrowl^{+}l^{-}', 'F')
             legend.AddEntry(plots[qcdLabel], 'QCD/#gamma + jets', 'F')
             
     #        legend.AddEntry(plots['Di-Boson'], 'VV + X', 'F')
@@ -1616,19 +1631,25 @@ def plotNormalisationResults(results, analysis):
                             outputFormat_plots,
                             savePath + measurement)
             c = TCanvas(prefix + '_AbsEta_templates_' + metbin + bjetbin + measurement, "Differential cross section", 1600, 1200)
-            max_y = plot_templates['TTJet'].GetMaximum()
-            plot_templates['TTJet'].SetMaximum(max_y * 1.5)
-            plot_templates['TTJet'].Draw('hist')
+#            max_y = plot_templates['TTJet'].GetMaximum()
+#            plot_templates['TTJet'].SetMaximum(max_y * 1.5)
+#            plot_templates['TTJet'].Draw('hist')
+            max_y = plot_templates['Signal'].GetMaximum()
+            plot_templates['Signal'].SetMaximum(max_y * 1.5)
+            plot_templates['Signal'].Draw('hist')
             plot_templates[qcdLabel].Draw('hist same')
-            plot_templates['DYJetsToLL'].Draw('hist same')
-            plot_templates['W+Jets'].Draw('hist same')
-            plot_templates['SingleTop'].Draw('hist same')
+#            plot_templates['DYJetsToLL'].Draw('hist same')
+#            plot_templates['W+Jets'].Draw('hist same')
+            plot_templates['V+Jets'].Draw('hist same')
+#            plot_templates['SingleTop'].Draw('hist same')
             
-            legend = plotting.create_legend()
-            legend.AddEntry(plot_templates['TTJet'], 't#bar{t}', 'L')
-            legend.AddEntry(plot_templates['SingleTop'], 'Single-Top', 'L')
-            legend.AddEntry(plot_templates['W+Jets'], 'W#rightarrowl#nu', 'L')
-            legend.AddEntry(plot_templates['DYJetsToLL'], 'Z/#gamma*#rightarrowl^{+}l^{-}', 'L')
+            legend = plotting.create_legend(x0=0.696, y0 = 0.95, x1=0.94, y1=0.65)
+            legend.AddEntry(plot_templates['Signal'], 't#bar{t} + Single-Top', 'L')
+#            legend.AddEntry(plot_templates['TTJet'], 't#bar{t}', 'L')
+#            legend.AddEntry(plot_templates['SingleTop'], 'Single-Top', 'L')
+            legend.AddEntry(plot_templates['V+Jets'], 'V+Jets', 'L')
+#            legend.AddEntry(plot_templates['W+Jets'], 'W#rightarrowl#nu', 'L')
+#            legend.AddEntry(plot_templates['DYJetsToLL'], 'Z/#gamma*#rightarrowl^{+}l^{-}', 'L')
             legend.AddEntry(plot_templates[qcdLabel], 'QCD/#gamma + jets', 'L')
             
     #        legend.AddEntry(plots['Di-Boson'], 'VV + X', 'F')
@@ -1756,12 +1777,13 @@ def printNormalisedCrossSectionResult(result, analysis, toFile=True):
     rows = {}
     header = 'Measurement'
     for metbin in metbins:
-        header += '& $\sigma_{meas}$ \met bin %s~\GeV' % metbin
+        header += '& $\sigma_{meas}$ \met bin %s~\GeV' % metbin_latex_tables[metbin]
 #        width = metbin_widths[metbin]
         for source in result[metbin].keys():
             fitresult = result[metbin][source]
             scale = 100
             relativeError = getRelativeError(fitresult['value'], fitresult['error'])
+#            0--25~\GeV & $\left(0.61 \pm 0.03 \text{ (fit)} \pm 0.06 \text{ (syst.)}\right) \times 10^{-2}\, \GeV^{-1}$\\ 
             text = ' $(%.2f \pm %.2f) \cdot 10^{-2}$ ' % (fitresult['value'] * scale, fitresult['error'] * scale) + '(%.2f' % (relativeError * 100) + '\%)'
 #            text = ' $%.2f \pm %.2f $ ' % (fitresult['value']*scale,fitresult['error']*scale) + '(%.2f' % (relativeError * 100) + '\%)'
             if rows.has_key(source):
@@ -1810,17 +1832,21 @@ def printNormalisedCrossSectionResultsForTTJetWithUncertanties(result, analysis,
     uncertainties = {}
     header = 'Uncertainty'
     for metbin in metbins:
-        header += '&\met bin %s~\GeV' % metbin
+        header += '&\met bin %s' %  metbin_latex_tables[metbin]
 #        width = metbin_widths[metbin]
         centralresult = result[metbin]['central']
         uncertainty = calculateTotalUncertainty(result[metbin])
         uncertainty['Total+']['value'], uncertainty['Total-']['value'] = symmetriseErrors(uncertainty['Total+']['value'], uncertainty['Total-']['value'])
         scale = 100# / width
-        formatting = (metbin, centralresult['value'] * scale,
+        formatting = (metbin_latex_tables[metbin], centralresult['value'] * scale,
                       centralresult['error'] * scale, uncertainty['Total+']['value'] * scale,
                       uncertainty['Total-']['value'] * scale)
-        text = '%s~\GeV & $%.2f \pm %.2f (fit)^{+%.2f}_{-%.2f} (sys) \cdot 10^{-2}$\\\\ \n' % formatting
-#        text = '%s~\GeV & $%.2f \pm %.2f (fit)^{+%.2f}_{-%.2f} (sys)$\\\\ \n' % formatting
+        text = '%s & $%.2f \pm %.2f (fit)^{+%.2f}_{-%.2f} (sys) \cdot 10^{-2}$\\\\ \n' % formatting
+        if doSymmetricErrors:
+            formatting = (metbin_latex_tables[metbin], centralresult['value'] * scale,
+                      centralresult['error'] * scale, uncertainty['Total+']['value'] * scale)
+            text = '%s & $\\left(%.2f \\pm %.2f \\text{ (fit)} \pm %.2f \\text{ (syst.)}\\right) \\times 10^{-2}\, \\GeV^{-1}$\\\\ \n' % formatting
+            #0--25~\GeV & $\left(0.61 \pm 0.03 \text{ (fit)} \pm 0.06 \text{ (syst.)}\right) \times 10^{-2}\, \GeV^{-1}$\\ 
         printout += text
         for source in uncertainty.keys():
             unc_result = uncertainty[source]
