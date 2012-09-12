@@ -92,6 +92,7 @@ void MTtbarAnalyser::analyseFourJetChi2(const EventPtr event) {
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
 			scale_ = bjetWeight * efficiencyCorrection;
+			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("MuonPlusJets/Ref selection/FourJetChi2");
 		}
 	}
@@ -173,6 +174,7 @@ void MTtbarAnalyser::analyseThreeJetChi2(const EventPtr event) {
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
 			scale_ = bjetWeight * efficiencyCorrection;
+			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("MuonPlusJets/Ref selection/ThreeJetChi2");
 		}
 	}
@@ -244,6 +246,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const EventPtr event) {
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
 			scale_ = bjetWeight * efficiencyCorrection;
+			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("MuonPlusJets/Ref selection/FourJetTopMassDifference");
 		}
 	}
@@ -384,6 +387,7 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
 			scale_ = bjetWeight * efficiencyCorrection;
+			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("MuonPlusJets/QCD non iso mu+jets/FourJetChi2");
 		}
 	}
@@ -522,6 +526,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
 			scale_ = bjetWeight * efficiencyCorrection;
+			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("MuonPlusJets/QCD non iso mu+jets/FourJetTopMassDifference");
 		}
 	}
@@ -673,6 +678,7 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
 			scale_ = bjetWeight * efficiencyCorrection;
+			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("MuonPlusJets/QCD non iso mu+jets/ThreeJetChi2");
 		}
 	}
