@@ -42,6 +42,8 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		Particle(energy, px, py, pz), //
 		usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05), //
 		electromagneticFraction(0.), //
+		numberOfRecHitsContaining90PercentOfTheJetEnergy(0.), //
+		fractionOfEnergyIntheHottestHPDReadout(0.), //
 		btag_discriminators(BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS), //
 		numberOfDaughters(0), //
 		chargedEmEnergyFraction(1), //
@@ -348,7 +350,7 @@ double Jet::getBJetL7EtCorrection() const {
 	Float_t towerBinning[] = { 0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5 };
 	unsigned int nEtaBins_ = 11;
 	double res = -1;
-	for (UInt_t iEta = 0; iEta < nEtaBins_; iEta++)
+	for (unsigned int iEta = 0; iEta < nEtaBins_; ++iEta)
 		if (fabs(eta()) >= towerBinning[iEta] && fabs(eta()) < towerBinning[iEta + 1])
 			res = Globals::bL7Corrections[iEta]->Eval(pt());
 	return res;
@@ -358,7 +360,7 @@ double Jet::getLightJetL7EtCorrection() const {
 	Float_t towerBinning[] = { 0.0, 0.174, 0.348, 0.522, 0.696, 0.87, 1.044, 1.218, 1.392, 1.566, 1.74, 2.5 };
 	unsigned int nEtaBins_ = 11;
 	double res = -1;
-	for (UInt_t iEta = 0; iEta < nEtaBins_; iEta++)
+	for (unsigned int iEta = 0; iEta < nEtaBins_; ++iEta)
 		if (fabs(eta()) >= towerBinning[iEta] && fabs(eta()) < towerBinning[iEta + 1])
 			res = Globals::lightL7Corrections[iEta]->Eval(pt());
 	return res;

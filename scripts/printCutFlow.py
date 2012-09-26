@@ -22,31 +22,32 @@ import QCDRateEstimation
 
 cuts = None
 cuts_electrons = [
-        "Skim",#
-        "Event cleaning and HLT",#
-                "Electron",#
-                "Muon Veto",#
-                "Electron veto",#
-                "Conversion veto",#
-                "$\geq 3$ jets",#
-                "$\geq 4$ jets",#
-                "$\geq 1$ CSV b-tag",#
+        "Skim", #
+        "Event cleaning and HLT", #
+                "Electron", #
+                "Muon Veto", #
+                "Electron veto", #
+                "Conversion veto", #
+                "$\geq 3$ jets", #
+                "$\geq 4$ jets", #
+                "$\geq 1$ CSV b-tag", #
                 "$\geq 2$ CSV b-tag" #
         ]
 
 cuts_muons = [
-        "Skim",#
-        "Event cleaning and HLT",#
-                "Muon",#
-                "Electron veto",#
-                "Muon Veto",#
-                "$\geq 3$ jets",#
-                "$\geq 4$ jets",#
-                "$\geq 1$ CSV b-tag",#
+        "Skim", #
+        "Event cleaning and HLT", #
+                "Muon", #
+                "Electron veto", #
+                "Muon Veto", #
+                "$\geq 3$ jets", #
+                "$\geq 4$ jets", #
+                "$\geq 1$ CSV b-tag", #
                 "$\geq 2$ CSV b-tag" #
         ]
 
-def printCutFlow(hist, analysis, outputFormat= 'Latex'):
+def printCutFlow(hist, analysis, outputFormat='Latex'):
+    scale_ttbar = 164.4 / 157.5
     used_data = 'ElectronHad'
     lepton = 'Electron/electron'
     if 'Mu' in analysis:
@@ -79,7 +80,7 @@ def printCutFlow(hist, analysis, outputFormat= 'Latex'):
     row = " | %s  |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d +- %d |  %d | "
     if outputFormat == 'Latex':
         header = "Selection step & \\ttbar & W + Jets & Z + Jets & Single-top & Di-boson & QCD~  & Sum MC & Data\\\\"
-        row = " %s  &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d +- %d &  %d \\\\ "
+        row = " %s  &  $%d \pm %d$ &  $%d \pm %d$ &  $%d \pm %d$ &  $%d \pm %d$ &  $%d \pm %d$ &  $%d \pm %d$ &  $%d \pm %d$ &  %d \\\\ "
     print header
     
     numbers, errors = getEventNumbers(hists, hist, hist_1mBtag, hist_2mBtag)# + '_0orMoreBtag')
@@ -88,21 +89,23 @@ def printCutFlow(hist, analysis, outputFormat= 'Latex'):
     for step in range(len(cuts)):
         nums = numbers[step]
         errs = errors[step]
+        nums['TTJet'] = nums['TTJet'] * scale_ttbar
+        errs['TTJet'] = errs['TTJet'] * scale_ttbar
         if analysis == 'EPlusJets' and step >= len(cuts) - 3:#have only estimates for >= 4 jet and beyond
-            histForEstimation  = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_0orMoreBtag'
+            histForEstimation = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_0orMoreBtag'
             if step == len(cuts) - 2:
-                histForEstimation  = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_1orMoreBtag'
+                histForEstimation = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_1orMoreBtag'
             if step == len(cuts) - 1:
-                histForEstimation  = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_2orMoreBtags'
+                histForEstimation = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_2orMoreBtags'
             estimate = QCDRateEstimation.estimateQCDWithRelIso(FILES.files, histForEstimation)
             nums['QCD'], errs['QCD'] = estimate['estimate'], estimate['absoluteError'] 
         if analysis == 'MuPlusJets' and step >= len(cuts) - 3:#have only estimates for >= 4 jet and beyond
             scale = 1.21
-            nums['QCD'], errs['QCD'] = nums['QCD']*scale, errs['QCD']*scale
+            nums['QCD'], errs['QCD'] = nums['QCD'] * scale, errs['QCD'] * scale
             
         sumMC = nums['TTJet'] + nums['W+Jets'] + nums['DYJetsToLL'] + nums['SingleTop'] + nums['QCD'] + nums['Di-Boson']
-        sumMC_err = sqrt(errs['TTJet']**2 + errs['W+Jets']**2 + errs['DYJetsToLL']**2 + errs['SingleTop']**2 + errs['QCD']**2 + errs['Di-Boson']**2)
-        print row % (cuts[step], nums['TTJet'], errs['TTJet'], nums['W+Jets'], errs['W+Jets'], nums['DYJetsToLL'], errs['DYJetsToLL'], 
+        sumMC_err = sqrt(errs['TTJet'] ** 2 + errs['W+Jets'] ** 2 + errs['DYJetsToLL'] ** 2 + errs['SingleTop'] ** 2 + errs['QCD'] ** 2 + errs['Di-Boson'] ** 2)
+        print row % (cuts[step], nums['TTJet'], errs['TTJet'], nums['W+Jets'], errs['W+Jets'], nums['DYJetsToLL'], errs['DYJetsToLL'],
                      nums['SingleTop'], errs['SingleTop'], nums['Di-Boson'], errs['Di-Boson'], nums['QCD'], errs['QCD'], sumMC, sumMC_err, nums[used_data])
 
 def getEventNumbers(hists, histname, hist_1mBtag, hist_2mBtag):        
@@ -118,14 +121,14 @@ def getEventNumbers(hists, histname, hist_1mBtag, hist_2mBtag):
                 events[sample] = hists[sample][hist_1mBtag].Integral()
                 entries = hists[sample][hist_1mBtag].GetEntries()
                 if not entries == 0:
-                    errors[sample] = sqrt(entries)/entries*events[sample]
+                    errors[sample] = sqrt(entries) / entries * events[sample]
                 else:
                     errors[sample] = 0
             if step == len(cuts) - 1:
                 events[sample] = hists[sample][hist_2mBtag].Integral()
                 entries = hists[sample][hist_2mBtag].GetEntries()
                 if not entries == 0:
-                    errors[sample] = sqrt(entries)/entries*events[sample]
+                    errors[sample] = sqrt(entries) / entries * events[sample]
                 else:
                     errors[sample] = 0
         eventNumbers.append(events)
