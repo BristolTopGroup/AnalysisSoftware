@@ -265,5 +265,5 @@ def sumSamples(histograms = {}, samplesToSum = []):
         return summedHist
             
         
-def plot(histogram, outputFile, ):
+def plot(histograms = [], data = 0, makeStack = True, outputFormats = ['png', 'pdf'], normalise = False, ratio = False ):
     pass

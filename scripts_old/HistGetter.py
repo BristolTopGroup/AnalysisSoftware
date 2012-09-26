@@ -1,6 +1,12 @@
 from ROOT import *
 #from math import fsum
-
+btag_bins_inclusive = ['0orMoreBtag', '1orMoreBtag', '2orMoreBtags', '3orMoreBtags']
+btag_sums = {
+             '0orMoreBtag':['0btag', '1btag', '2btags', '3btags', '4orMoreBtags'],
+             '1orMoreBtag':['1btag', '2btags', '3btags', '4orMoreBtags'],
+             '2orMoreBtags':['2btags', '3btags', '4orMoreBtags'],
+             '3orMoreBtags':['3btags', '4orMoreBtags']
+             }
 
 def getHistsFromFiles( histnames = [], files = {}, bJetBins = [], jetBins = [] ):
         TFileOpen = TFile.Open
@@ -25,15 +31,49 @@ def getHistsFromFiles( histnames = [], files = {}, bJetBins = [], jetBins = [] )
             allHists[sample] = {}
             fg = file.Get
             gcd()
+            rootHist = None
             for hist in histnames:
-                fhist = fg( hist )
-                if not fhist:
-                    print filename
-                    print 'sample:', sample, ',hist:', hist, "could not be found."
-                    continue
-                allHists[sample][hist] = fhist.Clone()
+                btag_found = ''
+                for btag in btag_bins_inclusive:
+                    if btag in hist:
+                        btag_found = btag
+                        break
+                if btag_found == '':
+                    rootHist = fg(hist)
+                    if not rootHist:
+                        print filename
+                        print 'sample:', sample, ',hist:', hist, "could not be found."
+                        continue
+                else:
+                    listOfExclusiveBins = btag_sums[btag_found]
+                    exclhists = []
+                    for excbin in listOfExclusiveBins:
+                        fhist = fg(hist.replace(btag_found, excbin))
+                        if not fhist:
+                            print filename
+                            print 'sample:', sample, ',hist:', hist, "could not be found."
+                            continue
+                        exclhists.append(fhist)
+                    rootHist = exclhists[0].Clone()
+                    for fhist in exclhists[1:]:
+                        rootHist.Add(fhist)
+#                fhist = fg( hist )
+#                if not fhist:
+#                    print filename
+#                    print 'sample:', sample, ',hist:', hist, "could not be found."
+#                    continue
+                allHists[sample][hist] = rootHist.Clone()
         return allHists
-
+    
+def sumHistograms(listOfHistograms):
+    if not listOfHistograms:
+        return None
+    newHistogram = listOfHistograms[0].Clone()
+    for histogram in listOfHistograms[1:]:
+        newHistogram.Add(histogram)
+    return newHistogram
+        
+    
 def addSampleSum( hists = {} ):
         qcdList = {}
         mc_all_list = {}

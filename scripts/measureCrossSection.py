@@ -984,28 +984,28 @@ def getHistograms(bjetbin, metbin, analysis):
     muonQCD_corrections = FileReader.getHistogramFromFile('etaAbs_ge2j_tight', 'data/etaAbs_ge2j_tight.root')
     #initial binning 0.05, target: 0.2
     muonQCD_corrections.Rebin(4)
+    muQCD = FileReader.getHistogramFromFile('etaAbs_ge2j_data', 'data/QCD_data_mu.root')
     for source in histogramCollection.keys():
         hists = histogramCollection[source]
         hists = plotting.rebin(hists, rebin)#rebin to 200 bins
         hists = plotting.setYTitle(hists, title="Events/%.2f" % (0.02 * rebin))
-        #correction for muon QCD
+        
         if analysis == "MuPlusJets" and not source in ['PDFWeights']:
-            muQCD = hists['QCDFromData_AntiIsolated']#both plots are identical
-            nbins = muQCD.GetNbinsX()
-            #check if binning is identical...plots have different xranges
-#            if not muonQCD_corrections.GetNbinsX() == nbins:
-#                print 'Something is wrong, not the same number of bins'
-#                print 'Corrections:', muonQCD_corrections.GetNbinsX() 
-#                print 'Data:', nbins
-            for bin_i in range(1, nbins + 1):
-                correction = muonQCD_corrections.GetBinContent(bin_i)
-                value = muQCD.GetBinContent(bin_i)
-#                print 'old:', value
-#                print 'new:', value*correction
-                muQCD.SetBinContent(bin_i, value * correction)
-            
-            hists['QCDFromData_Conversions'] = muQCD
-            hists['QCDFromData_AntiIsolated'] = muQCD
+            hists['QCDFromData_Conversions'] = muQCD.Clone()
+            hists['QCDFromData_AntiIsolated'] = muQCD.Clone()
+        #correction for muon QCD
+#        if analysis == "MuPlusJets" and not source in ['PDFWeights']:
+#            
+#            muQCD = hists['QCDFromData_AntiIsolated']#both plots are identical
+#            nbins = muQCD.GetNbinsX()
+#
+#            for bin_i in range(1, nbins + 1):
+#                correction = muonQCD_corrections.GetBinContent(bin_i)
+#                value = muQCD.GetBinContent(bin_i)
+#                muQCD.SetBinContent(bin_i, value * correction)
+#            
+#            hists['QCDFromData_Conversions'] = muQCD
+#            hists['QCDFromData_AntiIsolated'] = muQCD
         
     #sum samples
     histogramCollection['central'] = sumSamples(histogramCollection['central'])
@@ -1164,7 +1164,7 @@ def getTemplates(histograms):
     templates = {}
     for sample in histograms.keys():
         hist = deepcopy(histograms[sample].Clone())
-        hist.Sumw2()
+#        hist.Sumw2()
         templates[sample] = plotting.normalise(hist)
     return templates 
 
@@ -1561,14 +1561,17 @@ def plotNormalisationResults(results, analysis):
                     plot_template.SetLineWidth(5)
                 plots[sample] = plot
                 plot_templates[sample] = plot_template
+            plots['Background'] = plots['V+Jets'].Clone()
+            plots['Background'] += plots[qcdLabel]
             c = TCanvas("Fit_" + metbin + bjetbin + measurement + analysis, "Differential cross section", 1600, 1200)
             max_y = plots[used_data].GetMaximum()
             plots[used_data].SetMaximum(max_y * 1.5)
             plots[used_data].Draw('error')
             mcStack = THStack("MC", "MC")
     #        mcStack.Add(plots['Di-Boson']);
-            mcStack.Add(plots[qcdLabel]);
-            mcStack.Add(plots['V+Jets']);
+#            mcStack.Add(plots[qcdLabel]);
+#            mcStack.Add(plots['V+Jets']);
+            mcStack.Add(plots['Background']);
             mcStack.Add(plots['Signal']);
 #            mcStack.Add(plots['DYJetsToLL']);
 #            mcStack.Add(plots['W+Jets']);
@@ -1578,21 +1581,22 @@ def plotNormalisationResults(results, analysis):
 #            fit.Draw('same')
             plots[used_data].Draw('error same')
             
-            legend = plotting.create_legend()
+            legend = plotting.create_legend(x0=0.65, y0 = 0.95, x1=0.94, y1=0.55)
             legend.AddEntry(plots[used_data], "data", 'P')
             legend.AddEntry(plots['Signal'], 't#bar{t} + Single-Top', 'F')
 #            legend.AddEntry(plots['TTJet'], 't#bar{t}', 'F')
 #            legend.AddEntry(plots['SingleTop'], 'Single-Top', 'F')
-            legend.AddEntry(plots['V+Jets'], 'V+Jets', 'F')
+            legend.AddEntry(plots['Background'], 'background', 'F')
+#            legend.AddEntry(plots['V+Jets'], 'V+Jets', 'F')
 #            legend.AddEntry(plots['W+Jets'], 'W#rightarrowl#nu', 'F')
 #            legend.AddEntry(plots['DYJetsToLL'], 'Z/#gamma*#rightarrowl^{+}l^{-}', 'F')
-            legend.AddEntry(plots[qcdLabel], 'QCD/#gamma + jets', 'F')
+#            legend.AddEntry(plots[qcdLabel], 'QCD/#gamma + jets', 'F')
             
     #        legend.AddEntry(plots['Di-Boson'], 'VV + X', 'F')
             legend.Draw()
-            metLabel = TPaveText(0.2, 0.9, 0.5, 0.95, "NDC")
+            metLabel = TPaveText(0.2, 0.8, 0.6, 0.95, "NDC")
             mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
-            channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+            channelLabel = TPaveText(0.18, 0.97, 0.5, 1.01, "NDC")
             if analysis == 'EPlusJets':
                 channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
             elif analysis == 'MuPlusJets':
@@ -1600,7 +1604,7 @@ def plotNormalisationResults(results, analysis):
             elif analysis == 'Combination':
                 channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
             
-            mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} @ #sqrt{s} = 7 TeV" % (5050.0 / 1000));
+            mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} @ #sqrt{s} = 7 TeV" % (5.1));
             metLabel.AddText(metbin_latex[metbin])         
             mytext.SetFillStyle(0)
             mytext.SetBorderSize(0)
@@ -1675,6 +1679,8 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
     plot.GetYaxis().SetTitleSize(0.05)
     plot.SetMinimum(0)
     plot.SetMaximum(80)
+    plot.SetMarkerSize(2)
+    plot.SetMarkerStyle(20)
     plotMADGRAPH.SetLineColor(kRed + 1)
     plotMADGRAPH.SetLineStyle(7)
     plotPOWHEG.SetLineColor(kBlue)
@@ -1685,12 +1691,12 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
     plotnoCorr_mcatnlo.SetLineStyle(7)
     
     legend = plotting.create_legend()
-    legend.AddEntry(plot, 'measured', 'LEP')
+    legend.AddEntry(plot, 'data', 'P')
     if compareToSystematic:
         legend.AddEntry(plotMADGRAPH, 't#bar{t} (Q^{2} down)', 'l')
         legend.AddEntry(plotPOWHEG, 't#bar{t} (Q^{2} up)', 'l')
-        legend.AddEntry(plotPYTHIA6, 't#bar{t} (matching threshold 10 GeV)', 'l')
-        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (matching threshold 40 GeV)', 'l')
+        legend.AddEntry(plotPYTHIA6, 't#bar{t} (matching down)', 'l')
+        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (matching up)', 'l')
     else:
         legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'l')
         legend.AddEntry(plotPOWHEG, 't#bar{t} (POWHEG)', 'l')
@@ -1714,7 +1720,8 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
             plotPYTHIA6.SetBinContent(bin_i, centralresult['PYTHIA6'] * scale)
             plotnoCorr_mcatnlo.SetBinContent(bin_i, centralresult['MCatNLO'] * scale)
         bin_i += 1
-    plotAsym = TGraphAsymmErrors(plot)    
+    plotAsym = TGraphAsymmErrors(plot)
+    plotStatErr = TGraphAsymmErrors(plot)      
     bin_i = 0
     for metbin in metbins:
 #        width = metbin_widths[metbin]
@@ -1726,24 +1733,34 @@ def plotCrossSectionResults(result, analysis, compareToSystematic=False):
         error_down = sqrt(centralresult['error'] ** 2 + uncertainty['Total-']['value'] ** 2) * scale
         plotAsym.SetPointEYhigh(bin_i, error_up)
         plotAsym.SetPointEYlow(bin_i, error_down)
+        plotStatErr.SetPointEYhigh(bin_i, centralresult['error'])
+        plotStatErr.SetPointEYlow(bin_i, centralresult['error'])
         bin_i += 1
+    plotAsym.SetLineWidth(3)
+#    plotStatErr.SetLineStyle(2)
+    plotStatErr.SetLineWidth(3)
+#    plotAsym.SetMarkerSize(2)
+#    plotAsym.SetMarkerStyle(20)
     plot.Draw('P')
 #    gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
     plotPOWHEG.Draw('hist same')
     plotPYTHIA6.Draw('hist same')
     plotnoCorr_mcatnlo.Draw('hist same')
-    plotAsym.Draw('same P')
+    gStyle.SetEndErrorSize(20)
+    plotStatErr.Draw('same P')
+#    gStyle.SetEndErrorSize(0)
+    plotAsym.Draw('same P Z')
     legend.Draw()
     mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
-    channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+    channelLabel = TPaveText(0.18, 0.97, 0.5, 1.01, "NDC")
     if analysis == 'EPlusJets':
         channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
     elif analysis == 'MuPlusJets':
         channelLabel.AddText("#mu, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
     elif analysis == 'Combination':
         channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
-    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5050.0 / 1000));
+    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5.1));
              
     mytext.SetFillStyle(0)
     mytext.SetBorderSize(0)
@@ -1891,6 +1908,8 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
     plot.GetYaxis().SetTitleSize(0.05)
     plot.SetMinimum(0)
     plot.SetMaximum(0.02)
+    plot.SetMarkerSize(2)
+    plot.SetMarkerStyle(20)
     plotMADGRAPH.SetLineColor(kRed + 1)
 #    plotMADGRAPH.SetLineWidth(2)
     plotMADGRAPH.SetLineStyle(7)
@@ -1904,12 +1923,12 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
 #    plotnoCorr_mcatnlo.SetLineWidth(2)
     plotnoCorr_mcatnlo.SetLineStyle(7)
     legend = plotting.create_legend(x0=0.6, y1=0.5)
-    legend.AddEntry(plot, 'measured', 'LEP')
+    legend.AddEntry(plot, 'data', 'P')
     if compareToSystematic:
         legend.AddEntry(plotMADGRAPH, 't#bar{t} (Q^{2} down)', 'l')
         legend.AddEntry(plotPOWHEG, 't#bar{t} (Q^{2} up)', 'l')
-        legend.AddEntry(plotPYTHIA6, 't#bar{t} (matching threshold 10 GeV)', 'l')
-        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (matching threshold 40 GeV)', 'l')
+        legend.AddEntry(plotPYTHIA6, 't#bar{t} (matching down)', 'l')
+        legend.AddEntry(plotnoCorr_mcatnlo, 't#bar{t} (matching up)', 'l')
     else:
         legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'l')
         legend.AddEntry(plotPOWHEG, 't#bar{t} (POWHEG)', 'l')
@@ -1933,6 +1952,7 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
             plotnoCorr_mcatnlo.SetBinContent(bin_i, centralresult['MCatNLO'] * scale)
         bin_i += 1    
     plotAsym = TGraphAsymmErrors(plot)
+    plotStatErr = TGraphAsymmErrors(plot)
     bin_i = 0
     for metbin in metbins:
 #        width = metbin_widths[metbin]
@@ -1945,9 +1965,14 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
         if DEBUG:
             print centralresult['error'], uncertainty['Total+']['value'], error_up
             print centralresult['error'], uncertainty['Total-']['value'], error_down
+        plotStatErr.SetPointEYhigh(bin_i, centralresult['error'])
+        plotStatErr.SetPointEYlow(bin_i, centralresult['error'])
         plotAsym.SetPointEYhigh(bin_i, error_up)
         plotAsym.SetPointEYlow(bin_i, error_down)
         bin_i += 1 
+    plotAsym.SetLineWidth(3)
+#    plotStatErr.SetLineStyle(2)
+    plotStatErr.SetLineWidth(3)
     
     plot.Draw('P')
 #    gStyle.SetErrorX(0.4)
@@ -1955,17 +1980,20 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
     plotPOWHEG.Draw('hist same')
     plotPYTHIA6.Draw('hist same')
     plotnoCorr_mcatnlo.Draw('hist same')
-    plotAsym.Draw('same P')
+    gStyle.SetEndErrorSize(20)
+    plotStatErr.Draw('same P')
+#    gStyle.SetEndErrorSize(0)
+    plotAsym.Draw('same P Z')
     legend.Draw()
     mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
-    channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+    channelLabel = TPaveText(0.18, 0.97, 0.5, 1.01, "NDC")
     if analysis == 'EPlusJets':
         channelLabel.AddText("e, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
     elif analysis == 'MuPlusJets':
         channelLabel.AddText("#mu, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
     elif analysis == 'Combination':
         channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
-    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5050.0 / 1000));
+    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5.1));
              
     mytext.SetFillStyle(0)
     mytext.SetBorderSize(0)
@@ -1977,7 +2005,8 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
     channelLabel.SetTextFont(42)
     channelLabel.SetTextAlign(13)
     mytext.Draw()
-    channelLabel.Draw()
+    if not analysis == 'Combination':
+        channelLabel.Draw()
     unfolding = '_unfolded'
     if not doBinByBinUnfolding:
         unfolding = ''
@@ -1987,8 +2016,8 @@ def plotNormalisedCrossSectionResults(result, analysis, compareToSystematic=Fals
         plotting.saveAs(c, analysis + '_diff_MET_norm_xsection' + unfolding + '_' + bjetbin, outputFormat_plots, savePath)
 
 def plotNormalisedCrossSectionResultsAllChannels(result_electron, result_muon, result_combined):
-    arglist_electron = array('d', [0, 20, 45, 65, 100, 145])
-    arglist_muon = array('d', [0, 30, 45, 75, 100, 155])
+    arglist_electron = array('d', [0, 15, 45, 60, 100, 140])
+    arglist_muon = array('d', [0, 35, 45, 80, 100, 160])
     arglist_combined = array('d', [0, 25, 45, 70, 100, 150])
     c = TCanvas("test", "Differential cross section", 1600, 1200)
     plot_electron = TH1F("electron_measurement_" + bjetbin, 'Differential cross section; E_{T}^{miss} [GeV];#frac{1}{#sigma} #frac{d#sigma}{dE_{T}^{miss}} [GeV^{-1}]', len(arglist_electron) - 1, arglist_electron)
@@ -1999,26 +2028,26 @@ def plotNormalisedCrossSectionResultsAllChannels(result_electron, result_muon, r
     plot_combined.GetYaxis().SetTitleSize(0.05)
     plot_combined.SetMinimum(0)
     plot_combined.SetMaximum(0.02)
-    plot_combined.SetMarkerSize(1.2)
+    plot_combined.SetMarkerSize(2)
     plot_combined.SetMarkerStyle(20)
     
-    plot_electron.SetMarkerStyle(20);
+    plot_electron.SetMarkerStyle(21);
     plot_electron.SetMarkerColor(4)
     plot_electron.SetLineColor(4)
-    plot_electron.SetMarkerSize(1.2)
+    plot_electron.SetMarkerSize(2)
     
-    plot_muon.SetMarkerStyle(20);
+    plot_muon.SetMarkerStyle(22);
     plot_muon.SetMarkerColor(kAzure - 9)
     plot_muon.SetLineColor(7)
-    plot_muon.SetMarkerSize(1.2)
+    plot_muon.SetMarkerSize(2)
 
     plotMADGRAPH.SetLineColor(kRed + 1)
 
     legend = plotting.create_legend(x0=0.6, y1=0.5)
-    legend.AddEntry(plot_electron, 'e+jets', 'LEP')
-    legend.AddEntry(plot_muon, '#mu+jets', 'LEP')
-    legend.AddEntry(plot_combined, 'combined', 'LEP')
-    legend.AddEntry(plotMADGRAPH, 't#bar{t} (MADGRAPH)', 'l')
+    legend.AddEntry(plot_electron, 'e+jets', 'P')
+    legend.AddEntry(plot_muon, '#mu+jets', 'P')
+    legend.AddEntry(plot_combined, 'combined', 'P')
+    legend.AddEntry(plotMADGRAPH, 'MADGRAPH', 'l')
     bin_i = 1
     for metbin in metbins:
 #        width = metbin_widths[metbin]
@@ -2032,18 +2061,25 @@ def plotNormalisedCrossSectionResultsAllChannels(result_electron, result_muon, r
         plotMADGRAPH.SetBinContent(bin_i, centralresult_combined['MADGRAPH'] * scale)
         bin_i += 1    
     plotAsym_electron = TGraphAsymmErrors(plot_electron)
+    plotStatErr_electron = TGraphAsymmErrors(plot_electron)
     plotAsym_muon = TGraphAsymmErrors(plot_muon)
+    plotStatErr_muon = TGraphAsymmErrors(plot_muon)
     plotAsym_combined = TGraphAsymmErrors(plot_combined)
-    
-    plotAsym_electron.SetMarkerStyle(20)
-    plotAsym_muon.SetMarkerStyle(20)
-    plotAsym_combined.SetMarkerStyle(20)
-    plotAsym_electron.SetMarkerSize(1.2)
-    plotAsym_muon.SetMarkerSize(1.2)
-    plotAsym_combined.SetMarkerSize(1.2)
+    plotStatErr_combined = TGraphAsymmErrors(plot_combined)
     
     plotAsym_electron.SetLineColor(4)
     plotAsym_muon.SetLineColor(kAzure - 9)
+    
+#    plotStatErr_electron.SetLineStyle(2)
+#    plotStatErr_muon.SetLineStyle(2)
+#    plotStatErr_combined.SetLineStyle(2)
+    
+    plotAsym_electron.SetLineWidth(3)
+    plotStatErr_electron.SetLineWidth(3)
+    plotAsym_muon.SetLineWidth(3)
+    plotStatErr_muon.SetLineWidth(3)
+    plotAsym_combined.SetLineWidth(3)
+    plotStatErr_combined.SetLineWidth(3)
     bin_i = 0
     for metbin in metbins:
 #        width = metbin_widths[metbin]
@@ -2075,18 +2111,34 @@ def plotNormalisedCrossSectionResultsAllChannels(result_electron, result_muon, r
         
         plotAsym_combined.SetPointEYhigh(bin_i, error_up_combined)
         plotAsym_combined.SetPointEYlow(bin_i, error_down_combined)
+        
+        plotStatErr_electron.SetPointEYhigh(bin_i, centralresult_electron['error'])
+        plotStatErr_electron.SetPointEYlow(bin_i, centralresult_electron['error'])
+        
+        plotStatErr_muon.SetPointEYhigh(bin_i, centralresult_muon['error'])
+        plotStatErr_muon.SetPointEYlow(bin_i, centralresult_muon['error'])
+        
+        plotStatErr_combined.SetPointEYhigh(bin_i, centralresult_combined['error'])
+        plotStatErr_combined.SetPointEYlow(bin_i, centralresult_combined['error'])
+        
+        
         bin_i += 1 
     plot_combined.Draw('P')
 #    gStyle.SetErrorX(0.4)
     plotMADGRAPH.Draw('hist same')
-    plotAsym_electron.Draw('same P')
-    plotAsym_muon.Draw('same P')
-    plotAsym_combined.Draw('same P')
+    gStyle.SetEndErrorSize(20)
+    plotStatErr_electron.Draw('same P')
+    plotStatErr_muon.Draw('same P')
+    plotStatErr_combined.Draw('same P')
+#    gStyle.SetEndErrorSize(0)
+    plotAsym_electron.Draw('same P Z')
+    plotAsym_muon.Draw('same P Z')
+    plotAsym_combined.Draw('same P Z')
     legend.Draw()
     mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
-    channelLabel = TPaveText(0.15, 0.965, 0.4, 1.01, "NDC")
+    channelLabel = TPaveText(0.18, 0.97, 0.5, 1.01, "NDC")
     channelLabel.AddText("combined, %s, %s" % ("#geq 4 jets", BjetBinsLatex[bjetbin]))
-    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5050.0 / 1000));
+    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5.1));
              
     mytext.SetFillStyle(0)
     mytext.SetBorderSize(0)
@@ -2098,7 +2150,7 @@ def plotNormalisedCrossSectionResultsAllChannels(result_electron, result_muon, r
     channelLabel.SetTextFont(42)
     channelLabel.SetTextAlign(13)
     mytext.Draw()
-    channelLabel.Draw()
+    #channelLabel.Draw()
     unfolding = '_unfolded'
     if not doBinByBinUnfolding:
         unfolding = ''
@@ -2267,7 +2319,7 @@ if __name__ == '__main__':
     constrains['DYJetsToLL']['enabled'] = ('ZJets' in options.constrain)
     constrains['Di-Boson']['enabled'] = ('VV' in options.constrain)
 
-    savePath = "/storage/results/plots/AN-12-241_V3/DiffMETMeasurement/binCorrection/%s/" % metType    
+    savePath = "/storage/results/plots/AN-12-241_V4/DiffMETMeasurement/binCorrection/%s/" % metType    
     if test:
         metbins = ['25-45']
         savePath = "/storage/results/plots/testing2/%s/" % metType    
@@ -2321,6 +2373,7 @@ if __name__ == '__main__':
 #    
     gStyle.SetTitleYOffset(1.6)
     gStyle.SetPadLeftMargin(0.18)
+    gStyle.SetTitleXOffset(1.0)
     normalised_crosssection_result_electron = NormalisedCrossSectionAnalysis(normalisation_result_electron)
     printNormalisedCrossSectionResult(normalised_crosssection_result_electron, 'EPlusJets')
     printNormalisedCrossSectionResultsForTTJetWithUncertanties(normalised_crosssection_result_electron, 'EPlusJets')

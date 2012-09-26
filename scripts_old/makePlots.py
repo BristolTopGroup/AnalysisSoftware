@@ -4,6 +4,7 @@ import HistGetter
 import HistPlotter
 from time import sleep
 from math import isnan
+from copy import deepcopy
 
 import inputFiles
 import QCDEstimation
@@ -39,7 +40,72 @@ triggerVariables = ['jet_pt',
                     'jet_phi_PtGT45']
 triggerModifiers = ['visited', 'fired']
 
-def compareQCDControlRegionsInData(dataHists, bJetBins):
+def plotControlRegion(hists):
+    conversions = 'TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_AbsEta_0btag'
+    leg = TLegend(0.2, 0.6, 0.5, 0.92);
+    leg.SetBorderSize(0);
+    leg.SetLineStyle(0);
+    leg.SetTextFont(42);
+    leg.SetFillStyle(0);
+    for sample in hists.keys():
+        hists[sample][conversions].Sumw2()
+    
+    data = hists['ElectronHad'][conversions]
+    QCD = hists['bce1'][conversions] + hists['bce2'][conversions] + hists['bce3'][conversions] 
+    QCD += hists['enri1'][conversions] + hists['enri2'][conversions] + hists['enri3'][conversions]
+    QCD += hists['pj1'][conversions] + hists['pj2'][conversions] + hists['pj3'][conversions]
+    otherMC = hists['W1Jet'][conversions] + hists['W2Jets'][conversions] + hists['W3Jets'][conversions] + hists['W4Jets'][conversions] 
+    otherMC += hists['zjets'][conversions] + hists['ww'][conversions] + hists['wz'][conversions] + hists['zz'][conversions]
+    otherMC += hists['T_TuneZ2_tW-channel'][conversions] + hists['T_TuneZ2_t-channel'][conversions] + hists['T_TuneZ2_s-channel'][conversions]
+    otherMC += hists['Tbar_TuneZ2_tW-channel'][conversions] + hists['Tbar_TuneZ2_t-channel'][conversions] + hists['Tbar_TuneZ2_s-channel'][conversions]
+    otherMC += hists['ttbar'][conversions]
+    data.SetMarkerStyle(8);
+    QCD.SetFillColor(kYellow)
+    otherMC.SetFillColor(kRed + 1)
+    
+    qcdErrors = QCD.Clone()
+    
+    qcdErrors.SetFillColor(kGray + 3)
+    qcdErrors.SetMarkerStyle(0)
+    qcdErrors.SetFillStyle(3001);
+    mytext = TPaveText(0.5, 0.97, 1, 1.01, "NDC")
+    channelLabel = TPaveText(0.2, 0.97, 0.5, 1.01, "NDC")
+    channelLabel.AddText("e, #geq 4 jets, 0 b-tag")
+    mytext.AddText("CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (5.1));
+             
+    mytext.SetFillStyle(0)
+    mytext.SetBorderSize(0)
+    mytext.SetTextFont(42)
+    mytext.SetTextAlign(13)
+    
+    channelLabel.SetFillStyle(0)
+    channelLabel.SetBorderSize(0)
+    channelLabel.SetTextFont(42)
+    channelLabel.SetTextAlign(13)
+            
+    leg.AddEntry(data, 'data', 'f')
+    leg.AddEntry(QCD, 'QCD MC', 'f')
+    leg.AddEntry(otherMC, 'other MC', 'f')
+    leg.AddEntry(qcdErrors, 'QCD uncertainty (stat.)', 'f')
+    mcStack = THStack("MC", "MC")
+    mcStack.Add(QCD)
+    mcStack.Add(otherMC)
+    
+    data.SetMaximum(mcStack.GetMaximum()*1.4)
+    c = TCanvas("test", 'test', 1600, 1200)
+    
+    data.Draw('error')
+    mcStack.Draw('hist same')
+    gStyle.SetErrorX(0.5);
+    qcdErrors.Draw('E2 same')
+    data.Draw('error same')
+    leg.Draw()
+    mytext.Draw()
+    channelLabel.Draw()
+    saveAs(c, 'QCD_ConversionControlRegion_0btag', outputFormats)
+
+def compareQCDControlRegionsInData(hists, bJetBins):
+    dataHists = hists['ElectronHad']
 #    saveAs = HistPlotter.saveAs
     
     leg = TLegend(0.696, 0.6, 0.94, 0.92);
@@ -51,92 +117,70 @@ def compareQCDControlRegionsInData(dataHists, bJetBins):
     AddLegendEntry = leg.AddEntry 
     alreadyAdded = False
     var = 'electron_eta'
-    for bin in bJetBins:
-#        normConv = dataHists['topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_' + bin]
-#        normContr = dataHists['topReconstruction/backgroundShape/mttbar_antiID_withMETAndAsymJets_' + bin]
-#        normAnti = dataHists['topReconstruction/backgroundShape/mttbar_antiIsolated_withMETAndAsymJets_' + bin]
-#        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET_' + bin]
-#        normContr = dataHists['topReconstruction/backgroundShape/mttbar_3jets_antiID_withMETAndAsymJets_' + bin]
-#        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET_' + bin]
-        
-#        normConv =  dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_' + bin]
-#        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03_' + bin]
-#        
-#        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets/MET/patMETsPFlow/MET_' + bin]
-#        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET/patMETsPFlow/MET_' + bin]
-        normConv = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/Electron/electron_eta_' + bin]
-        normAnti = dataHists['TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron/electron_eta_' + bin]
-        
+    bin = '0btag'
+    normConv = dataHists['TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_AbsEta_' + bin]
+    normAnti = dataHists['TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_AbsEta_' + bin]
+    
 #        normConv.SetYTitle("normalised to unit area/(5 GeV)");
-        normConv.SetYTitle("normalised to unit area/(0.2 GeV)");
+    normConv.SetYTitle("normalised to unit area/(0.2 GeV)");
 #        normConv.SetYTitle("normalised to unit area/0.05");
-    
-        normConv.Sumw2()
+
+    normConv.Sumw2()
 #        normContr.Sumw2()
-        normAnti.Sumw2()
-        
-        
-        normConv = HistPlotter.normalise(normConv)
+    normAnti.Sumw2()
+    
+    
+    normConv = HistPlotter.normalise(normConv)
 #        normContr = HistPlotter.normalise(normContr)
-        normAnti = HistPlotter.normalise(normAnti)
-    
-        diff = normConv.Clone()
-        diff.Divide(normAnti)
+    normAnti = HistPlotter.normalise(normAnti)
+
+    diff = normConv.Clone()
+    diff.Divide(normAnti)
 #        line = TLine(0, 1, 500, 1)
-        line = TLine(-3, 1, 3, 1)
-        line.SetLineColor(1)
-        line.SetLineWidth(4)
-    
-    
-        c = TCanvas("cname", 'cname', 1200, 900)
-        diff.SetYTitle("conversions/non-iso electrons /0.2GeV");
+    line = TLine(-3, 1, 3, 1)
+    line.SetLineColor(1)
+    line.SetLineWidth(4)
+
+
+    c = TCanvas("cname", 'cname', 1200, 900)
+    diff.SetYTitle("conversions/non-iso electrons /0.2GeV");
 #        diff.SetYTitle("iso/non-iso trigger /0.05");
-        diff.GetXaxis().SetRangeUser(-3, 3);
+    diff.GetXaxis().SetRangeUser(-3, 3);
 #        diff.GetXaxis().SetRangeUser(0, 2);
-        diff.Draw('error')
-        line.Draw('same')
-        saveAs(c, 'shapeRatio_conversions_NonIsolatedElectrons_electron_eta' + '_' + bin , outputFormats)
+    diff.Draw('error')
+    line.Draw('same')
+    saveAs(c, 'shapeRatio_conversions_NonIsolatedElectrons_electron_eta' + '_' + bin , outputFormats)
 #        saveAs(c, 'shapeRatio_'+ var +'_NonIsolatedTriggers' + '_' + bin , outputFormats)
-        del c
+    del c
+
+    c = TCanvas("cname3", 'cname3', 1200, 900)
+
+    normConv.SetFillColor(kYellow)
+    normConv.SetFillStyle(1001)
     
-#        diff = normConv.Clone()
-#        diff.Divide(normContr)
-#    
-#        c = TCanvas("cname2", 'cname2', 1200, 900)
-#        diff.SetYTitle("conversions/fake electrons /50GeV");
-#        diff.Draw('error')
-#        line.Draw('same')
-#        saveAs(c, 'shapeRatio_conversions_fakeElectrons' + '_' + bin , outputFormat)
-#        del c
-#        
-        c = TCanvas("cname3", 'cname3', 1200, 900)
-    
-        normConv.SetFillColor(kYellow)
-        normConv.SetFillStyle(1001)
-        
 #        normContr.SetFillColor(kAzure - 2)
 #        normContr.SetFillStyle(3005)
-    
-        normAnti.SetFillColor(kRed + 1)
-        normAnti.SetFillStyle(3004)
-        normConv.GetYaxis().SetRangeUser(0, 0.2);
-        normConv.GetXaxis().SetRangeUser(-3, 3);
+
+    normAnti.SetFillColor(kRed + 1)
+    normAnti.SetFillStyle(3004)
+    normConv.GetYaxis().SetRangeUser(0, 0.2);
+    normConv.GetXaxis().SetRangeUser(-3, 3);
 #        normConv.GetXaxis().SetRangeUser(0, 2);
-        normConv.Draw('hist')
+    normConv.Draw('hist')
 #        normContr.Draw('hist same')
-        normAnti.Draw('hist same')
-    
-        if not alreadyAdded:
-            AddLegendEntry(normConv, "conversions", "f");
+    normAnti.Draw('hist same')
+
+    if not alreadyAdded:
+        AddLegendEntry(normConv, "conversions", "f");
 #            AddLegendEntry(normConv, "iso e+jets", "f");
 #            AddLegendEntry(normContr, "fake electrons", "f");
 #            AddLegendEntry(normAnti, "non isolated electrons", "f");
-            AddLegendEntry(normAnti, "non iso e+jets", "f");
-            alreadyAdded = True
-        
-        leg.Draw()
-        saveAs(c, 'shape_comparison_'+ var + '_NonIso_' + bin , outputFormats)
-        del c
+        AddLegendEntry(normAnti, "non iso e+jets", "f");
+        alreadyAdded = True
+    
+    leg.Draw()
+    saveAs(c, 'shape_comparison_'+ var + '_NonIso_' + bin , outputFormats)
+    del c
         
     del leg
 
@@ -676,26 +720,26 @@ if __name__ == '__main__':
     
     files = inputFiles.files
     
-    hltFiles = {}
-    hltFiles['data'] = '/storage/results/histogramFiles/data_1959.75pb_PFElectron_PF2PATJets_PFMET.root'
-    hltFiles['ttbar'] = '/storage/results/histogramFiles/TTJet_1959.75pb_PFElectron_PF2PATJets_PFMET.root'
-    
-    hltFiles['data'] = inputFiles.files['data']
-    hltFiles['ttbar'] = inputFiles.files['ttbar']
+#    hltFiles = {}
+#    hltFiles['data'] = '/storage/results/histogramFiles/data_1959.75pb_PFElectron_PF2PATJets_PFMET.root'
+#    hltFiles['ttbar'] = '/storage/results/histogramFiles/TTJet_1959.75pb_PFElectron_PF2PATJets_PFMET.root'
+#    
+#    hltFiles['data'] = inputFiles.files['data']
+#    hltFiles['ttbar'] = inputFiles.files['ttbar']
 
     qcdPlots = [#MET
 #                'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/MET/patType1CorrectedPFMet/MET',
 #                'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/MET/patType1CorrectedPFMet/MET',
-                'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCDConversions/Electron/electron_eta',
-                'TTbarEplusJetsPlusMetAnalysis/Ref selection/QCD non iso e+jets/Electron/electron_eta',
+                'TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_AbsEta',
+                'TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_AbsEta',
 #                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD non iso e+jets, non iso trigger/MET/patMETsPFlow/MET',
 #                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03',
 #                'TTbarEplusJetsPlusMetAnalysis/Ref + AsymJets selection/QCD e+jets PFRelIso, non iso trigger/Electron/electron_pfIsolation_03'
                 ]
-    triggerPlots = ['HLTStudy/' + trigger + '/' + variable + '_' + modifier for trigger in triggers for variable in triggerVariables for modifier in triggerModifiers]
+#    triggerPlots = ['HLTStudy/' + trigger + '/' + variable + '_' + modifier for trigger in triggers for variable in triggerVariables for modifier in triggerModifiers]
     
     HistPlotter.setStyle()
-    hists = HistGetter.getHistsFromFiles(qcdPlots, files, bJetBins=HistPlotter.allBjetBins)
+    hists = HistGetter.getHistsFromFiles(qcdPlots, files, bJetBins=['0btag'])
 #    hists = HistGetter.getHistsFromFiles(triggerPlots, hltFiles, jetBins=HistPlotter.allJetBins)
 #    hists = HistGetter.addSampleSum( hists )
 #    
@@ -713,14 +757,15 @@ if __name__ == '__main__':
 #    hists = HistPlotter.rebin(hists, 5, 'MET*')
 #    hists = HistPlotter.setXTitle(hists, 'MET/GeV', 'MET*')
 #    hists = HistPlotter.setYTitle(hists, 'Events/(5 GeV)', 'MET*')
-    hists = HistPlotter.rebin(hists, 10, 'electron_eta*')
-    hists = HistPlotter.setXTitle(hists, '#eta(e)', 'electron_eta*')
-    hists = HistPlotter.setYTitle(hists, 'Events/(0.2 GeV)', 'electron_eta*')
+    hists = HistPlotter.rebin(hists, 10, 'electron_AbsEta*')
+    hists = HistPlotter.setXTitle(hists, '|#eta(e)|', 'electron_AbsEta*')
+    hists = HistPlotter.setYTitle(hists, 'Events/(0.1 GeV)', 'electron_AbsEta*')
 #    hists = HistPlotter.rebin(hists, 5, '*pfIsolation*')
 #    hists = HistPlotter.setXTitle(hists, 'pf rel. iso', '*pfIsolation*')
 #    hists = HistPlotter.setYTitle(hists, 'Events/(0.05)', '*pfIsolation*')
-    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
-    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.exclusiveBjetBins)
+#    compareQCDControlRegionsInData(dataHists=hists['data'], bJetBins=HistPlotter.inclusiveBjetBins)
+#    compareQCDControlRegionsInData(hists=hists, bJetBins=['0btag'])
+    plotControlRegion(hists)
 #    compareShapesTwoData(
 #                         '/storage/results/histogramFiles/PAS3/data_1091.45pb_PFElectron_PF2PATJets_PFMET.root',
 #                         '/storage/results/histogramFiles/CiCElectron ID/data_1611.95pb_PFElectron_PF2PATJets_PFMET.root'
