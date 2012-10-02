@@ -2,7 +2,10 @@
 #define BTAGWEIGHT_H
 
 #include "RecoObjects/Jet.h"
-
+/**
+ * Original by Andrea Rizzi
+ * Modified by Lukasz Kreczko
+ */
 namespace BAT {
 
 class BTagWeight {
