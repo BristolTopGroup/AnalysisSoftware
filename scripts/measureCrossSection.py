@@ -2262,7 +2262,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-b", "--bjetbin", dest="bjetbin", default='2m',
                   help="set b-jet multiplicity for analysis. Options: exclusive: 0-3, inclusive (N or more): 0m, 1m, 2m, 3m, 4m")
-    parser.add_option("-m", "--metType", dest="metType", default='pf',
+    parser.add_option("-m", "--metType", dest="metType", default='type1',
                   help="set MET input for analysis.")
     parser.add_option("-u", "--unfolding",
                   action="store_false", dest="unfolding", default=True,
