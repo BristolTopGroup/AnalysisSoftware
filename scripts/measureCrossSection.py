@@ -21,7 +21,6 @@ import json
 from config.sampleSummations import qcd_samples, singleTop_samples, wplusjets_samples, allMC_samples, diboson_samples, signal_samples, \
     vplusjets_samples
 from sets import Set
-from measureCrossSection_RooFit import metType
 import sys
 correctionFactors = None
 acceptanceFactors = None
