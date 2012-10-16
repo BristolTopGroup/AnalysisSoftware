@@ -14,6 +14,11 @@ void THCollection<TH1>::add(std::string name, std::string title, unsigned int nu
 }
 
 template<>
+void THCollection<TH1>::add(std::string name, std::string title, unsigned int numberOfBins, float *xbins) {
+	histMap[name] = boost::shared_ptr<TH1>(new TH1D(name.c_str(), title.c_str(), numberOfBins, xbins));
+}
+
+template<>
 void THCollection<TH2>::add(std::string name, std::string title, unsigned int numberOfXBins, float xmin, float xmax,
 		unsigned int numberOfYBins, float ymin, float ymax) {
 	histMap[name] = boost::shared_ptr<TH2>(

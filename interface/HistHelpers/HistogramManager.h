@@ -118,8 +118,11 @@ public:
 	HistogramManager();
 	virtual ~HistogramManager();
 	void addH1D(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
+	void addH1D(std::string name, std::string title, unsigned int nBins, float *xbins);
 	void addH1D_JetBinned(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
+	void addH1D_JetBinned(std::string name, std::string title, unsigned int nBins, float *xbins);
 	void addH1D_BJetBinned(std::string name, std::string title, unsigned int nBins, float xmin, float xmax);
+	void addH1D_BJetBinned(std::string name, std::string title, unsigned int nBins, float *xbins);
 
 	void addH2D(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax, unsigned int nYBins,
 			float ymin, float ymax);

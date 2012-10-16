@@ -43,6 +43,19 @@ void HistogramManager::addH1D(std::string name, std::string title, unsigned int 
 	}
 }
 
+void HistogramManager::addH1D(std::string name, std::string title, unsigned int numberOfBins, float *xbins) {
+	if (numberOfBins > 200000)
+		cout << "WARNING: Histogram '" << name << "' has more than 200000 bins. Potential memory monster!" << endl;
+	if (collection1D.find(currentHistogramFolder) == collection1D.end())
+		addHistogramFolder(currentHistogramFolder);
+
+	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		if (seenDataTypes.at(type)) {
+			collection1D[currentHistogramFolder][type]->add(name, title, numberOfBins, xbins);
+		}
+	}
+}
+
 void HistogramManager::addH1D_JetBinned(std::string name, std::string title, unsigned int numberOfBins, float xmin,
 		float xmax) {
 
@@ -58,6 +71,19 @@ void HistogramManager::addH1D_JetBinned(std::string name, std::string title, uns
 	}
 }
 
+void HistogramManager::addH1D_JetBinned(std::string name, std::string title, unsigned int numberOfBins, float *xbins) {
+	for (unsigned short jetbin = 0; jetbin < JetBin::NUMBER_OF_JET_BINS; ++jetbin) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+			if (seenDataTypes.at(type)) {
+				std::stringstream tmp_name, tmp_title;
+				tmp_name << name << "_" << JetBin::names[jetbin];
+				tmp_title << title << " (" << JetBin::names[jetbin] << ")";
+				addH1D(tmp_name.str(), tmp_title.str(), numberOfBins, xbins);
+			}
+		}
+	}
+}
+
 void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, unsigned int numberOfBins, float xmin,
 		float xmax) {
 	for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
@@ -67,6 +93,19 @@ void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, un
 				tmp_name << name << "_" << BJetBin::names[jetbin];
 				tmp_title << title << " (" << BJetBin::names[jetbin] << ")";
 				addH1D(tmp_name.str(), tmp_title.str(), numberOfBins, xmin, xmax);
+			}
+		}
+	}
+}
+
+void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, unsigned int numberOfBins, float *xbins) {
+	for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+			if (seenDataTypes.at(type)) {
+				std::stringstream tmp_name, tmp_title;
+				tmp_name << name << "_" << BJetBin::names[jetbin];
+				tmp_title << title << " (" << BJetBin::names[jetbin] << ")";
+				addH1D(tmp_name.str(), tmp_title.str(), numberOfBins, xbins);
 			}
 		}
 	}

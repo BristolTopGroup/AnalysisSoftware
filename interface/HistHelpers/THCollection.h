@@ -51,6 +51,7 @@ public:
     }
 
     void add(std::string name, std::string title, unsigned int numberOfBins, float xmin, float xmax);
+    void add(std::string name, std::string title, unsigned int numberOfBins, float *xbins);
     void add(std::string name, std::string title, unsigned int numberOfXBins, float xmin, float xmax,
             unsigned int numberOfYBins, float ymin, float ymax);
     void add(std::string name, std::string title, unsigned int numberOfXBins, float xmin, float xmax,
