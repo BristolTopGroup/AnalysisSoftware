@@ -101,6 +101,7 @@ void Analysis::analyse() {
 		eventcountAnalyser->analyse(currentEvent);
 		mttbarAnalyser->analyse(currentEvent);
 		ttbarPlusMETAnalyser_->analyse(currentEvent);
+		diffVariablesAnalyser->analyse(currentEvent);
 
 	}
 }
@@ -264,6 +265,11 @@ void Analysis::createHistograms() {
 	cout << "Number of histograms added by vertexAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
+	diffVariablesAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by diffVariablesAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
 	cout << "Total number of histograms: " << histMan->size() << endl;
 }
 
@@ -304,7 +310,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		mvAnalyser(new MVAnalyser(histMan)), //
 		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
 		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
-		vertexAnalyser(new VertexAnalyser(histMan)) {
+		vertexAnalyser(new VertexAnalyser(histMan)),
+		diffVariablesAnalyser(new DiffVariablesAnalyser(histMan)) {
 //	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
 //		ePlusJetsCutflow[cut] = 0;
 //		ePlusJetsSingleCuts[cut] = 0;

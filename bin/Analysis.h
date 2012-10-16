@@ -43,6 +43,7 @@
 #include "../interface/Analysers/NeutrinoReconstructionAnalyser.h"
 #include "../interface/Analysers/TTbarPlusMETAnalyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
+#include "../interface/Analysers/DiffVariablesAnalyser.h"
 
 //typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
 //typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
@@ -83,6 +84,7 @@ private:
     BAT::NeutrinoRecoAnalyserLocalPtr neutrinoRecoAnalyser;
     BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
+    boost::scoped_ptr<BAT::DiffVariablesAnalyser> diffVariablesAnalyser;
 
 public:
 //    static float luminosity;
