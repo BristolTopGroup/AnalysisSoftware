@@ -62,10 +62,10 @@ if __name__ == "__main__":
         hist_powheg.Scale(1/hist_powheg.Integral())
         hist_pythia.Scale(1/hist_pythia.Integral())
         
-        hist_madgraph.Draw("E")
-        hist_mcatnlo.Draw('E same')
-        hist_powheg.Draw('E same')
-        hist_pythia.Draw('E same')
+        hist_madgraph.Draw("E1")
+        hist_mcatnlo.Draw('E1 same')
+        hist_powheg.Draw('E1 same')
+        hist_pythia.Draw('E1 same')
         
         if variable == 'MET_phi':
             legend = plotting.create_legend(x0=0.72, y0 = 0.90, x1=0.84, y1=0.80)
