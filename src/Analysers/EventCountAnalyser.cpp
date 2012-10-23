@@ -1,7 +1,7 @@
 /*
  * EventCountAnalyser.cpp
  *
- *  Created on: 24 Mar 2012
+ *  Created on: 24 Mar 2011
  *      Author: kreczko
  */
 
@@ -13,6 +13,7 @@ void EventCountAnalyser::analyse(const EventPtr event) {
 
 	topEPlusJetsReferenceSelection(event);
 	topMuPlusJetsReferenceSelection(event);
+	topMuPlusJetsReferenceSelection2011(event);
 	topEplusJetsPlusMETSelection(event);
 	topEplusJetsZprimeSelection(event);
 	qcdSelections(event);
@@ -54,6 +55,22 @@ void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 			histMan_->H1D("TTbarMuPlusJetsRefSelection")->Fill(step, weight_);
 		if (passesStep)
 			histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(step, weight_);
+	}
+}
+
+void EventCountAnalyser::topMuPlusJetsReferenceSelection2011(const EventPtr event) {
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	weight_ = event->weight() * prescale_ * scale_;
+	histMan_->H1D("TTbarMuPlusJetsRefSelection2011")->Fill(-1, weight_);
+	histMan_->H1D("TTbarMuPlusJetsRefSelection2011_singleCuts")->Fill(-1, weight_);
+
+	for (unsigned int step = 0; step < TTbarMuPlusJetsReferenceSelection2011::NUMBER_OF_SELECTION_STEPS; ++step) {
+		bool passesStep = topMuPlusJetsRefSelection2011_->passesSelectionStep(event, step);
+		bool passesStepUpTo = topMuPlusJetsRefSelection2011_->passesSelectionUpToStep(event, step);
+		if (passesStepUpTo)
+			histMan_->H1D("TTbarMuPlusJetsRefSelection2011")->Fill(step, weight_);
+		if (passesStep)
+			histMan_->H1D("TTbarMuPlusJetsRefSelection2011_singleCuts")->Fill(step, weight_);
 	}
 }
 
@@ -340,7 +357,15 @@ void EventCountAnalyser::createHistograms() {
 				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
 				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
 	}
-
+	const boost::array<string, 6> refSelections_muons2011 = { {"TTbarMuPlusJetsRef"} };
+	for (unsigned int index = 0; index < refSelections_muons2011.size(); ++index) {
+		string selection = refSelections_muons2011.at(index) + "Selection2011";
+		histMan_->addH1D(selection, selection, TTbarMuPlusJetsReferenceSelection2011::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
+				TTbarMuPlusJetsReferenceSelection2011::NUMBER_OF_SELECTION_STEPS - 0.5);
+		histMan_->addH1D(selection + "_singleCuts", selection + " (single cuts",
+				TTbarMuPlusJetsReferenceSelection2011::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
+				TTbarMuPlusJetsReferenceSelection2011::NUMBER_OF_SELECTION_STEPS - 0.5);
+	}
 }
 
 void EventCountAnalyser::setHistogramLabels() {
@@ -368,6 +393,7 @@ EventCountAnalyser::EventCountAnalyser(HistogramManagerPtr histMan, std::string 
 		topEplusAsymJetsSelection_(new TopPairEplusJetsRefAsymJetsSelection()), //
 		topEplusAsymJetsMETSelection_(new TopPairEPlusJetsRefAsymJetsMETSelection()), //
 		topMuPlusJetsRefSelection_(new TopPairMuPlusJetsReferenceSelection()), //
+		topMuPlusJetsRefSelection2011_(new TopPairMuPlusJetsReferenceSelection2011()), //
 		//QCD selections with respect to reference selection
 		qcdNonIsoElectronSelection_(new QCDNonIsolatedElectronSelection()), //
 		qcdNonIsoElectronNonIsoTriggerSelection_(new QCDNonIsolatedElectronSelection()), //

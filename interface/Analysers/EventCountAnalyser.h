@@ -1,7 +1,7 @@
 /*
  * EventCountAnalyser.h
  *
- *  Created on: 24 Mar 2012
+ *  Created on: 24 Mar 2011
  *      Author: kreczko
  */
 
@@ -13,6 +13,7 @@
 #include "../Selections/TopPairEplusJetsRefAsymJetsSelection.h"
 #include "../Selections/TopPairEPlusJetsRefAsymJetsMETSelection.h"
 #include "../Selections/TopPairMuPlusJetsReferenceSelection.h"
+#include "../Selections/TopPairMuPlusJetsReferenceSelection2011.h"
 //QCD selections
 #include "../Selections/QCDNonIsolatedElectronSelection.h"
 #include "../Selections/QCDNonIsolatedMuonSelection.h"
@@ -39,6 +40,7 @@ public:
 
 	void topEPlusJetsReferenceSelection(const EventPtr event);
 	void topMuPlusJetsReferenceSelection(const EventPtr event);
+	void topMuPlusJetsReferenceSelection2011(const EventPtr event);
 	void topEplusJetsPlusMETSelection(const EventPtr event);
 	void topEplusJetsZprimeSelection(const EventPtr event);
 
@@ -51,7 +53,7 @@ public:
 	void qcdNonIsoTriggerAsymJetsMETSelections(const EventPtr event);
 
 private:
-	SelectionPointer topEplusJetsRefSelection_, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_, topMuPlusJetsRefSelection_;
+	SelectionPointer topEplusJetsRefSelection_, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_, topMuPlusJetsRefSelection_, topMuPlusJetsRefSelection2011_;
 
 	//QCD selections with respect to reference selection
 	SelectionPointer qcdNonIsoElectronSelection_, qcdNonIsoElectronNonIsoTriggerSelection_, qcdNonIsoMuonSelection_;

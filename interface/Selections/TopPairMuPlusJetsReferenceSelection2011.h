@@ -1,18 +1,19 @@
 /*
- * TopPairReferenceSelection.h
+ * TopPairReferenceSelection2011.h
  *
- *  Created on: 25 Feb 2012
- *      Author: kreczko
+ *  Created on: 17 Oct 2011
+ *      Author: symonds
  */
 
-#ifndef TOPPAIRMUPLUSJETSREFERENCESELECTION_H_
-#define TOPPAIRMUPLUSJETSREFERENCESELECTION_H_
+
+#ifndef TOPPAIRMUPLUSJETSREFERENCESELECTION2011_H_
+#define TOPPAIRMUPLUSJETSREFERENCESELECTION2011_H_
 
 #include "BasicSelection.h"
 
 namespace BAT {
 
-namespace TTbarMuPlusJetsReferenceSelection {
+namespace TTbarMuPlusJetsReferenceSelection2011 {
 enum Step {
 	EventCleaningAndTrigger,
 	OneIsolatedMuon,
@@ -28,8 +29,8 @@ enum Step {
 const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 		"Event cleaning and High Level Trigger", //
 				"exactly one isolated muon", //
-				"loose muon veto", //
-				"loose electron veto", //
+				"loose lepton veto", //
+				"di-lepton veto", //
 				">= 3 jets", //
 				">= 4 jets", //
 				">=1 CSV b-tag", //
@@ -37,11 +38,11 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 		};
 }
 
-class TopPairMuPlusJetsReferenceSelection: public BAT::BasicSelection {
+class TopPairMuPlusJetsReferenceSelection2011: public BAT::BasicSelection {
 public:
-	TopPairMuPlusJetsReferenceSelection(unsigned int numberOfSelectionSteps =
-			TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS);
-	virtual ~TopPairMuPlusJetsReferenceSelection();
+	TopPairMuPlusJetsReferenceSelection2011(unsigned int numberOfSelectionSteps =
+			TTbarMuPlusJetsReferenceSelection2011::NUMBER_OF_SELECTION_STEPS);
+	virtual ~TopPairMuPlusJetsReferenceSelection2011();
 
 	virtual bool isGoodJet(const JetPointer jet) const;
 	virtual bool isBJet(const JetPointer jet) const;
@@ -59,8 +60,8 @@ public:
 	virtual bool passesEventCleaning(const EventPtr event) const;
 	virtual bool passesTriggerSelection(const EventPtr event) const;
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
-	virtual bool passesLooseElectronVeto(const EventPtr event) const;
 	virtual bool passesLooseMuonVeto(const EventPtr event) const;
+	virtual bool passesLooseElectronVeto(const EventPtr event) const;
 	virtual bool hasAtLeastThreeGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;
@@ -71,7 +72,7 @@ public:
 	virtual const JetCollection cleanedBJets(const EventPtr event) const;
 };
 
-typedef boost::shared_ptr<TopPairMuPlusJetsReferenceSelection> TopPairMuPlusJetsReferenceSelectionPointer;
+typedef boost::shared_ptr<TopPairMuPlusJetsReferenceSelection2011> TopPairMuPlusJetsReferenceSelection2011Pointer;
 
 } /* namespace BAT */
-#endif /* TOPPAIRMUPLUSJETSREFERENCESELECTION_H_ */
+#endif /* TOPPAIRMUPLUSJETSREFERENCESELECTION2011_H_ */
