@@ -3,7 +3,7 @@
 	<name>AnalysisTools</name>
 	<comment></comment>
 	<projects>
-		<project>TopQuarkAnalysis</project>
+		<project>DailyPythonScripts</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -89,6 +89,11 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>com.googlecode.cppcheclipse.Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>ch.hsr.ifs.cute.ui.cutenature</nature>
@@ -99,5 +104,6 @@
 		<nature>org.python.pydev.pythonNature</nature>
 		<nature>ch.hsr.ifs.cute.gcov.GcovNature</nature>
 		<nature>org.eclipse.linuxtools.rpm.rpmlint.rpmlintNature</nature>
+		<nature>com.googlecode.cppcheclipse.Nature</nature>
 	</natures>
 </projectDescription>

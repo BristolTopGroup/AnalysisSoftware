@@ -52,6 +52,17 @@ if __name__ == "__main__":
         hist_powheg.SetLineColor(kBlue)
         hist_pythia.SetLineColor(kGreen)
         
+        hist_madgraph.SetLineWidth(2)
+        hist_mcatnlo.SetLineWidth(2)
+        hist_powheg.SetLineWidth(2)
+        hist_pythia.SetLineWidth(2)
+        
+        hist_madgraph.SetMarkerSize(2)
+        hist_mcatnlo.SetMarkerSize(2)
+        hist_powheg.SetMarkerSize(2)
+        hist_pythia.SetMarkerSize(2)
+        #hist_madgraph.SetMarkerStyle(20)
+        
         hist_madgraph.Sumw2()
         hist_mcatnlo.Sumw2()
         hist_powheg.Sumw2()

@@ -25,12 +25,12 @@ void MCAnalyser::analyse(const EventPtr event) {
 	bool ejets_event = false;
 	bool leptonic_Wplus_found = false, leptonic_Wminus_found = false;
 	bool hadronic_Wplus_found = false, hadronic_Wminus_found = false;
-	bool fully_hadronic_event = false, fully_leptonic_event = false;
+//	bool fully_hadronic_event = false, fully_leptonic_event = false;
 	bool non_electron_leptonic_channel = false;
 	int index = 0;
-	int top_index = -100, antitop_index = -100, W_plus_index = -100, W_minus_index = -100, electron_index = -100,
-			neutrino_index = -100, b_from_top_index = -100, b_from_antitop_index = -100, quark_from_W_index = -100,
-			antiquark_from_W_index = -100;
+	int top_index = -100, antitop_index = -100, W_plus_index = -100, W_minus_index = -100;//, electron_index = -100,
+//			neutrino_index = -100, b_from_top_index = -100, b_from_antitop_index = -100, quark_from_W_index = -100,
+//			antiquark_from_W_index = -100;
 
 	//TODO: change from iterator to index: std::vectors have constant time for index = no gain using iterators
 	// MC ttbar reconstruction
@@ -69,12 +69,12 @@ void MCAnalyser::analyse(const EventPtr event) {
 		//b-quarks
 		if (((*mc_particle)->pdgId() == 5) && ((*mc_particle)->motherIndex() == top_index)) {
 			b_from_top = *mc_particle;
-			b_from_top_index = index;
+//			b_from_top_index = index;
 			continue;
 		}
 		if (((*mc_particle)->pdgId() == -5) && ((*mc_particle)->motherIndex() == antitop_index)) {
 			b_from_antitop = *mc_particle;
-			b_from_antitop_index = index;
+//			b_from_antitop_index = index;
 			continue;
 		}
 
@@ -82,13 +82,13 @@ void MCAnalyser::analyse(const EventPtr event) {
 		if ((*mc_particle)->motherIndex() == W_plus_index) {
 			if ((*mc_particle)->pdgId() == -11) {
 				electron = *mc_particle;
-				electron_index = index;
+//				electron_index = index;
 				leptonic_Wplus_found = true;
 			}
 
 			else if ((*mc_particle)->pdgId() == 12) {
 				neutrino = *mc_particle;
-				neutrino_index = index;
+//				neutrino_index = index;
 				leptonic_Wplus_found = true;
 			}
 
@@ -99,13 +99,13 @@ void MCAnalyser::analyse(const EventPtr event) {
 
 			else if ((*mc_particle)->isQuark() && ((*mc_particle)->pdgId() > 0)) {
 				quark_from_W = *mc_particle;
-				quark_from_W_index = index;
+//				quark_from_W_index = index;
 				hadronic_Wplus_found = true;
 			}
 
 			else if ((*mc_particle)->isQuark() && ((*mc_particle)->pdgId() < 0)) {
 				antiquark_from_W = *mc_particle;
-				antiquark_from_W_index = index;
+//				antiquark_from_W_index = index;
 				hadronic_Wplus_found = true;
 			}
 
@@ -119,13 +119,13 @@ void MCAnalyser::analyse(const EventPtr event) {
 		if ((*mc_particle)->motherIndex() == W_minus_index) {
 			if ((*mc_particle)->pdgId() == 11) {
 				electron = *mc_particle;
-				electron_index = index;
+//				electron_index = index;
 				leptonic_Wminus_found = true;
 			}
 
 			else if ((*mc_particle)->pdgId() == -12) {
 				neutrino = *mc_particle;
-				neutrino_index = index;
+//				neutrino_index = index;
 				leptonic_Wminus_found = true;
 			}
 
@@ -136,13 +136,13 @@ void MCAnalyser::analyse(const EventPtr event) {
 
 			else if ((*mc_particle)->isQuark() && ((*mc_particle)->pdgId() > 0)) {
 				quark_from_W = *mc_particle;
-				quark_from_W_index = index;
+//				quark_from_W_index = index;
 				hadronic_Wminus_found = true;
 			}
 
 			else if ((*mc_particle)->isQuark() && ((*mc_particle)->pdgId() < 0)) {
 				antiquark_from_W = *mc_particle;
-				antiquark_from_W_index = index;
+//				antiquark_from_W_index = index;
 				hadronic_Wminus_found = true;
 			}
 
@@ -159,11 +159,11 @@ void MCAnalyser::analyse(const EventPtr event) {
 		mcEvent.decayChannel = Decay::electronPlusJets;
 	}
 	if (((leptonic_Wplus_found) || (leptonic_Wminus_found)) && (!hadronic_Wplus_found) && (!hadronic_Wminus_found)) {
-		fully_leptonic_event = true;
+//		fully_leptonic_event = true;
 		mcEvent.decayChannel = Decay::fullyLeptonic;
 	}
 	if (((hadronic_Wplus_found) || (hadronic_Wminus_found)) && (!leptonic_Wplus_found) && (!leptonic_Wminus_found)) {
-		fully_hadronic_event = true;
+//		fully_hadronic_event = true;
 		mcEvent.decayChannel = Decay::fullyHadronic;
 	}
 

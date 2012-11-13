@@ -74,7 +74,13 @@ void EventWeightProvider::generate_weights() {
 	 * If Spring11 or Summer11 3D reweighting, use probdistFlat10 (compare to true)
 	 * Fall11, use Fall2011
 	 */
-	pileUpWeights = generateWeights(Fall2011);
+
+	//Needs a flag for 2011 MC tried energyInTeV?
+	if(Globals::energyInTeV == 8)
+		pileUpWeights = generateWeights(Summer2012);
+	else
+		pileUpWeights = generateWeights(Fall2011);
+
 //	cout << "Pile up weights" << endl;
 //
 //	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){

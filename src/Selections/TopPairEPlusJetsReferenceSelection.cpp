@@ -111,8 +111,23 @@ bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr e
 		else
 			return false;
 	} else {
-		//Fall11 MC
-		return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		if (Globals::energyInTeV == 8) {
+			//Summer12 MC
+			//do not use HLTs in Summer12 MC as they don't use JEC
+			//https://hypernews.cern.ch/HyperNews/CMS/get/top-trigger/66.html
+			//			return true;
+			//let's put it back - discussion inconclusive but it is better to have a scale factor than efficiency corrections
+			bool fired_START52_V5 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+			bool fired_START52_V9 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30)
+					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
+			bool fired_START53_V7A = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet50_40_30)
+					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet50_40_30);
+			return fired_START52_V5 || fired_START52_V9 || fired_START53_V7A;
+
+		} else {
+			//Fall11 MC
+			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		}
 	}
 }
 

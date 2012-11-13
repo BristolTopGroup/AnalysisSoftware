@@ -1,1 +1,4 @@
+*.py[cod]
 /Debug
+/Profile
+/Release
