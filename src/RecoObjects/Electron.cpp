@@ -355,8 +355,8 @@ double Electron::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) 
 	return pfIsolation(coneSize, deltaBetaCorrection) / et();
 }
 
-double Electron::pfRelativeIsolationRhoCorrected(double coneSize, double rho) const {
-	//https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection#Isolation_cone_R_0_3
+double Electron::pfRelativeIsolationRhoCorrected() const {
+/*	//https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection#Isolation_cone_R_0_3
 //	2.0<abs(eta)<2.2 	Aeff(NH) = 0.023 +/- 0.001 	Aeff(γ) = 0.089 +/- 0.002 	Aeff(γ+NH) = 0.11 +/- 0.003
 //	2.2<abs(eta)<2.3 	Aeff(NH) = 0.023 +/- 0.002 	Aeff(γ) = 0.092 +/- 0.004 	Aeff(γ+NH) = 0.12 +/- 0.004
 //	2.3<abs(eta)<2.4 	Aeff(NH) = 0.021 +/- 0.002 	Aeff(γ) = 0.097 +/- 0.004 	Aeff(γ+NH) = 0.12 +/- 0.005
@@ -386,8 +386,10 @@ double Electron::pfRelativeIsolationRhoCorrected(double coneSize, double rho) co
 		effArea = 0.13;
 
 	double neutralIso = PFGammaIsolation(coneSize) + PFNeutralHadronIsolation(coneSize);
-	double correctedIso = PFChargedHadronIsolation(coneSize) + max(neutralIso - rho * effArea, 0.);
-	return correctedIso;
+	double correctedIso = PFChargedHadronIsolation(coneSize) + max(neutralIso - rho * effArea, 0.);*/
+
+
+	return PFRelativeIsolationRho_DR03_;
 }
 
 ElectronAlgorithm::value Electron::algorithm() const {

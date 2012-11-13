@@ -22,7 +22,7 @@ TopPairEPlusJetsReferenceSelection::~TopPairEPlusJetsReferenceSelection() {
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
-	bool passesPtAndEta = jet->pt() > 20 && fabs(jet->eta()) < 2.4;
+	bool passesPtAndEta = jet->pt() > 20 && fabs(jet->eta()) < 2.5;
 	bool passesJetID(false);
 	JetAlgorithm::value algo = jet->getUsedAlgorithm();
 	if (algo == JetAlgorithm::CA08PF || algo == JetAlgorithm::PF2PAT) { //PFJet
@@ -91,7 +91,7 @@ bool TopPairEPlusJetsReferenceSelection::passesEventCleaning(const EventPtr even
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
 	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
-	passesAllFilters = passesAllFilters && event->passesNoisySCFilter();//2012 data only
+	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
 	return passesAllFilters;
 }
 
@@ -111,8 +111,23 @@ bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr e
 		else
 			return false;
 	} else {
-		//Fall11 MC
-		return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		if (Globals::energyInTeV == 8) {
+			//Summer12 MC
+			//do not use HLTs in Summer12 MC as they don't use JEC
+			//https://hypernews.cern.ch/HyperNews/CMS/get/top-trigger/66.html
+			//			return true;
+			//let's put it back - discussion inconclusive but it is better to have a scale factor than efficiency corrections
+			bool fired_START52_V5 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+			bool fired_START52_V9 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30)
+					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
+			bool fired_START53_V7A = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet50_40_30)
+					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet50_40_30);
+			return fired_START52_V5 || fired_START52_V9 || fired_START53_V7A;
+
+		} else {
+			//Fall11 MC
+			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		}
 	}
 }
 
@@ -130,8 +145,7 @@ bool TopPairEPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Event
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
-	bool passesEtAndEta = electron->et() > 30
-			&& fabs(electron->eta()) < 2.5 && !electron->isInCrack();
+	bool passesEtAndEta = electron->et() > 30 && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
 //	bool passesDistanceToPV = fabs(electron->ZDistanceToPrimaryVertex()) < 1;
 			//since H/E is used at trigger level, use the same cut here:

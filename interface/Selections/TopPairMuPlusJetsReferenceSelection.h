@@ -16,8 +16,8 @@ namespace TTbarMuPlusJetsReferenceSelection {
 enum Step {
 	EventCleaningAndTrigger,
 	OneIsolatedMuon,
-	LooseLeptonVeto,
-	DiLeptonVeto,
+	LooseMuonVeto,
+	LooseElectronVeto,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
 	AtLeastOneBtag,
@@ -28,8 +28,8 @@ enum Step {
 const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 		"Event cleaning and High Level Trigger", //
 				"exactly one isolated muon", //
-				"loose lepton veto", //
-				"di-lepton veto", //
+				"loose muon veto", //
+				"loose electron veto", //
 				">= 3 jets", //
 				">= 4 jets", //
 				">=1 CSV b-tag", //
@@ -59,8 +59,8 @@ public:
 	virtual bool passesEventCleaning(const EventPtr event) const;
 	virtual bool passesTriggerSelection(const EventPtr event) const;
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
-	virtual bool passesLooseLeptonVeto(const EventPtr event) const;
-	virtual bool passesDileptonVeto(const EventPtr event) const;
+	virtual bool passesLooseElectronVeto(const EventPtr event) const;
+	virtual bool passesLooseMuonVeto(const EventPtr event) const;
 	virtual bool hasAtLeastThreeGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
 	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;

@@ -4,6 +4,7 @@
 #include <functional>
 #include <numeric>
 #include <boost/scoped_ptr.hpp>
+#include <boost/array.hpp>
 
 namespace BAT {
 

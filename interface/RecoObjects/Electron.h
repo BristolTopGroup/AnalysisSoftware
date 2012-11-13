@@ -146,7 +146,7 @@ public:
     double relativeIsolation() const;
     double relativeIsolationPUCorrected(double rho) const;
     virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
-    virtual double pfRelativeIsolationRhoCorrected(double coneSize = 0.3, double rho = 0.) const;
+    virtual double pfRelativeIsolationRhoCorrected() const;
 
     virtual bool isInBarrelRegion() const;
     bool isInCrack() const;

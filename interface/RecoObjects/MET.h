@@ -16,7 +16,7 @@ namespace BAT {
 
 namespace METAlgorithm {
 enum value {
-	patMETsPFlow, GenMET, patType1CorrectedPFMet, patType1p2CorrectedPFMet,
+	recoMetPFlow, patMETsPFlow, GenMET, patType1CorrectedPFMet, patType1p2CorrectedPFMet,
 	//MET systematics
 	patType1p2CorrectedPFMetElectronEnUp,
 	patType1p2CorrectedPFMetElectronEnDown,
@@ -60,7 +60,8 @@ enum value {
 
 const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes = { {
 //MET names as stored in the nTuples
-		"patMETsPFlow",//
+		"recoMetPFlow", //
+		"patMETsPFlow", //
 		"GenMET", //
 		"patType1CorrectedPFMet", //
 		"patType1p2CorrectedPFMet", //
@@ -106,6 +107,7 @@ const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes 
 
 const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
 //MET names as used in output file for the used (central) MET
+		"RecoMET",//
 		"PFMET",//
 		"GenMET",//
 		"patType1CorrectedPFMet",//

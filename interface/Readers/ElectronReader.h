@@ -49,6 +49,7 @@ private:
 	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR05_;
 	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR05_;
 	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR05_;
+	VariableReader<MultiDoublePointer> PFRelativeIsolationRho_DR03_;
 
 	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR02_;
 	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR03_;
