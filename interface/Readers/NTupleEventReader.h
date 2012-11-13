@@ -23,6 +23,7 @@
 #include "TrackReader.h"
 #include "GenParticleReader.h"
 #include <string>
+#include "TTreePerfStats.h"
 
 namespace BAT {
 struct NoFileFoundException: public std::exception {
@@ -89,6 +90,8 @@ private:
 	bool areReadersSet, areDatatypesKnown;
 	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
+	boost::shared_ptr<TTreePerfStats> performanceMonitoring_;
+	bool createdMonitoring_;
 
 	void selectNextNtupleEvent();
 	void initiateReadersIfNotSet();
