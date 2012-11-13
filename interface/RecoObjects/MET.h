@@ -16,7 +16,7 @@ namespace BAT {
 
 namespace METAlgorithm {
 enum value {
-	recoMetPFlow, patMETsPFlow, GenMET, patType1CorrectedPFMet, patType1p2CorrectedPFMet,
+	patMETsPFlow, GenMET, patType1CorrectedPFMet, patType1p2CorrectedPFMet,
 	//MET systematics
 	patType1p2CorrectedPFMetElectronEnUp,
 	patType1p2CorrectedPFMetElectronEnDown,
@@ -55,12 +55,13 @@ enum value {
 	patType1CorrectedPFMetJetEnDown,
 	patType1CorrectedPFMetUnclusteredEnUp,
 	patType1CorrectedPFMetUnclusteredEnDown,
+	//only available with nTuple version 9 or higher
+	recoMetPFlow,
 	NUMBER_OF_METALGORITHMS
 };
 
 const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes = { {
 //MET names as stored in the nTuples
-		"recoMetPFlow", //
 		"patMETsPFlow", //
 		"GenMET", //
 		"patType1CorrectedPFMet", //
@@ -102,12 +103,12 @@ const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes 
 		"patType1CorrectedPFMetJetEnDown", //
 		"patType1CorrectedPFMetUnclusteredEnUp", //
 		"patType1CorrectedPFMetUnclusteredEnDown", //
-
+		//only available with nTuple version 9 or higher
+		"recoMetPFlow", //
 		} };
 
 const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
 //MET names as used in output file for the used (central) MET
-		"RecoMET",//
 		"PFMET",//
 		"GenMET",//
 		"patType1CorrectedPFMet",//
@@ -148,7 +149,10 @@ const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = {
 		"patType1CorrectedPFMetJetEnUp",//
 		"patType1CorrectedPFMetJetEnDown",//
 		"patType1CorrectedPFMetUnclusteredEnUp",//
-		"patType1CorrectedPFMetUnclusteredEnDown"} };
+		"patType1CorrectedPFMetUnclusteredEnDown",//
+		//only available with nTuple version 9 or higher
+		"RecoMET"//
+} };
 	}
 
 	class MET: public Particle {

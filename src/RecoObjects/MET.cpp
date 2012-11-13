@@ -69,8 +69,10 @@ bool MET::isMCOnlyMETType(unsigned int type) {
 }
 
 bool MET::isAvailableInNTupleVersion(unsigned int ntupleVersion, unsigned int type) {
-	if (ntupleVersion > 7)
+	if (ntupleVersion > 8)
 		return true;
+	else if (ntupleVersion == 8)
+		return type < METAlgorithm::recoMetPFlow;
 	else if (ntupleVersion == 7)
 		return type <= METAlgorithm::patType1p2CorrectedPFMetUnclusteredEnDown;
 	else
