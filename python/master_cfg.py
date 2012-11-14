@@ -56,7 +56,9 @@ analysisModes = ['central',
                  'LightJet_down',
                  'LightJet_up',
                  'PU_down',
-                 'PU_up']
+                 'PU_up',
+                 'Test']
+
 analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 
 available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
@@ -66,7 +68,7 @@ default_settings = {
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
-            'pdfWeightNumber' : 0
+            'pdfWeightNumber' : 0,
             }
 
 analysis_settings = {
@@ -80,7 +82,8 @@ analysis_settings = {
                             'custom_file_suffix':'PU_64600mb'
                             },
                  'PU_up':{'PUFile':'PileUp_2011_truth_finebin_71400microbarn.root', 
-                            'custom_file_suffix':'PU_71400mb'}
+                            'custom_file_suffix':'PU_71400mb'},
+                'Test': {'custom_file_suffix':'TESTING'}
                      }
 for weight in range(1, 45):
     weight_txt = 'PDFWeights_%d' % weight 
