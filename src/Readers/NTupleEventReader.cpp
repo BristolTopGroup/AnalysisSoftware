@@ -59,7 +59,7 @@ NTupleEventReader::NTupleEventReader() :
 		seenDataTypes(),//
 		performanceMonitoring_(),//
 		createdMonitoring_(false){
-	input->SetCacheSize(100000000);
+	input->SetCacheSize(0);
 	metReaders.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
 
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
