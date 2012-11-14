@@ -90,8 +90,6 @@ private:
 	bool areReadersSet, areDatatypesKnown;
 	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
-	boost::shared_ptr<TTreePerfStats> performanceMonitoring_;
-	bool createdMonitoring_;
 
 	void selectNextNtupleEvent();
 	void initiateReadersIfNotSet();

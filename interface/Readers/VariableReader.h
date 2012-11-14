@@ -107,7 +107,6 @@ protected:
 
 	void enableVariable() {
 		input->SetBranchStatus(variableName, true);
-		input->AddBranchToCache(variableName);
 	}
 };
 

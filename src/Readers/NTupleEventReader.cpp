@@ -56,10 +56,7 @@ NTupleEventReader::NTupleEventReader() :
 		areReadersSet(false), //
 		areDatatypesKnown(false), //
 		currentEvent(), //
-		seenDataTypes(),//
-		performanceMonitoring_(),//
-		createdMonitoring_(false){
-	input->SetCacheSize(100000000);
+		seenDataTypes(){
 	metReaders.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
 
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
@@ -71,7 +68,6 @@ NTupleEventReader::NTupleEventReader() :
 }
 
 NTupleEventReader::~NTupleEventReader() {
-	performanceMonitoring_->SaveAs("Root_IO_Performance.root");
 }
 
 void NTupleEventReader::addInputFile(const TString fileName) {
@@ -86,8 +82,6 @@ void NTupleEventReader::addInputFileWithoutCheck(const char * fileName) {
 }
 
 const EventPtr NTupleEventReader::getNextEvent() {
-	if(!createdMonitoring_)
-		performanceMonitoring_ = boost::shared_ptr<TTreePerfStats>(new TTreePerfStats("iopoerf", input.get()));
 	currentEvent = EventPtr(new Event());
 	selectNextNtupleEvent();
 
