@@ -1,4 +1,14 @@
 *.py[cod]
-/Debug
-/Profile
-/Release
+*.log
+Debug/AnalysisSoftware
+Debug/bin/
+Debug/src/
+Profile/AnalysisSoftware
+Profile/bin/
+Profile/src/
+Release/AnalysisSoftware
+Release/bin/
+Release/src/
+*_TESTING.root
+Root_IO_Performance.root
+.settings/
