@@ -4,6 +4,7 @@
 <use name="boost_python" />
 <use name="root" />
 <use name="rootcore" />
+<use name="rootgraphics" />
 <use name="boost_program_options"/>
 <use name="TopQuarkAnalysis/TopHitFit" />
 
@@ -13,6 +14,9 @@
 <use name="boost_python" />
 <use name="root" />
 <use name="rootcore" />
+<use name="rootgraphics" />
 <use name="TopQuarkAnalysis/TopHitFit" />
+<use name="XYZ" />
+
 <lib name="BristolAnalysisTools" />
 </export>
