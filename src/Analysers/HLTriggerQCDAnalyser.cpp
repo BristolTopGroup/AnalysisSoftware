@@ -318,8 +318,8 @@ bool HLTriggerQCDAnalyser::passesNonIsoWithoutBtagAndHLT(const EventPtr event) c
 	passes = passes && qcdNonIsoSelection_->passesLooseLeptonVeto(event);
 	passes = passes && qcdNonIsoSelection_->passesDileptonVeto(event);
 	passes = passes && qcdNonIsoSelection_->passesConversionVeto(event);
-	passes = passes && qcdNonIsoSelection_->hasAtLeastThreeGoodJets(event);
-	passes = passes && qcdNonIsoSelection_->hasAtLeastFourGoodJets(event);
+	passes = passes && qcdNonIsoSelection_->hasAtLeastNGoodJets(event,3);
+	passes = passes && qcdNonIsoSelection_->hasAtLeastNGoodJets(event,4);
 
 	return passes;
 }
@@ -331,8 +331,8 @@ bool HLTriggerQCDAnalyser::passesAntiIDWithoutBtagAndHLT(const EventPtr event) c
 	passes = passes && qcdAntiIDSelection_->passesLooseLeptonVeto(event);
 	passes = passes && qcdAntiIDSelection_->passesDileptonVeto(event);
 	passes = passes && qcdAntiIDSelection_->passesConversionVeto(event);
-	passes = passes && qcdAntiIDSelection_->hasAtLeastThreeGoodJets(event);
-	passes = passes && qcdAntiIDSelection_->hasAtLeastFourGoodJets(event);
+	passes = passes && qcdAntiIDSelection_->hasAtLeastNGoodJets(event, 3);
+	passes = passes && qcdAntiIDSelection_->hasAtLeastNGoodJets(event, 4);
 
 	return passes;
 }
@@ -344,8 +344,8 @@ bool HLTriggerQCDAnalyser::passesSignalSelectionWithoutBtagAndHLT(const EventPtr
 	passes = passes && topSignalSelection_->passesLooseLeptonVeto(event);
 	passes = passes && topSignalSelection_->passesDileptonVeto(event);
 	passes = passes && topSignalSelection_->passesConversionVeto(event);
-	passes = passes && topSignalSelection_->hasAtLeastThreeGoodJets(event);
-	passes = passes && topSignalSelection_->hasAtLeastFourGoodJets(event);
+	passes = passes && topSignalSelection_->hasAtLeastNGoodJets(event, 3);
+	passes = passes && topSignalSelection_->hasAtLeastNGoodJets(event, 4);
 
 	return passes;
 }

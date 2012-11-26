@@ -31,7 +31,6 @@ src/RecoObjects \
 src/Readers \
 src/Python \
 src/Printers \
-src/HitFit \
 src/HistHelpers \
 src/Analysers \
 bin \

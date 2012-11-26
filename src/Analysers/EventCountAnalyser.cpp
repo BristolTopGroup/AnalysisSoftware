@@ -11,18 +11,21 @@ namespace BAT {
 
 void EventCountAnalyser::analyse(const EventPtr event) {
 
+//	individualCuts(event);
 	topEPlusJetsReferenceSelection(event);
+	topEPlusJetsReferenceSelectionUnweighted(event);
 	topMuPlusJetsReferenceSelection(event);
-	topMuPlusJetsReferenceSelection2011(event);
-	topEplusJetsPlusMETSelection(event);
-	topEplusJetsZprimeSelection(event);
-	qcdSelections(event);
-	qcdMuPlusJetsSelections(event);
-	qcdAsymJetsSelections(event);
-	qcdAsymJetsMETSelections(event);
-	qcdNonIsoTriggerSelections(event);
-	qcdNonIsoTriggerAsymJetsSelections(event);
-	qcdNonIsoTriggerAsymJetsMETSelections(event);
+	topMuPlusJetsReferenceSelectionUnweighted(event);
+//	topMuPlusJetsReferenceSelection2011(event);
+//	topEplusJetsPlusMETSelection(event);
+//	topEplusJetsZprimeSelection(event);
+//	qcdSelections(event);
+//	qcdMuPlusJetsSelections(event);
+//	qcdAsymJetsSelections(event);
+//	qcdAsymJetsMETSelections(event);
+//	qcdNonIsoTriggerSelections(event);
+//	qcdNonIsoTriggerAsymJetsSelections(event);
+//	qcdNonIsoTriggerAsymJetsMETSelections(event);
 }
 
 void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
@@ -42,6 +45,49 @@ void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
 	}
 }
 
+void EventCountAnalyser::topEPlusJetsReferenceSelectionUnweighted(const EventPtr event) {
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	weight_ = 1.;
+	//fill all events bin
+	histMan_->H1D("TTbarEplusJetsRefSelectionUnweighted")->Fill(-1, weight_);
+	histMan_->H1D("TTbarEplusJetsRefSelectionUnweighted_singleCuts")->Fill(-1, weight_);
+
+	for (unsigned int step = 0; step < TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
+		bool passesStep = topEplusJetsRefSelection_->passesSelectionStep(event, step);
+		bool passesStepUpTo = topEplusJetsRefSelection_->passesSelectionUpToStep(event, step);
+		if (passesStepUpTo)
+			histMan_->H1D("TTbarEplusJetsRefSelectionUnweighted")->Fill(step, weight_);
+		if (passesStep)
+			histMan_->H1D("TTbarEplusJetsRefSelectionUnweighted_singleCuts")->Fill(step, weight_);
+	}
+}
+
+void EventCountAnalyser::individualCuts(const EventPtr event) {
+
+	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
+				cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
+				if(event->isBeamScraping() || !event->passesHBHENoiseFilter() || !event->passesCSCTightBeamHaloFilter() || !event->passesHCALLaserFilter()
+						|| !event->passesECALDeadCellFilter() || !event->passesTrackingFailureFilter() || !event->passesNoisySCFilter()){
+
+							if(event->isBeamScraping())
+								cout << "fail beam scrap" << endl;
+							if(!event->passesHBHENoiseFilter())
+								cout << "fail HBHE noise filter" << endl;
+							if(!event->passesCSCTightBeamHaloFilter())
+								cout << "fail CSCTightBeamHaloFilter" << endl;
+							if(!event->passesHCALLaserFilter())
+								cout << "fail HCALLaserFilter" << endl;
+							if(!event->passesECALDeadCellFilter())
+								cout << "fail passesECALDeadCellFilter" << endl;
+							if(!event->passesTrackingFailureFilter())
+								cout << "fail TrackingFailureFilter" << endl;
+							if(!event->passesNoisySCFilter())
+								cout << "fail NoisySCFilter()" << endl;
+				}
+	}
+
+}
+
 void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = event->weight() * prescale_ * scale_;
@@ -55,6 +101,22 @@ void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 			histMan_->H1D("TTbarMuPlusJetsRefSelection")->Fill(step, weight_);
 		if (passesStep)
 			histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(step, weight_);
+	}
+}
+
+void EventCountAnalyser::topMuPlusJetsReferenceSelectionUnweighted(const EventPtr event) {
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	weight_ = 1.;
+	histMan_->H1D("TTbarMuPlusJetsRefSelectionUnweighted")->Fill(-1, weight_);
+	histMan_->H1D("TTbarMuPlusJetsRefSelectionUnweighted_singleCuts")->Fill(-1, weight_);
+
+	for (unsigned int step = 0; step < TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
+		bool passesStep = topMuPlusJetsRefSelection_->passesSelectionStep(event, step);
+		bool passesStepUpTo = topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, step);
+		if (passesStepUpTo)
+			histMan_->H1D("TTbarMuPlusJetsRefSelectionUnweighted")->Fill(step, weight_);
+		if (passesStep)
+			histMan_->H1D("TTbarMuPlusJetsRefSelectionUnweighted_singleCuts")->Fill(step, weight_);
 	}
 }
 
@@ -331,6 +393,12 @@ void EventCountAnalyser::createHistograms() {
 				TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
 				TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
 
+		histMan_->addH1D(selection + "Unweighted", selection, TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
+				TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
+		histMan_->addH1D(selection + "Unweighted_singleCuts", selection + " (single cuts",
+				TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
+				TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
+
 		selection = refSelections.at(index) + "AsymJetsSelection";
 
 		histMan_->addH1D(selection, selection, TTbarEPlusJetsRefAsymJetsSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
@@ -354,6 +422,11 @@ void EventCountAnalyser::createHistograms() {
 		histMan_->addH1D(selection, selection, TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
 				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
 		histMan_->addH1D(selection + "_singleCuts", selection + " (single cuts",
+				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
+				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
+		histMan_->addH1D(selection + "Unweighted", selection, TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
+				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
+		histMan_->addH1D(selection + "Unweighted_singleCuts", selection + " (single cuts",
 				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS + 1, -1.5,
 				TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS - 0.5);
 	}

@@ -7,7 +7,7 @@ if os.environ.has_key('toolsFolder'):
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 8    
 #number of events to be processed
-maxEvents = 100
+maxEvents = 10000
 #integrated luminosity the MC simulation will be scaled to
 lumi = 5050#pb-1
 
@@ -17,17 +17,17 @@ if centerOfMassEnergy == 8:
     nTuple_version = 9
     PUFile = toolsFolder + "data/PileUp_2012_69300_truth_finebin.root"
     #+5%
-    PUFile = toolsFolder + "data/PileUp_2012_72765_truth_finebin.root"
+#    PUFile = toolsFolder + "data/PileUp_2012_72765_truth_finebin.root"
     #-5%
-    PUFile = toolsFolder + "data/PileUp_2012_65835_truth_finebin.root"
+#    PUFile = toolsFolder + "data/PileUp_2012_65835_truth_finebin.root"
 else:
     #File for pile-up re-weighting
     nTuple_version = 8
     PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_68000microbarn.root"
     #+5%
-    PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_71400microbarn.root"
+#    PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_71400microbarn.root"
     #-5%
-    PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_64600microbarn.root"
+#    PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_64600microbarn.root"
 
 
 

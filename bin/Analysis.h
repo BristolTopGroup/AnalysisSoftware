@@ -31,7 +31,7 @@
 #include "../interface/Analysers/BJetAnalyser.h"
 #include "../interface/Analysers/ElectronAnalyser.h"
 #include "../interface/Analysers/EventCountAnalyser.h"
-#include "../interface/Analysers/HitFitAnalyser.h"
+//#include "../interface/Analysers/HitFitAnalyser.h"
 #include "../interface/Analysers/HLTriggerTurnOnAnalyser.h"
 #include "../interface/Analysers/HLTriggerQCDAnalyser.h"
 #include "../interface/Analysers/JetAnalyser.h"
@@ -44,6 +44,7 @@
 #include "../interface/Analysers/TTbarPlusMETAnalyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
 #include "../interface/Analysers/DiffVariablesAnalyser.h"
+#include "../interface/Analysers/BinningAnalyser.h"
 
 //typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
 //typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
@@ -72,7 +73,7 @@ private:
     boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     BAT::BasicAnalyserLocalPtr eventcountAnalyser;
-    boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
+//    boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
     boost::scoped_ptr<BAT::HLTriggerTurnOnAnalyser> hltriggerAnalyser;
     BAT::BasicAnalyserLocalPtr hltriggerQCDAnalyserInclusive_, hltriggerQCDAnalyserExclusive_;
     boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;
@@ -85,6 +86,7 @@ private:
     BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
     boost::scoped_ptr<BAT::DiffVariablesAnalyser> diffVariablesAnalyser;
+    boost::scoped_ptr<BAT::BinningAnalyser> binningAnalyser;
 
 public:
 //    static float luminosity;

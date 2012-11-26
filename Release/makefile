@@ -15,7 +15,6 @@ RM := rm -rf
 -include src/Readers/subdir.mk
 -include src/Python/subdir.mk
 -include src/Printers/subdir.mk
--include src/HitFit/subdir.mk
 -include src/HistHelpers/subdir.mk
 -include src/Analysers/subdir.mk
 -include src/subdir.mk
@@ -49,19 +48,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: AnalysisSoftware
+all: AnalysisTools
 
 # Tool invocations
-AnalysisSoftware: $(OBJS) $(USER_OBJS)
+AnalysisTools: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	g++ -o "AnalysisSoftware" $(OBJS) $(USER_OBJS) $(LIBS) -L/usr/lib -L/usr/local/lib -L"/software/root/current/lib" -L"/storage/Workspace/Analysis/TopQuarkAnalysis/Release" -Xlinker -L/usr/local/lib `/software/root/current/bin/root-config --libs --glibs --cflags --ldflags --auxlibs --auxcflags` -pthread -lm -ldl
+	g++ -o "AnalysisTools" $(OBJS) $(USER_OBJS) $(LIBS) -L/usr/lib -L/usr/local/lib -L"/software/root/v5.34.02/normal/root/lib" -Xlinker -L/usr/local/lib `/software/root/v5.34.02/normal/root/bin/root-config --libs --glibs --cflags --ldflags --auxlibs --auxcflags` -pthread -lm -ldl
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) AnalysisSoftware
+	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) AnalysisTools
 	-@echo ' '
 
 .PHONY: all clean dependents

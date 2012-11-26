@@ -69,10 +69,14 @@ bool TopPairEPlusJetsReferenceSelection::passesSelectionStep(const EventPtr even
 		return passesDileptonVeto(event);
 	case TTbarEPlusJetsReferenceSelection::ConversionVeto:
 		return passesConversionVeto(event);
+	case TTbarEPlusJetsReferenceSelection::AtLeastOneGoodJet:
+		return hasAtLeastNGoodJets(event, 1);
+	case TTbarEPlusJetsReferenceSelection::AtLeastTwoGoodJets:
+		return hasAtLeastNGoodJets(event, 2);
 	case TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets:
-		return hasAtLeastThreeGoodJets(event);
+		return hasAtLeastNGoodJets(event, 3);
 	case TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets:
-		return hasAtLeastFourGoodJets(event);
+		return hasAtLeastNGoodJets(event, 4);
 	case TTbarEPlusJetsReferenceSelection::AtLeastOneBtag:
 		return hasAtLeastOneGoodBJet(event);
 	case TTbarEPlusJetsReferenceSelection::AtLeastTwoBtags:
@@ -216,29 +220,20 @@ bool TopPairEPlusJetsReferenceSelection::passesConversionVeto(const EventPtr eve
 	return electron->passConversionVeto();
 }
 
-bool TopPairEPlusJetsReferenceSelection::hasAtLeastThreeGoodJets(const EventPtr event) const {
-	const JetCollection goodJets(cleanedJets(event));
-	unsigned int nJetsAbove45GeV(0);
-	for (unsigned int index = 0; index < goodJets.size(); ++index) {
-		if (goodJets.at(index)->pt() > 45.)
-			++nJetsAbove45GeV;
-	}
-	return nJetsAbove45GeV > 2;
-}
-
-bool TopPairEPlusJetsReferenceSelection::hasAtLeastFourGoodJets(const EventPtr event) const {
+bool TopPairEPlusJetsReferenceSelection::hasAtLeastNGoodJets(const EventPtr event, unsigned int Njets) const {
 	const JetCollection goodJets(cleanedJets(event));
 	unsigned int nJetsAbove45GeV(0);
 	unsigned int nJetsAbove20GeV(0);
-
 	for (unsigned int index = 0; index < goodJets.size(); ++index) {
 		if (goodJets.at(index)->pt() > 45.)
 			++nJetsAbove45GeV;
 		if (goodJets.at(index)->pt() > 20.)
 			++nJetsAbove20GeV;
 	}
-
-	return nJetsAbove45GeV > 2 && nJetsAbove20GeV > 3;
+	if(Njets<=3)
+		return nJetsAbove45GeV >= Njets;
+	else
+		return nJetsAbove45GeV >= 3 && nJetsAbove20GeV >= Njets;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodBJet(const EventPtr event) const {
