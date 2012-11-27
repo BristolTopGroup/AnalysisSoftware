@@ -71,7 +71,7 @@ enum value {
 	HLT_IsoMu20_eta2p1, //needed for trigger efficiency
 	//5E33 menu new triggers (rest is included in 2011 menu)
 	HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet50_40_30,
-	HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentrlJet50_40_30, //new backup trigger
+	HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet50_40_30, //new backup trigger
 	//
 	HLT_Mu20_eta2p1_TriCentralPFJet30,
 	HLT_Mu20_eta2p1_TriCentralPFJet50_40_30,
@@ -104,14 +104,19 @@ enum value {
 	HLT_IsoMu17_eta2p1_DiCentralPFNoPUJet30,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet50_40_30,
-//triggers with lower 3rd jet threshold to combat missing JEC
+	//triggers with lower 3rd jet threshold to combat missing JEC
 	HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20,
 	HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30_30_20,
 	HLT_Mu17_eta2p1_TriCentralPFNoPUJet30_30_20,
-//new for 2011 SingleMu analysis
+	//new for 2011 SingleMu analysis
 	HLT_IsoMu24,
 	HLT_IsoMu24_eta2p1,
+	HLT_IsoMu30,
+	HLT_IsoMu30_eta2p1,
+	//2012 triggers with online JEC
+	HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet45_35_25,
+	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet45_35_25,
 	NUMBER_OF_TRIGGERS
 };
 
@@ -176,7 +181,7 @@ const boost::array<std::string, NUMBER_OF_TRIGGERS> names = { {
 		"HLT_IsoMu20_eta2p1", ////needed for trigger efficiency
 		//5E33 menu new triggers (rest is included in 2011 menu)
 		"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet50_40_30",//
-		"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentrlJet50_40_30", //new backup trigger
+		"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet50_40_30", //new backup trigger
 		//
 		"HLT_Mu20_eta2p1_TriCentralPFJet30",//
 		"HLT_Mu20_eta2p1_TriCentralPFJet50_40_30", //
@@ -209,12 +214,18 @@ const boost::array<std::string, NUMBER_OF_TRIGGERS> names = { {
 		"HLT_IsoMu17_eta2p1_DiCentralPFNoPUJet30", //
 		"HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30", //
 		"HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet50_40_30", //
-//triggers with lower 3rd jet threshold to combat missing JEC
+		//triggers with lower 3rd jet threshold to combat missing JEC
 		"HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20",//
 		"HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20",//
 		"HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30_30_20",//
 		"HLT_Mu17_eta2p1_TriCentralPFNoPUJet30_30_20",//
 		"HLT_IsoMu24",//
-		"HLT_IsoMu24_eta2p1" } };
+		"HLT_IsoMu24_eta2p1", //
+		"HLT_IsoMu30",
+		"HLT_IsoMu30_eta2p1", //
+		//2012 triggers with online JEC
+		"HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet45_35_25", //
+		"HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet45_35_25" //
+		} };
 }
 #endif /* HIGHLEVELTRIGGERS_H_ */
