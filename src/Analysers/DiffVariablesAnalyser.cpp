@@ -33,18 +33,37 @@ void DiffVariablesAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		unsigned int numberOfJets(jets.size());
 		unsigned int numberOfBJets(bJets.size());
+
+		//HT calculation
 		double HT = 0;
 		double HT_lepton = 0;
 		double HT_lepton_MET = 0;
 		for (unsigned int i = 0; i < numberOfJets; ++i) {
 			HT = HT + jets.at(i)->pt();
 		}
-
-		double M3 = 0;
-		M3 = jets.at(0)->pt()+jets.at(1)->pt()+jets.at(2)->pt();
-
 		HT_lepton = HT+signalLepton->pt();
 		HT_lepton_MET = HT_lepton + met->pt();
+
+
+		//M3 calculation
+		double M3 = 0;
+		double max_pt = 0;
+		if (jets.size() >= 3) {
+				for (unsigned int index1 = 0; index1 < jets.size() - 2; ++index1) {
+					for (unsigned int index2 = index1 + 1; index2 < jets.size() - 1; ++index2) {
+						for (unsigned int index3 = index2 + 1; index3 < jets.size(); ++index3) {
+							FourVector m3Vector(
+									jets.at(index1)->getFourVector() + jets.at(index2)->getFourVector()
+											+ jets.at(index3)->getFourVector());
+							double currentPt = m3Vector.Pt();
+							if (currentPt > max_pt) {
+								max_pt = currentPt;
+								M3 = m3Vector.M();
+							}
+						}
+					}
+				}
+		}
 
 		histMan_->H1D("HT")->Fill(HT, weight_);
 		histMan_->H1D("HT_lepton")->Fill(HT_lepton, weight_);
