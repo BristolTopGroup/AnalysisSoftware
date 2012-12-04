@@ -31,7 +31,7 @@
 #include "../interface/Analysers/BJetAnalyser.h"
 #include "../interface/Analysers/ElectronAnalyser.h"
 #include "../interface/Analysers/EventCountAnalyser.h"
-#include "../interface/Analysers/HitFitAnalyser.h"
+//#include "../interface/Analysers/HitFitAnalyser.h"
 #include "../interface/Analysers/HLTriggerTurnOnAnalyser.h"
 #include "../interface/Analysers/HLTriggerQCDAnalyser.h"
 #include "../interface/Analysers/JetAnalyser.h"
@@ -72,7 +72,7 @@ private:
     boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     BAT::BasicAnalyserLocalPtr eventcountAnalyser;
-    boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
+//    boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
     boost::scoped_ptr<BAT::HLTriggerTurnOnAnalyser> hltriggerAnalyser;
     BAT::BasicAnalyserLocalPtr hltriggerQCDAnalyserInclusive_, hltriggerQCDAnalyserExclusive_;
     boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;

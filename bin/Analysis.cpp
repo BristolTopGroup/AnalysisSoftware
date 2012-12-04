@@ -197,10 +197,10 @@ void Analysis::createHistograms() {
 	cout << "Number of histograms added by eventcountAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	hitfitAnalyser->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by hitfitAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-	lastNumberOfHistograms = numberOfHistograms;
+//	hitfitAnalyser->createHistograms();
+//	numberOfHistograms = histMan->size();
+//	cout << "Number of histograms added by hitfitAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+//	lastNumberOfHistograms = numberOfHistograms;
 
 //	hltriggerAnalyser->createHistograms();
 //	numberOfHistograms = histMan->size();
@@ -298,7 +298,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		diElectronAnalyser(new DiElectronAnalyser(histMan)), //
 		electronAnalyser(new ElectronAnalyser(histMan)), //
 		eventcountAnalyser(new EventCountAnalyser(histMan)), //
-		hitfitAnalyser(new HitFitAnalyser(histMan)), //
+//		hitfitAnalyser(new HitFitAnalyser(histMan)), //
 		hltriggerAnalyser(new HLTriggerTurnOnAnalyser(histMan)), //
 		hltriggerQCDAnalyserInclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_inclusive", false)), //
 		hltriggerQCDAnalyserExclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_exclusive", true)), //

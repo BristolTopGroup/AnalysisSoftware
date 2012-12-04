@@ -16,9 +16,6 @@ cmsenv
 #get the code from the repository
 git clone git@github.com:BristolTopGroup/AnalysisSoftware BristolAnalysis/Tools
 
-#check out the TopHitFit package
-cvs co TopQuarkAnalysis/TopHitFit
-
 #compile
 scram b -j2
 
