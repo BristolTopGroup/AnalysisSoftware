@@ -100,8 +100,8 @@ void Analysis::analyse() {
 		//		hltriggerQCDAnalyserExclusive_->analyse(currentEvent);
 		eventcountAnalyser->analyse(currentEvent);
 //		mttbarAnalyser->analyse(currentEvent);
-//		ttbarPlusMETAnalyser_->analyse(currentEvent);
-//		diffVariablesAnalyser->analyse(currentEvent);
+		ttbarPlusMETAnalyser_->analyse(currentEvent);
+		diffVariablesAnalyser->analyse(currentEvent);
 		binningAnalyser->analyse(currentEvent);
 	}
 }
@@ -254,22 +254,22 @@ void Analysis::createHistograms() {
 //	cout << "Number of histograms added by neutrinoRecoAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 //	lastNumberOfHistograms = numberOfHistograms;
 
-//	ttbarPlusMETAnalyser_->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by ttbarPlusMETAnalyser: " << numberOfHistograms - lastNumberOfHistograms
-//			<< endl;
-//	lastNumberOfHistograms = numberOfHistograms;
+	ttbarPlusMETAnalyser_->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by ttbarPlusMETAnalyser: " << numberOfHistograms - lastNumberOfHistograms
+			<< endl;
+	lastNumberOfHistograms = numberOfHistograms;
 //
 //	vertexAnalyser->createHistograms();
 //	numberOfHistograms = histMan->size();
 //	cout << "Number of histograms added by vertexAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 //	lastNumberOfHistograms = numberOfHistograms;
 //
-//	diffVariablesAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by diffVariablesAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
+	diffVariablesAnalyser->createHistograms();
+	numberOfHistograms = histMan->size();
+	cout << "Number of histograms added by diffVariablesAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+	lastNumberOfHistograms = numberOfHistograms;
+
 	binningAnalyser->createHistograms();
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by binningAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;

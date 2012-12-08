@@ -11,7 +11,7 @@ namespace BAT {
 
 void EventCountAnalyser::analyse(const EventPtr event) {
 
-//	individualCuts(event);
+	individualCuts(event);
 	topEPlusJetsReferenceSelection(event);
 	topEPlusJetsReferenceSelectionUnweighted(event);
 	topMuPlusJetsReferenceSelection(event);
@@ -64,9 +64,9 @@ void EventCountAnalyser::topEPlusJetsReferenceSelectionUnweighted(const EventPtr
 
 void EventCountAnalyser::individualCuts(const EventPtr event) {
 
-	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
+	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
 				cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
-				if(event->isBeamScraping() || !event->passesHBHENoiseFilter() || !event->passesCSCTightBeamHaloFilter() || !event->passesHCALLaserFilter()
+/*				if(event->isBeamScraping() || !event->passesHBHENoiseFilter() || !event->passesCSCTightBeamHaloFilter() || !event->passesHCALLaserFilter()
 						|| !event->passesECALDeadCellFilter() || !event->passesTrackingFailureFilter() || !event->passesNoisySCFilter()){
 
 							if(event->isBeamScraping())
@@ -83,7 +83,7 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 								cout << "fail TrackingFailureFilter" << endl;
 							if(!event->passesNoisySCFilter())
 								cout << "fail NoisySCFilter()" << endl;
-				}
+				}*/
 	}
 
 }

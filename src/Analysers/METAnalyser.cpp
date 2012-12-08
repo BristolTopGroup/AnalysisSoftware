@@ -63,8 +63,10 @@ void METAnalyser::analyseTransverseMass(const EventPtr event, const ParticlePoin
 
 		double MT = transverseMass(met, particle);
 		double angle = met->angle(particle);
+		double delPhi = met->deltaPhi(particle);
 		histMan_->H1D_BJetBinned("Transverse_Mass")->Fill(MT, weight_);
 		histMan_->H1D_BJetBinned("Angle_lepton_MET")->Fill(angle, weight_);
+		histMan_->H1D_BJetBinned("DeltaPhi_lepton_MET")->Fill(delPhi, weight_);
 		if (met->et() < 20)
 			histMan_->H1D_BJetBinned("Transverse_Mass_MET20")->Fill(MT, weight_);
 	}
@@ -110,6 +112,7 @@ void METAnalyser::createHistograms() {
 		histMan_->addH1D_BJetBinned("Transverse_Mass_MET20",
 				"Transverse Mass(lepton,MET);M_{T}(l,MET)/GeV; Events/1GeV", 1000, 0, 1000);
 		histMan_->addH1D_BJetBinned("Angle_lepton_MET", "angle(lepton,MET);angle(l,MET); Events/0.01", 320, 0, 3.2);
+		histMan_->addH1D_BJetBinned("DeltaPhi_lepton_MET", "#Delta#phi(lepton,MET);angle(l,MET); Events/0.01", 320, 0, 3.2);
 	}
 }
 
