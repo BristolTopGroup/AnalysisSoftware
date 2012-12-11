@@ -150,7 +150,6 @@ public:
 	int HLTPrescale(HLTriggers::value trigger) const;
 	static bool useCustomConversionTagger;
 	static bool usePFIsolation;
-	static bool useCiCElectronID;
 
 	const std::vector<int> GeneratedPileUpVertices() const;
 	const std::vector<double> PDFWeights() const;

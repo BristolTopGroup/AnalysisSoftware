@@ -79,17 +79,6 @@ public:
 	void testElectronInSTDCollection();
 	void testElectronSetMass();
 	void testGSFTrack();
-	void testCiCElectronIDVeryLooseMC();
-	void testCiCElectronIDLooseMC();
-	void testCiCElectronIDMediumMC();
-	void testCiCElectronIDTightMC();
-	void testCiCElectronIDSuperTightMC();
-	void testCiCElectronIDHyperTight1MC();
-	void testCiCElectronIDHyperTight2MC();
-	void testCiCElectronIDHyperTight3MC();
-	void testCiCElectronIDHyperTight4MC();
-	void testCiCElectronIDNoID();
-	void testCiCElectronIDMoreThanOneID();
 };
 
 extern cute::suite make_suite_TestElectron();

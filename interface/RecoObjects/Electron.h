@@ -42,21 +42,6 @@ enum value {
 };
 }
 
-namespace CiCElectronID {
-enum value {
-    eidVeryLooseMC,
-    eidLooseMC,
-    eidMediumMC,
-    eidTightMC,
-    eidSuperTightMC,
-    eidHyperTight1MC,
-    eidHyperTight2MC,
-    eidHyperTight3MC,
-    eidHyperTight4MC,
-    NUMBER_OF_CiCIds
-};
-}
-
 namespace ElectronID {
 enum value {
 	SimpleCutBasedWP95 = -9,
@@ -64,15 +49,6 @@ enum value {
 	SimpleCutBasedWP70 = -7,
 	MVAIDTrigger = -6,
 	MVAIDNonTrigger = -5,
-	CiCVeryLooseMC = 0,
-	CiCLooseMC = 1,
-	CiCMediumMC = 2,
-	CiCTightMC = 3,
-	CiCSuperTightMC = 4,
-	CiCHyperTight1MC = 5,
-	CiCHyperTight2MC = 6,
-	CiCHyperTight3MC = 7,
-	CiCHyperTight4MC = 8
 };
 
 
@@ -108,7 +84,6 @@ public:
     double distToClosestTrack() const;
     bool VBTF_WP70_ElectronID() const;
     bool VBTF_WP95_ElectronID() const;
-    bool CiC_ElectronID(CiCElectronID::value id) const;
     bool QCD_AntiID_WP70() const;
     bool QCD_AntiID_WP70_Barrel() const;
     bool QCD_AntiID_WP70_Endcap() const;
@@ -138,7 +113,6 @@ public:
     void setSharedFractionInnerHits(double hits);
     void setDistToNextTrack(double dist);
     void setDCotThetaToNextTrack(double dCotTheta);
-    void setCompressedCiCElectronID(int electronID);
     void setMVATrigV0(double mva);
     void setMVANonTrigV0(double mva);
     void setPassConversionVeto(bool passes);
@@ -161,7 +135,6 @@ private:
     double innerLayerMissingHits_;
     //used for electron ID
     double sigma_IEtaIEta, dPhi_In, dEta_In, hadOverEm;
-    int CiCElectronIDCompressed_;
     TrackPointer gsfTrack;
     int closesTrackID;
     double sharedFractionInnerHits;

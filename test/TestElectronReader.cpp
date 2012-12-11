@@ -67,51 +67,6 @@ void TestElectronReader::testShFracInnerHits() {
 	ASSERT_EQUAL(0, firstElectron->shFracInnerLayer());
 }
 
-void TestElectronReader::testCiCElectronIDVeryLooseMC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidVeryLooseMC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDLooseMC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidLooseMC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDMediumMC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidMediumMC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDTightMC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidTightMC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDSuperTightMC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidSuperTightMC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDHyperTight1MC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight1MC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDHyperTight2MC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight2MC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDHyperTight3MC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight3MC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectronReader::testCiCElectronIDHyperTight4MC() {
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight4MC;
-	ASSERT(firstElectron->CiC_ElectronID(IDunderTest));
-}
-
 void TestElectronReader::testPFRelIso03() {
 	ASSERT_EQUAL_DELTA(0.0137179, firstElectron->pfRelativeIsolation(0.3), 0.0000001);
 }
@@ -157,16 +112,6 @@ cute::suite make_suite_TestElectronReader() {
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testFirstElectronCharge));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testFirstElectronD0));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testShFracInnerHits));
-
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDVeryLooseMC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDLooseMC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDMediumMC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDTightMC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDSuperTightMC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight1MC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight2MC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight3MC));
-	s.push_back(CUTE_SMEMFUN(TestElectronReader, testCiCElectronIDHyperTight4MC));
 
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testPFRelIso03));
 	s.push_back(CUTE_SMEMFUN(TestElectronReader, testPFRelIso04));
