@@ -25,7 +25,7 @@ public:
 
 private:
 	//signal selections
-	SelectionPointer topEplusJetsRefSelection_, topMuplusJetsRefSelection_;
+	SelectionPointer topEplusJetsRefSelection_, topMuPlusJetsRefSelection_;
 };
 
 }

@@ -51,6 +51,7 @@ NTupleEventReader::NTupleEventReader() :
 		sumETReader_(new VariableReader<double>(input, "Event.SumET")), //
 		HCALLaserFilter(new VariableReader<bool>(input, "Event.HCALLaserFilter")), //
 		ECALDeadCellFilter(new VariableReader<bool>(input, "Event.ECALDeadCellFilter")), //
+		ECALDeadCellTPFilter(new VariableReader<bool>(input, "Event.ECALDeadCellTriggerPrimitiveFilter")), //
 		TrackingFailureFilter(new VariableReader<bool>(input, "Event.TrackingFailureFilter")), //
 		CSCTightHaloId(new VariableReader<bool>(input, "Event.CSCTightHaloId")), //
 		areReadersSet(false), //
@@ -142,6 +143,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 			met->setSumET(sumETReader_->getVariable());
 			currentEvent->setHCALLaserFilter(HCALLaserFilter->getVariable());
 			currentEvent->setECALDeadCellFilter(ECALDeadCellFilter->getVariable());
+			currentEvent->setECALDeadCellTPFilter(ECALDeadCellTPFilter->getVariable());
 			currentEvent->setTrackingFailureFilter(TrackingFailureFilter->getVariable());
 			currentEvent->setCSCTightBeamHaloFilter(!CSCTightHaloId->getVariable());
 			currentEvent->setHBHENoiseFilter(true);//we filter on this for the skim
@@ -206,6 +208,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			sumETReader_->initialise();
 			HCALLaserFilter->initialise();
 			ECALDeadCellFilter->initialise();
+			ECALDeadCellTPFilter->initialise();
 			TrackingFailureFilter->initialise();
 			CSCTightHaloId->initialise();
 		}

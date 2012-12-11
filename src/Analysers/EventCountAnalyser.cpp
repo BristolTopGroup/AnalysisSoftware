@@ -11,7 +11,7 @@ namespace BAT {
 
 void EventCountAnalyser::analyse(const EventPtr event) {
 
-	individualCuts(event);
+//	individualCuts(event);
 	topEPlusJetsReferenceSelection(event);
 	topEPlusJetsReferenceSelectionUnweighted(event);
 	topMuPlusJetsReferenceSelection(event);

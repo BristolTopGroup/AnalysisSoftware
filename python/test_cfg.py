@@ -1,4 +1,4 @@
-toolsFolder = './'
+toolsFolder = 'BristolAnalysis/Tools/'
 import os
 if os.environ.has_key('toolsFolder'):
     toolsFolder = os.environ['toolsFolder']
@@ -39,15 +39,7 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-#              '/storage/TopQuarkGroup/mc/7TeV/W4Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
-#              '/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
-#'/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v7c_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/SingleElectron_nTuple_52X_data_merged_001.root',
-#'/storage/TopQuarkGroup/mc/7TeV/TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root'
-#'/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v8c_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets/*.root'
-#              '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v8c_Run2012B-PromptReco-v1_GoldenJSON_LeptonPlus3Jets/*.root',
-#'/storage/TopQuarkGroup/mc/7TeV/TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root',
-#toolsFolder + "data/TTJets_nTuple_44X_mc_merged_001.root"
-toolsFolder + "data/TTJets_nTuple_53X_mc.root"        
+               '/storage/TopQuarkGroup/mc/8TeV/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
@@ -64,4 +56,4 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 
-custom_file_suffix = "TESTING"
+custom_file_suffix = "TEST"

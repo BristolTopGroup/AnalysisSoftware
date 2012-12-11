@@ -11,11 +11,12 @@ TH1D* getSample(TString sample, bool muon);
 
 
 void cutFlow(){
-	bool muon = false;
+	bool muon = true;
 TH1D* tt = getSample("TTJet", muon);
 
 
 double weight = 5050*157.5/6712238;
+weight = 1.;
 
 if(muon == true){
 std::cout  << setprecision(6)<< "skim &  " << weight*tt->GetBinContent(1) << "  $\\pm$ " << setprecision(3) << weight*tt->GetBinError(1)<< "  \\\\ " << std::endl;
@@ -50,11 +51,11 @@ std::cout<< setprecision(6) << "$\\geq$2btag &  " << weight*tt->GetBinContent(11
 
 TH1D* getSample(TString sample, bool muon){
 	TString dir = "../";
-	TFile* tt_file = new TFile(dir + sample + "_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TESTING.root");
+	TFile* tt_file = new TFile(dir + sample + "_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");
 	TDirectoryFile* tt_folder = (TDirectoryFile*) tt_file->Get("EventCount");
 	TH1D* tt_cutflow;
 	if(muon == true){
-	tt_cutflow = (TH1D*) tt_folder->Get("TTbarMuPlusJetsRefSelection");
+	tt_cutflow = (TH1D*) tt_folder->Get("TTbarMuPlusJetsRefSelectionUnweighted");
 	}else{
     tt_cutflow = (TH1D*) tt_folder->Get("TTbarEplusJetsRefSelection");
 	}

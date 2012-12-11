@@ -21,7 +21,7 @@
 using namespace std;
 
 namespace BAT {
-const string DEFAULT_CONFIG_PATH = "python/default_cfg.py";
+const string DEFAULT_CONFIG_PATH = "BristolAnalysis/Tools/python/default_cfg.py";
 
 ConfigFile::ConfigFile(int argc, char **argv) :
 		programOptions(getParameters(argc, argv)), //

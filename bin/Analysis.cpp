@@ -56,8 +56,8 @@ void Analysis::analyse() {
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
-		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
-			double bjetWeight = bjetWeights.at(weightIndex);
+//		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+//			double bjetWeight = bjetWeights.at(weightIndex);
 //			histMan->setCurrentBJetBin(weightIndex);
 //			abcdMethodAnalyser_->setScale(bjetWeight);
 //			diElectronAnalyser->setScale(bjetWeight);
@@ -79,7 +79,7 @@ void Analysis::analyse() {
 //			//		mvAnalyser->analyse(currentEvent);
 //			//		neutrinoRecoAnalyser->analyse(currentEvent);
 //			vertexAnalyser->analyse(currentEvent);
-		}
+//		}
 		//should not use btag reweighting (or unknown if shoud)
 //		bjetAnalyser->analyse(currentEvent);
 		//		if (currentEvent->getDataType() == DataType::TTJets) {

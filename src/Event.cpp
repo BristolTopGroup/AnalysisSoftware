@@ -53,6 +53,7 @@ Event::Event() : //
 		passesHBHENoiseFilter_(false), //
 		passesHCALLaserFilter_(false), //
 		passesECALDeadCellFilter_(false), //
+		passesECALDeadCellTPFilter_(false), //
 		passesTrackingFailureFilter_(false), //
 		passesNoisySCFilter_(false) {
 }
@@ -446,6 +447,10 @@ void Event::setECALDeadCellFilter(bool result) {
 	passesECALDeadCellFilter_ = result;
 }
 
+void Event::setECALDeadCellTPFilter(bool result) {
+	passesECALDeadCellTPFilter_ = result;
+}
+
 void Event::setTrackingFailureFilter(bool result) {
 	passesTrackingFailureFilter_ = result;
 }
@@ -468,6 +473,10 @@ bool Event::passesHCALLaserFilter() const {
 
 bool Event::passesECALDeadCellFilter() const {
 	return passesECALDeadCellFilter_;
+}
+
+bool Event::passesECALDeadCellTPFilter() const {
+	return passesECALDeadCellTPFilter_;
 }
 
 bool Event::passesTrackingFailureFilter() const {

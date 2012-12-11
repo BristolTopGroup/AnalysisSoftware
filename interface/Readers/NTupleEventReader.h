@@ -86,7 +86,7 @@ private:
 	boost::scoped_ptr<VariableReader<double> > PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
 			PUWeightShiftUp_, PUWeightShiftDown_;
 	boost::scoped_ptr<VariableReader<double> > sumETReader_;
-	boost::scoped_ptr<VariableReader<bool> > HCALLaserFilter, ECALDeadCellFilter, TrackingFailureFilter, CSCTightHaloId;
+	boost::scoped_ptr<VariableReader<bool> > HCALLaserFilter, ECALDeadCellFilter, ECALDeadCellTPFilter,TrackingFailureFilter, CSCTightHaloId;
 	bool areReadersSet, areDatatypesKnown;
 	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;

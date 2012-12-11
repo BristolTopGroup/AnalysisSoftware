@@ -21,21 +21,16 @@ QCDPFRelIsoMuPlusJetsSelection::~QCDPFRelIsoMuPlusJetsSelection() {
 }
 
 bool QCDPFRelIsoMuPlusJetsSelection::passesTriggerSelection(const EventPtr event) const {
-	if (!useNonIsoTrigger_)
-		return TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(event);
-	else {
-		unsigned int runNumber(event->runnumber());
-		if (event->isRealData()) {
-			if (runNumber >= 160404 && runNumber <= 178419)
-				return event->HLT(HLTriggers::HLT_Mu17_TriCentralJet30);
-			else if (runNumber > 178419)
-				return event->HLT(HLTriggers::HLT_Mu17_eta2p1_TriCentralPFJet30);
-			else
-				return false;
-		} else {
-			//Fall11 MC
-			return event->HLT(HLTriggers::HLT_Mu17_TriCentralJet30);
-		}
+	unsigned int runNumber(event->runnumber());
+	if (event->isRealData()) {
+		if (runNumber >= 160404 && runNumber < 173236)
+			return event->HLT(HLTriggers::HLT_IsoMu24);
+		else if (runNumber >= 173236)
+			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+		else
+			return false;
+	} else {
+		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
 	}
 }
 
@@ -61,7 +56,7 @@ const MuonPointer QCDPFRelIsoMuPlusJetsSelection::MostIsolatedMuon(const MuonCol
 	unsigned int bestIsolatedLepton = 990;
 
 	for (unsigned int index = 0; index < muons.size(); ++index) {
-		double currentIsolation(muons.at(index)->pfRelativeIsolation(0.3));
+		double currentIsolation(muons.at(index)->pfRelativeIsolation(0.4, true));
 
 		if (currentIsolation < bestIsolation) {
 			bestIsolation = currentIsolation;

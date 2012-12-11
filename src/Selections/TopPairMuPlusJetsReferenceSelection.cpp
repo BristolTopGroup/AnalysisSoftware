@@ -84,8 +84,7 @@ bool TopPairMuPlusJetsReferenceSelection::passesSelectionStep(const EventPtr eve
 	TTbarMuPlusJetsReferenceSelection::Step step = TTbarMuPlusJetsReferenceSelection::Step(selectionStep);
 	switch (step) {
 	case TTbarMuPlusJetsReferenceSelection::EventCleaningAndTrigger:
-		//return passesEventCleaning(event) && passesTriggerSelection(event);
-		return passesTriggerSelection(event);
+		return passesEventCleaning(event) && passesTriggerSelection(event);
 	case TTbarMuPlusJetsReferenceSelection::OneIsolatedMuon:
 		return hasExactlyOneIsolatedLepton(event);
 	case TTbarMuPlusJetsReferenceSelection::LooseMuonVeto:
@@ -116,7 +115,7 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
+	passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
 	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
 
@@ -207,7 +206,7 @@ bool TopPairMuPlusJetsReferenceSelection::isLooseMuon(const MuonPointer muon) co
 	bool passesEta = fabs(muon->eta()) < 2.5;
 	bool isPFMuon = muon->isPFMuon();
 	bool isGlobalOrTracker = muon->isGlobal() || muon->isTracker();
-	bool isLooselyIsolated = muon->pfRelativeIsolation(0.4) < 0.2;
+	bool isLooselyIsolated = muon->pfRelativeIsolation(0.4, true) < 0.2;
 
 	return isPFMuon && passesPt && passesEta && isGlobalOrTracker && isLooselyIsolated;
 }

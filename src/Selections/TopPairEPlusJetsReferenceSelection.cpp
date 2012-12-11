@@ -22,7 +22,7 @@ TopPairEPlusJetsReferenceSelection::~TopPairEPlusJetsReferenceSelection() {
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
-	bool passesPtAndEta = jet->pt() > 20 && fabs(jet->eta()) < 2.5;
+	bool passesPtAndEta = jet->pt() > 30 && fabs(jet->eta()) < 2.5;
 	bool passesJetID(false);
 	JetAlgorithm::value algo = jet->getUsedAlgorithm();
 	if (algo == JetAlgorithm::CA08PF || algo == JetAlgorithm::PF2PAT) { //PFJet
@@ -121,12 +121,13 @@ bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr e
 			//https://hypernews.cern.ch/HyperNews/CMS/get/top-trigger/66.html
 			//			return true;
 			//let's put it back - discussion inconclusive but it is better to have a scale factor than efficiency corrections
-			bool fired_START52_V5 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-			bool fired_START52_V9 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30)
-					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
-			bool fired_START53_V7A = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet50_40_30)
-					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet50_40_30);
-			return fired_START52_V5 || fired_START52_V9 || fired_START53_V7A;
+//			bool fired_START52_V5 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+//			bool fired_START52_V9 = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30)
+//					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
+//			bool fired_START53_V7A = event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet50_40_30)
+//					|| event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoVL_TrkIdVL_TrkIsoT_TriCentralPFNoPUJet50_40_30);
+
+			return event->HLT(HLTriggers::HLT_Ele27_WP80);
 
 		} else {
 			//Fall11 MC
@@ -222,18 +223,12 @@ bool TopPairEPlusJetsReferenceSelection::passesConversionVeto(const EventPtr eve
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastNGoodJets(const EventPtr event, unsigned int Njets) const {
 	const JetCollection goodJets(cleanedJets(event));
-	unsigned int nJetsAbove45GeV(0);
-	unsigned int nJetsAbove20GeV(0);
+	unsigned int nJetsAbove30GeV(0);
 	for (unsigned int index = 0; index < goodJets.size(); ++index) {
-		if (goodJets.at(index)->pt() > 45.)
-			++nJetsAbove45GeV;
-		if (goodJets.at(index)->pt() > 20.)
-			++nJetsAbove20GeV;
+		if (goodJets.at(index)->pt() > 30.)
+			++nJetsAbove30GeV;
 	}
-	if(Njets<=3)
-		return nJetsAbove45GeV >= Njets;
-	else
-		return nJetsAbove45GeV >= 3 && nJetsAbove20GeV >= Njets;
+		return nJetsAbove30GeV >=Njets;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastOneGoodBJet(const EventPtr event) const {
