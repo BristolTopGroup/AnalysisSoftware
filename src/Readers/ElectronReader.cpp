@@ -55,7 +55,6 @@ ElectronReader::ElectronReader() : //
 		vertex_dist_z(), //
 		dist(), //
 		dCotTheta(), //
-		CiCElectronIDReader(), //
 		mvaTrigV0_(), //
 		mvaNonTrigV0_(), //
 		passConversionVeto_(), //
@@ -108,8 +107,6 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		vertex_dist_z(input, ElectronAlgorithm::prefixes.at(algo) + ".VtxDistZ"), //
 		dist(input, ElectronAlgorithm::prefixes.at(algo) + ".Dist"), //
 		dCotTheta(input, ElectronAlgorithm::prefixes.at(algo) + ".DCotTheta"), //
-		CiCElectronIDReader(
-				new VariableReader<MultiIntPointer>(input, ElectronAlgorithm::prefixes.at(algo) + ".PassID")), //
 		mvaTrigV0_(input, ElectronAlgorithm::prefixes.at(algo) + ".mvaTrigV0"), //
 		mvaNonTrigV0_(input, ElectronAlgorithm::prefixes.at(algo) + ".mvaNonTrigV0"), //
 		passConversionVeto_(input, ElectronAlgorithm::prefixes.at(algo) + ".passConversionVeto"), //
@@ -158,8 +155,6 @@ void ElectronReader::readElectrons() {
 		electron->setHadOverEm(hadOverEmReader.getVariableAt(index));
 		electron->setDistToNextTrack(dist.getVariableAt(index));
 		electron->setDCotThetaToNextTrack(dCotTheta.getVariableAt(index));
-
-		electron->setCompressedCiCElectronID(CiCElectronIDReader->getIntVariableAt(index));
 
 		if (algorithm == ElectronAlgorithm::ParticleFlow) {
 			electron->setPFGammaIsolation(PFGammaIsolationReader_DR03_.getVariableAt(index), 0.3);
@@ -237,7 +232,6 @@ void ElectronReader::initialise() {
 	vertex_dist_z.initialise();
 	dist.initialise();
 	dCotTheta.initialise();
-	CiCElectronIDReader->initialise();
 	if (algorithm == ElectronAlgorithm::ParticleFlow) {
 		PFGammaIsolationReader_DR03_.initialise();
 		PFChargedHadronIsolationReader_DR03_.initialise();

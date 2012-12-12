@@ -114,10 +114,6 @@ ElectronPointer TestObjectFactory::goodCaloElectron() {
 	electron->setNumberOfMissingInnerLayerHits(0);
 	electron->setDCotThetaToNextTrack(0.5);
 	electron->setDistToNextTrack(0.5);
-	int passId = 0;
-	ElectronID::value IDunderTest = ElectronID::CiCHyperTight1MC;
-	passId = passId | 1 << (int) IDunderTest;
-	electron->setCompressedCiCElectronID(passId);
 
 	assert(electron->relativeIsolation() > 0.1);
 	return electron;
@@ -235,10 +231,6 @@ ElectronPointer TestObjectFactory::goodLooseElectron() {
 	looseElectron->setNumberOfMissingInnerLayerHits(0);
 	looseElectron->setD0(0);
 	looseElectron->setSuperClusterEta(0);
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidLooseMC;
-	passId = passId | 1 << (int) IDunderTest;
-	looseElectron->setCompressedCiCElectronID(passId);
 
 	return looseElectron;
 }
@@ -250,11 +242,8 @@ ElectronPointer TestObjectFactory::badLooseElectronNoID() {
 	badLooseElectronNoID->setEcalIsolation(0.3);
 	badLooseElectronNoID->setTrackerIsolation(0.4);
 	badLooseElectronNoID->setSigmaIEtaIEta(0.009 + 2);
-	//CIC ID
-	badLooseElectronNoID->setCompressedCiCElectronID(0);
 
 	assert(badLooseElectronNoID->VBTF_WP95_ElectronID() == false);
-	assert(badLooseElectronNoID->passesElectronID(ElectronID::CiCLooseMC) == false);
 
 	return badLooseElectronNoID;
 }
@@ -265,7 +254,6 @@ ElectronPointer TestObjectFactory::badElectronNoID() {
 	badElectronNoID->setEcalIsolation(0.3);
 	badElectronNoID->setTrackerIsolation(0.4);
 	badElectronNoID->setSigmaIEtaIEta(0.009 + 2);
-	badElectronNoID->setCompressedCiCElectronID(0);
 
 	assert(badElectronNoID->VBTF_WP70_ElectronID() == false);
 

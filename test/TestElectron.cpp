@@ -567,116 +567,6 @@ void TestElectron::testGSFTrack() {
 	ASSERT_EQUAL(track, goodElectron->GSFTrack());
 }
 
-void TestElectron::testCiCElectronIDVeryLooseMC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = (CiCElectronID::value) ElectronID::CiCVeryLooseMC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDLooseMC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidLooseMC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDMediumMC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidMediumMC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDTightMC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidTightMC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDSuperTightMC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidSuperTightMC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDHyperTight1MC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight1MC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDHyperTight2MC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight2MC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDHyperTight3MC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight3MC;
-	passId = passId | 1 << (int) IDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-}
-
-void TestElectron::testCiCElectronIDHyperTight4MC() {
-	int passId = 0;
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight4MC;
-	passId = passId | 1 << (int) IDunderTest;
-	goodElectron->setCompressedCiCElectronID(passId);
-	ASSERT(goodElectron->CiC_ElectronID(IDunderTest));
-	ASSERT(!goodElectron->CiC_ElectronID(CiCElectronID::eidHyperTight3MC));
-}
-
-void TestElectron::testCiCElectronIDNoID() {
-	int passId = 0;
-	goodElectron->setCompressedCiCElectronID(passId);
-	//if passId = 0 all IDs should be false
-	for (unsigned int id = 0; id < CiCElectronID::NUMBER_OF_CiCIds; ++id)
-		ASSERT(!goodElectron->CiC_ElectronID((CiCElectronID::value) id));
-}
-
-void TestElectron::testCiCElectronIDMoreThanOneID() {
-	int passId = 0;
-	goodElectron->setCompressedCiCElectronID(passId);
-	CiCElectronID::value IDunderTest = CiCElectronID::eidHyperTight3MC;
-	CiCElectronID::value otherIDunderTest = CiCElectronID::eidHyperTight4MC;
-	passId = passId | 1 << (int) IDunderTest;
-	passId = passId | 1 << (int) otherIDunderTest;
-
-	goodElectron->setCompressedCiCElectronID(passId);
-
-	for (unsigned int id = 0; id < CiCElectronID::NUMBER_OF_CiCIds; ++id) {
-		CiCElectronID::value testId = (CiCElectronID::value) id;
-		if (testId == IDunderTest || testId == otherIDunderTest) {
-			ASSERT(goodElectron->CiC_ElectronID(testId));
-		} else {
-			ASSERT(!goodElectron->CiC_ElectronID(testId));
-		}
-	}
-
-}
-
 cute::suite make_suite_TestElectron() {
 	cute::suite s;
 	s.push_back(CUTE_SMEMFUN(TestElectron, testRelativeIsolation));
@@ -733,18 +623,6 @@ cute::suite make_suite_TestElectron() {
 	s.push_back(CUTE_SMEMFUN(TestElectron, testElectronInCollection));
 	s.push_back(CUTE_SMEMFUN(TestElectron, testElectronSetMass));
 	s.push_back(CUTE_SMEMFUN(TestElectron, testElectronInSTDCollection));
-
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDVeryLooseMC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDLooseMC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDMediumMC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDTightMC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDSuperTightMC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight1MC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight2MC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight3MC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDHyperTight4MC));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDNoID));
-	s.push_back(CUTE_SMEMFUN(TestElectron, testCiCElectronIDMoreThanOneID));
 
 	s.push_back(CUTE_SMEMFUN(TestElectron, testGSFTrack));
 	return s;
