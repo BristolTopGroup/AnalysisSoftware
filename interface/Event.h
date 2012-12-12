@@ -71,7 +71,7 @@ protected:
 	double ptdensityRho;
 	std::string file_;
 
-	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_,
+	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_,passesECALDeadCellTPFilter_,
 			passesTrackingFailureFilter_, passesNoisySCFilter_;
 
 public:
@@ -111,6 +111,7 @@ public:
 	void setHBHENoiseFilter(bool result);
 	void setHCALLaserFilter(bool result);
 	void setECALDeadCellFilter(bool result);
+	void setECALDeadCellTPFilter(bool result);
 	void setTrackingFailureFilter(bool result);
 	void setNoisySCFilter(bool result);
 
@@ -170,6 +171,7 @@ public:
 	bool passesHBHENoiseFilter() const;
 	bool passesHCALLaserFilter() const;
 	bool passesECALDeadCellFilter() const;
+	bool passesECALDeadCellTPFilter() const;
 	bool passesTrackingFailureFilter() const;
 	bool passesNoisySCFilter() const;
 

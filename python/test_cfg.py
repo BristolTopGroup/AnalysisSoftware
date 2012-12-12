@@ -7,7 +7,7 @@ if os.environ.has_key('toolsFolder'):
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 8    
 #number of events to be processed
-maxEvents = 100
+maxEvents = 10000
 #integrated luminosity the MC simulation will be scaled to
 lumi = 5050#pb-1
 

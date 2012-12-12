@@ -23,9 +23,9 @@ void MuonAnalyser::analyse(const EventPtr event) {
 		histMan_->H1D_BJetBinned("All_Muon_Eta")->Fill(muon->eta(), weight_);
 		histMan_->H1D_BJetBinned("All_Muon_AbsEta")->Fill(fabs(muon->eta()), weight_);
 		histMan_->H1D_BJetBinned("All_Muon_Phi")->Fill(muon->phi(), weight_);
-		histMan_->H1D_BJetBinned("All_Muon_pfIsolation_03")->Fill(muon->pfRelativeIsolation(0.3), weight_);
-		histMan_->H1D_BJetBinned("All_Muon_pfIsolation_04")->Fill(muon->pfRelativeIsolation(0.4), weight_);
-		histMan_->H1D_BJetBinned("All_Muon_pfIsolation_05")->Fill(muon->pfRelativeIsolation(0.5), weight_);
+		histMan_->H1D_BJetBinned("All_Muon_pfIsolation_03")->Fill(muon->pfRelativeIsolation(0.3, true), weight_);
+		histMan_->H1D_BJetBinned("All_Muon_pfIsolation_04")->Fill(muon->pfRelativeIsolation(0.4, true), weight_);
+		histMan_->H1D_BJetBinned("All_Muon_pfIsolation_05")->Fill(muon->pfRelativeIsolation(0.5, true), weight_);
 
 		histMan_->H1D_BJetBinned("All_Muon_dB")->Fill(muon->d0(), weight_);
 	}
@@ -37,14 +37,14 @@ void MuonAnalyser::analyseMuon(const MuonPointer muon, double weight) {
 
 	histMan_->H1D_BJetBinned("muon_eta")->Fill(muon->eta(), weight_);
 	histMan_->H1D_BJetBinned("muon_AbsEta")->Fill(fabs(muon->eta()), weight_);
-	histMan_->H1D_BJetBinned("muon_pfIsolation_03")->Fill(muon->pfRelativeIsolation(0.3), weight_);
-	histMan_->H1D_BJetBinned("muon_pfIsolation_04")->Fill(muon->pfRelativeIsolation(0.4), weight_);
+	histMan_->H1D_BJetBinned("muon_pfIsolation_03")->Fill(muon->pfRelativeIsolation(0.3, true), weight_);
+	histMan_->H1D_BJetBinned("muon_pfIsolation_04")->Fill(muon->pfRelativeIsolation(0.4, true), weight_);
 
 	if (!ttbarPlusMETAnalysisSetup_) {
 		histMan_->H1D_BJetBinned("muon_pT")->Fill(muon->pt(), weight_);
 		histMan_->H1D_BJetBinned("muon_phi")->Fill(muon->phi(), weight_);
 
-		histMan_->H1D_BJetBinned("muon_pfIsolation_05")->Fill(muon->pfRelativeIsolation(0.5), weight_);
+		histMan_->H1D_BJetBinned("muon_pfIsolation_05")->Fill(muon->pfRelativeIsolation(0.5, true), weight_);
 
 		histMan_->H1D_BJetBinned("muon_dB")->Fill(muon->d0(), weight_);
 	}

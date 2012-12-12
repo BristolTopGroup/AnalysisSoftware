@@ -39,7 +39,9 @@ public:
 	void setHistogramLabels();
 
 	void topEPlusJetsReferenceSelection(const EventPtr event);
+	void topEPlusJetsReferenceSelectionUnweighted(const EventPtr event);
 	void topMuPlusJetsReferenceSelection(const EventPtr event);
+	void topMuPlusJetsReferenceSelectionUnweighted(const EventPtr event);
 	void topMuPlusJetsReferenceSelection2011(const EventPtr event);
 	void topEplusJetsPlusMETSelection(const EventPtr event);
 	void topEplusJetsZprimeSelection(const EventPtr event);
@@ -51,6 +53,7 @@ public:
 	void qcdNonIsoTriggerSelections(const EventPtr event);
 	void qcdNonIsoTriggerAsymJetsSelections(const EventPtr event);
 	void qcdNonIsoTriggerAsymJetsMETSelections(const EventPtr event);
+	void individualCuts(const EventPtr event);
 
 private:
 	SelectionPointer topEplusJetsRefSelection_, topEplusAsymJetsSelection_, topEplusAsymJetsMETSelection_, topMuPlusJetsRefSelection_, topMuPlusJetsRefSelection2011_;
