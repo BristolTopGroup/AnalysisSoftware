@@ -16,8 +16,8 @@ namespace TTbarEPlusJetsReferenceSelection {
 enum Step {
 	EventCleaningAndTrigger, OneIsolatedElectron, LooseMuonVeto, DiLeptonVeto, ConversionVeto,
 //	ConversionRejectionPartnerTrack,
-//	AtLeastOneGoodJet,
-//	AtLeastTwoGoodJets,
+	AtLeastOneGoodJet,
+	AtLeastTwoGoodJets,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
 	AtLeastOneBtag,
@@ -31,6 +31,8 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				"loose muon veto", //
 				"di-lepton veto", //
 				"Conversion veto", //
+				">= 1 jets", //
+				">= 2 jets", //
 				">= 3 jets", //
 				">= 4 jets", //
 				">=1 CSV b-tag", //
@@ -63,8 +65,7 @@ public:
 	virtual bool passesLooseLeptonVeto(const EventPtr event) const;
 	virtual bool passesDileptonVeto(const EventPtr event) const;
 	virtual bool passesConversionVeto(const EventPtr event) const;
-	virtual bool hasAtLeastThreeGoodJets(const EventPtr event) const;
-	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
+	virtual bool hasAtLeastNGoodJets(const EventPtr event, unsigned int Njets) const;
 	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;
 	virtual bool hasAtLeastTwoGoodBJets(const EventPtr event) const;
 

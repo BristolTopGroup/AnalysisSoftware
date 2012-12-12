@@ -44,6 +44,7 @@
 #include "../interface/Analysers/TTbarPlusMETAnalyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
 #include "../interface/Analysers/DiffVariablesAnalyser.h"
+#include "../interface/Analysers/BinningAnalyser.h"
 
 //typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
 //typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
@@ -85,6 +86,7 @@ private:
     BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
     boost::scoped_ptr<BAT::DiffVariablesAnalyser> diffVariablesAnalyser;
+    boost::scoped_ptr<BAT::BinningAnalyser> binningAnalyser;
 
 public:
 //    static float luminosity;

@@ -55,14 +55,27 @@ bool TopPairMuPlusJetsReferenceSelection::isBJet(const JetPointer jet) const {
 
 bool TopPairMuPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) const {
 	bool passesEtAndEta = muon->pt() > 26 && fabs(muon->eta()) < 2.1;
-	bool passesD0 = fabs(muon->d0()) < 0.02; //cm
+	bool passesD0 = fabs(muon->d0()) < 0.2; //cm
 	bool passesDistanceToPV = fabs(muon->ZDistanceToPrimaryVertex()) < 0.5;
-	bool passesID(muon->isTracker() && muon->isGlobal());
+	bool passesID = muon->isGlobal() && muon->isPFMuon();
 
 	bool passesMuonQuality_1(muon->normChi2() < 10 && muon->trackerLayersWithMeasurement() > 5);
 	bool passesMuonQuality_2(muon->numberOfValidMuonHits() > 0 && muon->pixelLayersWithMeasurement() > 0);
 	bool passesMuonQuality_3(muon->numberOfMatchedStations() > 1);
 	bool passesMuonQuality = passesMuonQuality_1 && passesMuonQuality_2 && passesMuonQuality_3;
+
+//	cout << "pT: " << muon->pt() << " eta: " << muon->eta() << " phi: " << muon->phi() << endl;
+/*	cout << "d0: " << muon->d0() << " z-dist: " << fabs(muon->ZDistanceToPrimaryVertex());
+	cout << " isGlobalMuon: " << muon->isGlobal() << endl;
+
+	//if (muon.globalTrack().isNonnull()) {
+		cout << "normChi2: " << muon->normChi2() << endl;
+		cout << "numberOfValidMuonHits: " << muon->numberOfValidMuonHits()
+				<< " , number of pixel hits: " << muon->numberOfValidPixelHits() << endl;
+		cout << " trackerLayersWithMeasurement: " << muon->trackerLayersWithMeasurement()
+				<< endl;
+	//}
+	cout << "numberOfMatchedStations: " << muon->numberOfMatchedStations() << endl;*/
 
 	return passesEtAndEta && passesD0 && passesDistanceToPV && passesID && passesMuonQuality;
 }
@@ -78,10 +91,14 @@ bool TopPairMuPlusJetsReferenceSelection::passesSelectionStep(const EventPtr eve
 		return passesLooseMuonVeto(event);
 	case TTbarMuPlusJetsReferenceSelection::LooseElectronVeto:
 		return passesLooseElectronVeto(event);
+	case TTbarMuPlusJetsReferenceSelection::AtLeastOneGoodJets:
+		return hasAtLeastNGoodJets(event, 1);
+	case TTbarMuPlusJetsReferenceSelection::AtLeastTwoGoodJets:
+		return hasAtLeastNGoodJets(event, 2);
 	case TTbarMuPlusJetsReferenceSelection::AtLeastThreeGoodJets:
-		return hasAtLeastThreeGoodJets(event);
+		return hasAtLeastNGoodJets(event, 3);
 	case TTbarMuPlusJetsReferenceSelection::AtLeastFourGoodJets:
-		return hasAtLeastFourGoodJets(event);
+		return hasAtLeastNGoodJets(event, 4);
 	case TTbarMuPlusJetsReferenceSelection::AtLeastOneBtag:
 		return hasAtLeastOneGoodBJet(event);
 	case TTbarMuPlusJetsReferenceSelection::AtLeastTwoBtags:
@@ -98,9 +115,25 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
+	passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
 	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
+
+/*	if(!event->isBeamScraping())
+		cout << "pass beam scrap" << endl;
+	if(event->passesHBHENoiseFilter())
+		cout << "pass HBHE noise filter" << endl;
+	if(event->passesCSCTightBeamHaloFilter())
+		cout << "pass CSCTightBeamHaloFilter" << endl;
+	if(event->passesHCALLaserFilter())
+		cout << "pass HCALLaserFilter" << endl;
+	if(event->passesECALDeadCellFilter())
+		cout << "pass passesECALDeadCellFilter" << endl;
+	if(event->passesTrackingFailureFilter())
+		cout << "pass TrackingFailureFilter" << endl;
+	if(event->passesNoisySCFilter())
+		cout << "pass NoisySCFilter()" << endl;*/
+
 	return passesAllFilters;
 }
 
@@ -114,8 +147,10 @@ bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr 
 		else
 			return false;
 	} else {
-		//Fall11 MC
-		return event->HLT(HLTriggers::HLT_IsoMu24);
+		//if(event->HLT(HLTriggers::HLT_IsoMu24)){
+			//cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
+		//}
+		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
 	}
 }
 
@@ -127,6 +162,10 @@ bool TopPairMuPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Even
 		if (isGoodMuon(muon) && isIsolated(muon))
 			++nIsolatedGoodMuons;
 	}
+/*	if(nIsolatedGoodMuons == 1){
+		cout << "good 1 muon" << endl;
+	}*/
+
 	return nIsolatedGoodMuons == 1;
 
 }
@@ -143,7 +182,8 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer e
 
 bool TopPairMuPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
 	const MuonPointer muon(boost::static_pointer_cast<Muon>(lepton));
-	return muon->pfRelativeIsolation(0.4) < 0.12;
+	//cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
+	return muon->pfRelativeIsolation(0.4, true) < 0.12;
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesLooseElectronVeto(const EventPtr event) const {
@@ -164,10 +204,11 @@ bool TopPairMuPlusJetsReferenceSelection::passesLooseElectronVeto(const EventPtr
 bool TopPairMuPlusJetsReferenceSelection::isLooseMuon(const MuonPointer muon) const {
 	bool passesPt = muon->pt() > 10;
 	bool passesEta = fabs(muon->eta()) < 2.5;
+	bool isPFMuon = muon->isPFMuon();
 	bool isGlobalOrTracker = muon->isGlobal() || muon->isTracker();
-	bool isLooselyIsolated = muon->pfRelativeIsolation(0.4) < 0.2;
+	bool isLooselyIsolated = muon->pfRelativeIsolation(0.4, true) < 0.2;
 
-	return passesPt && passesEta && isGlobalOrTracker && isLooselyIsolated;
+	return isPFMuon && passesPt && passesEta && isGlobalOrTracker && isLooselyIsolated;
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesLooseMuonVeto(const EventPtr event) const {
@@ -185,32 +226,22 @@ bool TopPairMuPlusJetsReferenceSelection::passesLooseMuonVeto(const EventPtr eve
 
 bool TopPairMuPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer electron) const {
 
-	bool passesEtAndEta = electron->et() > 20. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
-	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
-	bool passesIso = electron->pfRelativeIsolation(0.3) < 0.15;
-
+	bool passesEtAndEta = electron->et() > 20. && fabs(electron->eta()) < 2.5;
+	//bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
+	bool passesID(electron->passesElectronID(ElectronID::SimpleCutBasedWP95));
+	bool passesIso = electron->pfRelativeIsolationRhoCorrected() < 0.15;
 	return passesEtAndEta && passesIso && passesID;
 }
 
-bool TopPairMuPlusJetsReferenceSelection::hasAtLeastThreeGoodJets(const EventPtr event) const {
+bool TopPairMuPlusJetsReferenceSelection::hasAtLeastNGoodJets(const EventPtr event, int Njets) const {
 	const JetCollection goodJets(cleanedJets(event));
-	unsigned int nJetsAbove30GeV(0);
-	for (unsigned int index = 0; index < goodJets.size(); ++index) {
-		if (goodJets.at(index)->pt() > 30.)
-			++nJetsAbove30GeV;
-	}
-	return nJetsAbove30GeV > 2;
-}
-
-bool TopPairMuPlusJetsReferenceSelection::hasAtLeastFourGoodJets(const EventPtr event) const {
-	const JetCollection goodJets(cleanedJets(event));
-	unsigned int nJetsAbove30GeV(0);
+	int nJetsAbove30GeV(0);
 
 	for (unsigned int index = 0; index < goodJets.size(); ++index) {
 		if (goodJets.at(index)->pt() > 30.)
 			++nJetsAbove30GeV;
 	}
-	return nJetsAbove30GeV > 3;
+	return nJetsAbove30GeV >= Njets;
 }
 
 bool TopPairMuPlusJetsReferenceSelection::hasAtLeastOneGoodBJet(const EventPtr event) const {
@@ -235,9 +266,14 @@ const LeptonPointer TopPairMuPlusJetsReferenceSelection::signalLepton(const Even
 	const MuonCollection allMuons(event->Muons());
 	MuonCollection goodIsolatedMuons;
 	for (unsigned int index = 0; index < allMuons.size(); ++index) {
+//		cout << "muon:  " << index << endl;
 		const MuonPointer muon(allMuons.at(index));
-		if (isGoodMuon(muon) && isIsolated(muon))
+		if (isGoodMuon(muon) && isIsolated(muon)){
 			goodIsolatedMuons.push_back(muon);
+//			cout << "pass moun:  " <<  goodIsolatedMuons.size() << endl;
+//		}else{
+//			cout << "fail muon:  " << endl;
+		}
 	}
 
 	return goodIsolatedMuons.front();

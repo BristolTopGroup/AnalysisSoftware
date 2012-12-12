@@ -18,6 +18,8 @@ enum Step {
 	OneIsolatedMuon,
 	LooseMuonVeto,
 	LooseElectronVeto,
+	AtLeastOneGoodJets,
+	AtLeastTwoGoodJets,
 	AtLeastThreeGoodJets,
 	AtLeastFourGoodJets,
 	AtLeastOneBtag,
@@ -30,6 +32,8 @@ const std::string StringSteps[NUMBER_OF_SELECTION_STEPS] = { //
 				"exactly one isolated muon", //
 				"loose muon veto", //
 				"loose electron veto", //
+				">= 1 jets",
+				">= 2 jets",
 				">= 3 jets", //
 				">= 4 jets", //
 				">=1 CSV b-tag", //
@@ -61,8 +65,7 @@ public:
 	virtual bool hasExactlyOneIsolatedLepton(const EventPtr event) const;
 	virtual bool passesLooseElectronVeto(const EventPtr event) const;
 	virtual bool passesLooseMuonVeto(const EventPtr event) const;
-	virtual bool hasAtLeastThreeGoodJets(const EventPtr event) const;
-	virtual bool hasAtLeastFourGoodJets(const EventPtr event) const;
+	virtual bool hasAtLeastNGoodJets(const EventPtr event, int Njets) const;
 	virtual bool hasAtLeastOneGoodBJet(const EventPtr event) const;
 	virtual bool hasAtLeastTwoGoodBJets(const EventPtr event) const;
 

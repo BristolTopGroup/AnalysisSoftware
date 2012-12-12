@@ -19,6 +19,7 @@
 //muons
 #include "../../interface/Selections/QCDPFRelIsoMuPlusJetsSelection.h"
 #include "../../interface/Selections/QCDNonIsolatedMuonSelection.h"
+#include "../../interface/Selections/NoIsolationMuonSelection.h"
 
 namespace BAT {
 
@@ -586,7 +587,7 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 	//selection with respect to reference selection
 	if (qcdNonIsoMuonSelection_->passesSelectionUpToStep(event,
-			TTbarMuPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+			TTbarMuPlusJetsReferenceSelection::AtLeastThreeGoodJets)) {
 		const JetCollection jets(qcdNonIsoMuonSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdNonIsoMuonSelection_->cleanedBJets(event));
 		unsigned int numberOfBjets(bJets.size());
@@ -659,7 +660,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 	}
 
 	if (qcdPFRelIsoMuPlusJetsSelection_->passesSelectionUpToStep(event,
-			TTbarMuPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
+			TTbarMuPlusJetsReferenceSelection::AtLeastThreeGoodJets)) {
 		const JetCollection jets(qcdPFRelIsoMuPlusJetsSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdPFRelIsoMuPlusJetsSelection_->cleanedBJets(event));
 		unsigned int numberOfBjets(bJets.size());
@@ -711,6 +712,40 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		}
 	}
 
+	if (qcdNoIsolationMuonSelection_->passesSelectionUpToStep(event,
+			TTbarMuPlusJetsReferenceSelection::AtLeastThreeGoodJets)) {
+		const JetCollection jets(qcdNoIsolationMuonSelection_->cleanedJets(event));
+		const JetCollection bJets(qcdNoIsolationMuonSelection_->cleanedBJets(event));
+		unsigned int numberOfBjets(bJets.size());
+		vector<double> bjetWeights;
+		if (event->isRealData()) {
+			for (unsigned int index = 0; index <= numberOfBjets; ++index) {
+				if (index == numberOfBjets)
+					bjetWeights.push_back(1);
+				else
+					bjetWeights.push_back(0);
+			}
+		} else
+			bjetWeights = BjetWeights(jets, numberOfBjets);
+		histMan_->setCurrentJetBin(jets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
+		unsigned int prescale(qcdNoIsolationMuonSelection_->prescale(event));
+		const LeptonPointer signalLepton = qcdNoIsolationMuonSelection_->signalLepton(event);
+		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+
+		qcdNoIsolationMuonAnalyser_->setPrescale(prescale);
+		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+			double bjetWeight = bjetWeights.at(weightIndex);
+			histMan_->setCurrentBJetBin(weightIndex);
+			qcdNoIsolationMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+
+			qcdNoIsolationMuonAnalyser_->analyse(event);
+			qcdNoIsolationMuonAnalyser_->analyseMuon(signalMuon, event->weight());
+
+		}
+	}
+
 }
 
 void TTbarPlusMETAnalyser::createHistograms() {
@@ -758,6 +793,7 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	qcdEPlusjetsPFRelIsoElectronAnalyser_->createHistograms();
 	qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->createHistograms();
 	qcdMuPlusjetsPFRelIsoMuonAnalyser_->createHistograms();
+	qcdNoIsolationMuonAnalyser_->createHistograms();
 
 	metAnalyserqcdAntiIDSelection_->createHistograms();
 	qcdAntiIDElectronAnalyser_->createHistograms();
@@ -797,6 +833,7 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 		qcdPFRelIsoEPlusJetsSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
 		qcdPFRelIsoEPlusNonIsoTriggerSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
 		qcdPFRelIsoMuPlusJetsSelection_(new QCDPFRelIsoMuPlusJetsSelection()), //
+		qcdNoIsolationMuonSelection_(new NoIsolationMuonSelection()), //
 		qcdAntiIDSelection_(new QCDAntiIDEPlusJetsSelection()), //
 		qcdNoIsoNoIDSelection_(new QCDNoIsoNoIDSelection()), //
 		//analysers
@@ -834,6 +871,8 @@ TTbarPlusMETAnalyser::TTbarPlusMETAnalyser(HistogramManagerPtr histMan, std::str
 						histogramFolder + "/EPlusJets/QCD e+jets PFRelIso, non iso trigger/Electron", true)), //
 		qcdMuPlusjetsPFRelIsoMuonAnalyser_(
 				new MuonAnalyser(histMan, histogramFolder + "/MuPlusJets/QCD mu+jets PFRelIso/Muon", true)), //
+		qcdNoIsolationMuonAnalyser_(
+				new MuonAnalyser(histMan, histogramFolder + "/MuPlusJets/QCD No Iso/Muon", true)), //
 		metAnalyserqcdAntiIDSelection_(new METAnalyser(histMan, histogramFolder + "/EPlusJets/QCDAntiID/MET")), //
 		qcdAntiIDElectronAnalyser_(
 				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCDAntiID/Electron", true)), //

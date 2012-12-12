@@ -26,10 +26,10 @@ bool QCDNonIsolatedMuonSelection::hasExactlyOneIsolatedLepton(const EventPtr eve
 		const MuonPointer muon(allMuons.at(index));
 		if (isGoodMuon(muon)) {
 			++nGoodMuons;
-			if (muon->pfRelativeIsolation(0.3) < 0.3)
+			if (muon->pfRelativeIsolation(0.4, true) < 0.3)
 				++nGoodIsolatedMuons;
 
-			if (muon->pfRelativeIsolation(0.3) > 0.3)
+			if (muon->pfRelativeIsolation(0.4, true) > 0.3)
 				++nGoodNonIsolatedMuons;
 		}
 	}

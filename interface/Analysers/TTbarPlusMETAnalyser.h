@@ -39,7 +39,7 @@ private:
 	SelectionPointer qcdNonIsoElectronSelection_, qcdNonIsoElectronNonIsoTriggerSelection_, qcdNonIsoMuonSelection_;
 	SelectionPointer qcdConversionSelection_;
 	SelectionPointer qcdPFRelIsoEPlusJetsSelection_, qcdPFRelIsoEPlusNonIsoTriggerSelection_,
-			qcdPFRelIsoMuPlusJetsSelection_;
+			qcdPFRelIsoMuPlusJetsSelection_, qcdNoIsolationMuonSelection_;
 	SelectionPointer qcdAntiIDSelection_;
 	QCDNoIsoNoIDSelectionPointer qcdNoIsoNoIDSelection_;
 
@@ -63,6 +63,7 @@ private:
 	//No iso
 	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyser_, qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_;
 	MuonAnalyserLocalPtr qcdMuPlusjetsPFRelIsoMuonAnalyser_;
+	MuonAnalyserLocalPtr qcdNoIsolationMuonAnalyser_;
 	//Anti ID
 	METAnalyserLocalPtr metAnalyserqcdAntiIDSelection_;
 	ElectronAnalyserLocalPtr qcdAntiIDElectronAnalyser_;

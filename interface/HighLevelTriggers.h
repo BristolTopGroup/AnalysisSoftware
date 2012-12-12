@@ -11,7 +11,7 @@
 //nTuple_V7
 namespace HLTriggers {
 enum value {
-//ElectronHad PD
+    //ElectronHad PD
 	HLT_Ele25_CaloIdVT_TrkIdT_CentralJet30,
 	HLT_Ele25_CaloIdVT_TrkIdT_CentralDiJet30,
 	HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30,
@@ -104,7 +104,7 @@ enum value {
 	HLT_IsoMu17_eta2p1_DiCentralPFNoPUJet30,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet50_40_30,
-	//triggers with lower 3rd jet threshold to combat missing JEC
+//triggers with lower 3rd jet threshold to combat missing JEC
 	HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30_30_20,
 	HLT_Ele25_CaloIdVT_TrkIdT_TriCentralPFNoPUJet30_30_20,
 	HLT_IsoMu17_eta2p1_TriCentralPFNoPUJet30_30_20,
