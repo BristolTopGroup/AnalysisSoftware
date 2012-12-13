@@ -28,7 +28,6 @@ Electron::Electron() :
 		dPhi_In(initialBigValue), //
 		dEta_In(initialBigValue), //
 		hadOverEm(initialBigValue), //
-		CiCElectronIDCompressed_(0), //
 		gsfTrack(), //
 		closesTrackID(-1), //
 		sharedFractionInnerHits(0), //
@@ -49,7 +48,6 @@ Electron::Electron(double energy, double px, double py, double pz) :
 		dPhi_In(initialBigValue), //
 		dEta_In(initialBigValue), //
 		hadOverEm(initialBigValue), //
-		CiCElectronIDCompressed_(0), //
 		gsfTrack(), //
 		closesTrackID(-1), //
 		sharedFractionInnerHits(0), //
@@ -167,10 +165,7 @@ bool Electron::passesElectronID(short leptonID) const {
 	case ElectronID::MVAIDNonTrigger:
 		return mvaNonTrigV0() > 0.0;
 	default:
-		if (electronID >= ElectronID::CiCVeryLooseMC)
-			return CiC_ElectronID((CiCElectronID::value) electronID);
-		else
-			return false;
+		return mvaTrigV0() > 0.0;
 	}
 }
 
@@ -406,15 +401,6 @@ double Electron::distToClosestTrack() const {
 
 double Electron::dCotThetaToClosestTrack() const {
 	return dCotThetaToNextTrack_;
-}
-
-void Electron::setCompressedCiCElectronID(int electronID) {
-	CiCElectronIDCompressed_ = electronID;
-}
-
-bool Electron::CiC_ElectronID(CiCElectronID::value electronID) const {
-	// compressedId bit-wise and with the mask
-	return CiCElectronIDCompressed_ & (1 << (int) electronID);
 }
 
 bool Electron::isPFLepton() const {

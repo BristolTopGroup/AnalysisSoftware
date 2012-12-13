@@ -34,15 +34,6 @@ public:
 	void testFirstElectronCharge();
 	void testFirstElectronD0();
 	void testShFracInnerHits();
-	void testCiCElectronIDVeryLooseMC();
-	void testCiCElectronIDLooseMC();
-	void testCiCElectronIDMediumMC();
-	void testCiCElectronIDTightMC();
-	void testCiCElectronIDSuperTightMC();
-	void testCiCElectronIDHyperTight1MC();
-	void testCiCElectronIDHyperTight2MC();
-	void testCiCElectronIDHyperTight3MC();
-	void testCiCElectronIDHyperTight4MC();
 
 	void testPFRelIso03();
 	void testPFRelIso04();
