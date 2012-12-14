@@ -95,7 +95,12 @@ bool TopPairEPlusJetsReferenceSelection::passesEventCleaning(const EventPtr even
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
 	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
-	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
+	if (Globals::energyInTeV == 8) { //2012 data only
+		passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
+		passesAllFilters = passesAllFilters && event->passesEEBadSCFilter();
+		passesAllFilters = passesAllFilters && event->passesECALLaserCorrFilter();
+		passesAllFilters = passesAllFilters && event->passesTrackingPOGFilters();
+	}
 	return passesAllFilters;
 }
 

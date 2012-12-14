@@ -54,6 +54,9 @@ NTupleEventReader::NTupleEventReader() :
 		ECALDeadCellTPFilter(new VariableReader<bool>(input, "Event.ECALDeadCellTriggerPrimitiveFilter")), //
 		TrackingFailureFilter(new VariableReader<bool>(input, "Event.TrackingFailureFilter")), //
 		CSCTightHaloId(new VariableReader<bool>(input, "Event.CSCTightHaloId")), //
+		EEBadSCFilter(new VariableReader<bool>(input, "Event.EEBadSCFilter")), //
+		ECALLaserCorrFilter(new VariableReader<bool>(input, "Event.ECALLaserCorrFilter")), //
+		TrackingPOGFilters(new VariableReader<bool>(input, "Event.TrackingPOGFilters")), //
 		areReadersSet(false), //
 		areDatatypesKnown(false), //
 		currentEvent(), //
@@ -147,7 +150,11 @@ const EventPtr NTupleEventReader::getNextEvent() {
 			currentEvent->setTrackingFailureFilter(TrackingFailureFilter->getVariable());
 			currentEvent->setCSCTightBeamHaloFilter(!CSCTightHaloId->getVariable());
 			currentEvent->setHBHENoiseFilter(true);//we filter on this for the skim
-			currentEvent->setNoisySCFilter(true);//not available for current nTuples, 2012 data only
+		}
+		if (Globals::NTupleVersion >= 9){
+			currentEvent->setEEBadSCFilter(EEBadSCFilter->getVariable());
+			currentEvent->setECALLaserCorrFilter(ECALLaserCorrFilter->getVariable());
+			currentEvent->setTrackingPOGFilters(TrackingPOGFilters->getVariable());
 		}
 		mets.at(index) = met;
 	}
@@ -211,6 +218,11 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			ECALDeadCellTPFilter->initialise();
 			TrackingFailureFilter->initialise();
 			CSCTightHaloId->initialise();
+		}
+		if (Globals::NTupleVersion >= 9) {
+			EEBadSCFilter->initialise();
+			ECALLaserCorrFilter->initialise();
+			TrackingPOGFilters->initialise();
 		}
 
 		for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {

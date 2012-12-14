@@ -55,7 +55,10 @@ Event::Event() : //
 		passesECALDeadCellFilter_(false), //
 		passesECALDeadCellTPFilter_(false), //
 		passesTrackingFailureFilter_(false), //
-		passesNoisySCFilter_(false) {
+		passesEEBadSCFilter_(false), //
+		passesECALLaserCorrFilter_(false), //
+		passesTrackingPOGFilters_(false) //
+		{
 }
 
 Event::~Event() {
@@ -455,8 +458,16 @@ void Event::setTrackingFailureFilter(bool result) {
 	passesTrackingFailureFilter_ = result;
 }
 
-void Event::setNoisySCFilter(bool result) {
-	passesNoisySCFilter_ = result;
+void Event::setEEBadSCFilter(bool result) {
+	passesEEBadSCFilter_ = result;
+}
+
+void Event::setECALLaserCorrFilter(bool result) {
+	passesECALLaserCorrFilter_ = result;
+}
+
+void Event::setTrackingPOGFilters(bool result) {
+	passesTrackingPOGFilters_ = result;
 }
 
 bool Event::passesCSCTightBeamHaloFilter() const {
@@ -483,8 +494,16 @@ bool Event::passesTrackingFailureFilter() const {
 	return passesTrackingFailureFilter_;
 }
 
-bool Event::passesNoisySCFilter() const {
-	return passesNoisySCFilter_;
+bool Event::passesEEBadSCFilter() const {
+	return passesEEBadSCFilter_;
+}
+
+bool Event::passesECALLaserCorrFilter() const {
+	return passesECALLaserCorrFilter_;
+}
+
+bool Event::passesTrackingPOGFilters() const {
+	return passesTrackingPOGFilters_;
 }
 
 //std::vector<double> Event::BjetWeights(const JetCollection bjets) const {

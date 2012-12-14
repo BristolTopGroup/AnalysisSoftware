@@ -67,7 +67,7 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
 				cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
 /*				if(event->isBeamScraping() || !event->passesHBHENoiseFilter() || !event->passesCSCTightBeamHaloFilter() || !event->passesHCALLaserFilter()
-						|| !event->passesECALDeadCellFilter() || !event->passesTrackingFailureFilter() || !event->passesNoisySCFilter()){
+						|| !event->passesECALDeadCellFilter() || !event->passesTrackingFailureFilter() || !event->passesEEBadSCFilter()){
 
 							if(event->isBeamScraping())
 								cout << "fail beam scrap" << endl;
@@ -78,11 +78,17 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 							if(!event->passesHCALLaserFilter())
 								cout << "fail HCALLaserFilter" << endl;
 							if(!event->passesECALDeadCellFilter())
-								cout << "fail passesECALDeadCellFilter" << endl;
+								cout << "fail ECALDeadCellFilter" << endl;
+							if(!event->passesECALDeadCellTPFilter())
+								cout << "fail ECALDeadCellTPFilter" << endl;
 							if(!event->passesTrackingFailureFilter())
 								cout << "fail TrackingFailureFilter" << endl;
-							if(!event->passesNoisySCFilter())
-								cout << "fail NoisySCFilter()" << endl;
+							if(!event->passesEEBadSCFilter())
+								cout << "fail EEBadSCFilter()" << endl;
+							if(!event->passesECALLaserCorrFilter())
+								cout << "fail ECALLaserCorrFilter()" << endl;
+							if(!event->passesTrackingPOGFilters())
+								cout << "fail TrackingPOGFilters()" << endl;
 				}*/
 	}
 

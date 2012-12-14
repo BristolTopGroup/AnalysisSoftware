@@ -99,7 +99,6 @@ bool TopPairMuPlusJetsReferenceSelection2011::passesEventCleaning(const EventPtr
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
 	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
-	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2011 data only
 	return passesAllFilters;
 }
 
