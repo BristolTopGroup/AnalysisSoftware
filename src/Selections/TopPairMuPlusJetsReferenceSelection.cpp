@@ -115,10 +115,11 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
+	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
-	if (Globals::energyInTeV == 8) { //2012 data only
+	if (Globals::NTupleVersion >= 9)
 		passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
+	if ((Globals::energyInTeV == 8) and (Globals::NTupleVersion >= 10)) { //2012 data only, v10 ntuples
 		passesAllFilters = passesAllFilters && event->passesEEBadSCFilter();
 		passesAllFilters = passesAllFilters && event->passesECALLaserCorrFilter();
 		passesAllFilters = passesAllFilters && event->passesTrackingPOGFilters();
