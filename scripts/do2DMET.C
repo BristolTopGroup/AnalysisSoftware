@@ -63,7 +63,7 @@ TString Nbtags[5] = {"_0btag","_1btag", "_2btags", "_3btags", "_4orMoreBtags"};
 
 for(int i = 2; i < 3; i++){
 cout << "Getting histo: " << "Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET"+Nbtags[i] <<endl;
-	TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET"+Nbtags[i]);
+	TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/GenMET_vs_RecoMET"+Nbtags[i]);
 
 	tt_2d->Rebin2D(10,10);
   	tt_2d->GetYaxis()->SetTitle("reco MET");
@@ -99,8 +99,8 @@ void getBinning(bool muon, TString variable){
 	TString dir = "../";
 
 TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TESTING.root");
-TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET_2btags");
-cout << "Getting histo: " << "Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET_2btags" <<endl;
+TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/GenMET_vs_RecoMET_2btags");
+cout << "Getting histo: " << "Binning/"+leptonFolder+variable+"/GenMET_vs_RecoMET_2btags" <<endl;
 
 
 int bin2 = 25;
