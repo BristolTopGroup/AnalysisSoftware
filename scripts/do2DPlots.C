@@ -26,15 +26,15 @@ void do2DPlots(){
 
 bool muon = true;
 
-TString variable[8] = {"RecoHT_vs_GenHT", "RecoHT_lep_vs_GenHT_lep", "RecoHT_lep_met_vs_GenHT_lep_met", "Recoleptonic_W_pt_vs_Genleptonic_W_pt", "RecoM3_vs_GenM3", "RecoMET_vs_GenNu", "RecoHT_vs_GenParton", "GenJetHT_vs_GenParton"};
-TString xtitle[8] = {"Reco HT (GeV)", "Reco HT+lep (GeV)", "Reco HT+lep+met (GeV)", "Reco leptonic W pt (GeV)", "Reco M3 (GeV)", "Reco MET (GeV)", "Reco HT GeV", "Gen Jet HT (GeV)"};
-TString ytitle[8] = {"Gen HT (GeV)", "Gen HT+lep (GeV)", "Gen HT+lep+met (GeV)", "Gen leptonic W pt (GeV)", "Gen M3 (GeV)", "Gen Nu (GeV)", "Gen Parton HT (GeV)", "Gen Parton HT (GeV)"};
+TString variable[8] = {"GenHT_vs_RecoHT", "GenHT_lep_vs_RecoHT_lep", "GenHT_lep_met_vs_RecoHT_lep_met", "Genleptonic_W_pt_vs_Recoleptonic_W_pt", "GenM3_vs_RecoM3", "GenNu_vs_RecoMET", "GenParton_vs_RecoHT", "GenJetHT_vs_GenParton"};
+TString xtitle[8] = {"Gen HT (GeV)", "Gen HT+lep (GeV)", "Gen HT+lep+met (GeV)", "Gen leptonic W pt (GeV)", "Gen M3 (GeV)", "Reco Nu (GeV)", "Gen HT GeVReco Parton HT (GeV)", "Gen Jet HT (GeV)"};
+TString ytitle[8] = {"Reco HT (GeV)", "Reco HT+lep (GeV)", "Reco HT+lep+met (GeV)", "Reco leptonic W pt (GeV)", "Reco M3 (GeV)", "Reco MET (GeV)", "Reco HT (GeV)", "Gen Parton HT (GeV)"};
 
 
 
-for(int i =4; i<5; i++){
-//do2DPlots(muon, variable[i], xtitle[i], ytitle[i]);
-getBinning(muon, variable[i], xtitle[i], ytitle[i]);
+for(int i =0; i<8; i++){
+do2DPlots(muon, variable[i], xtitle[i], ytitle[i]);
+//getBinning(muon, variable[i], xtitle[i], ytitle[i]);
 }
 
 }
@@ -52,7 +52,7 @@ void do2DPlots(bool muon, TString variable, TString xtitle, TString ytitle){
   	gStyle->SetPalette(1);
 
 	TString dir = "../";
-	TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TESTING.root");  
+	TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");  
 
 
 
@@ -94,7 +94,7 @@ void getBinning(bool muon, TString variable, TString xtitle, TString ytitle){
 		}
 
 	TString dir = "../";
-	TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TESTING.root");
+	TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");
 
 	TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"_2btags");
 
