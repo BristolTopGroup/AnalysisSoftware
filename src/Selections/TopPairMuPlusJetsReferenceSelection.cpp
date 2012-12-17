@@ -115,9 +115,15 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
+	//	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
-	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
+	if (Globals::NTupleVersion >= 9)
+		passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
+	if ((Globals::energyInTeV == 8) and (Globals::NTupleVersion >= 10)) { //2012 data only, v10 ntuples
+		passesAllFilters = passesAllFilters && event->passesEEBadSCFilter();
+		passesAllFilters = passesAllFilters && event->passesECALLaserCorrFilter();
+		passesAllFilters = passesAllFilters && event->passesTrackingPOGFilters();
+	}
 
 /*	if(!event->isBeamScraping())
 		cout << "pass beam scrap" << endl;
@@ -127,12 +133,17 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 		cout << "pass CSCTightBeamHaloFilter" << endl;
 	if(event->passesHCALLaserFilter())
 		cout << "pass HCALLaserFilter" << endl;
-	if(event->passesECALDeadCellFilter())
-		cout << "pass passesECALDeadCellFilter" << endl;
+	if(event->passesECALDeadCellTPFilter())
+		cout << "pass passesECALDeadCellTriggerPrimitiveFilter" << endl;
 	if(event->passesTrackingFailureFilter())
 		cout << "pass TrackingFailureFilter" << endl;
-	if(event->passesNoisySCFilter())
-		cout << "pass NoisySCFilter()" << endl;*/
+	if(event->passesEEBadSCFilter())
+		cout << "pass EEBadSCFilter()" << endl;
+	if(event->passesECALLaserCorrFilter())
+		cout << "pass ECALLaserCorrFilter()" << endl;
+	if(event->passesTrackingPOGFilters())
+		cout << "pass TrackingPOGFilters()" << endl;
+*/
 
 	return passesAllFilters;
 }

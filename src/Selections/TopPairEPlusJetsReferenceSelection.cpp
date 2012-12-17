@@ -93,27 +93,38 @@ bool TopPairEPlusJetsReferenceSelection::passesEventCleaning(const EventPtr even
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
+	//	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
-	passesAllFilters = passesAllFilters && event->passesNoisySCFilter(); //2012 data only
+	if (Globals::NTupleVersion >= 9)
+		passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
+	if ((Globals::energyInTeV == 8) and (Globals::NTupleVersion >= 10)) { //2012 data only, v10 ntuples
+		passesAllFilters = passesAllFilters && event->passesEEBadSCFilter();
+		passesAllFilters = passesAllFilters && event->passesECALLaserCorrFilter();
+		passesAllFilters = passesAllFilters && event->passesTrackingPOGFilters();
+	}
 	return passesAllFilters;
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr event) const {
 	unsigned int runNumber(event->runnumber());
 	if (event->isRealData()) {
-		if (runNumber >= 160404 && runNumber <= 163869)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
-		else if (runNumber > 163869 && runNumber <= 165633)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-		else if (runNumber > 165633 && runNumber <= 178380)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-		else if (runNumber > 178380 && runNumber <= 193621)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-		else if (runNumber > 193621)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
-		else
-			return false;
+		if (Globals::energyInTeV == 7){
+			if (runNumber >= 160404 && runNumber <= 163869)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+			else if (runNumber > 163869 && runNumber <= 165633)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+			else if (runNumber > 165633 && runNumber <= 178380)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+			else if (runNumber > 178380 && runNumber <= 193621)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+			else if (runNumber > 193621)
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFNoPUJet30);
+			else
+				return false;
+		} else {
+			//2012 data triggers
+			return event->HLT(HLTriggers::HLT_Ele27_WP80);
+		}
 	} else {
 		if (Globals::energyInTeV == 8) {
 			//Summer12 MC
