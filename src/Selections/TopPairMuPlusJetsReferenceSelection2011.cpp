@@ -97,7 +97,7 @@ bool TopPairMuPlusJetsReferenceSelection2011::passesEventCleaning(const EventPtr
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
+	//	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
 	if (Globals::NTupleVersion >= 9)
 		passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();

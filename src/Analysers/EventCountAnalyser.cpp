@@ -77,8 +77,6 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 								cout << "fail CSCTightBeamHaloFilter" << endl;
 							if(!event->passesHCALLaserFilter())
 								cout << "fail HCALLaserFilter" << endl;
-							if(!event->passesECALDeadCellFilter())
-								cout << "fail ECALDeadCellFilter" << endl;
 							if(!event->passesECALDeadCellTPFilter())
 								cout << "fail ECALDeadCellTPFilter" << endl;
 							if(!event->passesTrackingFailureFilter())

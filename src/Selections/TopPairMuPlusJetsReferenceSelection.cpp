@@ -115,7 +115,7 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
+	//	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
 	if (Globals::NTupleVersion >= 9)
 		passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
@@ -133,8 +133,6 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 		cout << "pass CSCTightBeamHaloFilter" << endl;
 	if(event->passesHCALLaserFilter())
 		cout << "pass HCALLaserFilter" << endl;
-	if(event->passesECALDeadCellFilter())
-		cout << "pass passesECALDeadCellFilter" << endl;
 	if(event->passesECALDeadCellTPFilter())
 		cout << "pass passesECALDeadCellTriggerPrimitiveFilter" << endl;
 	if(event->passesTrackingFailureFilter())
