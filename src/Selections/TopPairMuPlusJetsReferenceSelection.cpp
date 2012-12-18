@@ -64,8 +64,8 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) con
 	bool passesMuonQuality_3(muon->numberOfMatchedStations() > 1);
 	bool passesMuonQuality = passesMuonQuality_1 && passesMuonQuality_2 && passesMuonQuality_3;
 
-//	cout << "pT: " << muon->pt() << " eta: " << muon->eta() << " phi: " << muon->phi() << endl;
-/*	cout << "d0: " << muon->d0() << " z-dist: " << fabs(muon->ZDistanceToPrimaryVertex());
+/*	cout << "pT: " << muon->pt() << " eta: " << muon->eta() << " phi: " << muon->phi() << endl;
+	cout << "d0: " << muon->d0() << " z-dist: " << fabs(muon->ZDistanceToPrimaryVertex());
 	cout << " isGlobalMuon: " << muon->isGlobal() << endl;
 
 	//if (muon.globalTrack().isNonnull()) {
@@ -194,7 +194,10 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer e
 bool TopPairMuPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
 	const MuonPointer muon(boost::static_pointer_cast<Muon>(lepton));
 	//cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
+	cout << "Isolation: " << muon->PFDeltaBeta_Isolation_DR04() << endl;
+
 	return muon->pfRelativeIsolation(0.4, true) < 0.12;
+
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesLooseElectronVeto(const EventPtr event) const {
