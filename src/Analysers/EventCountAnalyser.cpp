@@ -64,8 +64,34 @@ void EventCountAnalyser::topEPlusJetsReferenceSelectionUnweighted(const EventPtr
 
 void EventCountAnalyser::individualCuts(const EventPtr event) {
 
-	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
+
+
+	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
+
+
 				cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
+
+				const MuonCollection allMuons(event->Muons());
+				for (unsigned int index = 0; index < allMuons.size(); ++index) {
+
+					const MuonPointer muon(allMuons.at(index));
+
+					cout << "pT: " << muon->pt() << " eta: " << muon->eta() << " phi: " << muon->phi() << endl;
+					cout << "d0: " << muon->d0() << " z-dist: " << fabs(muon->ZDistanceToPrimaryVertex());
+					cout << " isGlobalMuon: " << muon->isGlobal() << endl;
+
+					//if (muon.globalTrack().isNonnull()) {
+						cout << "normChi2: " << muon->normChi2() << endl;
+						cout << "numberOfValidMuonHits: " << muon->numberOfValidMuonHits()
+								<< " , number of pixel hits: " << muon->numberOfValidPixelHits() << endl;
+						cout << " trackerLayersWithMeasurement: " << muon->trackerLayersWithMeasurement()
+								<< endl;
+					//}
+					cout << "numberOfMatchedStations: " << muon->numberOfMatchedStations() << endl;
+					cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
+					cout << "had Iso: " << muon->PFChargedHadronIsolation(0.4) << endl;
+				}
+
 /*				if(event->isBeamScraping() || !event->passesHBHENoiseFilter() || !event->passesCSCTightBeamHaloFilter() || !event->passesHCALLaserFilter()
 						|| !event->passesECALDeadCellFilter() || !event->passesTrackingFailureFilter() || !event->passesNoisySCFilter()){
 

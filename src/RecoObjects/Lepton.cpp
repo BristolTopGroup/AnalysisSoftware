@@ -37,6 +37,7 @@ Lepton::Lepton() : //
 		PFChargedHadron_Isolation_DR05_(initialBigValue), //
 		PFNeutralHadron_Isolation_DR05_(initialBigValue), //
 		PFPUChargedHadron_Isolation_DR05_(initialBigValue), //
+		PFDeltaBeta_Isolation_DR04_(initialBigValue), //
 		PFRelativeIsolationRho_DR03_(initialBigValue), //
 		zDistanceToPrimaryVertex_(initialBigValue), //
 		directionalIsolation_DR02_(initialBigValue), //
@@ -70,6 +71,7 @@ Lepton::Lepton(double energy, double px, double py, double pz) : //
 		PFChargedHadron_Isolation_DR05_(initialBigValue), //
 		PFNeutralHadron_Isolation_DR05_(initialBigValue), //
 		PFPUChargedHadron_Isolation_DR05_(initialBigValue), //
+		PFDeltaBeta_Isolation_DR04_(initialBigValue), //
 		PFRelativeIsolationRho_DR03_(initialBigValue), //
 		zDistanceToPrimaryVertex_(initialBigValue), //
 		directionalIsolation_DR02_(initialBigValue), //
@@ -207,6 +209,9 @@ void Lepton::setPFPUChargedHadronIsolation(double isolation, double coneSize) {
 	}
 }
 
+void Lepton::setPFDeltaBeta_Isolation_DR04(double isolation) {
+	PFDeltaBeta_Isolation_DR04_ = isolation;
+}
 
 void Lepton::setPFRelativeIsolationRho(double isolation) {
 	PFRelativeIsolationRho_DR03_ = isolation;
@@ -268,12 +273,19 @@ double Lepton::PfPUChargedHadronIso(double coneSize) const {
 	return isolation;
 }
 
+double Lepton::PFDeltaBeta_Isolation_DR04() const{
+	return PFDeltaBeta_Isolation_DR04_;
+}
+
 double Lepton::relativeIsolation(double coneSize) const {
 	return (ecalIsolation(coneSize) + hcalIsolation(coneSize) + trackerIsolation(coneSize)) / pt();
 }
 
+
+
 double Lepton::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) const {
 	return pfIsolation(coneSize, deltaBetaCorrection) / pt();
+	//return pfIsolation(coneSize, deltaBetaCorrection);
 }
 
 double Lepton::pfIsolation(double coneSize, bool deltaBetaCorrection) const {
