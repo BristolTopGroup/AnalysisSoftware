@@ -53,6 +53,9 @@ struct Globals {
 
 	//MET
 	static METAlgorithm::value metAlgorithm;
+	static bool applySysShiftMetCorrection;
+	static bool applyType0MetCorrection;
+	static bool applyType1MetCorrection;
 
 	//miscellaneous
 	static std::string custom_file_suffix;

@@ -14,6 +14,21 @@
 
 namespace BAT {
 
+namespace METCorrections {
+enum value {
+	pfMetSysShiftCorrections,
+	pfMetType0Corrections,
+	pfMetType1Corrections,
+	NUMBER_OF_METCORRECTIONS
+};
+
+const boost::array<std::string, METCorrections::NUMBER_OF_METCORRECTIONS> prefixes = { {
+		//MET correction names as stored in the nTuples
+				"pfMetSysShiftCorrections", //
+				"pfMetType0Corrections", //
+				"pfMetType1Corrections" } };
+}
+
 namespace METAlgorithm {
 enum value {
 	patMETsPFlow, GenMET, patType1CorrectedPFMet, patType1p2CorrectedPFMet,

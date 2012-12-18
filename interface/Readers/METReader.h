@@ -16,7 +16,7 @@ class METReader {
 public:
 	METReader();
 	METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::patMETsPFlow);
-	const METPointer getMET();
+	const METPointer getMET(double corrx, double corry);
 	virtual ~METReader();
 	void initialise();
 	void initialiseBlindly();
@@ -29,7 +29,7 @@ private:
 	VariableReader<double> significanceReader;
 	METPointer met;
 	METAlgorithm::value usedAlgorithm;
-	void readMET();
+	void readMET(double corrx, double corry);
 };
 
 }

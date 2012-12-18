@@ -47,6 +47,9 @@ public:
 	int BtagSystematic() const;
 	std::string custom_file_suffix() const;
 	unsigned int pdfWeightNumber() const;
+	bool applyMetSysShiftCorr() const;
+	bool applyMetType0Corr() const;
+	bool applyMetType1Corr() const;
 
 private:
 	boost::program_options::variables_map programOptions;
@@ -69,6 +72,9 @@ private:
 	std::string custom_file_suffix_;
 	unsigned int pdfWeightNumber_;
 //	PileUpReweightingMethod::value pileUpReweightingMethod_;
+	bool applyMetSysShiftCorr_;
+	bool applyMetType0Corr_;
+	bool applyMetType1Corr_;
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
