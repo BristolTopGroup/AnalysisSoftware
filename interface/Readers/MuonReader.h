@@ -46,7 +46,13 @@ private:
 	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR05_;
 	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR05_;
 	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR05_;
+
+	//new iso
 	VariableReader<MultiDoublePointer> PFDeltaBeta_Isolation_DR04_;
+	VariableReader<MultiDoublePointer> sumChargedHadronPt04_;
+	VariableReader<MultiDoublePointer> sumNeutralHadronPt04_;
+	VariableReader<MultiDoublePointer> sumPhotonPt04_;
+	VariableReader<MultiDoublePointer> sumPUPt04_;
 
 	VariableReader<MultiBoolPointer> isGlobalMuon;
 	VariableReader<MultiBoolPointer> isTrackerMuon;
