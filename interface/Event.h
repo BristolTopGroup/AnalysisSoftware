@@ -71,8 +71,8 @@ protected:
 	double ptdensityRho;
 	std::string file_;
 
-	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_,passesECALDeadCellTPFilter_,
-			passesTrackingFailureFilter_, passesNoisySCFilter_;
+	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_, passesECALDeadCellTPFilter_,
+			passesTrackingFailureFilter_, passesEEBadSCFilter_, passesECALLaserCorrFilter_, passesTrackingPOGFilters_;
 
 public:
 	Event();
@@ -113,7 +113,9 @@ public:
 	void setECALDeadCellFilter(bool result);
 	void setECALDeadCellTPFilter(bool result);
 	void setTrackingFailureFilter(bool result);
-	void setNoisySCFilter(bool result);
+	void setEEBadSCFilter(bool result);
+	void setECALLaserCorrFilter(bool result);
+	void setTrackingPOGFilters(bool result);
 
 	const VertexPointer PrimaryVertex() const;
 	const VertexCollection& Vertices() const;
@@ -172,7 +174,9 @@ public:
 	bool passesECALDeadCellFilter() const;
 	bool passesECALDeadCellTPFilter() const;
 	bool passesTrackingFailureFilter() const;
-	bool passesNoisySCFilter() const;
+	bool passesEEBadSCFilter() const;
+	bool passesECALLaserCorrFilter() const;
+	bool passesTrackingPOGFilters() const;
 
 };
 
