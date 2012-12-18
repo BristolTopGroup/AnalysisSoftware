@@ -196,7 +196,7 @@ bool TopPairMuPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton)
 	//cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
 	//cout << "Isolation: " << muon->PFDeltaBeta_Isolation_DR04() << endl;
 
-	return muon->PFDeltaBeta_Isolation_DR04() < 0.12;
+	return muon->pfRelativeIsolation(0.4, true) < 0.12;
 
 }
 
