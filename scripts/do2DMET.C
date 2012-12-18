@@ -35,7 +35,7 @@ TString ytitle[41] = {"patMETsPFlow" , " GenMET" , " patType1CorrectedPFMet" , "
 
 
 
-for(int i =0; i<41; i++){
+for(int i =2; i<3; i++){
 do2DPlots(muon, variable[i], ytitle[i]);
 getBinning(muon, variable[i]);
 }
@@ -55,7 +55,7 @@ void do2DPlots(bool muon, TString variable, TString ytitle){
   	gStyle->SetPalette(1);
 
 	TString dir = "../";
-	TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TESTING.root");
+	TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");
 
 
 
@@ -63,7 +63,7 @@ TString Nbtags[5] = {"_0btag","_1btag", "_2btags", "_3btags", "_4orMoreBtags"};
 
 for(int i = 2; i < 3; i++){
 cout << "Getting histo: " << "Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET"+Nbtags[i] <<endl;
-	TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET"+Nbtags[i]);
+	TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/GenMET_vs_RecoMET"+Nbtags[i]);
 
 	tt_2d->Rebin2D(10,10);
   	tt_2d->GetYaxis()->SetTitle("reco MET");
@@ -98,30 +98,42 @@ void getBinning(bool muon, TString variable){
 
 	TString dir = "../";
 
-TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TESTING.root");
-TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET_2btags");
-cout << "Getting histo: " << "Binning/"+leptonFolder+variable+"/RecoMET_vs_GenMET_2btags" <<endl;
+TFile* tt_file = new TFile(dir + "TTJet_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");
+TH2D* tt_2d = (TH2D*) tt_file->Get("Binning/"+leptonFolder+variable+"/GenMET_vs_RecoMET_2btags");
+cout << "Getting histo: " << "Binning/"+leptonFolder+variable+"/GenMET_vs_RecoMET_2btags" <<endl;
 
 
 int bin2 = 25;
 int bin3 = 45;
 int bin4 = 70;
 int bin5 = 100;
+int bin6 = 150;
 int binEnd =301;
 
+double weight  = 20000*210.5/6920475;
+//double weight = 5050*157.5/6920475;
+
+  double Evts1 = tt_2d->Integral(0,301,0,bin2-1);
+  double Evts2 = tt_2d->Integral(0,301,bin2,bin3-1);
+  double Evts3 = tt_2d->Integral(0,301,bin3,bin4-1);
+  double Evts4 = tt_2d->Integral(0,301,bin4,bin5-1);
+  double Evts5 = tt_2d->Integral(0,301,bin5,bin6-1);
+  double Evts6 = tt_2d->Integral(0,301,bin6,301);
 
   double p1 = tt_2d->Integral(0,bin2-1,0,bin2-1)/tt_2d->Integral(0,301,0,bin2-1);
   double p2 = tt_2d->Integral(bin2,bin3-1,bin2,bin3-1)/tt_2d->Integral(0,301,bin2,bin3-1);
   double p3 = tt_2d->Integral(bin3,bin4-1,bin3,bin4-1)/tt_2d->Integral(0,301,bin3,bin4-1);
   double p4 = tt_2d->Integral(bin4,bin5-1,bin4,bin5-1)/tt_2d->Integral(0,301,bin4,bin5-1);
-  double p5 = tt_2d->Integral(bin5,301,bin5,301)/tt_2d->Integral(0,301,bin5,301);
-    
+  double p5 = tt_2d->Integral(bin5,bin6-1,bin5,bin6-1)/tt_2d->Integral(0,301,bin5,bin6-1);
+  double p6 = tt_2d->Integral(bin6,301,bin6,301)/tt_2d->Integral(0,301,bin6,301);
+  
   double s1 = tt_2d->Integral(0,bin2-1,0,bin2-1)/tt_2d->Integral(0,bin2-1,0,301);
   double s2 = tt_2d->Integral(bin2,bin3-1,bin2,bin3-1)/tt_2d->Integral(bin2,bin3-1,0,301);
   double s3 = tt_2d->Integral(bin3,bin4-1,bin3,bin4-1)/tt_2d->Integral(bin3,bin4-1,0,301);
   double s4 = tt_2d->Integral(bin4,bin5-1,bin4,bin5-1)/tt_2d->Integral(bin4,bin5-1,0,301);
-  double s5 = tt_2d->Integral(bin5,301,bin5,301)/tt_2d->Integral(bin5,301,0,301);
-
+  double s5 = tt_2d->Integral(bin5,bin6-1,bin5,bin6-1)/tt_2d->Integral(bin5,bin6-1,0,301);
+  double s6 = tt_2d->Integral(bin6,301,bin6,301)/tt_2d->Integral(bin6,301,0,301);
+  
   double dp1 = p1*sqrt(pow(tt_2d->Integral(0,bin2-1,0,bin2-1),-1)+pow(tt_2d->Integral(0,301,0,bin2-1),-1));
   double dp2 = p2*sqrt(pow(tt_2d->Integral(bin2,bin3-1,bin2,bin3-1),-1)+pow(tt_2d->Integral(0,301,bin2,bin3-1),-1));
   double dp3 = p3*sqrt(pow(tt_2d->Integral(bin3,bin4-1,bin3,bin4-1),-1)+pow(tt_2d->Integral(0,301,bin3,bin4-1),-1));
@@ -133,13 +145,16 @@ int binEnd =301;
   double ds3 = s3*sqrt(pow(tt_2d->Integral(bin3,bin4-1,bin3,bin4-1),-1)+pow(tt_2d->Integral(bin3,bin4-1,0,301),-1));
   double ds4 = s4*sqrt(pow(tt_2d->Integral(bin4,bin5-1,bin4,bin5-1),-1)+pow(tt_2d->Integral(bin4,bin5-1,0,301),-1));
   double ds5 = s5*sqrt(pow(tt_2d->Integral(bin5,301,bin5,301),-1)+pow(tt_2d->Integral(bin5,301,0,301),-1));
+
 //cout << " bin1 stab: " << s1 << " bin2 pure: " << p1 << endl;
 //cout << " bin2 stab: " << s2 << " bin2 pure: " << p2 << endl;
 //cout << " bin3 stab: " << s3 << " bin3 pure: " << p3 << endl;
 //cout << " bin4 stab: " << s4 << " bin4 pure: " << p4 << endl;
 //cout << " bin5 stab: " << s5 << " bin5 pure: " << p5 << endl;
 
-cout << setprecision(2) << "purity & " << p1 << " & " << p2 << " & " << p3 << " & " << p4 << " & " << p5 << endl;
-cout << setprecision(2) << "stability & " << s1 << " & " << s2 << " & " << s3 << " & " << s4 << " & " << s5 << endl;
+cout << setprecision(2) << "MC Evts & " << Evts1 << " & " << Evts2 << " & " << Evts3 << " & " << Evts4 << " & " << Evts5 << " & " << Evts6<< endl;
+cout << setprecision(2) << "pred Evts & " << weight*Evts1 << " & " << weight*Evts2 << " & " << weight*Evts3 << " & " << weight*Evts4 << " & " << weight*Evts5 << " & " << weight*Evts6<< endl;
+cout << setprecision(2) << "purity & " << p1 << " & " << p2 << " & " << p3 << " & " << p4 << " & " << p5<< " & " << p6 << endl;
+cout << setprecision(2) << "stability & " << s1 << " & " << s2 << " & " << s3 << " & " << s4 << " & " << s5 << " & " << s6<< endl;
 
 }

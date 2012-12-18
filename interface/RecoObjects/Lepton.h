@@ -33,6 +33,7 @@ public:
 	virtual void setPFPUChargedHadronIsolation(double isolation, double coneSize = 0.3);
 	virtual void setPFIsolationWithGaussianFallOff(double iso, double coneSize = 0.3);
 	virtual void setPFRelativeIsolationRho(double isolation);
+	virtual void setPFDeltaBeta_Isolation_DR04(double isolation);
 
 	//directional particle based isolation
 	virtual void setDirectionalIsolation(double iso, double coneSize = 0.3);
@@ -55,6 +56,7 @@ public:
 	virtual double pfIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
 	virtual double pfRelativeIsolationPUCorrected(double rho, double coneSize = 0.3) const;
 	virtual double pfIsolationWithGaussianFallOff(double coneSize = 0.3) const;
+	virtual double PFDeltaBeta_Isolation_DR04() const;
 	//directional particle based isolation
 	virtual double directionalIsolation(double coneSize = 0.2) const;
 	virtual double directionalIsolationWithGaussianFallOff(double coneSize = 0.2) const;
@@ -69,6 +71,7 @@ protected:
 	double PFGamma_Isolation_DR03_, PFChargedHadron_Isolation_DR03_, PFNeutralHadron_Isolation_DR03_,PFPUChargedHadron_Isolation_DR03_;
 	double PFGamma_Isolation_DR04_, PFChargedHadron_Isolation_DR04_, PFNeutralHadron_Isolation_DR04_, PFPUChargedHadron_Isolation_DR04_;
 	double PFGamma_Isolation_DR05_, PFChargedHadron_Isolation_DR05_, PFNeutralHadron_Isolation_DR05_, PFPUChargedHadron_Isolation_DR05_;
+	double PFDeltaBeta_Isolation_DR04_;
 	double PFRelativeIsolationRho_DR03_;
 	double zDistanceToPrimaryVertex_, directionalIsolation_DR02_, directionalIsolation_DR03_;
 	double  directionalIsolation_GaussianFallOff_DR02_, directionalIsolation_GaussianFallOff_DR03_;

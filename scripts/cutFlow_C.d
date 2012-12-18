@@ -46,5 +46,18 @@
 ./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TVectorFfwd.h
 ./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TVectorDfwd.h
 ./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TFitResultPtr.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TCanvas.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TPad.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TVirtualPad.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TAttPad.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TVirtualX.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TAttText.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/GuiTypes.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/Buttons.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TQObject.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TAttCanvas.h
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TCanvasImp.h
+./cutFlow_C.so: tdrstyle.C
+./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/TStyle.h
 ./cutFlow_C.so: /software/root/v5.34.02/normal/root/include/cintdictversion.h /software/root/v5.34.02/normal/root/include/RVersion.h
 cutFlow_C__ROOTBUILDVERSION= 5.34/02

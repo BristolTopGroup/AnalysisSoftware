@@ -2,9 +2,12 @@
 #include "TH1.h"
 #include "TObject.h"
 #include "TString.h"
+#include "TCanvas.h"
 #include <string.h>
 #include <iostream>
 #include <iomanip>
+#include "tdrstyle.C"
+
 
 void cutFlow();
 TH1D* getSample(TString sample, bool muon);
@@ -13,9 +16,21 @@ TH1D* getSample(TString sample, bool muon);
 void cutFlow(){
 	bool muon = true;
 TH1D* tt = getSample("TTJet", muon);
+TH1D* ttEff = new TH1D("cut eff","cut eff",10,0,10);
 
+for(int i =1; i<10; i++){
+ttEff->SetBinContent(i+1, tt->GetBinContent(i+1)/tt->GetBinContent(i));
+}	
+ 
+  TCanvas *c1 = new TCanvas("cutflow","cutflow",600, 500);
+	tt->Draw();
+	c1->SaveAs("plots/cutFlow/cutFlow.png");
 
-double weight = 5050*157.5/6712238;
+  TCanvas *c2 = new TCanvas("cutflow eff","cutflow eff",600, 500);
+	ttEff->Draw();
+	c2->SaveAs("plots/cutFlow/cutEff.png");
+
+double weight = 5050*157.5/6920475;
 weight = 1.;
 
 if(muon == true){
