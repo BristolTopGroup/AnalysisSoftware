@@ -41,7 +41,7 @@ produceFitterASCIIoutput = False
 inputFiles = [
               # '/storage/TopQuarkGroup/mc/8TeV/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
               #toolsFolder + "data/TTJets_nTuple_53X_mc.root"  
-              toolsFolder + "data/TTJets_nTuple_53X_mc.root"
+              toolsFolder + "data/TTJet_nTuple_53X_mc.root"
               #TTJets_nTuple_53X_mc_merged_008.root" 
               #toolsFolder + "data/SingleMu_nTuple_53X_data_merged_002.root"
               
