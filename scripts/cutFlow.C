@@ -30,7 +30,7 @@ ttEff->SetBinContent(i+1, tt->GetBinContent(i+1)/tt->GetBinContent(i));
 	ttEff->Draw();
 	c2->SaveAs("plots/cutFlow/cutEff.png");
 
-double weight = 5050*157.5/6712238;
+double weight = 5050*157.5/6920475;
 weight = 1.;
 
 if(muon == true){
@@ -66,13 +66,13 @@ std::cout<< setprecision(6) << "$\\geq$2btag &  " << weight*tt->GetBinContent(11
 
 TH1D* getSample(TString sample, bool muon){
 	TString dir = "../";
-	TFile* tt_file = new TFile(dir + sample + "_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");
+	TFile* tt_file = new TFile(dir + sample + "_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_SYNC.root");
 	TDirectoryFile* tt_folder = (TDirectoryFile*) tt_file->Get("EventCount");
 	TH1D* tt_cutflow;
 	if(muon == true){
 	tt_cutflow = (TH1D*) tt_folder->Get("TTbarMuPlusJetsRefSelectionUnweighted");
 	}else{
-    tt_cutflow = (TH1D*) tt_folder->Get("TTbarEplusJetsRefSelectionUnweighted");
+    tt_cutflow = (TH1D*) tt_folder->Get("TTbarEplusJetsRefSelection");
 	}
     return tt_cutflow;
 }
