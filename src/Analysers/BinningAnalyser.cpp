@@ -183,16 +183,17 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		HT_lepton = HT + signalLepton->pt();
 		GenHT_lepton = GenHT + genLeptPt;
-		HT_lepton_MET = GenHT_lepton + met->pt();
+		HT_lepton_MET = HT_lepton + met->pt();
 		GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
 
+		histMan_->H2D_BJetBinned("GenHTPlusMETPt_vs_RecoHTPlusMetPt")->Fill(GenHT+event->GenMET()->pt(),HT+met->pt(), weight_);
 		histMan_->H2D_BJetBinned("GenHT_vs_RecoHT")->Fill(GenHT,HT,  weight_);
 		histMan_->H2D_BJetBinned("GenM3_vs_RecoM3")->Fill(GenM3,RecoM3,  weight_);
 
 		if(oneMuon){
-		histMan_->H2D_BJetBinned("GenMuPlusMETPt_vs_RecoMuPlusMetPt")->Fill(genLeptPt+event->GenMET()->pt(),signalLepton->pt()+met->pt(), weight_);
-	    histMan_->H2D_BJetBinned("GendPhiMuMet_vs_RecodPhiMuMetPt")->Fill(gendPhi,signalLepton->deltaPhi(met), weight_);
-		histMan_->H2D_BJetBinned("GenMuonPt_vs_RecoMuonPt")->Fill(genLeptPt, signalLepton->pt(),weight_);
+		histMan_->H2D_BJetBinned("GenLepPlusMETPt_vs_RecoLepPlusMetPt")->Fill(genLeptPt+event->GenMET()->pt(),signalLepton->pt()+met->pt(), weight_);
+	    histMan_->H2D_BJetBinned("GendPhiLepMet_vs_RecodPhiLepMetPt")->Fill(gendPhi,signalLepton->deltaPhi(met), weight_);
+		histMan_->H2D_BJetBinned("GenLepPt_vs_RecoLepPt")->Fill(genLeptPt, signalLepton->pt(),weight_);
 		histMan_->H2D_BJetBinned("GenHT_lep_vs_RecoHT_lep")->Fill(GenHT_lepton,HT_lepton, weight_);
 		histMan_->H2D_BJetBinned("GenHT_lep_met_vs_RecoHT_lep_met")->Fill(GenHT_lepton_MET,HT_lepton_MET,  weight_);
 		histMan_->H2D_BJetBinned("Genleptonic_W_pt_vs_Recoleptonic_W_pt")->Fill(genWPt,leptonic_W->pt(),  weight_);
@@ -322,18 +323,18 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		HT_lepton = HT + signalLepton->pt();
 		GenHT_lepton = GenHT + genLeptPt;
-		HT_lepton_MET = GenHT_lepton + met->pt();
+		HT_lepton_MET = HT_lepton + met->pt();
 		GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
 
-
+		histMan_->H2D_BJetBinned("GenHTPlusMETPt_vs_RecoHTPlusMetPt")->Fill(GenHT+event->GenMET()->pt(),HT+met->pt(), weight_);
 		histMan_->H2D_BJetBinned("GenHT_vs_RecoHT")->Fill(GenHT,HT,  weight_);
 		histMan_->H2D_BJetBinned("GenM3_vs_RecoM3")->Fill(GenM3,RecoM3,  weight_);
 
 
 		if(oneElectron){
-			histMan_->H2D_BJetBinned("GenMuPlusMETPt_vs_RecoMuPlusMetPt")->Fill(genLeptPt+event->GenMET()->pt(),signalLepton->pt()+met->pt(), weight_);
-		    histMan_->H2D_BJetBinned("GendPhiMuMet_vs_RecodPhiMuMetPt")->Fill(gendPhi,signalLepton->deltaPhi(met), weight_);
-			histMan_->H2D_BJetBinned("GenMuonPt_vs_RecoMuonPt")->Fill(genLeptPt, signalLepton->pt(),weight_);
+			histMan_->H2D_BJetBinned("GenLepPlusMETPt_vs_RecoLepPlusMetPt")->Fill(genLeptPt+event->GenMET()->pt(),signalLepton->pt()+met->pt(), weight_);
+		    histMan_->H2D_BJetBinned("GendPhiLepMet_vs_RecodPhiLepMetPt")->Fill(gendPhi,signalLepton->deltaPhi(met), weight_);
+			histMan_->H2D_BJetBinned("GenLepPt_vs_RecoLepPt")->Fill(genLeptPt, signalLepton->pt(),weight_);
 			histMan_->H2D_BJetBinned("GenHT_lep_vs_RecoHT_lep")->Fill(GenHT_lepton,HT_lepton, weight_);
 			histMan_->H2D_BJetBinned("GenHT_lep_met_vs_RecoHT_lep_met")->Fill(GenHT_lepton_MET,HT_lepton_MET,  weight_);
 			histMan_->H2D_BJetBinned("Genleptonic_W_pt_vs_Recoleptonic_W_pt")->Fill(genWPt,leptonic_W->pt(),  weight_);
@@ -348,11 +349,13 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 void BinningAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_+ "/EPlusJets/");
-	histMan_->addH2D_BJetBinned("GenMuPlusMETPt_vs_RecoMuPlusMetPt", "GenMuPlusMETPt_vs_RecoMuPlusMETPt; muon+met pt_{Gen} [GeV]; muon+met pt_{Reco} [GeV]", 500,
+	histMan_->addH2D_BJetBinned("GenHTPlusMETPt_vs_RecoHTPlusMetPt", "GenHTPlusMETPt_vs_RecoHTPlusMETPt; HT+met_{Gen} [GeV]; HT+met_{Reco} [GeV]", 500,
+			0, 2000, 500, 0, 2000);
+	histMan_->addH2D_BJetBinned("GenLepPlusMETPt_vs_RecoLepPlusMetPt", "GenLepPlusMETPt_vs_RecoLepPlusMETPt; lepton+met pt_{Gen} [GeV]; lepton+met pt_{Reco} [GeV]", 500,
 						0, 500, 500, 0, 500);
-	histMan_->addH2D_BJetBinned("GenMuonPt_vs_RecoMuonPt", "GenMuonPt_vs_RecoMuonPt; muon pt_{Gen} [GeV]; muon pt_{Reco} [GeV]", 500,
+	histMan_->addH2D_BJetBinned("GenLepPt_vs_RecoLepPt", "GenLepPt_vs_RecoLepPt; Lep pt_{Gen} [GeV]; Lep pt_{Reco} [GeV]", 500,
 						0, 500, 500, 0, 500);
-	histMan_->addH2D_BJetBinned("GendPhiMuMet_vs_RecodPhiMuMetPt", "GendPhiMuMet_vs_RecodPhiMuMet; #Delta#Phi (#mu,MET)_{Gen}; #Delta#Phi (#mu,MET)_{Reco}", 400,
+	histMan_->addH2D_BJetBinned("GendPhiLepMet_vs_RecodPhiLepMetPt", "GendPhiLepMet_vs_RecodPhiLepMet; #Delta#Phi (lepton,MET)_{Gen}; #Delta#Phi (lepton,MET)_{Reco}", 400,
 						-4., +4., 400, -4, +4);
 	histMan_->addH2D_BJetBinned("GenHT_vs_RecoHT", "GenHT_vs_RecoHT; HT_{Gen} [GeV]; HT_{Reco} [GeV]", 500,
 						0, 2000, 500, 0, 2000);
@@ -373,12 +376,14 @@ void BinningAnalyser::createHistograms() {
 
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_+ "/MuPlusJets/");
-	histMan_->addH2D_BJetBinned("GenMuPlusMETPt_vs_RecoMuPlusMetPt", "GenMuPlusMETPt_vs_RecoMuPlusMETPt; muon+met pt_{Gen} [GeV]; muon+met pt_{Reco} [GeV]", 500,
-						0, 500, 500, 0, 500);
-	histMan_->addH2D_BJetBinned("GenMuonPt_vs_RecoMuonPt", "GenMuonPt_vs_RecoMuonPt; muon pt_{Gen} [GeV]; muon pt_{Reco} [GeV]", 500,
-						0, 500, 500, 0, 500);
-	histMan_->addH2D_BJetBinned("GendPhiMuMet_vs_RecodPhiMuMetPt", "GendPhiMuMet_vs_RecodPhiMuMet; #Delta#Phi (#mu,MET)_{Gen}; #Delta#Phi (#mu,MET)_{Reco}", 400,
-						-4., +4., 400, -4, +4);
+	histMan_->addH2D_BJetBinned("GenHTPlusMETPt_vs_RecoHTPlusMetPt", "GenHTPlusMETPt_vs_RecoHTPlusMETPt; HT+met_{Gen} [GeV]; HT+met_{Reco} [GeV]", 500,
+			0, 2000, 500, 0, 2000);
+	histMan_->addH2D_BJetBinned("GenLepPlusMETPt_vs_RecoLepPlusMetPt", "GenLepPlusMETPt_vs_RecoLepPlusMETPt; lepton+met pt_{Gen} [GeV]; lepton+met pt_{Reco} [GeV]", 500,
+			0, 500, 500, 0, 500);
+	histMan_->addH2D_BJetBinned("GenLepPt_vs_RecoLepPt", "GenLepPt_vs_RecoLepPt; Lep pt_{Gen} [GeV]; Lep pt_{Reco} [GeV]", 500,
+			0, 500, 500, 0, 500);
+	histMan_->addH2D_BJetBinned("GendPhiLepMet_vs_RecodPhiLepMetPt", "GendPhiLepMet_vs_RecodPhiLepMet; #Delta#Phi (lepton,MET)_{Gen}; #Delta#Phi (lepton,MET)_{Reco}", 400,
+			-4., +4., 400, -4, +4);
 	histMan_->addH2D_BJetBinned("GenHT_vs_RecoHT", "GenHT_vs_RecoHT; HT_{Gen} [GeV]; HT_{Reco} [GeV]", 500,
 						0, 2000, 500, 0, 2000);
 	histMan_->addH2D_BJetBinned("GenHT_lep_vs_RecoHT_lep", "GenHT_lep_vs_RecoHT_lep; HT_lep_{Gen} [GeV]; HT_lep_{Reco} [GeV]", 500,

@@ -141,8 +141,8 @@ void HistogramManager::addH2D_JetBinned(std::string name, std::string title, uns
 
 void HistogramManager::addH2D(std::string name, std::string title, unsigned int nXBins, float xmin, float xmax,
 		unsigned int nYBins, float ymin, float ymax) {
-	if (nXBins * nYBins > 200000)
-		cout << "WARNING: Histogram '" << name << "' has more than 200000 bins. Potential memory monster!" << endl;
+	if (nXBins * nYBins > 260000)
+		cout << "WARNING: Histogram '" << name << "' has more than 5000000 bins. Potential memory monster!" << endl;
 
 	if (collection2D.find(currentHistogramFolder) == collection2D.end())
 		addHistogramFolder(currentHistogramFolder);

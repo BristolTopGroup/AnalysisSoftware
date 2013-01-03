@@ -31,6 +31,8 @@ enum value {
 	QCD_EMEnriched_Pt30to80,
 	QCD_EMEnriched_Pt80to170,
 	QCD_MuEnrichedPt15_Pt20,
+	QCD_Pt_120to170_Mu,
+	QCD_Pt_800to1000_Mu,
 	PhotonJets_Pt40to100,
 	PhotonJets_Pt100to200,
 	PhotonJets_Pt200toInf,
@@ -103,6 +105,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_Pt-30to80_EMEnriched", //
 		"QCD_Pt-80to170_EMEnriched", //10
 		"QCD_Pt-20_MuEnrichedPt-15", //
+		"QCD_Pt-120to170_Mu",
+		"QCD_Pt-800to1000_Mu",
 		"GJets_HT-40To100", //
 		"GJets_HT-100To200", //
 		"GJets_HT-200", //

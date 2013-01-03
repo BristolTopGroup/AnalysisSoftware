@@ -609,8 +609,8 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
 
-		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
-		metAnalyserqcdNonIsoElectronSelection_->setPrescale(prescale);
+		qcdNonIsoMuonAnalyser_->setPrescale(prescale);
+		metAnalyserqcdNonIsoMuonSelection_->setPrescale(prescale);
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
@@ -681,11 +681,16 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
 
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/ge3 jet selection");
+		histMan_->H1D("Muon_Eta")->Fill(signalMuon->eta(), event->weight());
+		histMan_->H1D("Muon_AbsEta")->Fill(fabs(signalMuon->eta()), event->weight());
+
 		qcdMuPlusjetsPFRelIsoMuonAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+
 
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyse(event);
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
@@ -771,6 +776,11 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
 			5000);
+	//histos of central qcd estimation
+	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/ge3 jet selection");
+	histMan_->addH1D("Muon_Eta", "Muon #eta; #eta(#mu); Events/(0.02)", 300, -3, 3);
+	histMan_->addH1D("Muon_AbsEta", "Muon |#eta|; |#eta(#mu)|; Events/(0.01)", 300, 0, 3);
+
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();
 	electronAnalyserRefSelection_->createHistograms();
