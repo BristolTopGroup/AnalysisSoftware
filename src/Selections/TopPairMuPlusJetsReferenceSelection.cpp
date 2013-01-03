@@ -252,7 +252,9 @@ bool TopPairMuPlusJetsReferenceSelection::hasAtLeastNGoodJets(const EventPtr eve
 	int nJetsAbove30GeV(0);
 
 	for (unsigned int index = 0; index < goodJets.size(); ++index) {
-		if (goodJets.at(index)->pt() > 30.)
+
+		const JetPointer jet(goodJets.at(index));
+		if (goodJets.at(index)->pt() > 30. && isGoodJet(jet))
 			++nJetsAbove30GeV;
 	}
 	return nJetsAbove30GeV >= Njets;

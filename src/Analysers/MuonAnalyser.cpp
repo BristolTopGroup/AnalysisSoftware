@@ -35,6 +35,8 @@ void MuonAnalyser::analyseMuon(const MuonPointer muon, double weight) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = weight * prescale_ * scale_;
 
+
+
 	histMan_->H1D_BJetBinned("muon_eta")->Fill(muon->eta(), weight_);
 	histMan_->H1D_BJetBinned("muon_AbsEta")->Fill(fabs(muon->eta()), weight_);
 	histMan_->H1D_BJetBinned("muon_pfIsolation_03")->Fill(muon->pfRelativeIsolation(0.3, true), weight_);
@@ -89,6 +91,7 @@ void MuonAnalyser::createHistograms() {
 
 		histMan_->addH1D_BJetBinned("muon_dB", "Muon dB(PV); dB/cm; Events/(0.001 cm)", 200, 0, 0.2);
 	}
+
 	histMan_->addH1D_BJetBinned("muon_eta", "Muon #eta; #eta(#mu); Events/(0.02)", 300, -3, 3);
 	histMan_->addH1D_BJetBinned("muon_AbsEta", "Muon |#eta|; |#eta(#mu)|; Events/(0.01)", 300, 0, 3);
 	histMan_->addH1D_BJetBinned("muon_pfIsolation_03",
