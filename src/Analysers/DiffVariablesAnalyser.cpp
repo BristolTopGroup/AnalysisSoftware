@@ -215,21 +215,25 @@ void DiffVariablesAnalyser::createHistograms() {
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_+ "/MuPlusJets/");
 
-	histMan_->addH1D("HT", "HT (jets);HT (jets);Events", 6, HT_bins);
-	histMan_->addH1D("HT_lepton", "HT (jets+lepton);HT (jets+lepton);Events", 6, HT_lepton_bins);
-	histMan_->addH1D("HT_lepton_MET", "HT (jets+lepton+#slash{E}_{T});HT (jets+lepton+#slash{E}_{T});Events", 6, HT_lepton_MET_bins);
+//	histMan_->addH1D("HT", "HT (jets);HT (jets);Events", 6, HT_bins);
+//	histMan_->addH1D("HT_lepton", "HT (jets+lepton);HT (jets+lepton);Events", 6, HT_lepton_bins);
+//	histMan_->addH1D("HT_lepton_MET", "HT (jets+lepton+#slash{E}_{T});HT (jets+lepton+#slash{E}_{T});Events", 6, HT_lepton_MET_bins);
+
+	histMan_->addH1D("HT", "HT (jets);HT (jets);Events", 500, 0, 2000);
+	histMan_->addH1D("HT_lepton", "HT (jets+lepton);HT (jets+lepton);Events", 500, 0, 2000);
+	histMan_->addH1D("HT_lepton_MET", "HT (jets+lepton+#slash{E}_{T});HT (jets+lepton+#slash{E}_{T});Events", 500, 0, 2000);
 
 	histMan_->addH1D("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events", 80, -3, 3);
 	histMan_->addH1D("MET_pt", "pt (Missing transverse energy);p_t(#slash{E}_{T});Events", 100, 0, 300);
-	histMan_->addH1D("MET_1st_jet_pt", "#slash{E}_{T}+1st jet pt;#slash{E}_{T}+pt(1st jet);Events", 100, 0, 500);
-	histMan_->addH1D("MET_bjets_pt", "#slash{E}_{T}+2 b-jets pt's;#slash{E}_{T}+bjets pts;Events", 100, 0, 600);
+	histMan_->addH1D("MET_1st_jet_pt", "#slash{E}_{T}+1st jet pt;#slash{E}_{T}+pt(1st jet);Events", 500, 0, 500);
+	histMan_->addH1D("MET_bjets_pt", "#slash{E}_{T}+2 b-jets pt's;#slash{E}_{T}+bjets pts;Events", 600, 0, 600);
 
-	histMan_->addH1D("leptonic_W_pt", "pt (leptonic W);p_t(leptonic W);Events", 100, 0, 350);
+	histMan_->addH1D("leptonic_W_pt", "pt (leptonic W);p_t(leptonic W);Events", 350, 0, 350);
 	histMan_->addH1D("leptons_invariant_mass", "Inv.mass (lepton, #slash{E}_{T});Inv.mass (lepton, #slash{E}_{T});Events", 100, 0, 350);
-	histMan_->addH1D("invariant_mass_lepton_1bjet", "Inv.mass (lepton, 1 b-jet);Inv.mass (lepton,1b-jet)", 100, 0, 400);
-	histMan_->addH1D("invariant_mass_lepton_2bjet", "Inv.mass (lepton, 2 b-jet);Inv.mass (lepton,2b-jet)", 100, 0, 400);
-	histMan_->addH1D("invariant_mass_2bjets", "Inv.mass (1 b-jet, 2 b-jet);Inv.mass (2 b-jets)", 100, 0, 500);
-	histMan_->addH1D("M3", "M3;M3;Events", 100, 100, 1000);
+	histMan_->addH1D("invariant_mass_lepton_1bjet", "Inv.mass (lepton, 1 b-jet);Inv.mass (lepton,1b-jet)", 400, 0, 400);
+	histMan_->addH1D("invariant_mass_lepton_2bjet", "Inv.mass (lepton, 2 b-jet);Inv.mass (lepton,2b-jet)", 400, 0, 400);
+	histMan_->addH1D("invariant_mass_2bjets", "Inv.mass (1 b-jet, 2 b-jet);Inv.mass (2 b-jets)", 500, 0, 500);
+	histMan_->addH1D("M3", "M3;M3;Events", 1000, 100, 1000);
 	histMan_->addH1D("deltaR_lepton_MET", "#Delta R (lepton, #slash{E}_{T});#Delta R (lepton, #slash{E}_{T});Events", 100, 0, 5);
 	histMan_->addH1D("deltaPhi_lepton_2jets", "#Delta #phi (lepton, 1st jet) + #Delta #phi (lepton, 2nd jet);#Delta #phi (l, jet 1) + #Delta #phi(l, jet 2)", 100, -6, 6);
 	histMan_->addH1D("deltaPhi_lepton_2bjets", "#Delta #phi (lepton, 1st b-jet) + #Delta #phi (lepton, 2nd b-jet);#Delta #phi (l, bjet 1) + #Delta #phi(l, bjet 2)", 100, -6, 6);
