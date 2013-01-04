@@ -133,3 +133,11 @@ datasetInfo['MuHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 datasetInfo['SingleElectron'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 datasetInfo['SingleMu'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
+#Old QCD samples (kept to avoid dictionary errors)
+datasetInfo['QCD_Pt-20to30_BCtoE'] = {"cross-section": 0.2355e9 * 0.00046, "NumberOfProcessedEvents":2081560}
+datasetInfo['QCD_Pt-30to80_BCtoE'] = {"cross-section": 0.0593e9 * 0.00234, "NumberOfProcessedEvents":2013126}
+datasetInfo['QCD_Pt-80to170_BCtoE'] = {"cross-section": 0.906e6 * 0.0104, "NumberOfProcessedEvents":1044013}
+
+datasetInfo['QCD_Pt-20to30_EMEnriched'] = {"cross-section": 0.2355e9 * 0.0073, "NumberOfProcessedEvents":34607077}
+datasetInfo['QCD_Pt-30to80_EMEnriched'] = {"cross-section": 0.0593e9 * 0.059, "NumberOfProcessedEvents":70376046}
+datasetInfo['QCD_Pt-80to170_EMEnriched'] = {"cross-section": 0.906e6 * 0.148, "NumberOfProcessedEvents":8150672}
