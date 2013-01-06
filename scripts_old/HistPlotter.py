@@ -172,7 +172,7 @@ def get_cms_label( lumiInInvPb, njet = "4orMoreJets", nbjet = "0orMoreBtag", cha
     mytext = TPaveText( 0.5, 0.97, 1, 1.01, "NDC" )
     channelLabel = TPaveText( 0.15, 0.965, 0.4, 1.01, "NDC" )
     channelLabel.AddText(channel + ", %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet] ))
-    mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 7 TeV" % (lumiInInvPb/1000.));
+    mytext.AddText( "CMS Preliminary, L = %.1f fb^{-1} at #sqrt{s} = 8 TeV" % (lumiInInvPb/1000.));
 #    if njet != "":
 #        mytext.AddText( channel + ", %s, %s" % (jetBinsLatex[njet], BjetBinsLatex[nbjet] ))   
              

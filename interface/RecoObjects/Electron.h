@@ -48,7 +48,7 @@ enum value {
 	SimpleCutBasedWP80 = -8,
 	SimpleCutBasedWP70 = -7,
 	MVAIDTrigger = -6,
-	MVAIDNonTrigger = -5,
+	MVAIDNonTrigger = -5
 };
 
 
