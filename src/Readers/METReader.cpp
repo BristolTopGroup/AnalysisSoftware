@@ -55,14 +55,14 @@ void METReader::initialiseBlindly() {
 
 }
 
-const METPointer METReader::getMET() {
-	readMET();
+const METPointer METReader::getMET(double corrx, double corry) {
+	readMET(corrx, corry);
 	return met;
 }
 
-void METReader::readMET() {
+void METReader::readMET(double corrx, double corry) {
 	if (usedAlgorithm != METAlgorithm::GenMET || Globals::NTupleVersion >= 8) {
-		met = METPointer(new MET(exReader.getVariable(), eyReader.getVariable()));
+		met = METPointer(new MET(exReader.getVariable()+corrx, eyReader.getVariable()+corry));
 		met->setSignificance(significanceReader.getVariable());
 	} else
 		met = METPointer(new MET(multiExReader.getVariableAt(0), multiEyReader.getVariableAt(0)));

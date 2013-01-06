@@ -37,6 +37,7 @@ NTupleEventReader::NTupleEventReader() :
 		muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
+		metCorrReaders(), //
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
@@ -60,8 +61,13 @@ NTupleEventReader::NTupleEventReader() :
 		areReadersSet(false), //
 		areDatatypesKnown(false), //
 		currentEvent(), //
-		seenDataTypes(){
+		seenDataTypes() {
 	metReaders.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
+	metCorrReaders.resize(METCorrections::NUMBER_OF_METCORRECTIONS);
+
+	for (unsigned int index = 0; index < METCorrections::NUMBER_OF_METCORRECTIONS; ++ index) {
+		metCorrReaders.at(index) = boost::shared_ptr<METCorrReader>(new METCorrReader(input, (METCorrections::value) index));
+	}
 
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
@@ -133,6 +139,34 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	currentEvent->setJets(jetReader->getJets());
 
+	double sysShiftMetCorrectionX = 0;
+	double sysShiftMetCorrectionY = 0;
+	double type0MetCorrectionX = 0;
+	double type0MetCorrectionY = 0;
+	double type1MetCorrectionX = 0;
+	double type1MetCorrectionY = 0;
+
+	if (Globals::NTupleVersion > 8) {
+		if (Globals::applySysShiftMetCorrection) {
+			metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->readMETCorrections();
+			sysShiftMetCorrectionX = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getXcorrection();
+			sysShiftMetCorrectionY = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getYcorrection();
+		}
+		if (Globals::applyType0MetCorrection) {
+			metCorrReaders.at(METCorrections::pfMetType0Corrections)->readMETCorrections();
+			type0MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getXcorrection();
+			type0MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getYcorrection();
+		}
+		if (Globals::applyType1MetCorrection) {
+			metCorrReaders.at(METCorrections::pfMetType1Corrections)->readMETCorrections();
+			type1MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getXcorrection();
+			type1MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getYcorrection();
+		}
+	}
+
+	double totalMetCorrectionX = sysShiftMetCorrectionX + type0MetCorrectionX + type1MetCorrectionX;
+	double totalMetCorrectionY = sysShiftMetCorrectionY + type0MetCorrectionY + type1MetCorrectionY;
+
 	METCollection mets;
 	mets.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
@@ -141,7 +175,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		bool isMCOnlyMET = MET::isMCOnlyMETType(index);
 		if (isMCOnlyMET && currentEvent->isRealData())
 			continue;
-		const METPointer met(metReaders.at(index)->getMET());
+		const METPointer met(metReaders.at(index)->getMET(totalMetCorrectionX, totalMetCorrectionY));
 		if (Globals::NTupleVersion >= 7){
 			met->setSumET(sumETReader_->getVariable());
 			currentEvent->setHCALLaserFilter(HCALLaserFilter->getVariable());
@@ -227,6 +261,12 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			EEBadSCFilter->initialise();
 			ECALLaserCorrFilter->initialise();
 			TrackingPOGFilters->initialise();
+		}
+
+		if (Globals::NTupleVersion > 8) {
+			for (unsigned int index = 0; index < METCorrections::NUMBER_OF_METCORRECTIONS; ++index) {
+				metCorrReaders.at(index)->initialise();
+			}
 		}
 
 		for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {

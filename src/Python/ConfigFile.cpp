@@ -21,7 +21,7 @@
 using namespace std;
 
 namespace BAT {
-const string DEFAULT_CONFIG_PATH = "BristolAnalysis/Tools/python/default_cfg.py";
+const string DEFAULT_CONFIG_PATH = "python/default_cfg.py";
 
 ConfigFile::ConfigFile(int argc, char **argv) :
 		programOptions(getParameters(argc, argv)), //
@@ -42,7 +42,10 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		btagSystematic_(0), //
 		lightTagSystematic_(0), //
 		custom_file_suffix_(""), //
-		pdfWeightNumber_(0) {
+		pdfWeightNumber_(0),//
+		applyMetSysShiftCorr_(0),//
+		applyMetType0Corr_(0),//
+		applyMetType1Corr_(0){
 	if (PythonParser::hasAttribute(config, "JESsystematic"))
 		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
 	if (PythonParser::hasAttribute(config, "BTagSystematic"))
@@ -53,6 +56,12 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		custom_file_suffix_ = PythonParser::getAttributeFromPyObject<string>(config, "custom_file_suffix");
 	if (PythonParser::hasAttribute(config, "pdfWeightNumber"))
 		pdfWeightNumber_ = PythonParser::getAttributeFromPyObject<unsigned int>(config, "pdfWeightNumber");
+	if (PythonParser::hasAttribute(config, "applyMetSysShiftCorr"))
+		applyMetSysShiftCorr_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyMetSysShiftCorr");
+	if (PythonParser::hasAttribute(config, "applyMetType0Corr"))
+		applyMetType0Corr_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyMetType0Corr");
+	if (PythonParser::hasAttribute(config, "applyMetType1Corr"))
+		applyMetType1Corr_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyMetType1Corr");
 }
 
 boost::program_options::variables_map ConfigFile::getParameters(int argc, char** argv) {
@@ -85,6 +94,9 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("custom_file_suffix", value<std::string>(), "Custom file suffix, will be appended to file name");
 	desc.add_options()("pdfWeightNumber", value<unsigned int>(),
 			"Number of PDF weight to multiply the event weight with");
+	desc.add_options()("applyMetSysShiftCorr", value<bool>(), "apply MET systematic shift correction for phi modulation");
+	desc.add_options()("applyMetType0Corr", value<bool>(), "apply MET type-0 correction (for PU)");
+	desc.add_options()("applyMetType1Corr", value<bool>(), "apply MET type-1 correction (JEC)");
 
 	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	notify(vm);
@@ -236,6 +248,28 @@ unsigned int ConfigFile::pdfWeightNumber() const {
 		return pdfWeightNumber_;
 }
 
+bool ConfigFile::applyMetSysShiftCorr() const {
+	if (programOptions.count("applyMetSysShiftCorr"))
+		return programOptions["applyMetSysShiftCorr"].as<bool>();
+	else
+		return applyMetSysShiftCorr_;
+}
+
+bool ConfigFile::applyMetType0Corr() const {
+	if (programOptions.count("applyMetType0Corr"))
+		return programOptions["applyMetType0Corr"].as<bool>();
+	else
+		return applyMetType0Corr_;
+}
+
+bool ConfigFile::applyMetType1Corr() const {
+	if (programOptions.count("applyMetType1Corr"))
+		return programOptions["applyMetType1Corr"].as<bool>();
+	else
+		return applyMetType1Corr_;
+}
+
+
 ConfigFile::~ConfigFile() {
 }
 
@@ -305,6 +339,11 @@ void ConfigFile::loadIntoMemory() {
 
 	Globals::custom_file_suffix = custom_file_suffix();
 	Globals::pdfWeightNumber = pdfWeightNumber();
+
+	//MET corrections
+	Globals::applySysShiftMetCorrection = applyMetSysShiftCorr();
+	Globals::applyType0MetCorrection = applyMetType0Corr();
+	Globals::applyType1MetCorrection = applyMetType1Corr();
 }
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {

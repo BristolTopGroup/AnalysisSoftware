@@ -19,11 +19,11 @@
 #include "VariableReader.h"
 #include "VertexReader.h"
 #include "METReader.h"
+#include "METCorrReader.h"
 #include "GenMETReader.h"
 #include "TrackReader.h"
 #include "GenParticleReader.h"
 #include <string>
-#include "TTreePerfStats.h"
 
 namespace BAT {
 struct NoFileFoundException: public std::exception {
@@ -76,6 +76,7 @@ private:
 	boost::scoped_ptr<MuonReader> muonReader;
 //	boost::scoped_ptr<GenMETReader> genMetReader;
 	std::vector<boost::shared_ptr<METReader> > metReaders;
+	std::vector<boost::shared_ptr<METCorrReader> > metCorrReaders;
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
