@@ -5,6 +5,9 @@ from ROOT import *
 from ROOT import kAzure, kYellow, kViolet, kRed, gROOT, kMagenta, kGreen, TLegend, THStack, TCanvas, gStyle, kGray, TH1F, gPad
 #from QCDEstimation import getQCDEstimate#, estimateQCDFor
 import QCDEstimation
+import sys
+sys.path.insert(0, '../python/')
+from DataSetInfo_8TeV import *
 
 import HistPlotter
 import HistGetter
@@ -20,41 +23,38 @@ custom_suffix = ''
 #custom_suffix = '68000mb'
 #custom_suffix = '64600mb'
 #custom_suffix = '71400mb'
-used_data = 'SingleMu'
+used_data = 'SingleMuon'
 def plotMttbar():
     global used_data
     saveAs = HistPlotter.saveAs
+    savePath = "/storage/TopQuarkGroup/results/plots/2012_v9a"
     
     performRescale = False
     HistPlotter.setStyle()
-    lumi = 5100#5050.0#1959.75#1611.95
-    oldLumi = 5100#5050#/(0.95**2)
-    scale = lumi / oldLumi;
+    lumi = 5814#5050.0#1959.75#1611.95
+    oldLumi = 10000#5050#/(0.95**2)
+#    scale = 0.15#lumi / oldLumi;
     
     outputFormats = [
-                     'pdf',
-                     'png']
+                     'pdf'
+                    ]
     reverseMCOrder = False
 #    qcdFromData = 'topReconstruction/backgroundShape/mttbar_conversions_withMETAndAsymJets_0orMoreBtag'
-    wjetScale = 1.#0.75#*81268812/81345381
-    topScale = 164.4/157.5#1.#*3701947/59038455
-    savePath = "/storage/results/plots/AN-12-241_V4/"
-    print 'Top scale', topScale
-    print 'W+jets scale', wjetScale
+    
     hists = [];
     ttbarUncertainty = 0.1
     
 
     hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Electron/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_AbsEta')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_AbsEta')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets, non iso trigger/Electron/electron_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDAntiID/Electron/electron_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDNoIsoNoID/Electron/electron_AbsEta')
 #    
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Electron/electron_pT')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_pT')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_pT')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Electron/electron_pT')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCDConversions/Electron/electron_pT')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_pT')
 #
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD non iso e+jets/Electron/electron_pfIsolation_03')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03')
@@ -67,11 +67,11 @@ def plotMttbar():
 #    
 #
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/bjet_invariant_mass')
-    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET')
+#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET_phi')
 #
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/MET')
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/MET_phi')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/MET')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patMETsPFlow/MET_phi')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET')
 #    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
 #
@@ -85,10 +85,10 @@ def plotMttbar():
 #    hists.append('MttbarAnalysis/ElectronPlusJets/Ref selection/FourJetChi2/hadronicTopMass')
 #    hists.append('MttbarAnalysis/ElectronPlusJets/Ref selection/FourJetChi2/hadronicWMass')
     
-#    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Jets/N_Jets')
+    hists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Jets/N_Jets')
     
     hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Muon/muon_AbsEta')
-#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/Muon/muon_AbsEta')
+    hists.append('TTbarPlusMetAnalysis/MuPlusJets/QCD non iso mu+jets/Muon/muon_AbsEta')
 ##
 #    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_0-25/muon_AbsEta')
 #    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_25-45/muon_AbsEta')
@@ -97,10 +97,10 @@ def plotMttbar():
 #    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/BinnedMETAnalysis/Muon_patType1CorrectedPFMet_bin_100-inf/muon_AbsEta')
 ###    
 #    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/bjet_invariant_mass')
-#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patMETsPFlow/MET')
-    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET')
+    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patMETsPFlow/MET')
+#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET')
 #    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET')
-#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patMETsPFlow/MET_phi')
+    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patMETsPFlow/MET_phi')
 #    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1CorrectedPFMet/MET_phi')
 #    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/MET/patType1p2CorrectedPFMet/MET_phi')
 #    
@@ -116,10 +116,8 @@ def plotMttbar():
 #    hists.append('MttbarAnalysis/MuonPlusJets/Ref selection/FourJetChi2/m3')
 #    hists.append('MttbarAnalysis/MuonPlusJets/Ref selection/FourJetChi2/hadronicTopMass')
 #    hists.append('MttbarAnalysis/MuonPlusJets/Ref selection/FourJetChi2/hadronicWMass')
-#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Jets/N_Jets')
-#    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Muon/muon_pT')
-    
-    
+    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Jets/N_Jets')
+    hists.append('TTbarPlusMetAnalysis/MuPlusJets/Ref selection/Muon/muon_pT')
     
     
     files = inputFiles.files
@@ -131,6 +129,10 @@ def plotMttbar():
 #                                                                 '4orMoreBtags'
                                                                  ])
     otherHists = []
+    otherHists.append('EventCount/TTbarMuPlusJetsRefSelection')
+    otherHists.append('EventCount/TTbarEplusJetsRefSelection')
+    otherHists.append('EventCount/TTbarMuPlusJetsRefSelectionUnweighted')
+    otherHists.append('EventCount/TTbarEplusJetsRefSelectionUnweighted')
 #    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Vertices/nVertex')
 #    otherHists.append('TTbarPlusMetAnalysis/EPlusJets/Ref selection/Vertices/nVertex_reweighted')
 #    
@@ -160,60 +162,66 @@ def plotMttbar():
         if 'MuPlusJets' in histname or 'Muon' in histname:
             used_data = 'SingleMu'
         else:
-            used_data = 'ElectronHad'
+            used_data = 'SingleElectron'
         hist_data = hists[used_data][histname]
+        
+        for dataset in hists:
+            if not 'Single' in dataset:
+                scale = lumi * datasetInfo[dataset]['cross-section']/datasetInfo[dataset]['NumberOfProcessedEvents']
+#                print dataset, '[', histname, '] is scaled by ', scale
+                hists[dataset][histname].Scale(scale)
 
-        hist_ttbar = hists['ttbar'][histname]
+        hist_ttbar = hists['TTJet'][histname]
+        #hist_wjets = hists['WJetsToLNu'][histname]
         hist_wjets = hists['W1Jet'][histname]
         hist_wjets += hists['W2Jets'][histname] 
         hist_wjets += hists['W3Jets'][histname] 
         hist_wjets += hists['W4Jets'][histname]
-        hist_zjets = hists['zjets'][histname]
+        #hist_zjets = hists['DYJetsToLL'][histname]
+        hist_zjets = hists['DY1JetsToLL'][histname]
+        hist_zjets += hists['DY2JetsToLL'][histname]
+        hist_zjets += hists['DY3JetsToLL'][histname]
+        hist_zjets += hists['DY4JetsToLL'][histname]
 
-        hist_bce1 = hists['bce1'][histname]
-        hist_bce2 = hists['bce2'][histname]
-        hist_bce3 = hists['bce3'][histname]
-        hist_muQCD = hists['muQCD'][histname]
-        hist_enri1 = hists['enri1'][histname]
-        hist_enri2 = hists['enri2'][histname]
-        hist_enri3 = hists['enri3'][histname]
-        hist_pj1 = hists['pj1'][histname]
-        hist_pj2 = hists['pj2'][histname]
-        hist_pj3 = hists['pj3'][histname]
-        hist_singleTop = hists['T_TuneZ2_tW-channel'][histname] + hists['T_TuneZ2_t-channel'][histname] + hists['T_TuneZ2_s-channel'][histname]
-        hist_singleTop += hists['Tbar_TuneZ2_tW-channel'][histname] + hists['Tbar_TuneZ2_t-channel'][histname] + hists['Tbar_TuneZ2_s-channel'][histname]
+#        hist_muQCD = hists['QCD_Pt-20_MuEnrichedPt-15'][histname]
+        hist_muQCD = hists['QCD_Pt-15to20_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-20to30_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-30to50_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-50to80_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-80to120_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-120to170_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-170to300_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-300to470_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-470to600_MuEnrichedPt5'][histname]
+#        hist_muQCD += hists['QCD_Pt-600to800_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-800to1000_MuEnrichedPt5'][histname]
+        hist_muQCD += hists['QCD_Pt-1000_MuEnrichedPt5'][histname]
+        hist_bce1 = hists['QCD_Pt_20_30_BCtoE'][histname]
+        hist_bce2 = hists['QCD_Pt_30_80_BCtoE'][histname]
+        hist_bce3 = hists['QCD_Pt_80_170_BCtoE'][histname]
+        hist_bce4 = hists['QCD_Pt_170_250_BCtoE'][histname]
+        hist_bce5 = hists['QCD_Pt_250_350_BCtoE'][histname]
+        hist_bce6 = hists['QCD_Pt_350_BCtoE'][histname]        
+        hist_enri1 = hists['QCD_Pt_20_30_EMEnriched'][histname]
+        hist_enri2 = hists['QCD_Pt_30_80_EMEnriched'][histname]
+        hist_enri3 = hists['QCD_Pt_80_170_EMEnriched'][histname]
+        hist_enri4 = hists['QCD_Pt_170_250_EMEnriched'][histname]
+        hist_enri5 = hists['QCD_Pt_250_350_EMEnriched'][histname]
+        hist_enri6 = hists['QCD_Pt_350_EMEnriched'][histname]        
+        hist_pj4 = hists['GJets_HT-200To400'][histname]
+        hist_pj5 = hists['GJets_HT-400ToInf'][histname]
+        hist_singleTop = hists['T_tW-channel'][histname] + hists['T_t-channel'][histname] + hists['T_s-channel'][histname]
+        hist_singleTop += hists['Tbar_t-channel'][histname] + hists['Tbar_s-channel'][histname] + hists['Tbar_tW-channel'][histname]
         
-        hist_diboson = hists['ww'][histname] + hists['wz'][histname] + hists['zz'][histname]
+        #hist_diboson = hists['ww'][histname] + hists['wz'][histname] + hists['zz'][histname]
         
 #        hist_ttbarZ = hists['TTbarZIncl'][histname]
 #        hist_ttbarW = hists['TTbarInclWIncl'][histname]
 
-        hist_ttbar.Scale(scale);
-        hist_ttbar.Scale(topScale);
-        hist_wjets.Scale(scale);
-        hist_wjets.Scale(wjetScale);
-        hist_zjets.Scale(scale);
-        hist_singleTop.Scale(scale)
-        hist_diboson.Scale(scale)
-        hist_bce1.Scale(scale);
-        hist_bce2.Scale(scale);
-        hist_bce3.Scale(scale);
-#        hist_muQCD.Scale(scale);
-#        hist_ttbarZ.Scale(scale * 100)
-#        hist_ttbarW.Scale(scale * 100)
-        hist_enri1.Scale(scale);
-        hist_enri2.Scale(scale);
-        hist_enri3.Scale(scale);
-
-        hist_pj1.Scale(scale);
-        hist_pj2.Scale(scale);
-        hist_pj3.Scale(scale);
-
-
-        hist_qcd = hist_bce1 + hist_bce2 + hist_bce3
-        hist_qcd += hist_enri1 + hist_enri2 + hist_enri3
-        hist_qcd += hist_pj1 + hist_pj2 + hist_pj3
-        
+        hist_qcd = hist_bce1 + hist_bce2 + hist_bce3 + hist_bce4 + hist_bce5 + hist_bce6
+        hist_qcd += hist_enri1 + hist_enri2 + hist_enri3 + hist_enri4 + hist_enri5 + hist_enri6
+        hist_qcd += hist_pj4 + hist_pj5
+                
         nqcd = hist_qcd.Integral();
         shapeErrorHist = None 
         errorHist = None
@@ -249,7 +257,7 @@ def plotMttbar():
                     nShape = hist_qcd.Integral()
                     if nShape > 0:
                         hist_qcd.Scale(nQCD / nShape)
-                    files['data'] = files['ElectronHad']
+                    files['data'] = files['SingleElectron']
                     shapeErrorHist = QCDEstimation.getShapeErrorHistogram(files,
                                                                       histogramForShape=qcdShapeFromData,
                                                                       histogramForComparison=qcdShapeComparison)
@@ -513,7 +521,7 @@ def plotMttbar():
 #        hist_ttbarZ.Rebin(rebin)
         hist_muQCD.Rebin(rebin);
         hist_singleTop.Rebin(rebin)
-        hist_diboson.Rebin(rebin)
+#        hist_diboson.Rebin(rebin)
         hist_data.SetAxisRange(Urange[0], Urange[1]);
         hist_ttbar.SetAxisRange(Urange[0], Urange[1]);
         hist_wjets.SetAxisRange(Urange[0], Urange[1]);
@@ -521,7 +529,7 @@ def plotMttbar():
         hist_qcd.SetAxisRange(Urange[0], Urange[1]);
         hist_muQCD.SetAxisRange(Urange[0], Urange[1]);
         hist_singleTop.SetAxisRange(Urange[0], Urange[1]);
-        hist_diboson.SetAxisRange(Urange[0], Urange[1]);
+#        hist_diboson.SetAxisRange(Urange[0], Urange[1]);
 
         if shapeErrorHist:
             shapeErrorHist.Rebin(rebin)
@@ -546,8 +554,8 @@ def plotMttbar():
         hist_singleTop.SetFillColor(kMagenta)
 #        hist_singleTop.SetLineColor(kMagenta)
         
-        hist_diboson.SetFillStyle(1001);
-        hist_diboson.SetFillColor(kWhite)
+#        hist_diboson.SetFillStyle(1001);
+#        hist_diboson.SetFillColor(kWhite)
 #        hist_diboson.SetLineColor(kWhite)
         
 #        hist_ttbarZ.SetLineColor(kCyan-4)
@@ -559,47 +567,47 @@ def plotMttbar():
 #        hist_ttbarW.SetLineWidth(3)
 #        hist_ttbarW.SetLineStyle(4);
         allMC = hist_ttbar.Clone('allMC')
-        allMC += hist_wjets + hist_zjets + hist_singleTop + hist_diboson
+        allMC += hist_wjets + hist_zjets + hist_singleTop# + hist_diboson
         if 'MuPlusJets' in histname or 'Muon' in histname:
             allMC += hist_muQCD
         else:
             allMC += hist_qcd
             
-        ttbarErr = allMC.Clone('ttbar_err')
-        for bin_i in range(1, ttbarErr.GetNbinsX()):
-            value = hist_ttbar.GetBinContent(bin_i)
-            error = value * ttbarUncertainty
-            ttbarErr.SetBinError(bin_i, error)
-        ttbarErr.SetFillColor(kGray +2)
-        ttbarErr.SetMarkerStyle(0)
-        ttbarErr.SetFillStyle(3001);
+#        ttbarErr = allMC.Clone('ttbar_err')
+#        for bin_i in range(1, ttbarErr.GetNbinsX()):
+#            value = hist_ttbar.GetBinContent(bin_i)
+#            error = value * ttbarUncertainty
+#            ttbarErr.SetBinError(bin_i, error)
+#        ttbarErr.SetFillColor(kGray +2)
+#        ttbarErr.SetMarkerStyle(0)
+#        ttbarErr.SetFillStyle(3001);
 
-        leg = TLegend(0.696, 0.95, 0.94, 0.55);
-        leg.SetBorderSize(0);
-        leg.SetLineStyle(0);
-        leg.SetTextFont(42);
-        leg.SetFillStyle(0);
+        leg = TLegend(0.696, 0.95, 0.94, 0.55)
+        leg.SetBorderSize(0)
+        leg.SetLineStyle(0)
+        leg.SetTextFont(42)
+        leg.SetFillStyle(0)
 
-        leg.AddEntry(hist_data, "data", "P");
+        leg.AddEntry(hist_data, "data", "P")
         #        leg.AddEntry(hist_data2, "data(no HLT)", "P");
         leg.AddEntry(hist_ttbar, "t#bar{t}", "f")
         leg.AddEntry(hist_singleTop, "Single-Top", "f")
-        leg.AddEntry(hist_wjets, "W#rightarrowl#nu", "f");
-        leg.AddEntry(hist_zjets, "Z/#gamma*#rightarrowl^{+}l^{-}", "f");
+        leg.AddEntry(hist_wjets, "W#rightarrowl#nu", "f")
+        leg.AddEntry(hist_zjets, "Z/#gamma*#rightarrowl^{+}l^{-}", "f")
         if 'MuPlusJets' in histname or 'Muon' in histname:
-            leg.AddEntry(hist_muQCD, "QCD #mu Enriched", "f");
+            leg.AddEntry(hist_muQCD, "QCD #mu Enriched", "f")
         else:
-            leg.AddEntry(hist_qcd, "QCD/#gamma + jets", "f");
-        leg.AddEntry(hist_diboson, "VV + X", "f")
+            leg.AddEntry(hist_qcd, "QCD/#gamma + jets", "f")
+#        leg.AddEntry(hist_diboson, "VV + X", "f")
 #        leg.AddEntry(hist_ttbarW, "t#bar{t} + W x 100", "f")
 #        leg.AddEntry(hist_ttbarZ, "t#bar{t} + Z x 100", "f")
-        leg.AddEntry(ttbarErr, "t#bar{t} uncertainty", 'F')
+        #leg.AddEntry(ttbarErr, "t#bar{t} uncertainty", 'F')
         
         if normalise:
             if 'EPlusJets' in histname or 'Electron' in histname:
-                normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd, hist_diboson)
+                normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd)#, hist_diboson)
             else:
-                normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_muQCD, hist_diboson)
+                normalisePlotsToUnitArea(hist_data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_muQCD)#, hist_diboson)
             
 
         
@@ -607,7 +615,7 @@ def plotMttbar():
         canvases[-1].cd().SetRightMargin(0.04);
         if 'TTbarPlusMetAnalysis' in histname and not 'QCD' in histname and 'EPlusJets' in histname:
 #            relativeQCDEstimationError = 0
-            errorHist = QCDEstimation.createErrorHistogram([hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_diboson, hist_qcd],
+            errorHist = QCDEstimation.createErrorHistogram([hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd],
                                                        hist_qcd, relativeQCDEstimationError, shapeErrorHist)
         
         hs = THStack("MC", "MC");
@@ -620,10 +628,10 @@ def plotMttbar():
                 hs.Add(hist_muQCD);
             else:
                 hs.Add(hist_qcd);
-            hs.Add(hist_diboson);
+#            hs.Add(hist_diboson);
         
         else:
-            hs.Add(hist_diboson);
+ #           hs.Add(hist_diboson);
             if 'MuPlusJets' in histname or 'Muon' in histname:
                 hs.Add(hist_muQCD);
             else:
@@ -648,7 +656,7 @@ def plotMttbar():
         unsetErrorX = TExec('ex2', 'gStyle->SetErrorX(0.);')
 #        gStyle.SetErrorX(0.5);
         setErrorX.Draw()
-        ttbarErr.Draw('e2 same')
+#        ttbarErr.Draw('e2 same')
         unsetErrorX.Draw()
 #        gStyle.SetErrorX(0);
         if errorHist and drawQCDError:
@@ -802,16 +810,16 @@ def getCumulativePlot(initial, type):
     return cu;
 
 
-def normalisePlotsToUnitArea(data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd, hist_diboson):
+def normalisePlotsToUnitArea(data, hist_ttbar, hist_wjets, hist_zjets, hist_singleTop, hist_qcd):#, hist_diboson):
     nData = data.Integral()
     nTop = hist_ttbar.Integral()
     nWJ = hist_wjets.Integral()
     nZJ = hist_zjets.Integral()
     nST = hist_singleTop.Integral()
     nQCD = hist_qcd.Integral()
-    nDB = hist_diboson.Integral()
+#    nDB = hist_diboson.Integral()
     data.Sumw2()   
-    nMC = sum([nTop, nWJ, nZJ, nST, nQCD, nDB])
+    nMC = sum([nTop, nWJ, nZJ, nST, nQCD])#, nDB])
     print 'nMC', nMC
     if not nData == 0:
         data.Scale(1 / nData)
@@ -823,7 +831,7 @@ def normalisePlotsToUnitArea(data, hist_ttbar, hist_wjets, hist_zjets, hist_sing
         hist_zjets.Scale(1 / nMC)
         hist_singleTop.Scale(1 / nMC)
         hist_qcd.Scale(1 / nMC)
-        hist_diboson.Scale(1 / nMC)
+#        hist_diboson.Scale(1 / nMC)
     
     chi2 = 0
     for bin in range(1, data.GetNbinsX() + 1):
@@ -833,8 +841,8 @@ def normalisePlotsToUnitArea(data, hist_ttbar, hist_wjets, hist_zjets, hist_sing
         nZJ = hist_zjets.GetBinContent(bin)
         nST = hist_singleTop.GetBinContent(bin)
         nQCD = hist_qcd.GetBinContent(bin)
-        nDB = hist_diboson.GetBinContent(bin)
-        nMC = sum([nTop, nWJ, nZJ, nST, nQCD, nDB])
+#        nDB = hist_diboson.GetBinContent(bin)
+        nMC = sum([nTop, nWJ, nZJ, nST, nQCD])#, nDB])
         chi2 += (nData - nMC) ** 2
     print 'Chi2:', chi2
         
