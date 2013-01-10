@@ -56,6 +56,8 @@ void Analysis::analyse() {
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
+
+
 //		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 //			double bjetWeight = bjetWeights.at(weightIndex);
 //			histMan->setCurrentBJetBin(weightIndex);
@@ -133,6 +135,8 @@ void Analysis::initiateEvent() {
 			}
 		}
 	}
+
+//	cout << "PU weight: " << pileUpWeight  << endl;
 
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);

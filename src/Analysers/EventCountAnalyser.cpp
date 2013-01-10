@@ -74,12 +74,22 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 
 
 
-	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
+	if(topEplusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
 
 
 				cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
 
-				const MuonCollection allMuons(event->Muons());
+				const ElectronCollection allElectrons(event->Electrons());
+
+				for (unsigned int index = 0; index < allElectrons.size(); ++index) {
+				const ElectronPointer electron(allElectrons.at(index));
+
+				cout << "reliso: " << electron->pfRelativeIsolation(0.3) << endl;
+
+				}
+
+
+/*				const MuonCollection allMuons(event->Muons());
 				for (unsigned int index = 0; index < allMuons.size(); ++index) {
 
 					const MuonPointer muon(allMuons.at(index));
@@ -122,6 +132,7 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 							if(!event->passesTrackingPOGFilters())
 								cout << "fail TrackingPOGFilters()" << endl;
 				}*/
+
 	}
 
 }
