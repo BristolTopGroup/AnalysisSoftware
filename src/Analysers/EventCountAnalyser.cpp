@@ -74,12 +74,22 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 
 
 
-	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
+	if(topEplusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
 
 
 				cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
 
-				const MuonCollection allMuons(event->Muons());
+				const ElectronCollection allElectrons(event->Electrons());
+
+				for (unsigned int index = 0; index < allElectrons.size(); ++index) {
+				const ElectronPointer electron(allElectrons.at(index));
+
+				cout << "reliso: " << electron->pfRelativeIsolation(0.3) << endl;
+
+				}
+
+
+/*				const MuonCollection allMuons(event->Muons());
 				for (unsigned int index = 0; index < allMuons.size(); ++index) {
 
 					const MuonPointer muon(allMuons.at(index));
@@ -98,30 +108,8 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 					cout << "numberOfMatchedStations: " << muon->numberOfMatchedStations() << endl;
 					cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
 					cout << "had Iso: " << muon->PFDeltaBeta_Isolation_DR04() << endl;
-				}
-
-/*				if(event->isBeamScraping() || !event->passesHBHENoiseFilter() || !event->passesCSCTightBeamHaloFilter() || !event->passesHCALLaserFilter()
-						|| !event->passesECALDeadCellFilter() || !event->passesTrackingFailureFilter() || !event->passesEEBadSCFilter()){
-
-							if(event->isBeamScraping())
-								cout << "fail beam scrap" << endl;
-							if(!event->passesHBHENoiseFilter())
-								cout << "fail HBHE noise filter" << endl;
-							if(!event->passesCSCTightBeamHaloFilter())
-								cout << "fail CSCTightBeamHaloFilter" << endl;
-							if(!event->passesHCALLaserFilter())
-								cout << "fail HCALLaserFilter" << endl;
-							if(!event->passesECALDeadCellTPFilter())
-								cout << "fail ECALDeadCellTPFilter" << endl;
-							if(!event->passesTrackingFailureFilter())
-								cout << "fail TrackingFailureFilter" << endl;
-							if(!event->passesEEBadSCFilter())
-								cout << "fail EEBadSCFilter()" << endl;
-							if(!event->passesECALLaserCorrFilter())
-								cout << "fail ECALLaserCorrFilter()" << endl;
-							if(!event->passesTrackingPOGFilters())
-								cout << "fail TrackingPOGFilters()" << endl;
 				}*/
+
 	}
 
 }

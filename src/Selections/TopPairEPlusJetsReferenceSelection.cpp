@@ -175,8 +175,9 @@ bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer el
 bool TopPairEPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
 	const ElectronPointer electron(boost::static_pointer_cast<Electron>(lepton));
 	//TODO: switch to rho-based isolation
-//	return electron->pfRelativeIsolationRhoCorrected(0.3, rho);
-	return electron->pfRelativeIsolation(0.3) < 0.1;
+
+	return electron->pfRelativeIsolationRhoCorrected() < 0.1;
+
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesLooseLeptonVeto(const EventPtr event) const {
