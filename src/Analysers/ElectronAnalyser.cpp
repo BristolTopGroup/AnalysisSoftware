@@ -25,6 +25,7 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 		histMan_->H1D_BJetBinned("All_Electron_pfIsolation_03")->Fill(electron->pfRelativeIsolation(0.3), weight_);
 		histMan_->H1D_BJetBinned("All_Electron_pfIsolation_04")->Fill(electron->pfRelativeIsolation(0.4), weight_);
 		histMan_->H1D_BJetBinned("All_Electron_pfIsolation_05")->Fill(electron->pfRelativeIsolation(0.5), weight_);
+		histMan_->H1D_BJetBinned("All_Electron_rhoCorrectedIso_03")->Fill(electron->pfRelativeIsolationRhoCorrected(), weight_);
 
 		histMan_->H1D_BJetBinned("All_Electron_sigma_ietaieta")->Fill(electron->sigmaIEtaIEta(), weight_);
 		histMan_->H1D_BJetBinned("All_Electron_dPhi_in")->Fill(electron->dPhiIn(), weight_);
@@ -51,6 +52,7 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 
 		histMan_->H1D_BJetBinned("electron_pfIsolation_04")->Fill(electron->pfRelativeIsolation(0.4), weight_);
 		histMan_->H1D_BJetBinned("electron_pfIsolation_05")->Fill(electron->pfRelativeIsolation(0.5), weight_);
+		histMan_->H1D_BJetBinned("electron_rhoCorrectedIso_03")->Fill(electron->pfRelativeIsolationRhoCorrected(), weight_);
 
 		histMan_->H1D_BJetBinned("electron_sigma_ietaieta")->Fill(electron->sigmaIEtaIEta(), weight_);
 		histMan_->H1D_BJetBinned("electron_dPhi_in")->Fill(electron->dPhiIn(), weight_);
@@ -88,6 +90,8 @@ void ElectronAnalyser::createHistograms() {
 					"Electron relative pf isolation (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D_BJetBinned("All_Electron_pfIsolation_05",
 					"Electron relative pf isolation (DR=0.5); PF relative isolation; Events/(0.01)", 500, 0, 5);
+			histMan_->addH1D_BJetBinned("All_Electron_rhoCorrectedIso_03",
+					"Electron rho-corrected isolation (DR=0.3); rho-corrected isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D_BJetBinned("All_Electron_sigma_ietaieta",
 					"Electron #sigma_{i#etai#eta}; #sigma_{i#etai#eta}; Events/(0.001)", 100, 0, 0.1);
 			histMan_->addH1D_BJetBinned("All_Electron_dPhi_in", "Electron #Delta#Phi_{in}; #Delta#Phi_{in}; Events/(0.01)", 200,
@@ -110,7 +114,8 @@ void ElectronAnalyser::createHistograms() {
 					"Electron relative pf isolation (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D_BJetBinned("electron_pfIsolation_05",
 					"Electron relative pf isolation (DR=0.5); PF relative isolation; Events/(0.01)", 500, 0, 5);
-
+			histMan_->addH1D_BJetBinned("electron_rhoCorrectedIso_03",
+					"Electron rho-corrected isolation (DR=0.3); rho-corrected isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D_BJetBinned("electron_sigma_ietaieta",
 					"Electron #sigma_{i#etai#eta}; #sigma_{i#etai#eta}; Events/(0.001)", 100, 0, 0.1);
 			histMan_->addH1D_BJetBinned("electron_dPhi_in", "Electron #Delta#Phi_{in}; #Delta#Phi_{in}; Events/(0.01)", 200, -1,

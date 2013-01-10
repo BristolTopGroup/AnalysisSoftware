@@ -11,6 +11,10 @@ maxEvents = 100
 #integrated luminosity the MC simulation will be scaled to
 lumi = 5050#pb-1
 
+#MET corrections setup
+applyMetSysShiftCorr = False
+applyMetType0Corr = False
+applyMetType1Corr = False 
 
 if centerOfMassEnergy == 8:
     #File for pile-up re-weighting

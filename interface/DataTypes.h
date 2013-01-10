@@ -24,6 +24,11 @@ enum value {
 	W3Jets,
 	W4Jets,
 	Zjets,
+	//2012 DY samples
+	Z1Jet,
+	Z2Jets,
+	Z3Jets,
+	Z4Jets,
 	QCD_BCtoE_Pt20to30,
 	QCD_BCtoE_Pt30to80,
 	QCD_BCtoE_Pt80to170,
@@ -31,11 +36,37 @@ enum value {
 	QCD_EMEnriched_Pt30to80,
 	QCD_EMEnriched_Pt80to170,
 	QCD_MuEnrichedPt15_Pt20,
-	QCD_Pt_120to170_Mu,
-	QCD_Pt_800to1000_Mu,
+	//2012 QCD samples
+	QCD_BCtoE_Pt20_30,
+	QCD_BCtoE_Pt30_80,
+	QCD_BCtoE_Pt80_170,
+	QCD_BCtoE_Pt170_250,
+	QCD_BCtoE_Pt250_350,
+	QCD_BCtoE_Pt350,
+	QCD_EMEnriched_Pt20_30,
+	QCD_EMEnriched_Pt30_80,
+	QCD_EMEnriched_Pt80_170,
+	QCD_EMEnriched_Pt170_250,
+	QCD_EMEnriched_Pt250_350,
+	QCD_EMEnriched_Pt350,
+	QCD_MuEnrichedPt5_Pt15to20,
+	QCD_MuEnrichedPt5_Pt20to30,
+	QCD_MuEnrichedPt5_Pt30to50,
+	QCD_MuEnrichedPt5_Pt50to80,
+	QCD_MuEnrichedPt5_Pt80to120,
+	QCD_MuEnrichedPt5_Pt120to170,
+	QCD_MuEnrichedPt5_Pt170o300,
+	QCD_MuEnrichedPt5_Pt300to470,
+	QCD_MuEnrichedPt5_Pt470to600,
+	QCD_MuEnrichedPt5_Pt600to800,
+	QCD_MuEnrichedPt5_Pt800to1000,
+	QCD_MuEnrichedPt5_Pt1000,
 	PhotonJets_Pt40to100,
 	PhotonJets_Pt100to200,
 	PhotonJets_Pt200toInf,
+	//2012 PJ samples
+	PhotonJets_Pt200to400,
+	PhotonJets_Pt400toInf,
 	VQQ,
 	singleTop_And_W, //
 	singleTopTChannel,
@@ -98,6 +129,11 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"W3Jets", //
 		"W4Jets", //
 		"DYJetsToLL", //
+		//2012 DY samples
+		"DY1JetsToLL", //
+		"DY2JetsToLL", //
+		"DY3JetsToLL", //
+		"DY4JetsToLL", //
 		"QCD_Pt-20to30_BCtoE", //
 		"QCD_Pt-30to80_BCtoE", //
 		"QCD_Pt-80to170_BCtoE", //
@@ -105,11 +141,37 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_Pt-30to80_EMEnriched", //
 		"QCD_Pt-80to170_EMEnriched", //10
 		"QCD_Pt-20_MuEnrichedPt-15", //
-		"QCD_Pt-120to170_Mu",
-		"QCD_Pt-800to1000_Mu",
+		//2012 QCD samples
+		"QCD_Pt_20_30_BCtoE", //
+		"QCD_Pt_30_80_BCtoE", //
+		"QCD_Pt_80_170_BCtoE", //
+		"QCD_Pt_170_250_BCtoE", //
+		"QCD_Pt_250_350_BCtoE", //
+		"QCD_Pt_350_BCtoE", //
+		"QCD_Pt_20_30_EMEnriched", //
+		"QCD_Pt_30_80_EMEnriched", //
+		"QCD_Pt_80_170_EMEnriched", //
+		"QCD_Pt_170_250_EMEnriched", //
+		"QCD_Pt_250_350_EMEnriched", //
+		"QCD_Pt_350_EMEnriched", //
+		"QCD_Pt-15to20_MuEnrichedPt5", //
+		"QCD_Pt-20to30_MuEnrichedPt5", //
+		"QCD_Pt-30to50_MuEnrichedPt5", //
+		"QCD_Pt-50to80_MuEnrichedPt5", //
+		"QCD_Pt-80to120_MuEnrichedPt5", //
+		"QCD_Pt-120to170_MuEnrichedPt5", //
+		"QCD_Pt-170to300_MuEnrichedPt5", //
+		"QCD_Pt-300to470_MuEnrichedPt5", //
+		"QCD_Pt-470to600_MuEnrichedPt5", //
+		"QCD_Pt-600to800_MuEnrichedPt5", //
+		"QCD_Pt-800to1000_MuEnrichedPt5", //
+		"QCD_Pt-1000_MuEnrichedPt5", //
 		"GJets_HT-40To100", //
 		"GJets_HT-100To200", //
-		"GJets_HT-200", //
+		"GJets_HT-200ToInf", //
+		//2012 PJ samples
+		"GJets_HT-200To400", //
+		"GJets_HT-400ToInf", //
 		"VqqJets", //
 		"T_tW-channel", //
 		"T_t-channel", //
