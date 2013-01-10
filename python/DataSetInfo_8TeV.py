@@ -41,6 +41,8 @@ datasetInfo['QCD_Pt-30to80_EMEnriched'] = {"cross-section": 0.0593e9 * 0.059, "N
 datasetInfo['QCD_Pt-80to170_EMEnriched'] = {"cross-section": 0.906e6 * 0.148, "NumberOfProcessedEvents":8150672}
 
 datasetInfo['QCD_Pt-20_MuEnrichedPt-15'] = {"cross-section": 84679.3, "NumberOfProcessedEvents":25080241}
+datasetInfo['QCD_Pt-120to170_Mu'] = {"cross-section": 84679.3, "NumberOfProcessedEvents":25080241}
+datasetInfo['QCD_Pt-800to1000_Mu'] = {"cross-section": 84679.3, "NumberOfProcessedEvents":25080241}
 
 datasetInfo['T_s-channel'] = {"cross-section": 3.89394, "NumberOfProcessedEvents":259971}
 datasetInfo['T_t-channel'] = {"cross-section": 55.531, "NumberOfProcessedEvents":3340750}
