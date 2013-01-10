@@ -166,6 +166,11 @@ inputFiles = [path + '/' + filetype for path in input_folders]
 
 #number of events to be processed
 maxEvents = 0# 0 == all
+
+#Jet Energy Resolutions files (L7 corrections)
+bJetResoFile = toolsFolder + "data/bJetReso.root"
+lightJetResoFile = toolsFolder + "data/lightJetReso.root"
+
 #use HitFit for analysis
 useHitFit = False
 produceFitterASCIIoutput = False
