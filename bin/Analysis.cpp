@@ -121,7 +121,7 @@ void Analysis::initiateEvent() {
 	weight = 1.;
 
 	if (!currentEvent->isRealData()) {
-		//weight = weights->getWeight(currentEvent->getDataType());
+		weight = weights->getWeight(currentEvent->getDataType());
 		//TODO: fix this dirty little thing
 		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
 		weight *= pileUpWeight;
