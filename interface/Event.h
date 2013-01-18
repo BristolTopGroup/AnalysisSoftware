@@ -178,6 +178,10 @@ public:
 	bool passesECALLaserCorrFilter() const;
 	bool passesTrackingPOGFilters() const;
 
+	static double HT(const JetCollection jets);
+	static double ST(const JetCollection, const ParticlePointer, const METPointer);
+	static double MT(const ParticlePointer, const METPointer);
+
 };
 
 }
