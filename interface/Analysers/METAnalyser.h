@@ -9,7 +9,9 @@
 #define METANALYSER_H_
 
 #include "BasicAnalyser.h"
-
+#include "../RecoObjects/MET.h"
+#include "../RecoObjects/Particle.h"
+#include "../RecoObjects/Jet.h"
 namespace BAT {
 
 class METAnalyser: public BAT::BasicAnalyser {
@@ -18,10 +20,13 @@ public:
 	virtual ~METAnalyser();
 	void analyse(const EventPtr);
 	void analyse(const EventPtr, const ParticlePointer);
-	double transverseMass(const METPointer, const ParticlePointer) const;
+	void analyse(const EventPtr, const ParticlePointer, const JetCollection);
+
 	void createHistograms();
 protected:
 	void analyseTransverseMass(const EventPtr, const ParticlePointer);
+	void analyse_ST(const EventPtr, const ParticlePointer, const JetCollection);
+	void analyse_HT(const EventPtr, const JetCollection);
 };
 
 typedef boost::scoped_ptr<METAnalyser> METAnalyserLocalPtr;
