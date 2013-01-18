@@ -8,5 +8,6 @@ Profile/
 Release/
 CUTE_Tests/
 *_TESTING.root
+*_TEST.root
 Root_IO_Performance.root
 .settings/

@@ -100,7 +100,7 @@ void Analysis::analyse() {
 		//		hltriggerQCDAnalyserExclusive_->analyse(currentEvent);
 		eventcountAnalyser->analyse(currentEvent);
 //		mttbarAnalyser->analyse(currentEvent);
-		ttbarPlusMETAnalyser_->analyse(currentEvent);
+		ttbar_plus_X_analyser_->analyse(currentEvent);
 		diffVariablesAnalyser->analyse(currentEvent);
 		binningAnalyser->analyse(currentEvent);
 	}
@@ -254,9 +254,9 @@ void Analysis::createHistograms() {
 //	cout << "Number of histograms added by neutrinoRecoAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 //	lastNumberOfHistograms = numberOfHistograms;
 
-	ttbarPlusMETAnalyser_->createHistograms();
+	ttbar_plus_X_analyser_->createHistograms();
 	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by ttbarPlusMETAnalyser: " << numberOfHistograms - lastNumberOfHistograms
+	cout << "Number of histograms added by ttbar_plus_X_analyser: " << numberOfHistograms - lastNumberOfHistograms
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 //
@@ -314,7 +314,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		muonAnalyser(new MuonAnalyser(histMan)), //
 		mvAnalyser(new MVAnalyser(histMan)), //
 		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
-		ttbarPlusMETAnalyser_(new TTbarPlusMETAnalyser(histMan)), //
+		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
 		diffVariablesAnalyser(new DiffVariablesAnalyser(histMan)),
 		binningAnalyser(new BinningAnalyser(histMan)) {

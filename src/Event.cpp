@@ -58,7 +58,7 @@ Event::Event() : //
 		passesEEBadSCFilter_(false), //
 		passesECALLaserCorrFilter_(false), //
 		passesTrackingPOGFilters_(false) //
-		{
+{
 }
 
 Event::~Event() {
@@ -102,7 +102,6 @@ void Event::setElectrons(ElectronCollection electrons) {
 	allElectrons = electrons;
 }
 
-
 void Event::setJets(JetCollection jets) {
 	allJets.clear();
 
@@ -125,7 +124,6 @@ JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm:
 
 	return bjets;
 }
-
 
 const ElectronPointer Event::MostIsolatedElectron(const ElectronCollection& electrons, bool usePFIso) const {
 	float bestIsolation = 999999999;
@@ -506,75 +504,30 @@ bool Event::passesTrackingPOGFilters() const {
 	return passesTrackingPOGFilters_;
 }
 
-//std::vector<double> Event::BjetWeights(const JetCollection bjets) const {
-//	std::vector<double> bjetWeights;
-//	for (unsigned int index = 0; index < 5; ++index) {
-//		bjetWeights.push_back(0);
-//	}
-//
-//	std::vector<double> SF;
-//
-//	const boost::array<double, 14> SFb_error = { { 0.0295675, 0.0295095, 0.0210867, 0.0219349, 0.0227033, 0.0204062,
-//			0.0185857, 0.0256242, 0.0383341, 0.0409675, 0.0420284, 0.0541299, 0.0578761, 0.0655432 } };
-//
-//	const boost::array<double, 15> ptbins = { { 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500 } };
-//
-//	unsigned int numberOfBjets(bjets.size());
-//	for (unsigned int index = 0; index < numberOfBjets; ++index) {
-//		const JetPointer jet(bjets.at(index));
-////		if (jet->isBJet(bjetAlgo, WP) && fabs(jet->eta()) < 2.4) {
-//		double SFb(0);
-//		double sf_error(0);
-//		//these numbers are for CSVM only
-//		double pt = jet->pt();
-//
-//		if (pt < 30) {
-//			SFb = 0.6981 * ((1. + (0.414063 * 30)) / (1. + (0.300155 * 30)));
-//			sf_error = 0.12;
-//		} else if (pt > 670) {
-//			SFb = 0.6981 * ((1. + (0.414063 * 670)) / (1. + (0.300155 * 670)));
-//			sf_error = 2 * SFb_error[SFb_error.size() - 1];
-//		} else {
-//			SFb = 0.6981 * ((1. + (0.414063 * pt)) / (1. + (0.300155 * pt)));
-//			unsigned int ptbin(0);
-//			for (unsigned int bin = 0; bin < ptbins.size() + 1; ++bin) {
-//				double upperCut = index < ptbins.size() ? ptbins.at(index) : 670.;
-//				double lowerCut = index == 0 ? 0. : ptbins.at(index - 1);
-//
-//				if (pt > lowerCut && pt < upperCut) {
-//					ptbin = bin;
-//					break;
-//				}
-//			}
-//			sf_error = SFb_error.at(ptbin);
-//		}
-//		SFb += sf_error * Globals::BJetSystematic;
-//		SF.push_back(SFb);
-////		}
-//	}
-//
-//	for (unsigned int index = 0; index < numberOfBjets; ++index) {
-//		double sf = SF.at(index);
-//		bjetWeights[0] = index == 0 ? (1 - sf) : bjetWeights[0] * (1 - sf);
-//
-//		if (index > 0) {
-//			bjetWeights[1] = index == 1 ? sf : bjetWeights[1] * (1 - sf);
-//		}
-//		if (index > 1) {
-//			bjetWeights[2] = index == 2 ? sf * sf : bjetWeights[2] * (1 - sf);
-//		}
-//		if (index > 2) {
-//			bjetWeights[3] = index == 3 ? sf * sf * sf : bjetWeights[3] * (1 - sf);
-//		}
-//		if (index > 3) {
-//			bjetWeights[4] = index == 4 ? sf * sf * sf * sf : bjetWeights[4] * (1 - sf);
-//		}
-//	}
-//	if (numberOfBjets == 0)
-//		bjetWeights[0] = 1.;
-//
-//	return bjetWeights;
-//
-//}
+double Event::HT(const JetCollection jets) {
+	double ht(0);
+	//HT = first 5 jets == 5 most energetic jets
+	for (unsigned int index = 0; index < jets.size() && index < 6; ++index) {
+		ht += jets.at(index)->pt();
+	}
+	return ht;
+}
+
+double Event::ST(const JetCollection jets, const ParticlePointer lepton, const METPointer met) {
+	// ST = HT + MET + lepton pt
+	double ht = Event::HT(jets);
+	return ht + met->et() + lepton->pt();
+}
+
+double Event::MT(const ParticlePointer particle, const METPointer met) {
+	double energySquared = pow(particle->et() + met->et(), 2);
+	double momentumSquared = pow(particle->px() + met->px(), 2) + pow(particle->py() + met->py(), 2);
+	double MTSquared = energySquared - momentumSquared;
+
+	if (MTSquared > 0)
+		return sqrt(MTSquared);
+	else
+		return -1;
+}
 
 }
