@@ -41,7 +41,7 @@
 #include "../interface/Analysers/MuonAnalyser.h"
 #include "../interface/Analysers/MVAnalyser.h"
 #include "../interface/Analysers/NeutrinoReconstructionAnalyser.h"
-#include "../interface/Analysers/TTbarPlusMETAnalyser.h"
+#include "../interface/Analysers/TTbar_plus_X_analyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
 #include "../interface/Analysers/DiffVariablesAnalyser.h"
 #include "../interface/Analysers/BinningAnalyser.h"
@@ -83,7 +83,7 @@ private:
     boost::scoped_ptr<BAT::MuonAnalyser> muonAnalyser;
     BAT::MVAnalyserPtr mvAnalyser;
     BAT::NeutrinoRecoAnalyserLocalPtr neutrinoRecoAnalyser;
-    BAT::TTbarPlusMETAnalyserLocalPtr ttbarPlusMETAnalyser_;
+    BAT::TTbar_plus_X_analyser_local_ptr ttbar_plus_X_analyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
     boost::scoped_ptr<BAT::DiffVariablesAnalyser> diffVariablesAnalyser;
     boost::scoped_ptr<BAT::BinningAnalyser> binningAnalyser;
