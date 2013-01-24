@@ -506,8 +506,8 @@ bool Event::passesTrackingPOGFilters() const {
 
 double Event::HT(const JetCollection jets) {
 	double ht(0);
-	//HT = first 5 jets == 5 most energetic jets
-	for (unsigned int index = 0; index < jets.size() && index < 6; ++index) {
+	//Take ALL the jets!
+	for (unsigned int index = 0; index < jets.size(); ++index) {
 		ht += jets.at(index)->pt();
 	}
 	return ht;
