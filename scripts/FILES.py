@@ -1,11 +1,11 @@
 placeholder = 'SAMPLE'
-pathToFiles = '/storage/results/histogramfiles/AN-12-241_V3'
-luminosity = 5050#pb-1
+pathToFiles = '/storage/TopQuarkGroup/results/histogramfiles/AN-13-015_V2'
+luminosity = 5814#pb-1
 suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET.root'
 JES_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusJES.root'
 JES_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusJES.root'
-PU_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_64600mb.root'
-PU_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_71400mb.root'
+PU_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_65835mb.root'
+PU_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PU_72765mb.root'
 PDFWeights_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_PDFWeights_%d.root'
 BJet_down_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_minusBJet.root'
 BJet_up_suffix = 'PFElectron_PFMuon_PF2PATJets_PFMET_plusBjet.root'
@@ -23,23 +23,42 @@ template_BJet_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pa
 template_LightJet_down = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles + '/LightJet_down', 'lumi':luminosity, 'suffix':LightJet_down_suffix, 'placeholder':placeholder}
 template_LightJet_up = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % {'path':pathToFiles+ '/LightJet_up', 'lumi':luminosity, 'suffix':LightJet_up_suffix, 'placeholder':placeholder}
 
-samplesToLoad = ['ElectronHad',
+samplesToLoad = ['SingleElectron',
                  'SingleMu',
                  'TTJet', 
-                 'DYJetsToLL',
-                 'QCD_Pt-20_MuEnrichedPt-15',
-                 'QCD_Pt-20to30_BCtoE',
-                 'QCD_Pt-30to80_BCtoE',
-                 'QCD_Pt-80to170_BCtoE',
-                 'QCD_Pt-20to30_EMEnriched',
-                 'QCD_Pt-30to80_EMEnriched',
-                 'QCD_Pt-80to170_EMEnriched',
-                 'GJets_HT-40To100',
-                 'GJets_HT-100To200',
-                 'GJets_HT-200',
-                 'WWtoAnything',
-                 'WZtoAnything',
-                 'ZZtoAnything',
+                 'DY1JetsToLL',
+                 'DY2JetsToLL',
+                 'DY3JetsToLL',
+                 'DY4JetsToLL',
+                 'QCD_Pt-15to20_MuEnrichedPt5',
+                 'QCD_Pt-20to30_MuEnrichedPt5',
+                 'QCD_Pt-30to50_MuEnrichedPt5',
+                 'QCD_Pt-50to80_MuEnrichedPt5',
+                 'QCD_Pt-80to120_MuEnrichedPt5',
+                 'QCD_Pt-120to170_MuEnrichedPt5',
+                 'QCD_Pt-170to300_MuEnrichedPt5',
+                 'QCD_Pt-300to470_MuEnrichedPt5',
+                 'QCD_Pt-470to600_MuEnrichedPt5',
+#                 'QCD_Pt-600to800_MuEnrichedPt5',
+                 'QCD_Pt-800to1000_MuEnrichedPt5',
+                 'QCD_Pt-1000_MuEnrichedPt5',
+                 'QCD_Pt_20_30_BCtoE',
+                 'QCD_Pt_30_80_BCtoE',
+                 'QCD_Pt_80_170_BCtoE',
+                 'QCD_Pt_170_250_BCtoE',
+                 'QCD_Pt_250_350_BCtoE',
+                 'QCD_Pt_350_BCtoE',
+                 'QCD_Pt_20_30_EMEnriched',
+                 'QCD_Pt_30_80_EMEnriched',
+                 'QCD_Pt_80_170_EMEnriched',
+                 'QCD_Pt_170_250_EMEnriched',
+                 'QCD_Pt_250_350_EMEnriched',
+                 'QCD_Pt_350_EMEnriched',
+                 'GJets_HT-200To400',
+                 'GJets_HT-400ToInf',
+#                 'WWtoAnything',
+#                 'WZtoAnything',
+#                 'ZZtoAnything',
                  'T_tW-channel',
                  'T_t-channel',
                  'T_s-channel',
@@ -103,7 +122,7 @@ for sample in samplesToLoad:
 for sample in additionalSamples:
     files[sample] = rpl(placeholder, sample)
     
-for sample in ['POWHEG', 'PYTHIA6', 'MCatNLO']:
+for sample in ['POWHEG', 'MCatNLO']:
     formatting = {'path':pathToFiles + '/central', 'lumi':luminosity, 'suffix':'PFElectron_PFMuon_PF2PATJets_PFMET_%s.root'%sample, 'placeholder':'TTJet'}
     files[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
     files_JES_down[sample] = '%(path)s/%(placeholder)s_%(lumi)dpb_%(suffix)s' % formatting
@@ -119,12 +138,12 @@ for index in range(1,45):
     files_PDF_weights['TTJet_%d' % index] = template_PDFWeights % index
     
 #data is the same for:
-files_PU_down['ElectronHad'] = files['ElectronHad']
-files_PU_up['ElectronHad'] = files['ElectronHad']
-files_BJet_down['ElectronHad'] = files['ElectronHad']
-files_BJet_up['ElectronHad'] = files['ElectronHad']
-files_LightJet_down['ElectronHad'] = files['ElectronHad']
-files_LightJet_up['ElectronHad'] = files['ElectronHad']
+files_PU_down['SingleElectron'] = files['SingleElectron']
+files_PU_up['SingleElectron'] = files['SingleElectron']
+files_BJet_down['SingleElectron'] = files['SingleElectron']
+files_BJet_up['SingleElectron'] = files['SingleElectron']
+files_LightJet_down['SingleElectron'] = files['SingleElectron']
+files_LightJet_up['SingleElectron'] = files['SingleElectron']
 #muon channel
 files_PU_down['SingleMu'] = files['SingleMu']
 files_PU_up['SingleMu'] = files['SingleMu']

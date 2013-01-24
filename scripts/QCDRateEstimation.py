@@ -49,7 +49,7 @@ relIsoBias = 0.0
 
 def estimateQCDWithRelIso(inputFiles, histogramForEstimation=defaultHistogram, function='expo',
                    fitRange=(0.3, 1.6), fitRangesForSystematics=[(0.2, 1.6), (0.4, 1.6)]):
-    inputFile = inputFiles['ElectronHad']
+    inputFile = inputFiles['SingleElectron']
     if DEBUG:
         print '*' * 120
         print "Estimating QCD using a fit to RelIso"
@@ -272,7 +272,7 @@ def getStuff(histogramForEstimation, inputFiles):
     
     histograms['QCD'] = plotting.sumSamples(histograms, qcd)
     qcdInSignalRegion, qcdError = getIntegral(histograms['QCD'], (0, 0.1))
-    data, dataError = getIntegral(histograms['ElectronHad'], (0, 0.1))
+    data, dataError = getIntegral(histograms['SingleElectron'], (0, 0.1))
     sumMC, sumMCError = getIntegral(histograms['SumMC'], (0, 0.1))
     result = {
               'N_data': data,
@@ -291,7 +291,7 @@ if __name__ == '__main__':
                 ]
     
     
-    histBase = 'TTbarPlusMetAnalysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_%s'
+    histBase = 'TTbar_plus_X_analysis/EPlusJets/QCD e+jets PFRelIso/Electron/electron_pfIsolation_03_%s'
     results = {}
     mcresults = {}
     for btag in btagBins:
