@@ -8,7 +8,7 @@ datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v9a_Run2012A-
                             data_path + 'SingleMu/nTuple_v9a_Run2012A-recover-06Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
                             data_path + 'SingleMu/nTuple_v9a_Run2012B-13Jul2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
                             data_path + 'SingleMu/nTuple_v9a_Run2012C-24Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets'],
-                 'TTJet' : [mc_path + 'TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets'],
+                 'TTJet' : [mc_path + 'TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets_PDFweights'],
                  'DY1JetsToLL' : [mc_path + 'DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
                  'DY2JetsToLL' : [mc_path + 'DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets'],
                  'DY3JetsToLL' : [mc_path + 'DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
@@ -61,7 +61,7 @@ datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v9a_Run2012A-
                  'WJets-matchingdown' : [mc_path + 'WJetsToLNu_matchingdown_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
                  'WJets-matchingup' : [mc_path + 'WJetsToLNu_matchingup_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
                  'WJets-scaledown' : [mc_path + 'WJetsToLNu_scaledown_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
-                 'WJets-scaleup' : [mc_path + 'WJetsToLNu_scaleup_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
+                 'WJets-scaleup' : [mc_path + 'WJetsToLNu_scaleup_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v2_LeptonPlus3Jets'],
                  'ZJets-matchingdown' : [mc_path + 'DYJetsToLL_M-50_matchingdown_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
                  'ZJets-matchingup' : [mc_path + 'DYJetsToLL_M-50_matchingup_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
                  'ZJets-scaledown' : [mc_path + 'DYJetsToLL_M-50_scaledown_8TeV-madgraph-tauola/nTuple_v9a_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
@@ -196,5 +196,3 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 nTuple_version = 9
-
-
