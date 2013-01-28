@@ -64,7 +64,7 @@ void MTtbarAnalyser::analyseFourJetChi2(const EventPtr event) {
 	if (topMuonPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		LeptonPointer selectedMuon = topMuonPlusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
 		METPointer met = event->MET();
 		JetCollection jets = topMuonPlusJetsRefSelection_->cleanedJets(event);
 		JetCollection bJets = topMuonPlusJetsRefSelection_->cleanedBJets(event);
@@ -161,7 +161,7 @@ void MTtbarAnalyser::analyseThreeJetChi2(const EventPtr event) {
 
 		LeptonPointer selectedMuon = topMuonPlusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
 		METPointer met = event->MET();
 
 		boost::scoped_ptr<ChiSquaredThreeJetsTopPairReconstruction> chi2Reco(
@@ -218,7 +218,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const EventPtr event) {
 	if (topMuonPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		LeptonPointer selectedMuon = topMuonPlusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
 		METPointer met = event->MET();
 		JetCollection jets = topMuonPlusJetsRefSelection_->cleanedJets(event);
 		JetCollection bJets = topMuonPlusJetsRefSelection_->cleanedBJets(event);
@@ -358,7 +358,7 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 	if (qcdMuonNonIsoSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedMuon = qcdMuonNonIsoSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 		METPointer met = event->MET();
 		JetCollection jets = qcdMuonNonIsoSelection_->cleanedJets(event);
 		JetCollection bJets = qcdMuonNonIsoSelection_->cleanedBJets(event);
@@ -499,7 +499,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 	if (qcdMuonNonIsoSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedMuon = qcdMuonNonIsoSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 		METPointer met = event->MET();
 		JetCollection jets = qcdMuonNonIsoSelection_->cleanedJets(event);
 		JetCollection bJets = qcdMuonNonIsoSelection_->cleanedBJets(event);
@@ -648,7 +648,7 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 			TTbarMuPlusJetsReferenceSelection::AtLeastThreeGoodJets)) { //passes all except b-tag!
 		LeptonPointer selectedMuon = qcdMuonNonIsoSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-				double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+				double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 		METPointer met = event->MET();
 		JetCollection jets = qcdMuonNonIsoSelection_->cleanedJets(event);
 		if (jets.size() != 3) //only consider 3 jet events
