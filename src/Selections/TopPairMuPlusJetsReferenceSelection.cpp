@@ -194,7 +194,6 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer e
 bool TopPairMuPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
 	const MuonPointer muon(boost::static_pointer_cast<Muon>(lepton));
 	//cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
-	cout << "Isolation: " << muon->PFDeltaBeta_Isolation_DR04() << endl;
 
 	return muon->pfRelativeIsolation(0.4, true) < 0.12;
 
