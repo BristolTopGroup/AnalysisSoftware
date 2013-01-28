@@ -1,4 +1,4 @@
-toolsFolder = './'
+toolsFolder = 'BristolAnalysis/Tools/'
 import os
 if os.environ.has_key('toolsFolder'):
     toolsFolder = os.environ['toolsFolder']
@@ -39,9 +39,9 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-              # '/storage/TopQuarkGroup/mc/8TeV/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
+              '/storage/TopQuarkGroup/mc/8TeV/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
               #toolsFolder + "data/TTJets_nTuple_53X_mc.root"  
-              toolsFolder + "data/TTJet_nTuple_53X_mc.root"
+              #toolsFolder + "data/TTJet_nTuple_537_mc.root"
               #TTJets_nTuple_53X_mc_merged_008.root" 
               #toolsFolder + "data/SingleMu_nTuple_53X_data_merged_002.root"
 
@@ -61,4 +61,4 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 
-custom_file_suffix = "SYNCH"
+custom_file_suffix = "TEST"
