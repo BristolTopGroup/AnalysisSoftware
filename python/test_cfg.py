@@ -1,4 +1,4 @@
-toolsFolder = './'
+toolsFolder = 'BristolAnalysis/Tools/'
 import os
 if os.environ.has_key('toolsFolder'):
     toolsFolder = os.environ['toolsFolder']
@@ -61,4 +61,4 @@ if centerOfMassEnergy == 7:
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 
-custom_file_suffix = "SYNCH"
+custom_file_suffix = "TEST"
