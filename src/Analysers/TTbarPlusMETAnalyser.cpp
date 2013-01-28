@@ -518,7 +518,7 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		const LeptonPointer signalLepton = topMuplusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
@@ -607,7 +607,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNonIsoMuonSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoMuonSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 
 		qcdNonIsoMuonAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoMuonSelection_->setPrescale(prescale);
@@ -679,7 +679,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdPFRelIsoMuPlusJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoMuPlusJetsSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/ge3 jet selection");
 		histMan_->H1D("Muon_Eta")->Fill(signalMuon->eta(), event->weight());
@@ -737,7 +737,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNoIsolationMuonSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNoIsolationMuonSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 
 		qcdNoIsolationMuonAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {

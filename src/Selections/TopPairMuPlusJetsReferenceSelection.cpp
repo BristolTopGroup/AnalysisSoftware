@@ -38,7 +38,7 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const 
 			passNCH = jet->NCH() > 0;
 		}
 		passesJetID = passNOD && passCEF && passNHF && passNEF && passCHF && passNCH;
-		;
+
 	} else { //assume CaloJet
 		bool passesEMF = jet->emf() > 0.01;
 		bool passesN90Hits = jet->n90Hits() > 1;
@@ -241,8 +241,8 @@ bool TopPairMuPlusJetsReferenceSelection::passesLooseMuonVeto(const EventPtr eve
 bool TopPairMuPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer electron) const {
 
 	bool passesEtAndEta = electron->et() > 20. && fabs(electron->eta()) < 2.5;
-	//bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
-	bool passesID(electron->passesElectronID(ElectronID::SimpleCutBasedWP95));
+	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
+	//bool passesID(electron->passesElectronID(ElectronID::SimpleCutBasedWP95));
 	bool passesIso = electron->pfRelativeIsolationRhoCorrected() < 0.15;
 	return passesEtAndEta && passesIso && passesID;
 }
