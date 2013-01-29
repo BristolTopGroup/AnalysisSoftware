@@ -66,7 +66,7 @@ public:
 	void setNumberOfMatches(int nMatches);
 
 	//other
-	double getEfficiencyCorrection() const;
+	double getEfficiencyCorrection(bool qcd) const;
 
 private:
 	MuonAlgorithm::value usedAlgorithm_;

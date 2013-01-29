@@ -31,6 +31,14 @@ void EventCountAnalyser::analyse(const EventPtr event) {
 void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = event->weight() * prescale_ * scale_;
+
+//	cout << "weight: " <<  event->weight() << endl;
+//	cout << "prescale: " << prescale_ << endl;
+//	cout << "scale: " << scale_ << endl;
+//	cout << "Tot weight: " << weight_ << endl;
+//	cout << "*******************************************" << endl;
+
+
 	//fill all events bin
 	histMan_->H1D("TTbarEplusJetsRefSelection")->Fill(-1, weight_);
 	histMan_->H1D("TTbarEplusJetsRefSelection_singleCuts")->Fill(-1, weight_);
@@ -64,8 +72,44 @@ void EventCountAnalyser::topEPlusJetsReferenceSelectionUnweighted(const EventPtr
 
 void EventCountAnalyser::individualCuts(const EventPtr event) {
 
-	if(topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
+
+
+	if(topEplusJetsRefSelection_->passesSelectionUpToStep(event, 0)) {
+
+
 				cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
+
+				const ElectronCollection allElectrons(event->Electrons());
+
+				for (unsigned int index = 0; index < allElectrons.size(); ++index) {
+				const ElectronPointer electron(allElectrons.at(index));
+
+				cout << "reliso: " << electron->pfRelativeIsolation(0.3) << endl;
+
+				}
+
+
+/*				const MuonCollection allMuons(event->Muons());
+				for (unsigned int index = 0; index < allMuons.size(); ++index) {
+
+					const MuonPointer muon(allMuons.at(index));
+
+					cout << "pT: " << muon->pt() << " eta: " << muon->eta() << " phi: " << muon->phi() << endl;
+					cout << "d0: " << muon->d0() << " z-dist: " << fabs(muon->ZDistanceToPrimaryVertex());
+					cout << " isGlobalMuon: " << muon->isGlobal() << endl;
+					cout << " isPFMuon: " << muon->isPFMuon() << endl;
+					//if (muon.globalTrack().isNonnull()) {
+						cout << "normChi2: " << muon->normChi2() << endl;
+						cout << "numberOfValidMuonHits: " << muon->numberOfValidMuonHits()
+								<< " , number of pixel hits: " << muon->numberOfValidPixelHits() << endl;
+						cout << "trackerLayersWithMeasurement: " << muon->trackerLayersWithMeasurement()
+								<< endl;
+					//}
+					cout << "numberOfMatchedStations: " << muon->numberOfMatchedStations() << endl;
+					cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
+					cout << "had Iso: " << muon->PFChargedHadronIsolation(0.4) << endl;
+				}
+
 /*				if(event->isBeamScraping() || !event->passesHBHENoiseFilter() || !event->passesCSCTightBeamHaloFilter() || !event->passesHCALLaserFilter()
 						|| !event->passesECALDeadCellFilter() || !event->passesTrackingFailureFilter() || !event->passesEEBadSCFilter()){
 
@@ -88,6 +132,7 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 							if(!event->passesTrackingPOGFilters())
 								cout << "fail TrackingPOGFilters()" << endl;
 				}*/
+
 	}
 
 }

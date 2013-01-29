@@ -18,6 +18,8 @@ void JetAnalyser::analyse(const EventPtr event) {
 	unsigned int numberOfBJets(0);
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
+
+		if(jet->pt()>30){
 		histMan_->H1D_BJetBinned("all_jet_pT")->Fill(jet->pt(), weight_);
 		histMan_->H1D_BJetBinned("all_jet_phi")->Fill(jet->phi(), weight_);
 		histMan_->H1D_BJetBinned("all_jet_eta")->Fill(jet->eta(), weight_);
@@ -33,6 +35,7 @@ void JetAnalyser::analyse(const EventPtr event) {
 			histMan_->H1D_BJetBinned(nthJet + "_eta")->Fill(jet->eta(), weight_);
 		}
 
+		}
 	}
 	histMan_->H1D_BJetBinned("N_Jets")->Fill(jets.size(), weight_);
 	histMan_->H1D("N_BJets")->Fill(numberOfBJets, weight_);
