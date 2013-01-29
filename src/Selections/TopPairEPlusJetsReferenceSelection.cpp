@@ -27,12 +27,13 @@ bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
 	JetAlgorithm::value algo = jet->getUsedAlgorithm();
 	if (algo == JetAlgorithm::CA08PF || algo == JetAlgorithm::PF2PAT) { //PFJet
 		bool passNOD = jet->NOD() > 1;
-		bool passCEF = jet->CEF() < 0.99;
 		bool passNHF = jet->NHF() < 0.99;
 		bool passNEF = jet->NEF() < 0.99;
 		bool passCHF = true;
 		bool passNCH = true;
+		bool passCEF = true;
 		if (fabs(jet->eta()) < 2.4) {
+			passCEF = jet->CEF() < 0.99;
 			passCHF = jet->CHF() > 0;
 			passNCH = jet->NCH() > 0;
 		}
