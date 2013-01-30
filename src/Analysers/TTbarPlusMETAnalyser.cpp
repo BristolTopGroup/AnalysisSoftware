@@ -518,7 +518,7 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		const LeptonPointer signalLepton = topMuplusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
@@ -607,10 +607,10 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNonIsoMuonSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoMuonSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 
-		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
-		metAnalyserqcdNonIsoElectronSelection_->setPrescale(prescale);
+		qcdNonIsoMuonAnalyser_->setPrescale(prescale);
+		metAnalyserqcdNonIsoMuonSelection_->setPrescale(prescale);
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
@@ -679,13 +679,18 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdPFRelIsoMuPlusJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoMuPlusJetsSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
+
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/ge3 jet selection");
+		histMan_->H1D("Muon_Eta")->Fill(signalMuon->eta(), event->weight());
+		histMan_->H1D("Muon_AbsEta")->Fill(fabs(signalMuon->eta()), event->weight());
 
 		qcdMuPlusjetsPFRelIsoMuonAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+
 
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyse(event);
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
@@ -732,7 +737,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNoIsolationMuonSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNoIsolationMuonSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = signalMuon->getEfficiencyCorrection();
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 
 		qcdNoIsolationMuonAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
@@ -771,6 +776,11 @@ void TTbarPlusMETAnalyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 	histMan_->addH1D_BJetBinned("bjet_invariant_mass", "Invariant mass of 2 b-jets; m(b-jet, b-jet); Events", 5000, 0,
 			5000);
+	//histos of central qcd estimation
+	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/ge3 jet selection");
+	histMan_->addH1D("Muon_Eta", "Muon #eta; #eta(#mu); Events/(0.02)", 300, -3, 3);
+	histMan_->addH1D("Muon_AbsEta", "Muon |#eta|; |#eta(#mu)|; Events/(0.01)", 300, 0, 3);
+
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();
 	electronAnalyserRefSelection_->createHistograms();
