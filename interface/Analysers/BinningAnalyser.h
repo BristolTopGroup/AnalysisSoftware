@@ -18,6 +18,8 @@ public:
 	void setHistogramLabels();
 
 	void ePlusJetsSignalAnalysis(const EventPtr event);
+	void ePlusJetsHTAnalysis(const EventPtr event);
+	void ePlusJetsHTskimAnalysis(const EventPtr event);
 	void muPlusJetsSignalAnalysis(const EventPtr event);
 	void muPlusJetsMETAnalysis(const EventPtr event);
 	void ePlusJetsMETAnalysis(const EventPtr event);
