@@ -86,7 +86,7 @@ analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
 default_settings = {
             'JESsystematic':0,
-            'PUFile':'PileUp_2011_truth_finebin_68000microbarn.root',
+            'PUFile':'PileUp_2012_69300_truth_finebin.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
