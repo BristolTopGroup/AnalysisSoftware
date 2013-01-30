@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include "../../interface/GlobalVariables.h"
 
 using namespace std;
 namespace BAT {
@@ -37,6 +38,11 @@ Lepton::Lepton() : //
 		PFChargedHadron_Isolation_DR05_(initialBigValue), //
 		PFNeutralHadron_Isolation_DR05_(initialBigValue), //
 		PFPUChargedHadron_Isolation_DR05_(initialBigValue), //
+		PFDeltaBeta_Isolation_DR04_(initialBigValue), //
+		sumChargedHadronPt04_(initialBigValue), //
+		sumNeutralHadronPt04_(initialBigValue), //
+		sumPhotonPt04_(initialBigValue), //
+		sumPUPt04_(initialBigValue), //
 		PFRelativeIsolationRho_DR03_(initialBigValue), //
 		zDistanceToPrimaryVertex_(initialBigValue), //
 		directionalIsolation_DR02_(initialBigValue), //
@@ -70,6 +76,11 @@ Lepton::Lepton(double energy, double px, double py, double pz) : //
 		PFChargedHadron_Isolation_DR05_(initialBigValue), //
 		PFNeutralHadron_Isolation_DR05_(initialBigValue), //
 		PFPUChargedHadron_Isolation_DR05_(initialBigValue), //
+		PFDeltaBeta_Isolation_DR04_(initialBigValue), //
+		sumChargedHadronPt04_(initialBigValue), //
+		sumNeutralHadronPt04_(initialBigValue), //
+		sumPhotonPt04_(initialBigValue), //
+		sumPUPt04_(initialBigValue), //
 		PFRelativeIsolationRho_DR03_(initialBigValue), //
 		zDistanceToPrimaryVertex_(initialBigValue), //
 		directionalIsolation_DR02_(initialBigValue), //
@@ -207,6 +218,25 @@ void Lepton::setPFPUChargedHadronIsolation(double isolation, double coneSize) {
 	}
 }
 
+void Lepton::setPFDeltaBeta_Isolation_DR04(double isolation) {
+	PFDeltaBeta_Isolation_DR04_ = isolation;
+}
+
+void Lepton::setsumChargedHadronPt04(double isolation) {
+	sumChargedHadronPt04_ = isolation;
+}
+
+void Lepton::setsumNeutralHadronPt04(double isolation) {
+	sumNeutralHadronPt04_ = isolation;
+}
+
+void Lepton::setsumPhotonPt04(double isolation) {
+	sumPhotonPt04_ = isolation;
+}
+
+void Lepton::setsumPUPt04(double isolation) {
+	sumPUPt04_ = isolation;
+}
 
 void Lepton::setPFRelativeIsolationRho(double isolation) {
 	PFRelativeIsolationRho_DR03_ = isolation;
@@ -268,9 +298,31 @@ double Lepton::PfPUChargedHadronIso(double coneSize) const {
 	return isolation;
 }
 
+double Lepton::PFDeltaBeta_Isolation_DR04() const{
+	return PFDeltaBeta_Isolation_DR04_;
+}
+
+double Lepton::sumChargedHadronPt04() const{
+	return sumChargedHadronPt04_;
+}
+
+double Lepton::sumNeutralHadronPt04() const{
+	return sumNeutralHadronPt04_;
+}
+
+double Lepton::sumPhotonPt04() const{
+	return sumPhotonPt04_;
+}
+
+double Lepton::sumPUPt04() const{
+	return sumPUPt04_;
+}
+
 double Lepton::relativeIsolation(double coneSize) const {
 	return (ecalIsolation(coneSize) + hcalIsolation(coneSize) + trackerIsolation(coneSize)) / pt();
 }
+
+
 
 double Lepton::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) const {
 	return pfIsolation(coneSize, deltaBetaCorrection) / pt();
@@ -279,12 +331,26 @@ double Lepton::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) co
 double Lepton::pfIsolation(double coneSize, bool deltaBetaCorrection) const {
 	double iso(0);
 	if (deltaBetaCorrection){
-		iso = PFChargedHadronIsolation(coneSize)
-				+ max(0.0,
-						PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize)
-								- 0.5 * PfPUChargedHadronIso(coneSize));
+
+		if(Globals::NTupleVersion >= 10){
+			iso = sumChargedHadronPt04()
+				+ max(0.0,sumNeutralHadronPt04()
+						 + sumPhotonPt04()
+								- 0.5 * sumPUPt04());
+		}else{
+			iso = PFChargedHadronIsolation(coneSize)
+							+ max(0.0,
+									PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize)
+											- 0.5 * PfPUChargedHadronIso(coneSize));
+		}
+
+
 	}else{
-		iso = (PFChargedHadronIsolation(coneSize) + PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize));
+		if(Globals::NTupleVersion >= 10){
+			iso = (sumChargedHadronPt04() + sumNeutralHadronPt04() +sumPhotonPt04());
+		}else{
+			iso = (PFChargedHadronIsolation(coneSize) + PFNeutralHadronIsolation(coneSize) + PFGammaIsolation(coneSize));
+		}
 	}
 		return iso;
 }

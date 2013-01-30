@@ -144,9 +144,11 @@ double Muon::normChi2() const {
 	return normalisedChi2_;
 }
 
-double Muon::getEfficiencyCorrection() const {
+double Muon::getEfficiencyCorrection(bool qcd) const {
 	double correction(1.);
 	double muEta(eta());
+
+	if(Globals::energyInTeV == 7){
 	if (muEta < -1.5)
 		correction = 1.003;
 	else if (muEta >= -1.5 && muEta < -1.2)
@@ -163,6 +165,21 @@ double Muon::getEfficiencyCorrection() const {
 		correction = 0.967;
 	else if (muEta >= 1.5)
 		correction = 1.023;
+	}else if(qcd == false){ //corrections for ID(A+B), Iso(A+B) and Trigger(A)  respectively
+		if(abs(muEta)<0.9)
+			correction = 0.9941*0.9923*0.9560;
+		else if(abs(muEta)>=0.9 && abs(muEta)<1.2)
+			correction = 0.9917*0.9979*0.9528;
+		else if(abs(muEta)>=1.2)
+			correction = 0.9982*1.0019*0.9809;
+	}else{
+		if(abs(muEta)<0.9)
+			correction = 0.9941*0.9560;
+		else if(abs(muEta)>=0.9 && abs(muEta)<1.2)
+			correction = 0.9917*0.9528;
+		else if(abs(muEta)>=1.2)
+			correction = 0.9982*0.9809;
+	}
 
 	return correction;
 }
