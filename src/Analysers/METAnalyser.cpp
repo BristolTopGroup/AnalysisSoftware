@@ -114,7 +114,7 @@ void METAnalyser::createHistograms() {
 void METAnalyser::analyse(const EventPtr event, const ParticlePointer particle, const JetCollection jets) {
 	analyse_HT(event, jets);
 	analyse_ST(event, particle, jets);
-//	analyse(event, particle);
+	analyse(event, particle);
 }
 
 void METAnalyser::analyse_HT(const EventPtr event, const JetCollection jets) {
