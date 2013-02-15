@@ -6,16 +6,54 @@
  */
 
 #include "../../interface/Analysers/EventCountAnalyser.h"
+#include "../../interface/BTagWeight.h"
 
 namespace BAT {
 
 void EventCountAnalyser::analyse(const EventPtr event) {
 
-//	individualCuts(event);
-	topEPlusJetsReferenceSelection(event);
-	topEPlusJetsReferenceSelectionUnweighted(event);
-	topMuPlusJetsReferenceSelection(event);
+	const JetCollection jets(topMuPlusJetsRefSelection_->cleanedJets(event));
+	const JetCollection bJets(topMuPlusJetsRefSelection_->cleanedBJets(event));
+	const JetCollection jetsEle(topEplusJetsRefSelection_->cleanedJets(event));
+	const JetCollection bJetsEle(topEplusJetsRefSelection_->cleanedBJets(event));
+			unsigned int numberOfBjets(bJets.size());
+	vector<double> bjetWeights;
+	if (event->isRealData()) {
+		for (unsigned int index = 0; index <= numberOfBjets; ++index) {
+			if (index == numberOfBjets)
+				bjetWeights.push_back(1.);
+			else
+				bjetWeights.push_back(0);
+		}
+	} else
+		bjetWeights = BjetWeights(jets, numberOfBjets);
+
+	unsigned int numberOfBjetsEle(bJetsEle.size());
+	vector<double> bjetWeightsEle;
+	if (event->isRealData()) {
+		for (unsigned int index = 0; index <= numberOfBjetsEle; ++index) {
+			if (index == numberOfBjetsEle)
+				bjetWeightsEle.push_back(1.);
+			else
+				bjetWeightsEle.push_back(0);
+		}
+	} else
+		bjetWeightsEle = BjetWeights(jets, numberOfBjets);
+
+
+	//	individualCuts(event);
 	topMuPlusJetsReferenceSelectionUnweighted(event);
+	topEPlusJetsReferenceSelectionUnweighted(event);
+
+	for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
+		double bjetWeight = bjetWeights.at(weightIndex);
+		double bjetWeightEle = bjetWeightsEle.at(weightIndex);
+
+	topEPlusJetsReferenceSelection(event, bjetWeightEle);
+	topMuPlusJetsReferenceSelection(event, bjetWeight);
+
+	}
+
 //	topMuPlusJetsReferenceSelection2011(event);
 //	topEplusJetsPlusMETSelection(event);
 //	topEplusJetsZprimeSelection(event);
@@ -28,8 +66,9 @@ void EventCountAnalyser::analyse(const EventPtr event) {
 //	qcdNonIsoTriggerAsymJetsMETSelections(event);
 }
 
-void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
+void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event, double b_weight) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	scale_ = b_weight;
 	weight_ = event->weight() * prescale_ * scale_;
 	//fill all events bin
 	histMan_->H1D("TTbarEplusJetsRefSelection")->Fill(-1, weight_);
@@ -92,11 +131,24 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 
 }
 
-void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
+void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event, double b_weight) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
+
+	if (topMuPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+	const LeptonPointer signalLepton = topMuPlusJetsRefSelection_->signalLepton(event);
+	const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+	double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+	scale_ = b_weight*efficiencyCorrection;
+	}else{
+		scale_ = b_weight;
+	}
+
+
 	weight_ = event->weight() * prescale_ * scale_;
 	histMan_->H1D("TTbarMuPlusJetsRefSelection")->Fill(-1, weight_);
 	histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(-1, weight_);
+
+
 
 	for (unsigned int step = 0; step < TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS; ++step) {
 		bool passesStep = topMuPlusJetsRefSelection_->passesSelectionStep(event, step);

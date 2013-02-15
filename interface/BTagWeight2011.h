@@ -1,5 +1,5 @@
-#ifndef BTAGWEIGHT_H
-#define BTAGWEIGHT_H
+#ifndef BTAGWEIGHT2011_H
+#define BTAGWEIGHT2011_H
 
 #include "RecoObjects/Jet.h"
 /**
@@ -8,9 +8,9 @@
  */
 namespace BAT {
 
-class BTagWeight {
+class BTagWeight2011 {
 public:
-	BTagWeight();
+	BTagWeight2011();
 
 	double weight(unsigned int numberOf_b_Jets, unsigned int numberOf_c_Jets, unsigned int numberOf_udsg_Jets,
 			double mean_bJetEfficiency, double mean_cFJetEfficiency, double mean_udsgJetEfficiency,
@@ -42,9 +42,9 @@ public:
 	double getUDSGScaleFactor(const JetPointer) const;
 	double getAverageUDSGEfficiency(const JetCollection) const;
 
-	double getMeanUDSGScaleFactor(double jetPT, double jetEta) const;
-	double getMinUDSGScaleFactor(double jetPT, double jetEta) const;
-	double getMaxUDSGScaleFactor(double jetPT, double jetEta) const;
+	double getMeanUDSGScaleFactor(double jetPT) const;
+	double getMinUDSGScaleFactor(double jetPT) const;
+	double getMaxUDSGScaleFactor(double jetPT) const;
 
 	double getMeanUDSGEfficiency(double jetPT) const;
 private:
@@ -53,7 +53,7 @@ private:
 
 };
 
-std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfBtags);
+std::vector<double> BjetWeights2011(const JetCollection jets, unsigned int numberOfBtags);
 }
 #endif
 
