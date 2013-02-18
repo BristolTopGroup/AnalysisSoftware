@@ -38,9 +38,9 @@ public:
 	virtual void createHistograms();
 	void setHistogramLabels();
 
-	void topEPlusJetsReferenceSelection(const EventPtr event, double b_weight);
+	void topEPlusJetsReferenceSelection(const EventPtr event);
 	void topEPlusJetsReferenceSelectionUnweighted(const EventPtr event);
-	void topMuPlusJetsReferenceSelection(const EventPtr event, double b_weight);
+	void topMuPlusJetsReferenceSelection(const EventPtr event);
 	void topMuPlusJetsReferenceSelectionUnweighted(const EventPtr event);
 	void topMuPlusJetsReferenceSelection2011(const EventPtr event);
 	void topEplusJetsPlusMETSelection(const EventPtr event);
