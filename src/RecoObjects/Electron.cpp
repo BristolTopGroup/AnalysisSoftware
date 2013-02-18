@@ -161,11 +161,11 @@ bool Electron::passesElectronID(short leptonID) const {
 	case ElectronID::SimpleCutBasedWP95:
 		return VBTF_WP95_ElectronID();
 	case ElectronID::MVAIDTrigger:
-		return mvaTrigV0() > 0.0;
+		return mvaTrigV0() > 0.5;
 	case ElectronID::MVAIDNonTrigger:
 		return mvaNonTrigV0() > 0.0;
 	default:
-		return mvaTrigV0() > 0.0;
+		return mvaTrigV0() > 0.5;
 	}
 }
 
