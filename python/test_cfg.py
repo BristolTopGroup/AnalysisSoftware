@@ -40,7 +40,7 @@ useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
                
-'/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
+'/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets_PDFweights/*.root'
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
