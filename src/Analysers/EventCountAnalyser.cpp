@@ -53,12 +53,13 @@ void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
 	double weight_ge2b = 0.;
 	for (unsigned int weightIndex = 0; weightIndex < bjetWeightsEle.size(); ++weightIndex) {
 	double b_weight = bjetWeightsEle.at(weightIndex);
-	scale_ = b_weight;
 
 	if(weightIndex>0)
-	weight_ge1b += scale_;
+	weight_ge1b += b_weight;
 	if(weightIndex>1)
-	weight_ge2b += scale_;
+	weight_ge2b += b_weight;
+
+	}
 
 	weight_ = event->weight() * prescale_ * scale_;
 	//fill all events bin
@@ -74,16 +75,17 @@ void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
 			histMan_->H1D("TTbarEplusJetsRefSelection_singleCuts")->Fill(step, weight_);
 	}
 
-	}
 
-	if (topEplusJetsRefSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2)){
-	histMan_->H1D("TTbarEplusJetsRefSelection")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, event->weight() * prescale_ *weight_ge1b);
-	histMan_->H1D("TTbarEplusJetsRefSelection_singleCuts")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, event->weight() * prescale_ *weight_ge1b);
-	}
-	if (topEplusJetsRefSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1)){
-	histMan_->H1D("TTbarEplusJetsRefSelection")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, event->weight() * prescale_ *weight_ge2b);
-	histMan_->H1D("TTbarEplusJetsRefSelection_singleCuts")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, event->weight() * prescale_ *weight_ge2b);
-	}
+	if (topEplusJetsRefSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2))
+		histMan_->H1D("TTbarEplusJetsRefSelection")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, weight_ *weight_ge1b);
+	if (topEplusJetsRefSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2))
+		histMan_->H1D("TTbarEplusJetsRefSelection_singleCuts")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, weight_ *weight_ge1b);
+
+	if (topEplusJetsRefSelection_->passesSelectionUpToStep(event, TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1))
+		histMan_->H1D("TTbarEplusJetsRefSelection")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, weight_ *weight_ge2b);
+	if (topEplusJetsRefSelection_->passesSelectionStep(event, TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1))
+		histMan_->H1D("TTbarEplusJetsRefSelection_singleCuts")->Fill(TTbarEPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, weight_ *weight_ge2b);
+
 
 
 }
@@ -138,6 +140,15 @@ void EventCountAnalyser::individualCuts(const EventPtr event) {
 void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
+	if (topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
+	const LeptonPointer signalLepton = topMuPlusJetsRefSelection_->signalLepton(event);
+	const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+	double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+	 	scale_ = efficiencyCorrection;
+	}else{
+		scale_ =1;
+	}
+
 	//use bjet weights in histograms for muons
 	const JetCollection jets(topMuPlusJetsRefSelection_->cleanedJets(event));
 	const JetCollection bJets(topMuPlusJetsRefSelection_->cleanedBJets(event));
@@ -158,18 +169,12 @@ void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 	for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 		double b_weight = bjetWeights.at(weightIndex);
 
-	if (topMuPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
-	const LeptonPointer signalLepton = topMuPlusJetsRefSelection_->signalLepton(event);
-	const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-	double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
-	 	scale_ = b_weight*efficiencyCorrection;
-	}else{
-		scale_ = b_weight;
-	}
 	if(weightIndex>0)
-	weight_ge1b += scale_;
+	weight_ge1b += b_weight;
 	if(weightIndex>1)
-	weight_ge2b += scale_;
+	weight_ge2b += b_weight;
+
+	}
 
 	weight_ = event->weight() * prescale_ * scale_;
 
@@ -184,16 +189,17 @@ void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 		if (passesStep)
 			histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(step, weight_);
 	}
-	}
 
-	if (topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 8)){
-	histMan_->H1D("TTbarMuPlusJetsRefSelection")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, event->weight() * prescale_ *weight_ge1b);
-	histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, event->weight() * prescale_ *weight_ge1b);
-	}
-	if (topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 9)){
-	histMan_->H1D("TTbarMuPlusJetsRefSelection")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, event->weight() * prescale_ *weight_ge2b);
-	histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, event->weight() * prescale_ *weight_ge2b);
-	}
+	if (topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2))
+		histMan_->H1D("TTbarMuPlusJetsRefSelection")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, weight_ *weight_ge1b);
+	if (topMuPlusJetsRefSelection_->passesSelectionStep(event, TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2))
+		histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-2, weight_ *weight_ge1b);
+
+	if (topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1))
+		histMan_->H1D("TTbarMuPlusJetsRefSelection")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, weight_ *weight_ge2b);
+	if (topMuPlusJetsRefSelection_->passesSelectionStep(event, TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1))
+		histMan_->H1D("TTbarMuPlusJetsRefSelection_singleCuts")->Fill(TTbarMuPlusJetsReferenceSelection::NUMBER_OF_SELECTION_STEPS-1, weight_ * prescale_ *weight_ge2b);
+
 }
 
 void EventCountAnalyser::topMuPlusJetsReferenceSelectionUnweighted(const EventPtr event) {
