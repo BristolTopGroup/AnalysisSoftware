@@ -222,8 +222,7 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 				for (unsigned int c = 2; c < numberOfGenJets; ++c) {
 					if(a!=b && a!=c){
 						GeneratorM3 = ParticlePointer(new Particle(*genJets.at(a) + *genJets.at(b)+ *genJets.at(c)));
-				        for (unsigned int index = 0; index < numberOfGenJets; ++index) {
-				        }  double pt =  GeneratorM3->pt();
+						double pt =  GeneratorM3->pt();
 
 					    if(pt>ptGenMax){
 					    	ptGenMax = pt;
@@ -304,8 +303,6 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 //		unsigned int numberOfGenJets(genJets.size());
 		unsigned int numberOfJets(jets.size());
         unsigned int numberOfGenParts(genPart.size());
-
-
 
 //		unsigned int numberOfBJets(bJets.size());
 		double HT = 0;
