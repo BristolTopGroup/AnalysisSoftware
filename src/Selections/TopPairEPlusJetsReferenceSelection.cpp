@@ -285,7 +285,7 @@ const JetCollection TopPairEPlusJetsReferenceSelection::cleanedJets(const EventP
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
-		if (!jet->isWithinDeltaR(0.3, lepton))
+		if (!jet->isWithinDeltaR(0.3, lepton) && isGoodJet(jet))
 			cleanedJets.push_back(jet);
 	}
 
