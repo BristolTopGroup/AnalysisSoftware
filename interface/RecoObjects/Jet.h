@@ -52,7 +52,6 @@ const boost::array<std::string, BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS> names =
 		"TrackCountingHighPurity"
 	}}
 	;
-
 }
 
 namespace JetAlgorithm {
@@ -78,6 +77,15 @@ public:
 	bool isBJet(BtagAlgorithm::value type = BtagAlgorithm::SimpleSecondaryVertexHighEfficiency,
 			BtagAlgorithm::workingPoint wp = BtagAlgorithm::MEDIUM) const;
 	JetAlgorithm::value getUsedAlgorithm() const;
+
+	void set_matched_generated_jet(const ParticlePointer matchedgeneratedjet);
+	const ParticlePointer matched_generated_jet();
+
+	void set_unsmeared_jet(const ParticlePointer unsmearedjet);
+	const ParticlePointer unsmeared_jet();
+	static const ParticlePointer smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet);
+//	const ParticlePointer smeared_Jet();
+
 	double emf() const;
 	double n90Hits() const;
 	double fHPD() const;
@@ -140,6 +148,27 @@ private:
 	double pxRaw, pyRaw, pzRaw, JECUncertainty;
 	double l1OffJEC, l2l3ResJEC, l2RelJEC, l3AbsJEC;
 	int partonFlavour_;
+
+	double energy_unsmeared;
+	double pt_unsmeared;
+	double px_unsmeared;
+	double py_unsmeared;
+	double pz_unsmeared;
+	double phi_unsmeared;
+	double eta_unsmeared;
+
+	double energy_smeared;
+	double pt_smeared;
+	double px_smeared;
+	double py_smeared;
+	double pz_smeared;
+	double phi_smeared;
+	double eta_smeared;
+
+	ParticlePointer matchedGeneratedJet;
+	ParticlePointer unsmearedJet;
+	ParticlePointer smearedJet;
+
 };
 
 typedef boost::shared_ptr<Jet> JetPointer;

@@ -49,6 +49,7 @@ struct Globals {
 	static int JESsystematic;
 	static int BJetSystematic;
 	static int LightJetSystematic;
+	static int JetSmearingSystematic;
 
 
 	//MET

@@ -25,6 +25,10 @@ JetReader::JetReader() : //
 		pzRawReader(),
 		massReader(), ////
 		chargeReader(), ////
+		matchedGeneratedJetEnergyReader(), ////
+		matchedGeneratedJetPxReader(), ////
+		matchedGeneratedJetPyReader(), ////
+		matchedGeneratedJetPzReader(), ////
 		emfReader(), ////
 		n90HitsReader(), ////
 		fHPDReader(), ////
@@ -65,6 +69,10 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		pzRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PzRAW"), //
 		massReader(input, JetAlgorithm::prefixes.at(algo) + ".Mass"), //
 		chargeReader(input, JetAlgorithm::prefixes.at(algo) + ".Charge"), //
+		matchedGeneratedJetEnergyReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Energy"), //
+		matchedGeneratedJetPxReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Px"), //
+		matchedGeneratedJetPyReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Py"), //
+		matchedGeneratedJetPzReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Pz"), //
 		emfReader(input, JetAlgorithm::prefixes.at(algo) + ".EMF"), //
 		n90HitsReader(input, JetAlgorithm::prefixes.at(algo) + ".n90Hits"), //
 		fHPDReader(input, JetAlgorithm::prefixes.at(algo) + ".fHPD"), //
@@ -115,13 +123,36 @@ void JetReader::readJets() {
 		py = py * (1+JECUnc*Globals::JESsystematic);
 		pz = pz * (1+JECUnc*Globals::JESsystematic);
 
-		JetPointer jet(new Jet(energy, px, py, pz));
+//		THIS DOESN'T MEAN ANYTHING YET:
+//		//applying jet smearing + or - systematic, 0 by default)
+//		energy = energy * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
+//		px = px * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
+//		py = py * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
+//		pz = pz * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
+
+		//make unsmeared jet object pointer and store it in the jet object
+		JetPointer unsmearedJet(new Jet(energy, px, py, pz));
+
+		//get matched gen jet variables:
+		double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
+		double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
+		double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
+		double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
+
+		//store matched gen jet variables in a matchedGeneratedJet pointer and store it in the jet object
+		JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
+
+		//smear the unsmeared jet
+		const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet));
+		JetPointer jet(new Jet(smearedJet->energy(), smearedJet->px(), smearedJet->py(), smearedJet->pz()));
+
 		jet->setUsedAlgorithm(usedAlgorithm);
 		jet->setMass(massReader.getVariableAt(jetIndex));
 		jet->setCharge(chargeReader.getVariableAt(jetIndex));
 		jet->setPxRaw(pxRawReader.getVariableAt(jetIndex));
 		jet->setPyRaw(pyRawReader.getVariableAt(jetIndex));
 		jet->setPzRaw(pzRawReader.getVariableAt(jetIndex));
+
 		jet->setJECUnc(JECUncReader.getVariableAt(jetIndex));
 		jet->setL1OffJEC(L1OffJECReader.getVariableAt(jetIndex));
 		jet->setL2L3ResJEC(L2L3ResJECReader.getVariableAt(jetIndex));
@@ -176,9 +207,16 @@ void JetReader::readJets() {
 			jet->setCHF(CHFReader.getVariableAt(jetIndex));
 			jet->setNCH(NCHReader.getIntVariableAt(jetIndex));
 		}
+
+		//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
+		jet->set_unsmeared_jet(unsmearedJet);
+		jet->set_matched_generated_jet(matchedGeneratedJet);
+
 		jets.push_back(jet);
 	}
 }
+
+
 
 void JetReader::initialise() {
 	energyReader.initialise();
@@ -195,6 +233,12 @@ void JetReader::initialise() {
 	pzRawReader.initialise();
 	massReader.initialise();
 	chargeReader.initialise();
+
+	matchedGeneratedJetEnergyReader.initialise();
+	matchedGeneratedJetPxReader.initialise();
+	matchedGeneratedJetPyReader.initialise();
+	matchedGeneratedJetPzReader.initialise();
+
 	if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 		emfReader.initialise();
 		n90HitsReader.initialise();
