@@ -824,23 +824,21 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 	metBins_.push_back(70.);
 	metBins_.push_back(100.);
 	metBins_.push_back(150.);
-	//HT: 50, 150, 250, 350, 450, 650, 1100, inf
-	ht_bins_.push_back(50);
-	ht_bins_.push_back(150);
-	ht_bins_.push_back(250);
-	ht_bins_.push_back(350);
+	//HT: old 50, 150, 250, 350, 450, 650, 1100, inf
+	ht_bins_.push_back(240);
+	ht_bins_.push_back(280);
+	ht_bins_.push_back(330);
+	ht_bins_.push_back(380);
 	ht_bins_.push_back(450);
-	ht_bins_.push_back(650);
-	ht_bins_.push_back(1100);
+	ht_bins_.push_back(600);
 
-	//ST:150, 250, 350, 450, 550, 750, 1250, inf
-	st_bins_.push_back(150);
-	st_bins_.push_back(250);
+	//ST:150, 250, 350, 450, 550, 750, 1250, inf new: 350 & 400 & 450 & 500 & 570 & 650 & 1999
 	st_bins_.push_back(350);
+	st_bins_.push_back(400);
 	st_bins_.push_back(450);
-	st_bins_.push_back(550);
-	st_bins_.push_back(750);
-	st_bins_.push_back(1250);
+	st_bins_.push_back(500);
+	st_bins_.push_back(580);
+	st_bins_.push_back(700);
 
 	//[0, 40, 65, 85, 150, inf
 	mt_bins_.push_back(40);
