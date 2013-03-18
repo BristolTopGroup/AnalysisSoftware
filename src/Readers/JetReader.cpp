@@ -123,14 +123,14 @@ void JetReader::readJets() {
 		py = py * (1+JECUnc*Globals::JESsystematic);
 		pz = pz * (1+JECUnc*Globals::JESsystematic);
 
-//		THIS DOESN'T MEAN ANYTHING YET:
-//		//applying jet smearing + or - systematic, 0 by default)
+		//Can probably delete this.
+		//applying jet smearing + or - systematic, 0 by default)
 //		energy = energy * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
 //		px = px * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
 //		py = py * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
 //		pz = pz * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
 
-		//make unsmeared jet object pointer and store it in the jet object
+		//make unsmeared jet object pointer
 		JetPointer unsmearedJet(new Jet(energy, px, py, pz));
 
 		//get matched gen jet variables:
@@ -139,13 +139,13 @@ void JetReader::readJets() {
 		double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
 		double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
 
-		//store matched gen jet variables in a matchedGeneratedJet pointer and store it in the jet object
+		//store matched generated jet variables in a matchedGeneratedJet pointer
 		JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
 
 		//smear the unsmeared jet
-		const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet));
+		const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
 		JetPointer jet(new Jet(smearedJet->energy(), smearedJet->px(), smearedJet->py(), smearedJet->pz()));
-
+		
 		jet->setUsedAlgorithm(usedAlgorithm);
 		jet->setMass(massReader.getVariableAt(jetIndex));
 		jet->setCharge(chargeReader.getVariableAt(jetIndex));

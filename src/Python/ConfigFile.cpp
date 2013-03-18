@@ -39,6 +39,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
 		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
 		jesSystematic_(0), //
+		jetSmearingSystematic_(0), //
 		btagSystematic_(0), //
 		lightTagSystematic_(0), //
 		custom_file_suffix_(""), //
@@ -48,6 +49,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		applyMetType1Corr_(0){
 	if (PythonParser::hasAttribute(config, "JESsystematic"))
 		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
+	if (PythonParser::hasAttribute(config, "JetSmearingSystematic"))
+		jetSmearingSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JetSmearingSystematic");
 	if (PythonParser::hasAttribute(config, "BTagSystematic"))
 		btagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "BTagSystematic");
 	if (PythonParser::hasAttribute(config, "LightTagSystematic"))
@@ -91,6 +94,8 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 			"Light-tag scale factor systematic, the +/- number of uncertainties to vary the scale factor with");
 	desc.add_options()("JESsystematic", value<int>(),
 			"JES systematic, the +/- number of uncertainties to vary the jet with");
+	desc.add_options()("JetSmearingSystematic", value<int>(),
+			"Jet Smearing Systematic, the +/- number of uncertainties to vary the jet with");
 	desc.add_options()("custom_file_suffix", value<std::string>(), "Custom file suffix, will be appended to file name");
 	desc.add_options()("pdfWeightNumber", value<unsigned int>(),
 			"Number of PDF weight to multiply the event weight with");
@@ -221,6 +226,13 @@ int ConfigFile::jesSystematic() const {
 		return jesSystematic_;
 }
 
+int ConfigFile::jetSmearingSystematic() const {
+	if (programOptions.count("JetSmearingSystematic"))
+		return programOptions["JetSmearingSystematic"].as<int>();
+	else
+		return jetSmearingSystematic_;
+}
+
 int ConfigFile::BtagSystematic() const {
 	if (programOptions.count("BTagSystematic"))
 		return programOptions["BTagSystematic"].as<int>();
@@ -325,6 +337,9 @@ void ConfigFile::loadIntoMemory() {
 
 	//JES systematic
 	Globals::JESsystematic = jesSystematic();
+
+	//Jet Smearing systematic
+	Globals::JetSmearingSystematic = jetSmearingSystematic();
 
 	//b-tag systematics
 	Globals::BJetSystematic = BtagSystematic();

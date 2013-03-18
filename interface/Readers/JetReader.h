@@ -41,6 +41,7 @@ protected:
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPxReader;
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPyReader;
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPzReader;
+	VariableReader<MultiDoublePointer> jetSmearingUncertaintyReader;
 
 	VariableReader<MultiDoublePointer> emfReader;
 	VariableReader<unsigned int> numberOfJetsReader;

@@ -83,7 +83,7 @@ public:
 
 	void set_unsmeared_jet(const ParticlePointer unsmearedjet);
 	const ParticlePointer unsmeared_jet();
-	static const ParticlePointer smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet);
+	static const ParticlePointer smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic);
 //	const ParticlePointer smeared_Jet();
 
 	double emf() const;
