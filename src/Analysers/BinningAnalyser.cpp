@@ -211,7 +211,6 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		}
 
-		genWPtMet = Event::MT(allGenMuons.at(1), genMet);
 
 		double minDR = 99999999.;
 		if (oneMuon == true){
@@ -268,19 +267,21 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			}
 		}
 
-		HT_lepton = HT + signalLepton->pt();
-		GenHT_lepton = GenHT + allGenMuons.at(1)->pt();
-		HT_lepton_MET = Event::ST(jets, signalMuon, met);
-		GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
-
-        double MT_gen = -1;
-		double Esq= pow(allGenMuons.at(1)->et()+genMet->et(),2);
-		double Psq= pow(allGenMuons.at(1)->px()+genMet->px(),2)+pow(allGenMuons.at(1)->py()+genMet->py(),2);
-		if(Esq-Psq >0)
-		MT_gen = sqrt(Esq-Psq);
-
 		if(oneMuon){
-//	        cout << "GEN lep px,y: " <<  allGenMuons.at(1)->px() << ", " <<  allGenMuons.at(1)->py()  << ") , met px,y: " << genMet->px() << ", " <<	genMet->py() <<")" << endl;
+
+			genWPtMet = Event::MT(allGenMuons.at(1), genMet);
+			HT_lepton = HT + signalLepton->pt();
+			GenHT_lepton = GenHT + allGenMuons.at(1)->pt();
+			HT_lepton_MET = Event::ST(jets, signalMuon, met);
+			GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
+
+	        double MT_gen = -1;
+			double Esq= pow(allGenMuons.at(1)->et()+genMet->et(),2);
+			double Psq= pow(allGenMuons.at(1)->px()+genMet->px(),2)+pow(allGenMuons.at(1)->py()+genMet->py(),2);
+			if(Esq-Psq >0)
+			MT_gen = sqrt(Esq-Psq);
+
+//	        cout << "GEN lep px,y: " <<  allGenMuons.at(allGenMuons.size()-1)->px() << ", " <<  allGenMuons.at(allGenMuons.size()-1)->py()  << ") , met px,y: " << genMet->px() << ", " <<	genMet->py() <<")" << endl;
 //		    cout << "Gen lepE: " << allGenMuons.at(1)->et() << " , metE: " << genMet->et() << endl;
 //		    cout << "MET pt: " << genMet->pt() << endl;
 //		    cout << "calc: " << MT_gen << endl;
@@ -474,20 +475,22 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			}
 		}
 
-		HT_lepton = HT + signalLepton->pt();
-		GenHT_lepton = GenHT + allGenElectrons.at(1)->pt();
-		HT_lepton_MET = Event::ST(jets, signalElectron, met);
-		GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
-		double leptonic_W = Event::MT(signalElectron,met);
-		genWPtMet = Event::MT(allGenElectrons.at(1), genMet);
-
-        double MT_gen = -1;
-		double Esq= pow(allGenElectrons.at(1)->et()+genMet->et(),2);
-		double Psq= pow(allGenElectrons.at(1)->px()+genMet->px(),2)+pow(allGenElectrons.at(1)->py()+genMet->py(),2);
-		if(Esq-Psq >0)
-		MT_gen = sqrt(Esq-Psq);
 
 		if(oneElectron){
+
+			HT_lepton = HT + signalLepton->pt();
+			GenHT_lepton = GenHT + allGenElectrons.at(1)->pt();
+			HT_lepton_MET = Event::ST(jets, signalElectron, met);
+			GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
+			double leptonic_W = Event::MT(signalElectron,met);
+			genWPtMet = Event::MT(allGenElectrons.at(1), genMet);
+
+	        double MT_gen = -1;
+			double Esq= pow(allGenElectrons.at(1)->et()+genMet->et(),2);
+			double Psq= pow(allGenElectrons.at(1)->px()+genMet->px(),2)+pow(allGenElectrons.at(1)->py()+genMet->py(),2);
+			if(Esq-Psq >0)
+			MT_gen = sqrt(Esq-Psq);
+
 //	        cout << "GEN lep px,y: " <<  allGenElectrons.at(1)->px() << ", " <<  allGenElectrons.at(1)->py()  << ") , met px,y: " << genMet->px() << ", " <<	genMet->py() <<")" << endl;
 //	        cout << "Gen lepE: " << allGenElectrons.at(1)->et() << " , metE: " << genMet->et() << endl;
 //		    cout << "MET pt: " << genMet->pt() << endl;

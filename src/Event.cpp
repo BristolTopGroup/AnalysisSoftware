@@ -530,4 +530,12 @@ double Event::MT(const ParticlePointer particle, const METPointer met) {
 		return -1;
 }
 
+double Event::WPT(const ParticlePointer particle, const METPointer met) {
+	ParticlePointer W_boson;
+	W_boson = ParticlePointer(new Particle(*met + *particle));
+
+	return W_boson->pt();
+}
+
+
 }
