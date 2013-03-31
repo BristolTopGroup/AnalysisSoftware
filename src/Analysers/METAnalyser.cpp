@@ -83,6 +83,8 @@ void METAnalyser::createHistograms() {
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 		histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/5 GeV", 400, 0, 2000);
 		histMan_->addH1D_BJetBinned("ST", "ST;ST [GeV]; Events/5 GeV", 400, 0, 2000);
+		histMan_->addH1D_BJetBinned("WPT", "WPT;WPT [GeV]; Events/GeV", 1000, 0, 1000);
+		histMan_->addH1D_BJetBinned("MT", "MT;MT [GeV]; Events/GeV", 1000, 0, 1000);
 		if (index != METAlgorithm::GenMET) {
 			histMan_->addH2D_BJetBinned("RecoMET_vs_GenMET", "RecoMET_vs_GenMET; MET_{GEN} [GeV]; MET_{RECO} [GeV]", 60,
 					0, 300, 60, 0, 300);
@@ -139,6 +141,8 @@ void METAnalyser::analyse_ST(const EventPtr event, const ParticlePointer particl
 		const METPointer met(event->MET(metType));
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 		histMan_->H1D_BJetBinned("ST")->Fill(Event::ST(jets, particle, met), weight_);
+		histMan_->H1D_BJetBinned("WPT")->Fill(Event::WPT(particle, met), weight_);
+		histMan_->H1D_BJetBinned("MT")->Fill(Event::MT(particle, met), weight_);
 	}
 }
 
