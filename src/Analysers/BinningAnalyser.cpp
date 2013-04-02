@@ -14,8 +14,8 @@ void BinningAnalyser::analyse(const EventPtr event) {
 	//ePlusJetsHTAnalysis(event);
 	//ePlusJetsHTskimAnalysis(event);
 	muPlusJetsSignalAnalysis(event);
-	muPlusJetsMETAnalysis(event);
-	ePlusJetsMETAnalysis(event);
+	//muPlusJetsMETAnalysis(event);
+	//ePlusJetsMETAnalysis(event);
 	}
 }
 
@@ -37,7 +37,6 @@ void BinningAnalyser::muPlusJetsMETAnalysis(const EventPtr event) {
 			double muonID = 0;
 			double GenNuPt = 0;
 			for (unsigned int i = 0; i < numberOfGenParts; i++) {
-	//	cout << "part: " << i << " id: " << genPart.at(i)->pdgId() << " mother:" << genPart.at(i)->motherIndex() << " pt: " << genPart.at(i)->pt() << " M(): " << genPart.at(i)->mass() << endl;
 
 				// find the muon
 				if(abs(genPart.at(i)->pdgId())==(13) && abs(genPart.at(genPart.at(i)->motherIndex())->pdgId())==(24)){
@@ -89,7 +88,6 @@ void BinningAnalyser::ePlusJetsMETAnalysis(const EventPtr event) {
 			double electronID = 0;
 			double GenNuPt = 0;
 			for (unsigned int i = 0; i < numberOfGenParts; i++) {
-	//	cout << "part: " << i << " id: " << genPart.at(i)->pdgId() << " mother:" << genPart.at(i)->motherIndex() << " pt: " << genPart.at(i)->pt() << " M(): " << genPart.at(i)->mass() << endl;
 
 				// find the electron
 				if(abs(genPart.at(i)->pdgId())==(11) && abs(genPart.at(genPart.at(i)->motherIndex())->pdgId())==(24)){
@@ -139,6 +137,11 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		const METPointer met(event->MET());
 		const METPointer genMet(event->GenMET());
 
+		//added for gen jet cleaning
+		MCParticleCollection genMuons;
+		//added for gen jet cleaning
+		MCParticleCollection allGenMuons;
+
 		ParticlePointer W_boson;
 		W_boson = ParticlePointer(new Particle(*met + *signalLepton));
 
@@ -148,10 +151,6 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		unsigned int numberOfGenJets(genJets.size());
 		unsigned int numberOfJets(jets.size());
         unsigned int numberOfGenParts(genPart.size());
-
-//cout << "gen jets: " << numberOfGenJets << endl;
-//cout << "jets: " << numberOfJets << endl;
-//cout << "parts: " << numberOfGenParts << endl;
 
 //		unsigned int numberOfBJets(bJets.size());
 		double HT = 0;
@@ -169,8 +168,16 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		bool oneMuon = false;
 		double muonID = 0;
 		double partonPt = 0;
+		double Npartons = 0;
 		for (unsigned int i = 0; i < numberOfGenParts; i++) {
-//	cout << "part: " << i << " id: " << genPart.at(i)->pdgId() << " mother:" << genPart.at(i)->motherIndex() << " pt: " << genPart.at(i)->pt() << " M(): " << genPart.at(i)->mass() << endl;
+
+			//cout << "num: " << i << " ,pid: " << genPart.at(i)->pdgId() << " ,moth:" << genPart.at(i)->motherIndex() <<endl;
+
+			//store all mouns
+			if(abs(genPart.at(i)->pdgId())==(13)){
+			MCParticlePointer muon(genPart.at(i));
+			allGenMuons.push_back(muon);
+			}
 
 			// find the muon
 			if(abs(genPart.at(i)->pdgId())==(13) && abs(genPart.at(genPart.at(i)->motherIndex())->pdgId())==(24)){
@@ -179,7 +186,8 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 				genLeptPt = genPart.at(i)->pt();
 				gendPhi = genPart.at(i)->deltaPhi(event->GenMET());
 				genWPt = genPart.at(genPart.at(i)->motherIndex())->pt();
-				genWPtMet = Event::MT(genPart.at(i), genMet);
+				MCParticlePointer genMuon(genPart.at(i));
+				genMuons.push_back(genMuon);
 			}
 
 			// find neutrino
@@ -195,8 +203,27 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			//parton level Ht
 			if(((abs(genPart.at(i)->pdgId())>0 && abs(genPart.at(i)->pdgId()) < 6) && (abs(genPart.at(genPart.at(i)->motherIndex())->pdgId())==(6) || abs(genPart.at(genPart.at(i)->motherIndex())->pdgId())==(24))) || ((genPart.at(i)->pdgId()==21 || (abs(genPart.at(i)->pdgId())>0 && abs(genPart.at(i)->pdgId()) < 6)) && genPart.at(i)->motherIndex()==4)){
 				partonPt = partonPt + genPart.at(i)->pt();
+				Npartons++;
 			}
 
+
+
+
+		}
+
+
+		double minDR = 99999999.;
+		if (oneMuon == true){
+
+			for(unsigned int i = 0; i < genJets.size(); i++) {
+				JetPointer generatorJet(genJets.at(i));
+
+				double deltaRele = generatorJet->deltaR(genMuons.at(0));
+				if(deltaRele < minDR)
+					minDR = deltaRele;
+
+			histMan_->H1D_BJetBinned("deltaR Gen Mu")->Fill(minDR,weight_);
+			}
 		}
 
 		HT = Event::HT(jets);
@@ -229,7 +256,7 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 				for (unsigned int c = 2; c < numberOfGenJets; ++c) {
 					if(a!=b && a!=c){
 						GeneratorM3 = ParticlePointer(new Particle(*genJets.at(a) + *genJets.at(b)+ *genJets.at(c)));
-					    double pt =  GeneratorM3->pt();
+						double pt =  GeneratorM3->pt();
 
 					    if(pt>ptGenMax){
 					    	ptGenMax = pt;
@@ -240,14 +267,25 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			}
 		}
 
-		HT_lepton = HT + signalLepton->pt();
-		GenHT_lepton = GenHT + genLeptPt;
-		HT_lepton_MET = Event::ST(jets, signalMuon, met);
-		GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
-
-
-
 		if(oneMuon){
+
+			genWPtMet = Event::MT(allGenMuons.at(1), genMet);
+			HT_lepton = HT + signalLepton->pt();
+			GenHT_lepton = GenHT + allGenMuons.at(1)->pt();
+			HT_lepton_MET = Event::ST(jets, signalMuon, met);
+			GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
+
+	        double MT_gen = -1;
+			double Esq= pow(allGenMuons.at(1)->et()+genMet->et(),2);
+			double Psq= pow(allGenMuons.at(1)->px()+genMet->px(),2)+pow(allGenMuons.at(1)->py()+genMet->py(),2);
+			if(Esq-Psq >0)
+			MT_gen = sqrt(Esq-Psq);
+
+//	        cout << "GEN lep px,y: " <<  allGenMuons.at(allGenMuons.size()-1)->px() << ", " <<  allGenMuons.at(allGenMuons.size()-1)->py()  << ") , met px,y: " << genMet->px() << ", " <<	genMet->py() <<")" << endl;
+//		    cout << "Gen lepE: " << allGenMuons.at(1)->et() << " , metE: " << genMet->et() << endl;
+//		    cout << "MET pt: " << genMet->pt() << endl;
+//		    cout << "calc: " << MT_gen << endl;
+//			cout << "MTrec: " << leptonic_W <<" ,MTgen: " << genWPtMet << endl;
 			histMan_->H2D_BJetBinned("GenHTPlusMETPt_vs_RecoHTPlusMetPt")->Fill(GenHT+event->GenMET()->pt(),HT+met->pt(), weight_);
 			histMan_->H2D_BJetBinned("GenHT_vs_RecoHT")->Fill(GenHT,HT,  weight_);
 			histMan_->H2D_BJetBinned("GenM3_vs_RecoM3")->Fill(GenM3,RecoM3,  weight_);
@@ -271,7 +309,7 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->H2D_BJetBinned("GenHT_lep_vs_RecoHT_lep")->Fill(GenHT_lepton,HT_lepton, weight_);
 		histMan_->H2D_BJetBinned("GenHT_lep_met_vs_RecoHT_lep_met")->Fill(GenHT_lepton_MET,HT_lepton_MET,  weight_);
 		histMan_->H2D_BJetBinned("Genleptonic_W_pt_vs_Recoleptonic_W_pt")->Fill(genWPt,W_boson->pt(),  weight_);
-		histMan_->H2D_BJetBinned("Genleptonic_W_MET_vs_Recoleptonic_W_MET")->Fill(genWPtMet,leptonic_W,  weight_);
+		histMan_->H2D_BJetBinned("Genleptonic_W_MET_vs_Recoleptonic_W_MET")->Fill(MT_gen,leptonic_W,  weight_);
 		histMan_->H2D_BJetBinned("GenNu_vs_RecoMET")->Fill(GenNuPt, met->pt(), weight_);
 		histMan_->H2D_BJetBinned("GenParton_vs_RecoHT")->Fill(partonPt, HT, weight_);
 		histMan_->H2D_BJetBinned("GenJetHT_vs_GenParton")->Fill(GenHT, partonPt, weight_);
@@ -297,6 +335,10 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		const METPointer met(event->MET());
 		const METPointer genMet(event->GenMET());
 
+		//added for gen jet cleaning
+		JetCollection cleanedGenJets;
+		MCParticleCollection genElectrons;
+		MCParticleCollection allGenElectrons;
 
 		ParticlePointer W_boson;
 		W_boson = ParticlePointer(new Particle(*met + *signalLepton));
@@ -304,7 +346,7 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		ParticlePointer M3;
 		ParticlePointer GeneratorM3;
 
-		unsigned int numberOfGenJets(genJets.size());
+//		unsigned int numberOfGenJets(genJets.size());
 		unsigned int numberOfJets(jets.size());
         unsigned int numberOfGenParts(genPart.size());
 
@@ -326,7 +368,11 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		double partonPt = 0;
 
 		for (unsigned int i = 0; i < numberOfGenParts; i++) {
-//	cout << "part: " << i << " id: " << genPart.at(i)->pdgId() << " mother:" << genPart.at(i)->motherIndex() << " pt: " << genPart.at(i)->pt() << " M(): " << genPart.at(i)->mass() << endl;
+
+			if(abs(genPart.at(i)->pdgId())==(11)){
+				MCParticlePointer ele(genPart.at(i));
+				allGenElectrons.push_back(ele);
+			}
 
 			// find the electron
 			if(abs(genPart.at(i)->pdgId())==(11) && abs(genPart.at(genPart.at(i)->motherIndex())->pdgId())==(24)){
@@ -336,6 +382,8 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 				gendPhi = genPart.at(i)->deltaPhi(event->GenMET());
 				genWPt = genPart.at(genPart.at(i)->motherIndex())->pt();
 				genWPtMet = Event::MT(genPart.at(i), genMet);
+				MCParticlePointer genElectron(genPart.at(i));
+				genElectrons.push_back(genElectron);
 			}
 
 			// find neutrino
@@ -354,10 +402,41 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			}
 
 		}
-		//cout << genLeptPt << endl;
+
+		double minDR = 99999999.;
+		double minDR2 = 99999999.;
+
+		if (oneElectron == true){
+
+			for(unsigned int i = 0; i < genJets.size(); i++) {
+				JetPointer generatorJet(genJets.at(i));
+
+				double deltaRele = generatorJet->deltaR(genElectrons.at(0));
+				if(deltaRele < minDR)
+					minDR = deltaRele;
+
+				if(!generatorJet->isWithinDeltaR(0.1, genElectrons.at(0)))
+				cleanedGenJets.push_back(generatorJet);
+			}
+
+			for(unsigned int i = 0; i < genJets.size(); i++) {
+				JetPointer generatorJet(genJets.at(i));
+				double deltaRele = generatorJet->deltaR(genElectrons.at(0));
+				if(deltaRele > minDR && deltaRele < minDR2)
+						minDR2 = deltaRele;
+			}
+		}
+
+		if (oneElectron == true){
+			histMan_->H1D_BJetBinned("deltaR Gen Ele bin")->Fill(minDR,weight_);
+			histMan_->H1D_BJetBinned("deltaR Gen Ele")->Fill(minDR,weight_);
+			histMan_->H1D_BJetBinned("deltaR Gen Ele2")->Fill(minDR2,weight_);
+		}
+
+		unsigned int numberOfCleanedGenJets(cleanedGenJets.size());
 
 		HT = Event::HT(jets);
-		GenHT = Event::HT(genJets);
+		GenHT = Event::HT(cleanedGenJets);
 
 		//for M3 calc
 		double ptmax = 0;
@@ -380,11 +459,11 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		double ptGenMax = 0;
 		double GenM3 = 0;
-		for (unsigned int a = 0; a < numberOfGenJets; ++a) {
-			for (unsigned int b = 1; b < numberOfGenJets; ++b) {
-				for (unsigned int c = 2; c < numberOfGenJets; ++c) {
+		for (unsigned int a = 0; a < numberOfCleanedGenJets; ++a) {
+			for (unsigned int b = 1; b < numberOfCleanedGenJets; ++b) {
+				for (unsigned int c = 2; c < numberOfCleanedGenJets; ++c) {
 					if(a!=b && a!=c){
-						GeneratorM3 = ParticlePointer(new Particle(*genJets.at(a) + *genJets.at(b)+ *genJets.at(c)));
+						GeneratorM3 = ParticlePointer(new Particle(*cleanedGenJets.at(a) + *cleanedGenJets.at(b)+ *cleanedGenJets.at(c)));
 					    double pt =  GeneratorM3->pt();
 
 					    if(pt>ptGenMax){
@@ -396,32 +475,45 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			}
 		}
 
-		HT_lepton = HT + signalLepton->pt();
-		GenHT_lepton = GenHT + genLeptPt;
-		HT_lepton_MET = Event::ST(jets, signalElectron, met);
-		GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
-		double leptonic_W = Event::MT(signalElectron,met);
-
 
 		if(oneElectron){
 
+			HT_lepton = HT + signalLepton->pt();
+			GenHT_lepton = GenHT + allGenElectrons.at(1)->pt();
+			HT_lepton_MET = Event::ST(jets, signalElectron, met);
+			GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
+			double leptonic_W = Event::MT(signalElectron,met);
+			genWPtMet = Event::MT(allGenElectrons.at(1), genMet);
+
+	        double MT_gen = -1;
+			double Esq= pow(allGenElectrons.at(1)->et()+genMet->et(),2);
+			double Psq= pow(allGenElectrons.at(1)->px()+genMet->px(),2)+pow(allGenElectrons.at(1)->py()+genMet->py(),2);
+			if(Esq-Psq >0)
+			MT_gen = sqrt(Esq-Psq);
+
+//	        cout << "GEN lep px,y: " <<  allGenElectrons.at(1)->px() << ", " <<  allGenElectrons.at(1)->py()  << ") , met px,y: " << genMet->px() << ", " <<	genMet->py() <<")" << endl;
+//	        cout << "Gen lepE: " << allGenElectrons.at(1)->et() << " , metE: " << genMet->et() << endl;
+//		    cout << "MET pt: " << genMet->pt() << endl;
+//
+//	        cout << "calc: " << MT_gen << endl;
+//			cout << "MTrec: " << leptonic_W <<" ,MTgen: " << genWPtMet << endl;
 			histMan_->H2D_BJetBinned("GenHTPlusMETPt_vs_RecoHTPlusMetPt")->Fill(GenHT+event->GenMET()->pt(),HT+met->pt(), weight_);
 			histMan_->H2D_BJetBinned("GenHT_vs_RecoHT")->Fill(GenHT,HT,  weight_);
 			histMan_->H2D_BJetBinned("GenM3_vs_RecoM3")->Fill(GenM3,RecoM3,  weight_);
 
-			histMan_->H2D_BJetBinned("GenNJets_vs_RecoNJets")->Fill(numberOfGenJets,numberOfJets, weight_);
+			histMan_->H2D_BJetBinned("GenNJets_vs_RecoNJets")->Fill(numberOfCleanedGenJets,numberOfJets, weight_);
 
 
-			if(numberOfJets>0 && numberOfGenJets>0){
-	        histMan_->H2D_BJetBinned("GenJet1Pt_vs_RecoJet1Pt")->Fill(genJets.at(0)->pt(),jets.at(0)->pt(), weight_);}
-	        if(numberOfJets>1 && numberOfGenJets>1){
-	        histMan_->H2D_BJetBinned("GenJet2Pt_vs_RecoJet2Pt")->Fill(genJets.at(1)->pt(),jets.at(1)->pt(), weight_);}
-	        if(numberOfJets>2 && numberOfGenJets>2){
-	        histMan_->H2D_BJetBinned("GenJet3Pt_vs_RecoJet3Pt")->Fill(genJets.at(2)->pt(),jets.at(2)->pt(), weight_);}
-	        if(numberOfJets>3 && numberOfGenJets>3){
-	        histMan_->H2D_BJetBinned("GenJet4Pt_vs_RecoJet4Pt")->Fill(genJets.at(3)->pt(),jets.at(3)->pt(), weight_);}
-	        if(numberOfJets>4 && numberOfGenJets>4){
-	        histMan_->H2D_BJetBinned("GenJet5Pt_vs_RecoJet5Pt")->Fill(genJets.at(4)->pt(),jets.at(4)->pt(), weight_);}
+			if(numberOfJets>0 && numberOfCleanedGenJets>0){
+	        histMan_->H2D_BJetBinned("GenJet1Pt_vs_RecoJet1Pt")->Fill(cleanedGenJets.at(0)->pt(),jets.at(0)->pt(), weight_);}
+	        if(numberOfJets>1 && numberOfCleanedGenJets>1){
+	        histMan_->H2D_BJetBinned("GenJet2Pt_vs_RecoJet2Pt")->Fill(cleanedGenJets.at(1)->pt(),jets.at(1)->pt(), weight_);}
+	        if(numberOfJets>2 && numberOfCleanedGenJets>2){
+	        histMan_->H2D_BJetBinned("GenJet3Pt_vs_RecoJet3Pt")->Fill(cleanedGenJets.at(2)->pt(),jets.at(2)->pt(), weight_);}
+	        if(numberOfJets>3 && numberOfCleanedGenJets>3){
+	        histMan_->H2D_BJetBinned("GenJet4Pt_vs_RecoJet4Pt")->Fill(cleanedGenJets.at(3)->pt(),jets.at(3)->pt(), weight_);}
+	        if(numberOfJets>4 && numberOfCleanedGenJets>4){
+	        histMan_->H2D_BJetBinned("GenJet5Pt_vs_RecoJet5Pt")->Fill(cleanedGenJets.at(4)->pt(),jets.at(4)->pt(), weight_);}
 
 			histMan_->H2D_BJetBinned("GenLepPlusMETPt_vs_RecoLepPlusMetPt")->Fill(genLeptPt+event->GenMET()->pt(),signalLepton->pt()+met->pt(), weight_);
 		    histMan_->H2D_BJetBinned("GendPhiLepMet_vs_RecodPhiLepMetPt")->Fill(gendPhi,signalLepton->deltaPhi(met), weight_);
@@ -429,7 +521,7 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			histMan_->H2D_BJetBinned("GenHT_lep_vs_RecoHT_lep")->Fill(GenHT_lepton,HT_lepton, weight_);
 			histMan_->H2D_BJetBinned("GenHT_lep_met_vs_RecoHT_lep_met")->Fill(GenHT_lepton_MET,HT_lepton_MET,  weight_);
 			histMan_->H2D_BJetBinned("Genleptonic_W_pt_vs_Recoleptonic_W_pt")->Fill(genWPt,W_boson->pt(),  weight_);
-			histMan_->H2D_BJetBinned("Genleptonic_W_MET_vs_Recoleptonic_W_MET")->Fill(genWPtMet,leptonic_W,  weight_);
+			histMan_->H2D_BJetBinned("Genleptonic_W_MET_vs_Recoleptonic_W_MET")->Fill(MT_gen,leptonic_W,  weight_);
 			histMan_->H2D_BJetBinned("GenNu_vs_RecoMET")->Fill(GenNuPt, met->pt(), weight_);
 			histMan_->H2D_BJetBinned("GenParton_vs_RecoHT")->Fill(partonPt, HT, weight_);
 			histMan_->H2D_BJetBinned("GenJetHT_vs_GenParton")->Fill(GenHT, partonPt, weight_);
@@ -544,7 +636,12 @@ void BinningAnalyser::createHistograms() {
 
 	histMan_->addH2D_BJetBinned("GenNJets_vs_RecoNJets", "GenNJets_vs_RecoNJets; N Jets_{Gen}; N Jets_{Reco}", 20,
 			0, 20, 20, 0, 20);
-
+	histMan_->addH1D_BJetBinned("deltaR Gen Ele", "deltaR Ele; Delta R", 100,
+				0, 0.5);
+	histMan_->addH1D_BJetBinned("deltaR Gen Ele2", "deltaR Ele 2; Delta R", 500,
+					0, 4);
+	histMan_->addH1D_BJetBinned("deltaR Gen Ele bin", "deltaR Ele; Delta R", 500,
+					0, 4);
 
 	histMan_->addH2D_BJetBinned("GenJet1Pt_vs_RecoJet1Pt", "GenJet1Pt_vs_RecoJet1Pt; Jet 1 PT_{Gen} [GeV]; Jet 1PT_{Reco} [GeV]", 500,
 			0, 500, 500, 0, 500);
@@ -632,7 +729,8 @@ void BinningAnalyser::createHistograms() {
 
 	histMan_->addH2D_BJetBinned("GenNJets_vs_RecoNJets", "GenNJets_vs_RecoNJets; N Jets_{Gen}; N Jets_{Reco}", 20,
 			0, 20, 20, 0, 20);
-
+	histMan_->addH1D_BJetBinned("deltaR Gen Mu", "deltaR Mu; Delta R", 500,
+					0, 4);
 
 	histMan_->addH2D_BJetBinned("GenJet1Pt_vs_RecoJet1Pt", "GenJet1Pt_vs_RecoJet1Pt; Jet 1 PT_{Gen} [GeV]; Jet 1PT_{Reco} [GeV]", 500,
 			0, 500, 500, 0, 500);

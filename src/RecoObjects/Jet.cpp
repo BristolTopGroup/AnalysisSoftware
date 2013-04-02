@@ -239,7 +239,7 @@ bool Jet::FirstDataLoosePFJetID() const {
 		passCHF = CHF() > 0;
 		passNCH = NCH() > 0;
 	}
-	return passNOD && passCEF && passNHF && passNEF && passCHF && passNCH;;
+	return passNOD && passCEF && passNHF && passNEF && passCHF && passNCH;
 }
 
 bool Jet::FirstDataLooseCaloJetID() const {
