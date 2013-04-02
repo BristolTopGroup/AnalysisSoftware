@@ -37,6 +37,12 @@ protected:
 	VariableReader<MultiDoublePointer> massReader;
 	VariableReader<MultiDoublePointer> chargeReader;
 
+	VariableReader<MultiDoublePointer> matchedGeneratedJetEnergyReader;
+	VariableReader<MultiDoublePointer> matchedGeneratedJetPxReader;
+	VariableReader<MultiDoublePointer> matchedGeneratedJetPyReader;
+	VariableReader<MultiDoublePointer> matchedGeneratedJetPzReader;
+	VariableReader<MultiDoublePointer> jetSmearingUncertaintyReader;
+
 	VariableReader<MultiDoublePointer> emfReader;
 	VariableReader<unsigned int> numberOfJetsReader;
 	VariableReader<MultiIntPointer> n90HitsReader;
@@ -64,6 +70,8 @@ protected:
 	VariableReader<MultiDoublePointer> btagTrackCountingHighEfficiencyReader;
 
 	VariableReader<MultiIntPointer> PartonFlavour;
+
+
 
 	JetCollection jets;
 	JetAlgorithm::value usedAlgorithm;

@@ -7,6 +7,7 @@
 
 #include "../../interface/RecoObjects/Jet.h"
 #include "../../interface/GlobalVariables.h"
+#include <algorithm>
 
 namespace BAT {
 
@@ -31,7 +32,26 @@ Jet::Jet() :
 		l2l3ResJEC(0), //
 		l2RelJEC(0), //
 		l3AbsJEC(0), //
-		partonFlavour_(0) //
+		partonFlavour_(0), //
+		energy_unsmeared(0.),
+		pt_unsmeared(0.),
+		px_unsmeared(0.),
+		py_unsmeared(0.),
+		pz_unsmeared(0.),
+		phi_unsmeared(0.),
+		eta_unsmeared(0.),
+
+		energy_smeared(0.),
+		pt_smeared(0.),
+		px_smeared(0.),
+		py_smeared(0.),
+		pz_smeared(0.),
+		phi_smeared(0.),
+		eta_smeared(0.),
+
+		matchedGeneratedJet(), //
+		unsmearedJet(), //
+		smearedJet() //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -59,7 +79,27 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		l2l3ResJEC(0), //
 		l2RelJEC(0), //
 		l3AbsJEC(0), //
-		partonFlavour_(0) //
+		partonFlavour_(0), //
+
+		energy_unsmeared(0.),
+		pt_unsmeared(0.),
+		px_unsmeared(0.),
+		py_unsmeared(0.),
+		pz_unsmeared(0.),
+		phi_unsmeared(0.),
+		eta_unsmeared(0.),
+
+		energy_smeared(0.),
+		pt_smeared(0.),
+		px_smeared(0.),
+		py_smeared(0.),
+		pz_smeared(0.),
+		phi_smeared(0.),
+		eta_smeared(0.),
+
+		matchedGeneratedJet(), //
+		unsmearedJet(), //
+		smearedJet() //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -73,6 +113,114 @@ Jet::~Jet() {
 JetAlgorithm::value Jet::getUsedAlgorithm() const {
 	return usedAlgorithm;
 }
+
+void Jet::set_matched_generated_jet(const ParticlePointer matchedgeneratedjet) {
+	matchedGeneratedJet = matchedgeneratedjet;
+}
+
+const ParticlePointer Jet::matched_generated_jet() {
+	return matchedGeneratedJet;
+}
+
+void Jet::set_unsmeared_jet(const ParticlePointer unsmearedjet) {
+	unsmearedJet = unsmearedjet;
+}
+
+const ParticlePointer Jet::unsmeared_jet() {
+	return unsmearedJet;
+}
+
+const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic) {
+	// Get the jet energy resolution scale factors, depending on the jet eta, from 
+	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetResolution#Recommendations_for_7_and_8_TeV
+	double scaleFactor(0.);
+	if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.5) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.052-0.061;
+				break;
+			case 1:
+				scaleFactor = 1.052+0.062;
+				break;
+			default:
+				scaleFactor = 1.052;
+		}
+	}
+	if (fabs(jet->eta()) >= 0.5 && fabs(jet->eta()) < 1.1) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.057-0.055;
+				break;
+			case 1:
+				scaleFactor = 1.057+0.056;
+				break;
+			default:
+				scaleFactor = 1.057;
+		}
+	}
+	if (fabs(jet->eta()) >= 1.1 && fabs(jet->eta()) < 1.7) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.096-0.062;
+				break;
+			case 1:
+				scaleFactor = 1.096+0.063;
+				break;
+			default:
+				scaleFactor = 1.096;
+		}
+	}
+	if (fabs(jet->eta()) >= 1.7 && fabs(jet->eta()) < 2.3) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.134-0.085;
+				break;
+			case 1:
+				scaleFactor = 1.134+0.087;
+				break;
+			default:
+				scaleFactor = 1.134;
+		}
+	}
+	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 5.0) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 0.153;
+				break;
+			case 1:
+				scaleFactor = 0.155;
+				break;
+			default:
+				scaleFactor = 1.288;
+		}
+	}
+	//use raw scaleFactors from above to calculate the final factors to apply
+	double matchedGeneratedJetpt = gen_jet->pt();
+	double jetPt = jet->pt();
+	double factor = 1-scaleFactor;
+	double deltaPt = factor * (jetPt - matchedGeneratedJetpt);
+	double ptScale = std::max(0.0, ((jetPt + deltaPt)/jetPt));
+	
+	//get the unsmeared reconstructed values
+	double energy_unsmeared = jet->energy();
+	double px_unsmeared = jet->px();
+	double py_unsmeared = jet->py();
+	double pz_unsmeared = jet->pz();
+
+	//correct the reconstructed jet values
+	double energy_smeared = ptScale * energy_unsmeared;
+	double px_smeared = ptScale * px_unsmeared;
+	double py_smeared = ptScale * py_unsmeared;
+	double pz_smeared = ptScale * pz_unsmeared;
+
+	//make new jet to be a new variable to store the final smeared jet
+	ParticlePointer smearedJet(new Particle(energy_smeared, px_smeared, py_smeared, pz_smeared));
+	return smearedJet;
+}
+
+//const ParticlePointer Jet::smeared_Jet() {
+//	return smearedJet;
+//}
 
 double Jet::emf() const {
 	return electromagneticFraction;
@@ -177,6 +325,7 @@ void Jet::setL3AbsJEC(double JEC) {
 void Jet::setUsedAlgorithm(JetAlgorithm::value algo) {
 	usedAlgorithm = algo;
 }
+
 void Jet::setEMF(double emf) {
 	electromagneticFraction = emf;
 }
