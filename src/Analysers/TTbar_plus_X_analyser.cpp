@@ -892,7 +892,7 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 	ht_bins_.push_back(450);
 	ht_bins_.push_back(600);
 
-	//ST:150, 250, 350, 450, 550, 750, 1250, inf new: 350 & 400 & 450 & 500 & 570 & 650 & 1999
+	//ST:150, 250, 350, 450, 550, 750, 1250, inf new: 350 & 400 & 450 & 500 & 580 & 700 & 1999
 	st_bins_.push_back(350);
 	st_bins_.push_back(400);
 	st_bins_.push_back(450);

@@ -22,11 +22,13 @@ TopPairEPlusJetsReferenceSelection::~TopPairEPlusJetsReferenceSelection() {
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
+
 	/**
 	 * This function tests the jet ID and eta (and pt) range for jet
 	 * The cut of 20 GeV is actually obsolete since we only store jets above that threshold.
 	 * However, the jet id is only valid for jets above it.
 	 */
+
 	bool passesPtAndEta = jet->pt() > 20 && fabs(jet->eta()) < 2.5;
 	bool passesJetID(false);
 	JetAlgorithm::value algo = jet->getUsedAlgorithm();
