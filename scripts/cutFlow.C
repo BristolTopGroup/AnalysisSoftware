@@ -51,13 +51,14 @@ std::cout<< setprecision(6) << "$\\geq$2btag &  " << weight*tt->GetBinContent(11
 
 TH1D* getSample(TString sample, bool muon){
 	TString dir = "../";
-	TFile* tt_file = new TFile(dir + sample + "_5050pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");
+	TFile* tt_file = new TFile(dir + sample + "_5800pb_PFElectron_PFMuon_PF2PATJets_PFMET_TEST.root");
 	TDirectoryFile* tt_folder = (TDirectoryFile*) tt_file->Get("EventCount");
 	TH1D* tt_cutflow;
 	if(muon == true){
 	tt_cutflow = (TH1D*) tt_folder->Get("TTbarMuPlusJetsRefSelectionUnweighted");
+	//tt_cutflow = (TH1D*) tt_folder->Get("TTbarMuPlusJetsRefSelectionUnweighted_singleCuts");
 	}else{
-    tt_cutflow = (TH1D*) tt_folder->Get("TTbarEplusJetsRefSelection");
+    tt_cutflow = (TH1D*) tt_folder->Get("TTbarEplusJetsRefSelectionUnweighted_singleCuts");
 	}
     return tt_cutflow;
 }

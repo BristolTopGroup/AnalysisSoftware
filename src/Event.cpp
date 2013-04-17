@@ -509,6 +509,7 @@ double Event::HT(const JetCollection jets) {
 	//Take ALL the jets!
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		ht += jets.at(index)->pt();
+//		cout << "gen jet pt " << index << ": " << jets.at(index)->pt() << endl;
 	}
 	return ht;
 }
