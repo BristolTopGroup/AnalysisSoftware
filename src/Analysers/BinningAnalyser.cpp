@@ -357,8 +357,6 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		double genLeptPt= 0;
 		double genWPt = 0;
-//		double genWpt_check = 0;
-//		double genWpt_check2 = 0;
 
 		bool oneElectron = false;
 		double electronID = 0;
@@ -382,8 +380,7 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 				genElectrons.push_back(genElectron);
 
 				ParticlePointer genW_check(new Particle(*genMet + *genElectron));
-//				genWpt_check = genW_check->pt();
-//				genWpt_check2 = sqrt(pow(genElectron->px()+genMet->px(),2)+pow(genElectron->py()+genMet->py(),2));
+
 			}
 
 			// find neutrino
