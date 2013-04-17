@@ -22,7 +22,12 @@ TopPairMuPlusJetsReferenceSelection::~TopPairMuPlusJetsReferenceSelection() {
 }
 
 bool TopPairMuPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
-	bool passesPtAndEta = jet->pt() > 30 && fabs(jet->eta()) < 2.5;
+	/**
+	 * This function tests the jet ID and eta (and pt) range for jet
+	 * The cut of 20 GeV is actually obsolete since we only store jets above that threshold.
+	 * However, the jet id is only valid for jets above it.
+	 */
+	bool passesPtAndEta = jet->pt() > 20 && fabs(jet->eta()) < 2.5;
 	bool passesJetID(false);
 	JetAlgorithm::value algo = jet->getUsedAlgorithm();
 	if (algo == JetAlgorithm::CA08PF || algo == JetAlgorithm::PF2PAT) { //PFJet
@@ -64,19 +69,6 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) con
 	bool passesMuonQuality_3(muon->numberOfMatchedStations() > 1);
 	bool passesMuonQuality = passesMuonQuality_1 && passesMuonQuality_2 && passesMuonQuality_3;
 
-/*	cout << "pT: " << muon->pt() << " eta: " << muon->eta() << " phi: " << muon->phi() << endl;
-	cout << "d0: " << muon->d0() << " z-dist: " << fabs(muon->ZDistanceToPrimaryVertex());
-	cout << " isGlobalMuon: " << muon->isGlobal() << endl;
-
-	//if (muon.globalTrack().isNonnull()) {
-		cout << "normChi2: " << muon->normChi2() << endl;
-		cout << "numberOfValidMuonHits: " << muon->numberOfValidMuonHits()
-				<< " , number of pixel hits: " << muon->numberOfValidPixelHits() << endl;
-		cout << " trackerLayersWithMeasurement: " << muon->trackerLayersWithMeasurement()
-				<< endl;
-	//}
-	cout << "numberOfMatchedStations: " << muon->numberOfMatchedStations() << endl;*/
-
 	return passesEtAndEta && passesD0 && passesDistanceToPV && passesID && passesMuonQuality;
 }
 
@@ -115,7 +107,6 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 	passesAllFilters = passesAllFilters && event->passesHBHENoiseFilter();
 	passesAllFilters = passesAllFilters && event->passesCSCTightBeamHaloFilter();
 	passesAllFilters = passesAllFilters && event->passesHCALLaserFilter();
-	//	passesAllFilters = passesAllFilters && event->passesECALDeadCellFilter();
 	passesAllFilters = passesAllFilters && event->passesTrackingFailureFilter();
 	if (Globals::NTupleVersion >= 9)
 		passesAllFilters = passesAllFilters && event->passesECALDeadCellTPFilter();
@@ -124,26 +115,6 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 		passesAllFilters = passesAllFilters && event->passesECALLaserCorrFilter();
 		passesAllFilters = passesAllFilters && event->passesTrackingPOGFilters();
 	}
-
-/*	if(!event->isBeamScraping())
-		cout << "pass beam scrap" << endl;
-	if(event->passesHBHENoiseFilter())
-		cout << "pass HBHE noise filter" << endl;
-	if(event->passesCSCTightBeamHaloFilter())
-		cout << "pass CSCTightBeamHaloFilter" << endl;
-	if(event->passesHCALLaserFilter())
-		cout << "pass HCALLaserFilter" << endl;
-	if(event->passesECALDeadCellTPFilter())
-		cout << "pass passesECALDeadCellTriggerPrimitiveFilter" << endl;
-	if(event->passesTrackingFailureFilter())
-		cout << "pass TrackingFailureFilter" << endl;
-	if(event->passesEEBadSCFilter())
-		cout << "pass EEBadSCFilter()" << endl;
-	if(event->passesECALLaserCorrFilter())
-		cout << "pass ECALLaserCorrFilter()" << endl;
-	if(event->passesTrackingPOGFilters())
-		cout << "pass TrackingPOGFilters()" << endl;
-*/
 
 	return passesAllFilters;
 }
@@ -158,9 +129,6 @@ bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr 
 		else
 			return false;
 	} else {
-		//if(event->HLT(HLTriggers::HLT_IsoMu24)){
-			//cout << "run: " << event->runnumber() << " lumi: " << event->lumiblock() << " evt: " << event->eventnumber() << endl;
-		//}
 		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
 	}
 }
@@ -173,9 +141,6 @@ bool TopPairMuPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Even
 		if (isGoodMuon(muon) && isIsolated(muon))
 			++nIsolatedGoodMuons;
 	}
-/*	if(nIsolatedGoodMuons == 1){
-		cout << "good 1 muon" << endl;
-	}*/
 
 	return nIsolatedGoodMuons == 1;
 
@@ -187,14 +152,11 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer e
 	bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
 	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
 	return passesEtAndEta && passesD0 &&
-//			passesDistanceToPV &&
 			passesHOverE && passesID;
 }
 
 bool TopPairMuPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
 	const MuonPointer muon(boost::static_pointer_cast<Muon>(lepton));
-	//cout << "Isolation: " << muon->pfRelativeIsolation(0.4, true) << endl;
-	//cout << "Isolation: " << muon->PFDeltaBeta_Isolation_DR04() << endl;
 
 	return muon->pfRelativeIsolation(0.4, true) < 0.12;
 
@@ -242,7 +204,6 @@ bool TopPairMuPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer 
 
 	bool passesEtAndEta = electron->et() > 20. && fabs(electron->eta()) < 2.5;
 	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
-	//bool passesID(electron->passesElectronID(ElectronID::SimpleCutBasedWP95));
 	bool passesIso = electron->pfRelativeIsolationRhoCorrected() < 0.15;
 	return passesEtAndEta && passesIso && passesID;
 }
@@ -254,7 +215,7 @@ bool TopPairMuPlusJetsReferenceSelection::hasAtLeastNGoodJets(const EventPtr eve
 	for (unsigned int index = 0; index < goodJets.size(); ++index) {
 
 		const JetPointer jet(goodJets.at(index));
-		if (goodJets.at(index)->pt() > 30. && isGoodJet(jet))
+		if (goodJets.at(index)->pt() > 30.)
 			++nJetsAbove30GeV;
 	}
 	return nJetsAbove30GeV >= Njets;
@@ -282,13 +243,9 @@ const LeptonPointer TopPairMuPlusJetsReferenceSelection::signalLepton(const Even
 	const MuonCollection allMuons(event->Muons());
 	MuonCollection goodIsolatedMuons;
 	for (unsigned int index = 0; index < allMuons.size(); ++index) {
-//		cout << "muon:  " << index << endl;
 		const MuonPointer muon(allMuons.at(index));
-		if (isGoodMuon(muon) && isIsolated(muon)){
+		if (isGoodMuon(muon) && isIsolated(muon)) {
 			goodIsolatedMuons.push_back(muon);
-//			cout << "pass moun:  " <<  goodIsolatedMuons.size() << endl;
-//		}else{
-//			cout << "fail muon:  " << endl;
 		}
 	}
 
@@ -300,14 +257,15 @@ const JetCollection TopPairMuPlusJetsReferenceSelection::cleanedJets(const Event
 	const JetCollection jets(event->Jets());
 	JetCollection cleanedJets;
 
-	if (!hasExactlyOneIsolatedLepton(event)) //if no signal lepton is found, can't clean jets, return them all!
+	//if no signal lepton is found, can't clean jets, return them all!
+	if (!hasExactlyOneIsolatedLepton(event))
 		return jets;
 
 	const LeptonPointer lepton(signalLepton(event));
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
-		if (!jet->isWithinDeltaR(0.3, lepton))
+		if (!jet->isWithinDeltaR(0.3, lepton) && isGoodJet(jet))
 			cleanedJets.push_back(jet);
 	}
 
