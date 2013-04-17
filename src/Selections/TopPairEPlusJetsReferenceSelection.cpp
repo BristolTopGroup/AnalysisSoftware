@@ -22,7 +22,7 @@ TopPairEPlusJetsReferenceSelection::~TopPairEPlusJetsReferenceSelection() {
 }
 
 bool TopPairEPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const {
-	bool passesPtAndEta = jet->pt() > 30 && fabs(jet->eta()) < 2.5;
+	bool passesPtAndEta = jet->pt() > 20 && fabs(jet->eta()) < 2.5;
 	bool passesJetID(false);
 	JetAlgorithm::value algo = jet->getUsedAlgorithm();
 	if (algo == JetAlgorithm::CA08PF || algo == JetAlgorithm::PF2PAT) { //PFJet
