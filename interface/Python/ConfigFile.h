@@ -43,6 +43,7 @@ public:
 	unsigned int centerOfMassEnergy() const;
 	unsigned int nTupleVersion() const;
 	int jesSystematic() const;
+	int jetSmearingSystematic() const;
 	int LightTagSystematic() const;
 	int BtagSystematic() const;
 	std::string custom_file_suffix() const;
@@ -67,6 +68,7 @@ private:
 	unsigned int centerOfMassEnergy_;
 	unsigned int nTupleVersion_;
 	int jesSystematic_;
+	int jetSmearingSystematic_;
 	int btagSystematic_;
 	int lightTagSystematic_;
 	std::string custom_file_suffix_;

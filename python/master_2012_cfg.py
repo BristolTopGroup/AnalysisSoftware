@@ -79,16 +79,19 @@ analysisModes = ['central',
                  'LightJet_up',
                  'PU_down',
                  'PU_up',
+		 'JetSmearing_up',
+		 'JetSmearing_down',
                  'Test']
 
 analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 
-available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
+available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'JetSmearingSystematic', 'custom_file_suffix']
 default_settings = {
             'JESsystematic':0,
             'PUFile':'PileUp_2012_69300_truth_finebin.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
+	    'JetSmearingSystematic':0,
             'custom_file_suffix':'',
             'pdfWeightNumber' : 0,
             }
@@ -105,6 +108,8 @@ analysis_settings = {
                             },
                  'PU_up':{'PUFile':'PileUp_2012_72765_truth_finebin.root',
                             'custom_file_suffix':'PU_72765mb'},
+		 'JetSmearing_up':{'JetSmearingSystematic':1},
+		 'JetSmearing_down':{'JetSmearingSystematic':-1},
                 'Test': {'custom_file_suffix':'TESTING'}
                      }
 for weight in range(1, 45):
@@ -154,6 +159,7 @@ if sample in ['TTJets-mcatnlo','TTJets-powheg']:
 PUFile = toolsFolder + "data/" + settings['PUFile']
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
+JetSmearingSystematic = settings['JetSmearingSystematic']
 BTagSystematic = settings['BTagSystematic']
 LightTagSystematic = settings['LightTagSystematic']
 custom_file_suffix = settings['custom_file_suffix']
