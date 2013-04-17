@@ -356,9 +356,6 @@ double BTagWeight::getMaxUDSGScaleFactor(double jetPT, double jetEta) const {
 double BTagWeight::getAverageBEfficiency() const {
 	double discriminator_cut = 0.679; //== CSVM
 
-//	std::cout << "beff old: " << -1.73338329789 * pow(discriminator_cut, 4) + 1.26161794785 * pow(discriminator_cut, 3)	+ 0.784721653518 * pow(discriminator_cut, 2) + -1.03328577451 * discriminator_cut + 1.04305075822 << std::endl;
-//	std::cout << "beff new: " <<  0.607239* pow(discriminator_cut, 4) -1.49984 * pow(discriminator_cut, 3)	+ 1.3473 * pow(discriminator_cut, 2) -0.599888  * discriminator_cut + 1.09396 << std::endl;
-
 	return -1.73338329789 * pow(discriminator_cut, 4) + 1.26161794785 * pow(discriminator_cut, 3)
 			+ 0.784721653518 * pow(discriminator_cut, 2) + -1.03328577451 * discriminator_cut + 1.04305075822;
 
