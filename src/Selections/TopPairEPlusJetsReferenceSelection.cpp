@@ -211,9 +211,9 @@ bool TopPairEPlusJetsReferenceSelection::passesDileptonVeto(const EventPtr event
 
 bool TopPairEPlusJetsReferenceSelection::isLooseElectron(const ElectronPointer electron) const {
 
-	bool passesEtAndEta = electron->et() > 30. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
+	bool passesEtAndEta = electron->et() > 20. && fabs(electron->eta()) < 2.5;
 	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
-	bool passesIso = electron->pfRelativeIsolationRhoCorrected() < 0.2;
+	bool passesIso = electron->pfRelativeIsolationRhoCorrected() < 0.15;
 
 	return passesEtAndEta && passesID && passesIso;
 }
