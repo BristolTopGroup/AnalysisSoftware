@@ -19,7 +19,7 @@
 datasetInfo = {}
 #datasetInfo['TTJet'] = {"cross-section": 225.197, "NumberOfProcessedEvents":59414270}
 #if using the designated subset:
-datasetInfo['TTJet'] = {"cross-section": 225.197, "NumberOfProcessedEvents":6920475}
+datasetInfo['TTJet'] = {"cross-section": 225.197, "NumberOfProcessedEvents":6819798}
 datasetInfo['WJetsToLNu'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":57708550}
 datasetInfo['W1Jet'] = {"cross-section": 5400.0, "NumberOfProcessedEvents":23141598 }
 datasetInfo['W2Jets'] = {"cross-section": 1750.0, "NumberOfProcessedEvents":34044921}
@@ -35,12 +35,12 @@ datasetInfo['DY4JetsToLL'] = {"cross-section": 23.04, "NumberOfProcessedEvents":
 datasetInfo['GJets_HT-200To400'] = {"cross-section": 960.5, "NumberOfProcessedEvents":10479625}
 datasetInfo['GJets_HT-400ToInf'] = {"cross-section": 107.5, "NumberOfProcessedEvents":1611963}
 
-datasetInfo['QCD_Pt_20_30_BCtoE'] = {"cross-section": 2.886e8 * 5.8e-4, "NumberOfProcessedEvents":1740223}
-datasetInfo['QCD_Pt_30_80_BCtoE'] = {"cross-section": 7.424e7 * 0.00225, "NumberOfProcessedEvents":2048147}
-datasetInfo['QCD_Pt_80_170_BCtoE'] = {"cross-section": 1191000.0 * 0.0109, "NumberOfProcessedEvents":1937602}
-datasetInfo['QCD_Pt_170_250_BCtoE'] = {"cross-section": 30980.0 * 0.0204, "NumberOfProcessedEvents":1945895}
-datasetInfo['QCD_Pt_250_350_BCtoE'] = {"cross-section": 4250.0 * 0.0243, "NumberOfProcessedEvents":2019922}
-datasetInfo['QCD_Pt_350_BCtoE'] = {"cross-section": 811.0 * 0.0295, "NumberOfProcessedEvents":1934813}
+datasetInfo['QCD_Pt_20_30_BCtoE'] = {"cross-section": 2.886e8 * 5.8e-4, "NumberOfProcessedEvents":1740229}
+datasetInfo['QCD_Pt_30_80_BCtoE'] = {"cross-section": 7.424e7 * 0.00225, "NumberOfProcessedEvents":2048152}
+datasetInfo['QCD_Pt_80_170_BCtoE'] = {"cross-section": 1191000.0 * 0.0109, "NumberOfProcessedEvents":1945525}
+datasetInfo['QCD_Pt_170_250_BCtoE'] = {"cross-section": 30980.0 * 0.0204, "NumberOfProcessedEvents":1948112}
+datasetInfo['QCD_Pt_250_350_BCtoE'] = {"cross-section": 4250.0 * 0.0243, "NumberOfProcessedEvents":1739875}
+datasetInfo['QCD_Pt_350_BCtoE'] = {"cross-section": 811.0 * 0.0295, "NumberOfProcessedEvents":1502725}
 
 datasetInfo['QCD_Pt_20_30_EMEnriched'] = {"cross-section": 2.886e8 * 0.0101, "NumberOfProcessedEvents":34339883}
 datasetInfo['QCD_Pt_30_80_EMEnriched'] = {"cross-section": 7.433e7 * 0.0621, "NumberOfProcessedEvents":32537408}
@@ -63,13 +63,13 @@ datasetInfo['QCD_Pt-600to800_MuEnrichedPt5'] = {"cross-section": 27.01 * 0.0996,
 datasetInfo['QCD_Pt-800to1000_MuEnrichedPt5'] = {"cross-section": 3.57 * 0.1033, "NumberOfProcessedEvents":4107853}
 datasetInfo['QCD_Pt-1000_MuEnrichedPt5'] = {"cross-section": 0.774 * 0.1097, "NumberOfProcessedEvents":3873970}
 
-datasetInfo['T_s-channel'] = {"cross-section": 3.89394, "NumberOfProcessedEvents":259911}
-datasetInfo['T_t-channel'] = {"cross-section": 55.531, "NumberOfProcessedEvents":3757707}
-datasetInfo['T_tW-channel'] = {"cross-section": 11.1773, "NumberOfProcessedEvents":497395}
+datasetInfo['T_s-channel'] = {"cross-section": 3.89394, "NumberOfProcessedEvents":259961}
+datasetInfo['T_t-channel'] = {"cross-section": 55.531, "NumberOfProcessedEvents":3758227}
+datasetInfo['T_tW-channel'] = {"cross-section": 11.1773, "NumberOfProcessedEvents":497658}
 
-datasetInfo['Tbar_s-channel'] = {"cross-section": 1.75776, "NumberOfProcessedEvents":139948}
-datasetInfo['Tbar_t-channel'] = {"cross-section": 30.0042, "NumberOfProcessedEvents":1934817}
-datasetInfo['Tbar_tW-channel'] = {"cross-section": 11.1773, "NumberOfProcessedEvents":493239}
+datasetInfo['Tbar_s-channel'] = {"cross-section": 1.75776, "NumberOfProcessedEvents":139974}
+datasetInfo['Tbar_t-channel'] = {"cross-section": 30.0042, "NumberOfProcessedEvents":1857670}
+datasetInfo['Tbar_tW-channel'] = {"cross-section": 11.1773, "NumberOfProcessedEvents":493460}
 
 #systematic samples
 datasetInfo['TTJets-matchingdown'] = {"cross-section": 130., "NumberOfProcessedEvents":5476728}
