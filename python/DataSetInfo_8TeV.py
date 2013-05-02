@@ -21,19 +21,19 @@ datasetInfo = {}
 #if using the designated subset:
 datasetInfo['TTJet'] = {"cross-section": 225.197, "NumberOfProcessedEvents":6920475}
 datasetInfo['WJetsToLNu'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":57708550}
-datasetInfo['W1Jet'] = {"cross-section": 5400.0, "NumberOfProcessedEvents":23140779 }
-datasetInfo['W2Jets'] = {"cross-section": 1750.0, "NumberOfProcessedEvents":34041404}
-datasetInfo['W3Jets'] = {"cross-section": 519.0, "NumberOfProcessedEvents":15536443}
-datasetInfo['W4Jets'] = {"cross-section": 214.0, "NumberOfProcessedEvents":13370904}
+datasetInfo['W1Jet'] = {"cross-section": 5400.0, "NumberOfProcessedEvents":23141598 }
+datasetInfo['W2Jets'] = {"cross-section": 1750.0, "NumberOfProcessedEvents":34044921}
+datasetInfo['W3Jets'] = {"cross-section": 519.0, "NumberOfProcessedEvents":15539503}
+datasetInfo['W4Jets'] = {"cross-section": 214.0, "NumberOfProcessedEvents":13349346}
 
 datasetInfo['DYJetsToLL'] = {"cross-section": 3503.71, "NumberOfProcessedEvents":30457954}
-datasetInfo['DY1JetsToLL'] = {"cross-section": 561.0, "NumberOfProcessedEvents":24042904}
-datasetInfo['DY2JetsToLL'] = {"cross-section": 181.0, "NumberOfProcessedEvents":21835749}
-datasetInfo['DY3JetsToLL'] = {"cross-section": 51.1, "NumberOfProcessedEvents":11010628}
-datasetInfo['DY4JetsToLL'] = {"cross-section": 23.04, "NumberOfProcessedEvents":6391785}
+datasetInfo['DY1JetsToLL'] = {"cross-section": 561.0, "NumberOfProcessedEvents":24045248}
+datasetInfo['DY2JetsToLL'] = {"cross-section": 181.0, "NumberOfProcessedEvents":21852156}
+datasetInfo['DY3JetsToLL'] = {"cross-section": 51.1, "NumberOfProcessedEvents":11015445}
+datasetInfo['DY4JetsToLL'] = {"cross-section": 23.04, "NumberOfProcessedEvents":6402827}
 
-datasetInfo['GJets_HT-200To400'] = {"cross-section": 960.5, "NumberOfProcessedEvents":10484464}
-datasetInfo['GJets_HT-400ToInf'] = {"cross-section": 107.5, "NumberOfProcessedEvents":1606586}
+datasetInfo['GJets_HT-200To400'] = {"cross-section": 960.5, "NumberOfProcessedEvents":10479625}
+datasetInfo['GJets_HT-400ToInf'] = {"cross-section": 107.5, "NumberOfProcessedEvents":1611963}
 
 datasetInfo['QCD_Pt_20_30_BCtoE'] = {"cross-section": 2.886e8 * 5.8e-4, "NumberOfProcessedEvents":1740223}
 datasetInfo['QCD_Pt_30_80_BCtoE'] = {"cross-section": 7.424e7 * 0.00225, "NumberOfProcessedEvents":2048147}
@@ -42,26 +42,26 @@ datasetInfo['QCD_Pt_170_250_BCtoE'] = {"cross-section": 30980.0 * 0.0204, "Numbe
 datasetInfo['QCD_Pt_250_350_BCtoE'] = {"cross-section": 4250.0 * 0.0243, "NumberOfProcessedEvents":2019922}
 datasetInfo['QCD_Pt_350_BCtoE'] = {"cross-section": 811.0 * 0.0295, "NumberOfProcessedEvents":1934813}
 
-datasetInfo['QCD_Pt_20_30_EMEnriched'] = {"cross-section": 2.886e8 * 0.0101, "NumberOfProcessedEvents":35005597}
-datasetInfo['QCD_Pt_30_80_EMEnriched'] = {"cross-section": 7.433e7 * 0.0621, "NumberOfProcessedEvents":28753832}
-datasetInfo['QCD_Pt_80_170_EMEnriched'] = {"cross-section": 1191000.0 * 0.1539, "NumberOfProcessedEvents":34436039}
-datasetInfo['QCD_Pt_170_250_EMEnriched'] = {"cross-section": 30990.0 * 0.148, "NumberOfProcessedEvents":31581299}
-datasetInfo['QCD_Pt_250_350_EMEnriched'] = {"cross-section": 4250.0 * 0.131, "NumberOfProcessedEvents":34502346}
-datasetInfo['QCD_Pt_350_EMEnriched'] = {"cross-section": 810.0 * 0.11, "NumberOfProcessedEvents":33478691}
+datasetInfo['QCD_Pt_20_30_EMEnriched'] = {"cross-section": 2.886e8 * 0.0101, "NumberOfProcessedEvents":34339883}
+datasetInfo['QCD_Pt_30_80_EMEnriched'] = {"cross-section": 7.433e7 * 0.0621, "NumberOfProcessedEvents":32537408}
+datasetInfo['QCD_Pt_80_170_EMEnriched'] = {"cross-section": 1191000.0 * 0.1539, "NumberOfProcessedEvents":34542763}
+datasetInfo['QCD_Pt_170_250_EMEnriched'] = {"cross-section": 30990.0 * 0.148, "NumberOfProcessedEvents":14114030}
+datasetInfo['QCD_Pt_250_350_EMEnriched'] = {"cross-section": 4250.0 * 0.131, "NumberOfProcessedEvents":15061299}
+datasetInfo['QCD_Pt_350_EMEnriched'] = {"cross-section": 810.0 * 0.11, "NumberOfProcessedEvents":0}
 
 datasetInfo['QCD_Pt_20_MuEnrichedPt_15'] = {"cross-section": 3.64e8 * 3.7e-4, "NumberOfProcessedEvents":21484326}
-datasetInfo['QCD_Pt-15to20_MuEnrichedPt5'] = {"cross-section": 7.022e8 * 0.0039, "NumberOfProcessedEvents":1722678}
-datasetInfo['QCD_Pt-20to30_MuEnrichedPt5'] = {"cross-section": 2.87e8 * 0.0065, "NumberOfProcessedEvents":8486893}
-datasetInfo['QCD_Pt-30to50_MuEnrichedPt5'] = {"cross-section": 6.609e7 * 0.0122, "NumberOfProcessedEvents":8928999}
-datasetInfo['QCD_Pt-50to80_MuEnrichedPt5'] = {"cross-section": 8082000.0 * 0.0218, "NumberOfProcessedEvents":9981739}
-datasetInfo['QCD_Pt-80to120_MuEnrichedPt5'] = {"cross-section": 1024000.0 * 0.0395, "NumberOfProcessedEvents":9030624}
-datasetInfo['QCD_Pt-120to170_MuEnrichedPt5'] = {"cross-section": 157800.0 * 0.0473, "NumberOfProcessedEvents":8500505}
-datasetInfo['QCD_Pt-170to300_MuEnrichedPt5'] = {"cross-section": 34020.0 * 0.0676, "NumberOfProcessedEvents":7662483}
-datasetInfo['QCD_Pt-300to470_MuEnrichedPt5'] = {"cross-section": 1757.0 * 0.0864, "NumberOfProcessedEvents":7797481}
-datasetInfo['QCD_Pt-470to600_MuEnrichedPt5'] = {"cross-section": 115.2 * 0.1024, "NumberOfProcessedEvents":3749539}
-datasetInfo['QCD_Pt-600to800_MuEnrichedPt5'] = {"cross-section": 27.01 * 0.0996, "NumberOfProcessedEvents":0}
-datasetInfo['QCD_Pt-800to1000_MuEnrichedPt5'] = {"cross-section": 3.57 * 0.1033, "NumberOfProcessedEvents":4047142}
-datasetInfo['QCD_Pt-1000_MuEnrichedPt5'] = {"cross-section": 0.774 * 0.1097, "NumberOfProcessedEvents":3807263}
+datasetInfo['QCD_Pt-15to20_MuEnrichedPt5'] = {"cross-section": 7.022e8 * 0.0039, "NumberOfProcessedEvents":1722681}
+datasetInfo['QCD_Pt-20to30_MuEnrichedPt5'] = {"cross-section": 2.87e8 * 0.0065, "NumberOfProcessedEvents":8486904}
+datasetInfo['QCD_Pt-30to50_MuEnrichedPt5'] = {"cross-section": 6.609e7 * 0.0122, "NumberOfProcessedEvents":9560265}
+datasetInfo['QCD_Pt-50to80_MuEnrichedPt5'] = {"cross-section": 8082000.0 * 0.0218, "NumberOfProcessedEvents":10365230}
+datasetInfo['QCD_Pt-80to120_MuEnrichedPt5'] = {"cross-section": 1024000.0 * 0.0395, "NumberOfProcessedEvents":9238642}
+datasetInfo['QCD_Pt-120to170_MuEnrichedPt5'] = {"cross-section": 157800.0 * 0.0473, "NumberOfProcessedEvents":8501935}
+datasetInfo['QCD_Pt-170to300_MuEnrichedPt5'] = {"cross-section": 34020.0 * 0.0676, "NumberOfProcessedEvents":7669947}
+datasetInfo['QCD_Pt-300to470_MuEnrichedPt5'] = {"cross-section": 1757.0 * 0.0864, "NumberOfProcessedEvents":7832261}
+datasetInfo['QCD_Pt-470to600_MuEnrichedPt5'] = {"cross-section": 115.2 * 0.1024, "NumberOfProcessedEvents":3783069}
+datasetInfo['QCD_Pt-600to800_MuEnrichedPt5'] = {"cross-section": 27.01 * 0.0996, "NumberOfProcessedEvents":4119000}
+datasetInfo['QCD_Pt-800to1000_MuEnrichedPt5'] = {"cross-section": 3.57 * 0.1033, "NumberOfProcessedEvents":4107853}
+datasetInfo['QCD_Pt-1000_MuEnrichedPt5'] = {"cross-section": 0.774 * 0.1097, "NumberOfProcessedEvents":3873970}
 
 datasetInfo['T_s-channel'] = {"cross-section": 3.89394, "NumberOfProcessedEvents":259911}
 datasetInfo['T_t-channel'] = {"cross-section": 55.531, "NumberOfProcessedEvents":3757707}
@@ -72,20 +72,20 @@ datasetInfo['Tbar_t-channel'] = {"cross-section": 30.0042, "NumberOfProcessedEve
 datasetInfo['Tbar_tW-channel'] = {"cross-section": 11.1773, "NumberOfProcessedEvents":493239}
 
 #systematic samples
-datasetInfo['TTJets-matchingdown'] = {"cross-section": 130., "NumberOfProcessedEvents":5458456}
-datasetInfo['TTJets-matchingup'] = {"cross-section": 138., "NumberOfProcessedEvents":5412642}
-datasetInfo['TTJets-scaledown'] = {"cross-section": 228.0, "NumberOfProcessedEvents":5384596}
-datasetInfo['TTJets-scaleup'] = {"cross-section": 97.7, "NumberOfProcessedEvents":5007277}
+datasetInfo['TTJets-matchingdown'] = {"cross-section": 130., "NumberOfProcessedEvents":5476728}
+datasetInfo['TTJets-matchingup'] = {"cross-section": 138., "NumberOfProcessedEvents":5306710}
+datasetInfo['TTJets-scaledown'] = {"cross-section": 228.0, "NumberOfProcessedEvents":5387181}
+datasetInfo['TTJets-scaleup'] = {"cross-section": 97.7, "NumberOfProcessedEvents":5009488}
 
-datasetInfo['WJets-matchingdown'] = {"cross-section": 29690.0, "NumberOfProcessedEvents":21364189}
-datasetInfo['WJets-matchingup'] = {"cross-section": 30290.0, "NumberOfProcessedEvents":20126095}
-datasetInfo['WJets-scaledown'] = {"cross-section": 33300.0, "NumberOfProcessedEvents":20760315}
-datasetInfo['WJets-scaleup'] = {"cross-section": 32000.0, "NumberOfProcessedEvents":19402929}
+datasetInfo['WJets-matchingdown'] = {"cross-section": 29690.0, "NumberOfProcessedEvents":21364637}
+datasetInfo['WJets-matchingup'] = {"cross-section": 30290.0, "NumberOfProcessedEvents":20976082}
+datasetInfo['WJets-scaledown'] = {"cross-section": 33300.0, "NumberOfProcessedEvents":20719363}
+datasetInfo['WJets-scaleup'] = {"cross-section": 32000.0, "NumberOfProcessedEvents":20784770}
 
-datasetInfo['ZJets-matchingdown'] = {"cross-section": 2888.0, "NumberOfProcessedEvents":2091131}
-datasetInfo['ZJets-matchingup'] = {"cross-section": 2915.0, "NumberOfProcessedEvents":1985440}
-datasetInfo['ZJets-scaledown'] = {"cross-section": 3312.0, "NumberOfProcessedEvents":1934768}
-datasetInfo['ZJets-scaleup'] = {"cross-section": 2954.0, "NumberOfProcessedEvents":2126758}
+datasetInfo['ZJets-matchingdown'] = {"cross-section": 2888.0, "NumberOfProcessedEvents":2112387}
+datasetInfo['ZJets-matchingup'] = {"cross-section": 2915.0, "NumberOfProcessedEvents":1985529}
+datasetInfo['ZJets-scaledown'] = {"cross-section": 3312.0, "NumberOfProcessedEvents":1934901}
+datasetInfo['ZJets-scaleup'] = {"cross-section": 2954.0, "NumberOfProcessedEvents":2170270}
 
 #Data and not used samples
 datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}

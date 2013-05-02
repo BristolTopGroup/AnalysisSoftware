@@ -495,18 +495,3 @@ export TQAFPath=${TQAFPath}
 #sample="ZJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaledown_central.log &
 #sample="ZJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaleup_central.log &
 
-#systematics
-#sample="TTJets-matchingdown" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-matchingdown_PU_down.log &
-#sample="TTJets-matchingup" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-matchingup_PU_down.log &
-#sample="TTJets-scaledown" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-scaledown_PU_down.log &
-#sample="TTJets-scaleup" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-scaleup_PU_down.log &
-
-#sample="WJets-matchingdown" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-matchingdown_PU_down.log &
-#sample="WJets-matchingup" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-matchingup_PU_down.log &
-#sample="WJets-scaledown" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-scaledown_PU_down.log &
-#sample="WJets-scaleup" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-scaleup_PU_down.log &
-
-#sample="ZJets-matchingdown" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-matchingdown_PU_down.log &
-#sample="ZJets-matchingup" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-matchingup_PU_down.log &
-#sample="ZJets-scaledown" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaledown_PU_down.log &
-#sample="ZJets-scaleup" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaleup_PU_down.log &
