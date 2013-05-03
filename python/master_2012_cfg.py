@@ -1,14 +1,18 @@
 mc_path = '/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/'
 data_path = '/storage/TopQuarkGroup/data/2012/'
-datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v10_Run2012A-13Jul2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleElectron/nTuple_v10_Run2012A-recover-06Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleElectron/nTuple_v10_Run2012B-13Jul2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleElectron/nTuple_v10_Run2012C-24Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets'],
-                 'SingleMu' : [data_path + 'SingleMu/nTuple_v10_Run2012A-13Jul2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleMu/nTuple_v10_Run2012A-recover-06Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleMu/nTuple_v10_Run2012B-13Jul2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleMu/nTuple_v10_Run2012C-24Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets'],
-                 'TTJet' : [mc_path + 'TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v10_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets_PDFweights'],
+datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v10_Run2012A-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+                            data_path + 'SingleElectron/nTuple_v10_Run2012B-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+                            data_path + 'SingleElectron/nTuple_v10_Run2012C-24Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+			    data_path + 'SingleElectron/nTuple_v10_Run2012C-PromptReco-v2_AOD_GoldenJSON_LeptonPlus3Jets',
+			    data_path + 'SingleElectron/nTuple_v10_Run2012C-EcalRecover_11Dec2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+			    data_path + 'SingleElectron/nTuple_v10_Run2012D-PromptReco-v1_AOD_GoldenJSON_LeptonPlus3Jets'],
+                 'SingleMu' : [data_path + 'SingleMu/nTuple_v10_Run2012A-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+                            data_path + 'SingleMu/nTuple_v10_Run2012B-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+                            data_path + 'SingleMu/nTuple_v10_Run2012C-24Aug2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+                            data_path + 'SingleMu/nTuple_v10_Run2012C-PromptReco-v2_AOD_GoldenJSON_LeptonPlus3Jets',
+			    data_path + 'SingleMu/nTuple_v10_Run2012C-EcalRecover_11Dec2012-v1_AOD_GoldenJSON_LeptonPlus3Jets',
+			    data_path + 'SingleMu/nTuple_v10_Run2012D-PromptReco-v1_AOD_GoldenJSON_LeptonPlus3Jets'],
+                 'TTJet' : [mc_path + 'TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets'],
                  'DY1JetsToLL' : [mc_path + 'DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
                  'DY2JetsToLL' : [mc_path + 'DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets'],
                  'DY3JetsToLL' : [mc_path + 'DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
@@ -189,7 +193,7 @@ applyMetType0Corr = True
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5814.#pb-1
+lumi = 19584.#pb-1
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
@@ -201,4 +205,4 @@ if centerOfMassEnergy == 7:
     datasetInfoFile = toolsFolder + "python/DataSetInfo.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
-nTuple_version = 9
+nTuple_version = 10
