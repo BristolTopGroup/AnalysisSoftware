@@ -1216,6 +1216,7 @@ void TTbar_plus_X_analyser::make_binned_MET_analysers() {
 		Binned_Variable_analyser_ptr qcd_noniso_binned_met_muon_eta_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets ge3j/Binned_MET_Analysis"));
+
 		no_selection_binned_met_muon_eta_analyser->set_variables(metPrefix, metBins_, "muon_absolute_eta", 30, 0.0,3.0);
 		ref_selection_binned_met_muon_eta_analyser->set_variables(metPrefix, metBins_, "muon_absolute_eta", 30, 0.0,
 				3.0);
@@ -1463,6 +1464,7 @@ void TTbar_plus_X_analyser::make_binned_WPT_analysers() {
 		Binned_Variable_analyser_ptr qcd_noniso_binned_WPT_muon_eta_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets ge3j/Binned_WPT_Analysis"));
+
 		no_selection_binned_WPT_muon_eta_analyser->set_variables("WPT_with_" + metPrefix, wpt_bins_, "muon_absolute_eta",
 								30, 0.0, 3.0);
 		ref_selection_binned_WPT_muon_eta_analyser->set_variables("WPT_with_" + metPrefix, wpt_bins_, "muon_absolute_eta",
@@ -1471,6 +1473,7 @@ void TTbar_plus_X_analyser::make_binned_WPT_analysers() {
 				30, 0.0, 3.0);
 		qcd_noniso_binned_WPT_muon_eta_analyser->set_variables("WPT_with_" + metPrefix, wpt_bins_, "muon_absolute_eta", 30,
 				0.0, 3.0);
+
 		no_selection_binned_WPT_analyser_muon_eta_.push_back(no_selection_binned_WPT_muon_eta_analyser);
 		ref_selection_binned_WPT_analyser_muon_eta_.push_back(ref_selection_binned_WPT_muon_eta_analyser);
 		qcd_PFRelIso_binned_WPT_analyser_muon_eta_.push_back(qcd_PFRelIso_binned_WPT_muon_eta_analyser);
