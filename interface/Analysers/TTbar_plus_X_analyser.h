@@ -32,6 +32,8 @@ public:
 	void muPlusJetsQcdAnalysis(const EventPtr);
 	void ePlusJetsSignalAnalysis(const EventPtr);
 	void muPlusJetsSignalAnalysis(const EventPtr);
+	void ePlusJetsSystematicsAnalysis(const EventPtr);
+	void muPlusJetsSystematicsAnalysis(const EventPtr);
 
 private:
 	//signal selections
@@ -40,11 +42,13 @@ private:
 	SelectionPointer qcdNonIsoElectronSelection_;
 	SelectionPointer qcdConversionSelection_;
 	SelectionPointer qcdPFRelIsoEPlusJetsSelection_, qcdPFRelIsoMuPlusJetsSelection_,
-			qcd_noniso_muon_plus_jets_selection_, qcd_noiso_muon_plus_jets_selection_;
+			qcd_noniso_muon_plus_jets_selection_, qcd_noniso_muon_plus_jets_selection_ge4j_,qcd_noiso_muon_plus_jets_selection_;
 
 	/**
 	 * Analysers
 	 */
+	//no selection
+	METAnalyserLocalPtr metAnalyserEPlusJetsNoSelection_, metAnalyserMuPlusJetsNoSelection_;
 	//signal regions
 	METAnalyserLocalPtr metAnalyserEPlusJetsRefSelection_, metAnalyserMuPlusJetsRefSelection_;
 	ElectronAnalyserLocalPtr electronAnalyserRefSelection_;
@@ -52,9 +56,9 @@ private:
 	BasicAnalyserLocalPtr vertexAnalyserEPlusJetsRefSelection_, vertexAnalyserMuPlusJetsRefSelection_;
 
 	//QCD region Non-isolated electrons
-	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdNonIsoMuonSelection_;
+	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdNonIsoMuonSelection_, metAnalyserqcdNonIsoMuonSelection_ge4j_;
 	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyser_;
-	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser_;
+	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser_, qcdNonIsoMuonAnalyser_ge4j_;
 	//QCD region electrons from conversions
 	METAnalyserLocalPtr metAnalyserqcdConversionSelection_;
 	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyser_;
@@ -64,56 +68,66 @@ private:
 
 	std::vector<double> metBins_, ht_bins_, st_bins_, mt_bins_, wpt_bins_;
 	//MET analysers electron
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_MET_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_MET_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_MET_analyser_electron_isolation_; //for QCD rate estimation
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_MET_analyser_electron_rhocorrected_isolation_; //for QCD rate estimation
 	//MET analysers muon
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_MET_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_MET_analyser_muon_eta_;
 
 	//HT analysers electron
+	Binned_Variable_analyser_ptr no_selection_binned_HT_analyser_electron_eta_;
 	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_electron_eta_;
 	Binned_Variable_analyser_ptr qcd_conversion_binned_HT_analyser_electron_eta_;
 	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_electron_eta_;
 	Binned_Variable_analyser_ptr qcd_PFRelIso_binned_HT_analyser_electron_isolation_; //for QCD rate estimation
 	Binned_Variable_analyser_ptr qcd_PFRelIso_binned_HT_analyser_electron_rhocorrected_isolation_; //for QCD rate estimation
 	//HT analysers muon
+	Binned_Variable_analyser_ptr no_selection_binned_HT_analyser_muon_eta_;
 	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_muon_eta_;
 	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_muon_eta_;
 	Binned_Variable_analyser_ptr qcd_PFRelIso_binned_HT_analyser_muon_eta_;
 
 	//ST analysers electron
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_ST_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_ST_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_ST_analyser_electron_isolation_; //for QCD rate estimation
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_ST_analyser_electron_rhocorrected_isolation_; //for QCD rate estimation
 	//ST analysers muon
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_ST_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_ST_analyser_muon_eta_;
 
 	//MT analysers electron
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_MT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_MT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_MT_analyser_electron_isolation_; //for QCD rate estimation
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_MT_analyser_electron_rhocorrected_isolation_; //for QCD rate estimation
 	//MT analysers muon
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_MT_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_MT_analyser_muon_eta_;
 
 	//WPT analysers electron
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_WPT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_WPT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_electron_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_WPT_analyser_electron_isolation_; //for QCD rate estimation
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_WPT_analyser_electron_rhocorrected_isolation_; //for QCD rate estimation
 	//WPT analysers muon
+	std::vector<Binned_Variable_analyser_ptr> no_selection_binned_WPT_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_muon_eta_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_PFRelIso_binned_WPT_analyser_muon_eta_;
