@@ -40,7 +40,7 @@ private:
 	SelectionPointer qcdNonIsoElectronSelection_;
 	SelectionPointer qcdConversionSelection_;
 	SelectionPointer qcdPFRelIsoEPlusJetsSelection_, qcdPFRelIsoMuPlusJetsSelection_,
-			qcd_noniso_muon_plus_jets_selection_, qcd_noiso_muon_plus_jets_selection_;
+			qcd_noniso_muon_plus_jets_selection_, qcd_noniso_muon_plus_jets_selection_ge4j_,qcd_noiso_muon_plus_jets_selection_;
 
 	/**
 	 * Analysers
@@ -52,9 +52,9 @@ private:
 	BasicAnalyserLocalPtr vertexAnalyserEPlusJetsRefSelection_, vertexAnalyserMuPlusJetsRefSelection_;
 
 	//QCD region Non-isolated electrons
-	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdNonIsoMuonSelection_;
+	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdNonIsoMuonSelection_, metAnalyserqcdNonIsoMuonSelection_ge4j_;
 	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyser_;
-	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser_;
+	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser_, qcdNonIsoMuonAnalyser_ge4j_;
 	//QCD region electrons from conversions
 	METAnalyserLocalPtr metAnalyserqcdConversionSelection_;
 	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyser_;
