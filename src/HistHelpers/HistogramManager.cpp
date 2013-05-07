@@ -317,6 +317,7 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 	std::string metAlgo = METAlgorithm::names[Globals::metAlgorithm];
 	std::string muonAlgo = MuonAlgorithm::names[Globals::muonAlgorithm];
 	std::string jesSyst = (Globals::JESsystematic > 0) ? "_plusJES" : "_minusJES";
+	std::string jetSmearingSyst = (Globals::JetSmearingSystematic > 0) ? "_plusJER" : "_minusJER";
 	std::string bjetSyst = (Globals::BJetSystematic > 0) ? "_plusBjet" : "_minusBJet";
 	std::string lightJetSyst = (Globals::LightJetSystematic > 0) ? "_plusLightJet" : "_minusLightJet";
 	std::string suffix = Globals::custom_file_suffix;
@@ -324,6 +325,8 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 			(Globals::pdfWeightNumber != 0) ? "_PDF_" + boost::lexical_cast<std::string>(Globals::pdfWeightNumber) : "";
 	if (Globals::JESsystematic == 0)
 		jesSyst = "";
+	if (Globals::JetSmearingSystematic == 0)
+		jetSmearingSyst = "";
 	if (Globals::BJetSystematic == 0)
 		bjetSyst = "";
 	if (Globals::LightJetSystematic == 0)
@@ -333,7 +336,7 @@ const std::string HistogramManager::assembleFilename(DataType::value type) const
 
 	str << name << "_" << Globals::luminosity << "pb";
 	str << "_" << electronAlgo << "_" << muonAlgo << "_" << jetAlgo << "_" << metAlgo;
-	str << jesSyst << pdfWeight << bjetSyst << lightJetSyst << suffix << ".root";
+	str << jesSyst << jetSmearingSyst << pdfWeight << bjetSyst << lightJetSyst << suffix << ".root";
 	return str.str();
 
 }

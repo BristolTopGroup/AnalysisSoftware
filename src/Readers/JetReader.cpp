@@ -123,13 +123,6 @@ void JetReader::readJets() {
 		py = py * (1+JECUnc*Globals::JESsystematic);
 		pz = pz * (1+JECUnc*Globals::JESsystematic);
 
-		//Can probably delete this.
-		//applying jet smearing + or - systematic, 0 by default)
-//		energy = energy * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
-//		px = px * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
-//		py = py * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
-//		pz = pz * (1+JetSmearingUncertainty*Globals::JetSmearingSystematic);
-
 		//make unsmeared jet object pointer
 		JetPointer unsmearedJet(new Jet(energy, px, py, pz));
 
@@ -144,8 +137,13 @@ void JetReader::readJets() {
 
 		//smear the unsmeared jet
 		const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
-		JetPointer jet(new Jet(smearedJet->energy(), smearedJet->px(), smearedJet->py(), smearedJet->pz()));
 		
+		JetPointer jet(new Jet(smearedJet->energy(), smearedJet->px(), smearedJet->py(), smearedJet->pz()));
+
+		//only use the smeared jet if it's not smeared to zero. should also fix the issue of jet smearing in data (data jets shouldn't be smeared!)
+		if (matchedGeneratedJetEnergy == 0)
+			jet = unsmearedJet;
+
 		jet->setUsedAlgorithm(usedAlgorithm);
 		jet->setMass(massReader.getVariableAt(jetIndex));
 		jet->setCharge(chargeReader.getVariableAt(jetIndex));
@@ -234,10 +232,10 @@ void JetReader::initialise() {
 	massReader.initialise();
 	chargeReader.initialise();
 
-	matchedGeneratedJetEnergyReader.initialise();
-	matchedGeneratedJetPxReader.initialise();
-	matchedGeneratedJetPyReader.initialise();
-	matchedGeneratedJetPzReader.initialise();
+	matchedGeneratedJetEnergyReader.initialiseBlindly();
+	matchedGeneratedJetPxReader.initialiseBlindly();
+	matchedGeneratedJetPyReader.initialiseBlindly();
+	matchedGeneratedJetPzReader.initialiseBlindly();
 
 	if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 		emfReader.initialise();

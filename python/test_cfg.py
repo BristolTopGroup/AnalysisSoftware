@@ -9,12 +9,12 @@ centerOfMassEnergy = 8
 #number of events to be processed
 maxEvents = 10000
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5050#pb-1
+lumi = 19584#pb-1
 
 
 if centerOfMassEnergy == 8:
     #File for pile-up re-weighting
-    nTuple_version = 9
+    nTuple_version = 10
     PUFile = toolsFolder + "data/PileUp_2012_69300_truth_finebin.root"
     #+5%
 #    PUFile = toolsFolder + "data/PileUp_2012_72765_truth_finebin.root"
@@ -39,8 +39,7 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-               
-'/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v9a_Summer12-PU_S10_START53_V7C-v1_LeptonPlus3Jets_PDFweights/*.root'
+    '/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder

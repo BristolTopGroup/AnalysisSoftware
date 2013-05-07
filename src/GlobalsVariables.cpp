@@ -13,8 +13,8 @@ namespace BAT {
 //general
 unsigned long Globals::maxEvents = 0;
 
-double Globals::luminosity = 3934.085;
-unsigned short Globals::energyInTeV = 7;
+double Globals::luminosity = 19584.;
+unsigned short Globals::energyInTeV = 8;
 unsigned long Globals::printEveryXEvents = 100000;
 std::string Globals::selectedEventsOutputfile = "selectedEvents.txt";
 std::string Globals::selectedEventsWithMetaDataOutputfile = "selectedEventsWithMetaData.txt";
@@ -38,9 +38,9 @@ JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
 int Globals::JESsystematic = 0;
 int Globals::BJetSystematic = 0;
 int Globals::LightJetSystematic = 0;
-int Globals::JetSmearingSystematic = -1;
+int Globals::JetSmearingSystematic = 0;
 
-//Level7 JEC arrays
+//Level7 JEC arrays (obsolete)
 boost::array< boost::shared_ptr<TF1>, 12 > Globals::bL7Corrections = {{
 		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1,
 		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1}};
