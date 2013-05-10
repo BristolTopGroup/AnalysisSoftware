@@ -40,7 +40,7 @@ datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v10_Run2012A-
             'QCD_80to170_EMEnriched' : [mc_path + 'QCD_Pt_80_170_EMEnriched_TuneZ2star_8TeV_pythia6/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
             'QCD_170to250_EMEnriched' : [mc_path + 'QCD_Pt_170_250_EMEnriched_TuneZ2star_8TeV_pythia6/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
             'QCD_250to350_EMEnriched' : [mc_path + 'QCD_Pt_250_350_EMEnriched_TuneZ2star_8TeV_pythia6/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
-            #'QCD_350_EMEnriched' : [mc_path + 'QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
+            'QCD_350_EMEnriched' : [mc_path + 'QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
             'GJets_200To400' : [mc_path + 'GJets_HT-200To400_8TeV-madgraph/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
             'GJets_400' : [mc_path + 'GJets_HT-400ToInf_8TeV-madgraph/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
             #'WW' : [mc_path + 'WW_TuneZ2_7TeV_pythia6_tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
