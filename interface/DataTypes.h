@@ -75,6 +75,8 @@ enum value {
 	singleAntiTop_And_W,
 	singleAntiTopTChannel,
 	singleAntiTopSChannel,
+	TTJets_mcatnlo,
+	TTJets_powheg,
 	Zprime_M500GeV_W5GeV,
 	Zprime_M500GeV_W50GeV,
 	Zprime_M750GeV_W7500MeV,
@@ -181,6 +183,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"Tbar_tW-channel", //
 		"Tbar_t-channel", //20
 		"Tbar_s-channel", //
+	        "TTJets-mcatnlo", //
+        	"TTJets-powheg", //
 		"Zprime_M500GeV_W5GeV", //
 		"Zprime_M500GeV_W50GeV", //
 		"Zprime_M750GeV_W7500MeV", //
