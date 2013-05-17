@@ -72,10 +72,10 @@ datasetInfo['Tbar_t-channel'] = {"cross-section": 30.0042, "NumberOfProcessedEve
 datasetInfo['Tbar_tW-channel'] = {"cross-section": 11.1773, "NumberOfProcessedEvents":493460}
 
 #systematic samples
-datasetInfo['TTJets-matchingdown'] = {"cross-section": 130., "NumberOfProcessedEvents":5476728}
-datasetInfo['TTJets-matchingup'] = {"cross-section": 138., "NumberOfProcessedEvents":5306710}
-datasetInfo['TTJets-scaledown'] = {"cross-section": 228.0, "NumberOfProcessedEvents":5387181}
-datasetInfo['TTJets-scaleup'] = {"cross-section": 97.7, "NumberOfProcessedEvents":5009488}
+datasetInfo['TTJets-matchingdown'] = {"cross-section": 245.8, "NumberOfProcessedEvents":5476728}
+datasetInfo['TTJets-matchingup'] = {"cross-section": 245.8, "NumberOfProcessedEvents":5306710}
+datasetInfo['TTJets-scaledown'] = {"cross-section": 245.8, "NumberOfProcessedEvents":5387181}
+datasetInfo['TTJets-scaleup'] = {"cross-section": 245.8, "NumberOfProcessedEvents":5009488}
 
 datasetInfo['WJets-matchingdown'] = {"cross-section": 29690.0, "NumberOfProcessedEvents":21364637}
 datasetInfo['WJets-matchingup'] = {"cross-section": 30290.0, "NumberOfProcessedEvents":20976082}
