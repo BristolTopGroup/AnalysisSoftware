@@ -12,7 +12,7 @@ To setup the standalone version of the code:
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git AnalysisSoftware
 cd AnalysisSoftware
 
-#create the makefile using cmake
+#create the makefile using cmake (install it if you don't have it: https://github.com/Kitware/CMake)
 cmake CMakeLists.txt
 
 #compile and build
@@ -22,7 +22,7 @@ make -j24
 export toolsFolder=$PWD/
 
 #test run the code:
-nohup AnalysisSoftware python/test_cfg.py &> test.log &
+nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 ```
 
 
