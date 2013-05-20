@@ -1,8 +1,14 @@
+AnalysisSoftware
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
 .project
 .cproject
 .pydevproject
 *.py[cod]
 *.log
+*.so
 Debug/
 Profile/
 Release/
@@ -11,3 +17,6 @@ CUTE_Tests/
 *_TEST.root
 Root_IO_Performance.root
 .settings/
+*~
+[#]*[#]
+.\#*

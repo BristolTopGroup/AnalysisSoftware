@@ -1,11 +1,32 @@
 AnalysisSoftware
 ================
 
-Analysis software for TTbar+MET differential cross section analysis (TOP-12-042)
+Analysis software for TTbar+X differential cross section analysis (TOP-12-042)
 
 ## General Recipe
 
-To setup the code:
+To setup the standalone version of the code:
+
+```
+#get the code from the repository
+git clone https://github.com/BristolTopGroup/AnalysisSoftware.git AnalysisSoftware
+cd AnalysisSoftware
+
+#create the makefile using cmake (install it if you don't have it: https://github.com/Kitware/CMake)
+cmake CMakeLists.txt
+
+#compile and build
+make -j24
+
+#adjust the toolsFolder environment variable
+export toolsFolder=$PWD/
+
+#test run the code:
+nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
+```
+
+
+To setup the code using CMSSW:
 
 ```
 export SCRAM_ARCH=slc5_amd64_gcc462
@@ -14,7 +35,7 @@ cd CMSSW_6_0_0/src
 cmsenv
 
 #get the code from the repository
-git clone git@github.com:BristolTopGroup/AnalysisSoftware BristolAnalysis/Tools
+git clone https://github.com/BristolTopGroup/AnalysisSoftware.git BristolAnalysis/Tools
 
 #compile
 scram b -j2
