@@ -119,6 +119,9 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
 	weight = 1.;
+	histMan->setCurrentDataType(currentEvent->getDataType());
+	histMan->setCurrentJetBin(currentEvent->Jets().size());
+	histMan->setCurrentBJetBin(0);
 
 	if (!currentEvent->isRealData()) {
 		weight = weights->getWeight(currentEvent->getDataType());
@@ -127,7 +130,11 @@ void Analysis::initiateEvent() {
 		weight *= pileUpWeight;
 		if (Globals::pdfWeightNumber != 0) {
 			try {
-				weight *= currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0);
+				double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
+				weight *= pdf_weight;
+
+				histMan->setCurrentHistogramFolder("");
+				histMan->H1D("PDFweights")->Fill(pdf_weight);
 			} catch (exception& e) {
 				cout << "PDF weight assigning exception: " << e.what() << endl;
 			}
@@ -137,9 +144,6 @@ void Analysis::initiateEvent() {
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);
 
-	histMan->setCurrentDataType(currentEvent->getDataType());
-	histMan->setCurrentJetBin(currentEvent->Jets().size());
-	histMan->setCurrentBJetBin(0);
 }
 
 void Analysis::inspectEvents() {
@@ -274,6 +278,9 @@ void Analysis::createHistograms() {
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by binningAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
+
+	histMan->setCurrentHistogramFolder("");
+	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
 
 	cout << "Total number of histograms: " << histMan->size() << endl;
 }
