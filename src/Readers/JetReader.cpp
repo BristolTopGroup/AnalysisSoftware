@@ -102,14 +102,14 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 JetReader::~JetReader() {
 }
 
-const JetCollection& JetReader::getJets() {
+const JetCollection& JetReader::getJets(const EventPtr event) {
 	if (jets.empty() == false)
 		jets.clear();
-	readJets();
+	readJets(event);
 	return jets;
 }
 
-void JetReader::readJets() {
+void JetReader::readJets(const EventPtr event) {
 	for (unsigned int jetIndex = 0; jetIndex < energyReader.size(); jetIndex++) {
 		double energy = energyReader.getVariableAt(jetIndex);
 		double px = pxReader.getVariableAt(jetIndex);
@@ -125,24 +125,40 @@ void JetReader::readJets() {
 
 		//make unsmeared jet object pointer
 		JetPointer unsmearedJet(new Jet(energy, px, py, pz));
+		
+		JetPointer jet;
 
 		//get matched gen jet variables:
-		double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
-		double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
-		double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
-		double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
+		if (not event->isRealData()) {
+			double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
+			double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
+			double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
+			double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
 
-		//store matched generated jet variables in a matchedGeneratedJet pointer
-		JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
+			//store matched generated jet variables in a matchedGeneratedJet pointer
+			JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
 
-		//smear the unsmeared jet
-		const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
-		
-		JetPointer jet(new Jet(smearedJet->energy(), smearedJet->px(), smearedJet->py(), smearedJet->pz()));
+			//smear the unsmeared jet
+			const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
 
-		//only use the smeared jet if it's not smeared to zero. should also fix the issue of jet smearing in data (data jets shouldn't be smeared!)
-		if (matchedGeneratedJetEnergy == 0)
+			JetPointer tempSmearedJet(new Jet(smearedJet->energy(), smearedJet->px(), smearedJet->py(), smearedJet->pz()));
+			jet = tempSmearedJet;
+
+			//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
+			jet->set_unsmeared_jet(unsmearedJet);
+			jet->set_matched_generated_jet(matchedGeneratedJet);
+
+		}
+
+		else {
+			double matchedGeneratedJetEnergy = 0; //
+			double matchedGeneratedJetPx = 0; //
+			double matchedGeneratedJetPy = 0; //
+			double matchedGeneratedJetPz = 0; //
+
+			//use the unsmeared jet if data
 			jet = unsmearedJet;
+		}
 
 		jet->setUsedAlgorithm(usedAlgorithm);
 		jet->setMass(massReader.getVariableAt(jetIndex));
@@ -205,10 +221,6 @@ void JetReader::readJets() {
 			jet->setCHF(CHFReader.getVariableAt(jetIndex));
 			jet->setNCH(NCHReader.getIntVariableAt(jetIndex));
 		}
-
-		//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
-		jet->set_unsmeared_jet(unsmearedJet);
-		jet->set_matched_generated_jet(matchedGeneratedJet);
 
 		jets.push_back(jet);
 	}
