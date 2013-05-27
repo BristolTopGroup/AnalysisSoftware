@@ -19,7 +19,7 @@ public:
 	JetReader(TChainPointer,
 			JetAlgorithm::value algo = JetAlgorithm::Calo_AntiKT_Cone05);
 	virtual ~JetReader();
-	virtual const JetCollection& getJets(const EventPtr);
+	virtual const JetCollection& getJets(const bool isRealData);
 	virtual void initialise();
 
 protected:
@@ -75,8 +75,8 @@ protected:
 
 	JetCollection jets;
 	JetAlgorithm::value usedAlgorithm;
-	const EventPtr event;
-	virtual void readJets(const EventPtr);
+	bool isRealData;
+	virtual void readJets(bool);
 
 };
 

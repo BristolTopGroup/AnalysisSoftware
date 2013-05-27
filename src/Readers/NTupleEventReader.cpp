@@ -137,7 +137,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	}
 
-	currentEvent->setJets(jetReader->getJets(currentEvent));
+	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
 
 	double sysShiftMetCorrectionX = 0;
 	double sysShiftMetCorrectionY = 0;
