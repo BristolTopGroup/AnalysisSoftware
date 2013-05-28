@@ -98,7 +98,7 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		PartonFlavour(input, JetAlgorithm::prefixes.at(algo) + ".PartonFlavour"),//
 		jets(), //
 		usedAlgorithm(algo), //
-		isRealData() {
+		isRealData(false) {
 
 }
 JetReader::~JetReader() {
