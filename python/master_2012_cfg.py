@@ -183,6 +183,9 @@ maxEvents = 0# 0 == all
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 
+#Jet Smearing application
+applyJetSmearing = False
+
 #use HitFit for analysis
 useHitFit = False
 produceFitterASCIIoutput = False
