@@ -130,31 +130,29 @@ void JetReader::readJets(bool isRealData) {
 		JetPointer jet(new Jet(energy, px, py, pz));
 
 		//get matched gen jet variables:
-		if (Globals::applyJetSmearing) {
-			if (!isRealData) {
-				double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
-				double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
-				double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
-				double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
-	
-				// smear the jet if a matched generated jet exists
-				if (matchedGeneratedJetEnergy == 0) {
-					break;
-				}
+		if (Globals::applyJetSmearing && !isRealData) {
+			double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
+			double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
+			double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
+			double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
 
-				//store matched generated jet variables in a matchedGeneratedJet pointer
-				JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
-
-				//smear the unsmeared jet
-				const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
-
-				FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
-				jet->setFourVector(smearedJetFourVector);
-
-				//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
-				jet->set_unsmeared_jet(unsmearedJet);
-				jet->set_matched_generated_jet(matchedGeneratedJet);
+			// smear the jet if a matched generated jet exists
+			if (matchedGeneratedJetEnergy == 0) {
+				break;
 			}
+
+			//store matched generated jet variables in a matchedGeneratedJet pointer
+			JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
+
+			//smear the unsmeared jet
+			const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
+
+			FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
+			jet->setFourVector(smearedJetFourVector);
+
+			//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
+			jet->set_unsmeared_jet(unsmearedJet);
+			jet->set_matched_generated_jet(matchedGeneratedJet);
 		}
 
 		jet->setUsedAlgorithm(usedAlgorithm);

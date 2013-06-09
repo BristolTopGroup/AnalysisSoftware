@@ -184,7 +184,7 @@ bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 
 #Jet Smearing application
-applyJetSmearing = False
+applyJetSmearing = True
 
 #use HitFit for analysis
 useHitFit = False
