@@ -33,21 +33,6 @@ Jet::Jet() :
 		l2RelJEC(0), //
 		l3AbsJEC(0), //
 		partonFlavour_(0), //
-		energy_unsmeared(0.),
-		pt_unsmeared(0.),
-		px_unsmeared(0.),
-		py_unsmeared(0.),
-		pz_unsmeared(0.),
-		phi_unsmeared(0.),
-		eta_unsmeared(0.),
-
-		energy_smeared(0.),
-		pt_smeared(0.),
-		px_smeared(0.),
-		py_smeared(0.),
-		pz_smeared(0.),
-		phi_smeared(0.),
-		eta_smeared(0.),
 
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
@@ -185,10 +170,10 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 5.0) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 0.153;
+				scaleFactor = 1.288-0.153;
 				break;
 			case 1:
-				scaleFactor = 0.155;
+				scaleFactor = 1.288+0.155;
 				break;
 			default:
 				scaleFactor = 1.288;
@@ -214,7 +199,7 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 	double pz_smeared = ptScale * pz_unsmeared;
 
 	//make new jet to be a new variable to store the final smeared jet
-	ParticlePointer smearedJet(new Particle(energy_smeared, px_smeared, py_smeared, pz_smeared));
+	const ParticlePointer smearedJet(new Particle(energy_smeared, px_smeared, py_smeared, pz_smeared));
 	return smearedJet;
 }
 

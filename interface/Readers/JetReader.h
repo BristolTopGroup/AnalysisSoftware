@@ -7,6 +7,7 @@
 
 #ifndef JETREADER_H_
 #define JETREADER_H_
+#include "../Event.h"
 #include "VariableReader.h"
 #include "../RecoObjects/Jet.h"
 
@@ -18,7 +19,7 @@ public:
 	JetReader(TChainPointer,
 			JetAlgorithm::value algo = JetAlgorithm::Calo_AntiKT_Cone05);
 	virtual ~JetReader();
-	virtual const JetCollection& getJets();
+	virtual const JetCollection& getJets(const bool isRealData);
 	virtual void initialise();
 
 protected:
@@ -41,7 +42,6 @@ protected:
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPxReader;
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPyReader;
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPzReader;
-	VariableReader<MultiDoublePointer> jetSmearingUncertaintyReader;
 
 	VariableReader<MultiDoublePointer> emfReader;
 	VariableReader<unsigned int> numberOfJetsReader;
@@ -75,7 +75,8 @@ protected:
 
 	JetCollection jets;
 	JetAlgorithm::value usedAlgorithm;
-	virtual void readJets();
+	bool isRealData;
+	virtual void readJets(bool);
 
 };
 

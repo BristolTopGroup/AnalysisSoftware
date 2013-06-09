@@ -39,6 +39,7 @@ int Globals::JESsystematic = 0;
 int Globals::BJetSystematic = 0;
 int Globals::LightJetSystematic = 0;
 int Globals::JetSmearingSystematic = 0;
+bool Globals::applyJetSmearing = 0;
 
 //Level7 JEC arrays (obsolete)
 boost::array< boost::shared_ptr<TF1>, 12 > Globals::bL7Corrections = {{

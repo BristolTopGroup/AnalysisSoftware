@@ -50,6 +50,7 @@ struct Globals {
 	static int BJetSystematic;
 	static int LightJetSystematic;
 	static int JetSmearingSystematic;
+	static bool applyJetSmearing;
 
 
 	//MET
