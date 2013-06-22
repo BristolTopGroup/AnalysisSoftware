@@ -508,7 +508,8 @@ double Event::HT(const JetCollection jets) {
 	double ht(0);
 	//Take ALL the jets!
 	for (unsigned int index = 0; index < jets.size(); ++index) {
-		ht += jets.at(index)->pt();
+		if(jets.at(index)->pt() > 20 && jets.at(index)->eta() <2.5)
+			ht += jets.at(index)->pt();
 	}
 	return ht;
 }
