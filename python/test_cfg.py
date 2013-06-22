@@ -29,7 +29,9 @@ else:
     #-5%
 #    PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_64600microbarn.root"
 
-
+#apply the met corrections
+applyMetSysShiftCorr = True
+applyMetType0Corr = True
 
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = toolsFolder + "data/bJetReso.root"
