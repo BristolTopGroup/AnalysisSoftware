@@ -59,6 +59,9 @@ struct Globals {
 	static bool applyType0MetCorrection;
 	static bool applyType1MetCorrection;
 
+	//top pt reweighting
+	static bool applyTopPtReweighting;
+
 	//miscellaneous
 	static std::string custom_file_suffix;
 	static unsigned int pdfWeightNumber;

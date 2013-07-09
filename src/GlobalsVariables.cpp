@@ -56,6 +56,9 @@ bool Globals::applySysShiftMetCorrection = false;
 bool Globals::applyType0MetCorrection = false;
 bool Globals::applyType1MetCorrection = false;
 
+//top pt reweighting
+bool Globals::applyTopPtReweighting = true;
+
 std::string Globals::custom_file_suffix = "";
 unsigned int Globals::pdfWeightNumber = 0;
 

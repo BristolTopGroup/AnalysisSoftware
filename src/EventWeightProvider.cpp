@@ -50,6 +50,27 @@ double EventWeightProvider::reweightPileUp(unsigned int numberOfVertices) {
 	return pileUpWeights.at(numberOfVertices);
 }
 
+double EventWeightProvider::reweightTopPt(const EventPtr event) {
+	const MCParticleCollection genPart(event->GenParticles());
+
+	double topPt = 0.;
+	double tbarPt = 0.;
+	for (unsigned int i = 0; i < genPart.size(); i++) {
+
+		if (genPart.at(i)->pdgId() == (6))
+		  	  topPt = genPart.at(i)->pt();
+
+		if (genPart.at(i)->pdgId() == (-6))
+		  	  tbarPt = genPart.at(i)->pt();
+	}
+
+	double SFtop = exp(0.159-0.00141*topPt);
+	double SFtbar = exp(0.159-0.00141*tbarPt);
+
+	double weight=sqrt(SFtop*SFtbar);
+  return weight;
+}
+
 //boost::shared_ptr<TH1D> EventWeightProvider::getPileUpHistogram(std::string pileUpEstimationFile) {
 //	using namespace std;
 //
