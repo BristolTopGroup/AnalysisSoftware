@@ -1,4 +1,4 @@
-toolsFolder = 'BristolAnalysis/Tools/'
+toolsFolder = './'
 import os
 if os.environ.has_key('toolsFolder'):
     toolsFolder = os.environ['toolsFolder']
@@ -29,7 +29,9 @@ else:
     #-5%
 #    PUFile = toolsFolder + "data/PileUp_2011_truth_finebin_64600microbarn.root"
 
-
+#apply the met corrections
+applyMetSysShiftCorr = True
+applyMetType0Corr = True
 
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = toolsFolder + "data/bJetReso.root"
@@ -39,7 +41,8 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-    '/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
+    'data/TTJet_nTuple_53x_mc_noskim.root'
+    #'/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root'
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder

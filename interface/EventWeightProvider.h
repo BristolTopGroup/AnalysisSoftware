@@ -59,6 +59,7 @@ public:
 	double getWeight(const EventPtr) const;
 	double getPUWeight(const EventPtr) const;
 
+	double reweightTopPt(const EventPtr);
 	//@deprecated
 	double getWeight(DataType::value type);
 	//@deprecated
