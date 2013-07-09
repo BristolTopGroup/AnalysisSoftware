@@ -1481,4 +1481,3 @@ void TTbar_plus_X_analyser::make_binned_WPT_analysers() {
 }
 
 } /* namespace BAT */
-
