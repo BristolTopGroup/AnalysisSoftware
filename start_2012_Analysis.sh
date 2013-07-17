@@ -516,7 +516,7 @@ export TQAFPath=${TQAFPath}
 #sample="SingleMu" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> SingleMu_JES_down.log &
 
 #PDFs with odd numbers
-#for i in $(seq 22)
+#for i in $(seq 11)
 #do
 #if [ $(($i % 2)) -eq 1 ]
 #then
@@ -525,7 +525,28 @@ export TQAFPath=${TQAFPath}
 #sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
 #fi
 #done
-#for i in $(seq 22 44)
+
+#for i in $(seq 12 22)
+#do
+#if [ $(($i % 2)) -eq 1 ]
+#then
+#testi="PDFWeights_${i}"
+#echo "Starting ${testi}"
+#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
+#fi
+#done
+
+#for i in $(seq 22 33)
+#do
+#if [ $(($i % 2)) -eq 1 ]
+#then
+#testi="PDFWeights_${i}"
+#echo "Starting ${testi}"
+#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
+#fi
+#done
+
+#for i in $(seq 34 44)
 #do
 #if [ $(($i % 2)) -eq 1 ]
 #then
@@ -536,7 +557,7 @@ export TQAFPath=${TQAFPath}
 #done
 
 #PDFs with even numbers
-#for i in $(seq 22)
+#for i in $(seq 11)
 #do
 #if [ $(($i % 2)) -eq 0 ]
 #then
@@ -546,16 +567,36 @@ export TQAFPath=${TQAFPath}
 #fi
 #done
 
-#PDFs with even numbers
-#for i in $(seq 23 44)
+#for i in $(seq 11 22)
 #do
+#if [ $(($i % 2)) -eq 0 ]
+#then
+#testi="PDFWeights_${i}"
+#echo "Starting ${testi}" 
+#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
+#fi
+#done
+
+#for i in $(seq 23 33)
+#do   
+#if [ $(($i % 2)) -eq 0 ]
+#then
+#testi="PDFWeights_${i}"
+#echo "Starting ${testi}" 
+#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
+#fi
+#done
+
+#for i in $(seq 33 44)
+#do   
 #if [ $(($i % 2)) -eq 0 ]
 #then
 #testi="PDFWeights_${i}"
 #echo "Starting ${testi}"
 #sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
+#fi   
 #done
+
 
 #other generators:
 #sample="TTJets-mcatnlo" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-mcatnlo_central.log &
@@ -576,4 +617,3 @@ export TQAFPath=${TQAFPath}
 #sample="ZJets-matchingup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-matchingup_central.log &
 #sample="ZJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaledown_central.log &
 #sample="ZJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaleup_central.log &
-
