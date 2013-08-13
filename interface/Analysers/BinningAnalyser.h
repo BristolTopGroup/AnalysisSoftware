@@ -23,6 +23,8 @@ public:
 	void muPlusJetsSignalAnalysis(const EventPtr event);
 	void muPlusJetsMETAnalysis(const EventPtr event);
 	void ePlusJetsMETAnalysis(const EventPtr event);
+	void muPlusJetsVerticesAnalysis(const EventPtr event);
+	void ePlusJetsVerticesAnalysis(const EventPtr event);
 
 private:
 	SelectionPointer topEplusJetsRefSelection_, topMuPlusJetsRefSelection_;
