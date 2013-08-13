@@ -8,6 +8,9 @@ namespace BAT {
 
 void BinningAnalyser::analyse(const EventPtr event) {
 
+	muPlusJetsVerticesAnalysis(event);
+	ePlusJetsVerticesAnalysis(event);
+
 	if (!event->isRealData()) {
 		ePlusJetsSignalAnalysis(event);
 		//ePlusJetsHTAnalysis(event);
@@ -15,8 +18,7 @@ void BinningAnalyser::analyse(const EventPtr event) {
 		muPlusJetsSignalAnalysis(event);
 		muPlusJetsMETAnalysis(event);
 		ePlusJetsMETAnalysis(event);
-		muPlusJetsVerticesAnalysis(event);
-		ePlusJetsVerticesAnalysis(event);
+
 	}
 }
 
