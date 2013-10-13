@@ -129,17 +129,14 @@ void JetReader::readJets(bool isRealData) {
 		JetPointer unsmearedJet(new Jet(energy, px, py, pz));
 		JetPointer jet(new Jet(energy, px, py, pz));
 
-		//get matched gen jet variables:
-		if (Globals::applyJetSmearing && !isRealData) {
+		double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //                                                                                                                              
+		//get matched gen jet variables if MC, applyJetSmearing is True and there is a matchedGeneratedJet:
+		if (Globals::applyJetSmearing && !isRealData && matchedGeneratedJetEnergy != 0) {
 			double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
 			double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
 			double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
 			double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
 
-			// smear the jet if a matched generated jet exists
-			if (matchedGeneratedJetEnergy == 0) {
-				break;
-			}
 
 			//store matched generated jet variables in a matchedGeneratedJet pointer
 			JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
