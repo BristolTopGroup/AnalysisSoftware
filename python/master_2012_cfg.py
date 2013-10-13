@@ -182,6 +182,9 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 #Jet Smearing application
 applyJetSmearing = True
 
+#Apply Top Pt reweighting
+applyTopPtReweighting = False
+
 #use HitFit for analysis
 useHitFit = False
 produceFitterASCIIoutput = False
