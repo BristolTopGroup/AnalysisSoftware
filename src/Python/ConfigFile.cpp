@@ -47,7 +47,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		applyMetSysShiftCorr_(0),//
 		applyMetType0Corr_(0),//
 		applyMetType1Corr_(0),
-		applyJetSmearing_(0){
+		applyJetSmearing_(0),
+		applyTopPtReweighting_(0){
 	if (PythonParser::hasAttribute(config, "JESsystematic"))
 		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
 	if (PythonParser::hasAttribute(config, "JetSmearingSystematic"))
@@ -68,6 +69,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		applyMetType1Corr_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyMetType1Corr");
 	if (PythonParser::hasAttribute(config, "applyJetSmearing"))
 		applyJetSmearing_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyJetSmearing");
+	if (PythonParser::hasAttribute(config, "applyTopPtReweighting"))
+	        applyTopPtReweighting_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyTopPtReweighting");
 }
 
 boost::program_options::variables_map ConfigFile::getParameters(int argc, char** argv) {
@@ -106,6 +109,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("applyMetType0Corr", value<bool>(), "apply MET type-0 correction (for PU)");
 	desc.add_options()("applyMetType1Corr", value<bool>(), "apply MET type-1 correction (JEC)");
 	desc.add_options()("applyJetSmearing", value<bool>(), "apply Jet Smearing");
+	desc.add_options()("applyTopPtReweighting", value<bool>(), "apply Top Pt Reweighting");
 
 	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	notify(vm);
@@ -292,6 +296,13 @@ bool ConfigFile::applyJetSmearing() const {
 		return applyJetSmearing_;
 }
 
+bool ConfigFile::applyTopPtReweighting() const {
+        if (programOptions.count("applyTopPtReweighting"))
+	        return programOptions["applyTopPtReweighting"].as<bool>();
+	else
+                return applyTopPtReweighting_;
+}
+
 ConfigFile::~ConfigFile() {
 }
 
@@ -370,6 +381,7 @@ void ConfigFile::loadIntoMemory() {
 	Globals::applyType0MetCorrection = applyMetType0Corr();
 	Globals::applyType1MetCorrection = applyMetType1Corr();
 	Globals::applyJetSmearing = applyJetSmearing();
+	Globals::applyTopPtReweighting = applyTopPtReweighting();
 }
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
