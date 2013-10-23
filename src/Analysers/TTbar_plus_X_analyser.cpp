@@ -635,8 +635,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
 
-		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
-		metAnalyserqcdNonIsoElectronSelection_->setPrescale(prescale);
+		qcdNonIsoMuonAnalyser_->setPrescale(prescale);
+		metAnalyserqcdNonIsoMuonSelection_->setPrescale(prescale);
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
