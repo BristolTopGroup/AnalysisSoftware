@@ -374,16 +374,11 @@ void BinningAnalyser::muPlusJetsVerticesAnalysis(const EventPtr event) {
 		double ST = Event::ST(jets, signalMuon, met);
 		double WPT = Event::WPT(signalMuon, met);
 
-		histMan_->H2D_BJetBinned("NVertices_vs_HT")->Fill( nVertices,
-					HT, weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_ST")->Fill( nVertices,
-							ST, weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_WPT")->Fill( nVertices,
-							WPT, weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_MET")->Fill( nVertices,
-							met->pt(), weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_MT")->Fill( nVertices,
-									MT, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_HT")->Fill(nVertices, HT, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_ST")->Fill(nVertices, ST, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_WPT")->Fill(nVertices, WPT, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_MET")->Fill(nVertices, met->pt(), weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_MT")->Fill(nVertices, MT, weight_);
 	}
 
 }
@@ -415,16 +410,11 @@ void BinningAnalyser::ePlusJetsVerticesAnalysis(const EventPtr event) {
 		double ST = Event::ST(jets, signalElectron, met);
 		double WPT = Event::WPT(signalElectron, met);
 
-		histMan_->H2D_BJetBinned("NVertices_vs_HT")->Fill( nVertices,
-					HT, weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_ST")->Fill( nVertices,
-							ST, weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_WPT")->Fill( nVertices,
-							WPT, weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_MET")->Fill( nVertices,
-							met->pt(), weight_);
-		histMan_->H2D_BJetBinned("NVertices_vs_MT")->Fill( nVertices,
-									MT, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_HT")->Fill(nVertices, HT, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_ST")->Fill(nVertices, ST, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_WPT")->Fill(nVertices, WPT, weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_MET")->Fill(nVertices, met->pt(), weight_);
+		histMan_->H2D_BJetBinned("NVertices_vs_MT")->Fill(nVertices, MT, weight_);
 	}
 
 }
@@ -779,7 +769,7 @@ void BinningAnalyser::createHistograms() {
 			"GendPhiLepMet_vs_RecodPhiLepMet; #Delta#Phi (lepton,MET)_{Gen}; #Delta#Phi (lepton,MET)_{Reco}", 400, -4.,
 			+4., 400, -4, +4);
 	histMan_->addH2D_BJetBinned("GenHT_vs_RecoHT", "GenHT_vs_RecoHT; HT_{Gen} [GeV]; HT_{Reco} [GeV]", 500, 0, 2000,
-				500, 0, 2000);
+			500, 0, 2000);
 	histMan_->addH2D_BJetBinned("GenHT_lep_vs_RecoHT_lep",
 			"GenHT_lep_vs_RecoHT_lep; HT_lep_{Gen} [GeV]; HT_lep_{Reco} [GeV]", 500, 0, 2000, 500, 0, 2000);
 	histMan_->addH2D_BJetBinned("GenHT_lep_met_vs_RecoHT_lep_met",
@@ -800,17 +790,16 @@ void BinningAnalyser::createHistograms() {
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJetsVertices/");
 
-	histMan_->addH2D_BJetBinned("NVertices_vs_HT", "NVertices_vs_RecoHT; NVertices; HT_{Reco} [GeV]", 50, 0, 50,
-					500, 0, 2000);
-	histMan_->addH2D_BJetBinned("NVertices_vs_MET", "NVertices_vs_RecoMET; NVertices; MET_{Reco} [GeV]", 50, 0, 50,
-				300, 0, 300);
-	histMan_->addH2D_BJetBinned("NVertices_vs_WPT",
-				"NVertices_vs_Reco_WPT; NVertices; WPT_{Reco} [GeV]", 50, 0, 50, 300, 0, 300);
-	histMan_->addH2D_BJetBinned("NVertices_vs_ST",
-			"NVertices_vs_ST; NVertices; ST_{Reco} [GeV]", 50, 0, 50, 500, 0,
+	histMan_->addH2D_BJetBinned("NVertices_vs_HT", "NVertices_vs_RecoHT; NVertices; HT_{Reco} [GeV]", 50, 0, 50, 500, 0,
 			2000);
-	histMan_->addH2D_BJetBinned("NVertices_vs_MT", "NVertices_vs_MT ; NVertices; MT_{Reco} [GeV]", 50, 0, 50,
-				300, 0, 300);
+	histMan_->addH2D_BJetBinned("NVertices_vs_MET", "NVertices_vs_RecoMET; NVertices; MET_{Reco} [GeV]", 50, 0, 50, 300,
+			0, 300);
+	histMan_->addH2D_BJetBinned("NVertices_vs_WPT", "NVertices_vs_Reco_WPT; NVertices; WPT_{Reco} [GeV]", 50, 0, 50,
+			300, 0, 300);
+	histMan_->addH2D_BJetBinned("NVertices_vs_ST", "NVertices_vs_ST; NVertices; ST_{Reco} [GeV]", 50, 0, 50, 500, 0,
+			2000);
+	histMan_->addH2D_BJetBinned("NVertices_vs_MT", "NVertices_vs_MT ; NVertices; MT_{Reco} [GeV]", 50, 0, 50, 300, 0,
+			300);
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJetsHTstep0/");
 
@@ -901,18 +890,16 @@ void BinningAnalyser::createHistograms() {
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJetsVertices/");
 
-	histMan_->addH2D_BJetBinned("NVertices_vs_HT", "NVertices_vs_RecoHT; NVertices; HT_{Reco} [GeV]", 50, 0, 50,
-					500, 0, 2000);
-	histMan_->addH2D_BJetBinned("NVertices_vs_MET", "NVertices_vs_RecoMET; NVertices; MET_{Reco} [GeV]", 50, 0, 50,
-				300, 0, 300);
-	histMan_->addH2D_BJetBinned("NVertices_vs_WPT",
-				"NVertices_vs_Reco_WPT; NVertices; WPT_{Reco} [GeV]", 50, 0, 50, 300, 0, 300);
-	histMan_->addH2D_BJetBinned("NVertices_vs_ST",
-			"NVertices_vs_ST; NVertices; ST_{Reco} [GeV]", 50, 0, 50, 500, 0,
+	histMan_->addH2D_BJetBinned("NVertices_vs_HT", "NVertices_vs_RecoHT; NVertices; HT_{Reco} [GeV]", 50, 0, 50, 500, 0,
 			2000);
-	histMan_->addH2D_BJetBinned("NVertices_vs_MT", "NVertices_vs_MT ; NVertices; MT_{Reco} [GeV]", 50, 0, 50,
-				300, 0, 300);
-
+	histMan_->addH2D_BJetBinned("NVertices_vs_MET", "NVertices_vs_RecoMET; NVertices; MET_{Reco} [GeV]", 50, 0, 50, 300,
+			0, 300);
+	histMan_->addH2D_BJetBinned("NVertices_vs_WPT", "NVertices_vs_Reco_WPT; NVertices; WPT_{Reco} [GeV]", 50, 0, 50,
+			300, 0, 300);
+	histMan_->addH2D_BJetBinned("NVertices_vs_ST", "NVertices_vs_ST; NVertices; ST_{Reco} [GeV]", 50, 0, 50, 500, 0,
+			2000);
+	histMan_->addH2D_BJetBinned("NVertices_vs_MT", "NVertices_vs_MT ; NVertices; MT_{Reco} [GeV]", 50, 0, 50, 300, 0,
+			300);
 
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
