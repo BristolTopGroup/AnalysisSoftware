@@ -289,16 +289,16 @@ void BinningAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		}
 
 		if (oneMuon) {
-
+			MCParticlePointer gen_muon = genMuons.at(0);
 			HT_lepton = HT + signalLepton->pt();
-			GenHT_lepton = GenHT + allGenMuons.at(1)->pt();
+			GenHT_lepton = GenHT + gen_muon->pt();
 			HT_lepton_MET = Event::ST(jets, signalMuon, met);
 			GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
 
 			double MT_gen = -1;
-			double Esq = pow(allGenMuons.at(1)->et() + genMet->et(), 2);
-			double Psq = pow(allGenMuons.at(1)->px() + genMet->px(), 2)
-					+ pow(allGenMuons.at(1)->py() + genMet->py(), 2);
+			double Esq = pow(gen_muon->et() + genMet->et(), 2);
+			double Psq = pow(gen_muon->px() + genMet->px(), 2)
+					+ pow(gen_muon->py() + genMet->py(), 2);
 			if (Esq - Psq > 0)
 				MT_gen = sqrt(Esq - Psq);
 
@@ -577,16 +577,17 @@ void BinningAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 				}
 			}
 
+			MCParticlePointer gen_electron = genElectrons.at(0);
 			HT_lepton = HT + signalLepton->pt();
-			GenHT_lepton = GenHT + allGenElectrons.at(1)->pt();
+			GenHT_lepton = GenHT + gen_electron->pt();
 			HT_lepton_MET = Event::ST(jets, signalElectron, met);
 			GenHT_lepton_MET = GenHT_lepton + event->GenMET()->et();
 			double MT = Event::MT(signalElectron, met);
 
 			double MT_gen = -1;
-			double Esq = pow(allGenElectrons.at(1)->et() + genMet->et(), 2);
-			double Psq = pow(allGenElectrons.at(1)->px() + genMet->px(), 2)
-					+ pow(allGenElectrons.at(1)->py() + genMet->py(), 2);
+			double Esq = pow(gen_electron->et() + genMet->et(), 2);
+			double Psq = pow(gen_electron->px() + genMet->px(), 2)
+					+ pow(gen_electron->py() + genMet->py(), 2);
 			if (Esq - Psq > 0)
 				MT_gen = sqrt(Esq - Psq);
 
