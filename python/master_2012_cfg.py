@@ -68,6 +68,7 @@ datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v10_Run2012A-
             'ZJets-scaleup' : [mc_path + 'DYJetsToLL_M-50_scaleup_8TeV-madgraph-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
             'TTJets-mcatnlo' : [mc_path + 'TT_8TeV-mcatnlo/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1_LeptonPlus3Jets'],
             'TTJets-powheg' : [mc_path + 'TT_CT10_TuneZ2star_8TeV-powheg-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v2_LeptonPlus3Jets'],
+            'TTH_Inclusive_M-125' : [mc_path + 'TTH_Inclusive_M-125_8TeV_pythia6/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7A-v1'],
             }
 
 analysisModes = ['central',
