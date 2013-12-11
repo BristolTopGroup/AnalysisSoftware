@@ -124,9 +124,13 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr event) const {
 	unsigned int runNumber(event->runnumber());
 	if (event->isRealData()) {
+		//2011 data: run 160404 to run 180252
 		if (runNumber >= 160404 && runNumber < 173236)
 			return event->HLT(HLTriggers::HLT_IsoMu24);
-		else if (runNumber >= 173236)
+		else if (runNumber >= 173236 && runNumber < 180252)
+			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+		//2012 data: run 190456 to run 208686 (same trigger as second 2011 trigger)
+		else if (runNumber >= 190456 && runNumber <= 208686)
 			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
 		else
 			return false;
