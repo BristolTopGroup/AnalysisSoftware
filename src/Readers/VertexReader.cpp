@@ -31,7 +31,7 @@ void VertexReader::initialise() {
     ndofReader.initialise();
     zReader.initialise();
     rhoReader.initialise();
-    isfakeReader.initialise();
+//    isfakeReader.initialise();
 }
 
 const VertexCollection& VertexReader::getVertices() {
@@ -45,7 +45,8 @@ void VertexReader::readVertices() {
     for (unsigned int index = 0; index < ndofReader.size(); index++) {
         VertexPointer vertex(new Vertex());
         vertex->setDegreesOfFreedom(ndofReader.getVariableAt(index));
-        vertex->setFake(isfakeReader.getBoolVariableAt(index));
+//        vertex->setFake(isfakeReader.getBoolVariableAt(index));
+        vertex->setFake(false);
         vertex->setRho(rhoReader.getVariableAt(index));
         vertex->setZPosition(zReader.getVariableAt(index));
         vertices.push_back(vertex);

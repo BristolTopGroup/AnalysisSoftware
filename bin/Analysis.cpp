@@ -102,7 +102,7 @@ void Analysis::analyse() {
 //		mttbarAnalyser->analyse(currentEvent);
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		diffVariablesAnalyser->analyse(currentEvent);
-		binningAnalyser->analyse(currentEvent);
+//		binningAnalyser->analyse(currentEvent);
 	}
 }
 
@@ -283,10 +283,10 @@ void Analysis::createHistograms() {
 	cout << "Number of histograms added by diffVariablesAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	binningAnalyser->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by binningAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-	lastNumberOfHistograms = numberOfHistograms;
+//	binningAnalyser->createHistograms();
+//	numberOfHistograms = histMan->size();
+//	cout << "Number of histograms added by binningAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
+//	lastNumberOfHistograms = numberOfHistograms;
 
 	histMan->setCurrentHistogramFolder("");
 	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
