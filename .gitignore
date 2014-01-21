@@ -9,6 +9,7 @@ Makefile
 *.py[cod]
 *.log
 *.so
+*.root
 Debug/
 Profile/
 Release/

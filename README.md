@@ -5,23 +5,28 @@ Analysis software for TTbar+X differential cross section analysis (TOP-12-042)
 
 ## General Recipe
 
-To setup the standalone version of the code:
+To setup the stand-alone version of the code:
 
 ```
-#get the code from the repository
+# get the code from the repository
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git AnalysisSoftware
 cd AnalysisSoftware
 
-#create the makefile using cmake (install it if you don't have it: https://github.com/Kitware/CMake)
+# create the makefile using cmake (install it if you don't have it: https://github.com/Kitware/CMake)
 cmake CMakeLists.txt
 
-#compile and build
+# for older versions of boost you will need to
+#sed -i 's/lib64\/lib64/lib64/g' ./CMakeFiles/AnalysisSoftware.dir/build.make
+#sed -i 's/lib64\/lib64/lib64/g' ./CMakeFiles/AnalysisSoftware.dir/link.txt
+# as the library path is wrong (contains lib64/lib64)
+
+# compile and build
 make -j24
 
-#adjust the toolsFolder environment variable
+# adjust the toolsFolder environment variable
 export toolsFolder=$PWD/
 
-#test run the code:
+# test run the code:
 nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 ```
 
@@ -34,15 +39,15 @@ cmsrel CMSSW_6_0_0
 cd CMSSW_6_0_0/src
 cmsenv
 
-#get the code from the repository
+# get the code from the repository
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git BristolAnalysis/Tools
 
-#compile
+# compile
 scram b -j2
 
 hash -r #or rehash in case that BAT cannot be found
 
-#test run the code:
+# test run the code:
 nohup BAT BristolAnalysis/Tools/python/test_cfg.py &> test.log &
 ```
 
