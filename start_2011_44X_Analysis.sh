@@ -1,11 +1,17 @@
 #!/bin/bash
 #setup the machine you are using
-machine="soolin"
+machine=dice
+#machine="soolin"
 #machine="stardust"
-exe=BAT
+if [ ${machine} == "soolin" ]
+then
 toolsFolder=BristolAnalysis/Tools/
-toolsFolder=BristolAnalysis/Tools/ 
-if [ ${machine} == "stardust" ]
+exe=BAT
+elif [ ${machine} == "dice" ]
+then
+toolsFolder=./
+exe=./AnalysisSoftware
+elif [ ${machine} == "stardust" ]
 then
 toolsFolder=/storage/Workspace/Analysis/AnalysisTools/
 exe=${toolsFolder}Release/AnalysisTools
@@ -15,6 +21,7 @@ fi
 export toolsFolder=${toolsFolder}
 export exe=${exe}
 export TQAFPath=${TQAFPath}
+
 #sample="QCD_20to30_BCtoE" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_44X_cfg.py ${TQAFPath} &> QCD_20to30_BCtoE_central.log &
 #sample="QCD_20to30_BCtoE" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_44X_cfg.py ${TQAFPath} &> QCD_20to30_BCtoE_JES_up.log &
 #sample="QCD_20to30_BCtoE" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_44X_cfg.py ${TQAFPath} &> QCD_20to30_BCtoE_JES_down.log &
