@@ -2,9 +2,9 @@ mc_path = '/storage/TopQuarkGroup/mc/7TeV/'
 data_path = '/storage/TopQuarkGroup/data/2011/'
 datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v10_Run2011A-12Oct2013-v1_53X_GoldenJSON_LeptonPlus3Jets',
                             data_path + 'ElectronHad/nTuple_v10_Run2011B-12Oct2013-v1_53X_GoldenJSON_LeptonPlus3Jets'],
+                 'SingleMu' : [data_path + 'SingleMu/nTuple_v10_Run2011A-12Oct2013-v1_53X_GoldenJSON_LeptonPlus3Jets',
+                            data_path + 'SingleMu/nTuple_v10_Run2011B-12Oct2013-v1_53X_GoldenJSON_LeptonPlus3Jets'],
             #to update all filepaths below here when ntuples are created and merged
-                 'SingleMu' : [data_path + 'SingleMu/nTuple_v8b_Run2011A-08Nov2011-v1_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleMu/nTuple_v8b_Run2011B-19Nov2011-v1_GoldenJSON_LeptonPlus3Jets'],
                  'TTJet' : [mc_path + 'TTJets_TuneZ2_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'DYJetsToLL' : [mc_path + 'DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'QCD_Mu' : [mc_path + 'QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
