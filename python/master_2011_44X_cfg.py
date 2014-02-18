@@ -16,25 +16,25 @@ datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v10_Run2011A-08Nov2
                  'GJets_40To100' : [mc_path + 'GJets_TuneZ2_40_HT_100_7TeV-madgraph/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'GJets_100To200' : [mc_path + 'GJets_TuneZ2_100_HT_200_7TeV-madgraph/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'GJets_200' : [mc_path + 'GJets_TuneZ2_200_HT_inf_7TeV-madgraph/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 'WW' : [mc_path + 'WW_TuneZ2_7TeV_pythia6_tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'], #*
-                 'WZ' : [mc_path + 'WZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
-                 'ZZ' : [mc_path + 'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
+                 'WW' : [mc_path + 'WW_TuneZ2_7TeV-pythia6-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
+                 'WZ' : [mc_path + 'WZ_TuneZ2_7TeV-pythia6-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
+                 'ZZ' : [mc_path + 'ZZ_TuneZ2_7TeV_pythia6_tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'T_s' : [mc_path + 'T_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'T_t' : [mc_path + 'T_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'T_tW' : [mc_path + 'T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'Tbar_s' : [mc_path + 'Tbar_TuneZ2_s-channel_7TeV-powheg-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'Tbar_t' : [mc_path + 'Tbar_TuneZ2_t-channel_7TeV-powheg-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'Tbar_tW' : [mc_path + 'Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 'TTbarZIncl' : [mc_path + 'TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
-                 'TTbarInclWIncl' : [mc_path + 'TTbarInclWIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
+                 'TTbarZIncl' : [mc_path + 'TTbarZIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
+                 'TTbarInclWIncl' : [mc_path + 'TTbarInclWIncl_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'W1Jet' : [mc_path + 'W1Jet_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'W2Jets' : [mc_path + 'W2Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 'W3Jets' : [mc_path + 'W3Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
+                 'W3Jets' : [mc_path + 'W3Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v2_LeptonPlus3Jets'],
                  'W4Jets' : [mc_path + 'W4Jets_TuneZ2_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'TTJets-matchingdown' : [mc_path + 'TTjets_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v3_LeptonPlus3Jets'],
-                 'TTJets-matchingup' : [mc_path + 'TTjets_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
-                 'TTJets-scaledown' : [mc_path + 'TTjets_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
-                 'TTJets-scaleup' : [mc_path + 'TTjets_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
+                 'TTJets-matchingup' : [mc_path + 'TTjets_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
+                 'TTJets-scaledown' : [mc_path + 'TTjets_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
+                 'TTJets-scaleup' : [mc_path + 'TTjets_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'WJets-matchingdown' : [mc_path + 'WJetsToLNu_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'WJets-matchingup' : [mc_path + 'WJetsToLNu_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'WJets-scaledown' : [mc_path + 'WJetsToLNu_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
@@ -44,7 +44,7 @@ datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v10_Run2011A-08Nov2
                  'ZJets-scaledown' : [mc_path + 'ZJetsToLL_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'ZJets-scaleup' : [mc_path + 'ZJetsToLL_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'TTJets-mcatnlo' : [mc_path + 'TT_TuneZ2_7TeV-mcatnlo/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 'TTJets-pythia' : [mc_path + 'TT_TuneZ2_7TeV-pythia6-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],#*
+                 'TTJets-pythia' : [mc_path + 'TT_TuneZ2_7TeV-pythia6-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  'TTJets-powheg' : [mc_path + 'TT_TuneZ2_7TeV-powheg-tauola/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                      }
 
