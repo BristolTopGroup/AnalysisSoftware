@@ -47,7 +47,7 @@ elif centerOfMassEnergy == 7:
         applyMetType0Corr = False
 
         #Apply Jet Smearing
-        applyJetSmearing = False
+        applyJetSmearing = True
     
         #Apply Top Pt Reweighting
         applyTopPtReweighting = False
