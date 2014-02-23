@@ -24,7 +24,8 @@ bool QCDAntiIDEPlusJetsSelection::isGoodElectron(const ElectronPointer electron)
 }
 
 bool QCDAntiIDEPlusJetsSelection::isIsolated(const LeptonPointer lepton) const {
-	return lepton->pfRelativeIsolation(0.3) < 0.2;
+	const ElectronPointer electron(boost::static_pointer_cast<Electron>(lepton));
+	return electron->pfRelativeIsolationRhoCorrected() < 0.2;
 }
 
 QCDAntiIDEPlusJetsSelection::~QCDAntiIDEPlusJetsSelection() {

@@ -187,7 +187,7 @@ bool TopPairMuPlusJetsReferenceSelection2011::isLooseElectron(const ElectronPoin
 
 	bool passesEtAndEta = electron->et() > 15. && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 //	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
-	bool passesIso = electron->pfRelativeIsolation(0.3) < 0.2;
+	bool passesIso = electron->pfRelativeIsolationRhoCorrected() < 0.2;
 
 	return passesEtAndEta && passesIso;
 }
