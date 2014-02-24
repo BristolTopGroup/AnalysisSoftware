@@ -33,7 +33,7 @@ datasetInfo['DYJetsToLL'] = {"cross-section": 3048., "NumberOfProcessedEvents":3
 
 datasetInfo['GJets_HT-40To100'] = {"cross-section": 23620., "NumberOfProcessedEvents":12730863}
 datasetInfo['GJets_HT-100To200'] = {"cross-section": 3476., "NumberOfProcessedEvents":1536287}
-datasetInfo['GJets_HT-200'] = {"cross-section": 485., "NumberOfProcessedEvents":9377168}
+datasetInfo['GJets_HT-200ToInf'] = {"cross-section": 485., "NumberOfProcessedEvents":9377168}
 
 datasetInfo['QCD_Pt-20to30_BCtoE'] = {"cross-section": 0.2355e9 * 0.00046, "NumberOfProcessedEvents":2002588}
 datasetInfo['QCD_Pt-30to80_BCtoE'] = {"cross-section": 0.0593e9 * 0.00234, "NumberOfProcessedEvents":2030030}
