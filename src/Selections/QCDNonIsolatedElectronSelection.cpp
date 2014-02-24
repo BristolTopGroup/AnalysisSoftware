@@ -26,10 +26,10 @@ bool QCDNonIsolatedElectronSelection::hasExactlyOneIsolatedLepton(const EventPtr
 		const ElectronPointer electron(allElectrons.at(index));
 		if (isGoodElectron(electron)) {
 			++nGoodElectrons;
-			if (electron->pfRelativeIsolation(0.3) < 0.2)
+			if (electron->pfRelativeIsolationRhoCorrected() < 0.2)
 				++nGoodIsolatedElectrons;
 
-			if (electron->pfRelativeIsolation(0.3) > 0.2)
+			if (electron->pfRelativeIsolationRhoCorrected() > 0.2)
 				++nGoodNonIsolatedElectrons;
 		}
 	}

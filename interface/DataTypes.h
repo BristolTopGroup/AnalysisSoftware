@@ -173,7 +173,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_Pt-1000_MuEnrichedPt5", //
 		"GJets_HT-40To100", //
 		"GJets_HT-100To200", //
-		"GJets_HT-200", //
+		"GJets_HT-200ToInf", //
 		//2012 PJ samples
 		"GJets_HT-200To400", //
 		"GJets_HT-400ToInf", //

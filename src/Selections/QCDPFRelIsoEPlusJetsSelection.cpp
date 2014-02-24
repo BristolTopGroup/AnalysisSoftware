@@ -69,7 +69,7 @@ const ElectronPointer QCDPFRelIsoEPlusJetsSelection::MostIsolatedElectron(const 
 	unsigned int bestIsolatedLepton = 990;
 
 	for (unsigned int index = 0; index < electrons.size(); ++index) {
-		double currentIsolation(electrons.at(index)->pfRelativeIsolation(0.3));
+		double currentIsolation(electrons.at(index)->pfRelativeIsolationRhoCorrected());
 
 		if (currentIsolation < bestIsolation) {
 			bestIsolation = currentIsolation;
