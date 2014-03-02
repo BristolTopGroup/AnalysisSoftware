@@ -27,6 +27,7 @@ protected:
 	double weight_;
 	unsigned int prescale_;
 	double scale_;
+	bool have_histograms_been_created_;
 
 public:
 	/**

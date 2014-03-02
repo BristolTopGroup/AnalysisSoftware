@@ -13,13 +13,8 @@ namespace BAT {
 
 Binned_variable_analyser::Binned_variable_analyser(HistogramManagerPtr histMan, string histogramFolder) :
 		BasicAnalyser(histMan, histogramFolder), //
-		variable_name_("variable"), //
-		fit_variable_name_("fit_variable"), //
-		variable_bins_(), //
-		fit_variable_bins_(), //
-		fit_variable_n_bins_(1), //
-		fit_variable_min_(0), //
-		fit_variable_max_(100) {
+		variable_(), //
+		fit_variables_(){
 
 }
 
@@ -30,58 +25,152 @@ void Binned_variable_analyser::analyse(const EventPtr event) {
 
 }
 
-void Binned_variable_analyser::analyse(double variable, double fit_variable, double weight) {
+void Binned_variable_analyser::analyse(double variable, double fit_variable_value,
+		double weight) {
+	if (!have_histograms_been_created_)
+		createHistograms();
+	analyse(variable, fit_variable_value, weight, fit_variables_.at(0).name);
+}
+
+void Binned_variable_analyser::analyse(double variable,
+		std::vector<double> fit_variable_values, double weight) {
+	assert(fit_variable_values.size() == fit_variables_.size());
+	if (!have_histograms_been_created_)
+		createHistograms();
+
+	for (unsigned int i = 0; i < fit_variable_values.size(); ++i) {
+		analyse(variable, fit_variable_values.at(i), weight,
+				fit_variables_.at(i).name);
+	}
+
+	analyse_correlations(fit_variable_values, weight);
+}
+
+void Binned_variable_analyser::analyse(double variable,
+		double fit_variable_value, double weight, string fit_variable_name) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = weight * prescale_ * scale_;
-	for (unsigned int index = 0; index < variable_bins_.size() + 1; ++index) {
-		double upperCut = index < variable_bins_.size() ? variable_bins_.at(index) : 999999.;
-		double lowerCut = index == 0 ? 0. : variable_bins_.at(index - 1);
+	for (unsigned int index = 0; index < variable_.bins.size() + 1; ++index) {
+		double upperCut =
+				index < variable_.bins.size() ?
+						variable_.bins.at(index) : 999999.;
+		double lowerCut = index == 0 ? 0. : variable_.bins.at(index - 1);
 
-		if (variable >= lowerCut && variable < upperCut) {//find right bin
+		if (variable >= lowerCut && variable < upperCut) { //find right bin
 			string bin =
-					index < variable_bins_.size() ? boost::lexical_cast<string>(variable_bins_.at(index)) : "inf";
-			string previousBin = index == 0 ? "0" : boost::lexical_cast<string>(variable_bins_.at(index - 1));
-			string folder = variable_name_ + "_bin_" + previousBin + "-" + bin;
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + folder);
-			histMan_->H1D_BJetBinned(fit_variable_name_)->Fill(fit_variable, weight_);
+					index < variable_.bins.size() ?
+							boost::lexical_cast<string>(
+									variable_.bins.at(index)) :
+							"inf";
+			string previousBin =
+					index == 0 ?
+							"0" :
+							boost::lexical_cast<string>(
+									variable_.bins.at(index - 1));
+			string folder = variable_.name + "_bin_" + previousBin + "-" + bin;
+			histMan_->setCurrentHistogramFolder(
+					histogramFolder_ + "/" + folder);
+			histMan_->H1D_BJetBinned(fit_variable_name)->Fill(
+					fit_variable_value, weight_);
+		}
+	}
+}
+
+void Binned_variable_analyser::analyse_correlations(
+		vector<double> fit_variable_values, double weight) {
+	if (fit_variable_values.size() < 2)
+		return;
+	// only if we have more than one variable
+	for (unsigned int i = 0; i < fit_variables_.size(); ++i) {
+		histMan_->setCurrentHistogramFolder(
+				histogramFolder_ + "/" + "fit_variable_correlations");
+		for (unsigned int j = i + 1; j < fit_variables_.size(); ++j) {
+			Variable a = fit_variables_.at(i);
+			Variable b = fit_variables_.at(j);
+			double value_a = fit_variable_values.at(i);
+			double value_b = fit_variable_values.at(j);
+			histMan_->H2D(b.name + "_vs_" + a.name)->Fill(value_a, value_b,
+					weight);
 		}
 	}
 }
 
 void Binned_variable_analyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
-	if ((fit_variable_bins_.empty() && fit_variable_n_bins_ <= 1) || variable_bins_.empty())
-		throw "Binned_Variable_analyser: fit_variable_bins and/or variable_bins have not been specified!";
 
-	for (unsigned int index = 0; index < variable_bins_.size() + 1; ++index) {
-		string bin = index < variable_bins_.size() ? boost::lexical_cast<string>(variable_bins_.at(index)) : "inf";
-		string previousBin = index == 0 ? "0" : boost::lexical_cast<string>(variable_bins_.at(index - 1));
-		string folder = variable_name_ + "_bin_" + previousBin + "-" + bin;
+	for (unsigned int index = 0; index < variable_.bins.size() + 1; ++index) {
+		string bin =
+				index < variable_.bins.size() ?
+						boost::lexical_cast<string>(variable_.bins.at(index)) :
+						"inf";
+		string previousBin =
+				index == 0 ?
+						"0" :
+						boost::lexical_cast<string>(
+								variable_.bins.at(index - 1));
+		string folder = variable_.name + "_bin_" + previousBin + "-" + bin;
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + folder);
-		if (fit_variable_bins_.empty())
-			histMan_->addH1D_BJetBinned(fit_variable_name_, fit_variable_name_, fit_variable_n_bins_, fit_variable_min_,
-					fit_variable_max_);
-		//no alternative at the moment
+		// create all fit variable histograms
+		for (unsigned int i = 0; i < fit_variables_.size(); ++i) {
+			Variable fit_variable = fit_variables_.at(i);
+			if ((fit_variable.bins.empty() && fit_variable.n_bins <= 1)
+					|| variable_.bins.empty())
+				throw "Binned_Variable_analyser: fit_variable_bins and/or variable_bins have not been specified!";
+
+			if (fit_variable.bins.empty())
+				histMan_->addH1D_BJetBinned(fit_variable.name,
+						fit_variable.name, fit_variable.n_bins,
+						fit_variable.min, fit_variable.max);
+			//no alternative at the moment
+		}
 	}
+
+	// correlation histograms
+	for (unsigned int i = 0; i < fit_variables_.size(); ++i) {
+		histMan_->setCurrentHistogramFolder(
+				histogramFolder_ + "/" + "fit_variable_correlations");
+		for (unsigned int j = i + 1; j < fit_variables_.size(); ++j) {
+		// no b-tag binning
+			Variable a = fit_variables_.at(i);
+			Variable b = fit_variables_.at(j);
+			// name, 'title; y-axis title; x-axis title', etc
+			histMan_->addH2D(b.name + "_vs_" + a.name, b.name + "_vs_" + a.name + "; " + a.name + "; " + b.name, a.n_bins, a.min, a.max, b.n_bins, b.min, b.max);
+		}
+
+	}
+	have_histograms_been_created_ = true;
 }
 
 void Binned_variable_analyser::set_variables(string variable_name, vector<double> variable_bins,
 		string fit_variable_name, vector<double> fit_variable_bins) {
-	variable_name_ = variable_name;
-	fit_variable_name_ = fit_variable_name;
-	variable_bins_ = variable_bins;
-	fit_variable_bins_ = fit_variable_bins;
+	variable_ = Variable(variable_name, variable_bins);
+	variable_.bins = variable_bins;
+
+	fit_variables_.push_back(Variable(fit_variable_name, fit_variable_bins));
 }
 
-void Binned_variable_analyser::set_variables(string variable_name, vector<double> variable_bins,
-		string fit_variable_name, unsigned int fit_variable_n_bins, double fit_variable_min,
+void Binned_variable_analyser::set_variables(string variable_name,
+		vector<double> variable_bins, string fit_variable_name,
+		unsigned int fit_variable_n_bins, double fit_variable_min,
 		double fit_variable_max) {
-	variable_name_ = variable_name;
-	fit_variable_name_ = fit_variable_name;
-	variable_bins_ = variable_bins;
-	fit_variable_n_bins_ = fit_variable_n_bins;
-	fit_variable_min_ = fit_variable_min;
-	fit_variable_max_ = fit_variable_max;
+	variable_ = Variable(variable_name, variable_bins);
+
+	fit_variables_.push_back(
+			Variable(fit_variable_name, fit_variable_n_bins, fit_variable_min,
+					fit_variable_max));
+}
+
+void Binned_variable_analyser::set_variables(Variable variable,
+		Variable fit_variable) {
+	variable_ = variable;
+	fit_variables_.push_back(fit_variable);
+}
+
+void Binned_variable_analyser::set_variables(Variable variable,
+		vector<Variable> fit_variables) {
+	assert(fit_variables.size() > 0);
+	variable_ = variable;
+	fit_variables_ = fit_variables;
 }
 
 }
