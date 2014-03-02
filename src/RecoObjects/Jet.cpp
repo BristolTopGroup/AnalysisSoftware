@@ -33,7 +33,23 @@ Jet::Jet() :
 		l2RelJEC(0), //
 		l3AbsJEC(0), //
 		partonFlavour_(0), //
-
+		//
+		energy_unsmeared(0.), //
+		pt_unsmeared(0.), //
+		px_unsmeared(0.), //
+		py_unsmeared(0.), //
+		pz_unsmeared(0.), //
+		phi_unsmeared(0.), //
+		eta_unsmeared(0.), //
+		//
+		energy_smeared(0.), //
+		pt_smeared(0.), //
+		px_smeared(0.), //
+		py_smeared(0.), //
+		pz_smeared(0.), //
+		phi_smeared(0.), //
+		eta_smeared(0.), //
+		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
 		smearedJet() //
@@ -65,23 +81,23 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		l2RelJEC(0), //
 		l3AbsJEC(0), //
 		partonFlavour_(0), //
-
-		energy_unsmeared(0.),
-		pt_unsmeared(0.),
-		px_unsmeared(0.),
-		py_unsmeared(0.),
-		pz_unsmeared(0.),
-		phi_unsmeared(0.),
-		eta_unsmeared(0.),
-
-		energy_smeared(0.),
-		pt_smeared(0.),
-		px_smeared(0.),
-		py_smeared(0.),
-		pz_smeared(0.),
-		phi_smeared(0.),
-		eta_smeared(0.),
-
+		//
+		energy_unsmeared(0.), //
+		pt_unsmeared(0.), //
+		px_unsmeared(0.), //
+		py_unsmeared(0.), //
+		pz_unsmeared(0.), //
+		phi_unsmeared(0.), //
+		eta_unsmeared(0.), //
+		//
+		energy_smeared(0.), //
+		pt_smeared(0.), //
+		px_smeared(0.), //
+		py_smeared(0.), //
+		pz_smeared(0.), //
+		phi_smeared(0.), //
+		eta_smeared(0.), //
+		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
 		smearedJet() //

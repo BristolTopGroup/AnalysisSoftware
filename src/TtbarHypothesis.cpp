@@ -14,17 +14,49 @@
 namespace BAT {
 
 TtbarHypothesis::TtbarHypothesis() :
-		totalChi2(99999.), leptonicChi2(99999.), hadronicChi2(99999.), globalChi2(99999.), discriminator(999999), hadronicTop(), leptonicTop(), leptonicW(), hadronicW(), resonance(), neutrinoFromW(), leptonicBjet(), hadronicBJet(), jet1FromW(), jet2FromW(), leptonFromW(), met(), decayChannel(
-				Decay::unknown) {
+		totalChi2(99999.), //
+		leptonicChi2(99999.), //
+		hadronicChi2(99999.), //
+		globalChi2(99999.), //
+		discriminator(999999), //
+		hadronicTop(), //
+		leptonicTop(), //
+		leptonicW(), //
+		hadronicW(), //
+		resonance(), //
+		neutrinoFromW(), //
+		leptonicBjet(), //
+		hadronicBJet(), //
+		jet1FromW(), //
+		jet2FromW(), //
+		leptonFromW(), //
+		met(), //
+		decayChannel(Decay::unknown) {
 
 }
 
-TtbarHypothesis::TtbarHypothesis(const LeptonPointer& elec, const ParticlePointer& neut, const JetPointer& lepBJet,
-		const JetPointer& hadBJet, const JetPointer& hadWJet1, const JetPointer& hadWJet2) :
-		totalChi2(99999.), leptonicChi2(99999.), hadronicChi2(99999.), globalChi2(99999.), hadronicTop(), leptonicTop(), leptonicW(
-				new Particle(*elec + *neut)), hadronicW(new Particle(*hadWJet1 + *hadWJet2)), resonance(), neutrinoFromW(
-				neut), leptonicBjet(lepBJet), hadronicBJet(hadBJet), jet1FromW(hadWJet1), jet2FromW(hadWJet2), leptonFromW(
-				elec), met(new MET(neut->px(), neut->py())) {
+TtbarHypothesis::TtbarHypothesis(const LeptonPointer& elec,
+		const ParticlePointer& neut, const JetPointer& lepBJet,
+		const JetPointer& hadBJet, const JetPointer& hadWJet1,
+		const JetPointer& hadWJet2) :
+		totalChi2(99999.), //
+		leptonicChi2(99999.), //
+		hadronicChi2(99999.), //
+		globalChi2(99999.), //
+		discriminator(999999), //
+		hadronicTop(), //
+		leptonicTop(), //
+		leptonicW(new Particle(*elec + *neut)), //
+		hadronicW(new Particle(*hadWJet1 + *hadWJet2)), //
+		resonance(), //
+		neutrinoFromW(neut), //
+		leptonicBjet(lepBJet), //
+		hadronicBJet(hadBJet), //
+		jet1FromW(hadWJet1), //
+		jet2FromW(hadWJet2), //
+		leptonFromW(elec), //
+		met(new MET(neut->px(), neut->py())), //
+		decayChannel(Decay::unknown) {
 
 }
 
