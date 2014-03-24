@@ -63,6 +63,7 @@ analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 
 available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
 default_settings = {
+            'LeptonScaleFactorSystematic':0,
             'JESsystematic':0,
             'PUFile':'PileUp_2011_truth_finebin_68000microbarn.root',
             'BTagSystematic':0,
@@ -72,6 +73,8 @@ default_settings = {
             }
 
 analysis_settings = {
+                     'LeptonScaleFactor_down':{'LeptonScaleFactorSystematic':-1},
+                     'LeptonScaleFactor_up':{'LeptonScaleFactorSystematic':1},
                      'BJet_down':{'BTagSystematic':-1},
                  'BJet_up':{'BTagSystematic':1},
                  'JES_down':{'JESsystematic':-1},
@@ -130,6 +133,8 @@ if sample in ['TTJets-mcatnlo','TTJets-pythia','TTJets-powheg']:
     
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
+ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
+MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
 BTagSystematic = settings['BTagSystematic']

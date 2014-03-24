@@ -352,10 +352,10 @@ double Electron::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) 
 
 double Electron::pfRelativeIsolationRhoCorrected() const {
 /*	//https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection#Isolation_cone_R_0_3
-//	2.0<abs(eta)<2.2 	Aeff(NH) = 0.023 +/- 0.001 	Aeff(γ) = 0.089 +/- 0.002 	Aeff(γ+NH) = 0.11 +/- 0.003
-//	2.2<abs(eta)<2.3 	Aeff(NH) = 0.023 +/- 0.002 	Aeff(γ) = 0.092 +/- 0.004 	Aeff(γ+NH) = 0.12 +/- 0.004
-//	2.3<abs(eta)<2.4 	Aeff(NH) = 0.021 +/- 0.002 	Aeff(γ) = 0.097 +/- 0.004 	Aeff(γ+NH) = 0.12 +/- 0.005
-//	abs(η)>2.4 	Aeff(NH) = 0.021 +/- 0.003 	Aeff(γ) = 0.11 +/- 0.004 	Aeff(γ+NH) = 0.13 +/- 0.006
+//	2.0<abs(eta)<2.2 	Aeff(NH) = 0.023 +/- 0.001 	Aeff(gamma) = 0.089 +/- 0.002 	Aeff(gamma+NH) = 0.11 +/- 0.003
+//	2.2<abs(eta)<2.3 	Aeff(NH) = 0.023 +/- 0.002 	Aeff(gamma) = 0.092 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.004
+//	2.3<abs(eta)<2.4 	Aeff(NH) = 0.021 +/- 0.002 	Aeff(gamma) = 0.097 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.005
+//	abs(eta)>2.4 	Aeff(NH) = 0.021 +/- 0.003 	Aeff(gamma) = 0.11 +/- 0.004 	Aeff(gamma+NH) = 0.13 +/- 0.006
 
 	if(coneSize != 0.3){
 		//TODO: put exception or warning
@@ -432,6 +432,189 @@ double Electron::mvaTrigV0() const {
 
 double Electron::mvaNonTrigV0() const {
 	return mvaNonTrigV0_;
+}
+
+double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic) const {
+	double correction(1.);
+	double electronEta(eta());
+
+	if(Globals::energyInTeV == 7){
+	if (electronEta < -1.5)
+		correction = 1.003;
+	else if (electronEta >= -1.5 && electronEta < -1.2)
+		correction = 0.980;
+	else if (electronEta >= -1.2 && electronEta < -0.9)
+		correction = 0.941;
+	else if (electronEta >= -0.9 && electronEta < 0)
+		correction = 0.974;
+	else if (electronEta >= 0 && electronEta < 0.9)
+		correction = 0.977;
+	else if (electronEta >= 0.9 && electronEta < 1.2)
+		correction = 0.939;
+	else if (electronEta >= 1.2 && electronEta < 1.5)
+		correction = 0.967;
+	else if (electronEta >= 1.5)
+		correction = 1.023;
+	//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/KoPFAElectronTagAndProbe
+	//Only factors from PromptReco available (in the "Efficiency for e+jet channel (promptreco)" section)
+	//Specifically: ID & Iso: "ID/Isolation efficiency" sub-section
+	//Specifically: Trigger: "Trigger efficiency" sub-section
+	}else if(qcd == false){ //corrections for (ID & Iso) and Trigger respectively
+		if(abs(electronEta)<0.8) {
+			if(20<=pt() && pt()<30) {  //Note: Trigger scale factors only provided down to electron pt of 30GeV in the link above, so I have used the same as for the 30GeV-40GeV range.
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.949-0.0007)*(0.987-0.017);
+						break;
+					case 1:
+						correction = (0.949+0.007)*(0.987+0.012);
+						break;
+					default:
+						correction = 0.949*0.987;
+				}
+			}
+			else if(30<=pt() && pt()<40) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.939-0.003)*(0.987-0.017);
+						break;
+					case 1:
+						correction = (0.939+0.003)*(0.987+0.012);
+						break;
+					default:
+						correction = 0.939*0.987;
+				}
+			}
+			else if(40<=pt() && pt()<50) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.950-0.001)*(0.997-0.001);
+						break;
+					case 1:
+						correction = (0.950+0.001)*(0.997+0.001);
+						break;
+					default:
+						correction = 0.950*0.997;
+				}
+			}
+			else if(50<=pt() && pt()<=200) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.957-0.001)*(0.998-0.002);
+						break;
+					case 1:
+						correction = (0.957+0.001)*(0.998+0.002);
+						break;
+					default:
+						correction = 0.957*0.998;
+				}
+			}
+		}
+		else if(abs(electronEta)>=0.8 && abs(electronEta)<1.478) {
+			if(20<=pt() && pt()<30) { //Note: Trigger scale factors only provided down to electron pt of 30GeV in the link above, so I have used the same as for the 30GeV-40GeV range.
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.900-0.009)*(0.964-0.001);
+						break;
+					case 1:
+						correction = (0.900+0.010)*(0.964+0.002);
+						break;
+					default:
+						correction = 0.900*0.964;
+				}
+			}
+			if(30<=pt() && pt()<40) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.920-0.000)*(0.964-0.001);
+						break;
+					case 1:
+						correction = (0.920+0.002)*(0.964+0.002);
+						break;
+					default:
+						correction = 0.920*0.964;
+				}
+			}
+			if(40<=pt() && pt()<50) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.949-0.002)*(0.980-0.001);
+						break;
+					case 1:
+						correction = (0.949+0.002)*(0.980+0.001);
+						break;
+					default:
+						correction = 0.949*0.980;
+				}
+			}
+			if(50<=pt() && pt()<=200) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.959-0.003)*(0.988-0.002);
+						break;
+					case 1:
+						correction = (0.959+0.003)*(0.988+0.002);
+						break;
+					default:
+						correction = 0.954*0.988;
+				}
+			}
+		}
+		else if(abs(electronEta)>=1.478 && abs(electronEta)<2.5) {
+			if(20<=pt() && pt()<30) { //Note: Trigger scale factors only provided down to electron pt of 30GeV in the link above, so I have used the same as for the 30GeV-40GeV range.
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.857-0.010)*(1.004-0.006);
+						break;
+					case 1:
+						correction = (0.857+0.009)*(1.004+0.006);
+						break;
+					default:
+						correction = 0.857*1.004;
+				}
+			}
+			if(30<=pt() && pt()<40) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.907-0.005)*(1.004-0.006);
+						break;
+					case 1:
+						correction = (0.907+0.005)*(1.004+0.006);
+						break;
+					default:
+						correction = 0.907*1.004;
+				}
+			}
+			if(40<=pt() && pt()<50) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.937-0.008)*(1.033-0.007);
+						break;
+					case 1:
+						correction = (0.937+0.008)*(1.033+0.007);
+						break;
+					default:
+						correction = 0.937*1.033;
+				}
+			}
+			if(50<=pt() && pt()<=200) {
+				switch (electron_scale_factor_systematic) {
+					case -1:
+						correction = (0.954-0.010)*(0.976-0.012);
+						break;
+					case 1:
+						correction = (0.954+0.011)*(0.976+0.015);
+						break;
+					default:
+						correction = 0.954*0.976;
+				}
+			}
+		}
+//ID scale factor for QCD is technically irrelevant since we use conversion veto for QCD, but ID and isolation scale factors are provided as one so unable to split them to remove the ID scale factor.
+
+	}
+	return correction;
+
 }
 
 }

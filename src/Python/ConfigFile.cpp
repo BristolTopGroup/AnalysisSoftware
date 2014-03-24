@@ -38,6 +38,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")), //
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
 		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
+		electronScaleFactorSystematic_(0), //
+		muonScaleFactorSystematic_(0), //
 		jesSystematic_(0), //
 		jetSmearingSystematic_(0), //
 		btagSystematic_(0), //
@@ -49,6 +51,10 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		applyMetType1Corr_(0),
 		applyJetSmearing_(0),
 		applyTopPtReweighting_(0){
+	if (PythonParser::hasAttribute(config, "ElectronScaleFactorSystematic"))
+			electronScaleFactorSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "ElectronScaleFactorSystematic");
+	if (PythonParser::hasAttribute(config, "MuonScaleFactorSystematic"))
+			muonScaleFactorSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "MuonScaleFactorSystematic");
 	if (PythonParser::hasAttribute(config, "JESsystematic"))
 		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
 	if (PythonParser::hasAttribute(config, "JetSmearingSystematic"))
@@ -94,6 +100,10 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("TQAFPath", value<std::string>(),
 			"path to TopQuarkAnalysis folder (the folder itself not included).");
 	desc.add_options()("lumi", value<std::string>(), "Integrated luminosity the MC simulation will be scaled to");
+	desc.add_options()("ElectronScaleFactorSystematic", value<int>(),
+			"Electron ID, Iso and Trigger scale factor systematic,  the +/- number of uncertainties to vary the scale factor with");
+	desc.add_options()("MuonScaleFactorSystematic", value<int>(),
+			"Muon ID, Iso and Trigger scale factor systematic,  the +/- number of uncertainties to vary the scale factor with");
 	desc.add_options()("BTagSystematic", value<int>(),
 			"B-tag scale factor systematic, the +/- number of uncertainties to vary the scale factor with");
 	desc.add_options()("LightTagSystematic", value<int>(),
@@ -227,6 +237,20 @@ double ConfigFile::lumi() const {
 		return lumi_;
 }
 
+int ConfigFile::electronScaleFactorSystematic() const {
+	if (programOptions.count("ElectronScaleFactorSystematic"))
+		return programOptions["ElectronScaleFactorSystematic"].as<int>();
+	else
+		return electronScaleFactorSystematic_;
+}
+
+int ConfigFile::muonScaleFactorSystematic() const {
+	if (programOptions.count("MuonScaleFactorSystematic"))
+		return programOptions["MuonScaleFactorSystematic"].as<int>();
+	else
+		return muonScaleFactorSystematic_;
+}
+
 int ConfigFile::jesSystematic() const {
 	if (programOptions.count("JESsystematic"))
 		return programOptions["JESsystematic"].as<int>();
@@ -355,6 +379,10 @@ void ConfigFile::loadIntoMemory() {
 	Globals::produceFitterASCIIoutput = fitterOutputFlag();
 
 	Globals::estimatedPileup = getPileUpHistogram(PUFile());
+
+	//Lepton Scale Factors
+	Globals::ElectronScaleFactorSystematic = electronScaleFactorSystematic();
+	Globals::MuonScaleFactorSystematic = muonScaleFactorSystematic();
 
 	//JES systematic
 	Globals::JESsystematic = jesSystematic();

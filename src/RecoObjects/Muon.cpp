@@ -144,7 +144,7 @@ double Muon::normChi2() const {
 	return normalisedChi2_;
 }
 
-double Muon::getEfficiencyCorrection(bool qcd) const {
+double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic) const {
 	double correction(1.);
 	double muEta(eta());
 
@@ -165,24 +165,110 @@ double Muon::getEfficiencyCorrection(bool qcd) const {
 		correction = 0.967;
 	else if (muEta >= 1.5)
 		correction = 1.023;
-	}else if(qcd == false){ //corrections for ID(A+B), Iso(A+B) and Trigger(A)  respectively
-		if(abs(muEta)<0.9)
-			correction = 0.9941*0.9923*0.9560;
-		else if(abs(muEta)>=0.9 && abs(muEta)<1.2)
-			correction = 0.9917*0.9979*0.9528;
-		else if(abs(muEta)>=1.2)
-			correction = 0.9982*1.0019*0.9809;
-	}else{
-		if(abs(muEta)<0.9)
-			correction = 0.9941*0.9560;
-		else if(abs(muEta)>=0.9 && abs(muEta)<1.2)
-			correction = 0.9917*0.9528;
-		else if(abs(muEta)>=1.2)
-			correction = 0.9982*0.9809;
+	//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#22Jan2013_ReReco_of_2012_data_re
+	//Specifically: ID & Iso: https://indico.cern.ch/event/257630/material/slides/2?contribId=1, Slide 12, "Tight Id" & Slide 26 "pfCombIso04dBeta (< 0.12) for	Tight Id"
+	//Specifically: Trigger: https://indico.cern.ch/event/257000/material/slides/0?contribId=2, Slide 13, "IsoMu24 TightID PFIsodB"
+	}else if(qcd == false){ //corrections for ID, Iso and Trigger respectively
+		if(abs(muEta)<0.9) {
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9925-0.0002)*(0.9959-0.00002)*(0.9837-0.00021);
+					break;
+				case 1:
+					correction = (0.9925+0.0002)*(0.9959+0.00002)*(0.9837+0.00021);
+					break;
+				default:
+					correction = 0.9925*0.9959*0.9837;
+			}
+		}
+		else if(abs(muEta)>=0.9 && abs(muEta)<1.2) {
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9928-0.0003)*(0.9878-0.0003)*(0.9656-0.00066);
+					break;
+				case 1:
+					correction = (0.9928+0.0003)*(0.9878-0.0003)*(0.9656+0.00066);
+					break;
+				default:
+					correction = 0.9928*0.9878*0.9656;
+			}
+		}
+		else if(abs(muEta)>=1.2 && abs(muEta)<2.1) {
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9960-0.0003)*(1.0027-0.0002)*(0.9962-0.00052);
+					break;
+				case 1:
+					correction = (0.9960+0.0003)*(1.0027+0.0002)*(0.9962+0.00052);
+					break;
+				default:
+					correction = 0.9960*1.0027*0.9962;
+			}
+		}
+		else if(abs(muEta)>=2.1 && abs(muEta)<=2.4) { //Note: Trigger scale factors only provided up to absolute eta of 2.1 in the link above, so I have used the same as for the 1.2 to 2.1 eta range.
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9952-0.0006)*(1.0633-0.0007)*(0.9962-0.00052);
+					break;
+				case 1:
+					correction = (0.9952+0.0006)*(1.0633+0.0007)*(0.9962+0.00052);
+					break;
+				default:
+					correction = 0.9952*1.0633*0.9962;
+			}
+		}
 	}
-
+	else{ //QCD has non-isolated muon hence isolation scale factor is irrelevant here
+		if(abs(muEta)<0.9) {
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9925-0.0002)*(0.9837-0.00021);
+					break;
+				case 1:
+					correction = (0.9925+0.0002)*(0.9837+0.00021);
+					break;
+				default:
+					correction = 0.9925*0.9837;
+			}
+		}
+		else if(abs(muEta)>=0.9 && abs(muEta)<1.2) {
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9928-0.0003)*(0.9656-0.00066);
+					break;
+				case 1:
+					correction = (0.9928+0.0003)*(0.9656+0.00066);
+					break;
+				default:
+					correction = 0.9928*0.9656;
+			}
+		}
+		else if(abs(muEta)>=1.2 && abs(muEta)<2.1) {
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9960-0.0003)*(0.9962-0.00052);
+					break;
+				case 1:
+					correction = (0.9960+0.0003)*(0.9962+0.00052);
+					break;
+				default:
+					correction = 0.9960*0.9962;
+			}
+		}
+		else if(abs(muEta)>=2.1 && abs(muEta)<=2.4) {
+			switch (muon_scale_factor_systematic) {
+				case -1:
+					correction = (0.9952-0.0006)*(0.9962-0.00052);
+					break;
+				case 1:
+					correction = (0.9952+0.0006)*(0.9962+0.00052);
+					break;
+				default:
+					correction = 0.9952*0.9962;
+			}
+		}
+	}
 	return correction;
 }
 
 }
-

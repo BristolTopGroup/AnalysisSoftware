@@ -38,9 +38,11 @@ struct Globals {
 
 	//electrons
 	static ElectronAlgorithm::value electronAlgorithm;
+	static int ElectronScaleFactorSystematic;
 //
 //	//muons
 	static MuonAlgorithm::value muonAlgorithm;
+	static int MuonScaleFactorSystematic;
 //
 //	//jets
 	static JetAlgorithm::value jetAlgorithm;
