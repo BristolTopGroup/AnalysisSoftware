@@ -143,7 +143,7 @@ void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 	if (topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
 	const LeptonPointer signalLepton = topMuPlusJetsRefSelection_->signalLepton(event);
 	const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-	double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+	double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::MuonScaleFactorSystematic);
 	 	scale_ = efficiencyCorrection;
 	}else{
 		scale_ =1;
