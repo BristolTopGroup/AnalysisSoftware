@@ -18,7 +18,7 @@
 
 datasetInfo = {}
 #if using the designated subset:
-datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":59389354}
+datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":7458920}
 datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":57708550} #not needed for 7TeV
 datasetInfo['W1Jet'] = {"cross-section": 4480., "NumberOfProcessedEvents":75710577 }
 datasetInfo['W2Jets'] = {"cross-section": 1674., "NumberOfProcessedEvents":25397957}
