@@ -9,7 +9,7 @@ centerOfMassEnergy = 8
 nTuple_version = 10
 #number of events to be processed
 maxEvents = 10000
-
+verbose = True
 
 if centerOfMassEnergy == 8:
     #File for pile-up re-weighting
@@ -75,12 +75,7 @@ TQAFPath = ""
 datasetInfoFile = ""
 
 if centerOfMassEnergy == 7:
-    if nTuple_version == 7:
-        datasetInfoFile = toolsFolder + "python/DataSetInfo_V7.py"
-    elif nTuple_version == 10:
-        datasetInfoFile = toolsFolder + "python/DataSetInfo_7TeV.py"
-    else:
-        datasetInfoFile = toolsFolder + "python/DataSetInfo.py"
+    datasetInfoFile = toolsFolder + "python/DataSetInfo_7TeV.py"
 elif centerOfMassEnergy == 8:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_8TeV.py"
 

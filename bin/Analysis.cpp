@@ -56,48 +56,6 @@ void Analysis::analyse() {
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
-//		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
-//			double bjetWeight = bjetWeights.at(weightIndex);
-//			histMan->setCurrentBJetBin(weightIndex);
-//			abcdMethodAnalyser_->setScale(bjetWeight);
-//			diElectronAnalyser->setScale(bjetWeight);
-//			electronAnalyser->setScale(bjetWeight);
-//			jetAnalyser->setScale(bjetWeight);
-//			metAnalyser->setScale(bjetWeight);
-//			muonAnalyser->setScale(bjetWeight);
-//			mvAnalyser->setScale(bjetWeight);
-//			neutrinoRecoAnalyser->setScale(bjetWeight);
-//			vertexAnalyser->setScale(bjetWeight);
-//
-//			abcdMethodAnalyser_->analyse(currentEvent);
-//			diElectronAnalyser->analyse(currentEvent);
-//			electronAnalyser->analyse(currentEvent);
-//
-//			jetAnalyser->analyse(currentEvent);
-//			metAnalyser->analyse(currentEvent);
-//			muonAnalyser->analyse(currentEvent);
-//			//		mvAnalyser->analyse(currentEvent);
-//			//		neutrinoRecoAnalyser->analyse(currentEvent);
-//			vertexAnalyser->analyse(currentEvent);
-//		}
-		//should not use btag reweighting (or unknown if shoud)
-//		bjetAnalyser->analyse(currentEvent);
-		//		if (currentEvent->getDataType() == DataType::TTJets) {
-		//			mcAnalyser->analyse(currentEvent);
-		//			const TtbarHypothesis& mcEvent = mcAnalyser->GetMCTTbarHypothesis();
-		//			const TtbarHypothesisPointer mcEventPtr(new TtbarHypothesis(mcEvent));
-		//			hitfitAnalyser->setMCTTbarHypothesis(mcEvent);
-		//			neutrinoRecoAnalyser->setMCTTbarHypothesis(mcEventPtr);
-		//		}
-		//hitfit analyser has to be after mcAnalyser as it depends on it
-		//		if (Globals::useHitFit) {
-		//			hitfitAnalyser->analyse(currentEvent);
-		//		}
-
-		//complex analysers use their own reweighting
-		//		hltriggerAnalyser->analyse(currentEvent);
-		//		hltriggerQCDAnalyserInclusive_->analyse(currentEvent);
-		//		hltriggerQCDAnalyserExclusive_->analyse(currentEvent);
 		eventcountAnalyser->analyse(currentEvent);
 //		mttbarAnalyser->analyse(currentEvent);
 		ttbar_plus_X_analyser_->analyse(currentEvent);
@@ -185,108 +143,21 @@ void Analysis::createHistograms() {
 	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
 
-//	abcdMethodAnalyser_->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by abcdMethodAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	bjetAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by bjetAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	diElectronAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by diElectronAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	electronAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by electronAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-
 	eventcountAnalyser->createHistograms();
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by eventcountAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
-
-//	hitfitAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by hitfitAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-
-//	hltriggerAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by hltriggerAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-
-//	hltriggerQCDAnalyserInclusive_->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by hltriggerQCDAnalyserInclusive_: "
-//			<< numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	hltriggerQCDAnalyserExclusive_->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by hltriggerQCDAnalyserExclusive_: "
-//			<< numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-
-//	jetAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by jetAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	mcAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by mcAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	metAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by metAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	mttbarAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by mttbarAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
-//	muonAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by muonAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-
-//	mvAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by mvAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-
-//	neutrinoRecoAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by neutrinoRecoAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
 
 	ttbar_plus_X_analyser_->createHistograms();
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by ttbar_plus_X_analyser: " << numberOfHistograms - lastNumberOfHistograms
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
-//
-//	vertexAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by vertexAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
-//
+
 	diffVariablesAnalyser->createHistograms();
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by diffVariablesAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
 	lastNumberOfHistograms = numberOfHistograms;
-
-//	binningAnalyser->createHistograms();
-//	numberOfHistograms = histMan->size();
-//	cout << "Number of histograms added by binningAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-//	lastNumberOfHistograms = numberOfHistograms;
 
 	histMan->setCurrentHistogramFolder("");
 	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
@@ -298,28 +169,17 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		eventReader(new NTupleEventReader()), //
 		currentEvent(), //
 		histMan(new BAT::HistogramManager()), //
-//		ePlusJetsCutflow(), //
-//		ePlusJetsSingleCuts(), //
-//		ePlusJetsCutflowPerFile(), //
-//		ePlusJetsSingleCutsPerFile(), //
-//		muPlusJetsCutFlow(), //
-//		muPlusJetsSingleCuts(), //
 		interestingEvents(), //
 		brokenEvents(), //
 		eventCheck(), //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-//		ePlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
-//				JetBin::NUMBER_OF_JET_BINS), //
-//		muPlusJetsCutflowPerSample(DataType::NUMBER_OF_DATA_TYPES, TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS,
-//				JetBin::NUMBER_OF_JET_BINS), //
 		abcdMethodAnalyser_(new ABCDMethodAnalyser(histMan)), //
 		bjetAnalyser(new BJetAnalyser(histMan)), //
 		diElectronAnalyser(new DiElectronAnalyser(histMan)), //
 		electronAnalyser(new ElectronAnalyser(histMan)), //
 		eventcountAnalyser(new EventCountAnalyser(histMan)), //
-//		hitfitAnalyser(new HitFitAnalyser(histMan)), //
 		hltriggerAnalyser(new HLTriggerTurnOnAnalyser(histMan)), //
 		hltriggerQCDAnalyserInclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_inclusive", false)), //
 		hltriggerQCDAnalyserExclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_exclusive", true)), //
@@ -334,15 +194,6 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		vertexAnalyser(new VertexAnalyser(histMan)),
 		diffVariablesAnalyser(new DiffVariablesAnalyser(histMan)),
 		binningAnalyser(new BinningAnalyser(histMan)) {
-//	for (unsigned int cut = 0; cut < TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-//		ePlusJetsCutflow[cut] = 0;
-//		ePlusJetsSingleCuts[cut] = 0;
-//	}
-//
-//	for (unsigned int cut = 0; cut < TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS; ++cut) {
-//		muPlusJetsCutFlow[cut] = 0;
-//		muPlusJetsSingleCuts[cut] = 0;
-//	}
 	histMan->enableDebugMode(true);
 }
 

@@ -680,42 +680,6 @@ void TTbar_plus_X_analyser::createHistograms() {
 	qcdEPlusjetsPFRelIsoElectronAnalyser_->createHistograms();
 	qcdMuPlusjetsPFRelIsoMuonAnalyser_->createHistograms();
 
-//	for (unsigned int index = 0; index < ref_selection_binned_MET_analyser_electron_eta_.size(); ++index) {
-//		ref_selection_binned_MET_analyser_electron_eta_.at(index)->createHistograms();
-//	}
-//
-//	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
-//		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
-//			continue;
-//		ref_selection_binned_MET_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_conversion_binned_MET_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_MET_analyser_electron_eta_.at(index)->createHistograms();
-//
-//		ref_selection_binned_MET_analyser_muon_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_MET_analyser_muon_eta_.at(index)->createHistograms();
-//
-//		ref_selection_binned_ST_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_conversion_binned_ST_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_ST_analyser_electron_eta_.at(index)->createHistograms();
-//
-//		ref_selection_binned_ST_analyser_muon_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_ST_analyser_muon_eta_.at(index)->createHistograms();
-//
-//		ref_selection_binned_MT_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_conversion_binned_MT_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_MT_analyser_electron_eta_.at(index)->createHistograms();
-//
-//		ref_selection_binned_MT_analyser_muon_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_MT_analyser_muon_eta_.at(index)->createHistograms();
-//
-//		ref_selection_binned_WPT_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_conversion_binned_WPT_analyser_electron_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_WPT_analyser_electron_eta_.at(index)->createHistograms();
-//
-//		ref_selection_binned_WPT_analyser_muon_eta_.at(index)->createHistograms();
-//		qcd_noniso_binned_WPT_analyser_muon_eta_.at(index)->createHistograms();
-//	}
-
 	jetAnalyserEPlusJetsRefSelection_->createHistograms();
 	jetAnalyserMuPlusJetsRefSelection_->createHistograms();
 
