@@ -43,12 +43,13 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		btagSystematic_(0), //
 		lightTagSystematic_(0), //
 		custom_file_suffix_(""), //
-		pdfWeightNumber_(0),//
-		applyMetSysShiftCorr_(0),//
-		applyMetType0Corr_(0),//
-		applyMetType1Corr_(0),
-		applyJetSmearing_(0),
-		applyTopPtReweighting_(0){
+		pdfWeightNumber_(0), //
+		applyMetSysShiftCorr_(0), //
+		applyMetType0Corr_(0), //
+		applyMetType1Corr_(0), //
+		applyJetSmearing_(0), //
+		applyTopPtReweighting_(0), //
+		verbose_(0) {
 	if (PythonParser::hasAttribute(config, "JESsystematic"))
 		jesSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "JESsystematic");
 	if (PythonParser::hasAttribute(config, "JetSmearingSystematic"))
@@ -70,7 +71,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 	if (PythonParser::hasAttribute(config, "applyJetSmearing"))
 		applyJetSmearing_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyJetSmearing");
 	if (PythonParser::hasAttribute(config, "applyTopPtReweighting"))
-	        applyTopPtReweighting_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyTopPtReweighting");
+		applyTopPtReweighting_ = PythonParser::getAttributeFromPyObject<bool>(config, "applyTopPtReweighting");
 }
 
 boost::program_options::variables_map ConfigFile::getParameters(int argc, char** argv) {
@@ -110,6 +111,8 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("applyMetType1Corr", value<bool>(), "apply MET type-1 correction (JEC)");
 	desc.add_options()("applyJetSmearing", value<bool>(), "apply Jet Smearing");
 	desc.add_options()("applyTopPtReweighting", value<bool>(), "apply Top Pt Reweighting");
+
+	desc.add_options()("verbose", value<bool>(), "enable verose output");
 
 	store(command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	notify(vm);
@@ -297,10 +300,17 @@ bool ConfigFile::applyJetSmearing() const {
 }
 
 bool ConfigFile::applyTopPtReweighting() const {
-        if (programOptions.count("applyTopPtReweighting"))
-	        return programOptions["applyTopPtReweighting"].as<bool>();
+	if (programOptions.count("applyTopPtReweighting"))
+		return programOptions["applyTopPtReweighting"].as<bool>();
 	else
-                return applyTopPtReweighting_;
+		return applyTopPtReweighting_;
+}
+
+bool ConfigFile::verbose() const {
+	if (programOptions.count("verbose"))
+		return programOptions["verbose"].as<bool>();
+	else
+		return verbose_;
 }
 
 ConfigFile::~ConfigFile() {
@@ -382,6 +392,9 @@ void ConfigFile::loadIntoMemory() {
 	Globals::applyType1MetCorrection = applyMetType1Corr();
 	Globals::applyJetSmearing = applyJetSmearing();
 	Globals::applyTopPtReweighting = applyTopPtReweighting();
+
+	Globals::verbose = verbose();
+	cout << "Verbose: " << verbose() << endl;
 }
 
 boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimationFile) {
