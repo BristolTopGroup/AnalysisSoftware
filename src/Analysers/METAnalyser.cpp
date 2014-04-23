@@ -82,7 +82,7 @@ void METAnalyser::createHistograms() {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
 		histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/5 GeV", 400, 0, 2000);
-		histMan_->addH1D_BJetBinned("ST", "ST;ST [GeV]; Events/5 GeV", 400, 0, 2000);
+		histMan_->addH1D_BJetBinned("ST", "ST;ST [GeV]; Events/5 GeV", 600, 0, 3000);
 		histMan_->addH1D_BJetBinned("WPT", "WPT;WPT [GeV]; Events/GeV", 1000, 0, 1000);
 		histMan_->addH1D_BJetBinned("MT", "MT;MT [GeV]; Events/GeV", 1000, 0, 1000);
 		if (index != METAlgorithm::GenMET) {

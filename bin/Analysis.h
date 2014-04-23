@@ -31,7 +31,6 @@
 #include "../interface/Analysers/BJetAnalyser.h"
 #include "../interface/Analysers/ElectronAnalyser.h"
 #include "../interface/Analysers/EventCountAnalyser.h"
-//#include "../interface/Analysers/HitFitAnalyser.h"
 #include "../interface/Analysers/HLTriggerTurnOnAnalyser.h"
 #include "../interface/Analysers/HLTriggerQCDAnalyser.h"
 #include "../interface/Analysers/JetAnalyser.h"
@@ -46,34 +45,21 @@
 #include "../interface/Analysers/DiffVariablesAnalyser.h"
 #include "../interface/Analysers/BinningAnalyser.h"
 
-//typedef boost::array<unsigned long, BAT::TTbarEPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> ePlusJetscutarray;
-//typedef boost::array<unsigned long, BAT::TTbarMuPlusJetsSelection::NUMBER_OF_SELECTION_STEPS> muPlusJetscutarray;
-//typedef boost::unordered_map<std::string, ePlusJetscutarray> cutmap;
-
 class Analysis {
 private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
     BAT::EventPtr currentEvent;
     boost::shared_ptr<BAT::HistogramManager> histMan;
-//    ePlusJetscutarray ePlusJetsCutflow;
-//    ePlusJetscutarray ePlusJetsSingleCuts;
-//    cutmap ePlusJetsCutflowPerFile;
-//    cutmap ePlusJetsSingleCutsPerFile;
-//
-//    muPlusJetscutarray muPlusJetsCutFlow;
-//    muPlusJetscutarray muPlusJetsSingleCuts;
     std::vector<BAT::InterestingEvent> interestingEvents, brokenEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
     boost::shared_ptr<BAT::EventWeightProvider> weights;
     float weight, pileUpWeight;
-//    BAT::Counter ePlusJetsCutflowPerSample, muPlusJetsCutflowPerSample;
 
     BAT::ABCDMethodAnalyserLocalPtr abcdMethodAnalyser_;
     BAT::BJetAnalyserLocalPtr bjetAnalyser;
     boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     BAT::BasicAnalyserLocalPtr eventcountAnalyser;
-//    boost::scoped_ptr<BAT::HitFitAnalyser> hitfitAnalyser;
     boost::scoped_ptr<BAT::HLTriggerTurnOnAnalyser> hltriggerAnalyser;
     BAT::BasicAnalyserLocalPtr hltriggerQCDAnalyserInclusive_, hltriggerQCDAnalyserExclusive_;
     boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;
@@ -89,7 +75,6 @@ private:
     boost::scoped_ptr<BAT::BinningAnalyser> binningAnalyser;
 
 public:
-//    static float luminosity;
     Analysis(std::string fileForPileUpReweighting);
     virtual ~Analysis();
     void analyse();

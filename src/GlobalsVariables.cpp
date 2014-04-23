@@ -21,6 +21,7 @@ std::string Globals::selectedEventsWithMetaDataOutputfile = "selectedEventsWithM
 PileUpReweightingMethod::value Globals::pileUpReweightingMethod = PileUpReweightingMethod::averagePileUp;
 boost::shared_ptr<TH1D> Globals::estimatedPileup = boost::shared_ptr<TH1D>(new TH1D("tmp", "tmp", 25, 0, 25));
 unsigned int Globals::NTupleVersion = 6;
+bool Globals::verbose = true;
 
 //kinematic fit
 std::string Globals::TQAFPath = "";

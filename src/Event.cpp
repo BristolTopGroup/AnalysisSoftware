@@ -538,5 +538,62 @@ double Event::WPT(const ParticlePointer particle, const METPointer met) {
 	return W_boson->pt();
 }
 
+double Event::M3(const JetCollection jets) {
+	double m3(0), max_pt(0);
+	if (jets.size() >= 3) {
+		for (unsigned int index1 = 0; index1 < jets.size() - 2; ++index1) {
+			for (unsigned int index2 = index1 + 1; index2 < jets.size() - 1;
+					++index2) {
+				for (unsigned int index3 = index2 + 1; index3 < jets.size();
+						++index3) {
+					FourVector m3Vector(
+							jets.at(index1)->getFourVector()
+									+ jets.at(index2)->getFourVector()
+									+ jets.at(index3)->getFourVector());
+					double currentPt = m3Vector.Pt();
+					if (currentPt > max_pt) {
+						max_pt = currentPt;
+						m3 = m3Vector.M();
+					}
+				}
+			}
+		}
+	}
+
+	return m3;
+}
+
+double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton) {
+	double m_bl(0.);
+	if (b_jets.size() != 0) {
+		// store the jets as particle pointers
+		ParticleCollection particles;
+		for (unsigned int i = 0; i < b_jets.size(); ++i)
+			particles.push_back(b_jets.at(i));
+		// find closest b_jet
+		unsigned short closest_b_jet_index = lepton->getClosest(particles);
+		JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
+		ParticlePointer pseudo_particle(new Particle(*closest_b_jet + *lepton));
+		m_bl = pseudo_particle->mass();
+	}
+	return m_bl;
+}
+
+double Event::angle_bl(const JetCollection b_jets,
+		const ParticlePointer lepton) {
+	double angle(-1);
+	if (b_jets.size() != 0) {
+		// store the jets as particle pointers
+		ParticleCollection particles;
+		for (unsigned int i = 0; i < b_jets.size(); ++i)
+			particles.push_back(b_jets.at(i));
+		// find closest b_jet
+		unsigned short closest_b_jet_index = lepton->getClosest(particles);
+		JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
+		angle = lepton->angle(closest_b_jet);
+	}
+	return angle;
+}
+
 
 }

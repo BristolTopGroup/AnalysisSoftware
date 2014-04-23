@@ -6,6 +6,7 @@
 #include "BasicAnalyser.h"
 #include "../Selections/TopPairEPlusJetsReferenceSelection.h"
 #include "../Selections/TopPairMuPlusJetsReferenceSelection.h"
+#include "../TopPairMCEvent.h"
 
 namespace BAT {
 
@@ -15,19 +16,17 @@ public:
 	virtual ~BinningAnalyser();
 	virtual void analyse(const EventPtr);
 	virtual void createHistograms();
-	void setHistogramLabels();
-
-	void ePlusJetsSignalAnalysis(const EventPtr event);
-	void ePlusJetsHTAnalysis(const EventPtr event);
-	void ePlusJetsHTskimAnalysis(const EventPtr event);
-	void muPlusJetsSignalAnalysis(const EventPtr event);
-	void muPlusJetsMETAnalysis(const EventPtr event);
-	void ePlusJetsMETAnalysis(const EventPtr event);
-	void muPlusJetsVerticesAnalysis(const EventPtr event);
-	void ePlusJetsVerticesAnalysis(const EventPtr event);
 
 private:
-	SelectionPointer topEplusJetsRefSelection_, topMuPlusJetsRefSelection_;
+	SelectionPointer top_e_plus_jets_ref_selection_, top_mu_plus_jets_ref_selection_;
+	TopPairMCEvent top_event_;
+
+	void electron_plus_jets_analysis(const EventPtr event);
+	void muon_plus_jets_analysis(const EventPtr event);
+	void create_histograms();
+
+	const ParticlePointer find_gen_lepton(unsigned int lepton_id, const MCParticleCollection particles);
+	const ParticlePointer find_gen_neutrino(unsigned int neutrino_id, const MCParticleCollection particles);
 };
 
 } /* namespace BAT */

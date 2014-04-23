@@ -30,6 +30,7 @@ struct Globals {
 	static PileUpReweightingMethod::value pileUpReweightingMethod;
 	static boost::shared_ptr<TH1D> estimatedPileup;
 	static unsigned int NTupleVersion;
+	static bool verbose;
 
 	//Kinematic fit
 	static std::string TQAFPath;

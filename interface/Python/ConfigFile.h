@@ -54,6 +54,8 @@ public:
 	bool applyJetSmearing() const;
 	bool applyTopPtReweighting() const;
 
+	bool verbose() const;
+
 private:
 	boost::program_options::variables_map programOptions;
 	boost::python::object config;
@@ -81,6 +83,8 @@ private:
 	bool applyMetType1Corr_;
 	bool applyJetSmearing_;
 	bool applyTopPtReweighting_;
+
+	bool verbose_;
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);

@@ -64,46 +64,49 @@ private:
 
 	std::vector<double> metBins_, ht_bins_, st_bins_, mt_bins_, wpt_bins_;
 	//MET analysers electron
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_MET_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_electron_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_MET_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_electron_;
 	//MET analysers muon
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_muon_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_muon_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_muon_;
 
 	//HT analysers electron
-	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_electron_eta_;
-	Binned_Variable_analyser_ptr qcd_conversion_binned_HT_analyser_electron_eta_;
-	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_electron_eta_;
+	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_conversion_binned_HT_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_electron_;
 	//HT analysers muon
-	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_muon_eta_;
-	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_muon_eta_;
+	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_muon_;
+	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_muon_;
 
 	//ST analysers electron
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_ST_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_electron_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_ST_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_electron_;
 	//ST analysers muon
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_muon_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_muon_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_muon_;
 
 	//MT analysers electron
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_MT_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_electron_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_MT_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_electron_;
 	//MT analysers muon
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_muon_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_muon_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_muon_;
 
 	//WPT analysers electron
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_WPT_analyser_electron_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_electron_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_WPT_analyser_electron_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_electron_;
 	//WPT analysers muon
-	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_muon_eta_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_muon_eta_;
+	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_muon_;
 
 	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_, jetAnalyserMuPlusJetsRefSelection_;
+
+	// variable definitions
+	std::vector<Variable> electron_variables_, muon_variables_;
 
 	void make_binned_MET_analysers();
 	void make_binned_HT_analysers();
