@@ -434,7 +434,7 @@ double Electron::mvaNonTrigV0() const {
 	return mvaNonTrigV0_;
 }
 
-double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic, int run_number) {
+double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic, int run_number) const {
 	double correction(1.);
 	double electronEta(eta());
 
@@ -461,9 +461,8 @@ double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_sys
 	//Only factors from PromptReco available (in the "Efficiency for e+jet channel (promptreco)" section)
 	//Specifically: ID & Iso: "ID/Isolation efficiency" sub-section
 	//Specifically: Trigger: "Trigger efficiency" sub-section
-	// These values are hard coded because, unlike for Muons, there is no pickle file provided.
+	//These values are hard coded because, unlike for Muons, there is no pickle file provided.
 	else if(qcd == false){ //corrections for (ID & Iso) and Trigger respectively
-		//again, hard coded because no pickle file available.
 		if(fabs(electronEta)<0.8) {
 			if(20<=pt() && pt()<30) {  //Note: Trigger scale factors only provided down to electron pt of 30GeV in the link above, so I have used the same as for the 30GeV-40GeV range.
 				switch (electron_scale_factor_systematic) {
