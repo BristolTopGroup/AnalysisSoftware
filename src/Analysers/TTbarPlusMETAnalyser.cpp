@@ -50,18 +50,19 @@ void TTbarPlusMETAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
-			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight);
+			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight * efficiencyCorrection);
 
-			metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight);
-			electronAnalyserRefSelection_->setScale(bjetWeight);
-			vertexAnalyserEPlusJetsRefSelection_->setScale(bjetWeight);
-			jetAnalyserEPlusJetsRefSelection_->setScale(bjetWeight);
+			metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+			electronAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+			vertexAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+			jetAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 
 			metAnalyserEPlusJetsRefSelection_->analyse(event, signalLepton);
 //			metAnalyserEPlusJetsRefSelection_->analyseTransverseMass(event, signalLepton);
@@ -86,7 +87,7 @@ void TTbarPlusMETAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						binnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						binnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						binnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron, event->weight());
 					}
 				}
@@ -102,14 +103,14 @@ void TTbarPlusMETAnalyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
 						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
 						//conserve event weight by normalising the number of combinations
-						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						double weight = event->weight() * bjetWeight * efficiencyCorrection/ numberOfCombinations;
 						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
 			}
 		}
 		histMan_->setCurrentBJetBin(bJets.size());
-		histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight());
+		histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * efficiencyCorrection);
 //		jetAnalyserEPlusJetsRefSelection_noBtagWeights_->analyse(event);
 	}
 
@@ -138,6 +139,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNonIsoElectronSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoElectronSelection_->setPrescale(prescale);
@@ -145,8 +147,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdNonIsoElectronAnalyser_->setScale(bjetWeight);
-			metAnalyserqcdNonIsoElectronSelection_->setScale(bjetWeight);
+			qcdNonIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+			metAnalyserqcdNonIsoElectronSelection_->setScale(bjetWeight * efficiencyCorrection);
 
 			qcdNonIsoElectronAnalyser_->analyse(event);
 			qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
@@ -166,7 +168,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						qcdNonIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 								event->weight());
 					}
@@ -182,7 +184,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
 						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
 						//conserve event weight by normalising the number of combinations
-						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						double weight = event->weight() * bjetWeight * efficiencyCorrection/ numberOfCombinations;
 						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
@@ -211,6 +213,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNonIsoElectronNonIsoTriggerSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronNonIsoTriggerSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		qcdNonIsoNonIsoTriggerElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->setPrescale(prescale);
@@ -218,8 +221,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdNonIsoNonIsoTriggerElectronAnalyser_->setScale(bjetWeight);
-			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->setScale(bjetWeight);
+			qcdNonIsoNonIsoTriggerElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->setScale(bjetWeight * efficiencyCorrection);
 			qcdNonIsoNonIsoTriggerElectronAnalyser_->analyse(event);
 			qcdNonIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 			metAnalyserqcdNonIsoElectronNonIsoTriggerSelection_->analyse(event, signalLepton);
@@ -247,6 +250,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdConversionSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdConversionSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		qcdConversionsElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdConversionSelection_->setPrescale(prescale);
@@ -254,8 +258,8 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdConversionsElectronAnalyser_->setScale(bjetWeight);
-			metAnalyserqcdConversionSelection_->setScale(bjetWeight);
+			qcdConversionsElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+			metAnalyserqcdConversionSelection_->setScale(bjetWeight * efficiencyCorrection);
 
 			qcdConversionsElectronAnalyser_->analyse(event);
 			qcdConversionsElectronAnalyser_->analyseElectron(signalElectron, event->weight());
@@ -276,7 +280,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						qcdConversionBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 								event->weight() * bjetWeight);
 					}
@@ -292,7 +296,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
 						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
 						//conserve event weight by normalising the number of combinations
-						double weight = event->weight() * bjetWeight / numberOfCombinations;
+						double weight = event->weight() * bjetWeight * efficiencyCorrection/ numberOfCombinations;
 						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
 					}
 				}
@@ -320,12 +324,13 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdPFRelIsoEPlusJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoEPlusJetsSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdEPlusjetsPFRelIsoElectronAnalyser_->setScale(bjetWeight);
+			qcdEPlusjetsPFRelIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 
 			qcdEPlusjetsPFRelIsoElectronAnalyser_->analyse(event);
 			qcdEPlusjetsPFRelIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
@@ -344,7 +349,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						qcdPFRelIsoBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 								event->weight());
 					}
@@ -373,13 +378,14 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdPFRelIsoEPlusNonIsoTriggerSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoEPlusNonIsoTriggerSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->setPrescale(prescale);
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->setScale(bjetWeight);
+			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyse(event);
 			qcdEPlusjetsPFRelIsoNonIsoTriggerElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 		}
@@ -404,14 +410,15 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdAntiIDSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdAntiIDSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		qcdAntiIDElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdAntiIDSelection_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdAntiIDElectronAnalyser_->setScale(bjetWeight);
-			metAnalyserqcdAntiIDSelection_->setScale(bjetWeight);
+			qcdAntiIDElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+			metAnalyserqcdAntiIDSelection_->setScale(bjetWeight * efficiencyCorrection);
 
 			qcdAntiIDElectronAnalyser_->analyse(event);
 			qcdAntiIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
@@ -432,7 +439,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						qcdAntiIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 								event->weight());
 					}
@@ -460,14 +467,15 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNoIsoNoIDSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNoIsoNoIDSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		qcdNoIsoNoIDElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNoIsoNoIDSelection_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 			histMan_->setCurrentBJetBin(weightIndex);
-			qcdNoIsoNoIDElectronAnalyser_->setScale(bjetWeight);
-			metAnalyserqcdNoIsoNoIDSelection_->setScale(bjetWeight);
+			qcdNoIsoNoIDElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+			metAnalyserqcdNoIsoNoIDSelection_->setScale(bjetWeight * efficiencyCorrection);
 			qcdNoIsoNoIDElectronAnalyser_->analyse(event);
 			qcdNoIsoNoIDElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 			metAnalyserqcdNoIsoNoIDSelection_->analyse(event, signalLepton);
@@ -487,7 +495,7 @@ void TTbarPlusMETAnalyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 					unsigned int analyserIndex = index + metIndex * (metBins_.size() + 1);
 					const METPointer met(event->MET((METAlgorithm::value) metIndex));
 					if (met->et() >= lowerCut && met->et() < upperCut) {
-						qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight);
+						qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->setScale(bjetWeight * efficiencyCorrection);
 						qcdNoIsoNoIDBinnedElectronAnalysers_.at(analyserIndex)->analyseElectron(signalElectron,
 								event->weight());
 					}
@@ -518,7 +526,7 @@ void TTbarPlusMETAnalyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		const LeptonPointer signalLepton = topMuplusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::MuonScaleFactorSystematic, event->runnumber());
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
@@ -607,7 +615,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNonIsoMuonSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoMuonSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true, Globals::MuonScaleFactorSystematic, event->runnumber());
 
 		qcdNonIsoMuonAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoMuonSelection_->setPrescale(prescale);
@@ -679,7 +687,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdPFRelIsoMuPlusJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoMuPlusJetsSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true, Globals::MuonScaleFactorSystematic, event->runnumber());
 
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/ge3 jet selection");
 		histMan_->H1D("Muon_Eta")->Fill(signalMuon->eta(), event->weight());
@@ -737,7 +745,7 @@ void TTbarPlusMETAnalyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNoIsolationMuonSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNoIsolationMuonSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true, Globals::MuonScaleFactorSystematic, event->runnumber());
 
 		qcdNoIsolationMuonAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {

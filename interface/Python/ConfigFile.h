@@ -42,6 +42,8 @@ public:
 	bool isOptionSetInConfig(std::string option) const;
 	unsigned int centerOfMassEnergy() const;
 	unsigned int nTupleVersion() const;
+	int electronScaleFactorSystematic() const;
+	int muonScaleFactorSystematic() const;
 	int jesSystematic() const;
 	int jetSmearingSystematic() const;
 	int LightTagSystematic() const;
@@ -71,6 +73,8 @@ private:
 	double lumi_;
 	unsigned int centerOfMassEnergy_;
 	unsigned int nTupleVersion_;
+	int electronScaleFactorSystematic_;
+	int muonScaleFactorSystematic_;
 	int jesSystematic_;
 	int jetSmearingSystematic_;
 	int btagSystematic_;

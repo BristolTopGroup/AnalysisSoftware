@@ -34,6 +34,15 @@ void EventCountAnalyser::analyse(const EventPtr event) {
 void EventCountAnalyser::topEPlusJetsReferenceSelection(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
+	if (topEplusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
+	const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
+	const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+	double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
+	 	scale_ = efficiencyCorrection;
+	}else{
+		scale_ =1;
+	}
+
 	//use bjet weights in histograms for electrons
 	const JetCollection jetsEle(topEplusJetsRefSelection_->cleanedJets(event));
 	const JetCollection bJetsEle(topEplusJetsRefSelection_->cleanedBJets(event));
@@ -143,7 +152,7 @@ void EventCountAnalyser::topMuPlusJetsReferenceSelection(const EventPtr event) {
 	if (topMuPlusJetsRefSelection_->passesSelectionUpToStep(event, 1)) {
 	const LeptonPointer signalLepton = topMuPlusJetsRefSelection_->signalLepton(event);
 	const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-	double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+	double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::MuonScaleFactorSystematic, event->runnumber());
 	 	scale_ = efficiencyCorrection;
 	}else{
 		scale_ =1;

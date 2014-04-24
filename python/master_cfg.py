@@ -49,6 +49,10 @@ datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v8c_Run2011A-08Nov2
                      }
 
 analysisModes = ['central',
+                 'ElectronScaleFactor_down',
+                 'ElectronScaleFactor_up',
+                 'MuonScaleFactor_down',
+                 'MuonScaleFactor_up',
                  'BJet_down',
                  'BJet_up',
                  'JES_down',
@@ -61,8 +65,10 @@ analysisModes = ['central',
 
 analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 
-available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
+available_settings = ['ElectronScaleFactorSystematic', 'MuonScaleFactorSystematic', 'JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
 default_settings = {
+            'ElectronScaleFactorSystematic':0,
+            'MuonScaleFactorSystematic':0,
             'JESsystematic':0,
             'PUFile':'PileUp_2011_truth_finebin_68000microbarn.root',
             'BTagSystematic':0,
@@ -72,6 +78,10 @@ default_settings = {
             }
 
 analysis_settings = {
+                     'ElectronScaleFactor_down':{'ElectronScaleFactorSystematic':-1},
+                     'ElectronScaleFactor_up':{'ElectronScaleFactorSystematic':1},
+                     'MuonScaleFactor_down':{'MuonScaleFactorSystematic':-1},
+                     'MuonScaleFactor_up':{'MuonScaleFactorSystematic':1},
                      'BJet_down':{'BTagSystematic':-1},
                  'BJet_up':{'BTagSystematic':1},
                  'JES_down':{'JESsystematic':-1},
@@ -130,6 +140,8 @@ if sample in ['TTJets-mcatnlo','TTJets-pythia','TTJets-powheg']:
     
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
+ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
+MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
 BTagSystematic = settings['BTagSystematic']

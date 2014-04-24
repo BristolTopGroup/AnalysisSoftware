@@ -117,6 +117,7 @@ public:
     void setMVANonTrigV0(double mva);
     void setPassConversionVeto(bool passes);
 
+    double getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic, int run_number);
     double relativeIsolation() const;
     double relativeIsolationPUCorrected(double rho) const;
     virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
