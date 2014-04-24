@@ -76,16 +76,11 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			fit_variable_values.push_back(fabs(signalElectron->eta()));
 			fit_variable_values.push_back(Event::M3(jets));
 			fit_variable_values.push_back(Event::M_bl(bJets, signalElectron));
-			fit_variable_values.push_back(
-					Event::angle_bl(bJets, signalElectron));
-			ref_selection_binned_HT_analyser_electron_->analyse(Event::HT(jets),
-					fit_variable_values, event->weight());
+			fit_variable_values.push_back(Event::angle_bl(bJets, signalElectron));
+			ref_selection_binned_HT_analyser_electron_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
-			for (unsigned int metIndex = 0;
-					metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS;
-					++metIndex) {
-				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion,
-						metIndex))
+			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
 					continue;
 				bool isMCOnlyMET = MET::isMCOnlyMETType(metIndex);
 				//skip MC only MET entries
@@ -184,11 +179,9 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			fit_variable_values.push_back(fabs(signalElectron->eta()));
 			fit_variable_values.push_back(Event::M3(jets));
 			fit_variable_values.push_back(Event::M_bl(bJets, signalElectron));
-			fit_variable_values.push_back(
-					Event::angle_bl(bJets, signalElectron));
+			fit_variable_values.push_back(Event::angle_bl(bJets, signalElectron));
 
-			qcd_noniso_binned_HT_analyser_electron_->analyse(Event::HT(jets),
-					fit_variable_values, event->weight());
+			qcd_noniso_binned_HT_analyser_electron_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -274,10 +267,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			fit_variable_values.push_back(fabs(signalElectron->eta()));
 			fit_variable_values.push_back(Event::M3(jets));
 			fit_variable_values.push_back(Event::M_bl(bJets, signalElectron));
-			fit_variable_values.push_back(
-					Event::angle_bl(bJets, signalElectron));
-			qcd_conversion_binned_HT_analyser_electron_->analyse(
-					Event::HT(jets), fit_variable_values, event->weight());
+			fit_variable_values.push_back(Event::angle_bl(bJets, signalElectron));
+			qcd_conversion_binned_HT_analyser_electron_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -400,15 +391,13 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			vertexAnalyserMuPlusJetsRefSelection_->analyse(event);
 			jetAnalyserMuPlusJetsRefSelection_->analyse(event);
 
-			ref_selection_binned_HT_analyser_muon_->setScale(
-					bjetWeight * efficiencyCorrection);
+			ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 			vector<double> fit_variable_values;
 			fit_variable_values.push_back(fabs(signalMuon->eta()));
 			fit_variable_values.push_back(Event::M3(jets));
 			fit_variable_values.push_back(Event::M_bl(bJets, signalMuon));
 			fit_variable_values.push_back(Event::angle_bl(bJets, signalMuon));
-			ref_selection_binned_HT_analyser_muon_->analyse(Event::HT(jets),
-					fit_variable_values, event->weight());
+			ref_selection_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -502,8 +491,7 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 			fit_variable_values.push_back(Event::M3(jets));
 			fit_variable_values.push_back(Event::M_bl(bJets, signalMuon));
 			fit_variable_values.push_back(Event::angle_bl(bJets, signalMuon));
-			qcd_noniso_binned_HT_analyser_muon_->analyse(Event::HT(jets),
-					fit_variable_values, event->weight());
+			qcd_noniso_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
 			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -747,25 +735,20 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 		//HT
 		ref_selection_binned_HT_analyser_electron_(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_
-								+ "/EPlusJets/Ref selection/Binned_HT_Analysis")), //
+						histogramFolder_ + "/EPlusJets/Ref selection/Binned_HT_Analysis")), //
 		qcd_conversion_binned_HT_analyser_electron_(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_
-								+ "/EPlusJets/QCDConversions/Binned_HT_Analysis")), //
+						histogramFolder_ + "/EPlusJets/QCDConversions/Binned_HT_Analysis")), //
 		qcd_noniso_binned_HT_analyser_electron_(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_
-								+ "/EPlusJets/QCD non iso e+jets/Binned_HT_Analysis")), //
+						histogramFolder_ + "/EPlusJets/QCD non iso e+jets/Binned_HT_Analysis")), //
 		//HT muons
 		ref_selection_binned_HT_analyser_muon_(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_
-								+ "/MuPlusJets/Ref selection/Binned_HT_Analysis")), //
+						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_HT_Analysis")), //
 		qcd_noniso_binned_HT_analyser_muon_(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_
-								+ "/MuPlusJets/QCD non iso mu+jets ge3j/Binned_HT_Analysis")), //
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets ge3j/Binned_HT_Analysis")), //
 		//ST
 		ref_selection_binned_ST_analyser_electron_(), //
 		qcd_conversion_binned_ST_analyser_electron_(), //
@@ -788,47 +771,71 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 		ref_selection_binned_WPT_analyser_muon_(), //
 		qcd_noniso_binned_WPT_analyser_muon_(), //
 		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
-		jetAnalyserMuPlusJetsRefSelection_(new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
+		jetAnalyserMuPlusJetsRefSelection_(
+				new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
 		electron_variables_(), //
 		muon_variables_() {
 
-	//MET bins: 25, 45, 70, 100, 150, inf
-	metBins_.push_back(25.);
-	metBins_.push_back(45.);
-	metBins_.push_back(70.);
-	metBins_.push_back(100.);
-	metBins_.push_back(150.);
-	//HT: old 50, 150, 250, 350, 450, 650, 1100, inf
-	ht_bins_.push_back(240);
-	ht_bins_.push_back(280);
-	ht_bins_.push_back(330);
-	ht_bins_.push_back(380);
-	ht_bins_.push_back(450);
-	ht_bins_.push_back(600);
+	//bins: start is always assumed to be 0 and the last is read as > X
+	//MET bins:
+	// old: 25, 45, 70, 100, 150, inf
+	// new:[0.0, 31.0, 58.0, 96.0, 142.0, 191.0, inf]
+	metBins_.push_back(31.);
+	metBins_.push_back(58.);
+	metBins_.push_back(96.);
+	metBins_.push_back(142.);
+	metBins_.push_back(191.);
+	//HT:
+	// old: 50, 150, 250, 350, 450, 650, 1100, inf
+	// new: [0.0, 190.0, 225.0, 262.0, 302.0, 345.0, 392.0, 445.0, 501.0, 562.0, 623.0, 689.0, 766.0, inf]
+	ht_bins_.push_back(190.0);
+	ht_bins_.push_back(225.0);
+	ht_bins_.push_back(262.0);
+	ht_bins_.push_back(302.0);
+	ht_bins_.push_back(345.0);
+	ht_bins_.push_back(392.0);
+	ht_bins_.push_back(445.0);
+	ht_bins_.push_back(501.0);
+	ht_bins_.push_back(562.0);
+	ht_bins_.push_back(623.0);
+	ht_bins_.push_back(689.0);
+	ht_bins_.push_back(766.0);
 
-	//ST:150, 250, 350, 450, 550, 750, 1250, inf new: 350 & 400 & 450 & 500 & 580 & 700 & 1999
-	st_bins_.push_back(350);
-	st_bins_.push_back(400);
-	st_bins_.push_back(450);
-	st_bins_.push_back(500);
-	st_bins_.push_back(580);
-	st_bins_.push_back(700);
+	//ST:
+	// old: 150, 250, 350, 450, 550, 750, 1250, inf new: 350 & 400 & 450 & 500 & 580 & 700 & inf
+	// new: [0.0, 285.0, 329.0, 376.0, 428.0, 484.0, 544.0, 609.0, 678.0, 751.0, 830.0, 911.0, 1028.0, 2500.0]
+	st_bins_.push_back(285);
+	st_bins_.push_back(329);
+	st_bins_.push_back(376);
+	st_bins_.push_back(428);
+	st_bins_.push_back(484);
+	st_bins_.push_back(544);
+	st_bins_.push_back(609);
+	st_bins_.push_back(678);
+	st_bins_.push_back(751);
+	st_bins_.push_back(830);
+	st_bins_.push_back(911);
+	st_bins_.push_back(1028);
 
-	//0, 40, 65, 85, 150, inf
-	mt_bins_.push_back(30);
-	mt_bins_.push_back(50);
-	mt_bins_.push_back(80);
-	mt_bins_.push_back(100);
+	//MT:
+	// old: 0, 40, 65, 85, 150, inf
+	// new: [0.0, 28.0, 66.0, inf]
+	mt_bins_.push_back(28);
+	mt_bins_.push_back(66);
 
-	//0, 40, 70, 100, 130, 170 inf
-	wpt_bins_.push_back(40);
-	wpt_bins_.push_back(70);
-	wpt_bins_.push_back(100);
-	wpt_bins_.push_back(130);
-	wpt_bins_.push_back(170);
+	//WPT:
+	// old: 0, 40, 70, 100, 130, 170 inf
+	// new: [0.0, 31.0, 59.0, 88.0, 118.0, 151.0, 187.0, 227.0, 267.0, inf]
+	wpt_bins_.push_back(31);
+	wpt_bins_.push_back(59);
+	wpt_bins_.push_back(88);
+	wpt_bins_.push_back(118);
+	wpt_bins_.push_back(151);
+	wpt_bins_.push_back(187);
+	wpt_bins_.push_back(227);
+	wpt_bins_.push_back(267);
 
-	Variable electron_absolute_eta = Variable("electron_absolute_eta", 30, 0.0,
-			3.0);
+	Variable electron_absolute_eta = Variable("electron_absolute_eta", 30, 0.0, 3.0);
 	Variable muon_absolute_eta = Variable("muon_absolute_eta", 30, 0.0, 3.0);
 	Variable M3 = Variable("M3", 200, 0.0, 1000.);
 	Variable M_bl = Variable("M_bl", 200, 0.0, 1000.);
@@ -898,16 +905,13 @@ void TTbar_plus_X_analyser::make_binned_MET_analysers() {
 void TTbar_plus_X_analyser::make_binned_HT_analysers() {
 	// multi-variable analysers
 	Variable HT = Variable("HT", ht_bins_);
-	ref_selection_binned_HT_analyser_electron_->set_variables(HT,
-			electron_variables_);
+	ref_selection_binned_HT_analyser_electron_->set_variables(HT, electron_variables_);
 	ref_selection_binned_HT_analyser_muon_->set_variables(HT, muon_variables_);
 
-	qcd_noniso_binned_HT_analyser_electron_->set_variables(HT,
-			electron_variables_);
+	qcd_noniso_binned_HT_analyser_electron_->set_variables(HT, electron_variables_);
 	qcd_noniso_binned_HT_analyser_muon_->set_variables(HT, muon_variables_);
 
-	qcd_conversion_binned_HT_analyser_electron_->set_variables(HT,
-			electron_variables_);
+	qcd_conversion_binned_HT_analyser_electron_->set_variables(HT, electron_variables_);
 }
 
 void TTbar_plus_X_analyser::make_binned_ST_analysers() {
@@ -926,13 +930,10 @@ void TTbar_plus_X_analyser::make_binned_ST_analysers() {
 		Binned_Variable_analyser_ptr qcd_noniso_binned_ST_electron_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/EPlusJets/QCD non iso e+jets/Binned_ST_Analysis"));
-		ref_selection_binned_ST_electron_analyser->set_variables(ST,
-				electron_variables_);
+		ref_selection_binned_ST_electron_analyser->set_variables(ST, electron_variables_);
 
-		qcd_conversion_binned_ST_electron_analyser->set_variables(ST,
-				electron_variables_);
-		qcd_noniso_binned_ST_electron_analyser->set_variables(ST,
-				electron_variables_);
+		qcd_conversion_binned_ST_electron_analyser->set_variables(ST, electron_variables_);
+		qcd_noniso_binned_ST_electron_analyser->set_variables(ST, electron_variables_);
 		ref_selection_binned_ST_analyser_electron_.push_back(ref_selection_binned_ST_electron_analyser);
 		qcd_conversion_binned_ST_analyser_electron_.push_back(qcd_conversion_binned_ST_electron_analyser);
 		qcd_noniso_binned_ST_analyser_electron_.push_back(qcd_noniso_binned_ST_electron_analyser);
@@ -970,12 +971,9 @@ void TTbar_plus_X_analyser::make_binned_MT_analysers() {
 		Binned_Variable_analyser_ptr qcd_noniso_binned_MT_electron_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/EPlusJets/QCD non iso e+jets/Binned_MT_Analysis"));
-		ref_selection_binned_MT_electron_analyser->set_variables(MT,
-				electron_variables_);
-		qcd_conversion_binned_MT_electron_analyser->set_variables(MT,
-				electron_variables_);
-		qcd_noniso_binned_MT_electron_analyser->set_variables(MT,
-				electron_variables_);
+		ref_selection_binned_MT_electron_analyser->set_variables(MT, electron_variables_);
+		qcd_conversion_binned_MT_electron_analyser->set_variables(MT, electron_variables_);
+		qcd_noniso_binned_MT_electron_analyser->set_variables(MT, electron_variables_);
 
 		ref_selection_binned_MT_analyser_electron_.push_back(ref_selection_binned_MT_electron_analyser);
 		qcd_conversion_binned_MT_analyser_electron_.push_back(qcd_conversion_binned_MT_electron_analyser);
@@ -1014,12 +1012,9 @@ void TTbar_plus_X_analyser::make_binned_WPT_analysers() {
 		Binned_Variable_analyser_ptr qcd_noniso_binned_WPT_electron_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/EPlusJets/QCD non iso e+jets/Binned_WPT_Analysis"));
-		ref_selection_binned_WPT_electron_analyser->set_variables(WPT,
-				electron_variables_);
-		qcd_conversion_binned_WPT_electron_analyser->set_variables(WPT,
-				electron_variables_);
-		qcd_noniso_binned_WPT_electron_analyser->set_variables(WPT,
-				electron_variables_);
+		ref_selection_binned_WPT_electron_analyser->set_variables(WPT, electron_variables_);
+		qcd_conversion_binned_WPT_electron_analyser->set_variables(WPT, electron_variables_);
+		qcd_noniso_binned_WPT_electron_analyser->set_variables(WPT, electron_variables_);
 		ref_selection_binned_WPT_analyser_electron_.push_back(ref_selection_binned_WPT_electron_analyser);
 		qcd_conversion_binned_WPT_analyser_electron_.push_back(qcd_conversion_binned_WPT_electron_analyser);
 		qcd_noniso_binned_WPT_analyser_electron_.push_back(qcd_noniso_binned_WPT_electron_analyser);
@@ -1035,12 +1030,9 @@ void TTbar_plus_X_analyser::make_binned_WPT_analysers() {
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets ge3j/Binned_WPT_Analysis"));
 
-		no_selection_binned_WPT_muon_analyser->set_variables(WPT,
-				muon_variables_);
-		ref_selection_binned_WPT_muon_analyser->set_variables(WPT,
-				muon_variables_);
-		qcd_noniso_binned_WPT_muon_analyser->set_variables(WPT,
-				muon_variables_);
+		no_selection_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
+		ref_selection_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
+		qcd_noniso_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
 
 		ref_selection_binned_WPT_analyser_muon_.push_back(ref_selection_binned_WPT_muon_analyser);
 		qcd_noniso_binned_WPT_analyser_muon_.push_back(qcd_noniso_binned_WPT_muon_analyser);
