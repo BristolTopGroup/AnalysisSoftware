@@ -38,7 +38,7 @@ TopPairMCEvent::TopPairMCEvent(const MCParticleCollection particles) :
 	for (unsigned int i = 0; i < particles.size(); ++i) {
 		MCParticlePointer particle = particles.at(i);
 		MCParticlePointer mother(new MCParticle());
-		if (particle->motherIndex() >= 0 && particle->motherIndex() < particles.size())
+		if (particle->motherIndex() >= 0 && fabs(particle->motherIndex()) < particles.size())
 			mother = particles.at(particle->motherIndex());
 
 		//first, lets find the two top quarks

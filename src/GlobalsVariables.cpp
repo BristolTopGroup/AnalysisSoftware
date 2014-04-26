@@ -30,9 +30,11 @@ bool Globals::produceFitterASCIIoutput = false;
 
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
+int Globals::ElectronScaleFactorSystematic = 0;
 
 //muons
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
+int Globals::MuonScaleFactorSystematic = 0;
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;

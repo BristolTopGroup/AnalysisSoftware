@@ -66,7 +66,7 @@ public:
 	void setNumberOfMatches(int nMatches);
 
 	//other
-	double getEfficiencyCorrection(bool qcd) const;
+	double getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic, int run_number) const;
 
 private:
 	MuonAlgorithm::value usedAlgorithm_;
@@ -74,6 +74,7 @@ private:
 	double normalisedChi2_;
 	int numberOfValidMuonHits_, numberOfValidPixelHits_, numberOfValidHits_, pixelLayersWithMeasurement_, trackerLayersWithMeasurement_;
 	int numberOfMatches_, numberOfMatchedStations_;
+	int muon_scale_factor_systematic_;
 };
 
 typedef boost::shared_ptr<Muon> MuonPointer;

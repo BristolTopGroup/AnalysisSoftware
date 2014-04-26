@@ -29,6 +29,8 @@ void MTtbarAnalyser::analyse(const EventPtr event) {
 void MTtbarAnalyser::analyseFourJetChi2(const EventPtr event) {
 	if (topElectronPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		LeptonPointer selectedElectron = topElectronPlusJetsRefSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = topElectronPlusJetsRefSelection_->cleanedJets(event);
 		JetCollection bJets = topElectronPlusJetsRefSelection_->cleanedBJets(event);
@@ -55,7 +57,7 @@ void MTtbarAnalyser::analyseFourJetChi2(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/Ref selection/FourJetChi2");
 		}
@@ -64,7 +66,7 @@ void MTtbarAnalyser::analyseFourJetChi2(const EventPtr event) {
 	if (topMuonPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		LeptonPointer selectedMuon = topMuonPlusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = topMuonPlusJetsRefSelection_->cleanedJets(event);
 		JetCollection bJets = topMuonPlusJetsRefSelection_->cleanedBJets(event);
@@ -121,6 +123,9 @@ void MTtbarAnalyser::analyseThreeJetChi2(const EventPtr event) {
 		histMan_->setCurrentBJetBin(numberOfBjets);
 
 		LeptonPointer selectedElectron = topElectronPlusJetsRefSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
+
 		METPointer met = event->MET();
 
 		boost::scoped_ptr<ChiSquaredThreeJetsTopPairReconstruction> chi2Reco(
@@ -132,7 +137,7 @@ void MTtbarAnalyser::analyseThreeJetChi2(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/Ref selection/ThreeJetChi2");
 		}
@@ -161,7 +166,7 @@ void MTtbarAnalyser::analyseThreeJetChi2(const EventPtr event) {
 
 		LeptonPointer selectedMuon = topMuonPlusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::MuonScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 
 		boost::scoped_ptr<ChiSquaredThreeJetsTopPairReconstruction> chi2Reco(
@@ -183,6 +188,9 @@ void MTtbarAnalyser::analyseThreeJetChi2(const EventPtr event) {
 void MTtbarAnalyser::analyseFourJetTopMassDifference(const EventPtr event) {
 	if (topElectronPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		LeptonPointer selectedElectron = topElectronPlusJetsRefSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
+
 		METPointer met = event->MET();
 		JetCollection jets = topElectronPlusJetsRefSelection_->cleanedJets(event);
 		JetCollection bJets = topElectronPlusJetsRefSelection_->cleanedBJets(event);
@@ -209,7 +217,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const EventPtr event) {
 		allSolutions = topMassDiffReco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/Ref selection/FourJetTopMassDifference");
 		}
@@ -218,7 +226,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const EventPtr event) {
 	if (topMuonPlusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		LeptonPointer selectedMuon = topMuonPlusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::MuonScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = topMuonPlusJetsRefSelection_->cleanedJets(event);
 		JetCollection bJets = topMuonPlusJetsRefSelection_->cleanedBJets(event);
@@ -255,6 +263,8 @@ void MTtbarAnalyser::analyseFourJetTopMassDifference(const EventPtr event) {
 void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 	if (qcdElectronConversionSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronConversionSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronConversionSelection_->cleanedJets(event);
 		JetCollection bJets = qcdElectronConversionSelection_->cleanedBJets(event);
@@ -281,7 +291,7 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCDConversions/FourJetChi2");
 		}
@@ -289,6 +299,8 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 
 	if (qcdElectronNonIsoSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronNonIsoSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronNonIsoSelection_->cleanedJets(event);
 		JetCollection bJets = qcdElectronNonIsoSelection_->cleanedBJets(event);
@@ -315,7 +327,7 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCD non iso e+jets/FourJetChi2");
 		}
@@ -323,6 +335,8 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 
 	if (qcdElectronAntiIDSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronAntiIDSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronAntiIDSelection_->cleanedJets(event);
 		JetCollection bJets = qcdElectronAntiIDSelection_->cleanedBJets(event);
@@ -349,7 +363,7 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCDAntiID/FourJetChi2");
 		}
@@ -358,7 +372,7 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 	if (qcdMuonNonIsoSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedMuon = qcdMuonNonIsoSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true, Globals::MuonScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdMuonNonIsoSelection_->cleanedJets(event);
 		JetCollection bJets = qcdMuonNonIsoSelection_->cleanedBJets(event);
@@ -396,6 +410,8 @@ void MTtbarAnalyser::analyseFourJetChi2QCDBackground(const EventPtr event) {
 void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr event) {
 	if (qcdElectronConversionSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronConversionSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronConversionSelection_->cleanedJets(event);
 		JetCollection bJets = qcdElectronConversionSelection_->cleanedBJets(event);
@@ -422,7 +438,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCDConversions/FourJetTopMassDifference");
 		}
@@ -430,6 +446,8 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 
 	if (qcdElectronNonIsoSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronNonIsoSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronNonIsoSelection_->cleanedJets(event);
 		JetCollection bJets = qcdElectronNonIsoSelection_->cleanedBJets(event);
@@ -456,7 +474,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCD non iso e+jets/FourJetTopMassDifference");
 		}
@@ -464,6 +482,8 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 
 	if (qcdElectronAntiIDSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronAntiIDSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronAntiIDSelection_->cleanedJets(event);
 		JetCollection bJets = qcdElectronAntiIDSelection_->cleanedBJets(event);
@@ -490,7 +510,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCDAntiID/FourJetTopMassDifference");
 		}
@@ -499,7 +519,7 @@ void MTtbarAnalyser::analyseFourJetTopMassDifferenceQCDBackground(const EventPtr
 	if (qcdMuonNonIsoSelection_->passesFullSelectionExceptLastTwoSteps(event)) { //passes all except b-tag!
 		LeptonPointer selectedMuon = qcdMuonNonIsoSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true, Globals::MuonScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdMuonNonIsoSelection_->cleanedJets(event);
 		JetCollection bJets = qcdMuonNonIsoSelection_->cleanedBJets(event);
@@ -536,6 +556,8 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 	if (qcdElectronConversionSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronConversionSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronConversionSelection_->cleanedJets(event);
 		if (jets.size() != 3) //only consider 3 jet events
@@ -564,7 +586,7 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCDConversions/ThreeJetChi2");
 		}
@@ -573,6 +595,8 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 	if (qcdElectronNonIsoSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronNonIsoSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronNonIsoSelection_->cleanedJets(event);
 		if (jets.size() != 3) //only consider 3 jet events
@@ -601,7 +625,7 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCD non iso e+jets/ThreeJetChi2");
 		}
@@ -610,6 +634,8 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 	if (qcdElectronAntiIDSelection_->passesSelectionUpToStep(event,
 			TTbarEPlusJetsReferenceSelection::AtLeastThreeGoodJets)) { //passes all except b-tag!
 		LeptonPointer selectedElectron = qcdElectronAntiIDSelection_->signalLepton(event);
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedElectron));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(true, Globals::ElectronScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdElectronAntiIDSelection_->cleanedJets(event);
 		if (jets.size() != 3) //only consider 3 jet events
@@ -638,7 +664,7 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 		allSolutions = chi2Reco->getAllSolutions();
 		for (unsigned int weight_Index = 0; weight_Index < bjetWeights.size(); ++weight_Index) {
 			double bjetWeight = bjetWeights.at(weight_Index);
-			scale_ = bjetWeight;
+			scale_ = bjetWeight * efficiencyCorrection;
 			histMan_->setCurrentBJetBin(weight_Index);
 			fillHistograms("ElectronPlusJets/QCDAntiID/ThreeJetChi2");
 		}
@@ -648,7 +674,7 @@ void MTtbarAnalyser::analyseThreeJetChi2QCDBackground(const EventPtr event) {
 			TTbarMuPlusJetsReferenceSelection::AtLeastThreeGoodJets)) { //passes all except b-tag!
 		LeptonPointer selectedMuon = qcdMuonNonIsoSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedMuon));
-				double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true);
+				double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true, Globals::MuonScaleFactorSystematic, event->runnumber());
 		METPointer met = event->MET();
 		JetCollection jets = qcdMuonNonIsoSelection_->cleanedJets(event);
 		if (jets.size() != 3) //only consider 3 jet events

@@ -32,7 +32,7 @@ enum TopPairDecays {
 	full_leptonic_electron_tau, //
 	full_leptonic_muon_muon, //
 	full_leptonic_muon_tau, //
-	full_leptonic_tau_tau, //
+	full_leptonic_tau_tau //
 };
 
 class TopPairMCEvent {
