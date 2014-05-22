@@ -1,4 +1,4 @@
-mc_path = '/storage/TopQuarkGroup/mc/7TeV/LeptonPlus3JetsSkim/'
+mc_path = '/storage/TopQuarkGroup/mc/7TeV/v10/LeptonPlus3JetsSkim/'
 data_path = '/storage/TopQuarkGroup/data/2011/'
 datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v10_Run2011A-08Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets',
                             data_path + 'ElectronHad/nTuple_v10_Run2011B-19Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets'],
