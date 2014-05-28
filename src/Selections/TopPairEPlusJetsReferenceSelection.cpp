@@ -156,7 +156,8 @@ bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer el
 	bool passesEtAndEta = electron->et() > 30 && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
 			//since H/E is used at trigger level, use the same cut here:
-	bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
+//	bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
+	bool passesHOverE = true; // Synch with unfolding workflow
 	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
 	return passesEtAndEta && passesD0 &&
 			passesHOverE && passesID;
@@ -217,7 +218,7 @@ bool TopPairEPlusJetsReferenceSelection::passesConversionVeto(const EventPtr eve
 		return false;
 
 	const ElectronPointer electron(boost::static_pointer_cast<Electron>(signalLepton(event)));
-	return electron->passConversionVeto();
+	return electron->passConversionVeto() && electron->innerLayerMissingHits() <= 0;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastNGoodJets(const EventPtr event, unsigned int Njets) const {
