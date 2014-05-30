@@ -72,6 +72,10 @@ datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v10_Run2012A-
             }
 
 analysisModes = ['central',
+                 'Electron_down',
+                 'Electron_up',
+                 'Muon_down',
+                 'Muon_up',
                  'BJet_down',
                  'BJet_up',
                  'JES_down',
@@ -86,22 +90,30 @@ analysisModes = ['central',
 
 analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 
-available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'JetSmearingSystematic', 'custom_file_suffix']
+available_settings = ['ElectronScaleFactorSystematic', 'MuonScaleFactorSystematic', 'JESsystematic', 'JetSmearingSystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
 default_settings = {
+            'ElectronScaleFactorSystematic':0,
+            'MuonScaleFactorSystematic':0,
             'JESsystematic':0,
+            'JetSmearingSystematic':0,
             'PUFile':'PileUp_2012_69300_truth_finebin.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
-            'JetSmearingSystematic':0,
             'custom_file_suffix':'',
             'pdfWeightNumber' : 0,
             }
 
 analysis_settings = {
+                     'Electron_down':{'ElectronScaleFactorSystematic':-1},
+                     'Electron_up':{'ElectronScaleFactorSystematic':1},
+                     'Muon_down':{'MuonScaleFactorSystematic':-1},
+                     'Muon_up':{'MuonScaleFactorSystematic':1},
                      'BJet_down':{'BTagSystematic':-1},
                      'BJet_up':{'BTagSystematic':1},
                      'JES_down':{'JESsystematic':-1},
                      'JES_up':{'JESsystematic':1},
+                     'JetSmearing_up':{'JetSmearingSystematic':1},
+                     'JetSmearing_down':{'JetSmearingSystematic':-1},
                      'LightJet_down':{'LightTagSystematic':-1},
                      'LightJet_up':{'LightTagSystematic':1},
                      'PU_down':{'PUFile':'PileUp_2012_65835_truth_finebin.root',
@@ -109,8 +121,6 @@ analysis_settings = {
                                 },
                      'PU_up':{'PUFile':'PileUp_2012_72765_truth_finebin.root',
                               'custom_file_suffix':'PU_72765mb'},
-                     'JetSmearing_up':{'JetSmearingSystematic':1},
-                     'JetSmearing_down':{'JetSmearingSystematic':-1},
                      'Test': {'custom_file_suffix':'TESTING'}
                      }
 
@@ -160,6 +170,8 @@ if sample in ['TTJets-mcatnlo','TTJets-powheg']:
     
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
+ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
+MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
 JetSmearingSystematic = settings['JetSmearingSystematic']

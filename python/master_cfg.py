@@ -49,10 +49,10 @@ datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v8c_Run2011A-08Nov2
                      }
 
 analysisModes = ['central',
-                 'ElectronScaleFactor_down',
-                 'ElectronScaleFactor_up',
-                 'MuonScaleFactor_down',
-                 'MuonScaleFactor_up',
+                 'Electron_down',
+                 'Electron_up',
+                 'Muon_down',
+                 'Muon_up',
                  'BJet_down',
                  'BJet_up',
                  'JES_down',
@@ -61,11 +61,13 @@ analysisModes = ['central',
                  'LightJet_up',
                  'PU_down',
                  'PU_up',
+                 'JetSmearing_up',
+                 'JetSmearing_down',
                  'Test']
 
 analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 
-available_settings = ['ElectronScaleFactorSystematic', 'MuonScaleFactorSystematic', 'JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
+available_settings = ['ElectronScaleFactorSystematic', 'MuonScaleFactorSystematic', 'JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'JetSmearingSystematic', 'custom_file_suffix']
 default_settings = {
             'ElectronScaleFactorSystematic':0,
             'MuonScaleFactorSystematic':0,
@@ -73,16 +75,17 @@ default_settings = {
             'PUFile':'PileUp_2011_truth_finebin_68000microbarn.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
+            'JetSmearingSystematic':0,
             'custom_file_suffix':'',
             'pdfWeightNumber' : 0,
             }
 
 analysis_settings = {
-                     'ElectronScaleFactor_down':{'ElectronScaleFactorSystematic':-1},
-                     'ElectronScaleFactor_up':{'ElectronScaleFactorSystematic':1},
-                     'MuonScaleFactor_down':{'MuonScaleFactorSystematic':-1},
-                     'MuonScaleFactor_up':{'MuonScaleFactorSystematic':1},
-                     'BJet_down':{'BTagSystematic':-1},
+                 'Electron_down':{'ElectronScaleFactorSystematic':-1},
+                 'Electron_up':{'ElectronScaleFactorSystematic':1},
+                 'Muon_down':{'MuonScaleFactorSystematic':-1},
+                 'Muon_up':{'MuonScaleFactorSystematic':1},
+                 'BJet_down':{'BTagSystematic':-1},
                  'BJet_up':{'BTagSystematic':1},
                  'JES_down':{'JESsystematic':-1},
                  'JES_up':{'JESsystematic':1},
@@ -93,7 +96,9 @@ analysis_settings = {
                             },
                  'PU_up':{'PUFile':'PileUp_2011_truth_finebin_71400microbarn.root', 
                             'custom_file_suffix':'PU_71400mb'},
-                'Test': {'custom_file_suffix':'TESTING'}
+                 'JetSmearing_up':{'JetSmearingSystematic':1},
+                 'JetSmearing_down':{'JetSmearingSystematic':-1},
+                 'Test': {'custom_file_suffix':'TESTING'}
                      }
 for weight in range(1, 45):
     weight_txt = 'PDFWeights_%d' % weight 
@@ -144,6 +149,7 @@ ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
+JetSmearingSystematic = settings['JetSmearingSystematic']
 BTagSystematic = settings['BTagSystematic']
 LightTagSystematic = settings['LightTagSystematic']
 custom_file_suffix = settings['custom_file_suffix']

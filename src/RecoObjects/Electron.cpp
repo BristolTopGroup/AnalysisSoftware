@@ -438,31 +438,31 @@ double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_sys
 	double correction(1.);
 	double electronEta(eta());
 
-	if(Globals::energyInTeV == 7){
-		// hard coded values since pickle file not available...not updated because I couldn't find any values on twikis!
-		if (electronEta < -1.5)
-			correction = 1.003;
-		else if (electronEta >= -1.5 && electronEta < -1.2)
-			correction = 0.980;
-		else if (electronEta >= -1.2 && electronEta < -0.9)
-			correction = 0.941;
-		else if (electronEta >= -0.9 && electronEta < 0)
-			correction = 0.974;
-		else if (electronEta >= 0 && electronEta < 0.9)
-			correction = 0.977;
-		else if (electronEta >= 0.9 && electronEta < 1.2)
-			correction = 0.939;
-		else if (electronEta >= 1.2 && electronEta < 1.5)
-			correction = 0.967;
-		else if (electronEta >= 1.5)
-			correction = 1.023;
-	}
+//	if(Globals::energyInTeV == 7){
+//		// hard coded values since pickle file not available...not updated because I couldn't find any values on twikis!
+//		if (electronEta < -1.5)
+//			correction = 1.003;
+//		else if (electronEta >= -1.5 && electronEta < -1.2)
+//			correction = 0.980;
+//		else if (electronEta >= -1.2 && electronEta < -0.9)
+//			correction = 0.941;
+//		else if (electronEta >= -0.9 && electronEta < 0)
+//			correction = 0.974;
+//		else if (electronEta >= 0 && electronEta < 0.9)
+//			correction = 0.977;
+//		else if (electronEta >= 0.9 && electronEta < 1.2)
+//			correction = 0.939;
+//		else if (electronEta >= 1.2 && electronEta < 1.5)
+//			correction = 0.967;
+//		else if (electronEta >= 1.5)
+//			correction = 1.023;
+//	}
 	//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/KoPFAElectronTagAndProbe
 	//Only factors from PromptReco available (in the "Efficiency for e+jet channel (promptreco)" section)
 	//Specifically: ID & Iso: "ID/Isolation efficiency" sub-section
 	//Specifically: Trigger: "Trigger efficiency" sub-section
 	//These values are hard coded because, unlike for Muons, there is no pickle file provided.
-	else if(qcd == false){ //corrections for (ID & Iso) and Trigger respectively
+//	else if(qcd == false){ //corrections for (ID & Iso) and Trigger respectively
 		if(fabs(electronEta)<0.8) {
 			if(20<=pt() && pt()<30) {  //Note: Trigger scale factors only provided down to electron pt of 30GeV in the link above, so I have used the same as for the 30GeV-40GeV range.
 				switch (electron_scale_factor_systematic) {
@@ -559,7 +559,7 @@ double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_sys
 						correction = (0.959+0.003)*(0.988+0.002);
 						break;
 					default:
-						correction = 0.954*0.988;
+						correction = 0.959*0.988;
 				}
 			}
 		}
@@ -613,7 +613,7 @@ double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_sys
 				}
 			}
 		}
-	}
+//	}
 //ID scale factor for QCD is technically irrelevant since we use conversion veto for QCD, but ID and isolation scale factors are provided as one so unable to split them to remove the ID scale factor.
 //	else if(qcd == true){
 //	}

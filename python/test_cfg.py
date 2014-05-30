@@ -5,7 +5,7 @@ if os.environ.has_key('toolsFolder'):
     
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
-centerOfMassEnergy = 7
+centerOfMassEnergy = 8
 nTuple_version = 10
 #number of events to be processed
 maxEvents = 10000
@@ -59,8 +59,8 @@ elif centerOfMassEnergy == 7:
         applyTopPtReweighting = False
         
         #Lepton Scale Factors     
-        ElectronScaleFactorSystematic = -1
-        MuonScaleFactorSystematic = -1
+        ElectronScaleFactorSystematic = 0
+        MuonScaleFactorSystematic = 0
 
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = toolsFolder + "data/bJetReso.root"
@@ -70,12 +70,12 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-#    '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v10_Run2012D-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets/*.root' # 53X 8TeV data
+    '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v10_Run2012D-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets/*.root' # 53X 8TeV data
 #    '/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root' #53X 8TeV MC
 #    '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v10_Run2011A-12Oct2013-v1_53X_GoldenJSON_LeptonPlus3Jets/*.root' # 53X 7TeV data
 #    ''53X 7TeV MC not available yet
 #     '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v10_Run2011B-19Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets/*.root' #44X 7TeV data
-    '/storage/TopQuarkGroup/mc/7TeV/v10/LeptonPlus3JetsSkim/TTJets_TuneZ2_7TeV-madgraph-tauola_with_genjet_properties/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root' #44X 7TeV MC
+#    '/storage/TopQuarkGroup/mc/7TeV/v10/LeptonPlus3JetsSkim/TTJets_TuneZ2_7TeV-madgraph-tauola_with_genjet_properties/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root' #44X 7TeV MC
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
