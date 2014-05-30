@@ -154,8 +154,10 @@ bool TopPairMuPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Even
 
 }
 
-//@deprecated
-// This is not used in mu+jets channel
+/*
+* @deprecated
+* This is not used in mu+jets channel
+*/
 bool TopPairMuPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
 	bool passesEtAndEta = electron->et() > 30 && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
