@@ -30,7 +30,7 @@ if centerOfMassEnergy == 8:
     JetSmearingSystematic = 0
 
     #Apply Top Pt Reweighting
-    applyTopPtReweighting = True
+    applyTopPtReweighting = False
     
     #Lepton Scale Factors     
     ElectronScaleFactorSystematic = 0
