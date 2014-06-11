@@ -29,6 +29,7 @@ void METAnalyser::analyse(const EventPtr event) {
 			continue;
 		const METPointer met(event->MET(metType));
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
+		histMan_->H1D("MET")->Fill(met->et());
 		histMan_->H1D_BJetBinned("MET")->Fill(met->et(), weight_);
 		if (index != METAlgorithm::GenMET && !event->isRealData()) {
 			histMan_->H2D_BJetBinned("RecoMET_vs_GenMET")->Fill(event->GenMET()->et(), met->et(), weight_);
@@ -36,6 +37,7 @@ void METAnalyser::analyse(const EventPtr event) {
 		//do not fill other histograms for met systematics
 		if ((index > METAlgorithm::patType1p2CorrectedPFMet) && (index != METAlgorithm::recoMetPFlow))
 			continue;
+		histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
 		histMan_->H1D_BJetBinned("MET_phi")->Fill(met->phi(), weight_);
 		histMan_->H1D_BJetBinned("METsignificance")->Fill(met->significance(), weight_);
 		histMan_->H2D_BJetBinned("METsignificance_vs_MET")->Fill(met->et(), met->significance(), weight_);
@@ -81,6 +83,7 @@ void METAnalyser::createHistograms() {
 			continue;
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
+		histMan_->addH1D("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/5 GeV", 400, 0, 2000);
 		histMan_->addH1D_BJetBinned("MET", "Missing transverse energy; #slash{E}_{T}/GeV; events/5 GeV", 400, 0, 2000);
 		histMan_->addH1D_BJetBinned("ST", "ST;ST [GeV]; Events/5 GeV", 600, 0, 3000);
 		histMan_->addH1D_BJetBinned("WPT", "WPT;WPT [GeV]; Events/GeV", 1000, 0, 1000);
@@ -93,6 +96,8 @@ void METAnalyser::createHistograms() {
 		//do not create other histograms for met systematics
 		if ((index > METAlgorithm::patType1p2CorrectedPFMet) && (index != METAlgorithm::recoMetPFlow))
 			continue;
+		histMan_->addH1D("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80, -4,
+						4);
 		histMan_->addH1D_BJetBinned("MET_phi", "#phi(Missing transverse energy);#phi(#slash{E}_{T});Events/0.1", 80, -4,
 				4);
 		histMan_->addH1D_BJetBinned("METsignificance", "METsignificance; #slash{E}_{T} significance", 1000, 0, 1000);
