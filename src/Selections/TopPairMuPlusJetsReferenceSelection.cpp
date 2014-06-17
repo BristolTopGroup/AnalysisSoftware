@@ -132,6 +132,8 @@ bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr 
 		//2012 data: run 190456 to run 208686 (same trigger as second 2011 trigger)
 		else if (runNumber >= 190456 && runNumber <= 208686)
 			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+		else if ( runNumber == 1 ) // MC pretending to be data
+			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
 		else
 			return false;
 	} else {
@@ -152,6 +154,10 @@ bool TopPairMuPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Even
 
 }
 
+/*
+* @deprecated
+* This is not used in mu+jets channel
+*/
 bool TopPairMuPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
 	bool passesEtAndEta = electron->et() > 30 && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm

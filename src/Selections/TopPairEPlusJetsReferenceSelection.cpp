@@ -127,6 +127,14 @@ bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr e
 		//2012 data: run 190456 to run 208686
 		else if (runNumber >= 190456 && runNumber <= 208686)
 			return event->HLT(HLTriggers::HLT_Ele27_WP80);
+		else if ( runNumber == 1 ) {// MC pretending to be data
+			if (Globals::energyInTeV == 7) //Fall11 MC
+				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+			else if (Globals::energyInTeV == 8) //Summer12 MC
+				return event->HLT(HLTriggers::HLT_Ele27_WP80);
+			else
+				return false;
+		}
 		else
 			return false;
 	}
@@ -155,11 +163,8 @@ bool TopPairEPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const Event
 bool TopPairEPlusJetsReferenceSelection::isGoodElectron(const ElectronPointer electron) const {
 	bool passesEtAndEta = electron->et() > 30 && fabs(electron->eta()) < 2.5 && !electron->isInCrack();
 	bool passesD0 = fabs(electron->d0()) < 0.02; //cm
-			//since H/E is used at trigger level, use the same cut here:
-	bool passesHOverE = electron->HadOverEm() < 0.05; // same for EE and EB
 	bool passesID(electron->passesElectronID(ElectronID::MVAIDTrigger));
-	return passesEtAndEta && passesD0 &&
-			passesHOverE && passesID;
+	return passesEtAndEta && passesD0 && passesID;
 }
 
 bool TopPairEPlusJetsReferenceSelection::isIsolated(const LeptonPointer lepton) const {
@@ -183,10 +188,11 @@ bool TopPairEPlusJetsReferenceSelection::passesLooseLeptonVeto(const EventPtr ev
 bool TopPairEPlusJetsReferenceSelection::isLooseMuon(const MuonPointer muon) const {
 	bool passesPt = muon->pt() > 10;
 	bool passesEta = fabs(muon->eta()) < 2.5;
+	bool isPFMuon = muon->isPFMuon();
 	bool isGlobalOrTracker = muon->isGlobal() || muon->isTracker();
 	bool isLooselyIsolated = muon->pfRelativeIsolation(0.4) < 0.2;
 
-	return passesPt && passesEta && isGlobalOrTracker && isLooselyIsolated;
+	return passesPt && passesEta && isGlobalOrTracker && isPFMuon && isLooselyIsolated;
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesDileptonVeto(const EventPtr event) const {
@@ -217,7 +223,7 @@ bool TopPairEPlusJetsReferenceSelection::passesConversionVeto(const EventPtr eve
 		return false;
 
 	const ElectronPointer electron(boost::static_pointer_cast<Electron>(signalLepton(event)));
-	return electron->passConversionVeto();
+	return electron->passConversionVeto() && electron->innerLayerMissingHits() <= 0;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasAtLeastNGoodJets(const EventPtr event, unsigned int Njets) const {
