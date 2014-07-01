@@ -67,7 +67,7 @@ analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 available_settings = ['JESsystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'JetSmearingSystematic', 'custom_file_suffix']
 default_settings = {
             'JESsystematic':0,
-            'PUFile':'PileUp_2011_truth_finebin_68000microbarn.root',
+            'PUFile':'Data_PUDist_2011Full_central_68000mb_June2014.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'JetSmearingSystematic':0,
@@ -82,10 +82,10 @@ analysis_settings = {
                      'JES_up':{'JESsystematic':1},
                      'LightJet_down':{'LightTagSystematic':-1},
                      'LightJet_up':{'LightTagSystematic':1},
-                     'PU_down':{'PUFile':'PileUp_2011_truth_finebin_64600microbarn.root', 
+                     'PU_down':{'PUFile':'Data_PUDist_2011Full_64600mb_June2014.root', 
                             'custom_file_suffix':'PU_64600mb'
                             },
-                     'PU_up':{'PUFile':'PileUp_2011_truth_finebin_71400microbarn.root', 
+                     'PU_up':{'PUFile':'Data_PUDist_2011Full_71400mb_June2014.root', 
                             'custom_file_suffix':'PU_71400mb'},
                      'JetSmearing_up':{'JetSmearingSystematic':1},
                      'JetSmearing_down':{'JetSmearingSystematic':-1},
