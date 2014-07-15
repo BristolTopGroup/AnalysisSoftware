@@ -21,18 +21,23 @@ private:
     unsigned int dim1, dim2, dim3;
     integerCounter unweightedEntries;
     floatCounter weightedEntries;
-    unsigned int eventType;
+//    unsigned int eventType;
 
 public:
-    Counter() {
-    }
+	Counter() :
+					dim1(1),
+					dim2(1),
+					dim3(1),
+					unweightedEntries(boost::extents[dim1][dim2][dim3]),
+					weightedEntries(boost::extents[dim1][dim2][dim3]) {
+	}
 
     Counter(unsigned int dimension1, unsigned int dimension2, unsigned int dimension3) :
         dim1(dimension1),
         dim2(dimension2),
         dim3(dimension3),
-        unweightedEntries(boost::extents[dimension1][dimension2][dimension3]),
-        weightedEntries(boost::extents[dimension1][dimension2][dimension3]) {
+        unweightedEntries(boost::extents[dim1][dim2][dim3]),
+        weightedEntries(boost::extents[dim1][dim2][dim3]) {
     }
 
     ~Counter() {
