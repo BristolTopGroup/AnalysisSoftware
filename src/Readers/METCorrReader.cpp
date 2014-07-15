@@ -14,8 +14,7 @@ METCorrReader::METCorrReader() :
 		corrxReader(), //
 		corryReader(), //
 		corrx(), //
-		corry(), //
-		usedCorrections(METCorrections::pfMetSysShiftCorrections) {
+		corry() {
 
 }
 
@@ -23,8 +22,7 @@ METCorrReader::METCorrReader(TChainPointer input, METCorrections::value correcti
 				corrxReader(input, METCorrections::prefixes.at(correction) + ".x"), //
 				corryReader(input, METCorrections::prefixes.at(correction) + ".y"), //
 				corrx(), //
-				corry(), //
-				usedCorrections(METCorrections::pfMetSysShiftCorrections) {
+				corry() {
 
 }
 

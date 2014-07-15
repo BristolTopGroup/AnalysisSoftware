@@ -56,7 +56,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 		}
 	}
 
-	if (!goodElectrons.size() > 0)
+	if (goodElectrons.size() < 1)
 		return; //need at least one good electron to continue
 
 	ElectronPointer mostIsolatedElectron = goodElectrons.front();
@@ -86,7 +86,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 
 	}
 
-	if (!cleanedJets.size() > 0)
+	if (cleanedJets.size() < 1)
 		return; //need at least one jet to continue
 
 	//set jet binning for HLT analysis

@@ -65,8 +65,8 @@ TtbarHypothesis::~TtbarHypothesis() {
 }
 
 bool TtbarHypothesis::isValid() const {
-	bool hasObjects = leptonFromW != 0 && neutrinoFromW != 0 && jet1FromW != 0 && jet2FromW != 0 && hadronicBJet != 0
-			&& leptonicBjet;
+	bool hasObjects = !leptonFromW && !neutrinoFromW && !jet1FromW && !jet2FromW && !hadronicBJet
+			&& !leptonicBjet;
 	return hasObjects;
 
 }

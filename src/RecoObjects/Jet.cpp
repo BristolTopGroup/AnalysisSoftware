@@ -145,6 +145,7 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 				break;
 			default:
 				scaleFactor = 1.052;
+				break;
 		}
 	}
 	if (fabs(jet->eta()) >= 0.5 && fabs(jet->eta()) < 1.1) {
@@ -157,6 +158,7 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 				break;
 			default:
 				scaleFactor = 1.057;
+				break;
 		}
 	}
 	if (fabs(jet->eta()) >= 1.1 && fabs(jet->eta()) < 1.7) {
@@ -169,6 +171,7 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 				break;
 			default:
 				scaleFactor = 1.096;
+				break;
 		}
 	}
 	if (fabs(jet->eta()) >= 1.7 && fabs(jet->eta()) < 2.3) {
@@ -181,6 +184,7 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 				break;
 			default:
 				scaleFactor = 1.134;
+				break;
 		}
 	}
 	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 5.0) {
@@ -193,6 +197,7 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 				break;
 			default:
 				scaleFactor = 1.288;
+				break;
 		}
 	}
 	//use raw scaleFactors from above to calculate the final factors to apply
