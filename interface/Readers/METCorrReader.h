@@ -28,7 +28,7 @@ private:
 	VariableReader<double> corryReader;
 
 	double corrx, corry;
-	METCorrections::value usedCorrections;
+//	METCorrections::value usedCorrections;
 };
 
 }
