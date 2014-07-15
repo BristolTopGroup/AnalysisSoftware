@@ -74,7 +74,7 @@ private:
 	double normalisedChi2_;
 	int numberOfValidMuonHits_, numberOfValidPixelHits_, numberOfValidHits_, pixelLayersWithMeasurement_, trackerLayersWithMeasurement_;
 	int numberOfMatches_, numberOfMatchedStations_;
-	int muon_scale_factor_systematic_;
+//	int muon_scale_factor_systematic_;
 };
 
 typedef boost::shared_ptr<Muon> MuonPointer;
