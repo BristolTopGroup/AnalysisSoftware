@@ -10,6 +10,7 @@
 #include <iostream>
 #include <numeric>
 #include <set>
+#include <vector>
 
 using namespace std;
 
@@ -269,7 +270,7 @@ const METPointer Event::GenMET() const {
 const METPointer Event::MET(METAlgorithm::value type) const {
 	unsigned int index(type);
 	if (index >= mets_.size())
-		throw "Trying to access non-available MET at " + index;
+		throw "Trying to access non-available MET at " + std::to_string(index);
 
 	return mets_.at(index);
 }
