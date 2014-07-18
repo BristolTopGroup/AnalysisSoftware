@@ -24,19 +24,23 @@ enum value {
 	W3Jets,
 	W4Jets,
 	Zjets,
-	//2012 DY samples
+	// 2012 DY samples
 	Z1Jet,
 	Z2Jets,
 	Z3Jets,
 	Z4Jets,
+	// 2011 QCD samples
 	QCD_BCtoE_Pt20to30,
 	QCD_BCtoE_Pt30to80,
 	QCD_BCtoE_Pt80to170,
 	QCD_EMEnriched_Pt20to30,
 	QCD_EMEnriched_Pt30to80,
 	QCD_EMEnriched_Pt80to170,
+	QCD_EMEnriched_Pt170to250,
+	QCD_EMEnriched_Pt250to350,
+	QCD_EMEnriched_Pt350,
 	QCD_MuEnrichedPt15_Pt20,
-	//2012 QCD samples
+	// 2012 QCD samples
 	QCD_BCtoE_Pt20_30,
 	QCD_BCtoE_Pt30_80,
 	QCD_BCtoE_Pt80_170,
@@ -48,7 +52,7 @@ enum value {
 	QCD_EMEnriched_Pt80_170,
 	QCD_EMEnriched_Pt170_250,
 	QCD_EMEnriched_Pt250_350,
-	QCD_EMEnriched_Pt350,
+	//QCD_EMEnriched_Pt350, // commented out as it has the same name as for 2011 a few lines above
 	QCD_MuEnrichedPt15_Pt_20, 
 	QCD_MuEnrichedPt5_Pt15to20,
 	QCD_MuEnrichedPt5_Pt20to30,
@@ -138,12 +142,16 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"DY2JetsToLL", //
 		"DY3JetsToLL", //
 		"DY4JetsToLL", //
+		//2011 QCD Samples
 		"QCD_Pt-20to30_BCtoE", //
 		"QCD_Pt-30to80_BCtoE", //
 		"QCD_Pt-80to170_BCtoE", //
 		"QCD_Pt-20to30_EMEnriched", //
 		"QCD_Pt-30to80_EMEnriched", //
 		"QCD_Pt-80to170_EMEnriched", //10
+		"QCD_Pt-170to250_EMEnriched", //
+		"QCD_Pt-250to350_EMEnriched", //
+		"QCD_Pt-350_EMEnriched", //
 		"QCD_Pt-20_MuEnrichedPt-15", //
 		//2012 QCD samples
 		"QCD_Pt_20_30_BCtoE", //
@@ -157,7 +165,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_Pt_80_170_EMEnriched", //
 		"QCD_Pt_170_250_EMEnriched", //
 		"QCD_Pt_250_350_EMEnriched", //
-		"QCD_Pt_350_EMEnriched", //
+		//"QCD_Pt_350_EMEnriched", // commented out as it has the same name as for 2011 a few lines above
+		//2011 & 2012 Muon QCD samples
 		"QCD_Pt_20_MuEnrichedPt_15", //
 		"QCD_Pt-15to20_MuEnrichedPt5", //
 		"QCD_Pt-20to30_MuEnrichedPt5", //

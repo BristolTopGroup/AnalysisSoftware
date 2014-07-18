@@ -18,10 +18,10 @@
 
 datasetInfo = {}
 #if using the designated subset:
-datasetInfo['TTJet'] = {"cross-section": 157.5, "NumberOfProcessedEvents":17100187}
+datasetInfo['TTJet'] = {"cross-section": 164.5, "NumberOfProcessedEvents":17100187}
 datasetInfo['WJetsToLNu'] = {"cross-section": 31314., "NumberOfProcessedEvents":76726296}
 datasetInfo['W1Jet'] = {"cross-section": 4480., "NumberOfProcessedEvents":75710577 } #to update once sample is available
-datasetInfo['W2Jets'] = {"cross-section": 1674., "NumberOfProcessedEvents":25013856}
+datasetInfo['W2Jets'] = {"cross-section": 1674., "NumberOfProcessedEvents":25069566} 
 datasetInfo['W3Jets'] = {"cross-section": 484.7, "NumberOfProcessedEvents":7404688} #to update once sample is available
 datasetInfo['W4Jets'] = {"cross-section": 211.7, "NumberOfProcessedEvents":13240209}
 
@@ -112,6 +112,7 @@ datasetInfo['QCD_Pt_250_350_EMEnriched'] = {"cross-section": 4250.0 * 0.131, "Nu
 datasetInfo['QCD_Pt_350_EMEnriched'] = {"cross-section": 810.0 * 0.11, "NumberOfProcessedEvents":33981105}
 
 datasetInfo['QCD_Pt_20_MuEnrichedPt_15'] = {"cross-section": 3.64e8 * 3.7e-4, "NumberOfProcessedEvents":21484326}
+datasetInfo['QCD_Pt-20_MuEnrichedPt-15'] = {"cross-section": 3.64e8 * 3.7e-4, "NumberOfProcessedEvents":25080199}
 
 datasetInfo['WWtoAnything'] = {"cross-section": 43., "NumberOfProcessedEvents":4225341}
 datasetInfo['WZtoAnything'] = {"cross-section": 18.2, "NumberOfProcessedEvents":4264676}
