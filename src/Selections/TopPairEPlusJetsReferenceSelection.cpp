@@ -139,8 +139,9 @@ bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr e
 			return false;
 	}
 	else {
-		if (Globals::energyInTeV == 7) //Fall11 MC
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+		if (Globals::energyInTeV == 7) //Fall11 MC or Summer11Leg
+//			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+			return true;
 		else if (Globals::energyInTeV == 8) //Summer12 MC
 			return event->HLT(HLTriggers::HLT_Ele27_WP80);
 		else

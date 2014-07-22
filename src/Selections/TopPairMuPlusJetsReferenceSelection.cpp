@@ -137,7 +137,12 @@ bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr 
 		else
 			return false;
 	} else {
-		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+		if (Globals::energyInTeV == 7) //Fall11 or Summer11Leg
+			return true;
+		else if (Globals::energyInTeV == 8) //Summer12 MC
+			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+		else
+			return false;
 	}
 }
 

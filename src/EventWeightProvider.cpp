@@ -97,10 +97,13 @@ void EventWeightProvider::generate_weights() {
 	 */
 
 	//Needs a flag for 2011 MC tried energyInTeV?
-	if(Globals::energyInTeV == 8)
+	if (Globals::energyInTeV == 8) {
 		pileUpWeights = generateWeights(Summer2012);
-	else
+	} else if (Globals::energyInTeV == 7 && Globals::NTupleVersion < 11) {
 		pileUpWeights = generateWeights(Fall2011);
+	} else if (Globals::energyInTeV == 7 && Globals::NTupleVersion == 11) {
+		pileUpWeights = generateWeights(Summer11Leg);
+	}
 
 //	cout << "Pile up weights" << endl;
 //
