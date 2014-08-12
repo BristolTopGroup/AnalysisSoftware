@@ -52,6 +52,8 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
@@ -166,6 +168,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdNonIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 			metAnalyserqcdNonIsoElectronSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -254,6 +258,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdConversionsElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 			metAnalyserqcdConversionSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -340,6 +346,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdEPlusjetsPFRelIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -373,6 +381,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
@@ -477,6 +487,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 			metAnalyserqcdNonIsoMuonSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -565,6 +577,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdNonIsoMuonAnalyser_ge4j_->setScale(bjetWeight * efficiencyCorrection);
 			metAnalyserqcdNonIsoMuonSelection_ge4j_->setScale(bjetWeight * efficiencyCorrection);
@@ -616,6 +630,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		qcdMuPlusjetsPFRelIsoMuonAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
+			if ( bjetWeight == 0 ) continue;
+
 			histMan_->setCurrentBJetBin(weightIndex);
 			qcdMuPlusjetsPFRelIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 
