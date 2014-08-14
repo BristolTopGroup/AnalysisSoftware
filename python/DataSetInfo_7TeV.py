@@ -101,7 +101,13 @@ datasetInfo['SingleMu'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 datasetInfo['TTJets-mcatnlo'] = {"cross-section": 164.5, "NumberOfProcessedEvents":20713658} # not used
 datasetInfo['TTJets-powheg'] = {"cross-section": 164.5, "NumberOfProcessedEvents":16370364} # not used
 
-#Older/newer QCD samples (kept to avoid dictionary errors)
+#Older/newer samples (kept to avoid dictionary errors)
+
+datasetInfo['DY1JetsToLL'] = {"cross-section": 561.0, "NumberOfProcessedEvents":24045248} #not available in Summer11Leg
+datasetInfo['DY2JetsToLL'] = {"cross-section": 181.0, "NumberOfProcessedEvents":21852156} #not available in Summer11Leg
+datasetInfo['DY3JetsToLL'] = {"cross-section": 51.1, "NumberOfProcessedEvents":11015445} #not available in Summer11Leg
+datasetInfo['DY4JetsToLL'] = {"cross-section": 23.04, "NumberOfProcessedEvents":6402827} #not available in Summer11Leg
+
 datasetInfo['GJets_HT-200To400'] = {"cross-section": 960.5, "NumberOfProcessedEvents":10479625}
 datasetInfo['GJets_HT-400ToInf'] = {"cross-section": 107.5, "NumberOfProcessedEvents":1611963}
 
