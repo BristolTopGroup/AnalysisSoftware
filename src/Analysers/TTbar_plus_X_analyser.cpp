@@ -778,62 +778,68 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 
 	//bins: start is always assumed to be 0 and the last is read as > X
 	//MET bins:
-	// old: 25, 45, 70, 100, 150, inf
-	// new:[0.0, 31.0, 58.0, 96.0, 142.0, 191.0, inf]
-	metBins_.push_back(31.);
-	metBins_.push_back(58.);
-	metBins_.push_back(96.);
-	metBins_.push_back(142.);
-	metBins_.push_back(191.);
+	// very old: 25, 45, 70, 100, 150, inf
+	// old: [0.0, 31.0, 58.0, 96.0, 142.0, 191.0, inf]
+	// new: [0.0, 27.0, 52.0, 87.0, 129.0, 171.0, inf]
+	metBins_.push_back(27.);
+	metBins_.push_back(52.);
+	metBins_.push_back(87.);
+	metBins_.push_back(129.);
+	metBins_.push_back(171.);
 	//HT:
-	// old: 50, 150, 250, 350, 450, 650, 1100, inf
-	// new: [0.0, 190.0, 225.0, 262.0, 302.0, 345.0, 392.0, 445.0, 501.0, 562.0, 623.0, 689.0, 766.0, inf]
-	ht_bins_.push_back(190.0);
-	ht_bins_.push_back(225.0);
-	ht_bins_.push_back(262.0);
-	ht_bins_.push_back(302.0);
-	ht_bins_.push_back(345.0);
-	ht_bins_.push_back(392.0);
-	ht_bins_.push_back(445.0);
-	ht_bins_.push_back(501.0);
-	ht_bins_.push_back(562.0);
-	ht_bins_.push_back(623.0);
-	ht_bins_.push_back(689.0);
-	ht_bins_.push_back(766.0);
+	// very old: 50, 150, 250, 350, 450, 650, 1100, inf
+	// old: [0.0, 190.0, 225.0, 262.0, 302.0, 345.0, 392.0, 445.0, 501.0, 562.0, 623.0, 689.0, 766.0, inf]
+	// new: [0.0, 187.0, 217.0, 250.0, 287.0, 327.0, 369.0, 414.0, 464.0, 517.0, 575.0, 634.0, 696.0, 772.0, inf]
+	ht_bins_.push_back(187.0);
+	ht_bins_.push_back(217.0);
+	ht_bins_.push_back(250.0);
+	ht_bins_.push_back(287.0);
+	ht_bins_.push_back(327.0);
+	ht_bins_.push_back(369.0);
+	ht_bins_.push_back(414.0);
+	ht_bins_.push_back(464.0);
+	ht_bins_.push_back(517.0);
+	ht_bins_.push_back(575.0);
+	ht_bins_.push_back(634.0);
+	ht_bins_.push_back(696.0);
+	ht_bins_.push_back(772.0);
 
 	//ST:
-	// old: 150, 250, 350, 450, 550, 750, 1250, inf new: 350 & 400 & 450 & 500 & 580 & 700 & inf
-	// new: [0.0, 285.0, 329.0, 376.0, 428.0, 484.0, 544.0, 609.0, 678.0, 751.0, 830.0, 911.0, 1028.0, 2500.0]
-	st_bins_.push_back(285);
-	st_bins_.push_back(329);
-	st_bins_.push_back(376);
-	st_bins_.push_back(428);
-	st_bins_.push_back(484);
-	st_bins_.push_back(544);
-	st_bins_.push_back(609);
-	st_bins_.push_back(678);
-	st_bins_.push_back(751);
-	st_bins_.push_back(830);
-	st_bins_.push_back(911);
-	st_bins_.push_back(1028);
+	// very old: 150, 250, 350, 450, 550, 750, 1250, inf new: 350 & 400 & 450 & 500 & 580 & 700 & inf
+	// old: [0.0, 285.0, 329.0, 376.0, 428.0, 484.0, 544.0, 609.0, 678.0, 751.0, 830.0, 911.0, 1028.0, inf]
+	// new: [0.0, 281.0, 324.0, 367.0, 415.0, 466.0, 521.0, 581.0, 645.0, 714.0, 783.0, 861.0, 946.0, inf]
+	st_bins_.push_back(281.0);
+	st_bins_.push_back(324.0);
+	st_bins_.push_back(367.0);
+	st_bins_.push_back(415.0);
+	st_bins_.push_back(466.0);
+	st_bins_.push_back(521.0);
+	st_bins_.push_back(581.0);
+	st_bins_.push_back(645.0);
+	st_bins_.push_back(714.0);
+	st_bins_.push_back(783.0);
+	st_bins_.push_back(861.0);
+	st_bins_.push_back(946.0);
 
 	//MT:
-	// old: 0, 40, 65, 85, 150, inf
-	// new: [0.0, 28.0, 66.0, inf]
-	mt_bins_.push_back(28);
-	mt_bins_.push_back(66);
+	// very old: 0, 40, 65, 85, 150, inf
+	// old: [0.0, 28.0, 66.0, inf]
+	// new: [0.0, 23.0, 58.0, inf]
+	mt_bins_.push_back(23.0);
+	mt_bins_.push_back(58.0);
 
 	//WPT:
-	// old: 0, 40, 70, 100, 130, 170 inf
-	// new: [0.0, 31.0, 59.0, 88.0, 118.0, 151.0, 187.0, 227.0, 267.0, inf]
-	wpt_bins_.push_back(31);
-	wpt_bins_.push_back(59);
-	wpt_bins_.push_back(88);
-	wpt_bins_.push_back(118);
-	wpt_bins_.push_back(151);
-	wpt_bins_.push_back(187);
-	wpt_bins_.push_back(227);
-	wpt_bins_.push_back(267);
+	// very old: 0, 40, 70, 100, 130, 170 inf
+	// old: [0.0, 31.0, 59.0, 88.0, 118.0, 151.0, 187.0, 227.0, 267.0, inf]
+	// new: [0.0, 27.0, 52.0, 78.0, 105.0, 134.0, 165.0, 198.0, 235.0, inf]
+	wpt_bins_.push_back(27.0);
+	wpt_bins_.push_back(52.0);
+	wpt_bins_.push_back(78.0);
+	wpt_bins_.push_back(105.0);
+	wpt_bins_.push_back(134.0);
+	wpt_bins_.push_back(165.0);
+	wpt_bins_.push_back(198.0);
+	wpt_bins_.push_back(235.0);
 
 	Variable electron_absolute_eta = Variable("electron_absolute_eta", 30, 0.0, 3.0);
 	Variable muon_absolute_eta = Variable("muon_absolute_eta", 30, 0.0, 3.0);
