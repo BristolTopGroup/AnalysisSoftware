@@ -1,5 +1,5 @@
-mc_path = '/storage/TopQuarkGroup/mc/8TeV/v11/LeptonPlus3JetsSkim/'
-data_path = '/storage/TopQuarkGroup/data/2012/'
+mc_path = '/hdfs/TopQuarkGroup/mc/8TeV/v11/LeptonPlus3JetsSkim/'
+data_path = '/hdfs/TopQuarkGroup/data/2012/'
 datasets = {'SingleElectron' : [data_path + 'SingleElectron/nTuple_v11_Run2012A-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets',
                                 data_path + 'SingleElectron/nTuple_v11_Run2012B-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets',
                                 data_path + 'SingleElectron/nTuple_v11_Run2012C-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets',
