@@ -25,8 +25,8 @@ std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfB
 }
 
 BTagWeight::BTagWeight() :
-		minNumberOfTags_(0), //
-		maxNumberOfTags_(0) {
+				minNumberOfTags_(0), //
+				maxNumberOfTags_(0) {
 }
 
 double BTagWeight::weight(const JetCollection jets) const {
@@ -111,21 +111,21 @@ std::vector<double> BTagWeight::getBScaleFactor(const JetPointer jet, double unc
 		// From https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFb-pt_WITHttbar_payload_EPS13.txt,
 		// which is linked from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2012_Data_and_MC_EPS13_prescript
 		const boost::array<double, 16> SFb_error = { {0.0415707,
-				 0.0204209,
-				 0.0223227,
-				 0.0206655,
-				 0.0199325,
-				 0.0174121,
-				 0.0202332,
-				 0.0182446,
-				 0.0159777,
-				 0.0218531,
-				 0.0204688,
-				 0.0265191,
-				 0.0313175,
-				 0.0415417,
-				 0.0740446,
-				 0.0596716 } };
+				0.0204209,
+				0.0223227,
+				0.0206655,
+				0.0199325,
+				0.0174121,
+				0.0202332,
+				0.0182446,
+				0.0159777,
+				0.0218531,
+				0.0204688,
+				0.0265191,
+				0.0313175,
+				0.0415417,
+				0.0740446,
+				0.0596716 } };
 
 		//2012 pt bins low edges
 		const boost::array<double, 16> ptbins = { {20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600 } };
@@ -163,19 +163,19 @@ std::vector<double> BTagWeight::getBScaleFactor(const JetPointer jet, double unc
 	else if (Globals::energyInTeV == 7) { // 2011 btag scale factors
 		// https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFb-mujet_payload.txt
 		const boost::array<double, 14> SFb_error = { { 0.0295675,
-		 0.0295095,
-		 0.0210867,
-		 0.0219349,
-		 0.0227033,
-		 0.0204062,
-		 0.0185857,
-		 0.0256242,
-		 0.0383341,
-		 0.0409675,
-		 0.0420284,
-		 0.0541299,
-		 0.0578761,
-		 0.0655432 } };
+				0.0295095,
+				0.0210867,
+				0.0219349,
+				0.0227033,
+				0.0204062,
+				0.0185857,
+				0.0256242,
+				0.0383341,
+				0.0409675,
+				0.0420284,
+				0.0541299,
+				0.0578761,
+				0.0655432 } };
 
 		//2011 pt bins low edges
 		const boost::array<double, 16> ptbins = { { 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500 } };
@@ -211,7 +211,7 @@ std::vector<double> BTagWeight::getBScaleFactor(const JetPointer jet, double unc
 			}
 		}
 	}
-//	SFb += sf_error * Globals::BJetSystematic * uncertaintyFactor;
+	//	SFb += sf_error * Globals::BJetSystematic * uncertaintyFactor;
 	std::vector<double> SF_b_and_error;
 	SF_b_and_error.push_back(SFb);
 	SF_b_and_error.push_back(sf_error * uncertaintyFactor);
@@ -234,7 +234,7 @@ std::vector<double> BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 			SF_udsg_and_error.push_back(0.);
 			SF_udsg_and_error.push_back(0.);
 			return SF_udsg_and_error;
-//			return 0;
+			//			return 0;
 		} else if (pt > 850 && eta >= 1.6 && eta <= 2.4) {
 			SF_udsg_mean = getMeanUDSGScaleFactor(850., eta);
 			SF_udsg_min = getMinUDSGScaleFactor(850, eta);
@@ -259,7 +259,7 @@ std::vector<double> BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 			SF_udsg_and_error.push_back(0.);
 			SF_udsg_and_error.push_back(0.);
 			return SF_udsg_and_error;
-//			return 0;
+			//			return 0;
 		} else if (pt > 670 && eta >= 0. && eta <= 2.4) {
 			// Use integrated over all eta
 			SF_udsg_mean = getMeanUDSGScaleFactor(pt, eta);
@@ -289,8 +289,8 @@ std::vector<double> BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 }
 
 double BTagWeight::getMeanUDSGScaleFactor(double jetPT, double jetEta) const {
-// From https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFlightFuncs_EPS2013.C
-// which is linked from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2012_Data_and_MC_EPS13_prescript
+	// From https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFlightFuncs_EPS2013.C
+	// which is linked from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2012_Data_and_MC_EPS13_prescript
 
 	if (Globals::energyInTeV == 8) { // 2012
 		if(jetEta >=0 && jetEta < 0.8) {
@@ -420,33 +420,31 @@ double BTagWeight::getBEfficiency(const JetPointer jet) const {
 		}
 		return eff[eff.size()-1];
 	} else if (Globals::energyInTeV == 7) { // 2011
-		if (jetEta >-0. && jetEta < 2.4) {
-			std::vector<double> eff{
-				0.510614693165,
-				0.625705659389,
-				0.650622546673,
-				0.689294397831,
-				0.705310404301,
-				0.723900854588,
-				0.738776385784,
-				0.744492590427,
-				0.7463555336,
-				0.721650719643,
-				0.691826879978,
-				0.641910970211,
-				0.583380103111,
-				0.539074957371,
-				0.438271611929,
-				0.423076927662
-			};
+		std::vector<double> eff{
+			0.510614693165,
+			0.625705659389,
+			0.650622546673,
+			0.689294397831,
+			0.705310404301,
+			0.723900854588,
+			0.738776385784,
+			0.744492590427,
+			0.7463555336,
+			0.721650719643,
+			0.691826879978,
+			0.641910970211,
+			0.583380103111,
+			0.539074957371,
+			0.438271611929,
+			0.423076927662
+		};
 
-			// Which pt bin to use
-			for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
-				if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
-					return eff[binIndex];
-			}
-			return eff[eff.size()-1];
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
 		}
+		return eff[eff.size()-1];
 	}
 	return 0.;
 }
@@ -484,33 +482,31 @@ double BTagWeight::getCEfficiency(const JetPointer jet) const {
 		}
 		return eff[eff.size()-1];
 	} else if (Globals::energyInTeV == 7) { // 2011
-		if (jetEta >-0. && jetEta < 2.4) {
-			std::vector<double> eff{
-				0.147453084588,
-				0.191264390945,
-				0.188042387366,
-				0.202001750469,
-				0.206677630544,
-				0.216319575906,
-				0.224087715149,
-				0.222374990582,
-				0.220220595598,
-				0.206811457872,
-				0.187931656837,
-				0.170212760568,
-				0.140024781227,
-				0.132492110133,
-				0.0921052619815,
-				0.147058829665
-			};
+		std::vector<double> eff{
+			0.147453084588,
+			0.191264390945,
+			0.188042387366,
+			0.202001750469,
+			0.206677630544,
+			0.216319575906,
+			0.224087715149,
+			0.222374990582,
+			0.220220595598,
+			0.206811457872,
+			0.187931656837,
+			0.170212760568,
+			0.140024781227,
+			0.132492110133,
+			0.0921052619815,
+			0.147058829665
+		};
 
-			// Which pt bin to use
-			for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
-				if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
-					return eff[binIndex];
-			}
-			return eff[eff.size()-1];
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
 		}
+		return eff[eff.size()-1];
 	}
 	return 0.;
 }
@@ -548,33 +544,31 @@ double BTagWeight::getUDSGEfficiency(const JetPointer jet) const {
 		}
 		return eff[eff.size()-1];
 	} else if (Globals::energyInTeV == 7) { // 2011
-		if (jetEta >-0. && jetEta < 2.4) {
-			std::vector<double> eff{
-				0.0144789591432,
-				0.0180907342583,
-				0.0137853939086,
-				0.0135071650147,
-				0.0124906441197,
-				0.0128347137943,
-				0.0132970232517,
-				0.0132412724197,
-				0.0141806136817,
-				0.0142573462799,
-				0.0167632680386,
-				0.01748948358,
-				0.0179928019643,
-				0.0181461498141,
-				0.0192926041782,
-				0.00740740727633
-			};
+		std::vector<double> eff{
+			0.0144789591432,
+			0.0180907342583,
+			0.0137853939086,
+			0.0135071650147,
+			0.0124906441197,
+			0.0128347137943,
+			0.0132970232517,
+			0.0132412724197,
+			0.0141806136817,
+			0.0142573462799,
+			0.0167632680386,
+			0.01748948358,
+			0.0179928019643,
+			0.0181461498141,
+			0.0192926041782,
+			0.00740740727633
+		};
 
-			// Which pt bin to use
-			for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
-				if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
-					return eff[binIndex];
-			}
-			return eff[eff.size()-1];
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
 		}
+		return eff[eff.size()-1];
 	}
 	return 0.;
 }
