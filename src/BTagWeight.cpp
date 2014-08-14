@@ -204,6 +204,11 @@ std::vector<double> BTagWeight::getBScaleFactor(const JetPointer jet, double unc
 				}
 			}
 			sf_error = SFb_error.at(ptbin);
+
+			//use twice the uncertainty if outside the 0 to 2.4 eta range
+			if (2.4 < eta && eta <=2.6) {
+				sf_error = 2 * SFb_error.at(ptbin);
+			}
 		}
 	}
 //	SFb += sf_error * Globals::BJetSystematic * uncertaintyFactor;
