@@ -13,10 +13,13 @@ git clone https://github.com/BristolTopGroup/AnalysisSoftware.git AnalysisSoftwa
 cd AnalysisSoftware
 
 # on DICE need to source ROOT:
-source /software/root/v5.32.00/bin/thisroot.sh
+# source /software/root/v5.32.00/bin/thisroot.sh
 
 # create the makefile using cmake (install it if you don't have it: https://github.com/Kitware/CMake)
-cmake28 CMakeLists.txt
+# minimal cmake version 2.6.0 according to CMakeLists.txt
+cmake CMakeLists.txt
+#on DICE use cmake28
+# cmake28 CMakeLists.txt
 
 # for older versions of boost, e.g. on DICE, you will need to
 #sed -i 's/lib64\/lib64/lib64/g' ./CMakeFiles/AnalysisSoftware.dir/build.make

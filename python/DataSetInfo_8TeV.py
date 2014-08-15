@@ -20,16 +20,16 @@ datasetInfo = {}
 #if using the designated subset:
 #cross-section from http://arxiv.org/pdf/1303.6254v1.pdf
 datasetInfo['TTJet'] = {"cross-section": 245.8, "NumberOfProcessedEvents":6706068}
-#cross-sections from twiki (https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat8TeV)
-datasetInfo['WJetsToLNu'] = {"cross-section": 12234.4, "NumberOfProcessedEvents":57708550} #not used
+#cross-sections from ??
+datasetInfo['WJetsToLNu'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":57708550} #not used
 #cross-sections from PREP (search for: W*Jet*8TeV*madgraph)
 datasetInfo['W1Jet'] = {"cross-section": 5400.0, "NumberOfProcessedEvents":23129996 }
 datasetInfo['W2Jets'] = {"cross-section": 1750.0, "NumberOfProcessedEvents":34027847}
 datasetInfo['W3Jets'] = {"cross-section": 519.0, "NumberOfProcessedEvents":15539463}
 datasetInfo['W4Jets'] = {"cross-section": 214.0, "NumberOfProcessedEvents":13373865}
 
-#cross-sections from twiki (https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat8TeV)
-datasetInfo['DYJetsToLL'] = {"cross-section": 1177.3, "NumberOfProcessedEvents":30457954} #not used
+#cross-sections from ??
+datasetInfo['DYJetsToLL'] = {"cross-section": 3503.71, "NumberOfProcessedEvents":30457954} #not used
 #cross-sections from PREP (search for: DY*Jet*8TeV*madgraph)
 datasetInfo['DY1JetsToLL'] = {"cross-section": 561.0, "NumberOfProcessedEvents":24032529}
 datasetInfo['DY2JetsToLL'] = {"cross-section": 181.0, "NumberOfProcessedEvents":21840628}
@@ -86,15 +86,15 @@ datasetInfo['TTJets-matchingup'] = {"cross-section": 245.8, "NumberOfProcessedEv
 datasetInfo['TTJets-scaledown'] = {"cross-section": 245.8, "NumberOfProcessedEvents":5387181}
 datasetInfo['TTJets-scaleup'] = {"cross-section": 245.8, "NumberOfProcessedEvents":5009488}
 
-datasetInfo['WJets-matchingdown'] = {"cross-section": 29690.0, "NumberOfProcessedEvents":21341479}
-datasetInfo['WJets-matchingup'] = {"cross-section": 30290.0, "NumberOfProcessedEvents":20594331}
-datasetInfo['WJets-scaledown'] = {"cross-section": 33300.0, "NumberOfProcessedEvents":20121177}
-datasetInfo['WJets-scaleup'] = {"cross-section": 32000.0, "NumberOfProcessedEvents":20711338}
+datasetInfo['WJets-matchingdown'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":21341479}
+datasetInfo['WJets-matchingup'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":20594331}
+datasetInfo['WJets-scaledown'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":20121177}
+datasetInfo['WJets-scaleup'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":20711338}
 
-datasetInfo['ZJets-matchingdown'] = {"cross-section": 2888.0, "NumberOfProcessedEvents":2112383}
-datasetInfo['ZJets-matchingup'] = {"cross-section": 2915.0, "NumberOfProcessedEvents":1985526}
-datasetInfo['ZJets-scaledown'] = {"cross-section": 3312.0, "NumberOfProcessedEvents":1934895}
-datasetInfo['ZJets-scaleup'] = {"cross-section": 2954.0, "NumberOfProcessedEvents":2159410}
+datasetInfo['ZJets-matchingdown'] = {"cross-section": 3503.71, "NumberOfProcessedEvents":2112383}
+datasetInfo['ZJets-matchingup'] = {"cross-section": 3503.71, "NumberOfProcessedEvents":1985526}
+datasetInfo['ZJets-scaledown'] = {"cross-section": 3503.71, "NumberOfProcessedEvents":1934895}
+datasetInfo['ZJets-scaleup'] = {"cross-section": 3503.71, "NumberOfProcessedEvents":2159410}
 
 #Data and not used samples
 datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}

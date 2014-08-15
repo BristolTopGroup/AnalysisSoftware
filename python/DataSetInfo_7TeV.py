@@ -75,10 +75,10 @@ datasetInfo['Tbar_t-channel'] = {"cross-section": 22.0, "NumberOfProcessedEvents
 datasetInfo['Tbar_tW-channel'] = {"cross-section": 5.3, "NumberOfProcessedEvents":801626}
 
 #systematic samples (same cross-sections respective central samples)
-datasetInfo['TTJets-matchingdown'] = {"cross-section": 164.5, "NumberOfProcessedEvents":1577671} #to update once sample is available
-datasetInfo['TTJets-matchingup'] = {"cross-section": 164.5, "NumberOfProcessedEvents":5306710} #to update once sample is available
-datasetInfo['TTJets-scaledown'] = {"cross-section": 164.5, "NumberOfProcessedEvents":9426377}
-datasetInfo['TTJets-scaleup'] = {"cross-section": 164.5, "NumberOfProcessedEvents":10095984}
+datasetInfo['TTJets-matchingdown'] = {"cross-section": 172, "NumberOfProcessedEvents":1577671} #to update once sample is available
+datasetInfo['TTJets-matchingup'] = {"cross-section": 172, "NumberOfProcessedEvents":5306710} #to update once sample is available
+datasetInfo['TTJets-scaledown'] = {"cross-section": 172, "NumberOfProcessedEvents":9426377}
+datasetInfo['TTJets-scaleup'] = {"cross-section": 172, "NumberOfProcessedEvents":10095984}
 
 datasetInfo['WJets-matchingdown'] = {"cross-section": 31314, "NumberOfProcessedEvents":9954470} #to update once sample is available
 datasetInfo['WJets-matchingup'] = {"cross-section": 31314, "NumberOfProcessedEvents":10458997} #to update once sample is available
@@ -98,8 +98,8 @@ datasetInfo['SingleMu'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
 #TTJets different generators (succeeded by BLT)
 #(cross-sections same as central samples)
-datasetInfo['TTJets-mcatnlo'] = {"cross-section": 164.5, "NumberOfProcessedEvents":20713658} # not used
-datasetInfo['TTJets-powheg'] = {"cross-section": 164.5, "NumberOfProcessedEvents":16370364} # not used
+datasetInfo['TTJets-mcatnlo'] = {"cross-section": 172, "NumberOfProcessedEvents":20713658} # not used
+datasetInfo['TTJets-powheg'] = {"cross-section": 172, "NumberOfProcessedEvents":16370364} # not used
 
 #Older/newer samples (kept to avoid dictionary errors)
 

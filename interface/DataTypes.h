@@ -52,8 +52,8 @@ enum value {
 	QCD_EMEnriched_Pt80_170,
 	QCD_EMEnriched_Pt170_250,
 	QCD_EMEnriched_Pt250_350,
-	//QCD_EMEnriched_Pt350, // commented out as it has the same name as for 2011 a few lines above
-	QCD_MuEnrichedPt15_Pt_20, 
+	QCD_EMEnriched_Pt_350, //
+	QCD_MuEnrichedPt15_Pt_20,
 	QCD_MuEnrichedPt5_Pt15to20,
 	QCD_MuEnrichedPt5_Pt20to30,
 	QCD_MuEnrichedPt5_Pt30to50,
@@ -165,7 +165,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_Pt_80_170_EMEnriched", //
 		"QCD_Pt_170_250_EMEnriched", //
 		"QCD_Pt_250_350_EMEnriched", //
-		//"QCD_Pt_350_EMEnriched", // commented out as it has the same name as for 2011 a few lines above
+		"QCD_Pt_350_EMEnriched", //
 		//2011 & 2012 Muon QCD samples
 		"QCD_Pt_20_MuEnrichedPt_15", //
 		"QCD_Pt-15to20_MuEnrichedPt5", //
