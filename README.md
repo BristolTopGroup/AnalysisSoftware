@@ -51,6 +51,21 @@ hash -r #or rehash in case that BAT cannot be found
 nohup BAT BristolAnalysis/Tools/python/test_cfg.py &> test.log &
 ```
 
+## Eclipse
+If you want like to use Eclipse for the development of the code, initial
+project files are provided in the ```eclipse/``` folder. You can copy them into
+the main directory (example for OS X):
+```
+# in AnalysisSoftware folder
+cp eclipse/.project.osx .project
+cp eclipse/.cproject.osx .cproject
+cp eclipse/.pydevproject.osx .pydevproject
+```
+
+### Code Style
+A code style prescription is also available in ```eclipse/Bristol_C++_CodeStyle.xml```.
+You should import it ```under Preferences->C/C++->Code Style->Formatter```
+
 ## Notes
 More information can be found at [Bristol Analysis Tools twiki page](https://twiki.cern.ch/twiki/bin/view/CMS/BristolAnalysisTools)
 
