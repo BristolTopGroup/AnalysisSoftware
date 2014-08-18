@@ -211,7 +211,7 @@ std::vector<double> BTagWeight::getBScaleFactor(const JetPointer jet, double unc
 			}
 		}
 	}
-	//	SFb += sf_error * Globals::BJetSystematic * uncertaintyFactor;
+
 	std::vector<double> SF_b_and_error;
 	SF_b_and_error.push_back(SFb);
 	SF_b_and_error.push_back(sf_error * uncertaintyFactor);
@@ -277,13 +277,7 @@ std::vector<double> BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 
 	double SF_udsg_error = abs(SF_udsg_max - SF_udsg_mean) > abs(SF_udsg_min - SF_udsg_mean) ? abs(SF_udsg_max - SF_udsg_mean) : abs(SF_udsg_min - SF_udsg_mean);
 
-	if (Globals::LightJetSystematic == -1) {
-		SF_udsg_and_error.push_back(SF_udsg_min);
-	} else if (Globals::LightJetSystematic == 1) {
-		SF_udsg_and_error.push_back(SF_udsg_max);
-	} else if (Globals::LightJetSystematic == 0) {
-		SF_udsg_and_error.push_back(SF_udsg_mean);
-	}
+	SF_udsg_and_error.push_back(SF_udsg_mean);
 	SF_udsg_and_error.push_back(SF_udsg_error);
 	return SF_udsg_and_error;
 }
@@ -389,7 +383,6 @@ double BTagWeight::getEfficiency( const unsigned int partonFlavour, const JetPoi
 double BTagWeight::getBEfficiency(const JetPointer jet) const {
 
 	std::vector<double> binEdges{ 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800 };
-	const double jetEta = jet->eta();
 	const double jetPt = jet->pt();
 
 	if (Globals::energyInTeV == 8) { // 2012
@@ -451,7 +444,6 @@ double BTagWeight::getBEfficiency(const JetPointer jet) const {
 
 double BTagWeight::getCEfficiency(const JetPointer jet) const {
 	std::vector<double> binEdges{ 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800 };
-	const double jetEta = jet->eta();
 	const double jetPt = jet->pt();
 
 	if (Globals::energyInTeV == 8) { // 2012
