@@ -55,7 +55,9 @@ file(GLOB_RECURSE SRC "src/*.cpp")
 #Excluding unnecessary files
 file(GLOB_RECURSE SRC_EXCLUDE "src/*HitFitAnalyser.cpp")
 list(REMOVE_ITEM SRC ${SRC_EXCLUDE})
-
+ADD_DEFINITIONS(
+    -std=c++11
+)
 #Adding the executable
 add_executable(AnalysisSoftware ${SRC} ${SRC_COMMON})
 

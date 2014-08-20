@@ -8,7 +8,7 @@
 #ifndef THCOLLECTION_H_
 #define THCOLLECTION_H_
 #include <string>
-
+#include <assert.h>
 #include "TFile.h"
 #include "TDirectory.h"
 #include "TH1.h"

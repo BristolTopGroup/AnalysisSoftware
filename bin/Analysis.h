@@ -7,6 +7,7 @@
 
 #ifndef ANALYSIS_H_
 #define ANALYSIS_H_
+#include <assert.h>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>

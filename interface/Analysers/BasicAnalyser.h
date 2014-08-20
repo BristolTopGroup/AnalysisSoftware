@@ -7,6 +7,7 @@
 
 #ifndef BASICANALYSER_H_
 #define BASICANALYSER_H_
+#include <assert.h>
 #include <string>
 #include <boost/scoped_ptr.hpp>
 #include "../HistHelpers/HistogramManager.h"
