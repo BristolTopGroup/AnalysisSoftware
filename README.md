@@ -12,10 +12,16 @@ To setup the stand-alone version of the code:
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git AnalysisSoftware
 cd AnalysisSoftware
 
-# create the makefile using cmake (install it if you don't have it: https://github.com/Kitware/CMake)
-cmake CMakeLists.txt
+# on DICE need to source ROOT:
+# source /software/root/v5.32.00/bin/thisroot.sh
 
-# for older versions of boost you will need to
+# create the makefile using cmake (install it if you don't have it: https://github.com/Kitware/CMake)
+# minimal cmake version 2.6.0 according to CMakeLists.txt
+cmake CMakeLists.txt
+#on DICE use cmake28
+# cmake28 CMakeLists.txt
+
+# for older versions of boost, e.g. on DICE, you will need to
 #sed -i 's/lib64\/lib64/lib64/g' ./CMakeFiles/AnalysisSoftware.dir/build.make
 #sed -i 's/lib64\/lib64/lib64/g' ./CMakeFiles/AnalysisSoftware.dir/link.txt
 # as the library path is wrong (contains lib64/lib64)
@@ -34,9 +40,15 @@ nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 To setup the code using CMSSW:
 
 ```
+# on soolin (scientific linux 5 machines)
 export SCRAM_ARCH=slc5_amd64_gcc462
 cmsrel CMSSW_6_0_0
 cd CMSSW_6_0_0/src
+cmsenv
+# OR on DICE (scientific linux 6 machines)
+. $VO_CMS_SW_DIR/cmsset_default.sh # echo $SCRAM_ARCH should now return slc6_amd64_gcc472
+cmsrel CMSSW_6_2_12
+cd CMSSW_6_2_12/src
 cmsenv
 
 # get the code from the repository

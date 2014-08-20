@@ -176,23 +176,23 @@ sample="QCD_350_EMEnriched" analysisMode="LightJet_down" nohup ${exe} ${toolsFol
 sample="QCD_350_EMEnriched" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> QCD_350_EMEnriched_LightJet_up.log &
 wait
 
-#sample="GJets_40To100" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_central.log &
-#sample="GJets_40To100" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Electron_up.log &
-#sample="GJets_40To100" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Electron_down.log &
-#sample="GJets_40To100" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Muon_up.log &
-#sample="GJets_40To100" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Muon_down.log &
-#sample="GJets_40To100" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JES_up.log &
-#sample="GJets_40To100" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JES_down.log &
-#sample="GJets_40To100" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JER_up.log &
-#wait
-#sample="GJets_40To100" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JER_down.log &
-#sample="GJets_40To100" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_PU_down.log &
-#sample="GJets_40To100" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_BJet_down.log &
-#sample="GJets_40To100" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_PU_up.log &
-#sample="GJets_40To100" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_BJet_up.log &
-#sample="GJets_40To100" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_LightJet_down.log &
-#sample="GJets_40To100" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_LightJet_up.log &
-#wait
+sample="GJets_40To100" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_central.log &
+sample="GJets_40To100" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Electron_up.log &
+sample="GJets_40To100" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Electron_down.log &
+sample="GJets_40To100" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Muon_up.log &
+sample="GJets_40To100" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_Muon_down.log &
+sample="GJets_40To100" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JES_up.log &
+sample="GJets_40To100" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JES_down.log &
+sample="GJets_40To100" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JER_up.log &
+wait
+sample="GJets_40To100" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_JER_down.log &
+sample="GJets_40To100" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_PU_down.log &
+sample="GJets_40To100" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_BJet_down.log &
+sample="GJets_40To100" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_PU_up.log &
+sample="GJets_40To100" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_BJet_up.log &
+sample="GJets_40To100" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_LightJet_down.log &
+sample="GJets_40To100" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_40To100_LightJet_up.log &
+wait
 
 sample="GJets_100To200" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_100To200_central.log &
 sample="GJets_100To200" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_100To200_Electron_up.log &
@@ -212,23 +212,23 @@ sample="GJets_100To200" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}
 sample="GJets_100To200" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_100To200_LightJet_up.log &
 wait
 
-#sample="GJets_200" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_central.log &
-#sample="GJets_200" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Electron_up.log &
-#sample="GJets_200" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Electron_down.log &
-#sample="GJets_200" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Muon_up.log &
-#sample="GJets_200" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Muon_down.log &
-#sample="GJets_200" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JES_up.log &
-#sample="GJets_200" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JES_down.log &
-#sample="GJets_200" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JER_up.log &
-#wait
-#sample="GJets_200" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JER_down.log &
-#sample="GJets_200" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_PU_down.log &
-#sample="GJets_200" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_PU_up.log &
-#sample="GJets_200" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_BJet_down.log &
-#sample="GJets_200" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_BJet_up.log &
-#sample="GJets_200" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_LightJet_down.log &
-#sample="GJets_200" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_LightJet_up.log &
-#wait
+sample="GJets_200" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_central.log &
+sample="GJets_200" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Electron_up.log &
+sample="GJets_200" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Electron_down.log &
+sample="GJets_200" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Muon_up.log &
+sample="GJets_200" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_Muon_down.log &
+sample="GJets_200" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JES_up.log &
+sample="GJets_200" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JES_down.log &
+sample="GJets_200" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JER_up.log &
+wait
+sample="GJets_200" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_JER_down.log &
+sample="GJets_200" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_PU_down.log &
+sample="GJets_200" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_PU_up.log &
+sample="GJets_200" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_BJet_down.log &
+sample="GJets_200" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_BJet_up.log &
+sample="GJets_200" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_LightJet_down.log &
+sample="GJets_200" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> GJets_200_LightJet_up.log &
+wait
 
 sample="QCD_15to20_Mu" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> QCD_15to20_Mu_central.log &
 sample="QCD_15to20_Mu" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> QCD_15to20_Mu_Electron_up.log &
@@ -464,23 +464,23 @@ sample="WJets" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/ma
 sample="WJets" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> WJet_LightJet_up.log &
 wait
 
-#sample="W1Jet" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_central.log &
-#sample="W1Jet" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Electron_up.log &
-#sample="W1Jet" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Electron_down.log &
-#sample="W1Jet" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Muon_up.log &
-#sample="W1Jet" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Muon_down.log &
-#sample="W1Jet" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JES_up.log &
-#sample="W1Jet" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JES_down.log &
-#sample="W1Jet" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JER_up.log &
-#wait
-#sample="W1Jet" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JER_down.log &
-#sample="W1Jet" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_PU_down.log &
-#sample="W1Jet" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_PU_up.log &
-#sample="W1Jet" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_BJet_down.log &
-#sample="W1Jet" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_BJet_up.log &
-#sample="W1Jet" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_LightJet_down.log &
-#sample="W1Jet" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_LightJet_up.log &
-#wait
+sample="W1Jet" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_central.log &
+sample="W1Jet" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Electron_up.log &
+sample="W1Jet" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Electron_down.log &
+sample="W1Jet" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Muon_up.log &
+sample="W1Jet" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_Muon_down.log &
+sample="W1Jet" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JES_up.log &
+sample="W1Jet" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JES_down.log &
+sample="W1Jet" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JER_up.log &
+wait
+sample="W1Jet" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_JER_down.log &
+sample="W1Jet" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_PU_down.log &
+sample="W1Jet" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_PU_up.log &
+sample="W1Jet" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_BJet_down.log &
+sample="W1Jet" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_BJet_up.log &
+sample="W1Jet" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_LightJet_down.log &
+sample="W1Jet" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W1Jet_LightJet_up.log &
+wait
 
 sample="W2Jets" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W2Jets_central.log &
 sample="W2Jets" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W2Jets_Electron_up.log &
@@ -500,23 +500,23 @@ sample="W2Jets" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/m
 sample="W2Jets" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W2Jets_LightJet_up.log &
 wait
 
-#sample="W3Jets" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_central.log &
-#sample="W3Jets" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Electron_up.log &
-#sample="W3Jets" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Electron_down.log &
-#sample="W3Jets" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Muon_up.log &
-#sample="W3Jets" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Muon_down.log &
-#sample="W3Jets" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JES_up.log &
-#sample="W3Jets" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JES_down.log &
-#sample="W3Jets" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JER_up.log &
-#wait
-#sample="W3Jets" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JER_down.log &
-#sample="W3Jets" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_PU_down.log &
-#sample="W3Jets" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_PU_up.log &
-#sample="W3Jets" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_BJet_down.log &
-#sample="W3Jets" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_BJet_up.log &
-#sample="W3Jets" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_LightJet_down.log &
-#sample="W3Jets" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_LightJet_up.log &
-#wait
+sample="W3Jets" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_central.log &
+sample="W3Jets" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Electron_up.log &
+sample="W3Jets" analysisMode="Electron_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Electron_down.log &
+sample="W3Jets" analysisMode="Muon_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Muon_up.log &
+sample="W3Jets" analysisMode="Muon_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_Muon_down.log &
+sample="W3Jets" analysisMode="JES_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JES_up.log &
+sample="W3Jets" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JES_down.log &
+sample="W3Jets" analysisMode="JetSmearing_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JER_up.log &
+wait
+sample="W3Jets" analysisMode="JetSmearing_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_JER_down.log &
+sample="W3Jets" analysisMode="PU_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_PU_down.log &
+sample="W3Jets" analysisMode="PU_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_PU_up.log &
+sample="W3Jets" analysisMode="BJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_BJet_down.log &
+sample="W3Jets" analysisMode="BJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_BJet_up.log &
+sample="W3Jets" analysisMode="LightJet_down" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_LightJet_down.log &
+sample="W3Jets" analysisMode="LightJet_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W3Jets_LightJet_up.log &
+wait
 
 sample="W4Jets" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W4Jets_central.log &
 sample="W4Jets" analysisMode="Electron_up" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> W4Jets_Electron_up.log &
@@ -763,114 +763,13 @@ sample="SingleMu" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/mast
 wait
 
 #systematics
-#sample="TTJets-matchingdown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJets-matchingdown_central.log &
-#sample="TTJets-matchingup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJets-matchingup_central.log &
-sample="TTJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJets-scaledown_central.log &
-sample="TTJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJets-scaleup_central.log &
-
 #sample="WJets-matchingdown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> WJets-matchingdown_central.log &
 #sample="WJets-matchingup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> WJets-matchingup_central.log &
 #sample="WJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> WJets-scaledown_central.log &
 #sample="WJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> WJets-scaleup_central.log &
-wait
 
 #sample="ZJets-matchingdown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> ZJets-matchingdown_central.log &
 #sample="ZJets-matchingup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> ZJets-matchingup_central.log &
 #sample="ZJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> ZJets-scaledown_central.log &
 #sample="ZJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> ZJets-scaleup_central.log &
-
-#other generators: (last because they take the longest to run)
-#sample="TTJets-mcatnlo" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJets-mcatnlo_central.log &
-#sample="TTJets-pythia" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJets-pythia_central.log &
-#sample="TTJets-powheg" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJets-powheg_central.log &
-#wait
-
-#PDFs with odd numbers
-#for i in $(seq 11)
-#do
-#if [ $(($i % 2)) -eq 1 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}"
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
-
-#for i in $(seq 12 22)
-#do
-#if [ $(($i % 2)) -eq 1 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}"
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
-#
-#for i in $(seq 22 33)
-#do
-#if [ $(($i % 2)) -eq 1 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}"
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
-#
-#for i in $(seq 34 44)
-#do
-#if [ $(($i % 2)) -eq 1 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}"
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
-#
-#PDFs with even numbers
-#for i in $(seq 11)
-#do
-#if [ $(($i % 2)) -eq 0 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}"
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
-#
-#for i in $(seq 11 22)
-#do
-#if [ $(($i % 2)) -eq 0 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}" 
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
-#
-#for i in $(seq 23 33)
-#do   
-#if [ $(($i % 2)) -eq 0 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}" 
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
-#
-#for i in $(seq 33 44)
-#do   
-#if [ $(($i % 2)) -eq 0 ]
-#then
-#testi="PDFWeights_${i}"
-#echo "Starting ${testi}"
-#sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2011_53X_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-#fi
-#done
-#wait
+wait

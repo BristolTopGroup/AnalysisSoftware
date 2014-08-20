@@ -764,113 +764,13 @@ sample="SingleMu" analysisMode="JES_down" nohup ${exe} ${toolsFolder}python/mast
 wait
 
 #systematics
-sample="TTJets-matchingdown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-matchingdown_central.log &
-sample="TTJets-matchingup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-matchingup_central.log &
-sample="TTJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-scaledown_central.log &
-sample="TTJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-scaleup_central.log &
-
 sample="WJets-matchingdown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-matchingdown_central.log &
 sample="WJets-matchingup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-matchingup_central.log &
 sample="WJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-scaledown_central.log &
 sample="WJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> WJets-scaleup_central.log &
-wait
 
 sample="ZJets-matchingdown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-matchingdown_central.log &
 sample="ZJets-matchingup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-matchingup_central.log &
 sample="ZJets-scaledown" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaledown_central.log &
 sample="ZJets-scaleup" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> ZJets-scaleup_central.log &
-
-#other generators: (last because they take the longest to run)
-sample="TTJets-mcatnlo" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-mcatnlo_central.log &
-sample="TTJets-powheg" analysisMode="central" nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJets-powheg_central.log &
-wait
-
-#PDFs with odd numbers
-for i in $(seq 11)
-do
-if [ $(($i % 2)) -eq 1 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}"
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi
-done
-wait
-
-for i in $(seq 12 22)
-do
-if [ $(($i % 2)) -eq 1 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}"
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi
-done
-wait
-
-for i in $(seq 22 33)
-do
-if [ $(($i % 2)) -eq 1 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}"
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi
-done
-wait
-
-for i in $(seq 34 44)
-do
-if [ $(($i % 2)) -eq 1 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}"
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi
-done
-wait
-
-#PDFs with even numbers
-for i in $(seq 11)
-do
-if [ $(($i % 2)) -eq 0 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}"
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi
-done
-wait
-
-for i in $(seq 11 22)
-do
-if [ $(($i % 2)) -eq 0 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}" 
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi
-done
-wait
-
-for i in $(seq 23 33)
-do   
-if [ $(($i % 2)) -eq 0 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}" 
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi
-done
-wait
-
-for i in $(seq 33 44)
-do   
-if [ $(($i % 2)) -eq 0 ]
-then
-testi="PDFWeights_${i}"
-echo "Starting ${testi}"
-sample=TTJet analysisMode=${testi} nohup ${exe} ${toolsFolder}python/master_2012_cfg.py ${TQAFPath} &> TTJet_${testi}.log &
-fi   
-done
 wait

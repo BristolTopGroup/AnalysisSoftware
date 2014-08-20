@@ -6,9 +6,9 @@ if os.environ.has_key('toolsFolder'):
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 8
-nTuple_version = 10
+nTuple_version = 11
 #number of events to be processed
-maxEvents = 10000
+maxEvents = 100000
 verbose = True
 
 if centerOfMassEnergy == 8:
@@ -48,8 +48,8 @@ elif centerOfMassEnergy == 7:
 #        PUFile = toolsFolder + "data/Data_PUDist_2011Full_64600mb_June2014.root"
 
         #apply the met corrections
-        applyMetSysShiftCorr = False
-        applyMetType0Corr = False
+        applyMetSysShiftCorr = True
+        applyMetType0Corr = True
 
         #Apply Jet Smearing
         applyJetSmearing = True
@@ -70,11 +70,12 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-    '/storage/TopQuarkGroup/data/2012/SingleElectron/nTuple_v10_Run2012D-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets/*.root' # 53X 8TeV data
-#    '/storage/TopQuarkGroup/mc/8TeV/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/nTuple_v10_Summer12_DR53X-PU_S10_START53_V7C-v1_LeptonPlus3Jets/*.root' # 53X 8TeV MC
-#    '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v11_Run2011B-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets/*.root' # 53X 7TeV data
-#    '/storage/TopQuarkGroup/mc/7TeV/v11/LeptonPlus3JetsSkim/TTJets_MSDecays_central_TuneZ2_7TeV-madgraph-tauola/nTuple_v11_Summer11LegDR-PU_S13_START53_LV6-v1_LeptonPlus3Jets/*.root'# 53X 7TeV MC
-#     '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v10_Run2011B-19Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets/*.root' #44X 7TeV data
+              #change to hdfs once rsync is complete
+    '/hdfs/TopQuarkGroup/data/2012/SingleElectron/nTuple_v11_Run2012B-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets/*.root'     # 53X 8TeV data
+#    '/hdfs/TopQuarkGroup/mc/8TeV/v11/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/*.root'     # 53X 8TeV MC
+#    '/hdfs/TopQuarkGroup/data/2011/ElectronHad/nTuple_v11_Run2011A-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets/*.root'          # 53X 7TeV data
+#    '/hdfs/TopQuarkGroup/mc/7TeV/v11/LeptonPlus3JetsSkim/TTJets_MSDecays_central_TuneZ2_7TeV-madgraph-tauola/*.root'        # 53X 7TeV MC
+#     '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v10_Run2011B-19Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets/*.root'     #44X 7TeV data
 #    '/storage/TopQuarkGroup/mc/7TeV/v10/LeptonPlus3JetsSkim/TTJets_TuneZ2_7TeV-madgraph-tauola_with_genjet_properties/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root' #44X 7TeV MC
               ]
 
