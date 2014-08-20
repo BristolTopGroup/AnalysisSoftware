@@ -352,10 +352,10 @@ double Electron::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) 
 
 double Electron::pfRelativeIsolationRhoCorrected() const {
 /*	//https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection#Isolation_cone_R_0_3
-//	2.0<abs(eta)<2.2 	Aeff(NH) = 0.023 +/- 0.001 	Aeff(gamma) = 0.089 +/- 0.002 	Aeff(gamma+NH) = 0.11 +/- 0.003
-//	2.2<abs(eta)<2.3 	Aeff(NH) = 0.023 +/- 0.002 	Aeff(gamma) = 0.092 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.004
-//	2.3<abs(eta)<2.4 	Aeff(NH) = 0.021 +/- 0.002 	Aeff(gamma) = 0.097 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.005
-//	abs(eta)>2.4 	Aeff(NH) = 0.021 +/- 0.003 	Aeff(gamma) = 0.11 +/- 0.004 	Aeff(gamma+NH) = 0.13 +/- 0.006
+//	2.0<fabs(eta)<2.2 	Aeff(NH) = 0.023 +/- 0.001 	Aeff(gamma) = 0.089 +/- 0.002 	Aeff(gamma+NH) = 0.11 +/- 0.003
+//	2.2<fabs(eta)<2.3 	Aeff(NH) = 0.023 +/- 0.002 	Aeff(gamma) = 0.092 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.004
+//	2.3<fabs(eta)<2.4 	Aeff(NH) = 0.021 +/- 0.002 	Aeff(gamma) = 0.097 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.005
+//	fabs(eta)>2.4 	Aeff(NH) = 0.021 +/- 0.003 	Aeff(gamma) = 0.11 +/- 0.004 	Aeff(gamma+NH) = 0.13 +/- 0.006
 
 	if(coneSize != 0.3){
 		//TODO: put exception or warning
