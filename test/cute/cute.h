@@ -20,6 +20,7 @@
 
 #ifndef CUTE_H_
 #define CUTE_H_
+#include <assert.h>
 // all CUTE includes for writing tests and suites
 #include "cute_base.h"
 #include "cute_equals.h"
