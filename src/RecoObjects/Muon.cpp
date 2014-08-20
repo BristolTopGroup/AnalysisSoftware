@@ -557,7 +557,7 @@ double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic,
 					trigger_correction = 0.9804174981053351; // given for pt '140_500' in pickle file
 				}
 			}
-		} else if ((abs(muEta) >= 0.9 && abs(muEta) < 1.2)) { // 'ptabseta0.9-1.2' in pickle file
+		} else if ((fabs(muEta) >= 0.9 && fabs(muEta) < 1.2)) { // 'ptabseta0.9-1.2' in pickle file
 			if ((10 <= pt()) && (pt() < 20)) {
 				switch (muon_scale_factor_systematic) {
 				case -1:
@@ -738,7 +738,7 @@ double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic,
 					trigger_correction = 0.9712789619617556; // given for pt '140_500' in pickle file
 				}
 			}
-		} else if ((abs(muEta) >= 1.2 && abs(muEta) < 2.1)) { // 'ptabseta1.2-2.1' in pickle file
+		} else if ((fabs(muEta) >= 1.2 && fabs(muEta) < 2.1)) { // 'ptabseta1.2-2.1' in pickle file
 			if ((10 <= pt()) && (pt() < 20)) {
 				switch (muon_scale_factor_systematic) {
 				case -1:
@@ -919,7 +919,7 @@ double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic,
 					trigger_correction = 0.9941686682904833; // given for pt '140_500' in pickle file
 				}
 			}
-		} else if (abs(muEta) >= 2.1 && abs(muEta) <= 2.4) { // 'ptabseta2.1-2.4' in pickle file. Note: Trigger scale factors only provided up to absolute eta of 2.1 in the link above, so I have used the same as for the 1.2 to 2.1 eta range.
+		} else if (fabs(muEta) >= 2.1 && fabs(muEta) <= 2.4) { // 'ptabseta2.1-2.4' in pickle file. Note: Trigger scale factors only provided up to absolute eta of 2.1 in the link above, so I have used the same as for the 1.2 to 2.1 eta range.
 			if ((10 <= pt()) && (pt() < 20)) {
 				switch (muon_scale_factor_systematic) {
 				case -1:

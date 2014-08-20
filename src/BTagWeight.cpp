@@ -236,7 +236,7 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 	double sf_error(0);
 	//these numbers are for CSVM only
 	double pt = jet->pt();
-	double eta = abs(jet->eta());
+	double eta = fabs(jet->eta());
 
 	if (Globals::energyInTeV == 8) { // 2012 btag scale factors
 		// From https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFb-pt_WITHttbar_payload_EPS13.txt,
@@ -368,7 +368,7 @@ double BTagWeight::getAverageUDSGScaleFactor(const JetCollection jets) const {
 
 double BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 	double pt = jet->pt();
-	double eta = abs(jet->eta());
+	double eta = fabs(jet->eta());
 	double SF_udsg_mean(0), SF_udsg_min(0), SF_udsg_max(0);
 
 	if (Globals::energyInTeV == 8) { // 2012

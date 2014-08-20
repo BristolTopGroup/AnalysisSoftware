@@ -68,7 +68,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 	}
 
 	//all jets in the v2 nTuples have the following cuts applied:
-	//pt > 20 & abs(eta) < 2.5 && loose ID
+	//pt > 20 & fabs(eta) < 2.5 && loose ID
 	JetCollection jets = event->Jets();
 
 	JetCollection cleanedJets, cleanedBJets;
