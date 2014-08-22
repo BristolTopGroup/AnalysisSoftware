@@ -1,7 +1,7 @@
 # Check if cmake has the required version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR)
-
-PROJECT(AnalysisSoftware)
+set(PROJECT_NAME_STR AnalysisSoftware)
+PROJECT(${PROJECT_NAME_STR})
 
 if((CMAKE_SYSTEM_PROCESSOR MATCHES "i386") AND (CMAKE_SIZEOF_VOID_P EQUAL 8) AND (APPLE))
 	set(CMAKE_OSX_ARCHITECTURES "x86_64")
@@ -66,3 +66,11 @@ target_link_libraries(AnalysisSoftware
         ${PYTHON_LIBRARIES}
         ${ROOT_LIBRARIES}
     )
+
+# tests
+enable_testing()
+set(PROJECT_TEST_NAME ${PROJECT_NAME_STR}_test)
+include_directories(${COMMON_INCLUDES} "test/cute_lib")
+file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
+add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
+add_test(test1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_TEST_NAME})
