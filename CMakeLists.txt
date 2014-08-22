@@ -46,7 +46,7 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 
 #Check the compiler and set the compile and link flags
 set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-O3")
+set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
 
 #Adding files to compile
 aux_source_directory(bin/ SRC_COMMON)
