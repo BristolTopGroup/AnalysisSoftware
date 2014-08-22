@@ -6,30 +6,30 @@
 #include "TestDatasetInformation.h"
 #include "TestEventWeightProvider.h"
 #include "TestElectron.h"
-#include "TestElectronReader.h"
+//#include "TestElectronReader.h"
 #include "TestEvent.h"
 #include "TestEventCounter.h"
-#include "TestGenJetReader.h"
+//#include "TestGenJetReader.h"
 #include "TestHistogram.h"
 #include "TestHistogramManager.h"
 #include "TestJet.h"
-#include "TestJetReader.h"
+//#include "TestJetReader.h"
 #include "TestLepton.h"
 #include "TestMET.h"
-#include "TestMETReader.h"
+//#include "TestMETReader.h"
 #include "TestMuon.h"
-#include "TestMuonReader.h"
-#include "TestNTupleEventReader.h"
+//#include "TestMuonReader.h"
+//#include "TestNTupleEventReader.h"
 #include "TestParticle.h"
-#include "TestROOT.h"
+//#include "TestROOT.h"
 #include "TestStringOperations.h"
 #include "TestTHCollection.h"
 #include "TestTrack.h"
-#include "TestTrackReader.h"
+//#include "TestTrackReader.h"
 #include "TestTTbarSolution.h"
-#include "TestVariableReader.h"
+//#include "TestVariableReader.h"
 #include "TestVertex.h"
-#include "TestVertexReader.h"
+//#include "TestVertexReader.h"
 
 #include "TROOT.h"
 #include "../interface/Python/ConfigFile.h"
@@ -82,30 +82,30 @@ void setConfiguration(ConfigFile config) {
 
 void runSuite() {
 	cute::suite s = make_suite_TestBtagWeight();
-//    s += make_suite_TestDatasetInformation();
-//    s += make_suite_TestEventWeightProvider();
-//    s += make_suite_TestElectron();
+    s += make_suite_TestDatasetInformation();
+    s += make_suite_TestEventWeightProvider();
+    s += make_suite_TestElectron();
 //    s += make_suite_TestElectronReader();
-//    s += make_suite_TestEvent();
+    s += make_suite_TestEvent();
 //    s += make_suite_TestEventCounter();
 //    s += make_suite_TestGenJetReader();
-//    s += make_suite_TestHistogramManager();
-//    s += make_suite_TestHistogram();
-//    s += make_suite_TestJet();
+    s += make_suite_TestHistogramManager();
+    s += make_suite_TestHistogram();
+    s += make_suite_TestJet();
 //    s += make_suite_TestJetReader();
-//    s += make_suite_TestLepton();
-//    s += make_suite_TestMET();
+    s += make_suite_TestLepton();
+    s += make_suite_TestMET();
 //    s += make_suite_TestMETReader();
 	s += make_suite_TestMuon();
-	s += make_suite_TestMuonReader();
-//    s += make_suite_TestParticle();
+//	s += make_suite_TestMuonReader();
+    s += make_suite_TestParticle();
 //    s += make_suite_ROOTLearnTests();
-//    s += make_suite_TestStringOperations();
-//    s += make_suite_TestTHCollection();
-//    s += make_suite_TestTrack();
-//    s += make_suite_TestTTbarSolution();
+    s += make_suite_TestStringOperations();
+    s += make_suite_TestTHCollection();
+    s += make_suite_TestTrack();
+    s += make_suite_TestTTbarSolution();
 //    s += make_suite_TestVariableReader();
-//    s += make_suite_TestVertex();
+    s += make_suite_TestVertex();
 //    s += make_suite_TestVertexReader();
 //    s += make_suite_TestNTupleEventReader();
 	cute::ide_listener lis;
