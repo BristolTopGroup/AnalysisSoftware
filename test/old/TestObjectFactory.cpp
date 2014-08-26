@@ -128,9 +128,11 @@ ElectronPointer TestObjectFactory::goodIsolatedElectron() {
 	electron->setPFGammaIsolation(0.3);
 	electron->setPFNeutralHadronIsolation(0.5);
 	electron->setUsedAlgorithm(ElectronAlgorithm::ParticleFlow);
+	electron->setPFPUChargedHadronIsolation(0.2);
+	electron->setPFRelativeIsolationRho(0.05);
 
 	assert(electron->relativeIsolation() < 0.1);
-	assert(electron->pfRelativeIsolation() < 0.1);
+	assert(electron->pfRelativeIsolationRhoCorrected() < 0.1);
 
 	return electron;
 }
@@ -363,7 +365,9 @@ MuonPointer TestObjectFactory::goodIsolatedMuon() {
 	goodIsolatedMuon->setPFChargedHadronIsolation(1);
 	goodIsolatedMuon->setPFGammaIsolation(1);
 	goodIsolatedMuon->setPFNeutralHadronIsolation(1);
+	goodIsolatedMuon->setPFPUChargedHadronIsolation(0.2);
 	assert(fabs(goodIsolatedMuon->eta()) < 2.1);
+	cout << goodIsolatedMuon->pfRelativeIsolation() << endl;
 	assert(goodIsolatedMuon->pfRelativeIsolation() < 0.1);
 
 	return goodIsolatedMuon;

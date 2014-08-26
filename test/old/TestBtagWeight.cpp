@@ -6,7 +6,7 @@
  */
 
 #include "TestBtagWeight.h"
-#include "../interface/BTagWeight.h"
+#include "../interface/BTagWeight2011.h"
 #include "../interface/RecoObjects/Jet.h"
 #include <vector>
 #include <functional>
@@ -25,7 +25,7 @@ void TestBtagWeight::test0Bjets0Tags4Jets() {
 	double sfb(0.95), sfc(0.95), sfl(1.1);
 	unsigned int minTags(0), maxTags(10), nTags(0);
 	unsigned int N_B(0), N_C(0), N_L(4);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -37,7 +37,7 @@ void TestBtagWeight::test1Bjets1Tags1Jet() {
 	double sfb(0.95), sfc(0.95), sfl(1.1);
 	unsigned int minTags(1), maxTags(1), nTags(1);
 	unsigned int N_B(1), N_C(0), N_L(0);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -49,7 +49,7 @@ void TestBtagWeight::test1Bjets0Tags1Jet() {
 	double sfb(0.95), sfc(0.95), sfl(1.1);
 	unsigned int minTags(1), maxTags(1), nTags(1);
 	unsigned int N_B(1), N_C(0), N_L(0);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -59,7 +59,7 @@ void TestBtagWeight::test1Bjets0Tags1Jet() {
 void TestBtagWeight::test1Bjets0Tags1Jet_vec() {
 	double sfb(0.95);
 	unsigned int minTags(0), maxTags(1), nTags(1);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	std::vector<double> weights = b.weights(sfb, nTags);
@@ -71,7 +71,7 @@ void TestBtagWeight::test1Bjets0Tags1Jet_vec() {
 void TestBtagWeight::test0Tag_vec() {
 	double sfb(0.95);
 	unsigned int minTags(0), maxTags(1), nTags(0);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	std::vector<double> weights = b.weights(sfb, nTags);
@@ -83,7 +83,7 @@ void TestBtagWeight::test0Tag_vec() {
 void TestBtagWeight::test1Tag_vec() {
 	double sfb(0.95);
 	unsigned int minTags(0), maxTags(1), nTags(1);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	std::vector<double> weights = b.weights(sfb, nTags);
@@ -97,7 +97,7 @@ void TestBtagWeight::test2Tag_vec() {
 	unsigned int minTags(0), maxTags(1), nTags(2);
 	double sfb(0.95);
 
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	std::vector<double> weights = b.weights(sfb, nTags);
@@ -113,7 +113,7 @@ void TestBtagWeight::test2Bjets2Tags2Jets() {
 	double sfb(0.95), sfc(0.95), sfl(1.1);
 	unsigned int minTags(2), maxTags(2), nTags(2);
 	unsigned int N_B(2), N_C(0), N_L(0);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -125,7 +125,7 @@ void TestBtagWeight::test2Bjets2Tags2Jets() {
 //	double sfb(0.95), sfc(0.95), sfl(1.1);
 //	unsigned int minTags(1), maxTags(1), nTags(1);
 //	unsigned int N_B(2), N_C(0), N_L(0);
-//	BTagWeight b = BTagWeight();
+//	BTagWeight2011 b = BTagWeight2011();
 //	b.setNumberOfBtags(minTags, maxTags);
 //
 //	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -137,7 +137,7 @@ void TestBtagWeight::test2Bjets2Tags2Jets() {
 //	double sfb(0.95), sfc(0.95), sfl(1.1);
 //	unsigned int minTags(0), maxTags(0), nTags(0);
 //	unsigned int N_B(2), N_C(0), N_L(0);
-//	BTagWeight b = BTagWeight();
+//	BTagWeight2011 b = BTagWeight2011();
 //	b.setNumberOfBtags(minTags, maxTags);
 //
 //	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -149,7 +149,7 @@ void TestBtagWeight::test0Bjets1Tags4Jets() {
 	double sfb(0.95), sfc(0.95), sfl(1.1);
 	unsigned int minTags(1), maxTags(20), nTags(1);
 	unsigned int N_B(0), N_C(0), N_L(4);
-	BTagWeight b = BTagWeight();
+	BTagWeight2011 b = BTagWeight2011();
 	b.setNumberOfBtags(minTags, maxTags);
 
 	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -161,7 +161,7 @@ void TestBtagWeight::test0Bjets1Tags4Jets() {
 //	double sfb(0.95), sfc(0.95), sfl(1.1);
 //	unsigned int minTags(1), maxTags(20), nTags(1);
 //	unsigned int N_B(1), N_C(0), N_L(3);
-//	BTagWeight b = BTagWeight();
+//	BTagWeight2011 b = BTagWeight2011();
 //	b.setNumberOfBtags(minTags, maxTags);
 //
 //	double weight = b.weight(N_B, N_C, N_L, effb, effc, effl, sfb, sfc, sfl, nTags);
@@ -174,11 +174,11 @@ void TestBtagWeight::testAnalysisCase() {
 	unsigned int nTags(4);
 	unsigned int N_B(4), N_C(0), N_L(0);
 
-	BTagWeight b_0 = BTagWeight();
-	BTagWeight b_1 = BTagWeight();
-	BTagWeight b_2 = BTagWeight();
-	BTagWeight b_3 = BTagWeight();
-	BTagWeight b_4 = BTagWeight();
+	BTagWeight2011 b_0 = BTagWeight2011();
+	BTagWeight2011 b_1 = BTagWeight2011();
+	BTagWeight2011 b_2 = BTagWeight2011();
+	BTagWeight2011 b_3 = BTagWeight2011();
+	BTagWeight2011 b_4 = BTagWeight2011();
 	b_0.setNumberOfBtags(0, 20);
 	b_1.setNumberOfBtags(1, 20);
 	b_2.setNumberOfBtags(2, 20);
@@ -213,7 +213,7 @@ void TestBtagWeight::testAnalysisCaseWithJetInput() {
 	jets.push_back(jet);
 	jets.push_back(jet);
 
-	std::vector<double> weights = BjetWeights(jets, 4);
+	std::vector<double> weights = BjetWeights2011(jets, 4);
 
 	ASSERT_EQUAL_DELTA(1, std::accumulate(weights.begin(), weights.end(), 0.0), 0.0001);
 }

@@ -1,7 +1,7 @@
 # Check if cmake has the required version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR)
-
-PROJECT(AnalysisSoftware)
+set(PROJECT_NAME_STR AnalysisSoftware)
+PROJECT(${PROJECT_NAME_STR})
 
 if((CMAKE_SYSTEM_PROCESSOR MATCHES "i386") AND (CMAKE_SIZEOF_VOID_P EQUAL 8) AND (APPLE))
 	set(CMAKE_OSX_ARCHITECTURES "x86_64")
@@ -46,8 +46,9 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 
 #Check the compiler and set the compile and link flags
 set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-O3")
-
+set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
+# first attempt to make cmake work again on OS X
+set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -stdlib=libstdc++")
 #Adding files to compile
 aux_source_directory(bin/ SRC_COMMON)
 file(GLOB_RECURSE SRC "src/*.cpp")
@@ -66,3 +67,11 @@ target_link_libraries(AnalysisSoftware
         ${PYTHON_LIBRARIES}
         ${ROOT_LIBRARIES}
     )
+
+# tests
+enable_testing()
+set(PROJECT_TEST_NAME ${PROJECT_NAME_STR}_test)
+include_directories(${COMMON_INCLUDES})
+file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
+add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
+add_test(test1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_TEST_NAME})
