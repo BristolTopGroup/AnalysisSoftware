@@ -47,7 +47,8 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 #Check the compiler and set the compile and link flags
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
-
+# first attempt to make cmake work again on OS X
+set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -stdlib=libstdc++")
 #Adding files to compile
 aux_source_directory(bin/ SRC_COMMON)
 file(GLOB_RECURSE SRC "src/*.cpp")
@@ -70,7 +71,7 @@ target_link_libraries(AnalysisSoftware
 # tests
 enable_testing()
 set(PROJECT_TEST_NAME ${PROJECT_NAME_STR}_test)
-include_directories(${COMMON_INCLUDES} "test/cute_lib")
+include_directories(${COMMON_INCLUDES})
 file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
 add_test(test1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_TEST_NAME})
