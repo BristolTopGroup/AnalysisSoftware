@@ -17,12 +17,10 @@ source root/bin/thisroot.sh
 # Check if ROOT
 root -l -q
 
-# setup newer compilers for ROOT 6
-if [[ $ROOT == '6-00-00' ]]; then
-	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50;
-	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50;
-	sudo update-alternatives --set gcc /usr/bin/gcc-4.8; sudo update-alternatives --set g++ /usr/bin/g++-4.8;
-fi
+# setup newer compilers ( we need gcc >= 4.7 for c++11
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50;
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50;
+sudo update-alternatives --set gcc /usr/bin/gcc-4.8; sudo update-alternatives --set g++ /usr/bin/g++-4.8;
 
 cmake CMakelists.txt
 make
