@@ -8,7 +8,7 @@ set -e
 
 # Install a ROOT binary that we custom-built in a 64-bit Ubuntu VM
 # for the correct python / ROOT version
-time wget --no-check-certificate https://copy.com/s3BcYu1drmZa/ci/root_builds/root_v${ROOT}_python_2.7.tar.gz
+[ -f root_v${ROOT}_python_2.7.tar.gz ] || time wget --no-check-certificate https://copy.com/s3BcYu1drmZa/ci/root_builds/root_v${ROOT}_python_2.7.tar.gz
 time tar zxf root_v${ROOT}_python_2.7.tar.gz
 mv root_v${ROOT}_python_2.7 root
 source root/bin/thisroot.sh
