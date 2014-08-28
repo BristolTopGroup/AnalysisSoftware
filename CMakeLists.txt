@@ -9,7 +9,7 @@ if((CMAKE_SYSTEM_PROCESSOR MATCHES "i386") AND (CMAKE_SIZEOF_VOID_P EQUAL 8) AND
 else()
 	MESSAGE(STATUS "Building Bristol Analysis Software on ${CMAKE_SYSTEM_NAME}")
 endif()
-
+MESSAGE(STATUS "Using compiler ${CMAKE_CXX_COMPILER_ID}")
 # get ROOT
 include(FindROOT.cmake)
 MESSAGE(STATUS "** ROOT Include path: ${ROOT_INCLUDE_DIR}")
@@ -31,6 +31,7 @@ find_package(Boost COMPONENTS
                 system
                 python
                 program_options
+				unit_test_framework
              REQUIRED)
 MESSAGE(STATUS "** Boost Include path: ${Boost_INCLUDE_DIR}")
 MESSAGE(STATUS "** Boost Library path: ${Boost_LIBRARY_DIRS}")
@@ -48,17 +49,18 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
 # first attempt to make cmake work again on OS X
-set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -stdlib=libstdc++")
+if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (APPLE))
+	set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -stdlib=libc++")
+endif()
 #Adding files to compile
 aux_source_directory(bin/ SRC_COMMON)
 file(GLOB_RECURSE SRC "src/*.cpp")
-
+# some other checks
+include(CheckSTLContainers.cmake)
+CHECK_STL_CONTAINERS()
 #Excluding unnecessary files
 file(GLOB_RECURSE SRC_EXCLUDE "src/*HitFitAnalyser.cpp")
 list(REMOVE_ITEM SRC ${SRC_EXCLUDE})
-ADD_DEFINITIONS(
-    -std=c++11
-)
 #Adding the executable
 add_executable(AnalysisSoftware ${SRC} ${SRC_COMMON})
 

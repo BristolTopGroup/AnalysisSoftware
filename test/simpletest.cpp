@@ -8,8 +8,4 @@ BOOST_AUTO_TEST_SUITE(SimpleTest)
 BOOST_AUTO_TEST_CASE( one_and_one ) {
 	BOOST_REQUIRE(add(1, 1) == 2);
 }
-
-BOOST_AUTO_TEST_CASE( fail ) {
-	BOOST_REQUIRE(add(1, 1) == 3);
-}
 BOOST_AUTO_TEST_SUITE_END( )
