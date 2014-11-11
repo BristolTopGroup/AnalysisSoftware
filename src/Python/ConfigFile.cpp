@@ -29,6 +29,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		maxEvents_(PythonParser::getAttributeFromPyObject<long>(config, "maxEvents")), //
 		datasetInfoFile_(PythonParser::getAttributeFromPyObject<string>(config, "datasetInfoFile")), //
 		pileUpFile_(PythonParser::getAttributeFromPyObject<string>(config, "PUFile")), //
+		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonScaleFactorsFile")), //
 		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
 		lightJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "lightJetResoFile")), //
 		useHitFit_(PythonParser::getAttributeFromPyObject<bool>(config, "useHitFit")), //
@@ -94,6 +95,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("datasetInfoFile", value<std::string>(),
 			"Dataset information file for event weight calculation");
 	desc.add_options()("PUFile", value<std::string>(), "set input PU file for PU re-weighting");
+	desc.add_options()("MuonScaleFactorsFile", value<std::string>(), "set input file for muon scale factors");
 	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
 	desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
 	desc.add_options()("fitter", value<bool>(), "turn on the fitter (HitFit)");
@@ -192,6 +194,13 @@ string ConfigFile::PUFile() const {
 		return programOptions["PUFile"].as<std::string>();
 	else
 		return pileUpFile_;
+}
+
+string ConfigFile::MuonScaleFactorsFile() const {
+	if (programOptions.count("MuonScaleFactorsFile"))
+		return programOptions["MuonScaleFactorsFile"].as<std::string>();
+	else
+		return muonScaleFactorsFile_;
 }
 
 string ConfigFile::datasetInfoFile() const {
@@ -390,6 +399,8 @@ void ConfigFile::loadIntoMemory() {
 
 	Globals::estimatedPileup = getPileUpHistogram(PUFile());
 
+	Globals::muonScaleFactorsHistogram = getMuonScaleFactorsHistogram(MuonScaleFactorsFile());
+
 	//Lepton Scale Factors
 	Globals::ElectronScaleFactorSystematic = electronScaleFactorSystematic();
 	Globals::MuonScaleFactorSystematic = muonScaleFactorSystematic();
@@ -438,6 +449,21 @@ boost::shared_ptr<TH1D> ConfigFile::getPileUpHistogram(std::string pileUpEstimat
 
 	boost::scoped_ptr<TFile> file(TFile::Open(pileUpEstimationFile.c_str()));
 	boost::shared_ptr<TH1D> pileUp((TH1D*) file->Get("pileup")->Clone());
+	file->Close();
+
+	return pileUp;
+}
+
+boost::shared_ptr<TH2F> ConfigFile::getMuonScaleFactorsHistogram(std::string muonScaleFactorsFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(muonScaleFactorsFile)) {
+		cerr << "ConfigFile::getMuonScaleFactorsHistogram(" << muonScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find muon scale factors histogram file in " + muonScaleFactorsFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(muonScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH2F> pileUp((TH2F*) file->Get("SF_2011_TIGHT_ISO_PT25_PtrgL_eta_pt_PLOT")->Clone());
 	file->Close();
 
 	return pileUp;

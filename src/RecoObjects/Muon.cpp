@@ -24,7 +24,8 @@ Muon::Muon() :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1),
+		muonScaleFactorsHistogram(Globals::muonScaleFactorsHistogram) {
 
 }
 
@@ -41,7 +42,8 @@ Muon::Muon(double energy, double px, double py, double pz) :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1),
+		muonScaleFactorsHistogram(Globals::muonScaleFactorsHistogram) {
 
 }
 
@@ -151,6 +153,10 @@ double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic,
 
 	// 7TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#2011_data (from 44X pickle file)
 	if (Globals::energyInTeV == 7) { //Luminosity weighted average of 'combRelPFISO12_2011A' and 'combRelPFISO12_2011B' from pickle file
+
+		// Get bin number in histogram
+		unsigned int binNumber = muonScaleFactorsHistogram->FindBin( muEta, pt() );
+	
 		//get scale factors based on muon eta bin
 		if (fabs(muEta) <= 1.2) { // 'pt_abseta<1.2' in pickle file
 			//get scale factors based on muon pt

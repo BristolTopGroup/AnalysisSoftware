@@ -35,6 +35,7 @@ int Globals::ElectronScaleFactorSystematic = 0;
 //muons
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
 int Globals::MuonScaleFactorSystematic = 0;
+boost::shared_ptr<TH2F> Globals::muonScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;

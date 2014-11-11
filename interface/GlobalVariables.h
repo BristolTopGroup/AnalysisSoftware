@@ -14,6 +14,7 @@
 #include "RecoObjects/MET.h"
 #include "TF1.h"
 #include "TH1D.h"
+#include "TH2F.h"
 #include <string>
 
 
@@ -44,6 +45,7 @@ struct Globals {
 //	//muons
 	static MuonAlgorithm::value muonAlgorithm;
 	static int MuonScaleFactorSystematic;
+	static boost::shared_ptr<TH2F> muonScaleFactorsHistogram;
 //
 //	//jets
 	static JetAlgorithm::value jetAlgorithm;
