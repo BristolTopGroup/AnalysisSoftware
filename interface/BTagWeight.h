@@ -1,5 +1,5 @@
-#ifndef BTAGWEIGHT_H
-#define BTAGWEIGHT_H
+#ifndef BTagWeight_H
+#define BTagWeight_H
 
 #include "RecoObjects/Jet.h"
 /**
@@ -12,35 +12,21 @@ class BTagWeight {
 public:
 	BTagWeight();
 
-	double weight(unsigned int numberOf_b_Jets, unsigned int numberOf_c_Jets, unsigned int numberOf_udsg_Jets,
-			double mean_bJetEfficiency, double mean_cFJetEfficiency, double mean_udsgJetEfficiency,
-			double scaleFactor_b, double scaleFactor_c, double scaleFactor_udsg, unsigned int numberOfTags) const;
-	std::vector<double> weights(const JetCollection jets, unsigned int numberOfBtags) const;
-
-	std::vector<double> weights(unsigned int numberOf_b_Jets, unsigned int numberOf_c_Jets,
-			unsigned int numberOf_udsg_Jets, double mean_bJetEfficiency, double mean_cFJetEfficiency,
-			double mean_udsgJetEfficiency, double scaleFactor_b, double scaleFactor_c, double scaleFactor_udsg,
-			unsigned int numberOfTags) const;
-
-	std::vector<double> weights(double averageScaleFactor, unsigned int numberOfTags) const;
+	double weight(const JetCollection jets) const;
 
 	void setNumberOfBtags(unsigned int min, unsigned int max);
 
-	JetCollection getBJets(const JetCollection jets) const;
-	JetCollection getCJets(const JetCollection jets) const;
-	JetCollection getUDSGJets(const JetCollection jets) const;
-
 	bool filter(unsigned int t) const;
 
-	double getAverageBScaleFactor(const JetCollection, double uncertaintyFactor = 1.) const;
-	double getBScaleFactor(const JetPointer jet, double uncertaintyFactor = 1.) const;
-	double getAverageBEfficiency() const;
-	double getAverageCScaleFactor(const JetCollection) const;
-	double getCScaleFactor(const JetPointer) const;
-	double getAverageCEfficiency() const;
-	double getAverageUDSGScaleFactor(const JetCollection) const;
-	double getUDSGScaleFactor(const JetPointer) const;
-	double getAverageUDSGEfficiency(const JetCollection) const;
+	double getEfficiency( const unsigned int, const JetPointer ) const;
+	std::vector<double> getScaleFactor( const double, const JetPointer ) const;
+
+	std::vector<double> getBScaleFactor(const JetPointer, double uncertaintyFactor = 1.) const;
+	double getBEfficiency(const JetPointer) const;
+	std::vector<double> getCScaleFactor(const JetPointer) const;
+	double getCEfficiency(const JetPointer) const;
+	std::vector<double> getUDSGScaleFactor(const JetPointer) const;
+	double getUDSGEfficiency(const JetPointer) const;
 
 	double getMeanUDSGScaleFactor(double jetPT, double jetEta) const;
 	double getMinUDSGScaleFactor(double jetPT, double jetEta) const;

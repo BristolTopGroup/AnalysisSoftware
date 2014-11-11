@@ -6,232 +6,101 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/array.hpp>
 
-using namespace std; // so the abs() function from the standard libraries are used
-
 namespace BAT {
 
 std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfBtags) {
-	boost::scoped_ptr<BTagWeight> btagwWeight(new BTagWeight());
-	//get b-jets
-	const JetCollection bjets(btagwWeight->getBJets(jets));
-	//get c-jets
-	const JetCollection cjets(btagwWeight->getCJets(jets));
-	//get udsg jets
-	const JetCollection udsgjets(btagwWeight->getUDSGJets(jets));
+	boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
 
-	//get mean scale factors
-	double SF_b = btagwWeight->getAverageBScaleFactor(bjets);
-	double SF_c = btagwWeight->getAverageCScaleFactor(cjets);
-	double SF_udsg = btagwWeight->getAverageUDSGScaleFactor(udsgjets);
-	//get mean efficiencies
-	double mean_bJetEfficiency = btagwWeight->getAverageBEfficiency();
-	double mean_cJetEfficiency = btagwWeight->getAverageCEfficiency();
-	double mean_udsgJetEfficiency = btagwWeight->getAverageUDSGEfficiency(udsgjets);
 
+	double event_weight = btagWeight->weight( jets );
 	std::vector<double> event_weights;
 	for (unsigned int nTag = 0; nTag <= numberOfBtags; ++nTag) { // >= 4 is our last b-tag bin!
-		btagwWeight->setNumberOfBtags(nTag, 20);
-		double event_weight = btagwWeight->weight(bjets.size(), cjets.size(), udsgjets.size(), mean_bJetEfficiency,
-				mean_cJetEfficiency, mean_udsgJetEfficiency, SF_b, SF_c, SF_udsg, numberOfBtags);
-		event_weights.push_back(event_weight);
-	}
-	//all weights are inclusive. To get the weight for exclusive N b-tags ones has to subtract:
-	for (unsigned int nTag = 0; nTag < numberOfBtags; ++nTag) {
-		// w(N b-tags) = w(>= N) - w(>= N+1)
-		event_weights.at(nTag) = event_weights.at(nTag) - event_weights.at(nTag + 1);
-		//last weight, >= numberOfBjets jets, stays inclusive
+		btagWeight->setNumberOfBtags(nTag, 20);
+		if ( nTag == numberOfBtags )
+			event_weights.push_back(event_weight);
+		else
+			event_weights.push_back(0.);
 	}
 	return event_weights;
 }
 
-unsigned int fact(unsigned int n) {
-	if (n < 1)
-		return 1;
-	unsigned int r = 1;
-	for (unsigned int i = n; i > 1; i--)
-		r *= i;
-
-	return r;
-}
-
-unsigned int comb(unsigned int n, unsigned int k) {
-	return fact(n) / fact(k) / fact(n - k);
-}
-
 BTagWeight::BTagWeight() :
-		minNumberOfTags_(0), //
-		maxNumberOfTags_(0) {
-
+				minNumberOfTags_(0), //
+				maxNumberOfTags_(0) {
 }
 
-bool BTagWeight::filter(unsigned int numberOfTags) const {
-	return (numberOfTags >= minNumberOfTags_ && numberOfTags <= maxNumberOfTags_);
-}
+double BTagWeight::weight(const JetCollection jets) const {
+	float bTaggedMCJet = 1.0;
+	float nonBTaggedMCJet = 1.0;
+	float bTaggedDataJet = 1.0;
+	float nonBTaggedDataJet = 1.0;
 
-double BTagWeight::weight(unsigned int numberOf_b_Jets, unsigned int numberOf_c_Jets, unsigned int numberOf_udsg_Jets,
-		double mean_bJetEfficiency, double mean_cJetEfficiency, double mean_udsgJetEfficiency, double scaleFactor_b,
-		double scaleFactor_c, double scaleFactor_udsg, unsigned int numberOfTags) const {
-	if (!filter(numberOfTags)) {
-		return 0;
-	}
+	float err1 = 0.0;
+	float err2 = 0.0;
+	float err3 = 0.0;
+	float err4 = 0.0;
 
-	double probabilityMC = 0;
-	double probabilityData = 0;
-	for (unsigned int b_index = 0; b_index <= numberOf_b_Jets; ++b_index)
-		for (unsigned int c_index = 0; c_index <= numberOf_c_Jets; ++c_index)
-			for (unsigned int udsg_index = 0; udsg_index <= numberOf_udsg_Jets; ++udsg_index) {
-				unsigned int t = b_index + c_index + udsg_index;
-				if (!filter(t))
-					continue;
-
-				// how many equivalent ways
-				unsigned int totalCombinations = comb(numberOf_b_Jets, b_index) * comb(numberOf_c_Jets, c_index)
-						* comb(numberOf_udsg_Jets, udsg_index);
-
-				probabilityMC += 1. * totalCombinations * pow(mean_bJetEfficiency, b_index)
-						* pow(1. - mean_bJetEfficiency, numberOf_b_Jets - b_index) * pow(mean_cJetEfficiency, c_index)
-						* pow(1. - mean_cJetEfficiency, numberOf_c_Jets - c_index)
-						* pow(mean_udsgJetEfficiency, udsg_index)
-						* pow(1. - mean_udsgJetEfficiency, numberOf_udsg_Jets - udsg_index);
-
-				probabilityData += 1. * totalCombinations * pow(mean_bJetEfficiency * scaleFactor_b, b_index)
-						* pow(1. - mean_bJetEfficiency * scaleFactor_b, numberOf_b_Jets - b_index)
-						* pow(mean_cJetEfficiency * scaleFactor_c, c_index)
-						* pow(1. - mean_cJetEfficiency * scaleFactor_c, numberOf_c_Jets - c_index)
-						* pow(mean_udsgJetEfficiency * scaleFactor_udsg, udsg_index)
-						* pow(1. - mean_udsgJetEfficiency * scaleFactor_udsg, numberOf_udsg_Jets - udsg_index);
-			}
-	if (probabilityMC == 0)
-		return 0;
-	return probabilityData / probabilityMC;
-}
-
-//std::vector<double> BTagWeight::weights(unsigned int numberOf_b_Jets, unsigned int numberOf_c_Jets,
-//		unsigned int numberOf_udsg_Jets, double mean_bJetEfficiency, double mean_cJetEfficiency,
-//		double mean_udsgJetEfficiency, double scaleFactor_b, double scaleFactor_c, double scaleFactor_udsg,
-//		unsigned int numberOfTags) const {
-//
-//	std::vector<double> event_weights;
-//	for (unsigned index = 0; index <= numberOf_b_Jets + numberOf_c_Jets + numberOf_udsg_Jets; ++index) {
-//		event_weights.push_back(0);
-//	}
-//	if (!filter(numberOfTags)) {
-//		return event_weights;
-//	}
-//
-//	for (unsigned int b_index = 0; b_index <= numberOf_b_Jets; ++b_index)
-//		for (unsigned int c_index = 0; c_index <= numberOf_c_Jets; ++c_index)
-//			for (unsigned int udsg_index = 0; udsg_index <= numberOf_udsg_Jets; ++udsg_index) {
-//				unsigned int t = b_index + c_index + udsg_index;
-////				if (!filter(t))
-////					continue;
-//				double probabilityMC = 0;
-//				double probabilityData = 0;
-//				// how many equivalent ways
-////				unsigned int totalCombinations = comb(numberOf_b_Jets, b_index) * comb(numberOf_c_Jets, c_index)
-////						* comb(numberOf_udsg_Jets, udsg_index);
-//
-//				probabilityMC = pow(mean_bJetEfficiency, b_index)
-//						* pow(1. - mean_bJetEfficiency, numberOf_b_Jets - b_index) * pow(mean_cJetEfficiency, c_index)
-//						* pow(1. - mean_cJetEfficiency, numberOf_c_Jets - c_index)
-//						* pow(mean_udsgJetEfficiency, udsg_index)
-//						* pow(1. - mean_udsgJetEfficiency, numberOf_udsg_Jets - udsg_index);
-//
-//				probabilityData = pow(mean_bJetEfficiency * scaleFactor_b, b_index)
-//						* pow(1. - mean_bJetEfficiency * scaleFactor_b, numberOf_b_Jets - b_index)
-//						* pow(mean_cJetEfficiency * scaleFactor_c, c_index)
-//						* pow(1. - mean_cJetEfficiency * scaleFactor_c, numberOf_c_Jets - c_index)
-//						* pow(mean_udsgJetEfficiency * scaleFactor_udsg, udsg_index)
-//						* pow(1. - mean_udsgJetEfficiency * scaleFactor_udsg, numberOf_udsg_Jets - udsg_index);
-//
-//				if (probabilityMC == 0)
-//					event_weights.at(t) = 0;
-//				else
-//					event_weights.at(t) = probabilityData / probabilityMC;
-//			}
-//	return event_weights;
-//}
-
-//std::vector<double> BTagWeight::weights(double averageScaleFactor, unsigned int numberOfTags) const {
-//	std::vector<double> event_weights;
-//	for (unsigned int i = 0; i < numberOfTags + 1; ++i)
-//		event_weights.push_back(0);
-//	event_weights.at(0) = pow(1 - averageScaleFactor, numberOfTags);
-//
-//	if (numberOfTags > 0) {
-//		for (unsigned int i = 1; i <= numberOfTags; ++i) {
-//			double prod = 1;
-//			for (unsigned int j = 1; j <= numberOfTags; ++j) {
-//				if (j != i)
-//					prod *= 1 - averageScaleFactor;
-//			}
-//			event_weights.at(1) += averageScaleFactor * prod;
-//		}
-//	}
-//
-//	if (numberOfTags > 1) {
-//		for (unsigned int i = 1; i <= numberOfTags; ++i) {
-//			double sum(0);
-//			for (unsigned int j = 1; j <= numberOfTags; ++j) {
-//				if (j == i)
-//					continue;
-//				double prod(1);
-//				for (unsigned int k = 1; k <= numberOfTags; ++k) {
-//					if (k != i && k != j)
-//						prod *= 1 - averageScaleFactor;
-//				}
-//				sum += averageScaleFactor * prod;
-//			}
-//			event_weights.at(2) += averageScaleFactor * sum;
-//		}
-//		event_weights.at(2) = event_weights.at(2) / 2;
-//	}
-//	return event_weights;
-//}
-
-JetCollection BTagWeight::getBJets(const JetCollection jets) const {
-	JetCollection bjets;
-	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if (abs(jets.at(index)->partonFlavour()) == 5) //b-quark
-			bjets.push_back(jets.at(index));
-	}
-	return bjets;
-}
-
-JetCollection BTagWeight::getCJets(const JetCollection jets) const {
-	JetCollection cjets;
-	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if (abs(jets.at(index)->partonFlavour()) == 4) //c-quark
-			cjets.push_back(jets.at(index));
-	}
-	return cjets;
-}
-
-JetCollection BTagWeight::getUDSGJets(const JetCollection jets) const {
-	JetCollection udsgjets;
-	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if (abs(jets.at(index)->partonFlavour()) != 4 && abs(jets.at(index)->partonFlavour()) != 5) //not a c- or b-quark
-			udsgjets.push_back(jets.at(index));
-	}
-	return udsgjets;
-}
-
-double BTagWeight::getAverageBScaleFactor(const JetCollection jets, double uncertaintyFactor) const {
-	std::vector<double> scaleFactors;
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
+		// Info on this jet
 		const JetPointer jet(jets.at(index));
-		scaleFactors.push_back(getBScaleFactor(jet, uncertaintyFactor));
+		const unsigned int partonFlavour = abs( jet->partonFlavour() );
+		const bool isBTagged = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM);
+
+		// Get scale factor for this jet
+		std::vector<double> sfAndError = getScaleFactor( partonFlavour, jet );
+		const double sf = sfAndError.at(0);
+		const double sfError = sfAndError.at(1);
+
+		// Get efficiency for this jet
+		const double eff = getEfficiency( partonFlavour, jet );
+		if ( isBTagged ) {
+
+			bTaggedMCJet *= eff;
+			bTaggedDataJet *= eff*sf;
+
+			if(partonFlavour==5 || partonFlavour ==4)  err1 += sfError/sf; ///correlated for b/c
+			else err3 += sfError/sf; //correlated for light
+		}
+		else {
+			nonBTaggedMCJet *= ( 1 - eff );
+			nonBTaggedDataJet *= ( 1 - eff*sf );
+
+			if(partonFlavour==5 || partonFlavour ==4 ) err2 += (-eff*sfError)/(1-eff*sf); /// /correlated for b/c
+			else err4 +=  (-eff*sfError)/(1-eff*sf);  ////correlated for light
+		}
 	}
-	double sumOfScaleFactors = std::accumulate(scaleFactors.begin(), scaleFactors.end(), 0.0);
-	if (scaleFactors.size() == 0) {
-		return 1.;
-	} else {
-		return sumOfScaleFactors / scaleFactors.size();
+
+	double bTagWeight = (nonBTaggedDataJet * bTaggedDataJet) / (nonBTaggedMCJet * bTaggedMCJet);
+
+	double error_BTagWeight = sqrt(pow(err1 + err2, 2) + pow(err3 + err4, 2)) * bTagWeight; ///un-correlated for b/c and light
+
+	if (Globals::BJetSystematic == +1) {
+		return bTagWeight + error_BTagWeight;
+	} else if (Globals::BJetSystematic == -1) {
+		return bTagWeight - error_BTagWeight;
+	} else if (Globals::BJetSystematic == 0) {
+		return bTagWeight;
 	}
+
+	return 0.;
 }
 
-double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFactor) const {
+std::vector<double> BTagWeight::getScaleFactor( const double partonFlavour, const JetPointer jet ) const {
+
+	if ( partonFlavour == 5) { //b-quark
+		return getBScaleFactor(jet);
+	}
+	else if ( partonFlavour == 4) { //c-quark
+		return getCScaleFactor(jet);
+	}
+	else if ( partonFlavour != 4 && partonFlavour != 5) { //not a c- or b-quark
+		return getUDSGScaleFactor(jet);
+	}
+	else return std::vector<double>();
+}
+
+std::vector<double> BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFactor) const {
 	double SFb(0);
 	double sf_error(0);
 	//these numbers are for CSVM only
@@ -241,7 +110,7 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 	if (Globals::energyInTeV == 8) { // 2012 btag scale factors
 		// From https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFb-pt_WITHttbar_payload_EPS13.txt,
 		// which is linked from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2012_Data_and_MC_EPS13_prescript
-		const boost::array<double, 16> SFb_error = { { 0.0415707,
+		const boost::array<double, 16> SFb_error = { {0.0415707,
 				0.0204209,
 				0.0223227,
 				0.0206655,
@@ -259,20 +128,20 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 				0.0596716 } };
 
 		//2012 pt bins low edges
-		const boost::array<double, 16> ptbins = { { 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600 } };
+		const boost::array<double, 16> ptbins = { {20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600 } };
 
 		if (pt < 20) {
-			SFb = (0.938887 + (0.00017124 * 20)) + (-2.76366e-07 * (20 * 20));
+			SFb = (0.938887 + (0.00017124*20))+(-2.76366e-07*(20*20));
 			//use twice the uncertainty
 			sf_error = 2 * SFb_error[0];
 
 		} else if (pt > 800) {
-			SFb = (0.938887 + (0.00017124 * 800)) + (-2.76366e-07 * (800 * 800));
+			SFb = (0.938887 + (0.00017124*800))+(-2.76366e-07*(800*800));
 			//use twice the uncertainty
 			sf_error = 2 * SFb_error[SFb_error.size() - 1];
 
 		} else {
-			SFb = (0.938887 + (0.00017124 * pt)) + (-2.76366e-07 * (pt * pt));
+			SFb = (0.938887 + (0.00017124*pt))+(-2.76366e-07*(pt*pt));
 			unsigned int ptbin(0);
 			for (unsigned int bin = 0; bin < ptbins.size() + 1; ++bin) {
 				double upperCut = bin + 1 < ptbins.size() ? ptbins.at(bin + 1) : 800.;
@@ -286,11 +155,12 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 			sf_error = SFb_error.at(ptbin);
 
 			//use twice the uncertainty if outside the 0 to 2.4 eta range
-			if (2.4 < eta && eta <= 2.6) {
+			if (2.4 < eta && eta <=2.6) {
 				sf_error = 2 * SFb_error.at(ptbin);
 			}
 		}
-	} else if (Globals::energyInTeV == 7) { // 2011 btag scale factors
+	}
+	else if (Globals::energyInTeV == 7) { // 2011 btag scale factors
 		// https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFb-mujet_payload.txt
 		const boost::array<double, 14> SFb_error = { { 0.0295675,
 				0.0295095,
@@ -308,20 +178,20 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 				0.0655432 } };
 
 		//2011 pt bins low edges
-		const boost::array<double, 14> ptbins = { { 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500 } };
+		const boost::array<double, 16> ptbins = { { 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500 } };
 
 		if (pt < 30) {
-			SFb = 0.6981 * ((1. + (0.414063 * pt)) / (1. + (0.300155 * 30)));
+			SFb = 0.6981*((1.+(0.414063*pt))/(1.+(0.300155*30)));
 			//absolute uncertainty of +/-0.12
 			sf_error = 0.12;
 
 		} else if (pt > 670) {
-			SFb = 0.6981 * ((1. + (0.414063 * 670)) / (1. + (0.300155 * 670)));
+			SFb = 0.6981*((1.+(0.414063*670))/(1.+(0.300155*670)));
 			//use twice the uncertainty
 			sf_error = 2 * SFb_error[SFb_error.size() - 1];
 
 		} else {
-			SFb = 0.6981 * ((1. + (0.414063 * pt)) / (1. + (0.300155 * pt)));
+			SFb = 0.6981*((1.+(0.414063*pt))/(1.+(0.300155*pt)));
 
 			unsigned int ptbin(0);
 			for (unsigned int bin = 0; bin < ptbins.size() + 1; ++bin) {
@@ -334,46 +204,37 @@ double BTagWeight::getBScaleFactor(const JetPointer jet, double uncertaintyFacto
 				}
 			}
 			sf_error = SFb_error.at(ptbin);
+
+			//use twice the uncertainty if outside the 0 to 2.4 eta range
+			if (2.4 < eta && eta <=2.6) {
+				sf_error = 2 * SFb_error.at(ptbin);
+			}
 		}
 	}
-	SFb += sf_error * Globals::BJetSystematic * uncertaintyFactor;
-	return SFb;
+
+	std::vector<double> SF_b_and_error;
+	SF_b_and_error.push_back(SFb);
+	SF_b_and_error.push_back(sf_error * uncertaintyFactor);
+	return SF_b_and_error;
 }
 
-
-double BTagWeight::getAverageCScaleFactor(const JetCollection jets) const {
-	// Same in both 8TeV and 7TeV
-	return getAverageBScaleFactor(jets, 2.0); //SF_c = SF_b with twice the uncertainty
-}
-
-double BTagWeight::getCScaleFactor(const JetPointer jet) const {
+std::vector<double> BTagWeight::getCScaleFactor(const JetPointer jet) const { // doesn't seem to be used anywhere??
 	// Same in both 8TeV and 7TeV
 	return getBScaleFactor(jet, 2.0);
 }
 
-double BTagWeight::getAverageUDSGScaleFactor(const JetCollection jets) const {
-	std::vector<double> scaleFactors;
-
-	for (unsigned int index = 0; index < jets.size(); ++index) {
-		const JetPointer jet(jets.at(index));
-		scaleFactors.push_back(getUDSGScaleFactor(jet));
-	}
-	double sumOfScaleFactors = std::accumulate(scaleFactors.begin(), scaleFactors.end(), 0.0);
-	if (scaleFactors.size() == 0) {
-		return 1.;
-	} else {
-		return sumOfScaleFactors / scaleFactors.size();
-	}
-}
-
-double BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
+std::vector<double> BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 	double pt = jet->pt();
 	double eta = fabs(jet->eta());
 	double SF_udsg_mean(0), SF_udsg_min(0), SF_udsg_max(0);
+	std::vector<double> SF_udsg_and_error;
 
 	if (Globals::energyInTeV == 8) { // 2012
 		if (pt < 20) {
-			return 0;
+			SF_udsg_and_error.push_back(0.);
+			SF_udsg_and_error.push_back(0.);
+			return SF_udsg_and_error;
+			//			return 0;
 		} else if (pt > 850 && eta >= 1.6 && eta <= 2.4) {
 			SF_udsg_mean = getMeanUDSGScaleFactor(850., eta);
 			SF_udsg_min = getMinUDSGScaleFactor(850, eta);
@@ -395,7 +256,10 @@ double BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 		}
 	} else if (Globals::energyInTeV == 7) { // 2011
 		if (pt < 20) {
-			return 0;
+			SF_udsg_and_error.push_back(0.);
+			SF_udsg_and_error.push_back(0.);
+			return SF_udsg_and_error;
+			//			return 0;
 		} else if (pt > 670 && eta >= 0. && eta <= 2.4) {
 			// Use integrated over all eta
 			SF_udsg_mean = getMeanUDSGScaleFactor(pt, eta);
@@ -411,12 +275,11 @@ double BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 		}
 	}
 
-	if (Globals::LightJetSystematic == -1) {
-		return SF_udsg_min;
-	} else if (Globals::LightJetSystematic == 1) {
-		return SF_udsg_max;
-	}
-	return SF_udsg_mean;
+	double SF_udsg_error = abs(SF_udsg_max - SF_udsg_mean) > abs(SF_udsg_min - SF_udsg_mean) ? abs(SF_udsg_max - SF_udsg_mean) : abs(SF_udsg_min - SF_udsg_mean);
+
+	SF_udsg_and_error.push_back(SF_udsg_mean);
+	SF_udsg_and_error.push_back(SF_udsg_error);
+	return SF_udsg_and_error;
 }
 
 double BTagWeight::getMeanUDSGScaleFactor(double jetPT, double jetEta) const {
@@ -431,8 +294,10 @@ double BTagWeight::getMeanUDSGScaleFactor(double jetPT, double jetEta) const {
 		} else if(jetEta >= 1.6 && jetEta <= 2.4){
 			return ((1.05625+(0.000487231*jetPT))+(-2.22792e-06*(jetPT*jetPT)))+(1.70262e-09*(jetPT*(jetPT*jetPT)));
 		}
-	} else if (Globals::energyInTeV == 7) { // 2011
-		if(jetPT > 670 && jetEta >=0. && jetEta <= 2.4){ // Integrated over eta
+	}
+	else if (Globals::energyInTeV == 7) { // 2011
+		if(jetPT > 670 && jetEta >=0. && jetEta <=2.4){
+			// Integrated over eta
 			return ((1.04318+(0.000848162*jetPT))+(-2.5795e-06*(jetPT*jetPT)))+(1.64156e-09*(jetPT*(jetPT*jetPT)));
 		} else if(jetEta >= 0 && jetEta < 0.8) {
 			return ((1.06182+(0.000617034*jetPT))+(-1.5732e-06*(jetPT*jetPT)))+(3.02909e-10*(jetPT*(jetPT*jetPT)));
@@ -450,31 +315,33 @@ double BTagWeight::getMinUDSGScaleFactor(double jetPT, double jetEta) const {
 	// which is linked from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2012_Data_and_MC_EPS13_prescript
 
 	if (Globals::energyInTeV == 8) { // 2012
-			if(jetEta >=0 && jetEta < 0.8) {
-				return ((0.964527+(0.00149055*jetPT))+(-2.78338e-06*(jetPT*jetPT)))+(1.51771e-09*(jetPT*(jetPT*jetPT)));
-			} else if(jetEta >= 0.8 && jetEta < 1.6) {
-				return ((0.946051+(0.000759584*jetPT))+(-1.52491e-06*(jetPT*jetPT)))+(9.65822e-10*(jetPT*(jetPT*jetPT)));
-			} else if (jetEta >-1.6 && jetEta <= 2.4) {
-			return ((0.956736 + (0.000280197 * jetPT)) + (-1.42739e-06 * (jetPT * jetPT))) + (1.0085e-09 * (jetPT * (jetPT * jetPT)));
+		if(jetEta >=0 && jetEta < 0.8) {
+			return ((0.964527+(0.00149055*jetPT))+(-2.78338e-06*(jetPT*jetPT)))+(1.51771e-09*(jetPT*(jetPT*jetPT)));
+		} else if(jetEta >= 0.8 && jetEta < 1.6) {
+			return ((0.946051+(0.000759584*jetPT))+(-1.52491e-06*(jetPT*jetPT)))+(9.65822e-10*(jetPT*(jetPT*jetPT)));
+		} else if (jetEta >-1.6 && jetEta <= 2.4) {
+			return ((0.956736+(0.000280197*jetPT))+(-1.42739e-06*(jetPT*jetPT)))+(1.0085e-09*(jetPT*(jetPT*jetPT)));
 		}
 	}
 	if (Globals::energyInTeV == 7) { //2011
-		if (jetPT > 670 && jetEta >= 0. && jetEta <= 2.4) { // Integrated over eta
-			return ((0.962627 + (0.000448344 * jetPT)) + (-1.25579e-06 * (jetPT * jetPT))) + (4.82283e-10 * (jetPT * (jetPT * jetPT)));
-		} else if (jetEta >= 0 && jetEta < 0.8) {
-			return ((0.972455 + (7.51396e-06 * jetPT)) + (4.91857e-07 * (jetPT * jetPT))) + (-1.47661e-09 * (jetPT * (jetPT * jetPT)));
-		} else if (jetEta >= 0.8 && jetEta < 1.6) {
-			return ((1.02055 + (-0.000378856 * jetPT)) + (1.49029e-06 * (jetPT * jetPT))) + (-1.74966e-09 * (jetPT * (jetPT * jetPT)));
-		} else if (jetEta >= 1.6 && jetEta < 2.4) {
-			return ((0.983476 + (-0.000607242 * jetPT)) + (3.17997e-06 * (jetPT * jetPT))) + (-4.01242e-09 * (jetPT * (jetPT * jetPT)));
+		if (jetPT > 670 && jetEta >=0. && jetEta <=2.4) {
+			// Integrated over eta
+			return ((0.962627+(0.000448344*jetPT))+(-1.25579e-06*(jetPT*jetPT)))+(4.82283e-10*(jetPT*(jetPT*jetPT)));
+		} else if(jetEta >= 0 && jetEta < 0.8) {
+			return ((0.972455+(7.51396e-06*jetPT))+(4.91857e-07*(jetPT*jetPT)))+(-1.47661e-09*(jetPT*(jetPT*jetPT)));
+		} else if(jetEta >= 0.8 && jetEta < 1.6) {
+			return ((1.02055+(-0.000378856*jetPT))+(1.49029e-06*(jetPT*jetPT)))+(-1.74966e-09*(jetPT*(jetPT*jetPT)));
+		} else if(jetEta >= 1.6 && jetEta < 2.4) {
+			return ((0.983476+(-0.000607242*jetPT))+(3.17997e-06*(jetPT*jetPT)))+(-4.01242e-09*(jetPT*(jetPT*jetPT)));
 		}
 	}
 	return 0.;
 }
 
 double BTagWeight::getMaxUDSGScaleFactor(double jetPT, double jetEta) const {
- 	// From https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFlightFuncs_EPS2013.C
- 	// which is linked from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2012_Data_and_MC_EPS13_prescript
+	// From https://twiki.cern.ch/twiki/pub/CMS/BtagPOG/SFlightFuncs_EPS2013.C
+	// which is linked from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2012_Data_and_MC_EPS13_prescript
+
 	if (Globals::energyInTeV == 8) { // 2012
 		if (jetEta >-0. && jetEta < 0.8) {
 			return ((1.18638+(0.00314148*jetPT))+(-6.68993e-06*(jetPT*jetPT)))+(3.89288e-09*(jetPT*(jetPT*jetPT)));
@@ -498,47 +365,204 @@ double BTagWeight::getMaxUDSGScaleFactor(double jetPT, double jetEta) const {
 	return 0.;
 }
 
-double BTagWeight::getAverageBEfficiency() const {
-	double discriminator_cut = 0.679; //== CSVM
 
-	return -1.73338329789 * pow(discriminator_cut, 4) + 1.26161794785 * pow(discriminator_cut, 3)
-			+ 0.784721653518 * pow(discriminator_cut, 2) + -1.03328577451 * discriminator_cut + 1.04305075822;
-
-}
-
-double BTagWeight::getAverageCEfficiency() const {
-	double discriminator_cut = 0.679; //== CSVM
-	return -1.5734604211 * pow(discriminator_cut, 4) + 1.52798999269 * pow(discriminator_cut, 3)
-			+ 0.866697059943 * pow(discriminator_cut, 2) + -1.66657942274 * discriminator_cut + 0.780639301724;
-
-}
-
-double BTagWeight::getAverageUDSGEfficiency(const JetCollection jets) const {
-	std::vector<double> efficiencies;
-
-	for (unsigned int index = 0; index < jets.size(); ++index) {
-		const JetPointer jet(jets.at(index));
-		double efficiency(0);
-		//these numbers are for CSVM only
-		double pt = jet->pt();
-		if (pt < 20) {
-			continue;
-		} else if (pt > 800) {
-			efficiency = getMeanUDSGEfficiency(800.);
-		} else {
-			efficiency = getMeanUDSGEfficiency(pt);
-		}
-		efficiencies.push_back(efficiency);
+double BTagWeight::getEfficiency( const unsigned int partonFlavour, const JetPointer jet ) const {
+	if ( partonFlavour == 5) { //b-quark
+		return getBEfficiency( jet );
 	}
-	double sumOfEfficiencies = std::accumulate(efficiencies.begin(), efficiencies.end(), 0.0);
-	if (efficiencies.size() == 0)
-		return 1.;
-	else
-		return sumOfEfficiencies / efficiencies.size();
+	else if ( partonFlavour == 4) { //c-quark
+		return getCEfficiency( jet );
+	}
+	else if ( partonFlavour != 4 && partonFlavour != 5) { //not a c- or b-quark
+		return getUDSGEfficiency( jet );
+	}
+	else return 0.;
 }
 
-double BTagWeight::getMeanUDSGEfficiency(double jetPT) const {
-	return 0.0113428 + 5.18983e-05 * jetPT - 2.59881e-08 * pow(jetPT, 2);
+// Methods below for 2011 only: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagPOG#2011_Data_and_MC
+double BTagWeight::getBEfficiency(const JetPointer jet) const {
+
+	std::vector<double> binEdges{ 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800 };
+	const double jetPt = jet->pt();
+
+	if (Globals::energyInTeV == 8) { // 2012
+
+		std::vector<double> eff{
+			0.494606375694,
+			0.597042381763,
+			0.62597990036,
+			0.670304358006,
+			0.688453614712,
+			0.708679795265,
+			0.720353424549,
+			0.72651040554,
+			0.727195739746,
+			0.702006459236,
+			0.679377436638,
+			0.618240535259,
+			0.567078948021,
+			0.459390848875,
+			0.480620145798,
+			0.376811593771
+		};
+
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
+		}
+		return eff[eff.size()-1];
+	} else if (Globals::energyInTeV == 7) { // 2011
+		std::vector<double> eff{
+			0.510614693165,
+			0.625705659389,
+			0.650622546673,
+			0.689294397831,
+			0.705310404301,
+			0.723900854588,
+			0.738776385784,
+			0.744492590427,
+			0.7463555336,
+			0.721650719643,
+			0.691826879978,
+			0.641910970211,
+			0.583380103111,
+			0.539074957371,
+			0.438271611929,
+			0.423076927662
+		};
+
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
+		}
+		return eff[eff.size()-1];
+	}
+	return 0.;
+}
+
+double BTagWeight::getCEfficiency(const JetPointer jet) const {
+	std::vector<double> binEdges{ 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800 };
+	const double jetPt = jet->pt();
+
+	if (Globals::energyInTeV == 8) { // 2012
+
+		std::vector<double> eff{
+			0.137571901083,
+			0.17440225184,
+			0.168547004461,
+			0.190776929259,
+			0.186730355024,
+			0.201694756746,
+			0.211470022798,
+			0.208002716303,
+			0.19966648519,
+			0.172328293324,
+			0.174669444561,
+			0.148199439049,
+			0.115044251084,
+			0.140540540218,
+			0.0810810774565,
+			0.0909090936184
+		};
+
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
+		}
+		return eff[eff.size()-1];
+	} else if (Globals::energyInTeV == 7) { // 2011
+		std::vector<double> eff{
+			0.147453084588,
+			0.191264390945,
+			0.188042387366,
+			0.202001750469,
+			0.206677630544,
+			0.216319575906,
+			0.224087715149,
+			0.222374990582,
+			0.220220595598,
+			0.206811457872,
+			0.187931656837,
+			0.170212760568,
+			0.140024781227,
+			0.132492110133,
+			0.0921052619815,
+			0.147058829665
+		};
+
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
+		}
+		return eff[eff.size()-1];
+	}
+	return 0.;
+}
+
+double BTagWeight::getUDSGEfficiency(const JetPointer jet) const {
+	std::vector<double> binEdges{ 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800 };
+	const double jetEta = jet->eta();
+	const double jetPt = jet->pt();
+
+	if (Globals::energyInTeV == 8) { // 2012
+
+		std::vector<double> eff{
+			0.0141531676054,
+			0.0166055671871,
+			0.0122715132311,
+			0.0121522741392,
+			0.0121911447495,
+			0.0128813134506,
+			0.0122034205124,
+			0.0123074641451,
+			0.0138469943777,
+			0.0146079286933,
+			0.0160924512893,
+			0.0136655950919,
+			0.0142469471321,
+			0.019417475909,
+			0.0195121951401,
+			0.0188679248095
+		};
+
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
+		}
+		return eff[eff.size()-1];
+	} else if (Globals::energyInTeV == 7) { // 2011
+		std::vector<double> eff{
+			0.0144789591432,
+			0.0180907342583,
+			0.0137853939086,
+			0.0135071650147,
+			0.0124906441197,
+			0.0128347137943,
+			0.0132970232517,
+			0.0132412724197,
+			0.0141806136817,
+			0.0142573462799,
+			0.0167632680386,
+			0.01748948358,
+			0.0179928019643,
+			0.0181461498141,
+			0.0192926041782,
+			0.00740740727633
+		};
+
+		// Which pt bin to use
+		for ( unsigned int binIndex=0; binIndex < binEdges.size()-1; binIndex++ ) {
+			if ( jetPt >= binEdges[binIndex] && jetPt < binEdges[binIndex+1] )
+				return eff[binIndex];
+		}
+		return eff[eff.size()-1];
+	}
+	return 0.;
 }
 
 void BTagWeight::setNumberOfBtags(unsigned int min, unsigned int max) {
