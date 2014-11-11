@@ -505,7 +505,6 @@ double BTagWeight::getCEfficiency(const JetPointer jet) const {
 
 double BTagWeight::getUDSGEfficiency(const JetPointer jet) const {
 	std::vector<double> binEdges{ 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800 };
-	const double jetEta = jet->eta();
 	const double jetPt = jet->pt();
 
 	if (Globals::energyInTeV == 8) { // 2012
