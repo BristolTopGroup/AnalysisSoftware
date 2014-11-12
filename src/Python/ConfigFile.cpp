@@ -29,6 +29,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		maxEvents_(PythonParser::getAttributeFromPyObject<long>(config, "maxEvents")), //
 		datasetInfoFile_(PythonParser::getAttributeFromPyObject<string>(config, "datasetInfoFile")), //
 		pileUpFile_(PythonParser::getAttributeFromPyObject<string>(config, "PUFile")), //
+		getMuonScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getMuonScaleFactorsFromFile")), //
 		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonScaleFactorsFile")), //
 		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
 		lightJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "lightJetResoFile")), //
@@ -95,6 +96,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("datasetInfoFile", value<std::string>(),
 			"Dataset information file for event weight calculation");
 	desc.add_options()("PUFile", value<std::string>(), "set input PU file for PU re-weighting");
+	desc.add_options()("getMuonScaleFactorsFromFile", value<bool>(), "state whether we are getting the muon scale factors from a file or not");
 	desc.add_options()("MuonScaleFactorsFile", value<std::string>(), "set input file for muon scale factors");
 	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
 	desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
@@ -399,8 +401,9 @@ void ConfigFile::loadIntoMemory() {
 
 	Globals::estimatedPileup = getPileUpHistogram(PUFile());
 
-	Globals::muonScaleFactorsHistogram = getMuonScaleFactorsHistogram(MuonScaleFactorsFile());
-
+	if ( getMuonScaleFactorsFromFile_ ) {
+		Globals::muonScaleFactorsHistogram = getMuonScaleFactorsHistogram(MuonScaleFactorsFile());
+	}
 	//Lepton Scale Factors
 	Globals::ElectronScaleFactorSystematic = electronScaleFactorSystematic();
 	Globals::MuonScaleFactorSystematic = muonScaleFactorSystematic();

@@ -66,6 +66,7 @@ private:
 	long maxEvents_;
 	std::string datasetInfoFile_;
 	std::string pileUpFile_;
+	bool getMuonScaleFactorsFromFile_;
 	std::string muonScaleFactorsFile_;
     std::string bJetResoFile_;
     std::string lightJetResoFile_;
