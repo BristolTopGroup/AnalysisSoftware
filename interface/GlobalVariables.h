@@ -15,6 +15,7 @@
 #include "TF1.h"
 #include "TH1D.h"
 #include "TH2F.h"
+#include "TH3F.h"
 #include <string>
 
 
@@ -41,13 +42,14 @@ struct Globals {
 	//electrons
 	static ElectronAlgorithm::value electronAlgorithm;
 	static int ElectronScaleFactorSystematic;
-//
-//	//muons
+
+	//muons
 	static MuonAlgorithm::value muonAlgorithm;
 	static int MuonScaleFactorSystematic;
-	static boost::shared_ptr<TH2F> muonScaleFactorsHistogram;
-//
-//	//jets
+	static boost::shared_ptr<TH2F> muonIdIsoScaleFactorsHistogram;
+	static boost::shared_ptr<TH3F> muonTriggerScaleFactorsHistogram;
+
+	//jets
 	static JetAlgorithm::value jetAlgorithm;
 	static boost::array<boost::shared_ptr<TF1>, 12> bL7Corrections;
 	static boost::array<boost::shared_ptr<TF1>, 12> lightL7Corrections;

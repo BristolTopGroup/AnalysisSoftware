@@ -15,6 +15,7 @@
 #include "../EventWeightProvider.h"
 #include "TH1D.h"
 #include "TH2F.h"
+#include "TH3F.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
 
@@ -96,7 +97,8 @@ private:
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
-	boost::shared_ptr<TH2F> getMuonScaleFactorsHistogram(std::string muonScaleFactorsFile);
+	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
+	boost::shared_ptr<TH3F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 };
 

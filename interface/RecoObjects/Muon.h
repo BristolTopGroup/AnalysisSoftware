@@ -9,6 +9,7 @@
 #define MUON_H_
 #include "Lepton.h"
 #include "TH2F.h"
+#include "TH3F.h"
 #include <vector>
 #include <string>
 #include <boost/array.hpp>
@@ -76,7 +77,8 @@ private:
 	int numberOfValidMuonHits_, numberOfValidPixelHits_, numberOfValidHits_, pixelLayersWithMeasurement_, trackerLayersWithMeasurement_;
 	int numberOfMatches_, numberOfMatchedStations_;
 //	int muon_scale_factor_systematic_;
-	boost::shared_ptr<TH2F> muonScaleFactorsHistogram;
+	boost::shared_ptr<TH2F> muonIdIsoScaleFactorsHistogram;
+	boost::shared_ptr<TH3F> muonTriggerScaleFactorsHistogram;
 
 };
 

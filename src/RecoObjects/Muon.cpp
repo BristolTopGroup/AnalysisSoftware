@@ -8,6 +8,8 @@
 #include "../../interface/RecoObjects/Muon.h"
 #include "../../interface/GlobalVariables.h"
 
+#include <iostream>
+
 namespace BAT {
 const double initialBigValue = 123456789;
 
@@ -24,8 +26,9 @@ Muon::Muon() :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1),
-		muonScaleFactorsHistogram(Globals::muonScaleFactorsHistogram) {
+		numberOfMatchedStations_(-1), //
+		muonIdIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram), //
+		muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram) {
 
 }
 
@@ -42,8 +45,9 @@ Muon::Muon(double energy, double px, double py, double pz) :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1),
-		muonScaleFactorsHistogram(Globals::muonScaleFactorsHistogram) {
+		numberOfMatchedStations_(-1), //
+		muonIdIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram), //
+		muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram) {
 
 }
 
@@ -150,29 +154,44 @@ double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic,
 	double correction(1.);
 	double muEta(eta());
 	double id_correction(0), iso_correction(0), trigger_correction(0);
+	float triggerScaleFactor(0), idIsoScaleFactor(0);
+	float triggerScaleFactorError(0), idIsoScaleFactorError(0);
 
 	// 7TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#2011_data (from 44X pickle file)
 	if (Globals::energyInTeV == 7) { //Luminosity weighted average of 'combRelPFISO12_2011A' and 'combRelPFISO12_2011B' from pickle file
 
-		// Get bin number in histogram
-		unsigned int binNumber = muonScaleFactorsHistogram->FindBin( muEta, pt() );
+		// Get bin number in ID & ISO histogram
+		unsigned int idIsobinNumber = muonIdIsoScaleFactorsHistogram->FindBin( muEta, pt() );
 
-		// Get scale factor from histogram
-		float scaleFactor = muonScaleFactorsHistogram->GetBinContent( binNumber );
-		float scaleFactorError = muonScaleFactorsHistogram->GetBinError( binNumber );
+		// Get bin number in Trigger histogram. This is binned in eta, pt and charge. We average out the values between the charges.
+		unsigned int triggerBinNumberMuon = muonTriggerScaleFactorsHistogram->FindBin( 1, muEta, pt() ); // bin number for muon
+		unsigned int triggerBinNumberAntiMuon = muonTriggerScaleFactorsHistogram->FindBin( -1, muEta, pt() ); // bin number for antimuon
+
+		// Get ID & ISO scale factor from histogram
+		idIsoScaleFactor = muonIdIsoScaleFactorsHistogram->GetBinContent( idIsobinNumber );
+		idIsoScaleFactorError = muonIdIsoScaleFactorsHistogram->GetBinError( idIsobinNumber );
+
+		// Get Trigger scale factor from histogram for muons and antimuons
+		float triggerScaleFactorMuon = muonTriggerScaleFactorsHistogram->GetBinContent( triggerBinNumberMuon );
+		float triggerScaleFactorErrorMuon = muonTriggerScaleFactorsHistogram->GetBinError( triggerBinNumberMuon );
+
+		float triggerScaleFactorAntiMuon = muonTriggerScaleFactorsHistogram->GetBinContent( triggerBinNumberAntiMuon );
+		float triggerScaleFactorErrorAntiMuon = muonTriggerScaleFactorsHistogram->GetBinError( triggerBinNumberAntiMuon);
+
+		triggerScaleFactor = (triggerScaleFactorMuon + triggerScaleFactorAntiMuon) / 2;
+		triggerScaleFactorError = (sqrt(pow(triggerScaleFactorErrorMuon, 2) + pow(triggerScaleFactorErrorAntiMuon, 2))) / 2;
 
 		switch (muon_scale_factor_systematic) {
-		case -1:
-			correction = (scaleFactor - scaleFactorError);
-			break;
-		case 1:
-			correction = (scaleFactor + scaleFactorError);
-			break;
-		default:
-			correction = scaleFactor;
+			case -1:
+				correction = (triggerScaleFactor - triggerScaleFactorError) * (idIsoScaleFactor - idIsoScaleFactorError);
+				break;
+			case 1:
+				correction = (triggerScaleFactor + triggerScaleFactorError) * (idIsoScaleFactor + idIsoScaleFactorError);
+				break;
+			default:
+				correction = triggerScaleFactor * idIsoScaleFactor;
 		}
-
-		//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#22Jan2013_ReReco_of_2012_data_re (from pickle files)
+	//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#22Jan2013_ReReco_of_2012_data_re (from pickle files)
 	} else if (Globals::energyInTeV == 8){ //corrections for ID ('Tight'), Iso ('combRelIsoPF04dBeta<012_Tight') and Trigger ('IsoMu24', 'TightID_IsodB') respectively (keys used in pickle file)
 		if (fabs(muEta) < 0.9) { // 'ptabseta<0.9' in pickle file
 			if ((10 <= pt()) && (pt() < 20)) {

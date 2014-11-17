@@ -158,7 +158,7 @@ if sample in ['TTJets-mcatnlo','TTJets-pythia','TTJets-powheg']:
     
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
-getMuonScaleFactorsFromFile = False
+getMuonScaleFactorsFromFile = True
 MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
