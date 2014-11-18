@@ -276,7 +276,7 @@ std::vector<double> BTagWeight::getUDSGScaleFactor(const JetPointer jet) const {
 		}
 	}
 
-	double SF_udsg_error = abs(SF_udsg_max - SF_udsg_mean) > abs(SF_udsg_min - SF_udsg_mean) ? abs(SF_udsg_max - SF_udsg_mean) : abs(SF_udsg_min - SF_udsg_mean);
+	double SF_udsg_error = fabs(SF_udsg_max - SF_udsg_mean) > fabs(SF_udsg_min - SF_udsg_mean) ? fabs(SF_udsg_max - SF_udsg_mean) : fabs(SF_udsg_min - SF_udsg_mean);
 
 	SF_udsg_and_error.push_back(SF_udsg_mean);
 	SF_udsg_and_error.push_back(SF_udsg_error);
