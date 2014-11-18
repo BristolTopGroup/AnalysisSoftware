@@ -387,7 +387,6 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			double bjetWeight = bjetWeights.at(weightIndex);
 
 			if ( bjetWeight == 0 ) {
-				if ( weightIndex == bjetWeights.size() -1 )	std::cout << "Weight of ZERO" << std::endl;
 				continue;
 			}
 
