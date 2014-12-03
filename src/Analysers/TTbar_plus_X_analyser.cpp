@@ -33,6 +33,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		const JetCollection jets(topEplusJetsRefSelection_->cleanedJets(event));
 		const JetCollection bJets(topEplusJetsRefSelection_->cleanedBJets(event));
+		const JetPointer fourthJet = jets[3];
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
@@ -51,6 +52,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+		double hadronTriggerLegCorrection = event->isRealData() ? 1. : fourthJet->getEfficiencyCorrection( Globals::ElectronScaleFactorSystematic, event->runnumber() );
+
 		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {

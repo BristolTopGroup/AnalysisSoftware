@@ -52,7 +52,9 @@ Jet::Jet() :
 		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
-		smearedJet() //
+		smearedJet(), //
+
+		hadronTriggerLegEfficiencyHistogram( Globals::hadronTriggerLegEfficiencyHistogram ) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -100,7 +102,9 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
-		smearedJet() //
+		smearedJet(), //
+
+		hadronTriggerLegEfficiencyHistogram( Globals::hadronTriggerLegEfficiencyHistogram ) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -525,5 +529,26 @@ double Jet::getBTagDiscriminator(BtagAlgorithm::value type) const {
 	return btag_discriminators.at((unsigned int) type);
 }
 
+double Jet::getEfficiencyCorrection( int muon_scale_factor_systematic, int run_number) const {
+
+	if (Globals::energyInTeV == 7) {
+		double correction(1.);
+		double jetPt = pt();
+
+		if ( jetPt >= 100 ) return 1.0;
+
+		unsigned int binNumber = hadronTriggerLegEfficiencyHistogram->FindFixBin( jetPt );
+		correction = hadronTriggerLegEfficiencyHistogram->GetEfficiency( binNumber );
+
+		std::cout << "Correction for pt : " << jetPt << " " << correction << std::endl;
+
+		return correction;
+	}
+	else {
+		return 1.;
+	}
 }
+
+}
+
 

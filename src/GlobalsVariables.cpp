@@ -40,6 +40,7 @@ boost::shared_ptr<TH3F> Globals::muonTriggerScaleFactorsHistogram = boost::share
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
+boost::shared_ptr<TEfficiency> Globals::hadronTriggerLegEfficiencyHistogram = boost::shared_ptr<TEfficiency>(new TEfficiency());
 int Globals::JESsystematic = 0;
 int Globals::BJetSystematic = 0;
 int Globals::LightJetSystematic = 0;

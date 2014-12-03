@@ -9,6 +9,7 @@
 #define JET_H_
 #include "Particle.h"
 #include "TF1.h"
+#include "TEfficiency.h"
 #include <vector>
 #include <string>
 #include <boost/array.hpp>
@@ -135,6 +136,9 @@ public:
 
 	bool FirstDataLoosePFJetID() const;
 	bool FirstDataLooseCaloJetID() const;
+
+	double getEfficiencyCorrection( int muon_scale_factor_systematic, int run_number) const;
+
 private:
 	JetAlgorithm::value usedAlgorithm;
 	double electromagneticFraction;
@@ -168,6 +172,8 @@ private:
 	ParticlePointer matchedGeneratedJet;
 	ParticlePointer unsmearedJet;
 	ParticlePointer smearedJet;
+
+	boost::shared_ptr<TEfficiency> hadronTriggerLegEfficiencyHistogram;
 
 };
 
