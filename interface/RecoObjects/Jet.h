@@ -172,10 +172,6 @@ private:
 	ParticlePointer matchedGeneratedJet;
 	ParticlePointer unsmearedJet;
 	ParticlePointer smearedJet;
-
-	boost::shared_ptr<TEfficiency> hadronTriggerLegEfficiencyHistogram_nonIsoJets;
-	boost::shared_ptr<TEfficiency> hadronTriggerLegEfficiencyHistogram_isoJets;
-	boost::shared_ptr<TEfficiency> hadronTriggerLegEfficiencyHistogram_isoPFJets;
 };
 
 typedef boost::shared_ptr<Jet> JetPointer;

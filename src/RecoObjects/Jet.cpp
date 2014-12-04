@@ -52,12 +52,7 @@ Jet::Jet() :
 		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
-		smearedJet(), //
-
-		hadronTriggerLegEfficiencyHistogram_nonIsoJets( Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets ), //
-		hadronTriggerLegEfficiencyHistogram_isoJets( Globals::hadronTriggerLegEfficiencyHistogram_isoJets ), //
-		hadronTriggerLegEfficiencyHistogram_isoPFJets( Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets ) //
-
+		smearedJet() //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -105,11 +100,7 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
-		smearedJet(), //
-
-		hadronTriggerLegEfficiencyHistogram_nonIsoJets( Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets ), //
-		hadronTriggerLegEfficiencyHistogram_isoJets( Globals::hadronTriggerLegEfficiencyHistogram_isoJets ), //
-		hadronTriggerLegEfficiencyHistogram_isoPFJets( Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets ) //
+		smearedJet() //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -542,7 +533,7 @@ double Jet::getEfficiencyCorrection( int scale_factor_systematic ) const {
 
 		if ( jetPt >= 100 ) return 1.0;
 
-		unsigned int binNumber = hadronTriggerLegEfficiencyHistogram_nonIsoJets->FindFixBin( jetPt );
+		unsigned int binNumber = Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets->FindFixBin( jetPt );
 
 		double correction_nonIsoJets = 1.;
 		double lumi_nonIsoJets = Globals::luminosity * 0.076;
@@ -554,19 +545,19 @@ double Jet::getEfficiencyCorrection( int scale_factor_systematic ) const {
 
 		switch (scale_factor_systematic) {
 			case -1:
-				correction_nonIsoJets = hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiency( binNumber ) - hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiencyErrorLow( binNumber );
-				correction_isoJets = hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiency( binNumber ) - hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiencyErrorLow( binNumber );
-				correction_isoPFJets = hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiency( binNumber ) - hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiencyErrorLow( binNumber );
+				correction_nonIsoJets = Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiency( binNumber ) - Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiencyErrorLow( binNumber );
+				correction_isoJets = Globals::hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiency( binNumber ) - Globals::hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiencyErrorLow( binNumber );
+				correction_isoPFJets = Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiency( binNumber ) - Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiencyErrorLow( binNumber );
 				break;
 			case 1:
-				correction_nonIsoJets = hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiency( binNumber ) + hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiencyErrorUp( binNumber );
-				correction_isoJets = hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiency( binNumber ) + hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiencyErrorUp( binNumber );
-				correction_isoPFJets = hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiency( binNumber ) + hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiencyErrorUp( binNumber );
+				correction_nonIsoJets = Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiency( binNumber ) + Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiencyErrorUp( binNumber );
+				correction_isoJets = Globals::hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiency( binNumber ) + Globals::hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiencyErrorUp( binNumber );
+				correction_isoPFJets = Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiency( binNumber ) + Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiencyErrorUp( binNumber );
 				break;
 			default:
-				correction_nonIsoJets = hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiency( binNumber );
-				correction_isoJets = hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiency( binNumber );
-				correction_isoPFJets = hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiency( binNumber );				
+				correction_nonIsoJets = Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiency( binNumber );
+				correction_isoJets = Globals::hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiency( binNumber );
+				correction_isoPFJets = Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiency( binNumber );				
 		}
 
 		correction = ((correction_nonIsoJets * lumi_nonIsoJets) + (correction_isoJets * lumi_isoJets) + (correction_isoPFJets * lumi_isoPFJets)) / (Globals::luminosity);
