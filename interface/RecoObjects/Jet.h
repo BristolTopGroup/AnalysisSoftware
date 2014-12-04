@@ -137,7 +137,7 @@ public:
 	bool FirstDataLoosePFJetID() const;
 	bool FirstDataLooseCaloJetID() const;
 
-	double getEfficiencyCorrection( int muon_scale_factor_systematic, int run_number) const;
+	double getEfficiencyCorrection( int scale_factor_systematic ) const;
 
 private:
 	JetAlgorithm::value usedAlgorithm;
