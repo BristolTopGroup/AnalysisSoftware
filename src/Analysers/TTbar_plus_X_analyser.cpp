@@ -55,7 +55,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		double hadronTriggerLegCorrection = event->isRealData() ? 1. : fourthJet->getEfficiencyCorrection( Globals::ElectronScaleFactorSystematic, event->runnumber() );
 
-		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()) * hadronTriggerLegCorrection;
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
@@ -150,6 +150,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdNonIsoElectronSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdNonIsoElectronSelection_->cleanedBJets(event));
+		const JetPointer fourthJet = jets[3];
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
@@ -167,7 +168,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdNonIsoElectronSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdNonIsoElectronSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()); // should really be  qcd=true, not false, and should have a loop in Electron.cpp to get scale factors for QCD selection, but it doesn't exist (yet)
+		double hadronTriggerLegCorrection = event->isRealData() ? 1. : fourthJet->getEfficiencyCorrection( Globals::ElectronScaleFactorSystematic, event->runnumber() );
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()) * hadronTriggerLegCorrection;
 
 		qcdNonIsoElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdNonIsoElectronSelection_->setPrescale(prescale);
@@ -241,6 +243,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdConversionSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdConversionSelection_->cleanedBJets(event));
+		const JetPointer fourthJet = jets[3];
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
@@ -257,7 +260,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdConversionSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdConversionSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
+		double hadronTriggerLegCorrection = event->isRealData() ? 1. : fourthJet->getEfficiencyCorrection( Globals::ElectronScaleFactorSystematic, event->runnumber() );
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()) * hadronTriggerLegCorrection;
 
 		qcdConversionsElectronAnalyser_->setPrescale(prescale);
 		metAnalyserqcdConversionSelection_->setPrescale(prescale);
@@ -347,7 +351,9 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		unsigned int prescale(qcdPFRelIsoEPlusJetsSelection_->prescale(event));
 		const LeptonPointer signalLepton = qcdPFRelIsoEPlusJetsSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
+		const JetPointer fourthJet = jets[3];
+		double hadronTriggerLegCorrection = event->isRealData() ? 1. : fourthJet->getEfficiencyCorrection( Globals::ElectronScaleFactorSystematic, event->runnumber() );
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()) * hadronTriggerLegCorrection;
 
 		qcdEPlusjetsPFRelIsoElectronAnalyser_->setPrescale(prescale);
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {

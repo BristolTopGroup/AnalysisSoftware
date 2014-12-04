@@ -429,7 +429,7 @@ void ConfigFile::loadIntoMemory() {
 
 	if ( Globals::energyInTeV == 7 && getHadronTriggerFromFile_ ) {
 		std::cout << "Getting electron trigger hadron leg efficiencies from file " << hadronTriggerFile() << "." << std::endl;
-		Globals::hadronTriggerLegEfficiencyHistogram = getHadronTriggerLegHistogram(hadronTriggerFile());
+		getHadronTriggerLegHistogram(hadronTriggerFile());
 	}
 
 	//JES systematic
@@ -506,7 +506,7 @@ boost::shared_ptr<TH3F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	return triggerHistogram;
 }
 
-boost::shared_ptr<TEfficiency> ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
+void ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
 	using namespace std;
 
 	if (!boost::filesystem::exists(hadronTriggerFile)) {
@@ -515,10 +515,10 @@ boost::shared_ptr<TEfficiency> ConfigFile::getHadronTriggerLegHistogram(std::str
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(hadronTriggerFile.c_str()));
-	boost::shared_ptr<TEfficiency> hadronHistogram((TEfficiency*) file->Get("data")->Clone());
+	Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_1")->Clone("data_1"));
+	Globals::hadronTriggerLegEfficiencyHistogram_isoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_2")->Clone("data_2"));
+	Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_3")->Clone("data_3"));
 	file->Close();
-
-	return hadronHistogram;
 }
 
 unsigned int ConfigFile::nTupleVersion() const {

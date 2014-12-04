@@ -104,7 +104,7 @@ private:
 	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH3F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
-	boost::shared_ptr<TEfficiency> getHadronTriggerLegHistogram(std::string hadronTriggerFile);
+	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
 };
 
 } /* namespace BAT */

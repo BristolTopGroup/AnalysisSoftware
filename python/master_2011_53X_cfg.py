@@ -85,7 +85,7 @@ default_settings = {
             'JetSmearingSystematic':0,
             'PUFile':'Data_PUDist_2011Full_central_68000mb_June2014.root',
             'MuonScaleFactors':'MuonEfficiencies_SF_2011_53X_DataMC.root',
-            'hadronTriggerFile':'hadronLegEfficiencies_electron_.root',
+            'hadronTriggerFile':'hadronLegEfficiencies_electron.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',

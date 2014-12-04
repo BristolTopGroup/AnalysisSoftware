@@ -54,7 +54,10 @@ Jet::Jet() :
 		unsmearedJet(), //
 		smearedJet(), //
 
-		hadronTriggerLegEfficiencyHistogram( Globals::hadronTriggerLegEfficiencyHistogram ) //
+		hadronTriggerLegEfficiencyHistogram_nonIsoJets( Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets ), //
+		hadronTriggerLegEfficiencyHistogram_isoJets( Globals::hadronTriggerLegEfficiencyHistogram_isoJets ), //
+		hadronTriggerLegEfficiencyHistogram_isoPFJets( Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets ) //
+
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -104,7 +107,9 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		unsmearedJet(), //
 		smearedJet(), //
 
-		hadronTriggerLegEfficiencyHistogram( Globals::hadronTriggerLegEfficiencyHistogram ) //
+		hadronTriggerLegEfficiencyHistogram_nonIsoJets( Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets ), //
+		hadronTriggerLegEfficiencyHistogram_isoJets( Globals::hadronTriggerLegEfficiencyHistogram_isoJets ), //
+		hadronTriggerLegEfficiencyHistogram_isoPFJets( Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets ) //
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -537,10 +542,16 @@ double Jet::getEfficiencyCorrection( int muon_scale_factor_systematic, int run_n
 
 		if ( jetPt >= 100 ) return 1.0;
 
-		unsigned int binNumber = hadronTriggerLegEfficiencyHistogram->FindFixBin( jetPt );
-		correction = hadronTriggerLegEfficiencyHistogram->GetEfficiency( binNumber );
+		unsigned int binNumber = hadronTriggerLegEfficiencyHistogram_nonIsoJets->FindFixBin( jetPt );
 
-		std::cout << "Correction for pt : " << jetPt << " " << correction << std::endl;
+		double correction_nonIsoJets = hadronTriggerLegEfficiencyHistogram_nonIsoJets->GetEfficiency( binNumber );
+		double lumi_nonIsoJets = Globals::luminosity * 0.076;
+		double correction_isoJets = hadronTriggerLegEfficiencyHistogram_isoJets->GetEfficiency( binNumber );
+		double lumi_isoJets = Globals::luminosity * 0.764;
+		double correction_isoPFJets = hadronTriggerLegEfficiencyHistogram_isoPFJets->GetEfficiency( binNumber );
+		double lumi_isoPFJets = Globals::luminosity * 0.16;
+
+		correction = ((correction_nonIsoJets * lumi_nonIsoJets) + (correction_isoJets * lumi_isoJets) + (correction_isoPFJets * lumi_isoPFJets)) / (Globals::luminosity);
 
 		return correction;
 	}
