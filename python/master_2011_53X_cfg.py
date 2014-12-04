@@ -84,6 +84,7 @@ default_settings = {
             'JESsystematic':0,
             'JetSmearingSystematic':0,
             'PUFile':'Data_PUDist_2011Full_central_68000mb_June2014.root',
+            'MuonScaleFactors':'MuonEfficiencies_SF_2011_53X_DataMC.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
@@ -157,6 +158,8 @@ if sample in ['TTJets-mcatnlo','TTJets-pythia','TTJets-powheg']:
     
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
+getMuonScaleFactorsFromFile = True
+MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 #JES Systematic, the +/- number of uncertainties to vary the jets with

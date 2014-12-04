@@ -42,10 +42,13 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 				else
 					bjetWeights.push_back(0);
 			}
-		} else
+		} else {
 			bjetWeights = BjetWeights(jets, numberOfBjets);
+		}
 		histMan_->setCurrentJetBin(jets.size());
 		histMan_->setCurrentBJetBin(numberOfBjets);
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
+
 		const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
@@ -55,7 +58,6 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			if ( bjetWeight == 0 ) continue;
 
 			histMan_->setCurrentBJetBin(weightIndex);
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
 			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight * efficiencyCorrection);
 
@@ -375,16 +377,20 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			bjetWeights = BjetWeights(jets, numberOfBjets);
 		histMan_->setCurrentJetBin(jets.size());
 		histMan_->setCurrentBJetBin(numberOfBjets);
+		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
+
 		const LeptonPointer signalLepton = topMuplusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::MuonScaleFactorSystematic, event->runnumber());
 
 		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
 			double bjetWeight = bjetWeights.at(weightIndex);
-			if ( bjetWeight == 0 ) continue;
+
+			if ( bjetWeight == 0 ) {
+				continue;
+			}
 
 			histMan_->setCurrentBJetBin(weightIndex);
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
 			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight * efficiencyCorrection);
 

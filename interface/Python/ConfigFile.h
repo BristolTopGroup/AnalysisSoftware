@@ -14,6 +14,8 @@
 #include <boost/program_options/options_description.hpp>
 #include "../EventWeightProvider.h"
 #include "TH1D.h"
+#include "TH2F.h"
+#include "TH3F.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
 
@@ -28,6 +30,7 @@ public:
 	long maxEvents() const;
 	std::string datasetInfoFile() const;
 	std::string PUFile() const;
+	std::string MuonScaleFactorsFile() const;
     std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
 	bool useHitFit() const;
@@ -64,6 +67,8 @@ private:
 	long maxEvents_;
 	std::string datasetInfoFile_;
 	std::string pileUpFile_;
+	bool getMuonScaleFactorsFromFile_;
+	std::string muonScaleFactorsFile_;
     std::string bJetResoFile_;
     std::string lightJetResoFile_;
 	bool useHitFit_;
@@ -92,6 +97,8 @@ private:
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
+	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
+	boost::shared_ptr<TH3F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 };
 

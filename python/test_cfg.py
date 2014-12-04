@@ -35,6 +35,9 @@ if centerOfMassEnergy == 8:
     #Lepton Scale Factors     
     ElectronScaleFactorSystematic = 0
     MuonScaleFactorSystematic = 0
+    
+    getMuonScaleFactorsFromFile = False
+    MuonScaleFactorsFile = toolsFolder + ""
 
 elif centerOfMassEnergy == 7:
     #File for pile-up re-weighting
@@ -62,6 +65,9 @@ elif centerOfMassEnergy == 7:
         ElectronScaleFactorSystematic = 0
         MuonScaleFactorSystematic = 0
 
+        getMuonScaleFactorsFromFile = True
+        MuonScaleFactorsFile = toolsFolder + "data/MuonEfficiencies_SF_2011_53X_DataMC.root"
+
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
@@ -70,12 +76,11 @@ lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-              #change to hdfs once rsync is complete
     '/hdfs/TopQuarkGroup/data/2012/SingleElectron/nTuple_v11_Run2012B-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets/*.root'     # 53X 8TeV data
 #    '/hdfs/TopQuarkGroup/mc/8TeV/v11/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/*.root'     # 53X 8TeV MC
 #    '/hdfs/TopQuarkGroup/data/2011/ElectronHad/nTuple_v11_Run2011A-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets/*.root'          # 53X 7TeV data
 #    '/hdfs/TopQuarkGroup/mc/7TeV/v11/LeptonPlus3JetsSkim/TTJets_MSDecays_central_TuneZ2_7TeV-madgraph-tauola/*.root'        # 53X 7TeV MC
-#     '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v10_Run2011B-19Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets/*.root'     #44X 7TeV data
+#    '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v10_Run2011B-19Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets/*.root'     #44X 7TeV data
 #    '/storage/TopQuarkGroup/mc/7TeV/v10/LeptonPlus3JetsSkim/TTJets_TuneZ2_7TeV-madgraph-tauola_with_genjet_properties/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root' #44X 7TeV MC
               ]
 

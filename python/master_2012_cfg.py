@@ -92,6 +92,7 @@ default_settings = {
             'JESsystematic':0,
             'JetSmearingSystematic':0,
             'PUFile':'PileUp_2012_69300_truth_finebin.root',
+            'MuonScaleFactors':'nofile.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
@@ -165,6 +166,8 @@ if sample in ['TTJets-mcatnlo','TTJets-powheg']:
     
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
+getMuonScaleFactorsFromFile = False
+MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 #JES Systematic, the +/- number of uncertainties to vary the jets with

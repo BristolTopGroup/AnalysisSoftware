@@ -8,6 +8,8 @@
 #include "../../interface/RecoObjects/Muon.h"
 #include "../../interface/GlobalVariables.h"
 
+#include <iostream>
+
 namespace BAT {
 const double initialBigValue = 123456789;
 
@@ -24,7 +26,9 @@ Muon::Muon() :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1), //
+		muonIdIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram), //
+		muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram) {
 
 }
 
@@ -41,7 +45,9 @@ Muon::Muon(double energy, double px, double py, double pz) :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1), //
+		muonIdIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram), //
+		muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram) {
 
 }
 
@@ -147,234 +153,45 @@ double Muon::normChi2() const {
 double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic, int run_number) const {
 	double correction(1.);
 	double muEta(eta());
-	double id_correction(0), iso_correction(0), trigger_correction(0), correction_A(0), correction_B(0), lumi_2011A(0), lumi_2011B(0), lumi_2011(0);
+	double id_correction(0), iso_correction(0), trigger_correction(0);
+	float triggerScaleFactor(0), idIsoScaleFactor(0);
+	float triggerScaleFactorError(0), idIsoScaleFactorError(0);
 
 	// 7TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#2011_data (from 44X pickle file)
 	if (Globals::energyInTeV == 7) { //Luminosity weighted average of 'combRelPFISO12_2011A' and 'combRelPFISO12_2011B' from pickle file
-		//get scale factors based on muon eta bin
-		if (fabs(muEta) <= 1.2) { // 'pt_abseta<1.2' in pickle file
-			//get scale factors based on muon pt
-			if ((10 <= pt()) && (pt() < 20)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = (0.97187329075 - 0.00895689491314);
-					correction_B = (0.958160663139 - 0.0111131742061);
-					break;
-				case 1:
-					correction_A = (0.97187329075 + 0.00895689491314);
-					correction_B = (0.958160663139 + 0.0111131742061);
-					break;
-				default:
-					correction_A = 0.97187329075;
-					correction_B = 0.958160663139;
-				}
-			}
-			else if ((20 <= pt()) && (pt() < 30)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.984568503228 - 0.00240687426577;
-					correction_B = 0.975536117201 - 0.0029572697;
-					break;
-				case 1:
-					correction_A = 0.984568503228 + 0.00240687426577;
-					correction_B = 0.975536117201 + 0.0029572697;
-					break;
-				default:
-					correction_A = 0.984568503228;
-					correction_B = 0.975536117201;
-				}
-			}
-			else if ((30 <= pt()) && (pt() < 40)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.992423030756 - 0.000954303610304;
-					correction_B = 0.984073788145 - 0.00115894072787;
-					break;
-				case 1:
-					correction_A = 0.992423030756 + 0.000954303610304;
-					correction_B = 0.984073788145 + 0.00115894072787;
-					break;
-				default:
-					correction_A = 0.992423030756;
-					correction_B = 0.984073788145;
-				}
-			}
-			else if ((40 <= pt()) && (pt() < 50)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.99535554365 - 0.000585467761915;
-					correction_B = 0.990656279301 - 0.000349929656376;
-					break;
-				case 1:
-					correction_A = 0.99535554365 + 0.000585467761915;
-					correction_B = 0.990656279301 + 0.000349929656376;
-					break;
-				default:
-					correction_A = 0.99535554365;
-					correction_B = 0.990656279301;
-				}
-			}
-			else if ((50 <= pt()) && (pt() < 60)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.992170058662 - 0.00107765420273;
-					correction_B = 0.991084452935 - 0.00101971189879;
-					break;
-				case 1:
-					correction_A = 0.992170058662 + 0.00107765420273;
-					correction_B = 0.991084452935 + 0.00101971189879;
-					break;
-				default:
-					correction_A = 0.992170058662;
-					correction_B = 0.991084452935;
-				}
-			}
-			else if ((60 <= pt()) && (pt() < 80)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.993872313396 - 0.00894417946891;
-					correction_B = 0.98892037777 - 0.00174550565213;
-					break;
-				case 1:
-					correction_A = 0.993872313396 + 0.00894417946891;
-					correction_B = 0.98892037777 + 0.00174550565213;
-					break;
-				default:
-					correction_A = 0.993872313396;
-					correction_B = 0.98892037777;
-				}
-			}
-			else if ((80 <= pt()) && (pt() < 250)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.993271247496 + 0.00348975304908;
-					correction_B = 0.999774630941 - 0.00194422004257;
-					break;
-				case 1:
-					correction_A = 0.993271247496 + 0.00348975304908;
-					correction_B = 0.999774630941 + 0.00194422004257;
-					break;
-				default:
-					correction_A = 0.993271247496;
-					correction_B = 0.999774630941;
-				}
-			}
-		}
-		else if (fabs(muEta) > 1.2) { // 'pt_abseta>1.2' in pickle file
-			//get scale factors based on muon pt
-			if ((10 <= pt()) && (pt() < 20)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.989190191868 + 0.00717327834943;
-					correction_B = 0.999006216758 - 0.00943036154567;
-					break;
-				case 1:
-					correction_A = 0.989190191868 + 0.00717327834943;
-					correction_B = 0.999006216758 + 0.00943036154567;
-					break;
-				default:
-					correction_A = 0.989190191868;
-					correction_B = 0.999006216758;
-				}
-			}
-			else if ((20 <= pt()) && (pt() < 30)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 1.00271480782 - 0.00243884195789;
-					correction_B = 1.00043597215 - 0.0030187008106;
-					break;
-				case 1:
-					correction_A = 1.00271480782 + 0.00243884195789;
-					correction_B = 1.00043597215 + 0.0030187008106;
-					break;
-				default:
-					correction_A = 1.00271480782;
-					correction_B = 1.00043597215;
-				}
-			}
-			else if ((30 <= pt()) && (pt() < 40)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 1.00274598636 - 0.00114614223879;
-					correction_B = 1.0019607868 - 0.00144883691237;
-					break;
-				case 1:
-					correction_A = 1.00274598636 + 0.00114614223879;
-					correction_B = 1.0019607868 + 0.00144883691237;
-					break;
-				default:
-					correction_A = 1.00274598636;
-					correction_B = 1.0019607868;
-				}
-			}
-			else if ((40 <= pt()) && (pt() < 50)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 1.00158789661 - 0.000533242647022;
-					correction_B = 1.00242767691 - 0.000305384682504;
-					break;
-				case 1:
-					correction_A = 1.00158789661 + 0.000533242647022;
-					correction_B = 1.00242767691 + 0.000305384682504;
-					break;
-				default:
-					correction_A = 1.00158789661;
-					correction_B = 1.00242767691;
-				}
-			}
-			else if ((50 <= pt()) && (pt() < 60)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.99539699871 - 3.16725652446e-06;
-					correction_B = 1.00113878923 - 0.00134269877895;
-					break;
-				case 1:
-					correction_A = 0.99539699871 + 3.16725652446e-06;
-					correction_B = 1.00113878923 + 0.00134269877895;
-					break;
-				default:
-					correction_A = 0.99539699871;
-					correction_B = 1.00113878923;
-				}
-			}
-			else if ((60 <= pt()) && (pt() < 80)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.995568584925 - 0.00484818770698;
-					correction_B = 0.993575837027 - 0.0108856854386;
-					break;
-				case 1:
-					correction_A = 0.995568584925 + 0.00484818770698;
-					correction_B = 0.993575837027 + 0.0108856854386;
-					break;
-				default:
-					correction_A = 0.995568584925;
-					correction_B = 0.993575837027;
-				}
-			}
-			else if ((80 <= pt()) && (pt() < 250)) {
-				switch (muon_scale_factor_systematic) {
-				case -1:
-					correction_A = 0.988039073331 - 0.0029717666005;
-					correction_B= 0.993270235255 - 0.00286742004516;
-					break;
-				case 1:
-					correction_A = 0.988039073331 + 0.0029717666005;
-					correction_B = 0.993270235255 + 0.00286742004516;
-					break;
-				default:
-					correction_A = 0.988039073331;
-					correction_B = 0.993270235255;
-				}
-			}
-		}
-		//luminosity weighted average of correction_A and correction_B:
-		lumi_2011A = 2.311; //fb^-1
-		lumi_2011B = 2.739; //fb^-1
-		lumi_2011 = 5.050; //fb^-1
-		correction = ((lumi_2011A/lumi_2011) * correction_A) + ((lumi_2011B/lumi_2011)*correction_B);
 
-		//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#22Jan2013_ReReco_of_2012_data_re (from pickle files)
+		// Get bin number in ID & ISO histogram
+		unsigned int idIsobinNumber = muonIdIsoScaleFactorsHistogram->FindBin( muEta, pt() );
+
+		// Get bin number in Trigger histogram. This is binned in eta, pt and charge. We average out the values between the charges.
+		unsigned int triggerBinNumberMuon = muonTriggerScaleFactorsHistogram->FindBin( 1, muEta, pt() ); // bin number for muon
+		unsigned int triggerBinNumberAntiMuon = muonTriggerScaleFactorsHistogram->FindBin( -1, muEta, pt() ); // bin number for antimuon
+
+		// Get ID & ISO scale factor from histogram
+		idIsoScaleFactor = muonIdIsoScaleFactorsHistogram->GetBinContent( idIsobinNumber );
+		idIsoScaleFactorError = muonIdIsoScaleFactorsHistogram->GetBinError( idIsobinNumber );
+
+		// Get Trigger scale factor from histogram for muons and antimuons
+		float triggerScaleFactorMuon = muonTriggerScaleFactorsHistogram->GetBinContent( triggerBinNumberMuon );
+		float triggerScaleFactorErrorMuon = muonTriggerScaleFactorsHistogram->GetBinError( triggerBinNumberMuon );
+
+		float triggerScaleFactorAntiMuon = muonTriggerScaleFactorsHistogram->GetBinContent( triggerBinNumberAntiMuon );
+		float triggerScaleFactorErrorAntiMuon = muonTriggerScaleFactorsHistogram->GetBinError( triggerBinNumberAntiMuon);
+
+		triggerScaleFactor = (triggerScaleFactorMuon + triggerScaleFactorAntiMuon) / 2;
+		triggerScaleFactorError = (sqrt(pow(triggerScaleFactorErrorMuon, 2) + pow(triggerScaleFactorErrorAntiMuon, 2))) / 2;
+
+		switch (muon_scale_factor_systematic) {
+			case -1:
+				correction = (triggerScaleFactor - triggerScaleFactorError) * (idIsoScaleFactor - idIsoScaleFactorError);
+				break;
+			case 1:
+				correction = (triggerScaleFactor + triggerScaleFactorError) * (idIsoScaleFactor + idIsoScaleFactorError);
+				break;
+			default:
+				correction = triggerScaleFactor * idIsoScaleFactor;
+		}
+	//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#22Jan2013_ReReco_of_2012_data_re (from pickle files)
 	} else if (Globals::energyInTeV == 8){ //corrections for ID ('Tight'), Iso ('combRelIsoPF04dBeta<012_Tight') and Trigger ('IsoMu24', 'TightID_IsodB') respectively (keys used in pickle file)
 		if (fabs(muEta) < 0.9) { // 'ptabseta<0.9' in pickle file
 			if ((10 <= pt()) && (pt() < 20)) {
