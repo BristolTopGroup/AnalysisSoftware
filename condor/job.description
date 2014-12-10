@@ -9,6 +9,6 @@ should_transfer_files = YES
 when_to_transfer_output = ON_EXIT_OR_EVICT
 
 request_cpus = 1
-request_memory=1000
+request_memory=2000
 
 queue
