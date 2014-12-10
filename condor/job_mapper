@@ -1,0 +1,3 @@
+#!/usr/bin/env python
+# this thing takes an integer and translates it into a workload
+# e.g. takes 1 gives (QCD_20to30_BCtoE,central) or something like that
