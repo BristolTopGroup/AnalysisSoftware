@@ -31,6 +31,8 @@ bool Globals::produceFitterASCIIoutput = false;
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
 int Globals::ElectronScaleFactorSystematic = 0;
+boost::shared_ptr<TH2F> Globals::electronIdIsoScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TEfficiency> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TEfficiency>(new TEfficiency());
 
 //muons
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
