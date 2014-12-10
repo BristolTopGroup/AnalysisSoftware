@@ -7,6 +7,7 @@
 
 #include "../../interface/RecoObjects/Electron.h"
 #include "../../interface/GlobalVariables.h"
+#include "../../interface/Python/ConfigFile.h"
 #include <exception>
 #include <iostream>
 #include <sstream>
@@ -35,7 +36,9 @@ Electron::Electron() :
 		distToNextTrack_(0), //
 		mvaTrigV0_(-initialBigValue), //
 		mvaNonTrigV0_(-initialBigValue), //
-		passConversionVeto_(false) {
+		passConversionVeto_(false), //
+		electronIdIsoScaleFactorsHistogram(Globals::electronIdIsoScaleFactorsHistogram), //
+		electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram) {
 }
 
 Electron::Electron(double energy, double px, double py, double pz) :
@@ -55,8 +58,9 @@ Electron::Electron(double energy, double px, double py, double pz) :
 		distToNextTrack_(0), //
 		mvaTrigV0_(-initialBigValue), //
 		mvaNonTrigV0_(-initialBigValue), //
-		passConversionVeto_(false) {
-
+		passConversionVeto_(false), //
+		electronIdIsoScaleFactorsHistogram(Globals::electronIdIsoScaleFactorsHistogram), //
+		electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram) {
 }
 
 Electron::~Electron() {
@@ -437,33 +441,59 @@ double Electron::mvaNonTrigV0() const {
 double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic, int run_number) const {
 	double correction(1.);
 	double electronEta(eta());
+	float triggerScaleFactor(0), idIsoScaleFactor(0);
+	float triggerScaleFactorErrorLow(0), triggerScaleFactorErrorUp(0), idIsoScaleFactorError(0);
 
-//	if(Globals::energyInTeV == 7){
-//		// hard coded values since pickle file not available...not updated because I couldn't find any values on twikis!
-//		if (electronEta < -1.5)
-//			correction = 1.003;
-//		else if (electronEta >= -1.5 && electronEta < -1.2)
-//			correction = 0.980;
-//		else if (electronEta >= -1.2 && electronEta < -0.9)
-//			correction = 0.941;
-//		else if (electronEta >= -0.9 && electronEta < 0)
-//			correction = 0.974;
-//		else if (electronEta >= 0 && electronEta < 0.9)
-//			correction = 0.977;
-//		else if (electronEta >= 0.9 && electronEta < 1.2)
-//			correction = 0.939;
-//		else if (electronEta >= 1.2 && electronEta < 1.5)
-//			correction = 0.967;
-//		else if (electronEta >= 1.5)
-//			correction = 1.023;
-//	}
+	if(Globals::energyInTeV == 7 ){
+
+		// Get bin number in ID & ISO histogram. The pt scale has a max value of 100.
+		unsigned int idIsoBinNumber(0);
+		if (pt() < 100) {
+			idIsoBinNumber = electronIdIsoScaleFactorsHistogram->FindFixBin( pt(), electronEta );
+		} else if (pt() >= 100) {
+			idIsoBinNumber = electronIdIsoScaleFactorsHistogram->FindFixBin( 99.9, electronEta );
+		}
+		// Get ID & ISO scale factor from histogram
+		idIsoScaleFactor = electronIdIsoScaleFactorsHistogram->GetBinContent ( idIsoBinNumber );
+		idIsoScaleFactorError = electronIdIsoScaleFactorsHistogram->GetBinError ( idIsoBinNumber );
+
+		// Get bin number in Trigger histogram. This is actually a TEfficiency graph and the pt scale has a max value of 100.
+		unsigned int triggerBinNumber(0);
+		if (pt() < 100) {
+			triggerBinNumber = electronTriggerScaleFactorsHistogram->FindFixBin( pt(), electronEta );
+		} else if (pt() >= 100) {
+			triggerBinNumber = electronTriggerScaleFactorsHistogram->FindFixBin( 99.9, electronEta );
+		}
+		// Get Trigger scale factor from TEfficiency
+		triggerScaleFactor = electronTriggerScaleFactorsHistogram->GetEfficiency ( triggerBinNumber );
+		triggerScaleFactorErrorLow = electronTriggerScaleFactorsHistogram->GetEfficiencyErrorLow ( triggerBinNumber );
+		triggerScaleFactorErrorUp = electronTriggerScaleFactorsHistogram->GetEfficiencyErrorUp ( triggerBinNumber );
+
+//		std::cout << "idIsoScaleFactor = " << idIsoScaleFactor << std::endl;
+//		std::cout << "idIsoScaleFactorError = " << idIsoScaleFactorError << std::endl;
+//		std::cout << "triggerScaleFactor = " << triggerScaleFactor << std::endl;
+//		std::cout << "triggerScaleFactorErrorLow = " << triggerScaleFactorErrorLow << std::endl;
+//		std::cout << "triggerScaleFactorErrorUp = " << triggerScaleFactorErrorUp << std::endl;
+
+		switch (electron_scale_factor_systematic) {
+		case -1:
+			correction = (idIsoScaleFactor - idIsoScaleFactorError) * (triggerScaleFactor - triggerScaleFactorErrorLow);
+			break;
+		case 1:
+			correction = (idIsoScaleFactor + idIsoScaleFactorError) * (triggerScaleFactor + triggerScaleFactorErrorUp);
+			break;
+		default:
+			correction = idIsoScaleFactor * triggerScaleFactor;
+		}
+//		std::cout << "correction = " << correction << std::endl;
+	}
 	//8TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/KoPFAElectronTagAndProbe
 	//Only factors from PromptReco available (in the "Efficiency for e+jet channel (promptreco)" section)
 	//Specifically: ID & Iso: "ID/Isolation efficiency" sub-section
 	//Specifically: Trigger: "Trigger efficiency" sub-section
 	//These values are hard coded because, unlike for Muons, there is no pickle file provided.
 //	else if(qcd == false){ //corrections for (ID & Iso) and Trigger respectively
-		if(fabs(electronEta)<0.8) {
+	else if(fabs(electronEta)<0.8) {
 			if(20<=pt() && pt()<30) {  //Note: Trigger scale factors only provided down to electron pt of 30GeV in the link above, so I have used the same as for the 30GeV-40GeV range.
 				switch (electron_scale_factor_systematic) {
 					case -1:

@@ -84,7 +84,9 @@ default_settings = {
             'JESsystematic':0,
             'JetSmearingSystematic':0,
             'PUFile':'Data_PUDist_2011Full_central_68000mb_June2014.root',
-            'MuonScaleFactors':'MuonEfficiencies_SF_2011_53X_DataMC.root',
+            'MuonScaleFactorsFile':'MuonEfficiencies_SF_2011_53X_DataMC.root',
+            'ElectronIdIsoScaleFactorsFile': 'scaleFactors_electron_id_iso.root',
+            'ElectronTriggerScaleFactorsFile':'scaleFactors_electron_trigger.root',
             'hadronTriggerFile':'hadronLegEfficiencies_electron.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
@@ -160,7 +162,10 @@ if sample in ['TTJets-mcatnlo','TTJets-pythia','TTJets-powheg']:
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = True
-MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
+MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactorsFile']
+getElectronScaleFactorsFromFile = True
+ElectronIdIsoScaleFactorsFile = toolsFolder + "data/" + settings['ElectronIdIsoScaleFactorsFile']
+ElectronTriggerScaleFactorsFile = toolsFolder + "data/" + settings['ElectronTriggerScaleFactorsFile']
 getHadronTriggerFromFile = True
 hadronTriggerFile = toolsFolder + "data/" + settings['hadronTriggerFile']
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']

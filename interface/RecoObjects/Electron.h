@@ -8,6 +8,8 @@
 #ifndef ELECTRON_H_
 #define ELECTRON_H_
 #include "Lepton.h"
+#include "TH2F.h"
+#include "TEfficiency.h"
 #include <vector>
 #include <string>
 #include <boost/static_assert.hpp>
@@ -147,6 +149,10 @@ private:
     bool getVBTF_WP70_ElectronID_Endcap() const;
     bool getVBTF_WP95_ElectronID_Barrel() const;
     bool getVBTF_WP95_ElectronID_Endcap() const;
+
+    boost::shared_ptr<TH2F> electronIdIsoScaleFactorsHistogram;
+    boost::shared_ptr<TEfficiency> electronTriggerScaleFactorsHistogram;
+
 
 };
 

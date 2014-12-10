@@ -32,7 +32,9 @@ public:
 	std::string datasetInfoFile() const;
 	std::string PUFile() const;
 	std::string MuonScaleFactorsFile() const;
-    std::string bJetResoFile() const;
+	std::string ElectronTriggerScaleFactorsFile() const;
+	std::string ElectronIdIsoScaleFactorsFile() const;
+	std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
     std::string hadronTriggerFile() const;
 	bool useHitFit() const;
@@ -71,7 +73,10 @@ private:
 	std::string pileUpFile_;
 	bool getMuonScaleFactorsFromFile_;
 	std::string muonScaleFactorsFile_;
-    std::string bJetResoFile_;
+	bool getElectronScaleFactorsFromFile_;
+	std::string electronIdIsoScaleFactorsFile_;
+	std::string electronTriggerScaleFactorsFile_;
+	std::string bJetResoFile_;
     std::string lightJetResoFile_;
     bool getHadronTriggerFromFile_;
     std::string hadronTriggerFile_;
@@ -103,6 +108,8 @@ private:
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
 	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH3F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
+	boost::shared_ptr<TEfficiency> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
+	boost::shared_ptr<TH2F> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
 };
