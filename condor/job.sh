@@ -1,6 +1,6 @@
 #!/bin/bash
 # source CMSSW env
-. $VO_CMS_SW_DIR/cmsset_default.sh
+. /cvmfs/cms.cern.ch/cmsset_default.sh
 # get CMSSW
 scramv1 project CMSSW CMSSW_6_2_12
 cd CMSSW_6_2_12/src/
