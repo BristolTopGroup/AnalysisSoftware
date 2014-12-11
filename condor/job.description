@@ -3,6 +3,7 @@ Universe = vanilla
 Output = BAT.job.$(cluster).$(process).out
 Error = BAT.job.$(cluster).$(process).err
 Log = BAT.job.$(cluster).$(process).log
+arguments = --process $(process)
 
 transfer_input_files = Analysis.tar
 should_transfer_files = YES
@@ -10,5 +11,8 @@ when_to_transfer_output = ON_EXIT_OR_EVICT
 
 request_cpus = 1
 request_memory=2000
+
+# use the ENV that is provided
+getenv = true
 
 queue

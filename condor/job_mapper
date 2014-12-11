@@ -1,3 +1,23 @@
 #!/usr/bin/env python
 # this thing takes an integer and translates it into a workload
 # e.g. takes 1 gives (QCD_20to30_BCtoE,central) or something like that
+from optparse import OptionParser
+
+parser = OptionParser( '''executable for plotting of ROOT histograms
+    Usage:
+    plot <command> --files=[>= 1 file] --histograms=[>=1 histogram] --labels=[size == size(max(files,histograms)] [options]
+    ''' )
+parser.add_option( '-p', '--process', dest = 'process', help = 'process' )
+parser.add_option( '-s', '--sample', dest = 'sample', help = 'sample' )
+parser.add_option( '-m', '--mode', dest = 'mode', help = 'mode' )
+parser.add_option("--return_sample", action = "store_true", dest = "return_sample",
+                      help = "Returns the sample from the map based on process" )
+parser.add_option("--return_mode", action = "store_true", dest = "return_mode",
+                      help = "Returns the analysis mode from the map based on process" )
+( options, args ) = parser.parse_args()
+
+if options.return_sample:
+    if options.sample:
+        print options.sample
+    else:
+        print get_sample(options.process)
