@@ -1,23 +1,127 @@
 #!/usr/bin/env python
-# this thing takes an integer and translates it into a workload
-# e.g. takes 1 gives (QCD_20to30_BCtoE,central) or something like that
+'''
+ This module takes an integer and translates it into a workload
+ e.g. takes 1 gives (QCD_20to30_BCtoE,central) depending on the action wanted
+ It will also parse all parameters defined in the condor job description file
+ under 'arguments'.
+ 
+ This module is not meant to be used in a manual workflow.
+ It is in to be used with the condor script only
+'''
 from optparse import OptionParser
+analysis_modes = ['central',
+                 'Electron_down',
+                 'Electron_up',
+                 'Muon_down',
+                 'Muon_up',
+                 'BJet_down',
+                 'BJet_up',
+                 'JES_down',
+                 'JES_up',
+                 'LightJet_down',
+                 'LightJet_up',
+                 'PU_down',
+                 'PU_up',
+                 'JetSmearing_up',
+                 'JetSmearing_down',
+                 ]
+samples = ['DYJetsToLL', 'DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
+           'ElectronHad', 
+           'GJets_40To100', 'GJets_100To200', 'GJets_200To400', 'GJets_200', 'GJets_400', 
+           'QCD_170to250_BCtoE', 'QCD_170to250_EMEnriched', 
+           'QCD_20to30_BCtoE', 'QCD_20to30_EMEnriched', 
+           'QCD_250to350_BCtoE', 'QCD_250to350_EMEnriched', 
+           'QCD_30to80_BCtoE', 'QCD_30to80_EMEnriched', 
+           'QCD_350_BCtoE', 'QCD_350_EMEnriched', 'QCD_80to170_BCtoE', 
+           'QCD_80to170_EMEnriched', 'QCD_Pt-1000_Mu', 'QCD_Pt-120to170_Mu', 
+           'QCD_Pt-15to20_Mu', 'QCD_Pt-170to300_Mu', 'QCD_Pt-20to30_Mu', 
+           'QCD_Pt-300to470_Mu', 'QCD_Pt-30to50_Mu', 'QCD_Pt-470to600_Mu', 
+           'QCD_Pt-50to80_Mu', 'QCD_Pt-600to800_Mu', 'QCD_Pt-800to1000_Mu', 
+           'QCD_Pt-80to120_Mu', 
+           'SingleElectron', 'SingleMu', 
+           'TTJet', 
+           'TTJets-matchingdown', 'TTJets-matchingup', 
+           'TTJets-scaledown', 'TTJets-scaleup', 
+           'T_s', 'T_t', 'T_tW', 
+           'Tbar_s', 'Tbar_t', 'Tbar_tW', 
+           'WJets', 'W1Jet', 'W2Jets', 'W3Jets', 'W4Jets', 
+           'WJets-matchingdown', 'WJets-matchingup', 'WJets-scaledown', 'WJets-scaleup', 
+           'ZJets-matchingdown', 'ZJets-matchingup', 'ZJets-scaledown', 'ZJets-scaleup']
 
-parser = OptionParser( '''executable for plotting of ROOT histograms
-    Usage:
-    plot <command> --files=[>= 1 file] --histograms=[>=1 histogram] --labels=[size == size(max(files,histograms)] [options]
-    ''' )
-parser.add_option( '-p', '--process', dest = 'process', help = 'process' )
-parser.add_option( '-s', '--sample', dest = 'sample', help = 'sample' )
-parser.add_option( '-m', '--mode', dest = 'mode', help = 'mode' )
-parser.add_option("--return_sample", action = "store_true", dest = "return_sample",
-                      help = "Returns the sample from the map based on process" )
-parser.add_option("--return_mode", action = "store_true", dest = "return_mode",
-                      help = "Returns the analysis mode from the map based on process" )
-( options, args ) = parser.parse_args()
+ignore_samples_7TeV = ['DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
+               'GJets_200To400', 'GJets_400', 'SingleElectron', 
+               'TTJets-matchingdown', 'TTJets-matchingup',
+               'W1Jet', 'W2Jets', 'W3Jets', 'W4Jets',
+               'WJets-matchingdown', 'WJets-matchingup', 'WJets-scaledown', 'WJets-scaleup', 
+               'ZJets-matchingdown', 'ZJets-matchingup', 'ZJets-scaledown', 'ZJets-scaleup'
+               ]
+ignore_samples_8TeV = ['DYJetsToLL', 'ElectronHad', 'WJets',]
 
-if options.return_sample:
-    if options.sample:
-        print options.sample
-    else:
-        print get_sample(options.process)
+def build_matrix(energy):
+    ignore_samples = None
+    if energy == 7:
+        ignore_samples = ignore_samples_7TeV
+    if energy == 8:
+        ignore_samples = ignore_samples_8TeV
+        
+    result = []
+    for sample in samples:
+        for mode in analysis_modes:
+            if not sample in ignore_samples:
+                result.append((sample, mode))
+    return result
+
+def main():
+    parser = OptionParser( '''executable for plotting of ROOT histograms
+        Usage:
+        plot <command> --files=[>= 1 file] --histograms=[>=1 histogram] --labels=[size == size(max(files,histograms)] [options]
+        ''' )
+    parser.add_option( '--process', dest = 'process', help = 'process',
+                       type = int  )
+    parser.add_option( '--sample', dest = 'sample', help = 'sample' )
+    parser.add_option( '--mode', dest = 'mode', help = 'mode' )
+    parser.add_option( '--cmssw', dest = 'cmssw', 
+                       help = 'cmssw version (53X|73X|74X', default = '53X' )
+    parser.add_option( '--energy', dest = 'energy', 
+                       help = 'centre-of-mass energy (7|8|13|14 TeV)',
+                       type = int )
+    parser.add_option("--return_sample", action = "store_true", dest = "return_sample",
+                          help = "Returns the sample from the map based on process" )
+    parser.add_option("--return_mode", action = "store_true", dest = "return_mode",
+                          help = "Returns the analysis mode from the map based on process" )
+    parser.add_option("--return_cmssw", action = "store_true", dest = "return_cmssw",
+                          help = "Returns the CMSSW version" )
+    parser.add_option("--return_energy", action = "store_true", dest = "return_energy",
+                          help = "Returns the centre-of-mass energy" )
+    ( options, args ) = parser.parse_args()
+    
+    
+    # first the static options    
+    if options.return_cmssw:
+        print options.cmssw
+    if options.return_energy:
+        print options.energy
+    # now the dynamic options
+    matrix = build_matrix(options.energy)
+    if options.return_sample:
+        if options.sample:
+            print options.sample
+        else:
+            print matrix[options.process][0]
+    
+    if options.return_mode:
+        if options.mode:
+            print options.mode
+        else:
+            print matrix[options.process][1]
+            
+
+def get_sample(process):
+    # process starts at 0
+    pass
+
+def get_mode(process):
+    pass
+
+if __name__ == '__main__':
+    main()
