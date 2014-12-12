@@ -37,7 +37,7 @@ datasetInfo['DY3JetsToLL'] = {"cross-section": 51.1, "NumberOfProcessedEvents":1
 datasetInfo['DY4JetsToLL'] = {"cross-section": 23.04, "NumberOfProcessedEvents":6381467}
 
 #cross-sections from PREP (search for: GJets*8TeV*)
-datasetInfo['GJets_HT-200To400'] = {"cross-section": 960.5, "NumberOfProcessedEvents":10479625} #to update once ntuple complete
+datasetInfo['GJets_HT-200To400'] = {"cross-section": 960.5, "NumberOfProcessedEvents":47316433}
 datasetInfo['GJets_HT-400ToInf'] = {"cross-section": 107.5, "NumberOfProcessedEvents":9491846}
 
 #cross-sections from PREP (search for: QCD*BCtoE*8TeV*)
