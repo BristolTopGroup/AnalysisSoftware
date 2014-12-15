@@ -39,6 +39,13 @@ if centerOfMassEnergy == 8:
     getMuonScaleFactorsFromFile = False
     MuonScaleFactorsFile = toolsFolder + ""
 
+    getElectronScaleFactorsFromFile = False
+    ElectronIdIsoScaleFactorsFile = toolsFolder + ""
+    ElectronTriggerScaleFactorsFile = toolsFolder + ""
+
+    getHadronTriggerFromFile = False
+    hadronTriggerFile = toolsFolder + ""
+
 elif centerOfMassEnergy == 7:
     #File for pile-up re-weighting
     if nTuple_version == 8 or nTuple_version > 10:
@@ -67,6 +74,13 @@ elif centerOfMassEnergy == 7:
 
         getMuonScaleFactorsFromFile = True
         MuonScaleFactorsFile = toolsFolder + "data/MuonEfficiencies_SF_2011_53X_DataMC.root"
+
+        getElectronScaleFactorsFromFile = True
+        ElectronIdIsoScaleFactorsFile = toolsFolder + "data/scaleFactors_electron_id_iso.root"
+        ElectronTriggerScaleFactorsFile = toolsFolder + "data/scaleFactors_electron_trigger.root"
+
+        getHadronTriggerFromFile = True
+        hadronTriggerFile = toolsFolder + "data/hadronLegEfficiencies_electron.root"
 
 #Jet Energy Resolutions files (L7 corrections)                                                                                                                                                                                     
 bJetResoFile = toolsFolder + "data/bJetReso.root"

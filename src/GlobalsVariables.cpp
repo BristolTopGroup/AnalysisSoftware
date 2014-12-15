@@ -31,6 +31,8 @@ bool Globals::produceFitterASCIIoutput = false;
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
 int Globals::ElectronScaleFactorSystematic = 0;
+boost::shared_ptr<TH2F> Globals::electronIdIsoScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TEfficiency> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TEfficiency>(new TEfficiency("electronEffic","electronEffic",1,0));
 
 //muons
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
@@ -40,9 +42,9 @@ boost::shared_ptr<TH3F> Globals::muonTriggerScaleFactorsHistogram = boost::share
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
-boost::shared_ptr<TEfficiency> Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = boost::shared_ptr<TEfficiency>(new TEfficiency());
-boost::shared_ptr<TEfficiency> Globals::hadronTriggerLegEfficiencyHistogram_isoJets = boost::shared_ptr<TEfficiency>(new TEfficiency());
-boost::shared_ptr<TEfficiency> Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = boost::shared_ptr<TEfficiency>(new TEfficiency());
+boost::shared_ptr<TEfficiency> Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = boost::shared_ptr<TEfficiency>(new TEfficiency("nonIsoJets","nonIsoJets",1,0));
+boost::shared_ptr<TEfficiency> Globals::hadronTriggerLegEfficiencyHistogram_isoJets = boost::shared_ptr<TEfficiency>(new TEfficiency("isoJets","isoJets",1,0));
+boost::shared_ptr<TEfficiency> Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = boost::shared_ptr<TEfficiency>(new TEfficiency("isoPFJets","isoPFJets",1,0));
 int Globals::JESsystematic = 0;
 int Globals::BJetSystematic = 0;
 int Globals::LightJetSystematic = 0;

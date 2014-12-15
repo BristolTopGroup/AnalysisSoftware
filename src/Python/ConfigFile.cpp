@@ -31,6 +31,9 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		pileUpFile_(PythonParser::getAttributeFromPyObject<string>(config, "PUFile")), //
 		getMuonScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getMuonScaleFactorsFromFile")), //
 		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonScaleFactorsFile")), //
+		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
+		electronIdIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdIsoScaleFactorsFile")), //
+		electronTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronTriggerScaleFactorsFile")), //
 		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
 		lightJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "lightJetResoFile")), //
 		getHadronTriggerFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getHadronTriggerFromFile")), //
@@ -100,6 +103,9 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("PUFile", value<std::string>(), "set input PU file for PU re-weighting");
 	desc.add_options()("getMuonScaleFactorsFromFile", value<bool>(), "state whether we are getting the muon scale factors from a file or not");
 	desc.add_options()("MuonScaleFactorsFile", value<std::string>(), "set input file for muon scale factors");
+	desc.add_options()("getElectronScaleFactorsFromFile", value<bool>(), "state whether we are getting the electron scale factors from a file or not");
+	desc.add_options()("ElectronIdIsoScaleFactorsFile", value<std::string>(), "set input file for electron ID & ISO scale factors");
+	desc.add_options()("ElectronTriggerScaleFactorsFile", value<std::string>(), "set input file for electron trigger scale factors");
 	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
 	desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
 	desc.add_options()("getHadronTriggerFromFile", value<bool>(), "state whether we are getting the electron trigger hadron leg efficiencies from a file or not");
@@ -206,6 +212,20 @@ string ConfigFile::MuonScaleFactorsFile() const {
 		return programOptions["MuonScaleFactorsFile"].as<std::string>();
 	else
 		return muonScaleFactorsFile_;
+}
+
+string ConfigFile::ElectronIdIsoScaleFactorsFile() const {
+	if (programOptions.count("ElectronIdIsoScaleFactorsFile"))
+		return programOptions["ElectronIdIsoScaleFactorsFile"].as<std::string>();
+	else
+		return electronIdIsoScaleFactorsFile_;
+}
+
+string ConfigFile::ElectronTriggerScaleFactorsFile() const {
+	if (programOptions.count("ElectronTriggerScaleFactorsFile"))
+		return programOptions["ElectronTriggerScaleFactorsFile"].as<std::string>();
+	else
+		return electronTriggerScaleFactorsFile_;
 }
 
 string ConfigFile::hadronTriggerFile() const {
@@ -413,23 +433,33 @@ void ConfigFile::loadIntoMemory() {
 
 	Globals::estimatedPileup = getPileUpHistogram(PUFile());
 
-	if (Globals::energyInTeV == 7 && getMuonScaleFactorsFromFile_ ) {
-		std::cout << "Getting muon scale factors from file " << MuonScaleFactorsFile() << "." << std::endl;
-		Globals::muonIdIsoScaleFactorsHistogram = getMuonIdIsoScaleFactorsHistogram(MuonScaleFactorsFile());
-		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonScaleFactorsFile());
-	} else {
-		std::cout << "Using hard coded muon scale factors in Muon.cpp." << std::endl;
-	}
-
 	//Lepton Scale Factors
 	Globals::ElectronScaleFactorSystematic = electronScaleFactorSystematic();
 	Globals::MuonScaleFactorSystematic = muonScaleFactorSystematic();
 	std::cout << "ConfigFile.cpp: Globals::ElectronScaleFactorSystematic = " << Globals::ElectronScaleFactorSystematic << std::endl;
 	std::cout << "ConfigFile.cpp: Globals::MuonScaleFactorSystematic = " << Globals::MuonScaleFactorSystematic << std::endl;
 
+	if (Globals::energyInTeV == 7 && getMuonScaleFactorsFromFile_ ) {
+		std::cout << "Getting muon scale factors from file " << MuonScaleFactorsFile() << "." << std::endl;
+		Globals::muonIdIsoScaleFactorsHistogram = getMuonIdIsoScaleFactorsHistogram(MuonScaleFactorsFile());
+		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonScaleFactorsFile());
+	} else {
+		std::cout << "No muon scale factors file, corrections will be set to 1." << std::endl;
+	}
+
+	if (Globals::energyInTeV == 7 && getElectronScaleFactorsFromFile_ ) {
+		std::cout << "Getting electron scale factors from file " << ElectronIdIsoScaleFactorsFile() << " and " << ElectronTriggerScaleFactorsFile() << "." << std::endl;
+		Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
+	} else {
+		std::cout << "No electron scale factors file, corrections will be set to 1." << std::endl;
+	}
+
 	if ( Globals::energyInTeV == 7 && getHadronTriggerFromFile_ ) {
 		std::cout << "Getting electron trigger hadron leg efficiencies from file " << hadronTriggerFile() << "." << std::endl;
 		getHadronTriggerLegHistogram(hadronTriggerFile());
+	} else {
+		std::cout << "No electron trigger hadron leg efficiencies file, corrections will be set to 1." << std::endl;
 	}
 
 	//JES systematic
@@ -506,6 +536,36 @@ boost::shared_ptr<TH3F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	return triggerHistogram;
 }
 
+boost::shared_ptr<TH2F> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(electronIdIsoScaleFactorsFile)) {
+		cerr << "ConfigFile::getElectronIdIsoScaleFactorsHistogram(" << electronIdIsoScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find electron ID & ISO scale factors histogram file in " + electronIdIsoScaleFactorsFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(electronIdIsoScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH2F> idIsoHistogram((TH2F*) file->Get("scaleFactors")->Clone());
+	file->Close();
+
+	return idIsoHistogram;
+}
+
+boost::shared_ptr<TEfficiency> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(electronTriggerScaleFactorsFile)) {
+		cerr << "ConfigFile::getElectronTriggerScaleFactorsHistogram(" << electronTriggerScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find electron trigger scale factors histogram file in " + electronTriggerScaleFactorsFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(electronTriggerScaleFactorsFile.c_str()));
+	boost::shared_ptr<TEfficiency> triggerHistogram((TEfficiency*) file->Get("data")->Clone());
+	file->Close();
+
+	return triggerHistogram;
+}
+
 void ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
 	using namespace std;
 
@@ -518,6 +578,7 @@ void ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
 	Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_1")->Clone("data_1"));
 	Globals::hadronTriggerLegEfficiencyHistogram_isoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_2")->Clone("data_2"));
 	Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_3")->Clone("data_3"));
+
 	file->Close();
 }
 

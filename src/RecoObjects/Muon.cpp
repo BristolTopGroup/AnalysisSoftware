@@ -157,19 +157,20 @@ double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic,
 	float triggerScaleFactor(0), idIsoScaleFactor(0);
 	float triggerScaleFactorError(0), idIsoScaleFactorError(0);
 
-	// 7TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#2011_data (from 44X pickle file)
-	if (Globals::energyInTeV == 7) { //Luminosity weighted average of 'combRelPFISO12_2011A' and 'combRelPFISO12_2011B' from pickle file
+	// 7 TeV scale factors provided by Muon POG: /afs/cern.ch/user/h/hwollny/wpublic/7tev/MuonEfficiencies_SF_2011_53X_DataMC.root
+	// http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2013_339_v9.pdf
+	if (Globals::energyInTeV == 7) {
 
 		// Get bin number in ID & ISO histogram
-		unsigned int idIsobinNumber = muonIdIsoScaleFactorsHistogram->FindBin( muEta, pt() );
+		unsigned int idIsoBinNumber = muonIdIsoScaleFactorsHistogram->FindBin( muEta, pt() );
 
 		// Get bin number in Trigger histogram. This is binned in eta, pt and charge. We average out the values between the charges.
 		unsigned int triggerBinNumberMuon = muonTriggerScaleFactorsHistogram->FindBin( 1, muEta, pt() ); // bin number for muon
 		unsigned int triggerBinNumberAntiMuon = muonTriggerScaleFactorsHistogram->FindBin( -1, muEta, pt() ); // bin number for antimuon
 
 		// Get ID & ISO scale factor from histogram
-		idIsoScaleFactor = muonIdIsoScaleFactorsHistogram->GetBinContent( idIsobinNumber );
-		idIsoScaleFactorError = muonIdIsoScaleFactorsHistogram->GetBinError( idIsobinNumber );
+		idIsoScaleFactor = muonIdIsoScaleFactorsHistogram->GetBinContent( idIsoBinNumber );
+		idIsoScaleFactorError = muonIdIsoScaleFactorsHistogram->GetBinError( idIsoBinNumber );
 
 		// Get Trigger scale factor from histogram for muons and antimuons
 		float triggerScaleFactorMuon = muonTriggerScaleFactorsHistogram->GetBinContent( triggerBinNumberMuon );
