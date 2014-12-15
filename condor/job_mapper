@@ -78,6 +78,8 @@ def main():
         ''' )
     parser.add_option( '--process', dest = 'process', help = 'process',
                        type = int  )
+    parser.add_option( '--cores', dest = 'cores', help = 'cores',
+                       type = int  )
     parser.add_option( '--sample', dest = 'sample', help = 'sample' )
     parser.add_option( '--mode', dest = 'mode', help = 'mode' )
     parser.add_option( '--cmssw', dest = 'cmssw', 
@@ -93,6 +95,10 @@ def main():
                           help = "Returns the CMSSW version" )
     parser.add_option("--return_energy", action = "store_true", dest = "return_energy",
                           help = "Returns the centre-of-mass energy" )
+    parser.add_option("--return_cores", action = "store_true", dest = "return_cores",
+                          help = "Returns the number of requested cores" )
+    parser.add_option("--return_process", action = "store_true", dest = "return_process",
+                          help = "Returns the number of requested cores" )
     ( options, args ) = parser.parse_args()
     
     
@@ -101,6 +107,10 @@ def main():
         print options.cmssw
     if options.return_energy:
         print options.energy
+    if options.return_cores:
+        print options.cores
+    if options.return_process:
+        print options.process
     # now the dynamic options
     matrix = build_matrix(options.energy)
     if options.return_sample:
@@ -114,14 +124,6 @@ def main():
             print options.mode
         else:
             print matrix[options.process][1]
-            
-
-def get_sample(process):
-    # process starts at 0
-    pass
-
-def get_mode(process):
-    pass
 
 if __name__ == '__main__':
     main()
