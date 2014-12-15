@@ -16,6 +16,7 @@
 #include "TH1D.h"
 #include "TH2F.h"
 #include "TH3F.h"
+#include "TEfficiency.h"
 #include <string>
 
 
@@ -51,6 +52,9 @@ struct Globals {
 
 	//jets
 	static JetAlgorithm::value jetAlgorithm;
+	static boost::shared_ptr<TEfficiency> hadronTriggerLegEfficiencyHistogram_nonIsoJets;
+	static boost::shared_ptr<TEfficiency> hadronTriggerLegEfficiencyHistogram_isoJets;
+	static boost::shared_ptr<TEfficiency> hadronTriggerLegEfficiencyHistogram_isoPFJets;
 	static boost::array<boost::shared_ptr<TF1>, 12> bL7Corrections;
 	static boost::array<boost::shared_ptr<TF1>, 12> lightL7Corrections;
 	static int JESsystematic;

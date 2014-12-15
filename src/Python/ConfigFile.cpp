@@ -33,6 +33,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonScaleFactorsFile")), //
 		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
 		lightJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "lightJetResoFile")), //
+		getHadronTriggerFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getHadronTriggerFromFile")), //
+		hadronTriggerFile_(PythonParser::getAttributeFromPyObject<string>(config, "hadronTriggerFile")), //
 		useHitFit_(PythonParser::getAttributeFromPyObject<bool>(config, "useHitFit")), //
 		fitterOutputFlag_(PythonParser::getAttributeFromPyObject<bool>(config, "produceFitterASCIIoutput")), //
 		inputFiles_(PythonParser::getVectorFromPythonObject(config, "inputFiles")), //
@@ -100,6 +102,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("MuonScaleFactorsFile", value<std::string>(), "set input file for muon scale factors");
 	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
 	desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
+	desc.add_options()("getHadronTriggerFromFile", value<bool>(), "state whether we are getting the electron trigger hadron leg efficiencies from a file or not");
 	desc.add_options()("fitter", value<bool>(), "turn on the fitter (HitFit)");
 	desc.add_options()("fitterASCIIoutput", value<bool>(), "produce full kinematic fit output in ASCII format");
 	desc.add_options()("TQAFPath", value<std::string>(),
@@ -203,6 +206,13 @@ string ConfigFile::MuonScaleFactorsFile() const {
 		return programOptions["MuonScaleFactorsFile"].as<std::string>();
 	else
 		return muonScaleFactorsFile_;
+}
+
+string ConfigFile::hadronTriggerFile() const {
+	if (programOptions.count("hadronTriggerFile"))
+		return programOptions["hadronTriggerFile"].as<std::string>();
+	else
+		return hadronTriggerFile_;
 }
 
 string ConfigFile::datasetInfoFile() const {
@@ -417,6 +427,11 @@ void ConfigFile::loadIntoMemory() {
 	std::cout << "ConfigFile.cpp: Globals::ElectronScaleFactorSystematic = " << Globals::ElectronScaleFactorSystematic << std::endl;
 	std::cout << "ConfigFile.cpp: Globals::MuonScaleFactorSystematic = " << Globals::MuonScaleFactorSystematic << std::endl;
 
+	if ( Globals::energyInTeV == 7 && getHadronTriggerFromFile_ ) {
+		std::cout << "Getting electron trigger hadron leg efficiencies from file " << hadronTriggerFile() << "." << std::endl;
+		getHadronTriggerLegHistogram(hadronTriggerFile());
+	}
+
 	//JES systematic
 	Globals::JESsystematic = jesSystematic();
 
@@ -489,6 +504,21 @@ boost::shared_ptr<TH3F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	file->Close();
 
 	return triggerHistogram;
+}
+
+void ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(hadronTriggerFile)) {
+		cerr << "ConfigFile::getHadronTriggerLegHistogram(" << hadronTriggerFile << "): could not find file" << endl;
+		throw "Could not find hadron leg efficiency histogram file in " + hadronTriggerFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(hadronTriggerFile.c_str()));
+	Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_1")->Clone("data_1"));
+	Globals::hadronTriggerLegEfficiencyHistogram_isoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_2")->Clone("data_2"));
+	Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_3")->Clone("data_3"));
+	file->Close();
 }
 
 unsigned int ConfigFile::nTupleVersion() const {

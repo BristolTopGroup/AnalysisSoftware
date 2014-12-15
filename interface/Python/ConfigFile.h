@@ -16,6 +16,7 @@
 #include "TH1D.h"
 #include "TH2F.h"
 #include "TH3F.h"
+#include "TEfficiency.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
 
@@ -33,6 +34,7 @@ public:
 	std::string MuonScaleFactorsFile() const;
     std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
+    std::string hadronTriggerFile() const;
 	bool useHitFit() const;
 	bool fitterOutputFlag() const;
 	const std::vector<std::string>& inputFiles() const;
@@ -71,6 +73,8 @@ private:
 	std::string muonScaleFactorsFile_;
     std::string bJetResoFile_;
     std::string lightJetResoFile_;
+    bool getHadronTriggerFromFile_;
+    std::string hadronTriggerFile_;
 	bool useHitFit_;
 	bool fitterOutputFlag_;
 	std::vector<std::string> inputFiles_;
@@ -100,6 +104,7 @@ private:
 	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH3F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
+	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
 };
 
 } /* namespace BAT */
