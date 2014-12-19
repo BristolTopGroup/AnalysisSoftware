@@ -18,9 +18,27 @@ source root/bin/thisroot.sh
 root -l -q
 
 # setup newer compilers ( we need gcc >= 4.7 for c++11
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50;
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50;
-sudo update-alternatives --set gcc /usr/bin/gcc-4.8; sudo update-alternatives --set g++ /usr/bin/g++-4.8;
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 50;
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 50;
+sudo update-alternatives --set gcc /usr/bin/gcc-${GCC_VERSION}; 
+sudo update-alternatives --set g++ /usr/bin/g++-${GCC_VERSION};
+
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${CLANG_VERSION} 50;
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${CLANG_VERSION} 50;
+sudo update-alternatives --set clang /usr/bin/clang-${CLANG_VERSION};
+sudo update-alternatives --set clang++ /usr/bin/clang++-${CLANG_VERSION};
+
+export CC=/usr/bin/clang-${CLANG_VERSION};
+export CXX=/usr/bin/clang++-${CLANG_VERSION};
+# check version
+echo "g++ version:"
+g++ --version
+echo "clang version:"
+clang --version
+which clang
+echo "using CXX: ${CXX}"
+
+ls -lah /usr/bin/ | grep clang
 
 cmake CMakelists.txt
 make
