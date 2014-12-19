@@ -60,46 +60,46 @@ MuonReader::MuonReader() :
 }
 
 MuonReader::MuonReader(TChainPointer input, MuonAlgorithm::value algo) :
-		energyReader(input, MuonAlgorithm::prefixes.at(algo) + ".Energy"), //
-		pxReader(input, MuonAlgorithm::prefixes.at(algo) + ".Px"), //
-		pyReader(input, MuonAlgorithm::prefixes.at(algo) + ".Py"), //
-		pzReader(input, MuonAlgorithm::prefixes.at(algo) + ".Pz"), //
-		chargeReader(input, MuonAlgorithm::prefixes.at(algo) + ".Charge"), //
-		d0_BS_Reader(input, MuonAlgorithm::prefixes.at(algo) + ".BeamSpotDXY"), //
-		d0_PV_Reader(input, MuonAlgorithm::prefixes.at(algo) + ".PrimaryVertexDXY"), //
-		ecalIsolationReader(input, MuonAlgorithm::prefixes.at(algo) + ".EcalIso03"), //
-		hcalIsolationReader(input, MuonAlgorithm::prefixes.at(algo) + ".HcalIso03"), //
-		trackerIsolationReader(input, MuonAlgorithm::prefixes.at(algo) + ".TrkIso03"), //
-		PFGammaIsolationReader_DR03_(input, MuonAlgorithm::prefixes.at(algo) + ".PFGammaIso03"), //
-		PFChargedHadronIsolationReader_DR03_(input, MuonAlgorithm::prefixes.at(algo) + ".PfChargedHadronIso03"), //
-		PFNeutralHadronIsolationReader_DR03_(input, MuonAlgorithm::prefixes.at(algo) + ".PfNeutralHadronIso03"), //
-		PFPUChargedHadron_Isolation_DR03_(input, MuonAlgorithm::prefixes.at(algo) + ".PfPUChargedHadronIso03"), //
-		PFGammaIsolationReader_DR04_(input, MuonAlgorithm::prefixes.at(algo) + ".PFGammaIso04"), //
-		PFChargedHadronIsolationReader_DR04_(input, MuonAlgorithm::prefixes.at(algo) + ".PfChargedHadronIso04"), //
-		PFNeutralHadronIsolationReader_DR04_(input, MuonAlgorithm::prefixes.at(algo) + ".PfNeutralHadronIso04"), //
-		PFPUChargedHadron_Isolation_DR04_(input, MuonAlgorithm::prefixes.at(algo) + ".PfPUChargedHadronIso04"), //
-		PFGammaIsolationReader_DR05_(input, MuonAlgorithm::prefixes.at(algo) + ".PFGammaIso05"), //
-		PFChargedHadronIsolationReader_DR05_(input, MuonAlgorithm::prefixes.at(algo) + ".PfChargedHadronIso05"), //
-		PFNeutralHadronIsolationReader_DR05_(input, MuonAlgorithm::prefixes.at(algo) + ".PfNeutralHadronIso05"), //
-		PFPUChargedHadron_Isolation_DR05_(input, MuonAlgorithm::prefixes.at(algo) + ".PfPUChargedHadronIso05"), //
-		PFDeltaBeta_Isolation_DR04_(input, MuonAlgorithm::prefixes.at(algo) + ".PFRelIso04DeltaBeta"), //
-		sumChargedHadronPt04_(input, MuonAlgorithm::prefixes.at(algo) + ".sumChargedHadronPt04"), //
-		sumNeutralHadronPt04_(input, MuonAlgorithm::prefixes.at(algo) + ".sumNeutralHadronPt04"), //
-		sumPhotonPt04_(input, MuonAlgorithm::prefixes.at(algo) + ".sumPhotonPt04"), //
-		sumPUPt04_(input, MuonAlgorithm::prefixes.at(algo) + ".sumPUPt04"), //
-		isGlobalMuon(input, MuonAlgorithm::prefixes.at(algo) + ".isGlobalMuon"), //
-		isTrackerMuon(input, MuonAlgorithm::prefixes.at(algo) + ".isTrackerMuon"), //
-		isPFMuon(input, MuonAlgorithm::prefixes.at(algo) + ".isPFMuon"), //
-		vertex_dist_z(input, MuonAlgorithm::prefixes.at(algo) + ".Vertex.DistZ"), //
-		normalisedChi2(input, MuonAlgorithm::prefixes.at(algo) + ".GlobalTrack.NormalizedChi2"), //
-		NumberOfValidHits(input, MuonAlgorithm::prefixes.at(algo) + ".InnerTrack.NumberOfValidHits"), //
-		NumberOfValidMuonHits(input, MuonAlgorithm::prefixes.at(algo) + ".GlobalTrack.NumberOfValidMuonHits"), //
-		PixelLayersWithMeasurement(input, MuonAlgorithm::prefixes.at(algo) + ".InnerTrack.PixelLayersWithMeasurement"), //
+		energyReader(input, "Muons.Energy"), //
+		pxReader(input, "Muons.Px"), //
+		pyReader(input, "Muons.Py"), //
+		pzReader(input, "Muons.Pz"), //
+		chargeReader(input, "Muons.Charge"), //
+		d0_BS_Reader(input, "Muons.BeamSpotDXY"), //
+		d0_PV_Reader(input, "Muons.PrimaryVertexDXY"), //
+		ecalIsolationReader(input, "Muons.EcalIso03"), //
+		hcalIsolationReader(input, "Muons.HcalIso03"), //
+		trackerIsolationReader(input, "Muons.TrkIso03"), //
+		// PFGammaIsolationReader_DR03_(input, "Muons.PFGammaIso03"), //
+		// PFChargedHadronIsolationReader_DR03_(input, "Muons.PfChargedHadronIso03"), //
+		// PFNeutralHadronIsolationReader_DR03_(input, "Muons.PfNeutralHadronIso03"), //
+		// PFPUChargedHadron_Isolation_DR03_(input, "Muons.PfPUChargedHadronIso03"), //
+		// PFGammaIsolationReader_DR04_(input, "Muons.PFGammaIso04"), //
+		// PFChargedHadronIsolationReader_DR04_(input, "Muons.PfChargedHadronIso04"), //
+		// PFNeutralHadronIsolationReader_DR04_(input, "Muons.PfNeutralHadronIso04"), //
+		// PFPUChargedHadron_Isolation_DR04_(input, "Muons.PfPUChargedHadronIso04"), //
+		// PFGammaIsolationReader_DR05_(input, "Muons.PFGammaIso05"), //
+		// PFChargedHadronIsolationReader_DR05_(input, "Muons.PfChargedHadronIso05"), //
+		// PFNeutralHadronIsolationReader_DR05_(input, "Muons.PfNeutralHadronIso05"), //
+		// PFPUChargedHadron_Isolation_DR05_(input, "Muons.PfPUChargedHadronIso05"), //
+		// PFDeltaBeta_Isolation_DR04_(input, "Muons.PFRelIso04DeltaBeta"), //
+		// sumChargedHadronPt04_(input, "Muons.sumChargedHadronPt04"), //
+		// sumNeutralHadronPt04_(input, "Muons.sumNeutralHadronPt04"), //
+		// sumPhotonPt04_(input, "Muons.sumPhotonPt04"), //
+		// sumPUPt04_(input, "Muons.sumPUPt04"), //
+		isGlobalMuon(input, "Muons.isGlobalMuon"), //
+		isTrackerMuon(input, "Muons.isTrackerMuon"), //
+		isPFMuon(input, "Muons.isPFMuon"), //
+		vertex_dist_z(input, "Muons.Vertex.DistZ"), //
+		normalisedChi2(input, "Muons.GlobalTrack.NormalizedChi2"), //
+		NumberOfValidHits(input, "Muons.InnerTrack.NumberOfValidHits"), //
+		NumberOfValidMuonHits(input, "Muons.GlobalTrack.NumberOfValidMuonHits"), //
+		PixelLayersWithMeasurement(input, "Muons.InnerTrack.PixelLayersWithMeasurement"), //
 		TrackerLayersWithMeasurement(input,
-				MuonAlgorithm::prefixes.at(algo) + ".InnerTrack.TrackerLayersWithMeasurement"), //
-		NumberOfValidPixelHits(input, MuonAlgorithm::prefixes.at(algo) + ".InnerTrack.NumberOfValidPixelHits"), //
-		NumberOfMatchedStations(input, MuonAlgorithm::prefixes.at(algo) + ".NumberOfMatchedStations"), //
-		NumberOfMatches(input, MuonAlgorithm::prefixes.at(algo) + ".NumberOfMatches"), //
+				"Muons.InnerTrack.TrackerLayersWithMeasurement"), //
+		NumberOfValidPixelHits(input, "Muons.InnerTrack.NumberOfValidPixelHits"), //
+		NumberOfMatchedStations(input, "Muons.NumberOfMatchedStations"), //
+		NumberOfMatches(input, "Muons.NumberOfMatches"), //
 		algorithm(algo), muons() {
 
 }
@@ -116,33 +116,33 @@ void MuonReader::initialise() {
 	ecalIsolationReader.initialise();
 	hcalIsolationReader.initialise();
 	trackerIsolationReader.initialise();
-	if (algorithm == MuonAlgorithm::ParticleFlow) {
-		PFGammaIsolationReader_DR03_.initialise();
-		PFChargedHadronIsolationReader_DR03_.initialise();
-		PFNeutralHadronIsolationReader_DR03_.initialise();
-		PFGammaIsolationReader_DR04_.initialise();
-		PFChargedHadronIsolationReader_DR04_.initialise();
-		PFNeutralHadronIsolationReader_DR04_.initialise();
-		PFGammaIsolationReader_DR05_.initialise();
-		PFChargedHadronIsolationReader_DR05_.initialise();
-		PFNeutralHadronIsolationReader_DR05_.initialise();
-		if (Globals::NTupleVersion >= 9) {
-			PFPUChargedHadron_Isolation_DR03_.initialise();
-			PFPUChargedHadron_Isolation_DR04_.initialise();
-			PFPUChargedHadron_Isolation_DR05_.initialise();
-			PFDeltaBeta_Isolation_DR04_.initialise();
-		}else {
-			cout << "Using an old (<9) nTuple version. Following variables will not be available:" << endl;
-			cout << "Muon::PfPUChargedHadronIso()" << endl;
-		}
+	// if (algorithm == MuonAlgorithm::ParticleFlow) {
+	// 	PFGammaIsolationReader_DR03_.initialise();
+	// 	PFChargedHadronIsolationReader_DR03_.initialise();
+	// 	PFNeutralHadronIsolationReader_DR03_.initialise();
+	// 	PFGammaIsolationReader_DR04_.initialise();
+	// 	PFChargedHadronIsolationReader_DR04_.initialise();
+	// 	PFNeutralHadronIsolationReader_DR04_.initialise();
+	// 	PFGammaIsolationReader_DR05_.initialise();
+	// 	PFChargedHadronIsolationReader_DR05_.initialise();
+	// 	PFNeutralHadronIsolationReader_DR05_.initialise();
+	// 	if (Globals::NTupleVersion >= 9) {
+	// 		PFPUChargedHadron_Isolation_DR03_.initialise();
+	// 		PFPUChargedHadron_Isolation_DR04_.initialise();
+	// 		PFPUChargedHadron_Isolation_DR05_.initialise();
+	// 		PFDeltaBeta_Isolation_DR04_.initialise();
+	// 	}else {
+	// 		cout << "Using an old (<9) nTuple version. Following variables will not be available:" << endl;
+	// 		cout << "Muon::PfPUChargedHadronIso()" << endl;
+	// 	}
 
-				if(Globals::NTupleVersion >= 10) {
-					sumChargedHadronPt04_.initialise();
-					sumNeutralHadronPt04_.initialise();
-					sumPhotonPt04_.initialise();
-					sumPUPt04_.initialise();
-				}
-	}
+	// 			if(Globals::NTupleVersion >= 10) {
+	// 				sumChargedHadronPt04_.initialise();
+	// 				sumNeutralHadronPt04_.initialise();
+	// 				sumPhotonPt04_.initialise();
+	// 				sumPUPt04_.initialise();
+	// 			}
+	// }
 
 	isGlobalMuon.initialise();
 	isTrackerMuon.initialise();
@@ -162,6 +162,7 @@ void MuonReader::initialise() {
 	}
 	NumberOfMatchedStations.initialise();
 	NumberOfMatches.initialise();
+
 }
 
 const MuonCollection& MuonReader::getMuons() {
@@ -185,35 +186,35 @@ void MuonReader::readMuons() {
 		muon->setHcalIsolation(hcalIsolationReader.getVariableAt(index));
 		muon->setTrackerIsolation(trackerIsolationReader.getVariableAt(index));
 
-		if (algorithm == MuonAlgorithm::ParticleFlow) {
-			muon->setPFGammaIsolation(PFGammaIsolationReader_DR03_.getVariableAt(index), 0.3);
-			muon->setPFChargedHadronIsolation(PFChargedHadronIsolationReader_DR03_.getVariableAt(index), 0.3);
-			muon->setPFNeutralHadronIsolation(PFNeutralHadronIsolationReader_DR03_.getVariableAt(index), 0.3);
-			muon->setPFGammaIsolation(PFGammaIsolationReader_DR04_.getVariableAt(index), 0.4);
-			muon->setPFChargedHadronIsolation(PFChargedHadronIsolationReader_DR04_.getVariableAt(index), 0.4);
-			muon->setPFNeutralHadronIsolation(PFNeutralHadronIsolationReader_DR04_.getVariableAt(index), 0.4);
-			muon->setPFGammaIsolation(PFGammaIsolationReader_DR05_.getVariableAt(index), 0.5);
-			muon->setPFChargedHadronIsolation(PFChargedHadronIsolationReader_DR05_.getVariableAt(index), 0.5);
-			muon->setPFNeutralHadronIsolation(PFNeutralHadronIsolationReader_DR05_.getVariableAt(index), 0.5);
-			if (Globals::NTupleVersion >= 9) {
-				muon->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR03_.getVariableAt(index), 0.3);
-				muon->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR04_.getVariableAt(index), 0.4);
-				muon->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR05_.getVariableAt(index), 0.5);
-				muon->setPFDeltaBeta_Isolation_DR04(PFDeltaBeta_Isolation_DR04_.getVariableAt(index));
-			} else {
-				muon->setPFPUChargedHadronIsolation(0, 0.3);
-				muon->setPFPUChargedHadronIsolation(0, 0.4);
-				muon->setPFPUChargedHadronIsolation(0, 0.5);
-			}
+		// if (algorithm == MuonAlgorithm::ParticleFlow) {
+		// 	muon->setPFGammaIsolation(PFGammaIsolationReader_DR03_.getVariableAt(index), 0.3);
+		// 	muon->setPFChargedHadronIsolation(PFChargedHadronIsolationReader_DR03_.getVariableAt(index), 0.3);
+		// 	muon->setPFNeutralHadronIsolation(PFNeutralHadronIsolationReader_DR03_.getVariableAt(index), 0.3);
+		// 	muon->setPFGammaIsolation(PFGammaIsolationReader_DR04_.getVariableAt(index), 0.4);
+		// 	muon->setPFChargedHadronIsolation(PFChargedHadronIsolationReader_DR04_.getVariableAt(index), 0.4);
+		// 	muon->setPFNeutralHadronIsolation(PFNeutralHadronIsolationReader_DR04_.getVariableAt(index), 0.4);
+		// 	muon->setPFGammaIsolation(PFGammaIsolationReader_DR05_.getVariableAt(index), 0.5);
+		// 	muon->setPFChargedHadronIsolation(PFChargedHadronIsolationReader_DR05_.getVariableAt(index), 0.5);
+		// 	muon->setPFNeutralHadronIsolation(PFNeutralHadronIsolationReader_DR05_.getVariableAt(index), 0.5);
+		// 	if (Globals::NTupleVersion >= 9) {
+		// 		muon->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR03_.getVariableAt(index), 0.3);
+		// 		muon->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR04_.getVariableAt(index), 0.4);
+		// 		muon->setPFPUChargedHadronIsolation(PFPUChargedHadron_Isolation_DR05_.getVariableAt(index), 0.5);
+		// 		muon->setPFDeltaBeta_Isolation_DR04(PFDeltaBeta_Isolation_DR04_.getVariableAt(index));
+		// 	} else {
+		// 		muon->setPFPUChargedHadronIsolation(0, 0.3);
+		// 		muon->setPFPUChargedHadronIsolation(0, 0.4);
+		// 		muon->setPFPUChargedHadronIsolation(0, 0.5);
+		// 	}
 
-			if (Globals::NTupleVersion >= 10) {
-					muon->setsumChargedHadronPt04(sumChargedHadronPt04_.getVariableAt(index));
-					muon->setsumNeutralHadronPt04(sumNeutralHadronPt04_.getVariableAt(index));
-					muon->setsumPhotonPt04(sumPhotonPt04_.getVariableAt(index));
-					muon->setsumPUPt04(sumPUPt04_.getVariableAt(index));
-			}
+		// 	if (Globals::NTupleVersion >= 10) {
+		// 			muon->setsumChargedHadronPt04(sumChargedHadronPt04_.getVariableAt(index));
+		// 			muon->setsumNeutralHadronPt04(sumNeutralHadronPt04_.getVariableAt(index));
+		// 			muon->setsumPhotonPt04(sumPhotonPt04_.getVariableAt(index));
+		// 			muon->setsumPUPt04(sumPUPt04_.getVariableAt(index));
+		// 	}
 
-		}
+		// }
 
 		muon->setD0(d0_PV_Reader.getVariableAt(index));
 		muon->setD0_wrtBeamSpot(d0_BS_Reader.getVariableAt(index));

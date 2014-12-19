@@ -28,6 +28,10 @@ Event::Event() : //
 		allJets(), //
 		genJets(), //
 		allMuons(), //
+		passesElectronSelection_(false),
+		passesMuonSelection_(false),
+		selectionOutputInfo_electron(),
+		selectionOutputInfo_muon(),
 		genParticles(), //
 		mets_(), //
 		genMet_(), //
@@ -114,6 +118,74 @@ void Event::setGenJets(JetCollection jets) {
 	genJets = jets;
 }
 
+const bool Event::PassesElectronSelection() const {
+	if ( passesElectronSelection_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonSelection() const {
+	if ( passesMuonSelection_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const LeptonPointer Event::getSignalLepton( bool isElectronChannel ) const {
+	if ( isElectronChannel ) {
+		unsigned int signalLeptonIndex = selectionOutputInfo_electron.getSignalLeptonIndex();
+		return allElectrons[signalLeptonIndex];
+	}
+	else {
+		unsigned int signalLeptonIndex = selectionOutputInfo_muon.getSignalLeptonIndex();
+		return allMuons[signalLeptonIndex];
+	}
+}
+
+const JetCollection Event::getCleanedJets( bool isElectronChannel ) const{
+	std::vector<unsigned int> cleanedJetIndices;
+	if ( isElectronChannel ) {
+		cleanedJetIndices = selectionOutputInfo_electron.getCleanedJetIndex();
+	}
+	else {
+		cleanedJetIndices = selectionOutputInfo_muon.getCleanedJetIndex();
+	}
+
+	JetCollection cleanedJets;
+	for ( unsigned int cleanedJetIndex = 0; cleanedJetIndex < cleanedJetIndices.size(); ++cleanedJetIndex ) {
+		cleanedJets.push_back( allJets[cleanedJetIndex] );
+	}
+	return cleanedJets;
+}
+
+const JetCollection Event::getCleanedBJets( bool isElectronChannel ) const{
+	std::vector<unsigned int> cleanedBJetIndices;
+	if ( isElectronChannel ) {
+		cleanedBJetIndices = selectionOutputInfo_electron.getCleanedBJetIndex();
+	}
+	else {
+		cleanedBJetIndices = selectionOutputInfo_muon.getCleanedBJetIndex();
+	}
+
+	JetCollection cleanedBJets;
+	for ( unsigned int cleanedBJetIndex = 0; cleanedBJetIndex < cleanedBJetIndices.size(); ++cleanedBJetIndex ) {
+		cleanedBJets.push_back( allJets[cleanedBJetIndex] );
+	}
+	return cleanedBJets;
+}
+
+const unsigned int Event::getNBJets( bool isElectronChannel ) const {
+	if ( isElectronChannel ) {
+		return selectionOutputInfo_electron.getNumberOfBJets();
+	}
+	else {
+		return selectionOutputInfo_muon.getNumberOfBJets();
+	}
+}
+
 JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
 		BtagAlgorithm::workingPoint WP) const {
 	JetCollection bjets;
@@ -181,6 +253,30 @@ const MuonPointer Event::MostPFIsolatedMuon(const MuonCollection& muons) const {
 void Event::setMuons(MuonCollection muons) {
 	allMuons.clear();
 	allMuons = muons;
+}
+
+void Event::setPassesElectronSelection( bool passesElectronSelection ) {
+	passesElectronSelection_ = passesElectronSelection;
+}
+
+void Event::setPassesMuonSelection( bool passesMuonSelection ) {
+	passesMuonSelection_ = passesMuonSelection;
+}
+
+void Event::setPassSelectionInfo( std::vector<unsigned int> passSelections ) {
+	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
+		if ( passSelections[selection] == 1 ) setPassesMuonSelection( true );
+		if ( passSelections[selection] == 2 ) setPassesElectronSelection( true );
+	}
+}
+
+
+void Event::setElectronSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
+	selectionOutputInfo_electron = newSelectionOutputInfo;
+}
+
+void Event::setMuonSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
+	selectionOutputInfo_muon = newSelectionOutputInfo;
 }
 
 void Event::setHLTs(const boost::shared_ptr<std::vector<int> > triggers) {
@@ -263,7 +359,7 @@ const METPointer Event::MET() const {
 }
 
 const METPointer Event::GenMET() const {
-	return MET(METAlgorithm::GenMET);
+	return MET(METAlgorithm::MET);  // FIXME when genMet is available from miniAOD ntuples
 //	return genMet_;
 }
 

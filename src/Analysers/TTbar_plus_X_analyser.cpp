@@ -24,122 +24,109 @@ namespace BAT {
 
 void TTbar_plus_X_analyser::analyse(const EventPtr event) {
 	ePlusJetsSignalAnalysis(event);
-	ePlusJetsQcdAnalysis(event);
-	muPlusJetsSignalAnalysis(event);
-	muPlusJetsQcdAnalysis(event);
+	// ePlusJetsQcdAnalysis(event);
+	// muPlusJetsSignalAnalysis(event);
+	// muPlusJetsQcdAnalysis(event);
 }
 
 void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
-	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
-		const JetCollection jets(topEplusJetsRefSelection_->cleanedJets(event));
-		const JetCollection bJets(topEplusJetsRefSelection_->cleanedBJets(event));
-		const JetPointer fourthJet = jets[3]; // our selection requires >=4 jets
-		unsigned int numberOfBjets(bJets.size());
-		vector<double> bjetWeights;
-		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= numberOfBjets; ++index) {
-				if (index == numberOfBjets)
-					bjetWeights.push_back(1.);
-				else
-					bjetWeights.push_back(0);
-			}
-		} else {
-			bjetWeights = BjetWeights(jets, numberOfBjets);
-		}
+	// if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+	if ( event->PassesElectronSelection() ) {
+		const JetCollection jets(event->getCleanedJets( true ));
+		unsigned int numberOfBjets = event->getNBJets( true );
+		const JetCollection bJets(event->getCleanedBJets( true ));
+
+		const LeptonPointer signalLepton = event->getSignalLepton( true );
+
+		double bjetWeight = 1;
 		histMan_->setCurrentJetBin(jets.size());
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 
-		const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
+		// const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-		double hadronTriggerLegCorrection = event->isRealData() ? 1. : fourthJet->getEfficiencyCorrection( Globals::ElectronScaleFactorSystematic );
+		double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
-		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()) * hadronTriggerLegCorrection;
-
-		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
-			double bjetWeight = bjetWeights.at(weightIndex);
-			if ( bjetWeight == 0 ) continue;
-
-			histMan_->setCurrentBJetBin(weightIndex);
-			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
-			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight * efficiencyCorrection);
-
-			metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-			electronAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-			vertexAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-			jetAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-
-			metAnalyserEPlusJetsRefSelection_->analyse(event, signalLepton, jets);
-
-			electronAnalyserRefSelection_->analyse(event);
-			electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
-
-			vertexAnalyserEPlusJetsRefSelection_->analyse(event);
-			jetAnalyserEPlusJetsRefSelection_->analyse(event);
-
-			ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
-
-			vector<double> fit_variable_values;
-			fit_variable_values.push_back(fabs(signalElectron->eta()));
-			fit_variable_values.push_back(Event::M3(jets));
-			fit_variable_values.push_back(Event::M_bl(bJets, signalElectron));
-			fit_variable_values.push_back(Event::angle_bl(bJets, signalElectron));
-			ref_selection_binned_HT_analyser_electron_->analyse(Event::HT(jets), fit_variable_values, event->weight());
-
-			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
-					continue;
-				bool isMCOnlyMET = MET::isMCOnlyMETType(metIndex);
-				//skip MC only MET entries
-				if (isMCOnlyMET && event->isRealData())
-					continue;
-				string metPrefix = METAlgorithm::names.at(metIndex);
-				const METPointer met(
-						event->MET((METAlgorithm::value) metIndex));
-				ref_selection_binned_MET_analyser_electron_.at(metIndex)->setScale(
-						bjetWeight * efficiencyCorrection);
-				ref_selection_binned_MET_analyser_electron_.at(metIndex)->analyse(
-						met->et(), fit_variable_values, event->weight());
-
-				ref_selection_binned_ST_analyser_electron_.at(metIndex)->setScale(
-						bjetWeight * efficiencyCorrection);
-				ref_selection_binned_ST_analyser_electron_.at(metIndex)->analyse(
-						Event::ST(jets, signalElectron, met),
-						fit_variable_values, event->weight());
-
-				ref_selection_binned_MT_analyser_electron_.at(metIndex)->setScale(
-						bjetWeight * efficiencyCorrection);
-				ref_selection_binned_MT_analyser_electron_.at(metIndex)->analyse(
-						Event::MT(signalElectron, met), fit_variable_values,
-						event->weight());
-
-				ref_selection_binned_WPT_analyser_electron_.at(metIndex)->setScale(
-						bjetWeight * efficiencyCorrection);
-				ref_selection_binned_WPT_analyser_electron_.at(metIndex)->analyse(
-						Event::WPT(signalElectron, met), fit_variable_values,
-						event->weight());
-			}
-
-			//bbar analysis part
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
-			if (numberOfBjets > 1) {
-				unsigned int numberOfCombinations(1);
-				for (unsigned int i = 2; i < numberOfBjets; ++i)
-					numberOfCombinations += i;
-				for (unsigned int i = 0; i < numberOfBjets; ++i) {
-					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
-						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
-						//conserve event weight by normalising the number of combinations
-						double weight = event->weight() * bjetWeight * efficiencyCorrection / numberOfCombinations;
-						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
-
-					}
-				}
-			}
-		}
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
+		histMan_->H1D("BTagWeights")->Fill(bjetWeight);
+		histMan_->H1D("N_BJets_reweighted")->Fill(numberOfBjets, event->weight() * bjetWeight * efficiencyCorrection);
 		histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * efficiencyCorrection);
+
+		metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		electronAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		vertexAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		jetAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+
+		metAnalyserEPlusJetsRefSelection_->analyse(event, signalLepton, jets);
+
+		electronAnalyserRefSelection_->analyse(event);
+		electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
+
+		vertexAnalyserEPlusJetsRefSelection_->analyse(event);
+		jetAnalyserEPlusJetsRefSelection_->analyse(event);
+
+		ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
+
+		vector<double> fit_variable_values;
+		fit_variable_values.push_back(fabs(signalElectron->eta()));
+		fit_variable_values.push_back(Event::M3(jets));
+		fit_variable_values.push_back(Event::M_bl(bJets, signalElectron));
+		fit_variable_values.push_back(Event::angle_bl(bJets, signalElectron));
+		ref_selection_binned_HT_analyser_electron_->analyse(Event::HT(jets), fit_variable_values, event->weight());
+
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			// 	if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
+			// 		continue;
+			// 	bool isMCOnlyMET = MET::isMCOnlyMETType(metIndex);
+			// 	//skip MC only MET entries
+			// 	if (isMCOnlyMET && event->isRealData())
+			// 		continue;
+			string metPrefix = METAlgorithm::names.at(metIndex);
+
+
+			const METPointer met(
+					event->MET((METAlgorithm::value) metIndex));
+			ref_selection_binned_MET_analyser_electron_.at(metIndex)->setScale(
+					bjetWeight * efficiencyCorrection);
+			ref_selection_binned_MET_analyser_electron_.at(metIndex)->analyse(
+					met->et(), fit_variable_values, event->weight());
+
+			ref_selection_binned_ST_analyser_electron_.at(metIndex)->setScale(
+					bjetWeight * efficiencyCorrection);
+			ref_selection_binned_ST_analyser_electron_.at(metIndex)->analyse(
+					Event::ST(jets, signalElectron, met),
+					fit_variable_values, event->weight());
+
+			ref_selection_binned_MT_analyser_electron_.at(metIndex)->setScale(
+					bjetWeight * efficiencyCorrection);
+			ref_selection_binned_MT_analyser_electron_.at(metIndex)->analyse(
+					Event::MT(signalElectron, met), fit_variable_values,
+					event->weight());
+
+			ref_selection_binned_WPT_analyser_electron_.at(metIndex)->setScale(
+					bjetWeight * efficiencyCorrection);
+			ref_selection_binned_WPT_analyser_electron_.at(metIndex)->analyse(
+					Event::WPT(signalElectron, met), fit_variable_values,
+					event->weight());
+		}
+
+		// //bbar analysis part
+		// histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
+		// if (numberOfBjets > 1) {
+		// 	unsigned int numberOfCombinations(1);
+		// 	for (unsigned int i = 2; i < numberOfBjets; ++i)
+		// 		numberOfCombinations += i;
+		// 	for (unsigned int i = 0; i < numberOfBjets; ++i) {
+		// 		for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
+		// 			double invMass = bJets.at(i)->invariantMass(bJets.at(j));
+		// 			//conserve event weight by normalising the number of combinations
+		// 			double weight = event->weight() * bjetWeight * efficiencyCorrection / numberOfCombinations;
+		// 			histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
+
+		// 		}
+		// 	}
+		// }
 	}
 
 }
@@ -371,106 +358,70 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
-	if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
-		const JetCollection jets(topMuplusJetsRefSelection_->cleanedJets(event));
-		const JetCollection bJets(topMuplusJetsRefSelection_->cleanedBJets(event));
-		unsigned int numberOfBjets(bJets.size());
-		vector<double> bjetWeights;
-		if (event->isRealData()) {
-			for (unsigned int index = 0; index <= numberOfBjets; ++index) {
-				if (index == numberOfBjets)
-					bjetWeights.push_back(1);
-				else
-					bjetWeights.push_back(0);
-			}
-		} else
-			bjetWeights = BjetWeights(jets, numberOfBjets);
+	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
+	if (true) {
+		const JetCollection jets(event->getCleanedJets( false ));
+		unsigned int numberOfBjets = event->getNBJets( false );
+		const JetCollection bJets(topEplusJetsRefSelection_->cleanedBJets(event));
+
+		const LeptonPointer signalLepton = event->getSignalLepton( false );
+
+		double bjetWeight = 1;
 		histMan_->setCurrentJetBin(jets.size());
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 
-		const LeptonPointer signalLepton = topMuplusJetsRefSelection_->signalLepton(event);
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(false, Globals::MuonScaleFactorSystematic, event->runnumber());
+		double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
-		for (unsigned int weightIndex = 0; weightIndex < bjetWeights.size(); ++weightIndex) {
-			double bjetWeight = bjetWeights.at(weightIndex);
 
-			if ( bjetWeight == 0 ) {
-				continue;
-			}
-
-			histMan_->setCurrentBJetBin(weightIndex);
-			histMan_->H1D("BTagWeights")->Fill(bjetWeight);
-			histMan_->H1D("N_BJets_reweighted")->Fill(weightIndex, event->weight() * bjetWeight * efficiencyCorrection);
-
-			metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-			muonAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-			vertexAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-			jetAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-
-			metAnalyserMuPlusJetsRefSelection_->analyse(event, signalLepton, jets);
-
-			muonAnalyserRefSelection_->analyse(event);
-			muonAnalyserRefSelection_->analyseMuon(signalMuon, event->weight());
-
-			vertexAnalyserMuPlusJetsRefSelection_->analyse(event);
-			jetAnalyserMuPlusJetsRefSelection_->analyse(event);
-
-			ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
-			vector<double> fit_variable_values;
-			fit_variable_values.push_back(fabs(signalMuon->eta()));
-			fit_variable_values.push_back(Event::M3(jets));
-			fit_variable_values.push_back(Event::M_bl(bJets, signalMuon));
-			fit_variable_values.push_back(Event::angle_bl(bJets, signalMuon));
-			ref_selection_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
-
-			for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
-				if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
-					continue;
-				bool isMCOnlyMET = MET::isMCOnlyMETType(metIndex);
-				//skip MC only MET entries
-				if (isMCOnlyMET && event->isRealData())
-					continue;
-				string metPrefix = METAlgorithm::names.at(metIndex);
-				const METPointer met(event->MET((METAlgorithm::value) metIndex));
-				ref_selection_binned_MET_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-				ref_selection_binned_MET_analyser_muon_.at(metIndex)->analyse(met->et(), fit_variable_values,
-						event->weight());
-
-				ref_selection_binned_ST_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-				ref_selection_binned_ST_analyser_muon_.at(metIndex)->analyse(Event::ST(jets, signalMuon, met),
-						fit_variable_values, event->weight());
-
-				ref_selection_binned_MT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-				ref_selection_binned_MT_analyser_muon_.at(metIndex)->analyse(Event::MT(signalMuon, met),
-						fit_variable_values, event->weight());
-
-				ref_selection_binned_WPT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-				ref_selection_binned_WPT_analyser_muon_.at(metIndex)->analyse(Event::WPT(signalMuon, met),
-						fit_variable_values, event->weight());
-			}
-
-			//bbar analysis part
-			histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
-			if (numberOfBjets > 1) {
-				unsigned int numberOfCombinations(1);
-				for (unsigned int i = 2; i < numberOfBjets; ++i)
-					numberOfCombinations += i;
-				for (unsigned int i = 0; i < numberOfBjets; ++i) {
-					for (unsigned int j = i + 1; j < numberOfBjets; ++j) {
-						double invMass = bJets.at(i)->invariantMass(bJets.at(j));
-						//conserve event weight by normalising the number of combinations
-						double weight = event->weight() * bjetWeight * efficiencyCorrection / numberOfCombinations;
-						histMan_->H1D_BJetBinned("bjet_invariant_mass")->Fill(invMass, weight);
-					}
-				}
-			}
-		}
-		histMan_->setCurrentBJetBin(bJets.size());
+		histMan_->setCurrentBJetBin(numberOfBjets);
+		histMan_->H1D("BTagWeights")->Fill(bjetWeight);
+		histMan_->H1D("N_BJets_reweighted")->Fill(numberOfBjets, event->weight() * bjetWeight * efficiencyCorrection);
 		histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * efficiencyCorrection);
-	}
 
+		metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		muonAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		vertexAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		jetAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+
+		metAnalyserMuPlusJetsRefSelection_->analyse(event, signalLepton, jets);
+
+		muonAnalyserRefSelection_->analyse(event);
+		muonAnalyserRefSelection_->analyseMuon(signalMuon, event->weight());
+
+		vertexAnalyserMuPlusJetsRefSelection_->analyse(event);
+		jetAnalyserMuPlusJetsRefSelection_->analyse(event);
+
+		ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
+		vector<double> fit_variable_values;
+		fit_variable_values.push_back(fabs(signalMuon->eta()));
+		fit_variable_values.push_back(Event::M3(jets));
+		fit_variable_values.push_back(Event::M_bl(bJets, signalMuon));
+		fit_variable_values.push_back(Event::angle_bl(bJets, signalMuon));
+		ref_selection_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
+
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			
+			string metPrefix = METAlgorithm::names.at(metIndex);
+			const METPointer met(event->MET((METAlgorithm::value) metIndex));
+			ref_selection_binned_MET_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			ref_selection_binned_MET_analyser_muon_.at(metIndex)->analyse(met->et(), fit_variable_values,
+					event->weight());
+
+			ref_selection_binned_ST_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			ref_selection_binned_ST_analyser_muon_.at(metIndex)->analyse(Event::ST(jets, signalMuon, met),
+					fit_variable_values, event->weight());
+
+			ref_selection_binned_MT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			ref_selection_binned_MT_analyser_muon_.at(metIndex)->analyse(Event::MT(signalMuon, met),
+					fit_variable_values, event->weight());
+
+			ref_selection_binned_WPT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			ref_selection_binned_WPT_analyser_muon_.at(metIndex)->analyse(Event::WPT(signalMuon, met),
+					fit_variable_values, event->weight());
+		}
+	}
 }
 
 void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {

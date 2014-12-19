@@ -15,22 +15,22 @@ METReader::METReader() :
 		eyReader(), //
 		significanceReader(), //
 		met(), //
-		usedAlgorithm(METAlgorithm::patMETsPFlow) {
+		usedAlgorithm(METAlgorithm::MET) {
 
 }
 
 METReader::METReader(TChainPointer input, METAlgorithm::value algo) :
-		exReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"), //
-		eyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"), //
-		multiExReader(input, METAlgorithm::prefixes.at(algo) + ".Ex"), //
-		multiEyReader(input, METAlgorithm::prefixes.at(algo) + ".Ey"), //
-		significanceReader(input, METAlgorithm::prefixes.at(algo) + ".Significance"), //
+		exReader(input, "MET.Ex"), //
+		eyReader(input, "MET.Ey"), //
+		multiExReader(input, "MET.Ex"), //
+		multiEyReader(input, "MET.Ey"), //
+		significanceReader(input, "MET.Significance"), //
 		met(), //
 		usedAlgorithm(algo) {
-	if (Globals::NTupleVersion < 8 && usedAlgorithm == METAlgorithm::GenMET) {
-		multiExReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".ExTrue");
-		multiEyReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".EyTrue");
-	}
+	// if (Globals::NTupleVersion < 8 && usedAlgorithm == METAlgorithm::GenMET) {
+	// 	multiExReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".ExTrue");
+	// 	multiEyReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".EyTrue");
+	// }
 
 }
 
@@ -44,14 +44,14 @@ void METReader::initialise() {
 }
 
 void METReader::initialiseBlindly() {
-	if (usedAlgorithm != METAlgorithm::GenMET || Globals::NTupleVersion >= 8) {
+	// if (usedAlgorithm != METAlgorithm::GenMET || Globals::NTupleVersion >= 8) {
 		exReader.initialiseBlindly();
 		eyReader.initialiseBlindly();
 		significanceReader.initialiseBlindly();
-	} else {
-		multiExReader.initialiseBlindly();
-		multiEyReader.initialiseBlindly();
-	}
+	// } else {
+	// 	multiExReader.initialiseBlindly();
+	// 	multiEyReader.initialiseBlindly();
+	// }
 
 }
 
@@ -61,11 +61,11 @@ const METPointer METReader::getMET(double corrx, double corry) {
 }
 
 void METReader::readMET(double corrx, double corry) {
-	if (usedAlgorithm != METAlgorithm::GenMET || Globals::NTupleVersion >= 8) {
+	// if (usedAlgorithm != METAlgorithm::GenMET || Globals::NTupleVersion >= 8) {
 		met = METPointer(new MET(exReader.getVariable()+corrx, eyReader.getVariable()+corry));
 		met->setSignificance(significanceReader.getVariable());
-	} else
-		met = METPointer(new MET(multiExReader.getVariableAt(0), multiEyReader.getVariableAt(0)));
+	// } else
+	// 	met = METPointer(new MET(multiExReader.getVariableAt(0), multiEyReader.getVariableAt(0)));
 
 	met->setUsedAlgorithm(usedAlgorithm);
 

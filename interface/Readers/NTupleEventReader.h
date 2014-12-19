@@ -23,6 +23,7 @@
 #include "GenMETReader.h"
 #include "TrackReader.h"
 #include "GenParticleReader.h"
+#include "SelectionOutputReader.h"
 #include <string>
 
 namespace BAT {
@@ -65,8 +66,8 @@ private:
 	long currentEventEntry;
 	unsigned long numberOfFiles;
 	boost::shared_ptr<TChain> input;
-	boost::shared_ptr<VariableReader<MultiIntPointer> > hltReader;
-	boost::shared_ptr<VariableReader<MultiIntPointer> > hltPrescaleReader;
+	// boost::shared_ptr<VariableReader<MultiIntPointer> > hltReader;
+	// boost::shared_ptr<VariableReader<MultiIntPointer> > hltPrescaleReader;
 	boost::scoped_ptr<VertexReader> vertexReader;
 	boost::scoped_ptr<TrackReader> trackReader;
 	boost::scoped_ptr<ElectronReader> electronReader;
@@ -76,7 +77,12 @@ private:
 	boost::scoped_ptr<MuonReader> muonReader;
 //	boost::scoped_ptr<GenMETReader> genMetReader;
 	std::vector<boost::shared_ptr<METReader> > metReaders;
-	std::vector<boost::shared_ptr<METCorrReader> > metCorrReaders;
+	// std::vector<boost::shared_ptr<METCorrReader> > metCorrReaders;
+
+
+	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesSelectionReader;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electron;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muon;
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;

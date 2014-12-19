@@ -39,7 +39,6 @@ int main(int argc, char **argv) {
 	watch.Start();
 
 	boost::scoped_ptr<Analysis> myAnalysis(new Analysis(config.datasetInfoFile()));
-
 	myAnalysis->setMaximalNumberOfEvents(Globals::maxEvents);
 
 	vector<string> inputFiles = config.inputFiles();
@@ -103,16 +102,7 @@ void setConfiguration(ConfigFile config) {
 	if (config.useHitFit())
 		cout << "Using HitFit.\n";
 
+	cout << "Loading in to memory" << endl;
 	config.loadIntoMemory();
 
-
-	//@Deprecated: move to selections
-	//jets
-	Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
-	//electrons
-	Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
-	//muons
-	Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
-	//mets
-	Globals::metAlgorithm = METAlgorithm::patMETsPFlow;
 }

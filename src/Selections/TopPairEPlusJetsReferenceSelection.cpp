@@ -113,40 +113,41 @@ bool TopPairEPlusJetsReferenceSelection::passesEventCleaning(const EventPtr even
 }
 
 bool TopPairEPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr event) const {
-	unsigned int runNumber(event->runnumber());
-	if (event->isRealData()) {
-		//2011 data: run 160404 to run 180252
-		if (runNumber >= 160404 && runNumber <= 163869)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
-		else if (runNumber > 163869 && runNumber <= 165633)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
-		else if (runNumber > 165633 && runNumber <= 178380)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-		else if (runNumber > 178380 && runNumber <= 180252)
-			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
-		//2012 data: run 190456 to run 208686
-		else if (runNumber >= 190456 && runNumber <= 208686)
-			return event->HLT(HLTriggers::HLT_Ele27_WP80);
-		else if ( runNumber == 1 ) {// MC pretending to be data
-			if (Globals::energyInTeV == 7) //Fall11 MC
-				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-			else if (Globals::energyInTeV == 8) //Summer12 MC
-				return event->HLT(HLTriggers::HLT_Ele27_WP80);
-			else
-				return false;
-		}
-		else
-			return false;
-	}
-	else {
-		if (Globals::energyInTeV == 7) //Fall11 MC or Summer11Leg
-//			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
-			return true;
-		else if (Globals::energyInTeV == 8) //Summer12 MC
-			return event->HLT(HLTriggers::HLT_Ele27_WP80);
-		else
-			return false;
-	}
+// 	unsigned int runNumber(event->runnumber());
+// 	if (event->isRealData()) {
+// 		//2011 data: run 160404 to run 180252
+// 		if (runNumber >= 160404 && runNumber <= 163869)
+// 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_CentralTriJet30);
+// 		else if (runNumber > 163869 && runNumber <= 165633)
+// 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_TrkIdT_TriCentralJet30);
+// 		else if (runNumber > 165633 && runNumber <= 178380)
+// 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+// 		else if (runNumber > 178380 && runNumber <= 180252)
+// 			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralPFJet30);
+// 		//2012 data: run 190456 to run 208686
+// 		else if (runNumber >= 190456 && runNumber <= 208686)
+// 			return event->HLT(HLTriggers::HLT_Ele27_WP80);
+// 		else if ( runNumber == 1 ) {// MC pretending to be data
+// 			if (Globals::energyInTeV == 7) //Fall11 MC
+// 				return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+// 			else if (Globals::energyInTeV == 8) //Summer12 MC
+// 				return event->HLT(HLTriggers::HLT_Ele27_WP80);
+// 			else
+// 				return false;
+// 		}
+// 		else
+// 			return false;
+// 	}
+// 	else {
+// 		if (Globals::energyInTeV == 7) //Fall11 MC or Summer11Leg
+// //			return event->HLT(HLTriggers::HLT_Ele25_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_TriCentralJet30);
+// 			return true;
+// 		else if (Globals::energyInTeV == 8) //Summer12 MC
+// 			return event->HLT(HLTriggers::HLT_Ele27_WP80);
+// 		else
+// 			return false;
+// 	}
+	return true;
 }
 
 bool TopPairEPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const EventPtr event) const {

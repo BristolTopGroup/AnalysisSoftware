@@ -13,6 +13,7 @@
 #include "RecoObjects/Vertex.h"
 #include "RecoObjects/MET.h"
 #include "RecoObjects/MCParticle.h"
+#include "RecoObjects/SelectionOutputInfo.h"
 #include "DataTypes.h"
 #include "Printers/EventContentPrinter.h"
 #include "HighLevelTriggers.h"
@@ -43,6 +44,11 @@ protected:
 	JetCollection genJets;
 
 	MuonCollection allMuons;
+
+	bool passesElectronSelection_;
+	bool passesMuonSelection_;
+	SelectionOutputInfo selectionOutputInfo_electron;
+	SelectionOutputInfo selectionOutputInfo_muon;
 
 	MCParticleCollection genParticles;
 
@@ -87,6 +93,11 @@ public:
 	void setJets(JetCollection jets);
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
+	void setPassesElectronSelection(bool passesElectronSelection);
+	void setPassesMuonSelection(bool passesMuonSelection);
+	void setPassSelectionInfo( std::vector<unsigned int> );
+	void setElectronSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setMuonSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setMETs(const std::vector<METPointer> mets);
 	void setGenMET(const METPointer met);
 	void setHLTs(const boost::shared_ptr<std::vector<int> >);
@@ -138,6 +149,14 @@ public:
 	const MuonPointer MostIsolatedMuon(const MuonCollection&, bool usePFIso) const;
 	const MuonPointer MostIsolatedMuon(const MuonCollection& muons) const;
 	const MuonPointer MostPFIsolatedMuon(const MuonCollection&) const;
+
+	const bool PassesElectronSelection() const;
+	const bool PassesMuonSelection() const;
+
+	const LeptonPointer getSignalLepton( bool isElectronChannel ) const;
+	const JetCollection getCleanedJets( bool isElectronChannel ) const;
+	const JetCollection getCleanedBJets( bool isElectronChannel ) const;
+	const unsigned int getNBJets( bool isElectronChannel ) const;
 
 	JetCollection GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
 			BtagAlgorithm::workingPoint WP = BtagAlgorithm::MEDIUM) const;

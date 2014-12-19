@@ -56,46 +56,46 @@ JetReader::JetReader() : //
 
 }
 JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
-		energyReader(input, JetAlgorithm::prefixes.at(algo) + ".Energy"), //
-		JECUncReader(input, JetAlgorithm::prefixes.at(algo) + ".JECUnc"), //
-		L1OffJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L1OffJEC"),
-		L2L3ResJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L2L3ResJEC"),
-		L2RelJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L2RelJEC"),
-		L3AbsJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L3AbsJEC"),
-		pxReader(input, JetAlgorithm::prefixes.at(algo) + ".Px"), //
-		pyReader(input, JetAlgorithm::prefixes.at(algo) + ".Py"), //
-		pzReader(input, JetAlgorithm::prefixes.at(algo) + ".Pz"), //
-		pxRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PxRAW"), //
-		pyRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PyRAW"), //
-		pzRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PzRAW"), //
-		massReader(input, JetAlgorithm::prefixes.at(algo) + ".Mass"), //
-		chargeReader(input, JetAlgorithm::prefixes.at(algo) + ".Charge"), //
-		matchedGeneratedJetEnergyReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Energy"), //
-		matchedGeneratedJetPxReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Px"), //
-		matchedGeneratedJetPyReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Py"), //
-		matchedGeneratedJetPzReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Pz"), //
-		emfReader(input, JetAlgorithm::prefixes.at(algo) + ".EMF"), //
-		n90HitsReader(input, JetAlgorithm::prefixes.at(algo) + ".n90Hits"), //
-		fHPDReader(input, JetAlgorithm::prefixes.at(algo) + ".fHPD"), //
-		NODReader(input, JetAlgorithm::prefixes.at(algo) + ".NConstituents"), //
-		CEFReader(input, JetAlgorithm::prefixes.at(algo) + ".ChargedEmEnergyFraction"), //
-		NHFReader(input, JetAlgorithm::prefixes.at(algo) + ".NeutralHadronEnergyFraction"), //
-		NEFReader(input, JetAlgorithm::prefixes.at(algo) + ".NeutralEmEnergyFraction"), //
-		CHFReader(input, JetAlgorithm::prefixes.at(algo) + ".ChargedHadronEnergyFraction"), //
-		NCHReader(input, JetAlgorithm::prefixes.at(algo) + ".ChargedMultiplicity"), //
-		btagCombinedSecondaryVertexReader(input, JetAlgorithm::prefixes.at(algo) + ".CombinedSecondaryVertexBJetTag"), //
+		energyReader(input, "Jets.Energy"), //
+		JECUncReader(input, "Jets.JECUnc"), //
+		L1OffJECReader(input, "Jets.L1OffJEC"),
+		L2L3ResJECReader(input, "Jets.L2L3ResJEC"),
+		L2RelJECReader(input, "Jets.L2RelJEC"),
+		L3AbsJECReader(input, "Jets.L3AbsJEC"),
+		pxReader(input, "Jets.Px"), //
+		pyReader(input, "Jets.Py"), //
+		pzReader(input, "Jets.Pz"), //
+		pxRawReader(input, "Jets.PxRAW"), //
+		pyRawReader(input, "Jets.PyRAW"), //
+		pzRawReader(input, "Jets.PzRAW"), //
+		massReader(input, "Jets.Mass"), //
+		chargeReader(input, "Jets.Charge"), //
+		matchedGeneratedJetEnergyReader(input, "Jets.GenJet.Energy"), //
+		matchedGeneratedJetPxReader(input, "Jets.GenJet.Px"), //
+		matchedGeneratedJetPyReader(input, "Jets.GenJet.Py"), //
+		matchedGeneratedJetPzReader(input, "Jets.GenJet.Pz"), //
+		emfReader(input, "Jets.EMF"), //
+		n90HitsReader(input, "Jets.n90Hits"), //
+		fHPDReader(input, "Jets.fHPD"), //
+		NODReader(input, "Jets.NConstituents"), //
+		CEFReader(input, "Jets.ChargedEmEnergyFraction"), //
+		NHFReader(input, "Jets.NeutralHadronEnergyFraction"), //
+		NEFReader(input, "Jets.NeutralEmEnergyFraction"), //
+		CHFReader(input, "Jets.ChargedHadronEnergyFraction"), //
+		NCHReader(input, "Jets.ChargedMultiplicity"), //
+		btagCombinedSecondaryVertexReader(input, "Jets.CombinedSecondaryVertexBJetTag"), //
 		btagCombinedSecondaryVertexMVAReader(input,
-				JetAlgorithm::prefixes.at(algo) + ".CombinedSecondaryVertexMVABJetTag"), //
-		btagJetBProbabilityReader(input, JetAlgorithm::prefixes.at(algo) + ".JetBProbabilityBTag"), //
-		btagJetProbabilityReader(input, JetAlgorithm::prefixes.at(algo) + ".JetProbabilityBTag"), //
-		btagSimpleSecondaryVertexHEReader(input, JetAlgorithm::prefixes.at(algo) + ".SimpleSecondaryVertexHighEffBTag"), //
-		btagSimpleSecondaryVertexHPReader(input, JetAlgorithm::prefixes.at(algo) + ".SimpleSecondaryVertexHighPurBTag"), //
-		btagSoftMuonReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonBJetTag"), //
-		btagSoftMuonByIP3dReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonByIP3dBJetTag"), //
-		btagSoftMuonByPtReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonByPtBJetTag"), //
-		btagTrackCountingHighPurityReader(input, JetAlgorithm::prefixes.at(algo) + ".TrackCountingHighPurBTag"), //
-		btagTrackCountingHighEfficiencyReader(input, JetAlgorithm::prefixes.at(algo) + ".TrackCountingHighEffBTag"), //
-		PartonFlavour(input, JetAlgorithm::prefixes.at(algo) + ".PartonFlavour"),//
+				"Jets.CombinedSecondaryVertexMVABJetTag"), //
+		btagJetBProbabilityReader(input, "Jets.JetBProbabilityBTag"), //
+		btagJetProbabilityReader(input, "Jets.JetProbabilityBTag"), //
+		btagSimpleSecondaryVertexHEReader(input, "Jets.SimpleSecondaryVertexHighEffBTag"), //
+		btagSimpleSecondaryVertexHPReader(input, "Jets.SimpleSecondaryVertexHighPurBTag"), //
+		btagSoftMuonReader(input, "Jets.SoftMuonBJetTag"), //
+		btagSoftMuonByIP3dReader(input, "Jets.SoftMuonByIP3dBJetTag"), //
+		btagSoftMuonByPtReader(input, "Jets.SoftMuonByPtBJetTag"), //
+		btagTrackCountingHighPurityReader(input, "Jets.TrackCountingHighPurBTag"), //
+		btagTrackCountingHighEfficiencyReader(input, "Jets.TrackCountingHighEffBTag"), //
+		PartonFlavour(input, "Jets.PartonFlavour"),//
 		jets(), //
 		usedAlgorithm(algo), //
 		isRealData(false) {

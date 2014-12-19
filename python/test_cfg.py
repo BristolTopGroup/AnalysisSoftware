@@ -6,7 +6,7 @@ if os.environ.has_key('toolsFolder'):
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 8
-nTuple_version = 11
+nTuple_version = 0
 #number of events to be processed
 maxEvents = 100000
 verbose = True
@@ -86,23 +86,21 @@ elif centerOfMassEnergy == 7:
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 
+getHadronTriggerFromFile = False
+hadronTriggerFile = ''
+
 #use HitFit for analysis
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-    '/hdfs/TopQuarkGroup/data/2012/SingleElectron/nTuple_v11_Run2012B-22Jan2013-v1_AOD_GoldenJSON_LeptonPlus3Jets/*.root'     # 53X 8TeV data
-#    '/hdfs/TopQuarkGroup/mc/8TeV/v11/LeptonPlus3JetsSkim/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/*.root'     # 53X 8TeV MC
-#    '/hdfs/TopQuarkGroup/data/2011/ElectronHad/nTuple_v11_Run2011A-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets/*.root'          # 53X 7TeV data
-#    '/hdfs/TopQuarkGroup/mc/7TeV/v11/LeptonPlus3JetsSkim/TTJets_MSDecays_central_TuneZ2_7TeV-madgraph-tauola/*.root'        # 53X 7TeV MC
-#    '/storage/TopQuarkGroup/data/2011/ElectronHad/nTuple_v10_Run2011B-19Nov2011-v1_44X_GoldenJSON_LeptonPlus3Jets/*.root'     #44X 7TeV data
-#    '/storage/TopQuarkGroup/mc/7TeV/v10/LeptonPlus3JetsSkim/TTJets_TuneZ2_7TeV-madgraph-tauola_with_genjet_properties/nTuple_v10_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets/*.root' #44X 7TeV MC
+    '/storage/ec6821/NTupleProd/CMSSW_7_2_3/src/ntuple_TTJets_madgraph.root'     # 53X 8TeV data
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder
 TQAFPath = ""
 
 #file with information (cross-section, number of processed events) for event weight calculation
-datasetInfoFile = ""
+datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV.py"
 
 if centerOfMassEnergy == 7:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_7TeV.py"
