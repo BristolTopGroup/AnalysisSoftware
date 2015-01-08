@@ -8,7 +8,6 @@
 #include "../../interface/RecoObjects/Muon.h"
 #include "../../interface/GlobalVariables.h"
 
-
 #include <iostream>
 
 namespace BAT {
@@ -27,7 +26,9 @@ Muon::Muon() :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1), //
+		muonIdIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram), //
+		muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram) {
 
 }
 
@@ -44,7 +45,9 @@ Muon::Muon(double energy, double px, double py, double pz) :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1), //
+		muonIdIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram), //
+		muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram) {
 
 }
 
@@ -150,36 +153,23 @@ double Muon::normChi2() const {
 double Muon::getEfficiencyCorrection(bool qcd, int muon_scale_factor_systematic, int run_number) const {
 	double correction(1.);
 	double muEta(eta());
-	double id_correction(1), iso_correction(1), trigger_correction(1);
-	float triggerScaleFactor(1), idIsoScaleFactor(1);
+	double id_correction(0), iso_correction(0), trigger_correction(0);
+	float triggerScaleFactor(0), idIsoScaleFactor(0);
 	float triggerScaleFactorError(0), idIsoScaleFactorError(0);
 
-	// 7 TeV scale factors provided by Muon POG: /afs/cern.ch/user/h/hwollny/wpublic/7tev/MuonEfficiencies_SF_2011_53X_DataMC.root
-	// http://cms.cern.ch/iCMS/jsp/openfile.jsp?tp=draft&files=AN2013_339_v9.pdf
-	if (Globals::energyInTeV == 7 ) {
-
-		// Get histograms.
-		boost::shared_ptr<TH2F> muonIdIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram);
-		boost::shared_ptr<TH3F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
-
-		//Check histograms have events in them, if not set correction to the initialised value of 1.
-		double muonIdIsoScaleFactorsHistogramIntegral = muonIdIsoScaleFactorsHistogram->Integral();
-		double muonTriggerScaleFactorsHistogramIntegral = muonTriggerScaleFactorsHistogram->Integral();
-		double integral = muonIdIsoScaleFactorsHistogramIntegral + muonTriggerScaleFactorsHistogramIntegral;
-		if (integral == 0) {
-			return correction;
-		}
+	// 7TeV scale factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs#2011_data (from 44X pickle file)
+	if (Globals::energyInTeV == 7) { //Luminosity weighted average of 'combRelPFISO12_2011A' and 'combRelPFISO12_2011B' from pickle file
 
 		// Get bin number in ID & ISO histogram
-		unsigned int idIsoBinNumber = muonIdIsoScaleFactorsHistogram->FindBin( muEta, pt() );
+		unsigned int idIsobinNumber = muonIdIsoScaleFactorsHistogram->FindBin( muEta, pt() );
 
 		// Get bin number in Trigger histogram. This is binned in eta, pt and charge. We average out the values between the charges.
 		unsigned int triggerBinNumberMuon = muonTriggerScaleFactorsHistogram->FindBin( 1, muEta, pt() ); // bin number for muon
 		unsigned int triggerBinNumberAntiMuon = muonTriggerScaleFactorsHistogram->FindBin( -1, muEta, pt() ); // bin number for antimuon
 
 		// Get ID & ISO scale factor from histogram
-		idIsoScaleFactor = muonIdIsoScaleFactorsHistogram->GetBinContent( idIsoBinNumber );
-		idIsoScaleFactorError = muonIdIsoScaleFactorsHistogram->GetBinError( idIsoBinNumber );
+		idIsoScaleFactor = muonIdIsoScaleFactorsHistogram->GetBinContent( idIsobinNumber );
+		idIsoScaleFactorError = muonIdIsoScaleFactorsHistogram->GetBinError( idIsobinNumber );
 
 		// Get Trigger scale factor from histogram for muons and antimuons
 		float triggerScaleFactorMuon = muonTriggerScaleFactorsHistogram->GetBinContent( triggerBinNumberMuon );

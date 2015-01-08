@@ -33,7 +33,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 	if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 		const JetCollection jets(topEplusJetsRefSelection_->cleanedJets(event));
 		const JetCollection bJets(topEplusJetsRefSelection_->cleanedBJets(event));
-		const JetPointer fourthJet = jets[3]; // our selection requires >=4 jets
+		const JetPointer fourthJet = jets[3];
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {
@@ -243,7 +243,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			TTbarEPlusJetsReferenceSelection::AtLeastFourGoodJets)) {
 		const JetCollection jets(qcdConversionSelection_->cleanedJets(event));
 		const JetCollection bJets(qcdConversionSelection_->cleanedBJets(event));
-		const JetPointer fourthJet = jets[3]; // our selection requires >=4 jets
+		const JetPointer fourthJet = jets[3];
 		unsigned int numberOfBjets(bJets.size());
 		vector<double> bjetWeights;
 		if (event->isRealData()) {

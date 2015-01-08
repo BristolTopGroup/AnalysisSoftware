@@ -36,15 +36,15 @@ datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v11_Run2011A-12Oct2
                  'Tbar_s' : [mc_path + 'Tbar_TuneZ2_s-channel_7TeV-powheg-tauola'],
                  'Tbar_t' : [mc_path + 'Tbar_TuneZ2_t-channel_7TeV-powheg-tauola'],
                  'Tbar_tW' : [mc_path + 'Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola'],
-                 #'WJets' : [mc_path + 'WJetsToLNu_TuneZ2_7TeV-madgraph-tauola'],
+                 'WJets' : [mc_path + 'WJetsToLNu_TuneZ2_7TeV-madgraph-tauola'],
                  'W1Jet' : [mc_path + 'W1Jet_TuneZ2_7TeV-madgraph-tauola'],
                  'W2Jets' : [mc_path + 'W2Jets_TuneZ2_7TeV-madgraph-tauola'],
                  'W3Jets' : [mc_path + 'W3Jets_TuneZ2_7TeV-madgraph-tauola'],
                  'W4Jets' : [mc_path + 'W4Jets_TuneZ2_7TeV-madgraph-tauola'],
                  #'TTJets-matchingdown' : [mc_path + 'TTjets_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  #'TTJets-matchingup' : [mc_path + 'TTjets_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'TTJets-scaledown' : [mc_path + 'TTJets_MSDecays_scaledown_TuneZ2star_7TeV-madgraph-tauola'],
-                 #'TTJets-scaleup' : [mc_path + 'TTJets_MSDecays_scaleup_TuneZ2star_7TeV-madgraph-tauola'],
+                 'TTJets-scaledown' : [mc_path + 'TTJets_MSDecays_scaledown_TuneZ2star_7TeV-madgraph-tauola'],
+                 'TTJets-scaleup' : [mc_path + 'TTJets_MSDecays_scaleup_TuneZ2star_7TeV-madgraph-tauola'],
                  #'WJets-matchingdown' : [mc_path + 'WJetsToLNu_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  #'WJets-matchingup' : [mc_path + 'WJetsToLNu_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
                  #'WJets-scaledown' : [mc_path + 'WJetsToLNu_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
@@ -84,9 +84,7 @@ default_settings = {
             'JESsystematic':0,
             'JetSmearingSystematic':0,
             'PUFile':'Data_PUDist_2011Full_central_68000mb_June2014.root',
-            'MuonScaleFactorsFile':'MuonEfficiencies_SF_2011_53X_DataMC.root',
-            'ElectronIdIsoScaleFactorsFile': 'scaleFactors_electron_id_iso.root',
-            'ElectronTriggerScaleFactorsFile':'scaleFactors_electron_trigger.root',
+            'MuonScaleFactors':'MuonEfficiencies_SF_2011_53X_DataMC.root',
             'hadronTriggerFile':'hadronLegEfficiencies_electron.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
@@ -162,10 +160,7 @@ if sample in ['TTJets-mcatnlo','TTJets-pythia','TTJets-powheg']:
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = True
-MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactorsFile']
-getElectronScaleFactorsFromFile = True
-ElectronIdIsoScaleFactorsFile = toolsFolder + "data/" + settings['ElectronIdIsoScaleFactorsFile']
-ElectronTriggerScaleFactorsFile = toolsFolder + "data/" + settings['ElectronTriggerScaleFactorsFile']
+MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
 getHadronTriggerFromFile = True
 hadronTriggerFile = toolsFolder + "data/" + settings['hadronTriggerFile']
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']

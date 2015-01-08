@@ -92,10 +92,8 @@ default_settings = {
             'JESsystematic':0,
             'JetSmearingSystematic':0,
             'PUFile':'PileUp_2012_69300_truth_finebin.root',
-            'MuonScaleFactorsFile':'nofile.root',
-            'ElectronIdIsoScaleFactorsFile': 'nofile.root',
-            'ElectronTriggerScaleFactorsFile':'nofile.root',
-            'hadronTriggerFile':'nofile.root',
+            'MuonScaleFactors':'nofile.root',
+            'PUFile':'noFile.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
@@ -170,11 +168,8 @@ if sample in ['TTJets-mcatnlo','TTJets-powheg']:
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = False
-MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactorsFile']
-getElectronScaleFactorsFromFile = False
-ElectronIdIsoScaleFactorsFile = toolsFolder + "data/" + settings["ElectronIdIsoScaleFactorsFile"]
-ElectronTriggerScaleFactorsFile = toolsFolder + "data/" + settings["ElectronTriggerScaleFactorsFile"]
-getHadronTriggerFromFile = False
+MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
+getHadronTriggerFromFile = True
 hadronTriggerFile = toolsFolder + "data/" + settings['hadronTriggerFile']
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
