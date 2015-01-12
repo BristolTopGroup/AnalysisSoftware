@@ -6,3 +6,4 @@
 
 set -e
 make test
+nosetests test/*.py
