@@ -71,7 +71,31 @@ def build_matrix(energy):
                 result.append((sample, mode))
     return result
 
-def main():
+def main(options, args = []):
+    # first the static options    
+    if options.return_cmssw:
+        return options.cmssw
+    if options.return_energy:
+        return options.energy
+    if options.return_cores:
+        return options.cores
+    if options.return_process:
+        return options.process
+    # now the dynamic options
+    matrix = build_matrix(options.energy)
+    if options.return_sample:
+        if options.sample:
+            return options.sample
+        else:
+            return matrix[options.process][0]
+    
+    if options.return_mode:
+        if options.mode:
+            return options.mode
+        else:
+            return matrix[options.process][1]
+
+def parse_args(parameters = []):
     parser = OptionParser( '''executable for plotting of ROOT histograms
         Usage:
         plot <command> --files=[>= 1 file] --histograms=[>=1 histogram] --labels=[size == size(max(files,histograms)] [options]
@@ -99,31 +123,14 @@ def main():
                           help = "Returns the number of requested cores" )
     parser.add_option("--return_process", action = "store_true", dest = "return_process",
                           help = "Returns the number of requested cores" )
-    ( options, args ) = parser.parse_args()
-    
-    
-    # first the static options    
-    if options.return_cmssw:
-        print options.cmssw
-    if options.return_energy:
-        print options.energy
-    if options.return_cores:
-        print options.cores
-    if options.return_process:
-        print options.process
-    # now the dynamic options
-    matrix = build_matrix(options.energy)
-    if options.return_sample:
-        if options.sample:
-            print options.sample
-        else:
-            print matrix[options.process][0]
-    
-    if options.return_mode:
-        if options.mode:
-            print options.mode
-        else:
-            print matrix[options.process][1]
+    options, args = None, None
+    if len(parameters) > 0:
+        ( options, args ) = parser.parse_args(parameters)
+    else:
+        ( options, args ) = parser.parse_args()
+    return options, args
 
 if __name__ == '__main__':
-    main()
+    options, args = parse_args()
+    print main(options, args)
+    
