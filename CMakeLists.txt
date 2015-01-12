@@ -50,6 +50,7 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
 # first attempt to make cmake work again on OS X
 if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (APPLE))
+	MESSAGE(STATUS "** std library for clang: libc++")
 	set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -stdlib=libc++")
 endif()
 #Adding files to compile

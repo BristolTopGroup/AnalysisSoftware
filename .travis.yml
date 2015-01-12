@@ -11,6 +11,8 @@ env:
     - ROOT=6-00-00
   global:
     - CLANG_VERSION=3.6
+    - GCC_VERSION=4.9
+    - BOOST_VERSION=1.55
 
 before_install: source ci/before_install.sh
 install: source ci/install.sh
