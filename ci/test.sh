@@ -5,4 +5,7 @@
 # in the .travis.yml in the top level folder of the project.
 
 set -e
-make test
+echo "Running C++ tests"
+time make test
+echo "Running Python tests"
+time nosetests -v test/*.py

@@ -9,6 +9,8 @@
  It is in to be used with the condor script only
 '''
 from optparse import OptionParser
+import sys
+
 analysis_modes = ['central',
                  'Electron_down',
                  'Electron_up',
@@ -81,16 +83,25 @@ def main(options, args = []):
         return options.cores
     if options.return_process:
         return options.process
+    if options.return_operation:
+        return options.operation
     # now the dynamic options
     matrix = build_matrix(options.energy)
+    if options.return_n_jobs:
+        return len(matrix)
+    
     if options.return_sample:
         if options.sample:
+            if not options.sample in samples:
+                sys.exit("ERROR Trying to run unknown sample '%s'" % options.sample)
             return options.sample
         else:
             return matrix[options.process][0]
     
     if options.return_mode:
         if options.mode:
+            if not options.mode in analysis_modes:
+                sys.exit("Trying to run unknown mode: %s" % options.mode)
             return options.mode
         else:
             return matrix[options.process][1]
@@ -108,6 +119,8 @@ def parse_args(parameters = []):
     parser.add_option( '--mode', dest = 'mode', help = 'mode' )
     parser.add_option( '--cmssw', dest = 'cmssw', 
                        help = 'cmssw version (53X|73X|74X', default = '53X' )
+    parser.add_option( '--operation', dest = 'operation', 
+                       help = 'mode of operation: analysis|single|test', default = 'test' )
     parser.add_option( '--energy', dest = 'energy', 
                        help = 'centre-of-mass energy (7|8|13|14 TeV)',
                        type = int )
@@ -123,6 +136,11 @@ def parse_args(parameters = []):
                           help = "Returns the number of requested cores" )
     parser.add_option("--return_process", action = "store_true", dest = "return_process",
                           help = "Returns the number of requested cores" )
+    parser.add_option("--return_operation", action = "store_true", dest = "return_operation",
+                          help = "Returns the operation" )
+    parser.add_option("--return_n_jobs", action = "store_true", dest = "return_n_jobs",
+                          help = "Returns the operation" )
+    
     options, args = None, None
     if len(parameters) > 0:
         ( options, args ) = parser.parse_args(parameters)
