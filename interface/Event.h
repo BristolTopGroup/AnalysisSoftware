@@ -31,6 +31,17 @@ typedef boost::shared_ptr<Event> EventPtr;
 #include "GlobalVariables.h"
 namespace BAT {
 
+namespace SelectionCriteria {
+enum selection {
+	ElectronPlusJetsReference,
+	MuonPlusJetsReference,
+	ElectronPlusJetsQCDNonIsolated,
+	ElectronPlusJetsQCDConversion,
+	MuonPlusJetsQCDNonIsolated,
+	NUMBER_OF_SELECTION_STEPS
+};
+}
+
 class Event {
 protected:
 	boost::shared_ptr<std::vector<int> > HLTs;
@@ -46,9 +57,15 @@ protected:
 	MuonCollection allMuons;
 
 	bool passesElectronSelection_;
+	bool passesElectronQCDSelection_;
+	bool passesElectronConversionSelection_;
 	bool passesMuonSelection_;
+	bool passesMuonQCDSelection_;
 	SelectionOutputInfo selectionOutputInfo_electron;
 	SelectionOutputInfo selectionOutputInfo_muon;
+	SelectionOutputInfo selectionOutputInfo_electronQCDNonisolated;
+	SelectionOutputInfo selectionOutputInfo_electronQCDConversion;
+	SelectionOutputInfo selectionOutputInfo_muonQCDNonisolated;
 
 	MCParticleCollection genParticles;
 
@@ -94,10 +111,16 @@ public:
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
 	void setPassesElectronSelection(bool passesElectronSelection);
+	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
+	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
 	void setPassesMuonSelection(bool passesMuonSelection);
+	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
 	void setPassSelectionInfo( std::vector<unsigned int> );
 	void setElectronSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setMuonSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setElectronQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setElectronConversionSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setMETs(const std::vector<METPointer> mets);
 	void setGenMET(const METPointer met);
 	void setHLTs(const boost::shared_ptr<std::vector<int> >);
@@ -151,12 +174,15 @@ public:
 	const MuonPointer MostPFIsolatedMuon(const MuonCollection&) const;
 
 	const bool PassesElectronSelection() const;
+	const bool PassesElectronQCDSelection() const;
+	const bool PassesElectronConversionSelection() const;
 	const bool PassesMuonSelection() const;
+	const bool PassesMuonQCDSelection() const;
 
-	const LeptonPointer getSignalLepton( bool isElectronChannel ) const;
-	const JetCollection getCleanedJets( bool isElectronChannel ) const;
-	const JetCollection getCleanedBJets( bool isElectronChannel ) const;
-	const unsigned int getNBJets( bool isElectronChannel ) const;
+	const LeptonPointer getSignalLepton( unsigned int selectionCriteria ) const;
+	const JetCollection getCleanedJets( unsigned int selectionCriteria ) const;
+	const JetCollection getCleanedBJets( unsigned int selectionCriteria ) const;
+	const unsigned int getNBJets( unsigned int selectionCriteria ) const;
 
 	JetCollection GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
 			BtagAlgorithm::workingPoint WP = BtagAlgorithm::MEDIUM) const;

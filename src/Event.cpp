@@ -29,7 +29,10 @@ Event::Event() : //
 		genJets(), //
 		allMuons(), //
 		passesElectronSelection_(false),
+		passesElectronQCDSelection_(false),
+		passesElectronConversionSelection_(false),
 		passesMuonSelection_(false),
+		passesMuonQCDSelection_(false),
 		selectionOutputInfo_electron(),
 		selectionOutputInfo_muon(),
 		genParticles(), //
@@ -126,6 +129,22 @@ const bool Event::PassesElectronSelection() const {
 	return false;
 }
 
+const bool Event::PassesElectronQCDSelection() const {
+	if ( passesElectronQCDSelection_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronConversionSelection() const {
+	if ( passesElectronConversionSelection_ ) {
+		return true;
+	}
+
+	return false;
+}
+
 const bool Event::PassesMuonSelection() const {
 	if ( passesMuonSelection_ ) {
 		return true;
@@ -134,25 +153,65 @@ const bool Event::PassesMuonSelection() const {
 	return false;
 }
 
-const LeptonPointer Event::getSignalLepton( bool isElectronChannel ) const {
-	if ( isElectronChannel ) {
+const bool Event::PassesMuonQCDSelection() const {
+	if ( passesMuonQCDSelection_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) const {
+
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_electron.getSignalLeptonIndex();
 		return allElectrons[signalLeptonIndex];
 	}
-	else {
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muon.getSignalLeptonIndex();
 		return allMuons[signalLeptonIndex];
 	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
+		unsigned int signalLeptonIndex = selectionOutputInfo_electronQCDNonisolated.getSignalLeptonIndex();
+		return allElectrons[signalLeptonIndex];
+	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
+		unsigned int signalLeptonIndex = selectionOutputInfo_electronQCDConversion.getSignalLeptonIndex();
+		return allElectrons[signalLeptonIndex];
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		unsigned int signalLeptonIndex = selectionOutputInfo_muonQCDNonisolated.getSignalLeptonIndex();
+		return allMuons[signalLeptonIndex];		
+	}
+
+	
+	return LeptonPointer();
 }
 
-const JetCollection Event::getCleanedJets( bool isElectronChannel ) const{
+const JetCollection Event::getCleanedJets( unsigned int selectionCriteria ) const{
+
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
 	std::vector<unsigned int> cleanedJetIndices;
-	if ( isElectronChannel ) {
+
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		cleanedJetIndices = selectionOutputInfo_electron.getCleanedJetIndex();
 	}
-	else {
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		cleanedJetIndices = selectionOutputInfo_muon.getCleanedJetIndex();
 	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
+		cleanedJetIndices = selectionOutputInfo_electronQCDNonisolated.getCleanedJetIndex();
+	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
+		cleanedJetIndices = selectionOutputInfo_electronQCDConversion.getCleanedJetIndex();
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		cleanedJetIndices = selectionOutputInfo_muonQCDNonisolated.getCleanedJetIndex();
+	}
+
 
 	JetCollection cleanedJets;
 	for ( unsigned int cleanedJetIndex = 0; cleanedJetIndex < cleanedJetIndices.size(); ++cleanedJetIndex ) {
@@ -161,13 +220,26 @@ const JetCollection Event::getCleanedJets( bool isElectronChannel ) const{
 	return cleanedJets;
 }
 
-const JetCollection Event::getCleanedBJets( bool isElectronChannel ) const{
+const JetCollection Event::getCleanedBJets( unsigned int selectionCriteria ) const{
+
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
 	std::vector<unsigned int> cleanedBJetIndices;
-	if ( isElectronChannel ) {
+
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		cleanedBJetIndices = selectionOutputInfo_electron.getCleanedBJetIndex();
 	}
-	else {
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		cleanedBJetIndices = selectionOutputInfo_muon.getCleanedBJetIndex();
+	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
+		cleanedBJetIndices = selectionOutputInfo_electronQCDNonisolated.getCleanedBJetIndex();
+	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
+		cleanedBJetIndices = selectionOutputInfo_electronQCDConversion.getCleanedBJetIndex();
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		cleanedBJetIndices = selectionOutputInfo_muonQCDNonisolated.getCleanedBJetIndex();
 	}
 
 	JetCollection cleanedBJets;
@@ -177,13 +249,27 @@ const JetCollection Event::getCleanedBJets( bool isElectronChannel ) const{
 	return cleanedBJets;
 }
 
-const unsigned int Event::getNBJets( bool isElectronChannel ) const {
-	if ( isElectronChannel ) {
+const unsigned int Event::getNBJets( unsigned int selectionCriteria ) const {
+
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		return selectionOutputInfo_electron.getNumberOfBJets();
 	}
-	else {
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		return selectionOutputInfo_muon.getNumberOfBJets();
 	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
+		return selectionOutputInfo_electronQCDNonisolated.getNumberOfBJets();
+	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
+		return selectionOutputInfo_electronQCDConversion.getNumberOfBJets();
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		return selectionOutputInfo_muonQCDNonisolated.getNumberOfBJets();
+	}
+
+	return 0;
 }
 
 JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
@@ -259,14 +345,29 @@ void Event::setPassesElectronSelection( bool passesElectronSelection ) {
 	passesElectronSelection_ = passesElectronSelection;
 }
 
+void Event::setPassesElectronQCDSelection( bool passesElectronQCDSelection ) {
+	passesElectronQCDSelection_ = passesElectronQCDSelection;
+}
+
+void Event::setPassesElectronConversionSelection( bool passesElectronConversionSelection ) {
+	passesElectronConversionSelection_ = passesElectronConversionSelection;
+}
+
 void Event::setPassesMuonSelection( bool passesMuonSelection ) {
 	passesMuonSelection_ = passesMuonSelection;
+}
+
+void Event::setPassesMuonQCDSelection( bool passesMuonQCDSelection ) {
+	passesMuonQCDSelection_ = passesMuonQCDSelection;
 }
 
 void Event::setPassSelectionInfo( std::vector<unsigned int> passSelections ) {
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
 		if ( passSelections[selection] == 1 ) setPassesMuonSelection( true );
 		if ( passSelections[selection] == 2 ) setPassesElectronSelection( true );
+		if ( passSelections[selection] == 3 ) setPassesMuonQCDSelection( true );
+		if ( passSelections[selection] == 4 ) setPassesElectronQCDSelection( true );
+		if ( passSelections[selection] == 5 ) setPassesElectronConversionSelection( true );
 	}
 }
 
@@ -277,6 +378,18 @@ void Event::setElectronSelectionOutputInfo(SelectionOutputInfo newSelectionOutpu
 
 void Event::setMuonSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
 	selectionOutputInfo_muon = newSelectionOutputInfo;
+}
+
+void Event::setElectronQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
+	selectionOutputInfo_electronQCDNonisolated = newSelectionOutputInfo;
+}
+
+void Event::setElectronConversionSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
+	selectionOutputInfo_electronQCDConversion = newSelectionOutputInfo;
+}
+
+void Event::setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
+	selectionOutputInfo_muonQCDNonisolated = newSelectionOutputInfo;
 }
 
 void Event::setHLTs(const boost::shared_ptr<std::vector<int> > triggers) {
@@ -410,6 +523,9 @@ void Event::inspect() const {
 
 	cout << "number of electrons: " << allElectrons.size() << endl;
 	EventContentPrinter::printElectrons(allElectrons);
+
+	cout << "number of muons: " << allMuons.size() << endl;
+	EventContentPrinter::printMuons(allMuons);
 }
 
 bool Event::HLT(HLTriggers::value trigger) const {

@@ -178,6 +178,7 @@ void MuonReader::readMuons() {
 		double px = pxReader.getVariableAt(index);
 		double py = pyReader.getVariableAt(index);
 		double pz = pzReader.getVariableAt(index);
+
 		MuonPointer muon(new Muon(energy, px, py, pz));
 		muon->setUsedAlgorithm(algorithm);
 		muon->setCharge(chargeReader.getIntVariableAt(index));
@@ -235,6 +236,7 @@ void MuonReader::readMuons() {
 			muon->setTrackerLayersWithMeasurement(TrackerLayersWithMeasurement.getIntVariableAt(index));
 			muon->setNumberOfValidPixelHits(NumberOfValidPixelHits.getIntVariableAt(index));
 		}
+
 		muons.push_back(muon);
 	}
 }

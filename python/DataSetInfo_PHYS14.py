@@ -190,4 +190,3 @@ datasetInfo['QCD_Pt-250to350_EMEnriched'] = {"cross-section": 0, "NumberOfProces
 datasetInfo['QCD_Pt-350_EMEnriched'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 #Higgs
 datasetInfo['TTH_Inclusive_M-125'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-

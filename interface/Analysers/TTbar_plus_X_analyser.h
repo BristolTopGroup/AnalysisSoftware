@@ -37,8 +37,8 @@ private:
 	SelectionPointer topEplusJetsRefSelection_, topMuplusJetsRefSelection_;
 	//QCD selections with respect to reference selection
 	SelectionPointer qcdNonIsoElectronSelection_, qcdConversionSelection_;
-	SelectionPointer qcd_noniso_muon_plus_jets_selection_, qcd_noniso_muon_plus_jets_selection_ge4j_;
-	SelectionPointer qcdPFRelIsoEPlusJetsSelection_, qcdPFRelIsoMuPlusJetsSelection_;
+	SelectionPointer qcd_noniso_muon_plus_jets_selection_;
+	SelectionPointer qcdPFRelIsoEPlusJetsSelection_;
 
 	/**
 	 * Analysers
@@ -50,16 +50,14 @@ private:
 	BasicAnalyserLocalPtr vertexAnalyserEPlusJetsRefSelection_, vertexAnalyserMuPlusJetsRefSelection_;
 
 	//QCD region Non-isolated electrons
-	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdNonIsoMuonSelection_,
-			metAnalyserqcdNonIsoMuonSelection_ge4j_;
+	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdNonIsoMuonSelection_;
 	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyser_;
-	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser_, qcdNonIsoMuonAnalyser_ge4j_;
+	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser_;
 	//QCD region electrons from conversions
 	METAnalyserLocalPtr metAnalyserqcdConversionSelection_;
 	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyser_;
 	//No iso
 	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyser_;
-	MuonAnalyserLocalPtr qcdMuPlusjetsPFRelIsoMuonAnalyser_;
 
 	std::vector<double> metBins_, ht_bins_, st_bins_, mt_bins_, wpt_bins_;
 	//MET analysers electron

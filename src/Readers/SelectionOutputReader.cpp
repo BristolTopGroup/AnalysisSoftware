@@ -7,6 +7,7 @@
 
 #include "../../interface/Readers/SelectionOutputReader.h"
 #include "../../interface/GlobalVariables.h"
+#include "../../interface/Event.h"
 #include <iostream>
 
 using namespace std;
@@ -23,7 +24,7 @@ SelectionOutputReader::SelectionOutputReader() :
 
 }
 
-SelectionOutputReader::SelectionOutputReader(TChainPointer input, bool isElectronChannel ) :
+SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int selectionCriteria ) :
 	numberJetsReader(),
 	numberBJetsReader(),
 	signalLeptonIndexReader(),
@@ -31,19 +32,43 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, bool isElectro
 	cleanedBJetsIndexReader(),
 	selectionOutputInfo() {
 
-	if ( isElectronChannel ) {
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfBtags");
 		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.signalElectronIndex");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedJetIndex");
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedBJetIndex");
 	}
-	else {
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsSelection.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsSelection.NumberOfBtags");
 		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsSelection.signalMuonIndex");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsSelection.cleanedJetIndex");		
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsSelection.cleanedBJetIndex");
+	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
+		numberJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfJets");
+		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfBtags");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.signalElectronIndex");
+		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedJetIndex");
+		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedBJetIndex");
+	}
+	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
+		numberJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfJets");
+		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfBtags");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.signalElectronIndex");
+		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedJetIndex");
+		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedBJetIndex");
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection.NumberOfJets");
+		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection.NumberOfBtags");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection.signalMuonIndex");
+		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection.cleanedJetIndex");		
+		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection.cleanedBJetIndex");
 	}
 }
 

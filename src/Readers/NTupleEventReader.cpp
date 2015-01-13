@@ -39,8 +39,11 @@ NTupleEventReader::NTupleEventReader() :
 		metReaders(), //
 		// metCorrReaders(), //
 		passesSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesSelection")),
-		selectionOutputReader_electron(new SelectionOutputReader(input, true)), //
-		selectionOutputReader_muon(new SelectionOutputReader(input, false)), //
+		selectionOutputReader_electron(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsReference)), //
+		selectionOutputReader_muon(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsReference)), //
+		selectionOutputReader_electronQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDNonIsolated)), //
+		selectionOutputReader_electronQCDConversion(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDConversion)), //
+		selectionOutputReader_muonQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsQCDNonIsolated)), //
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
@@ -127,6 +130,9 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setPassSelectionInfo( *passesSelectionReader->getVariable() );
 	currentEvent->setElectronSelectionOutputInfo( selectionOutputReader_electron->getSelectionOutputInfo() );
 	currentEvent->setMuonSelectionOutputInfo( selectionOutputReader_muon->getSelectionOutputInfo() );
+	// currentEvent->setElectronQCDNonisolatedSelectionOutputInfo( selectionOutputReader_electronQCDNonisolated->getSelectionOutputInfo() );
+	// currentEvent->setElectronConversionSelectionOutputInfo( selectionOutputReader_electronQCDConversion->getSelectionOutputInfo() );
+	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
 
 	// if (!currentEvent->isRealData()) {
 	// 	std::cout << "Gen Particles etc." << std::endl;
@@ -248,6 +254,9 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		passesSelectionReader->initialise();
 		selectionOutputReader_electron->initialise();
 		selectionOutputReader_muon->initialise();
+		// selectionOutputReader_electronQCDNonisolated->initialise();
+		// selectionOutputReader_electronQCDConversion->initialise();
+		selectionOutputReader_muonQCDNonisolated->initialise();
 
 		runNumberReader->initialise();
 		eventNumberReader->initialise();

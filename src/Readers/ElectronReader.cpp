@@ -272,11 +272,9 @@ void ElectronReader::initialise() {
 				<< endl;
 	}
 
-
 	if (Globals::NTupleVersion >= 9) {
 		PFRelativeIsolationRho_DR03_.initialise();
 	}
-
 }
 
 }

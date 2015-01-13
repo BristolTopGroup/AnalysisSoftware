@@ -15,7 +15,7 @@ namespace BAT {
 class SelectionOutputReader {
 public:
 	SelectionOutputReader();
-	SelectionOutputReader(TChainPointer input, bool isElectronChannel);
+	SelectionOutputReader(TChainPointer input, unsigned int selectionCriteria );
 	virtual ~SelectionOutputReader();
 	const SelectionOutputInfo& getSelectionOutputInfo();
 	void initialise();

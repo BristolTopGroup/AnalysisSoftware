@@ -83,6 +83,9 @@ private:
 	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesSelectionReader;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electron;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muon;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDNonisolated;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDConversion;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated;
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
