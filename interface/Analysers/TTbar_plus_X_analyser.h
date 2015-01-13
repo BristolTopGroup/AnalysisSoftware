@@ -14,9 +14,8 @@
 #include "MuonAnalyser.h"
 #include "VertexAnalyser.h"
 #include "JetAnalyser.h"
+#include "WAnalyser.h"
 #include "Binned_variable_analyser.h"
-#include "../Selections/BasicSelection.h"
-#include "../../interface/Selections/QCDNoIsoNoIDSelection.h"
 
 #include <string>
 
@@ -104,6 +103,9 @@ private:
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_muon_;
 
 	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_, jetAnalyserMuPlusJetsRefSelection_;
+
+	// W simple reco analyser
+	WAnalyserLocalPtr wAnalyserEPlusJetsRefSelection_, wAnalyserMuPlusJetsRefSelection_;
 
 	// variable definitions
 	std::vector<Variable> electron_variables_, muon_variables_;

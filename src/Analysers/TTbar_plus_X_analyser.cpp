@@ -66,6 +66,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		vertexAnalyserEPlusJetsRefSelection_->analyse(event);
 		jetAnalyserEPlusJetsRefSelection_->analyse(event);
 
+		wAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		wAnalyserEPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
+
 		ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 
 		vector<double> fit_variable_values;
@@ -393,6 +396,9 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		vertexAnalyserMuPlusJetsRefSelection_->analyse(event);
 		jetAnalyserMuPlusJetsRefSelection_->analyse(event);
 
+		wAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
+
 		ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;
 		fit_variable_values.push_back(fabs(signalMuon->eta()));
@@ -659,6 +665,9 @@ void TTbar_plus_X_analyser::createHistograms() {
 	jetAnalyserEPlusJetsRefSelection_->createHistograms();
 	jetAnalyserMuPlusJetsRefSelection_->createHistograms();
 
+	// W boson simple reconstruction
+	wAnalyserEPlusJetsRefSelection_->createHistograms();
+	wAnalyserMuPlusJetsRefSelection_->createHistograms();
 }
 
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::string histogramFolder) :
@@ -672,6 +681,7 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 		qcd_noniso_muon_plus_jets_selection_ge4j_(new QCDNonIsolatedMuonSelection()), //
 		qcdPFRelIsoEPlusJetsSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
 		qcdPFRelIsoMuPlusJetsSelection_(new QCDPFRelIsoMuPlusJetsSelection()), //
+
 		//analysers
 		//signal regions
 		metAnalyserEPlusJetsRefSelection_(new METAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/MET")), //
@@ -756,6 +766,8 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
 		jetAnalyserMuPlusJetsRefSelection_(
 				new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
+		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
+		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
 		electron_variables_(), //
 		muon_variables_() {
 
