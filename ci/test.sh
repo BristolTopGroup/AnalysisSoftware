@@ -5,5 +5,5 @@
 # in the .travis.yml in the top level folder of the project.
 
 set -e
-make test
-nosetests test/*.py
+time make test
+time nosetests -v test/*.py
