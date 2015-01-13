@@ -14,4 +14,4 @@ wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
 # Needed because sometimes travis' repositories get out of date
 sudo apt-get update -q
 # Install the dependencies we need
-time sudo apt-get -q install cmake clang-${CLANG_VERSION} libclang-${CLANG_VERSION}-dev gcc-${GCC_VERSION} g++-${GCC_VERSION} boost${BOOST_VERSION} python-nose python-setuptools python-dev
+time sudo apt-get -q install cmake clang-${CLANG_VERSION} libclang-${CLANG_VERSION}-dev gcc-${GCC_VERSION} g++-${GCC_VERSION} boost${BOOST_VERSION} python-nose python-setuptools python-dev python-unit
