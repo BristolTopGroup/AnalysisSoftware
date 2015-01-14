@@ -10,55 +10,58 @@
 '''
 from optparse import OptionParser
 analysis_modes = ['central',
-                 'Electron_down',
-                 'Electron_up',
-                 'Muon_down',
-                 'Muon_up',
-                 'BJet_down',
-                 'BJet_up',
-                 'JES_down',
-                 'JES_up',
-                 'LightJet_down',
-                 'LightJet_up',
-                 'PU_down',
-                 'PU_up',
-                 'JetSmearing_up',
-                 'JetSmearing_down',
+                 # 'Electron_down',
+                 # 'Electron_up',
+                 # 'Muon_down',
+                 # 'Muon_up',
+                 # 'BJet_down',
+                 # 'BJet_up',
+                 # 'JES_down',
+                 # 'JES_up',
+                 # 'LightJet_down',
+                 # 'LightJet_up',
+                 # 'PU_down',
+                 # 'PU_up',
+                 # 'JetSmearing_up',
+                 # 'JetSmearing_down',
                  ]
-samples = ['DYJetsToLL', 'DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
-           'ElectronHad', 
-           'GJets_40To100', 'GJets_100To200', 'GJets_200To400', 'GJets_200', 'GJets_400', 
-           'QCD_170to250_BCtoE', 'QCD_170to250_EMEnriched', 
-           'QCD_20to30_BCtoE', 'QCD_20to30_EMEnriched', 
-           'QCD_250to350_BCtoE', 'QCD_250to350_EMEnriched', 
-           'QCD_30to80_BCtoE', 'QCD_30to80_EMEnriched', 
-           'QCD_350_BCtoE', 'QCD_350_EMEnriched', 'QCD_80to170_BCtoE', 
-           'QCD_80to170_EMEnriched', 'QCD_Pt-1000_Mu', 'QCD_Pt-120to170_Mu', 
-           'QCD_Pt-15to20_Mu', 'QCD_Pt-170to300_Mu', 'QCD_Pt-20to30_Mu', 
-           'QCD_Pt-300to470_Mu', 'QCD_Pt-30to50_Mu', 'QCD_Pt-470to600_Mu', 
-           'QCD_Pt-50to80_Mu', 'QCD_Pt-600to800_Mu', 'QCD_Pt-800to1000_Mu', 
-           'QCD_Pt-80to120_Mu', 
-           'SingleElectron', 'SingleMu', 
-           'TTJet', 
-           'TTJets-matchingdown', 'TTJets-matchingup', 
-           'TTJets-scaledown', 'TTJets-scaleup', 
-           'T_s', 'T_t', 'T_tW', 
-           'Tbar_s', 'Tbar_t', 'Tbar_tW', 
-           'WJets', 'W1Jet', 'W2Jets', 'W3Jets', 'W4Jets', 
-           'WJets-matchingdown', 'WJets-matchingup', 'WJets-scaledown', 'WJets-scaleup', 
-           'ZJets-matchingdown', 'ZJets-matchingup', 'ZJets-scaledown', 'ZJets-scaleup']
+samples = [
+          'TTJet',
+          'TTJets_Madgraph_PU30bx50',
+          'TTJets_Madgraph_PU4bx50',
+          'TT_Pythia8',
+          'TT_Pythia8_PU30bx50',
+          'TT_Pythia8_PU40bx25',
+          
+          'DYJetsToLL',
+          'WJets',
+          
+          'GJets_100to200',
+          'GJets_200to400',
+          'GJets_600toInf',
+          'QCD_EMEnriched_20to30',
+          'QCD_EMEnriched_30to80',
+          'QCD_EMEnriched_80to170',
 
-ignore_samples_7TeV = ['DY1JetsToLL', 'DY2JetsToLL', 'DY3JetsToLL', 'DY4JetsToLL',
-               'GJets_200To400', 'GJets_400', 'SingleElectron', 
-               'TTJets-matchingdown', 'TTJets-matchingup',
-               'W1Jet', 'W2Jets', 'W3Jets', 'W4Jets',
-               'WJets-matchingdown', 'WJets-matchingup', 'WJets-scaledown', 'WJets-scaleup', 
-               'ZJets-matchingdown', 'ZJets-matchingup', 'ZJets-scaledown', 'ZJets-scaleup'
-               ]
-ignore_samples_8TeV = ['DYJetsToLL', 'ElectronHad', 'WJets',]
+          'QCD_bcToE_20to30',
+          'QCD_bcToE_30to80',
+          'QCD_bcToE_80to170',
+          'QCD_bcToE_170toInf',
+
+          'QCD_MuEnriched_20toInf',
+          'QCD_MuEnriched_30to50',
+          'QCD_MuEnriched_50to80',
+          'QCD_MuEnriched_80to120',
+
+          'TToLeptons_s', 'TToLeptons_t', 'T_tw', 
+          'TBarToLeptons_s', 'TBarToLeptons_t', 'Tbar_tw', 
+          ]
+
+ignore_samples_7TeV = []
+ignore_samples_8TeV = []
 
 def build_matrix(energy):
-    ignore_samples = None
+    ignore_samples = []
     if energy == 7:
         ignore_samples = ignore_samples_7TeV
     if energy == 8:
@@ -85,6 +88,7 @@ def main(options, args = []):
         return options.operation
     # now the dynamic options
     matrix = build_matrix(options.energy)
+
     if options.return_n_jobs:
         return len(matrix)
     
@@ -109,12 +113,10 @@ def parse_args(parameters = []):
                        type = int  )
     parser.add_option( '--cores', dest = 'cores', help = 'cores',
                        type = int  )
-    parser.add_option( '--sample', dest = 'sample', help = 'sample',
-                       default = samples[0] )
-    parser.add_option( '--mode', dest = 'mode', help = 'mode', 
-                       default = analysis_modes[0])
+    parser.add_option( '--sample', dest = 'sample', help = 'sample' )
+    parser.add_option( '--mode', dest = 'mode', help = 'mode')
     parser.add_option( '--cmssw', dest = 'cmssw', 
-                       help = 'cmssw version (53X|73X|74X', default = '53X' )
+                       help = 'cmssw version (53X|73X|74X', default = '73X' )
     parser.add_option( '--operation', dest = 'operation', 
                        help = 'mode of operation: analysis|single|test', default = 'test' )
     parser.add_option( '--energy', dest = 'energy', 
