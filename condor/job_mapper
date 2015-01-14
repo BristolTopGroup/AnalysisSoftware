@@ -81,8 +81,13 @@ def main(options, args = []):
         return options.cores
     if options.return_process:
         return options.process
+    if options.return_operation:
+        return options.operation
     # now the dynamic options
     matrix = build_matrix(options.energy)
+    if options.return_n_jobs:
+        return len(matrix)
+    
     if options.return_sample:
         if options.sample:
             return options.sample
@@ -104,10 +109,14 @@ def parse_args(parameters = []):
                        type = int  )
     parser.add_option( '--cores', dest = 'cores', help = 'cores',
                        type = int  )
-    parser.add_option( '--sample', dest = 'sample', help = 'sample' )
-    parser.add_option( '--mode', dest = 'mode', help = 'mode' )
+    parser.add_option( '--sample', dest = 'sample', help = 'sample',
+                       default = samples[0] )
+    parser.add_option( '--mode', dest = 'mode', help = 'mode', 
+                       default = analysis_modes[0])
     parser.add_option( '--cmssw', dest = 'cmssw', 
                        help = 'cmssw version (53X|73X|74X', default = '53X' )
+    parser.add_option( '--operation', dest = 'operation', 
+                       help = 'mode of operation: analysis|single|test', default = 'test' )
     parser.add_option( '--energy', dest = 'energy', 
                        help = 'centre-of-mass energy (7|8|13|14 TeV)',
                        type = int )
@@ -123,6 +132,11 @@ def parse_args(parameters = []):
                           help = "Returns the number of requested cores" )
     parser.add_option("--return_process", action = "store_true", dest = "return_process",
                           help = "Returns the number of requested cores" )
+    parser.add_option("--return_operation", action = "store_true", dest = "return_operation",
+                          help = "Returns the operation" )
+    parser.add_option("--return_n_jobs", action = "store_true", dest = "return_n_jobs",
+                          help = "Returns the operation" )
+    
     options, args = None, None
     if len(parameters) > 0:
         ( options, args ) = parser.parse_args(parameters)
