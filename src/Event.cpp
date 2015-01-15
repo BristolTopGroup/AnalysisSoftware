@@ -215,7 +215,8 @@ const JetCollection Event::getCleanedJets( unsigned int selectionCriteria ) cons
 
 	JetCollection cleanedJets;
 	for ( unsigned int cleanedJetIndex = 0; cleanedJetIndex < cleanedJetIndices.size(); ++cleanedJetIndex ) {
-		cleanedJets.push_back( allJets[cleanedJetIndex] );
+		unsigned int jetIndex = cleanedJetIndices[ cleanedJetIndex ];
+		cleanedJets.push_back( allJets[jetIndex] );
 	}
 	return cleanedJets;
 }

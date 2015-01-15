@@ -45,7 +45,7 @@ double BTagWeight::weight(const JetCollection jets) const {
 		// Info on this jet
 		const JetPointer jet(jets.at(index));
 		const unsigned int partonFlavour = abs( jet->partonFlavour() );
-		const bool isBTagged = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM);
+		const bool isBTagged = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 
 		// Get scale factor for this jet
 		std::vector<double> sfAndError = getScaleFactor( partonFlavour, jet );

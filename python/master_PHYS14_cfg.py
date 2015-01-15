@@ -1,12 +1,9 @@
-mc_path = '/hdfs/TopQuarkGroup/run2/ntuples/v7/'
+mc_path = '/hdfs/TopQuarkGroup/run2/ntuples/v4/'
 data_path = ''
 datasets = {
             'TTJet' : [ mc_path + 'TTJets_Madgraph_PU20bx25.root' ],
-            'TTJets_Madgraph_PU30bx50' : [ mc_path + 'TTJets_Madgraph_PU30bx50.root'],
-            'TTJets_Madgraph_PU4bx50' : [ mc_path + 'TTJets_Madgraph_PU4bx50.root'],
-            'TT_Pythia8' : [ mc_path + 'TT_Pythia8_PU20bx25.root'],
-            'TT_Pythia8_PU30bx50' : [ mc_path + 'TT_Pythia8_PU30bx50.root'],
-            'TT_Pythia8_PU40bx25' : [ mc_path + 'TT_Pythia8_PU40bx25.root'],
+            'TTJet_PU30bx50' : [ mc_path + 'TTJets_Madgraph_PU30bx50.root'],
+            'TTJets_PU4bx50' : [ mc_path + 'TTJets_Madgraph_PU4bx50.root'],
 
             'DYJetsToLL' : [ mc_path + 'DYJetsToLL_M50_PU20bx25.root' ],
             'WJets' : [ mc_path + 'WJets_PU20bx25.root' ],

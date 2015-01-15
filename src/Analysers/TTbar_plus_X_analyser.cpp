@@ -66,6 +66,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		wAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		wAnalyserEPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
 
+		hitFitAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		hitFitAnalyserEPlusJetsRefSelection_->analyse(event);
+
 		ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 
 		vector<double> fit_variable_values;
@@ -421,6 +424,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	// W boson simple reconstruction
 	wAnalyserEPlusJetsRefSelection_->createHistograms();
 	wAnalyserMuPlusJetsRefSelection_->createHistograms();
+
+	hitFitAnalyserEPlusJetsRefSelection_->createHistograms();
 }
 
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::string histogramFolder) :
@@ -513,6 +518,7 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::s
 				new JetAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
 		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
 		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
+		hitFitAnalyserEPlusJetsRefSelection_(new HitFitAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/HitFit")), //
 		electron_variables_(), //
 		muon_variables_() {
 

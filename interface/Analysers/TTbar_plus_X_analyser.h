@@ -15,6 +15,7 @@
 #include "VertexAnalyser.h"
 #include "JetAnalyser.h"
 #include "WAnalyser.h"
+#include "HitFitAnalyser.h"
 #include "Binned_variable_analyser.h"
 
 #include <string>
@@ -104,6 +105,9 @@ private:
 
 	// W simple reco analyser
 	WAnalyserLocalPtr wAnalyserEPlusJetsRefSelection_, wAnalyserMuPlusJetsRefSelection_;
+
+	// HitFit Analyser
+	BasicAnalyserLocalPtr hitFitAnalyserEPlusJetsRefSelection_;
 
 	// variable definitions
 	std::vector<Variable> electron_variables_, muon_variables_;
