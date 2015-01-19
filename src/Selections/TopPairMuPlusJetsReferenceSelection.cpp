@@ -295,7 +295,7 @@ const JetCollection TopPairMuPlusJetsReferenceSelection::cleanedBJets(const Even
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
-		if (isBJet(jet))
+		if (isBJet(jet) && jet->pt() > 30.)
 			cleanedBJets.push_back(jet);
 	}
 
