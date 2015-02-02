@@ -23,6 +23,7 @@
 #include "GenMETReader.h"
 #include "TrackReader.h"
 #include "GenParticleReader.h"
+#include "../DataTypes.h"
 #include <string>
 
 namespace BAT {
@@ -95,7 +96,6 @@ private:
 
 	void selectNextNtupleEvent();
 	void initiateReadersIfNotSet();
-	DataType::value getDataType(const std::string filename);
 	void readDataTypes();
 };
 

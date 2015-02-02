@@ -236,6 +236,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TTbarInclWIncl", //
 		"TTH_Inclusive_M-125"
 		} };
+
+DataType::value getDataType(const std::string filename);
 }
 
 }
