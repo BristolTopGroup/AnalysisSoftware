@@ -1,15 +1,21 @@
 #!/bin/bash -e
-# TODO: 
-# - get number of cores as parameter
-# - get operation (single or analysis)
-# parameters:
-# - energy
-# - operation = 'analysis|test|single'
-# - cores
-# if operation == single
-# - mode (an analysis mode)
-# - sample (which sample to analyse)
-# or at least the workload
+# Usage:
+# condor.sh --operation=test|single|analysis [--noop, --energy, --process, --sample, --mode, --cmssw]
+# 
+# mandatory:
+# --operation=test|single|analysis
+#     test: set of default parameters just for testing
+#     single: run just one job based on the parameters (need to specify energy, mode, sample & cores)
+#     analysis: run all jobs for a given centre-of-mass energy (need to specify energy & cores)
+#     
+# optional parameters:
+# --cores: number of cores to be used per condor job
+# --noop: no operation flag. Will create condor job template, but won't submit the jobs
+# --energy=<centre-of-mass energy> 
+# --process <condor process number> 
+# --sample=<valid sample> (TTJet, etc) 
+# --mode=<valid mode of operation> (central, JES_up, etc)
+# --cmssw=53X|73X|74X
 NOW=$(date +"%d-%m-%Y")
 tar -cf Analysis.tar BristolAnalysis/Tools --exclude="Debug*" --exclude="Release*" --exclude="Test*" --exclude="build*" --exclude="CMakeFiles" --exclude=".git*"
 memory_per_job=2000
@@ -22,6 +28,7 @@ fi
 operation=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_operation`
 energy=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_energy`
 cmssw_version=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_cmssw`
+noop=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_noop`
 
 job_description="job.description.$NOW"
 cp BristolAnalysis/Tools/condor/job.description.template $job_description;
@@ -54,5 +61,9 @@ if [ $operation == "analysis" ]; then
 	sed -i "s/%other_params%/${other_params}/g" $job_description
 	sed -i "s/%n_jobs%/${n_jobs}/g" $job_description
 fi
-echo "Submitting job(s) to condor"
-condor_submit $job_description
+if [ $noop == "0" ]; then
+	echo "Submitting job(s) to condor"
+	condor_submit $job_description
+else
+	echo "Nothing else to do"
+fi

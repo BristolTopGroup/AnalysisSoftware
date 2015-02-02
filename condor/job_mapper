@@ -7,6 +7,29 @@
  
  This module is not meant to be used in a manual workflow.
  It is in to be used with the condor script only
+ 
+ Usage:
+ job_mapper --operation=test|single|analysis [--noop, --energy, --process, --sample, --mode, --cmssw, --return_*]
+ 
+ mandatory:
+ --operation=test|single|analysis
+     test: set of default parameters just for testing
+     single: run just one job based on the parameters (need to specify energy, mode, sample & cores)
+     analysis: run all jobs for a given centre-of-mass energy (need to specify energy & cores)
+     
+ optional parameters:
+ --cores: number of cores to be used per condor job
+ --noop: no operation flag. Will create condor job template, but won't submit the jobs
+ --energy=<centre-of-mass energy> 
+ --process <condor process number> 
+ --sample=<valid sample> (TTJet, etc) 
+ --mode=<valid mode of operation> (central, JES_up, etc)
+ --cmssw=53X|73X|74X
+ 
+ defining return values:
+ return_<parameter>: script will return the specified parameter (e.g. return_mode returns the mode)
+ return_n_jobs: return the number of jobs
+ 
 '''
 from optparse import OptionParser
 import sys
@@ -74,6 +97,16 @@ def build_matrix(energy):
     return result
 
 def main(options, args = []):
+    if options.operation == 'test':
+        # set test defaults
+        if not options.energy:
+            options.energy = 7
+        if not options.cores:
+            options.cores = 1
+        if not options.mode:
+            options.mode = 'central'
+        if not options.sample:
+            options.sample = 'TTJet'
     # first the static options    
     if options.return_cmssw:
         return options.cmssw
@@ -88,7 +121,10 @@ def main(options, args = []):
     # now the dynamic options
     matrix = build_matrix(options.energy)
     if options.return_n_jobs:
-        return len(matrix)
+        if options.operation == 'test' or options.operation == 'single':
+            return 1
+        else:
+            return len(matrix)
     
     if options.return_sample:
         if options.sample:
@@ -105,12 +141,15 @@ def main(options, args = []):
             return options.mode
         else:
             return matrix[options.process][1]
+        
+    if options.return_noop:
+        if options.noop:
+            return 1
+        else:
+            return 0
 
 def parse_args(parameters = []):
-    parser = OptionParser( '''executable for plotting of ROOT histograms
-        Usage:
-        plot <command> --files=[>= 1 file] --histograms=[>=1 histogram] --labels=[size == size(max(files,histograms)] [options]
-        ''' )
+    parser = OptionParser( __doc__ )
     parser.add_option( '--process', dest = 'process', help = 'process',
                        type = int  )
     parser.add_option( '--cores', dest = 'cores', help = 'cores',
@@ -118,12 +157,14 @@ def parse_args(parameters = []):
     parser.add_option( '--sample', dest = 'sample', help = 'sample' )
     parser.add_option( '--mode', dest = 'mode', help = 'mode' )
     parser.add_option( '--cmssw', dest = 'cmssw', 
-                       help = 'cmssw version (53X|73X|74X', default = '53X' )
+                       help = 'cmssw version (53X|73X|74X)', default = '53X' )
     parser.add_option( '--operation', dest = 'operation', 
                        help = 'mode of operation: analysis|single|test', default = 'test' )
     parser.add_option( '--energy', dest = 'energy', 
                        help = 'centre-of-mass energy (7|8|13|14 TeV)',
                        type = int )
+    parser.add_option("--noop", action = "store_true", dest = "noop",
+                          help = "Returns the noop flag" )
     parser.add_option("--return_sample", action = "store_true", dest = "return_sample",
                           help = "Returns the sample from the map based on process" )
     parser.add_option("--return_mode", action = "store_true", dest = "return_mode",
@@ -140,6 +181,8 @@ def parse_args(parameters = []):
                           help = "Returns the operation" )
     parser.add_option("--return_n_jobs", action = "store_true", dest = "return_n_jobs",
                           help = "Returns the operation" )
+    parser.add_option("--return_noop", action = "store_true", dest = "return_noop",
+                          help = "Returns the noop flag" )
     
     options, args = None, None
     if len(parameters) > 0:

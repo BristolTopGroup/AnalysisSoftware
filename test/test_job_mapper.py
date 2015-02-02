@@ -10,7 +10,8 @@ def setup_func():
                "return_sample", "return_mode", "return_cmssw", "return_energy",
                "return_cores",
                ]
-    _globals['options_get_mode'] = ['--energy', '7', '--process', '0', '--return_mode'] 
+    _globals['options_get_mode'] = ['--energy', '7', '--process', '0', '--return_mode']
+    _globals['options_test_simple'] = ['--test'] 
 
 def teardown_func():
     "tear down test fixtures"
@@ -34,4 +35,32 @@ def test_build_matrix():
     
     set_8TeV = set(matrix_8TeV)
     assert len(set_8TeV) == len(matrix_8TeV)
+    
+def test_test_option():
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_mode'])
+    assert job_mapper.main(params) == 'central'
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_sample'])
+    assert job_mapper.main(params) == 'TTJet'
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_energy'])
+    assert job_mapper.main(params) == 7
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_cores'])
+    assert job_mapper.main(params) == 1
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_n_jobs'])
+    assert job_mapper.main(params) == 1
+    
+def test_test_option_with_defaults():
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_mode', '--mode', 'JES_up'])
+    assert job_mapper.main(params) == 'JES_up'
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_sample', '--sample', 'SingleElectron'])
+    assert job_mapper.main(params) == 'SingleElectron'
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_energy', '--energy', '8'])
+    assert job_mapper.main(params) == 8
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_cores', '--cores', '2'])
+    assert job_mapper.main(params) == 2
+    
+def test_noop_option():
+    params, _ = job_mapper.parse_args(['--return_noop', '--noop'])
+    assert job_mapper.main(params) == 1
+    params, _ = job_mapper.parse_args(['--return_noop'])
+    assert job_mapper.main(params) == 0
     

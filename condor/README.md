@@ -20,9 +20,9 @@ BristolAnalysis/Tools/condor/condor.sh --operation=test
 ```
 to run a single sample
 ```shell
-BristolAnalysis/Tools/condor/condor.sh --operation=single --mode=central --energy=7 --sample=TTJet
+BristolAnalysis/Tools/condor/condor.sh --operation=single --mode=central --energy=7 --sample=TTJet --cores 1
 ```
 to run the full analysis (many jobs!)
 ```shell
-BristolAnalysis/Tools/condor/condor.sh --operation=analysis --energy=7
+BristolAnalysis/Tools/condor/condor.sh --operation=analysis --energy=7 --cores 1
 ```
