@@ -1,6 +1,7 @@
 # Check if cmake has the required version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR)
 set(PROJECT_NAME_STR AnalysisSoftware)
+set(PROJECT_LIB_NAME BristolAnalysisTools)
 PROJECT(${PROJECT_NAME_STR})
 set(PROJECT_LIB_NAME BristolAnalysisTools)
 
@@ -55,21 +56,28 @@ if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (APPLE))
 	set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -stdlib=libc++")
 endif()
 #Adding files to compile
-aux_source_directory(bin/ SRC_COMMON)
-file(GLOB_RECURSE SRC "src/*.cpp")
+aux_source_directory(bin/ SRC)
+file(GLOB_RECURSE SRC_COMMON "src/*.cpp")
 # some other checks
 include(CheckSTLContainers.cmake)
 CHECK_STL_CONTAINERS()
 #Excluding unnecessary files
 file(GLOB_RECURSE SRC_EXCLUDE "src/*HitFitAnalyser.cpp")
-list(REMOVE_ITEM SRC ${SRC_EXCLUDE})
-#Adding the executable
-add_executable(AnalysisSoftware ${SRC} ${SRC_COMMON})
-
-target_link_libraries(AnalysisSoftware
-        ${Boost_LIBRARIES}
+list(REMOVE_ITEM SRC_COMMON ${SRC_EXCLUDE})
+#adding the library
+add_library(${PROJECT_LIB_NAME} SHARED ${SRC_COMMON})
+target_link_libraries(${PROJECT_LIB_NAME}
+		${Boost_LIBRARIES}
         ${PYTHON_LIBRARIES}
         ${ROOT_LIBRARIES}
+        )
+#Adding the executable
+add_executable(${PROJECT_NAME_STR} ${SRC})
+target_link_libraries(${PROJECT_NAME_STR}
+        ${PROJECT_LIB_NAME}
+        #${Boost_LIBRARIES}
+        #${PYTHON_LIBRARIES}
+        #${ROOT_LIBRARIES}
     )
 
 # tests
@@ -77,5 +85,11 @@ enable_testing()
 set(PROJECT_TEST_NAME ${PROJECT_NAME_STR}_test)
 include_directories(${COMMON_INCLUDES})
 file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
-add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
+add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
+target_link_libraries(${PROJECT_TEST_NAME}
+		${Boost_LIBRARIES}
+        ${PYTHON_LIBRARIES}
+        ${ROOT_LIBRARIES}
+        ${PROJECT_LIB_NAME}
+        )
 add_test(test1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_TEST_NAME})
