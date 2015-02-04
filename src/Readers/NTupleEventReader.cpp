@@ -130,8 +130,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setPassSelectionInfo( *passesSelectionReader->getVariable() );
 	currentEvent->setElectronSelectionOutputInfo( selectionOutputReader_electron->getSelectionOutputInfo() );
 	currentEvent->setMuonSelectionOutputInfo( selectionOutputReader_muon->getSelectionOutputInfo() );
-	// currentEvent->setElectronQCDNonisolatedSelectionOutputInfo( selectionOutputReader_electronQCDNonisolated->getSelectionOutputInfo() );
-	// currentEvent->setElectronConversionSelectionOutputInfo( selectionOutputReader_electronQCDConversion->getSelectionOutputInfo() );
+	currentEvent->setElectronQCDNonisolatedSelectionOutputInfo( selectionOutputReader_electronQCDNonisolated->getSelectionOutputInfo() );
+	currentEvent->setElectronConversionSelectionOutputInfo( selectionOutputReader_electronQCDConversion->getSelectionOutputInfo() );
 	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
 
 	// if (!currentEvent->isRealData()) {
@@ -254,8 +254,8 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		passesSelectionReader->initialise();
 		selectionOutputReader_electron->initialise();
 		selectionOutputReader_muon->initialise();
-		// selectionOutputReader_electronQCDNonisolated->initialise();
-		// selectionOutputReader_electronQCDConversion->initialise();
+		selectionOutputReader_electronQCDNonisolated->initialise();
+		selectionOutputReader_electronQCDConversion->initialise();
 		selectionOutputReader_muonQCDNonisolated->initialise();
 
 		runNumberReader->initialise();
