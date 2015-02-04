@@ -61,6 +61,8 @@ private:
 	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyser_;
 
 	std::vector<double> metBins_, ht_bins_, st_bins_, mt_bins_, wpt_bins_;
+	std::vector<double> mttbar_bins_, yttbar_bins_, pttbar_bins_, pttop_bins_, yt_bins_;
+
 	//MET analysers electron
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_electron_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_conversion_binned_MET_analyser_electron_;
@@ -101,13 +103,49 @@ private:
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_muon_;
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_muon_;
 
+	// Mttbar analyser electron
+	Binned_Variable_analyser_ptr ref_selection_binned_mttbar_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_conversion_binned_mttbar_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_noniso_binned_mttbar_analyser_electron_;
+	// Mttbar analyser muon
+	Binned_Variable_analyser_ptr ref_selection_binned_mttbar_analyser_muon_;
+
+	// Yttbar analyser electron
+	Binned_Variable_analyser_ptr ref_selection_binned_yttbar_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_conversion_binned_yttbar_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_noniso_binned_yttbar_analyser_electron_;
+	// Yttbar analyser muon
+	Binned_Variable_analyser_ptr ref_selection_binned_yttbar_analyser_muon_;
+
+	// Ptttbar analyser electron
+	Binned_Variable_analyser_ptr ref_selection_binned_Ptttbar_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_conversion_binned_Ptttbar_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_noniso_binned_Ptttbar_analyser_electron_;
+	// Ptttbar analyser muon
+	Binned_Variable_analyser_ptr ref_selection_binned_Ptttbar_analyser_muon_;
+
+	// Pttop analyser electron
+	Binned_Variable_analyser_ptr ref_selection_binned_Pttop_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_conversion_binned_Pttop_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_noniso_binned_Pttop_analyser_electron_;
+	// Pttop analyser muon
+	Binned_Variable_analyser_ptr ref_selection_binned_Pttop_analyser_muon_;
+
+	// Yt analyser electron
+	Binned_Variable_analyser_ptr ref_selection_binned_yt_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_conversion_binned_yt_analyser_electron_;
+	Binned_Variable_analyser_ptr qcd_noniso_binned_yt_analyser_electron_;
+	// Yt analyser muon
+	Binned_Variable_analyser_ptr ref_selection_binned_yt_analyser_muon_;
+
 	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_, jetAnalyserMuPlusJetsRefSelection_;
 
 	// W simple reco analyser
 	WAnalyserLocalPtr wAnalyserEPlusJetsRefSelection_, wAnalyserMuPlusJetsRefSelection_;
 
 	// HitFit Analyser
-	BasicAnalyserLocalPtr hitFitAnalyserEPlusJetsRefSelection_;
+	HitFitAnalyserLocalPtr hitFitAnalyserEPlusJetsRefSelection_;
+	HitFitAnalyserLocalPtr hitFitAnalyserMuPlusJetsRefSelection_;
 
 	// variable definitions
 	std::vector<Variable> electron_variables_, muon_variables_;
@@ -117,6 +155,12 @@ private:
 	void make_binned_ST_analysers();
 	void make_binned_MT_analysers();
 	void make_binned_WPT_analysers();
+	void make_binned_mttbar_analysers();
+	void make_binned_yttbar_analysers();
+	void make_binned_ptttbar_analysers();
+	void make_binned_pttop_analysers();
+	void make_binned_yt_analysers();
+
 };
 
 typedef boost::scoped_ptr<BAT::TTbar_plus_X_analyser> TTbar_plus_X_analyser_local_ptr;
