@@ -17,6 +17,7 @@
 #include "DataTypes.h"
 #include "Printers/EventContentPrinter.h"
 #include "HighLevelTriggers.h"
+#include "TtbarHypothesis.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -72,6 +73,8 @@ protected:
 	METCollection mets_;
 	METPointer genMet_;
 
+	TtbarHypothesis ttbarHypothesis_;
+
 	DataType::value dataType;
 	unsigned long runNumber;
 	unsigned long eventNumber;
@@ -123,6 +126,7 @@ public:
 	void setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setMETs(const std::vector<METPointer> mets);
 	void setGenMET(const METPointer met);
+	void setTTbarHypothesis(const TtbarHypothesis newHypo);
 	void setHLTs(const boost::shared_ptr<std::vector<int> >);
 	void setHLTPrescales(const boost::shared_ptr<std::vector<int> >);
 	void setFile(std::string file);
@@ -164,6 +168,8 @@ public:
 	const METPointer MET() const;
 	const METPointer MET(METAlgorithm::value type) const;
 	const METPointer GenMET() const;
+
+	const TtbarHypothesis ttbarHypothesis() const;
 
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&, bool usePFIso) const;
 	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;

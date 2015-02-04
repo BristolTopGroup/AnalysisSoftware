@@ -38,6 +38,7 @@ Event::Event() : //
 		genParticles(), //
 		mets_(), //
 		genMet_(), //
+		ttbarHypothesis_(), //
 		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
@@ -191,7 +192,6 @@ const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) con
 }
 
 const JetCollection Event::getCleanedJets( unsigned int selectionCriteria ) const{
-
 	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
 
 	std::vector<unsigned int> cleanedJetIndices;
@@ -414,6 +414,10 @@ void Event::setGenMET(const METPointer met) {
 	genMet_ = met;
 }
 
+void Event::setTTbarHypothesis(const TtbarHypothesis newHypo) {
+	ttbarHypothesis_ = newHypo;
+}
+
 void Event::setFile(string file) {
 	file_ = file;
 }
@@ -485,6 +489,11 @@ const METPointer Event::GenMET() const {
 	return MET(METAlgorithm::MET);  // FIXME when genMet is available from miniAOD ntuples
 //	return genMet_;
 }
+
+const TtbarHypothesis Event::ttbarHypothesis() const {
+	return ttbarHypothesis_;
+}
+
 
 const METPointer Event::MET(METAlgorithm::value type) const {
 	unsigned int index(type);
@@ -731,7 +740,7 @@ double Event::HT(const JetCollection jets) {
 	double ht(0);
 	//Take ALL the jets!
 	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if(jets.at(index)->pt() > 20)
+		if(jets.at(index)->pt() > 30)
 			ht += jets.at(index)->pt();
 	}
 	return ht;
@@ -769,6 +778,10 @@ double Event::M3(const JetCollection jets) {
 					++index2) {
 				for (unsigned int index3 = index2 + 1; index3 < jets.size();
 						++index3) {
+					if ( jets.at(index1)->pt() <= 30 ||
+						 jets.at(index2)->pt() <= 30 ||
+						 jets.at(index3)->pt() <= 30 )
+						continue;
 					FourVector m3Vector(
 							jets.at(index1)->getFourVector()
 									+ jets.at(index2)->getFourVector()
@@ -791,8 +804,10 @@ double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton) {
 	if (b_jets.size() != 0) {
 		// store the jets as particle pointers
 		ParticleCollection particles;
-		for (unsigned int i = 0; i < b_jets.size(); ++i)
+		for (unsigned int i = 0; i < b_jets.size(); ++i) {
+			if ( b_jets.at(i)->pt() <= 30 ) continue;
 			particles.push_back(b_jets.at(i));
+		}
 		// find closest b_jet
 		unsigned short closest_b_jet_index = lepton->getClosest(particles);
 		JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
@@ -808,8 +823,10 @@ double Event::angle_bl(const JetCollection b_jets,
 	if (b_jets.size() != 0) {
 		// store the jets as particle pointers
 		ParticleCollection particles;
-		for (unsigned int i = 0; i < b_jets.size(); ++i)
+		for (unsigned int i = 0; i < b_jets.size(); ++i) {
+			if ( b_jets.at(i)->pt() <= 30 ) continue;
 			particles.push_back(b_jets.at(i));
+		}
 		// find closest b_jet
 		unsigned short closest_b_jet_index = lepton->getClosest(particles);
 		JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
