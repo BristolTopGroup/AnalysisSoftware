@@ -38,17 +38,8 @@ JetReader::JetReader() : //
 		NEFReader(), //
 		CHFReader(), //
 		NCHReader(), //
-		btagCombinedSecondaryVertexReader(), //
-		btagCombinedSecondaryVertexMVAReader(), //
-		btagJetBProbabilityReader(), //
-		btagJetProbabilityReader(), //
-		btagSimpleSecondaryVertexHEReader(), //
-		btagSimpleSecondaryVertexHPReader(), //
-		btagSoftMuonReader(), //
-		btagSoftMuonByIP3dReader(), //
-		btagSoftMuonByPtReader(), //
-		btagTrackCountingHighPurityReader(), //
-		btagTrackCountingHighEfficiencyReader(), //
+		btagCSVv2Reader(), //
+		isBtagReader(), //
 		PartonFlavour(),
 		jets(), //
 		usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05), //
@@ -83,18 +74,8 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		NEFReader(input, "Jets.NeutralEmEnergyFraction"), //
 		CHFReader(input, "Jets.ChargedHadronEnergyFraction"), //
 		NCHReader(input, "Jets.ChargedMultiplicity"), //
-		btagCombinedSecondaryVertexReader(input, "Jets.CombinedSecondaryVertexBJetTag"), //
-		btagCombinedSecondaryVertexMVAReader(input,
-				"Jets.CombinedSecondaryVertexMVABJetTag"), //
-		btagJetBProbabilityReader(input, "Jets.JetBProbabilityBTag"), //
-		btagJetProbabilityReader(input, "Jets.JetProbabilityBTag"), //
-		btagSimpleSecondaryVertexHEReader(input, "Jets.SimpleSecondaryVertexHighEffBTag"), //
-		btagSimpleSecondaryVertexHPReader(input, "Jets.SimpleSecondaryVertexHighPurBTag"), //
-		btagSoftMuonReader(input, "Jets.SoftMuonBJetTag"), //
-		btagSoftMuonByIP3dReader(input, "Jets.SoftMuonByIP3dBJetTag"), //
-		btagSoftMuonByPtReader(input, "Jets.SoftMuonByPtBJetTag"), //
-		btagTrackCountingHighPurityReader(input, "Jets.TrackCountingHighPurBTag"), //
-		btagTrackCountingHighEfficiencyReader(input, "Jets.TrackCountingHighEffBTag"), //
+		btagCSVv2Reader(input, "Jets.combinedInclusiveSecondaryVertexV2BJetTags"), //
+		isBtagReader(input, "Jets.passesMediumCSV"), //
 		PartonFlavour(input, "Jets.PartonFlavour"),//
 		jets(), //
 		usedAlgorithm(algo), //
@@ -178,31 +159,9 @@ void JetReader::readJets(bool isRealData) {
 		}
 
 		//set b-tagging
-		//combined secondary vertex
-		jet->setDiscriminatorForBtagType(btagCombinedSecondaryVertexReader.getVariableAt(jetIndex),
-				BtagAlgorithm::CombinedSecondaryVertex);
-		jet->setDiscriminatorForBtagType(btagCombinedSecondaryVertexMVAReader.getVariableAt(jetIndex),
-				BtagAlgorithm::CombinedSecondaryVertexMVA);
-		//jet (b) probability
-		jet->setDiscriminatorForBtagType(btagJetBProbabilityReader.getVariableAt(jetIndex),
-				BtagAlgorithm::JetBProbability);
-		jet->setDiscriminatorForBtagType(btagJetProbabilityReader.getVariableAt(jetIndex),
-				BtagAlgorithm::JetProbability);
-		//simple secondary vertex
-		jet->setDiscriminatorForBtagType(btagSimpleSecondaryVertexHEReader.getVariableAt(jetIndex),
-				BtagAlgorithm::SimpleSecondaryVertexHighEfficiency);
-		jet->setDiscriminatorForBtagType(btagSimpleSecondaryVertexHPReader.getVariableAt(jetIndex),
-				BtagAlgorithm::SimpleSecondaryVertexHighPurity);
-		//soft muon
-		jet->setDiscriminatorForBtagType(btagSoftMuonReader.getVariableAt(jetIndex), BtagAlgorithm::SoftMuon);
-		jet->setDiscriminatorForBtagType(btagSoftMuonByIP3dReader.getVariableAt(jetIndex),
-				BtagAlgorithm::SoftMuonByIP3d);
-		jet->setDiscriminatorForBtagType(btagSoftMuonByPtReader.getVariableAt(jetIndex), BtagAlgorithm::SoftMuonByPt);
-		//track counting
-		jet->setDiscriminatorForBtagType(btagTrackCountingHighPurityReader.getVariableAt(jetIndex),
-				BtagAlgorithm::TrackCountingHighPurity);
-		jet->setDiscriminatorForBtagType(btagTrackCountingHighEfficiencyReader.getVariableAt(jetIndex),
-				BtagAlgorithm::TrackCountingHighEfficiency);
+		jet->setDiscriminatorForBtagType(btagCSVv2Reader.getVariableAt(jetIndex),
+				BtagAlgorithm::CombinedSecondaryVertexV2);
+		jet->setIsBJet(isBtagReader.getBoolVariableAt(jetIndex));
 
 		//parton flavour
 		jet->setPartonFlavour(PartonFlavour.getIntVariableAt(jetIndex));
@@ -249,17 +208,9 @@ void JetReader::initialise() {
 		fHPDReader.initialise();
 	}
 
-	btagCombinedSecondaryVertexReader.initialise();
-	btagCombinedSecondaryVertexMVAReader.initialise();
-	btagJetBProbabilityReader.initialise();
-	btagJetProbabilityReader.initialise();
-	btagSimpleSecondaryVertexHEReader.initialise();
-	btagSimpleSecondaryVertexHPReader.initialise();
-	btagSoftMuonReader.initialise();
-	btagSoftMuonByIP3dReader.initialise();
-	btagSoftMuonByPtReader.initialise();
-	btagTrackCountingHighPurityReader.initialise();
-	btagTrackCountingHighEfficiencyReader.initialise();
+	btagCSVv2Reader.initialise();
+	isBtagReader.initialise();
+
 	PartonFlavour.initialise();
 	if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
 		NODReader.initialise();
