@@ -38,7 +38,7 @@ void Analysis::analyse() {
 		unsigned int numberOfBJets(0);
 		for (unsigned int index = 0; index < numberOfJets; ++index) {
 			const JetPointer jet(currentEvent->Jets().at(index));
-			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM))
+			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM))
 				++numberOfBJets;
 		}
 		histMan->setCurrentBJetBin(numberOfBJets);
@@ -78,8 +78,8 @@ void Analysis::initiateEvent() {
 	histMan->setCurrentBJetBin(0);
 
 	// Ignore PU and PDF weights for now
-	// if (!currentEvent->isRealData()) {
-	// 	weight = weights->getWeight(currentEvent->getDataType());
+	if (!currentEvent->isRealData()) {
+		weight = weights->getWeight(currentEvent->getDataType());
 	// 	//TODO: fix this dirty little thing
 	// 	std::cout << "Getting PU weight" << std::endl;
 	// 	pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
@@ -95,7 +95,7 @@ void Analysis::initiateEvent() {
 	// 			cout << "PDF weight assigning exception: " << e.what() << endl;
 	// 		}
 	// 	}
-	// }
+	}
 
 	//top pt weight
 	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets){
