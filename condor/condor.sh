@@ -17,6 +17,10 @@
 # --mode=<valid mode of operation> (central, JES_up, etc)
 # --cmssw=53X|73X|74X
 NOW=$(date +"%d-%m-%Y")
+# remove Analysis.tar in case it exists. We want to ship the latest code!
+if [ -f "Analysis.tar" ]; then
+	rm -f Analysis.tar
+fi
 tar -cf Analysis.tar BristolAnalysis/Tools --exclude="Debug*" --exclude="Release*" --exclude="Test*" --exclude="build*" --exclude="CMakeFiles" --exclude=".git*"
 memory_per_job=2000
 total_memory=$memory_per_job
