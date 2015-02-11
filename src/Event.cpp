@@ -162,6 +162,10 @@ const bool Event::PassesMuonQCDSelection() const {
 	return false;
 }
 
+const TTGenInfoPointer Event::TTGenInfo() const {
+	return ttGenInfo_;
+}
+
 const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) const {
 
 	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
@@ -400,6 +404,10 @@ void Event::setElectronConversionSelectionOutputInfo(SelectionOutputInfo newSele
 
 void Event::setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
 	selectionOutputInfo_muonQCDNonisolated = newSelectionOutputInfo;
+}
+
+void Event::setTTGenInfo( TTGenInfoPointer ttGenInfo ){
+	ttGenInfo_ = ttGenInfo;
 }
 
 void Event::setHLTs(const boost::shared_ptr<std::vector<int> > triggers) {

@@ -24,6 +24,7 @@
 #include "TrackReader.h"
 #include "GenParticleReader.h"
 #include "SelectionOutputReader.h"
+#include "TTGenReader.h"
 #include <string>
 
 namespace BAT {
@@ -86,6 +87,8 @@ private:
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDNonisolated;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDConversion;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated;
+
+	boost::scoped_ptr<TTGenReader> ttGenInfoReader;	
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
