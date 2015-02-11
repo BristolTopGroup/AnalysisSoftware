@@ -66,10 +66,11 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		wAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		wAnalyserEPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
+		wAnalyserEPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
-		hitFitAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-		BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
-		event->setTTbarHypothesis( topHypothesis );
+		// hitFitAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		// BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
+		// event->setTTbarHypothesis( topHypothesis );
 
 		ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -81,24 +82,24 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		ref_selection_binned_HT_analyser_electron_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
 
-		if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
-			ref_selection_binned_mttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_mttbar_analyser_electron_->analyse( topHypothesis.resonance->mass(), fit_variable_values, event->weight() );
+		// if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+		// 	ref_selection_binned_mttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_mttbar_analyser_electron_->analyse( topHypothesis.resonance->mass(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_Ptttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_Ptttbar_analyser_electron_->analyse( topHypothesis.resonance->pt(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_Ptttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_Ptttbar_analyser_electron_->analyse( topHypothesis.resonance->pt(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_yttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_yttbar_analyser_electron_->analyse( topHypothesis.resonance->rapidity(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_yttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_yttbar_analyser_electron_->analyse( topHypothesis.resonance->rapidity(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_Pttop_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_Pttop_analyser_electron_->analyse( topHypothesis.leptonicTop->pt(), fit_variable_values, event->weight() );
-			ref_selection_binned_Pttop_analyser_electron_->analyse( topHypothesis.hadronicTop->pt(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_Pttop_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_Pttop_analyser_electron_->analyse( topHypothesis.leptonicTop->pt(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_Pttop_analyser_electron_->analyse( topHypothesis.hadronicTop->pt(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_yt_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_yt_analyser_electron_->analyse( topHypothesis.leptonicTop->rapidity(), fit_variable_values, event->weight() );
-			ref_selection_binned_yt_analyser_electron_->analyse( topHypothesis.hadronicTop->rapidity(), fit_variable_values, event->weight() );
-		}
+		// 	ref_selection_binned_yt_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_yt_analyser_electron_->analyse( topHypothesis.leptonicTop->rapidity(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_yt_analyser_electron_->analyse( topHypothesis.hadronicTop->rapidity(), fit_variable_values, event->weight() );
+		// }
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			// 	if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -315,10 +316,11 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		wAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
+		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
-		hitFitAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-		BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
-		event->setTTbarHypothesis( topHypothesis );
+		// hitFitAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
+		// BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
+		// event->setTTbarHypothesis( topHypothesis );
 
 		ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;
@@ -328,24 +330,24 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		fit_variable_values.push_back(Event::angle_bl(bJets, signalMuon));
 		ref_selection_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
-		if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
-			ref_selection_binned_mttbar_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_mttbar_analyser_muon_->analyse( topHypothesis.resonance->mass(), fit_variable_values, event->weight() );
+		// if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+		// 	ref_selection_binned_mttbar_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_mttbar_analyser_muon_->analyse( topHypothesis.resonance->mass(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_Ptttbar_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_Ptttbar_analyser_muon_->analyse( topHypothesis.resonance->pt(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_Ptttbar_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_Ptttbar_analyser_muon_->analyse( topHypothesis.resonance->pt(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_yttbar_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_yttbar_analyser_muon_->analyse( topHypothesis.resonance->rapidity(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_yttbar_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_yttbar_analyser_muon_->analyse( topHypothesis.resonance->rapidity(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_Pttop_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_Pttop_analyser_muon_->analyse( topHypothesis.leptonicTop->pt(), fit_variable_values, event->weight() );
-			ref_selection_binned_Pttop_analyser_muon_->analyse( topHypothesis.hadronicTop->pt(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_Pttop_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_Pttop_analyser_muon_->analyse( topHypothesis.leptonicTop->pt(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_Pttop_analyser_muon_->analyse( topHypothesis.hadronicTop->pt(), fit_variable_values, event->weight() );
 
-			ref_selection_binned_yt_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
-			ref_selection_binned_yt_analyser_muon_->analyse( topHypothesis.leptonicTop->rapidity(), fit_variable_values, event->weight() );
-			ref_selection_binned_yt_analyser_muon_->analyse( topHypothesis.hadronicTop->rapidity(), fit_variable_values, event->weight() );
-		}
+		// 	ref_selection_binned_yt_analyser_muon_->setScale( bjetWeight * efficiencyCorrection );
+		// 	ref_selection_binned_yt_analyser_muon_->analyse( topHypothesis.leptonicTop->rapidity(), fit_variable_values, event->weight() );
+		// 	ref_selection_binned_yt_analyser_muon_->analyse( topHypothesis.hadronicTop->rapidity(), fit_variable_values, event->weight() );
+		// }
 		
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			
