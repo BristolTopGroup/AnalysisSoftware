@@ -53,6 +53,19 @@ if [ $operation == "test" ] || [ $operation == "single" ]; then
 	sed -i "s/%n_jobs%/1/g" $job_description
 	
 fi
+if [ $operation == "single-sample-analysis" ]; then
+	echo "Running single sample analysis";
+	
+	sample=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_sample`
+	
+	set1="--operation=$operation --cores=$cores --sample=$sample"
+	set2="--sample=$sample --energy=$energy --cmssw=$cmssw_version"
+	other_params="$set1 $set2"
+	n_jobs=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_n_jobs`
+	
+	sed -i "s/%other_params%/${other_params}/g" $job_description
+	sed -i "s/%n_jobs%/${n_jobs}/g" $job_description
+fi
 
 if [ $operation == "analysis" ]; then
 	echo "lets do analysis"

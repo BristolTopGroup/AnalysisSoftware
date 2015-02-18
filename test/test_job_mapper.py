@@ -67,3 +67,7 @@ def test_noop_option():
     assert job_mapper.main(params) == 0
     print 'test'
     
+def test_single_option():
+    matrix_7TeV, _ = job_mapper.build_matrix(energy = 7, chosen_sample = 'TTJet')
+    assert len(matrix_7TeV) == len(job_mapper.analysis_modes)
+    

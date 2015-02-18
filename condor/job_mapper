@@ -12,9 +12,10 @@
  job_mapper --operation=test|single|analysis [--noop, --energy, --process, --sample, --mode, --cmssw, --return_*]
  
  mandatory:
- --operation=test|single|analysis
+ --operation=test|single|single-sample-analysis|analysis
      test: set of default parameters just for testing
      single: run just one job based on the parameters (need to specify energy, mode, sample & cores)
+     single-sample-analysis: runs all analysis modes for a given sample and centre-of-mass energy (need to specify energy, cores & sample)
      analysis: run all jobs for a given centre-of-mass energy (need to specify energy & cores)
      
  optional parameters:
@@ -24,7 +25,7 @@
  --process <condor process number> 
  --sample=<valid sample> (TTJet, etc) 
  --mode=<valid mode of operation> (central, JES_up, etc)
- --cmssw=53X|73X|74X
+ --cmssw=53X|73X|74X|75X
  
  defining return values:
  return_<parameter>: script will return the specified parameter (e.g. return_mode returns the mode)
@@ -46,16 +47,23 @@ analysis_modes.remove('Test')
 samples_7TeV = analysis_info.datasets_7TeV.keys()
 samples_8TeV = analysis_info.datasets_8TeV.keys()
 
-def build_matrix(energy):
+def build_matrix(energy, chosen_sample = None):
     samples = None
     if energy == 7:
         samples = samples_7TeV
     if energy == 8:
         samples = samples_8TeV
     result = []
-    for sample in samples:
+    if chosen_sample:
+        if not chosen_sample in samples:
+            sys.exit("ERROR Trying to run unknown sample '%s'" % options.sample)
         for mode in analysis_modes:
-            result.append((sample, mode))
+            result.append((chosen_sample, mode))
+        return result, [chosen_sample]
+    else:
+        for sample in samples:
+            for mode in analysis_modes:
+                result.append((sample, mode))
     return result, samples
 
 def main(options, args = []):
@@ -81,7 +89,11 @@ def main(options, args = []):
     if options.return_operation:
         return options.operation
     # now the dynamic options
-    matrix, samples = build_matrix(options.energy)
+    matrix, samples = None, None
+    if options.operation == 'single-sample-analysis':
+        matrix, samples = build_matrix(options.energy, options.sample)
+    else:
+        matrix, samples = build_matrix(options.energy)
     if options.return_n_jobs:
         if options.operation == 'test' or options.operation == 'single':
             return 1
