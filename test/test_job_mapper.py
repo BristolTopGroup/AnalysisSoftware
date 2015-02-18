@@ -1,6 +1,9 @@
 from imp import load_source
 from nose.tools.nontrivial import with_setup
-job_mapper = load_source( 'job_mapper', 'condor/job_mapper' )
+import os
+dirname, _ = os.path.split(os.path.abspath(__file__))
+analysis_info = load_source( 'analysis_info', dirname + '/../python/analysis_info.py' )
+job_mapper = load_source( 'job_mapper', dirname + '/../condor/job_mapper' )
 
 _globals = {'options_get_mode' : []}
 
@@ -23,11 +26,10 @@ def test_get_mode_process_0():
 
 @with_setup(setup_func, teardown_func)
 def test_build_matrix():
-    matrix_7TeV = job_mapper.build_matrix(energy = 7)
-    matrix_8TeV = job_mapper.build_matrix(energy = 8)
-    
-    assert len(matrix_7TeV) == (len(job_mapper.samples) - len(job_mapper.ignore_samples_7TeV)) * len(job_mapper.analysis_modes)
-    assert len(matrix_8TeV) == (len(job_mapper.samples) - len(job_mapper.ignore_samples_8TeV)) * len(job_mapper.analysis_modes)
+    matrix_7TeV, _ = job_mapper.build_matrix(energy = 7)
+    matrix_8TeV, _ = job_mapper.build_matrix(energy = 8)
+    assert len(matrix_7TeV) == (len(analysis_info.datasets_7TeV.keys()) * len(job_mapper.analysis_modes))
+    assert len(matrix_8TeV) == (len(analysis_info.datasets_8TeV.keys()) * len(job_mapper.analysis_modes))
     
     # test if all are unique
     set_7TeV = set(matrix_7TeV)
@@ -51,7 +53,7 @@ def test_test_option():
 def test_test_option_with_defaults():
     params, _ = job_mapper.parse_args(['--operation', 'test', '--return_mode', '--mode', 'JES_up'])
     assert job_mapper.main(params) == 'JES_up'
-    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_sample', '--sample', 'SingleElectron'])
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_sample', '--sample', 'SingleElectron', '--energy', '8'])
     assert job_mapper.main(params) == 'SingleElectron'
     params, _ = job_mapper.parse_args(['--operation', 'test', '--return_energy', '--energy', '8'])
     assert job_mapper.main(params) == 8
@@ -63,4 +65,5 @@ def test_noop_option():
     assert job_mapper.main(params) == 1
     params, _ = job_mapper.parse_args(['--return_noop'])
     assert job_mapper.main(params) == 0
+    print 'test'
     

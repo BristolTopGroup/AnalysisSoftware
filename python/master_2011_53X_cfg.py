@@ -1,79 +1,15 @@
-mc_path = '/hdfs/TopQuarkGroup/mc/7TeV/v11/LeptonPlus3JetsSkim/'
-data_path = '/hdfs/TopQuarkGroup/data/2011/'
-datasets = {'ElectronHad' : [data_path + 'ElectronHad/nTuple_v11_Run2011A-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'ElectronHad/nTuple_v11_Run2011B-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets'],
-                 'SingleMu' : [data_path + 'SingleMu/nTuple_v11_Run2011A-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets',
-                            data_path + 'SingleMu/nTuple_v11_Run2011B-12Oct2013-v1_GoldenJSON_LeptonPlus3Jets'],
-                 'TTJet' : [mc_path + 'TTJets_MSDecays_central_TuneZ2_7TeV-madgraph-tauola'],
-                 'DYJetsToLL' : [mc_path + 'DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola'],
-                 'QCD_15to20_Mu' : [mc_path + 'QCD_Pt-15to20_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_20to30_Mu' : [mc_path + 'QCD_Pt-20to30_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_30to50_Mu' : [mc_path + 'QCD_Pt-30to50_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_50to80_Mu' : [mc_path + 'QCD_Pt-50to80_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_80to120_Mu' : [mc_path + 'QCD_Pt-80to120_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_120to170_Mu' : [mc_path + 'QCD_Pt-120to170_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_170to300_Mu' : [mc_path + 'QCD_Pt-170to300_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_300to470_Mu' : [mc_path + 'QCD_Pt-300to470_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_470to600_Mu' : [mc_path + 'QCD_Pt-470to600_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_600to800_Mu' : [mc_path + 'QCD_Pt-600to800_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_800to1000_Mu' : [mc_path + 'QCD_Pt-800to1000_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_1000_Mu' : [mc_path + 'QCD_Pt-1000_MuEnrichedPt5_TuneZ2_7TeV_pythia6'],
-                 'QCD_20to30_BCtoE' : [mc_path + 'QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6'],
-                 'QCD_30to80_BCtoE' : [mc_path + 'QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6'],
-                 'QCD_80to170_BCtoE' : [mc_path + 'QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia'],
-                 'QCD_20to30_EMEnriched' : [mc_path + 'QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6'],
-                 'QCD_30to80_EMEnriched' : [mc_path + 'QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia'],
-                 'QCD_80to170_EMEnriched' : [mc_path + 'QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6'],
-                 'QCD_170to250_EMEnriched' : [mc_path + 'QCD_Pt-170to250_EMEnriched_TuneZ2_7TeV-pythia6'],
-                 'QCD_250to350_EMEnriched' : [mc_path + 'QCD_Pt-250to350_EMEnriched_TuneZ2_7TeV-pythia6'],
-                 'QCD_350_EMEnriched' : [mc_path + 'QCD_Pt-350_EMEnriched_TuneZ2_7TeV-pythia6'],
-                 'GJets_40To100' : [mc_path + 'GJets_TuneZ2_40_HT_100_7TeV-madgraph'],
-                 'GJets_100To200' : [mc_path + 'GJets_TuneZ2_100_HT_200_7TeV-madgraph'],
-                 'GJets_200' : [mc_path + 'GJets_TuneZ2_200_HT_inf_7TeV-madgraph'],
-                 'T_s' : [mc_path + 'T_TuneZ2_s-channel_7TeV-powheg-tauola'],
-                 'T_t' : [mc_path + 'T_TuneZ2_t-channel_7TeV-powheg-tauola'],
-                 'T_tW' : [mc_path + 'T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola'],
-                 'Tbar_s' : [mc_path + 'Tbar_TuneZ2_s-channel_7TeV-powheg-tauola'],
-                 'Tbar_t' : [mc_path + 'Tbar_TuneZ2_t-channel_7TeV-powheg-tauola'],
-                 'Tbar_tW' : [mc_path + 'Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola'],
-                 #'WJets' : [mc_path + 'WJetsToLNu_TuneZ2_7TeV-madgraph-tauola'],
-                 'W1Jet' : [mc_path + 'W1Jet_TuneZ2_7TeV-madgraph-tauola'],
-                 'W2Jets' : [mc_path + 'W2Jets_TuneZ2_7TeV-madgraph-tauola'],
-                 'W3Jets' : [mc_path + 'W3Jets_TuneZ2_7TeV-madgraph-tauola'],
-                 'W4Jets' : [mc_path + 'W4Jets_TuneZ2_7TeV-madgraph-tauola'],
-                 #'TTJets-matchingdown' : [mc_path + 'TTjets_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'TTJets-matchingup' : [mc_path + 'TTjets_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'TTJets-scaledown' : [mc_path + 'TTJets_MSDecays_scaledown_TuneZ2star_7TeV-madgraph-tauola'],
-                 #'TTJets-scaleup' : [mc_path + 'TTJets_MSDecays_scaleup_TuneZ2star_7TeV-madgraph-tauola'],
-                 #'WJets-matchingdown' : [mc_path + 'WJetsToLNu_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'WJets-matchingup' : [mc_path + 'WJetsToLNu_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'WJets-scaledown' : [mc_path + 'WJetsToLNu_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v8b_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'WJets-scaleup' : [mc_path + 'WJetsToLNu_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'ZJets-matchingdown' : [mc_path + 'ZJetsToLL_TuneZ2_matchingdown_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'ZJets-matchingup' : [mc_path + 'ZJetsToLL_TuneZ2_matchingup_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'ZJets-scaledown' : [mc_path + 'ZJetsToLL_TuneZ2_scaledown_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'ZJets-scaleup' : [mc_path + 'ZJetsToLL_TuneZ2_scaleup_7TeV-madgraph-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'TTJets-mcatnlo' : [mc_path + 'TT_TuneZ2_7TeV-mcatnlo/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'TTJets-pythia' : [mc_path + 'TT_TuneZ2_7TeV-powheg-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                 #'TTJets-powheg' : [mc_path + 'TT_TuneZ2_7TeV-pythia6-tauola/nTuple_v8c_Fall11-PU_S6_START44_V9B-v1_LeptonPlus3Jets'],
-                     }
+import os
+import sys
+from copy import deepcopy
+from imp import load_source
+dirname, _ = os.path.split(os.path.abspath(__file__))
+analysis_info = load_source( 'analysis_info', dirname + '/analysis_info.py' )
 
-analysisModes = ['central',
-                 'Electron_down',
-                 'Electron_up',
-                 'Muon_down',
-                 'Muon_up',
-                 'BJet_down',
-                 'BJet_up',
-                 'JES_down',
-                 'JES_up',
-                 'LightJet_down',
-                 'LightJet_up',
-                 'PU_down',
-                 'PU_up',
-                 'JetSmearing_up',
-                 'JetSmearing_down',
-                 'Test']
+mc_path = analysis_info.mc_path_7TeV
+data_path = analysis_info.data_path_7TeV
+datasets = analysis_info.datasets_7TeV
+
+analysisModes = analysis_info.analysisModes
 
 analysisModes.extend(['PDFWeights_%d' % weight for weight in range(1, 45)])
 
@@ -119,7 +55,6 @@ for weight in range(1, 45):
     weight_txt = 'PDFWeights_%d' % weight 
     analysis_settings[weight_txt] = {'pdfWeightNumber' : weight,'custom_file_suffix': weight_txt}
     
-from copy import deepcopy
 #helperfunctions
 def getAnalysisSettings(analysisMode):
     if not analysisMode in analysis_settings.keys():
@@ -132,8 +67,6 @@ def getAnalysisSettings(analysisMode):
 
 #config start
 toolsFolder = 'BristolAnalysis/Tools/'
-import os
-import sys
 if os.environ.has_key('toolsFolder'):
     toolsFolder = os.environ['toolsFolder']
 sample = ''
