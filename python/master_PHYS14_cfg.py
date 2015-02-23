@@ -1,42 +1,15 @@
-mc_path = '/hdfs/TopQuarkGroup/run2/ntuples/v4/'
-data_path = ''
-datasets = {
-            'TTJet' : [ mc_path + 'TTJets_Madgraph_PU20bx25.root' ],
-            'TTJet_PU30bx50' : [ mc_path + 'TTJets_Madgraph_PU30bx50.root'],
-            'TTJets_PU4bx50' : [ mc_path + 'TTJets_Madgraph_PU4bx50.root'],
+import os
+import sys
+from copy import deepcopy
+from imp import load_source
+dirname, _ = os.path.split(os.path.abspath(__file__))
+analysis_info = load_source( 'analysis_info', dirname + '/analysis_info.py' )
 
-            'DYJetsToLL' : [ mc_path + 'DYJetsToLL_M50_PU20bx25.root' ],
-            'WJets' : [ mc_path + 'WJets_PU20bx25.root' ],
+mc_path = analysis_info.mc_path_13TeV
+data_path = analysis_info.data_path_13TeV
+datasets = analysis_info.datasets_13TeV
 
-            'TToLeptons_s' : [mc_path + 'TToLeptons_s_PU20bx25.root'],
-            'TToLeptons_t' : [mc_path + 'TToLeptons_t_PU20bx25.root'],
-            'T_tw' : [mc_path + 'T_tw_PU20bx25.root'],
-            'TBarToLeptons_s' : [mc_path + 'TBarToLeptons_s_PU20bx25.root'],
-            'TBarToLeptons_t' : [mc_path + 'TBarToLeptons_t_PU20bx25.root'],
-            'Tbar_tw' : [mc_path + 'Tbar_tw_PU20bx25.root'],
-
-            'GJets_100to200' : [mc_path + 'GJets_100to200_PU20bx25.root'],
-            'GJets_200to400' : [mc_path + 'GJets_200to400_PU20bx25.root'],
-            'GJets_400to600' : [mc_path + 'GJets_400to600_PU20bx25.root'],
-            'GJets_600toInf' : [mc_path + 'GJets_600toInf_PU20bx25.root'],
-
-            'QCD_bcToE_20to30' : [mc_path + 'QCD_bcToE_20to30_PU20bx25.root'],
-            'QCD_bcToE_30to80' : [mc_path + 'QCD_bcToE_30to80_PU20bx25.root'],
-            'QCD_bcToE_80to170' : [mc_path + 'QCD_bcToE_80to170_PU20bx25.root'],
-            'QCD_bcToE_170toInf' : [mc_path + 'QCD_bcToE_170toInf_PU20bx25.root'],
-            
-            'QCD_EMEnriched_20to30' : [mc_path + 'QCD_EMEnriched_20to30_PU20bx25.root'],
-            'QCD_EMEnriched_30to80' : [mc_path + 'QCD_EMEnriched_30to80_PU20bx25.root'],
-            'QCD_EMEnriched_80to170' : [mc_path + 'QCD_EMEnriched_80to170_PU20bx25.root'],
-
-            'QCD_MuEnriched_20toInf' : [mc_path + 'QCD_MuEnriched_20toInf_PU20bx25.root'],
-            'QCD_MuEnriched_30to50' : [mc_path + 'QCD_MuEnriched_30to50_PU20bx25.root'],
-            'QCD_MuEnriched_50to80' : [mc_path + 'QCD_MuEnriched_50to80_PU20bx25.root'],
-            'QCD_MuEnriched_80to120' : [mc_path + 'QCD_MuEnriched_80to120_PU20bx25.root'],
-            }
-
-analysisModes = ['central',
-                 ]
+analysisModes = analysis_info.analysis_modes_13TeV
 
 available_settings = ['ElectronScaleFactorSystematic', 'MuonScaleFactorSystematic', 'JESsystematic', 'JetSmearingSystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
 default_settings = {
@@ -74,7 +47,6 @@ analysis_settings = {
                      'Test': {'custom_file_suffix':'TESTING'}
                      }
 
-from copy import deepcopy
 #helper functions
 def getAnalysisSettings(analysisMode):
     if not analysisMode in analysis_settings.keys():
@@ -87,8 +59,6 @@ def getAnalysisSettings(analysisMode):
 
 #config start
 toolsFolder = 'BristolAnalysis/Tools/'
-import os
-import sys
 if os.environ.has_key('toolsFolder'):
     toolsFolder = os.environ['toolsFolder']
 

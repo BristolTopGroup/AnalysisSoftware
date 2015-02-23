@@ -36,6 +36,7 @@ from optparse import OptionParser
 import sys
 import os
 from imp import load_source
+from copy import copy
 dirname, _ = os.path.split(os.path.abspath(__file__))
 analysis_info = load_source( 'analysis_info', dirname + '/../python/analysis_info.py' )
 
@@ -46,23 +47,29 @@ analysis_modes.remove('Test')
 
 samples_7TeV = analysis_info.datasets_7TeV.keys()
 samples_8TeV = analysis_info.datasets_8TeV.keys()
+samples_13TeV = analysis_info.datasets_13TeV.keys()
 
 def build_matrix(energy, chosen_sample = None):
+    global analysis_modes
+    analysis_modes_ = copy(analysis_modes)
     samples = None
     if energy == 7:
         samples = samples_7TeV
     if energy == 8:
         samples = samples_8TeV
+    if energy == 13:
+        samples = samples_13TeV
+        analysis_modes_ = analysis_info.analysis_modes_13TeV
     result = []
     if chosen_sample:
         if not chosen_sample in samples:
             sys.exit("ERROR Trying to run unknown sample '%s'" % options.sample)
-        for mode in analysis_modes:
+        for mode in analysis_modes_:
             result.append((chosen_sample, mode))
         return result, [chosen_sample]
     else:
         for sample in samples:
-            for mode in analysis_modes:
+            for mode in analysis_modes_:
                 result.append((sample, mode))
     return result, samples
 
@@ -94,6 +101,7 @@ def main(options, args = []):
         matrix, samples = build_matrix(options.energy, options.sample)
     else:
         matrix, samples = build_matrix(options.energy)
+    print matrix
     if options.return_n_jobs:
         if options.operation == 'test' or options.operation == 'single':
             return 1
@@ -131,7 +139,7 @@ def parse_args(parameters = []):
     parser.add_option( '--sample', dest = 'sample', help = 'sample' )
     parser.add_option( '--mode', dest = 'mode', help = 'mode' )
     parser.add_option( '--cmssw', dest = 'cmssw', 
-                       help = 'cmssw version (53X|73X|74X)', default = '53X' )
+                       help = 'cmssw version (53X|73X|74X|75X)', default = '73X' )
     parser.add_option( '--operation', dest = 'operation', 
                        help = 'mode of operation: analysis|single|test', default = 'test' )
     parser.add_option( '--energy', dest = 'energy', 
