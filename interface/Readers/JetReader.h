@@ -55,19 +55,8 @@ protected:
 	VariableReader<MultiDoublePointer> CHFReader;
 	VariableReader<MultiIntPointer> NCHReader;
 
-	VariableReader<MultiDoublePointer> btagCombinedSecondaryVertexReader;
-	VariableReader<MultiDoublePointer> btagCombinedSecondaryVertexMVAReader;
-	VariableReader<MultiDoublePointer> btagJetBProbabilityReader;
-	VariableReader<MultiDoublePointer> btagJetProbabilityReader;
-	VariableReader<MultiDoublePointer> btagSimpleSecondaryVertexHEReader;
-	VariableReader<MultiDoublePointer> btagSimpleSecondaryVertexHPReader;
-	VariableReader<MultiDoublePointer> btagSoftElectronByIP3dReader;
-	VariableReader<MultiDoublePointer> btagSoftElectronByPtReader;
-	VariableReader<MultiDoublePointer> btagSoftMuonReader;
-	VariableReader<MultiDoublePointer> btagSoftMuonByIP3dReader;
-	VariableReader<MultiDoublePointer> btagSoftMuonByPtReader;
-	VariableReader<MultiDoublePointer> btagTrackCountingHighPurityReader;
-	VariableReader<MultiDoublePointer> btagTrackCountingHighEfficiencyReader;
+	VariableReader<MultiDoublePointer> btagCSVv2Reader;
+	VariableReader<MultiBoolPointer> isBtagReader;
 
 	VariableReader<MultiIntPointer> PartonFlavour;
 
