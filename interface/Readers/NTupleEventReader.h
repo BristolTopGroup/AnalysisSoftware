@@ -23,6 +23,7 @@
 #include "GenMETReader.h"
 #include "TrackReader.h"
 #include "GenParticleReader.h"
+#include "PseudoTopReader.h"
 #include "SelectionOutputReader.h"
 #include "TTGenReader.h"
 #include "../DataTypes.h"
@@ -74,6 +75,7 @@ private:
 	boost::scoped_ptr<TrackReader> trackReader;
 	boost::scoped_ptr<ElectronReader> electronReader;
 	boost::scoped_ptr<GenParticleReader> genParticleReader;
+	boost::scoped_ptr<PseudoTopReader> pseudoTopReader;
 	boost::scoped_ptr<JetReader> jetReader;
 	boost::scoped_ptr<GenJetReader> genJetReader;
 	boost::scoped_ptr<MuonReader> muonReader;

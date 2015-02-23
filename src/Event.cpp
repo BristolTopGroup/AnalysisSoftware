@@ -166,6 +166,10 @@ const TTGenInfoPointer Event::TTGenInfo() const {
 	return ttGenInfo_;
 }
 
+const PseudoTopParticlesPointer Event::PseudoTopParticles() const {
+	return pseudoTopParticles_;
+}
+
 const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) const {
 
 	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
@@ -408,6 +412,10 @@ void Event::setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSele
 
 void Event::setTTGenInfo( TTGenInfoPointer ttGenInfo ){
 	ttGenInfo_ = ttGenInfo;
+}
+
+void Event::setPseudoTopParticles( PseudoTopParticlesPointer newPseudoParticles  ){
+	pseudoTopParticles_ = newPseudoParticles;
 }
 
 void Event::setHLTs(const boost::shared_ptr<std::vector<int> > triggers) {

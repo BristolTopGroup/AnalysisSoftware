@@ -32,6 +32,7 @@ NTupleEventReader::NTupleEventReader() :
 		trackReader(new TrackReader(input)), //
 		electronReader(new ElectronReader(input, Globals::electronAlgorithm)), //
 		genParticleReader(new GenParticleReader(input)), //
+		pseudoTopReader( new PseudoTopReader(input)), //
 		jetReader(new JetReader(input, Globals::jetAlgorithm)), //
 		genJetReader(new GenJetReader(input)), //
 		muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
@@ -141,6 +142,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	// 	std::cout << "Gen Particles etc." << std::endl;
 	// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());
 		currentEvent->setGenJets(genJetReader->getGenJets());
+		// cout << "Got " << pseudoTopReader->getPseudoTopParticles()->getPseudoTops().size() << " pseudo tops" << endl;
+		currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
 	// 	currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 	// 	currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
 
@@ -250,6 +253,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			trackReader->initialise();
 		electronReader->initialise();
 		genParticleReader->initialise();
+		pseudoTopReader->initialise();
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
