@@ -77,7 +77,7 @@ void HLTriggerTurnOnAnalyser::analyse(const EventPtr event) {
 		const JetPointer jet = jets.at(index);
 		bool noElectronInVicinity = !jet->isWithinDeltaR(0.3, mostIsolatedElectron);
 		bool passesEta = fabs(jet->eta()) < 2.4;
-		bool passesBTag = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM);
+		bool passesBTag = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 		if (noElectronInVicinity && passesEta) {
 			cleanedJets.push_back(jet);
 			if (passesBTag)
