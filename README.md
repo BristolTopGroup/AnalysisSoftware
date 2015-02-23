@@ -78,15 +78,12 @@ cp eclipse/.pydevproject.osx .pydevproject
 A code style prescription is also available in ```eclipse/Bristol_C++_CodeStyle.xml```.
 You should import it ```under Preferences->C/C++->Code Style->Formatter```
 
+# Notes
+More information can be found at [Bristol Analysis Tools twiki page](https://twiki.cern.ch/twiki/bin/view/CMS/BristolAnalysisTools)
 
 ## HTCondor
 Once the software is set up one can use HTCondor to submit jobs to a cluster.
 Instructions for this can be found in [condor/README.md](condor/README.md)
 
-# Notes
-More information can be found at [Bristol Analysis Tools twiki page](https://twiki.cern.ch/twiki/bin/view/CMS/BristolAnalysisTools)
-
 # Bugs
 Please report any problems on our [issues page](https://github.com/BristolTopGroup/AnalysisSoftware/issues).
-
-
