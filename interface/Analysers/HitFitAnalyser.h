@@ -11,7 +11,6 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 #include "../../interface/TtbarHypothesis.h"
-#include "../Selections/TopPairEPlusJetsReferenceSelection.h"
 #include "../../interface/HistHelpers/HistogramManager.h"
 #include "BasicAnalyser.h"
 
@@ -48,6 +47,8 @@ private:
 	double lepton_charge;
 	bool do_MC_matching;
 
+	bool isElectronChannel_;
+
 	hitfit::LeptonTranslatorBase<BAT::Electron> electronTranslator_;
 	hitfit::LeptonTranslatorBase<BAT::Muon> muonTranslator_;
 	hitfit::JetTranslatorBase<BAT::Jet> jetTranslator_;
@@ -60,21 +61,22 @@ private:
 	};
 	jetPtCompare jetPtComp;
 
-	TopPairEPlusJetsReferenceSelectionPointer topEplusJetsRefSelection_;
 private:
 	FourVector fourVectorFromHitFit(const hitfit::Fourvec& v);
 	BAT::TtbarHypothesis BatEvent(const hitfit::Lepjets_Event& ev);
 
 public:
-	HitFitAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "hitfitStudy");
+	HitFitAnalyser(HistogramManagerPtr histMan, const bool isElectronChannel, std::string histogramFolder = "hitfitStudy" );
 	virtual ~HitFitAnalyser();
 
 	void analyse(const EventPtr);
+	BAT::TtbarHypothesis analyseAndReturn(const EventPtr, const JetCollection jets, const JetCollection bjets, const LeptonPointer selectedLepton );
 	void setMCTTbarHypothesis(const TtbarHypothesis& mcEvent);
 	void createHistograms();
 	void printFile(const string filename);
 };
-
+typedef boost::scoped_ptr<HitFitAnalyser> HitFitAnalyserLocalPtr;
+typedef boost::shared_ptr<HitFitAnalyser> HitFitAnalyserPtr;
 }
 
 #endif /* HITFITANALYSER_H_ */

@@ -57,8 +57,8 @@ private:
     float weight, pileUpWeight;
 
     BAT::ABCDMethodAnalyserLocalPtr abcdMethodAnalyser_;
-    BAT::BJetAnalyserLocalPtr bjetAnalyser;
-    boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
+    // BAT::BJetAnalyserLocalPtr bjetAnalyser;
+    // boost::scoped_ptr<BAT::DiElectronAnalyser> diElectronAnalyser;
     boost::scoped_ptr<BAT::ElectronAnalyser> electronAnalyser;
     BAT::BasicAnalyserLocalPtr eventcountAnalyser;
     boost::scoped_ptr<BAT::HLTriggerTurnOnAnalyser> hltriggerAnalyser;
@@ -66,10 +66,10 @@ private:
     boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;
     boost::scoped_ptr<BAT::MCAnalyser> mcAnalyser;
     boost::scoped_ptr<BAT::METAnalyser> metAnalyser;
-    boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
+    // boost::scoped_ptr<BAT::MTtbarAnalyser> mttbarAnalyser;
     boost::scoped_ptr<BAT::MuonAnalyser> muonAnalyser;
-    BAT::MVAnalyserPtr mvAnalyser;
-    BAT::NeutrinoRecoAnalyserLocalPtr neutrinoRecoAnalyser;
+    // BAT::MVAnalyserPtr mvAnalyser;
+    // BAT::NeutrinoRecoAnalyserLocalPtr neutrinoRecoAnalyser;
     BAT::TTbar_plus_X_analyser_local_ptr ttbar_plus_X_analyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
     boost::scoped_ptr<BAT::DiffVariablesAnalyser> diffVariablesAnalyser;

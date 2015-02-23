@@ -13,7 +13,6 @@
 #include "../interface/EventCounter.h"
 #include <cmath>
 #include <math.h>
-#include "../interface/Printers/EventTablePrinter.h"
 #include "../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 #include "../interface/LumiReWeighting.h"
 #include "../interface/GlobalVariables.h"
@@ -39,7 +38,7 @@ void Analysis::analyse() {
 		unsigned int numberOfBJets(0);
 		for (unsigned int index = 0; index < numberOfJets; ++index) {
 			const JetPointer jet(currentEvent->Jets().at(index));
-			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM))
+			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM))
 				++numberOfBJets;
 		}
 		histMan->setCurrentBJetBin(numberOfBJets);
@@ -57,10 +56,7 @@ void Analysis::analyse() {
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		eventcountAnalyser->analyse(currentEvent);
-//		mttbarAnalyser->analyse(currentEvent);
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		diffVariablesAnalyser->analyse(currentEvent);
-//		binningAnalyser->analyse(currentEvent);
 	}
 }
 
@@ -81,22 +77,24 @@ void Analysis::initiateEvent() {
 	histMan->setCurrentJetBin(currentEvent->Jets().size());
 	histMan->setCurrentBJetBin(0);
 
+	// Ignore PU and PDF weights for now
 	if (!currentEvent->isRealData()) {
 		weight = weights->getWeight(currentEvent->getDataType());
-		//TODO: fix this dirty little thing
-		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
-		weight *= pileUpWeight;
-		if (Globals::pdfWeightNumber != 0) {
-			try {
-				double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
-				weight *= pdf_weight;
+	// 	//TODO: fix this dirty little thing
+	// 	std::cout << "Getting PU weight" << std::endl;
+	// 	pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
+	// 	weight *= pileUpWeight;
+	// 	if (Globals::pdfWeightNumber != 0) {
+	// 		try {
+	// 			double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
+	// 			weight *= pdf_weight;
 
-				histMan->setCurrentHistogramFolder("");
-				histMan->H1D("PDFweights")->Fill(pdf_weight);
-			} catch (exception& e) {
-				cout << "PDF weight assigning exception: " << e.what() << endl;
-			}
-		}
+	// 			histMan->setCurrentHistogramFolder("");
+	// 			histMan->H1D("PDFweights")->Fill(pdf_weight);
+	// 		} catch (exception& e) {
+	// 			cout << "PDF weight assigning exception: " << e.what() << endl;
+	// 		}
+	// 	}
 	}
 
 	//top pt weight
@@ -154,11 +152,6 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	diffVariablesAnalyser->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by diffVariablesAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-	lastNumberOfHistograms = numberOfHistograms;
-
 	histMan->setCurrentHistogramFolder("");
 	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
 
@@ -176,8 +169,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		weight(0), //
 		pileUpWeight(1), //
 		abcdMethodAnalyser_(new ABCDMethodAnalyser(histMan)), //
-		bjetAnalyser(new BJetAnalyser(histMan)), //
-		diElectronAnalyser(new DiElectronAnalyser(histMan)), //
+		// bjetAnalyser(new BJetAnalyser(histMan)), //
+		// diElectronAnalyser(new DiElectronAnalyser(histMan)), //
 		electronAnalyser(new ElectronAnalyser(histMan)), //
 		eventcountAnalyser(new EventCountAnalyser(histMan)), //
 		hltriggerAnalyser(new HLTriggerTurnOnAnalyser(histMan)), //
@@ -186,13 +179,12 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		jetAnalyser(new JetAnalyser(histMan)), //
 		mcAnalyser(new MCAnalyser(histMan)), //
 		metAnalyser(new METAnalyser(histMan)), //
-		mttbarAnalyser(new MTtbarAnalyser(histMan)), //
+		// mttbarAnalyser(new MTtbarAnalyser(histMan)), //
 		muonAnalyser(new MuonAnalyser(histMan)), //
-		mvAnalyser(new MVAnalyser(histMan)), //
-		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
+		// mvAnalyser(new MVAnalyser(histMan)), //
+		// neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
-		diffVariablesAnalyser(new DiffVariablesAnalyser(histMan)),
 		binningAnalyser(new BinningAnalyser(histMan)) {
 	histMan->enableDebugMode(true);
 }

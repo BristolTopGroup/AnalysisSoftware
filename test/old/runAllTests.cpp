@@ -10,7 +10,6 @@
 #include "TestEvent.h"
 #include "TestEventCounter.h"
 //#include "TestGenJetReader.h"
-#include "TestHistogram.h"
 #include "TestHistogramManager.h"
 #include "TestJet.h"
 //#include "TestJetReader.h"

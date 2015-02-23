@@ -111,7 +111,7 @@ template<>
 Lepjets_Event_Jet
 JetTranslatorBase<BAT::Jet>::operator()(const BAT::Jet& jet,
                                         int type /*= hitfit::unknown_label */,
-                                        bool useObjEmbRes /* = false */)
+                                        bool useObjEmbRes /* = false */ )
 {
 
     Fourvec p;
@@ -130,9 +130,12 @@ JetTranslatorBase<BAT::Jet>::operator()(const BAT::Jet& jet,
         p = Fourvec(lightCorr*jet.px(), lightCorr*jet.py(), lightCorr*jet.pz(), lightCorr*jet.energy());
     }
 
+    bool isBJet = jet.isBJet();
+    
     Lepjets_Event_Jet retjet(p,
                              type,
-                             jet_resolution);
+                             jet_resolution,
+                             isBJet);
     return retjet;
 
 } // Lepjets_Event_Jet JetTranslatorBase<BAT::Jet>::operator()(const BAT::Jet& j,int type)
