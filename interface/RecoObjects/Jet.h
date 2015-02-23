@@ -18,19 +18,7 @@ namespace BAT {
 
 namespace BtagAlgorithm {
 enum value {
-	CombinedSecondaryVertex,
-	CombinedSecondaryVertexMVA,
-	JetBProbability,
-	JetProbability,
-	SimpleSecondaryVertexHighEfficiency,
-	SimpleSecondaryVertexHighPurity,
-//	SoftElectronByIP3d,
-//	SoftElectronByPt,
-	SoftMuon,
-	SoftMuonByIP3d,
-	SoftMuonByPt,
-	TrackCountingHighEfficiency,
-	TrackCountingHighPurity,
+	CombinedSecondaryVertexV2,	
 	NUMBER_OF_BTAGALGORITHMS
 };
 
@@ -38,19 +26,7 @@ enum workingPoint {
 	LOOSE, MEDIUM, TIGHT
 };
 const boost::array<std::string, BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS> names = { {
-		"CombinedSecondaryVertex",//
-		"CombinedSecondaryVertexMVA",//
-		"JetBProbability",//
-		"JetProbability",//
-		"SimpleSecondaryVertexHighEfficiency",//
-		"SimpleSecondaryVertexHighPurity",//
-//		"SoftElectronByIP3d",//
-//		"SoftElectronByPt",//
-		"SoftMuon",//
-		"SoftMuonByIP3d",//
-		"SoftMuonByPt",//
-		"TrackCountingHighEfficiency",//
-		"TrackCountingHighPurity"
+		"CombinedSecondaryVertexV2"//
 	}}
 	;
 }
@@ -75,8 +51,9 @@ public:
 	Jet(double energy, double px, double py, double pz);
 	virtual ~Jet();
 	bool isGood() const;
-	bool isBJet(BtagAlgorithm::value type = BtagAlgorithm::SimpleSecondaryVertexHighEfficiency,
-			BtagAlgorithm::workingPoint wp = BtagAlgorithm::MEDIUM) const;
+	bool isBJet(BtagAlgorithm::value type,
+			BtagAlgorithm::workingPoint wp) const;
+	bool isBJet() const;
 	JetAlgorithm::value getUsedAlgorithm() const;
 
 	void set_matched_generated_jet(const ParticlePointer matchedgeneratedjet);
@@ -125,6 +102,7 @@ public:
 	void setN90Hits(int n90Hits);
 	void setFHPD(double fHPD);
 	void setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value type);
+	void setIsBJet( bool isBJet );
 	void setNOD(int nod);
 	void setCEF(double cef);
 	void setNHF(double nhf);
@@ -145,6 +123,7 @@ private:
 	int numberOfRecHitsContaining90PercentOfTheJetEnergy;
 	double fractionOfEnergyIntheHottestHPDReadout;
 	std::vector<double> btag_discriminators;
+	bool isBJet_;
 	//	double btagInData;
 	int numberOfDaughters;
 	double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;

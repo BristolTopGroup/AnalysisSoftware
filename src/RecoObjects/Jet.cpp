@@ -344,6 +344,10 @@ void Jet::setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value
 	btag_discriminators[type] = discriminator;
 }
 
+void Jet::setIsBJet( bool isItAB ) {
+	isBJet_ = isItAB;
+}
+
 void Jet::setNOD(int nod) {
 	numberOfDaughters = nod;
 }
@@ -410,80 +414,13 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 	double cut(9998);
 	switch (type) {
 
-	case BtagAlgorithm::CombinedSecondaryVertex:
+	case BtagAlgorithm::CombinedSecondaryVertexV2:
 		if (wp == BtagAlgorithm::LOOSE)
-			cut = 0.244;
+			cut = 0.423;
 		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 0.679;
+			cut = 0.814;
 		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 0.898;
-		break;
-
-	case BtagAlgorithm::CombinedSecondaryVertexMVA:
-		//same as without MVA? No hints found
-		//according to
-		//https://cms-btag-validation.web.cern.ch/cms-btag-validation/validation/index_RecoB_CMSSW_4_2_1_TTbar_421_vs_420_Startup.html
-		//these cuts should be lower
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 0.244;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 0.679;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 0.898;
-		break;
-
-	case BtagAlgorithm::JetBProbability:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 1.33;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 2.55;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 3.74;
-		break;
-
-	case BtagAlgorithm::JetProbability:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 0.275;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 0.545;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 0.790;
-		break;
-
-	case BtagAlgorithm::SimpleSecondaryVertexHighEfficiency:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 9998; //no input found
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 1.74;
-		else if (wp == BtagAlgorithm::TIGHT) //not supported
-			cut = 3.05;
-		break;
-
-	case BtagAlgorithm::SimpleSecondaryVertexHighPurity:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 9998; //no input found
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 9998; //no input found
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 2.;
-		break;
-
-	case BtagAlgorithm::TrackCountingHighEfficiency:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 1.7;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 3.3;
-		else if (wp == BtagAlgorithm::TIGHT) //not supported
-			cut = 10.2;
-		break;
-
-	case BtagAlgorithm::TrackCountingHighPurity:
-		if (wp == BtagAlgorithm::LOOSE) //not supported
-			cut = 1.19;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 1.93;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 3.41;
+			cut = 0.941;
 		break;
 
 	default:
@@ -493,8 +430,13 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 	return btag_discriminators[type] > cut;
 }
 
+bool Jet::isBJet() const {
+	return isBJet_;
+}
+
 double Jet::btagSSVHE() const {
-	return btag_discriminators[BtagAlgorithm::SimpleSecondaryVertexHighEfficiency];
+	return -1;
+	// return btag_discriminators[BtagAlgorithm::SimpleSecondaryVertexHighEfficiency];
 }
 
 double Jet::getBJetL7EtCorrection() const {
