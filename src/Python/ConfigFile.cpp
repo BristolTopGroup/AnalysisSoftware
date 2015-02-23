@@ -419,6 +419,7 @@ bool ConfigFile::isOptionSetInConfig(std::string option) const {
 }
 
 void ConfigFile::loadIntoMemory() {
+
 	//always use function to access the variables
 	//general
 	Globals::luminosity = lumi();
@@ -431,7 +432,7 @@ void ConfigFile::loadIntoMemory() {
 	Globals::useHitFit = useHitFit();
 	Globals::produceFitterASCIIoutput = fitterOutputFlag();
 
-	Globals::estimatedPileup = getPileUpHistogram(PUFile());
+	// Globals::estimatedPileup = getPileUpHistogram(PUFile());
 
 	//Lepton Scale Factors
 	Globals::ElectronScaleFactorSystematic = electronScaleFactorSystematic();
