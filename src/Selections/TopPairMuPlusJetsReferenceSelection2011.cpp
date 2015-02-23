@@ -49,7 +49,7 @@ bool TopPairMuPlusJetsReferenceSelection2011::isGoodJet(const JetPointer jet) co
 }
 
 bool TopPairMuPlusJetsReferenceSelection2011::isBJet(const JetPointer jet) const {
-	return jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM);
+	return jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 }
 
 bool TopPairMuPlusJetsReferenceSelection2011::isGoodMuon(const MuonPointer muon) const {

@@ -8,8 +8,8 @@
 #include "../interface/TtbarHypothesis.h"
 #include "../interface/ReconstructionModules/ReconstructionException.h"
 //#include "../interface/ReconstructionModules/BasicNeutrinoReconstruction.h"
-//#include <iostream>
-//using namespace std;
+// #include <iostream>
+// using namespace std;
 
 namespace BAT {
 
@@ -35,7 +35,7 @@ TtbarHypothesis::TtbarHypothesis() :
 
 }
 
-TtbarHypothesis::TtbarHypothesis(const LeptonPointer& elec,
+TtbarHypothesis::TtbarHypothesis(const LeptonPointer& lepton,
 		const ParticlePointer& neut, const JetPointer& lepBJet,
 		const JetPointer& hadBJet, const JetPointer& hadWJet1,
 		const JetPointer& hadWJet2) :
@@ -46,7 +46,7 @@ TtbarHypothesis::TtbarHypothesis(const LeptonPointer& elec,
 		discriminator(999999), //
 		hadronicTop(), //
 		leptonicTop(), //
-		leptonicW(new Particle(*elec + *neut)), //
+		leptonicW(new Particle(*lepton + *neut)), //
 		hadronicW(new Particle(*hadWJet1 + *hadWJet2)), //
 		resonance(), //
 		neutrinoFromW(neut), //
@@ -54,7 +54,7 @@ TtbarHypothesis::TtbarHypothesis(const LeptonPointer& elec,
 		hadronicBJet(hadBJet), //
 		jet1FromW(hadWJet1), //
 		jet2FromW(hadWJet2), //
-		leptonFromW(elec), //
+		leptonFromW(lepton), //
 		met(new MET(neut->px(), neut->py())), //
 		decayChannel(Decay::unknown) {
 
@@ -65,8 +65,8 @@ TtbarHypothesis::~TtbarHypothesis() {
 }
 
 bool TtbarHypothesis::isValid() const {
-	bool hasObjects = !leptonFromW && !neutrinoFromW && !jet1FromW && !jet2FromW && !hadronicBJet
-			&& !leptonicBjet;
+	bool hasObjects = leptonFromW && neutrinoFromW && jet1FromW && jet2FromW && hadronicBJet
+			&& leptonicBjet;
 	return hasObjects;
 
 }
@@ -100,9 +100,9 @@ void TtbarHypothesis::combineReconstructedObjects() {
 void TtbarHypothesis::throwDetailedException() const {
 	std::string msg = "TTbar Hypothesis not filled properly: \n";
 	if (leptonFromW == 0)
-		msg += "Electron from W: not filled \n";
+		msg += "Lepton from W: not filled \n";
 	else
-		msg += "Electron from W: filled \n";
+		msg += "Lepton from W: filled \n";
 
 	if (neutrinoFromW == 0)
 		msg += "Neutrino from W: not filled \n";

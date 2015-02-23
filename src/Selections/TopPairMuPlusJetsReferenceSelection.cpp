@@ -57,7 +57,7 @@ bool TopPairMuPlusJetsReferenceSelection::isGoodJet(const JetPointer jet) const 
 }
 
 bool TopPairMuPlusJetsReferenceSelection::isBJet(const JetPointer jet) const {
-	return jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM);
+	return jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 }
 
 bool TopPairMuPlusJetsReferenceSelection::isGoodMuon(const MuonPointer muon) const {
@@ -122,28 +122,29 @@ bool TopPairMuPlusJetsReferenceSelection::passesEventCleaning(const EventPtr eve
 }
 
 bool TopPairMuPlusJetsReferenceSelection::passesTriggerSelection(const EventPtr event) const {
-	unsigned int runNumber(event->runnumber());
-	if (event->isRealData()) {
-		//2011 data: run 160404 to run 180252
-		if (runNumber >= 160404 && runNumber < 173236)
-			return event->HLT(HLTriggers::HLT_IsoMu24);
-		else if (runNumber >= 173236 && runNumber <= 180252)
-			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
-		//2012 data: run 190456 to run 208686 (same trigger as second 2011 trigger)
-		else if (runNumber >= 190456 && runNumber <= 208686)
-			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
-		else if ( runNumber == 1 ) // MC pretending to be data
-			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
-		else
-			return false;
-	} else {
-		if (Globals::energyInTeV == 7) //Fall11 or Summer11Leg
-			return true;
-		else if (Globals::energyInTeV == 8) //Summer12 MC
-			return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
-		else
-			return false;
-	}
+	// unsigned int runNumber(event->runnumber());
+	// if (event->isRealData()) {
+	// 	//2011 data: run 160404 to run 180252
+	// 	if (runNumber >= 160404 && runNumber < 173236)
+	// 		return event->HLT(HLTriggers::HLT_IsoMu24);
+	// 	else if (runNumber >= 173236 && runNumber <= 180252)
+	// 		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+	// 	//2012 data: run 190456 to run 208686 (same trigger as second 2011 trigger)
+	// 	else if (runNumber >= 190456 && runNumber <= 208686)
+	// 		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+	// 	else if ( runNumber == 1 ) // MC pretending to be data
+	// 		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+	// 	else
+	// 		return false;
+	// } else {
+	// 	if (Globals::energyInTeV == 7) //Fall11 or Summer11Leg
+	// 		return true;
+	// 	else if (Globals::energyInTeV == 8) //Summer12 MC
+	// 		return event->HLT(HLTriggers::HLT_IsoMu24_eta2p1);
+	// 	else
+	// 		return false;
+	// }
+	return true;
 }
 
 bool TopPairMuPlusJetsReferenceSelection::hasExactlyOneIsolatedLepton(const EventPtr event) const {

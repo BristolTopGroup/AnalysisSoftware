@@ -8,6 +8,7 @@
 #ifndef TTBARHYPOTHESIS_H_
 #define TTBARHYPOTHESIS_H_
 #include "RecoObjects/Electron.h"
+#include "RecoObjects/Muon.h"
 #include "RecoObjects/Jet.h"
 #include "RecoObjects/MET.h"
 #include "RecoObjects/Particle.h"
@@ -30,7 +31,7 @@ class TtbarHypothesis {
 public:
 	TtbarHypothesis();
 
-	TtbarHypothesis( const LeptonPointer& elec, const ParticlePointer& neut,
+	TtbarHypothesis( const LeptonPointer& lepton, const ParticlePointer& neut,
 		const JetPointer& lepBJet,   const JetPointer& hadBJet,
 		const JetPointer& hadWJet1,  const JetPointer& hadWJet2 );
 
