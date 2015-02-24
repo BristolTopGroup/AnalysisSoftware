@@ -51,14 +51,9 @@ public:
 	void addFolder(std::string folder);
 	void addTreeToFolder(std::string folder, unsigned int dataType, std::string treeName);
 
-	void setCurrentTreeAndFolder(std::string folder, std::string treeName);
+	void setCurrentTreeFolder(std::string folder);
 
 	void writeToDisk();
-
-	void enableDebugMode(bool enable);
-
-	void beginDataType(DataType::value type);
-	void endDataType();
 
 private:
 
@@ -67,11 +62,9 @@ private:
 
 	DataType::value currentDataType;
 	std::string currentTreeFolder;
-	TTree* currentTree;
 
 	boost::unordered_map<std::string, TBranchArray> collection;
 
-	bool debugMode;
 	std::vector<double> bjetbin_weights_;
 
 	const std::string assembleFilename(DataType::value) const;

@@ -21,9 +21,7 @@ TTreeManager::TTreeManager() : //
 		treeFiles(), //
 		currentDataType(DataType::ElectronHad), //
 		currentTreeFolder(""), //
-		currentTree(0),
-		collection(), //
-		debugMode(false) {
+		collection() {
 }
 
 TTreeManager::~TTreeManager() {
@@ -147,14 +145,11 @@ void TTreeManager::addFolder(string folder)
 void TTreeManager::addTreeToFolder(string folder, unsigned int dataType, string treeName) {
 			collection[folder].at(dataType)->treeMap[folder] = boost::shared_ptr<TTree>(new TTree(treeName.c_str(),treeName.c_str()));
 			collection[folder].at(dataType)->treeMap[folder]->SetDirectory(0);
+			collection[folder].at(dataType)->addBranchToTree("EventWeight","EventWeight",collection[folder].at(dataType)->treeMap[folder]);
 }
 
-void TTreeManager::setCurrentTreeAndFolder(std::string collection, std::string treeName) {
+void TTreeManager::setCurrentTreeFolder(std::string collection) {
 	currentTreeFolder = collection;
-}
-
-void TTreeManager::enableDebugMode(bool enable) {
-	debugMode = enable;
 }
 
 } //end namespace BAT

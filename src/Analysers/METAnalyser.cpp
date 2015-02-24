@@ -35,7 +35,7 @@ void METAnalyser::analyse(const EventPtr event) {
 		// 	histMan_->H2D("RecoMET_vs_GenMET")->Fill(event->GenMET()->et(), met->et(), weight_);
 		// }
 
-		tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+		tTreeMan_->setCurrentTreeFolder(histogramFolder_);
 		tTreeMan_->Fill("MET",met->et());
 
 		// histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
@@ -113,7 +113,8 @@ void METAnalyser::createHistograms() {
 }
 
 void METAnalyser::createTTrees() {
-	tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+	tTreeMan_->setCurrentTreeFolder(histogramFolder_);
+	// tTreeMan_->addBranch("EventWeight", "EventWeight", "MET");
 	tTreeMan_->addBranch("HT", "HT", "MET");
 	tTreeMan_->addBranch("MET", "MET", "MET");
 	tTreeMan_->addBranch("ST", "ST", "MET");
@@ -132,7 +133,8 @@ void METAnalyser::analyse_HT(const EventPtr event, const JetCollection jets) {
 	weight_ = event->weight() * prescale_ * scale_;
 	histMan_->H1D("HT")->Fill(Event::HT(jets), weight_);
 
-	tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+	tTreeMan_->setCurrentTreeFolder(histogramFolder_);
+	tTreeMan_->Fill("EventWeight",weight_);
 	tTreeMan_->Fill("HT",Event::HT(jets));
 }
 
@@ -160,7 +162,7 @@ void METAnalyser::analyse_ST(const EventPtr event, const ParticlePointer particl
 		histMan_->H1D("WPT")->Fill(WPT, weight_);
 		histMan_->H1D("MT")->Fill(MT, weight_);
 
-		tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+		tTreeMan_->setCurrentTreeFolder(histogramFolder_);
 		tTreeMan_->Fill("ST",ST);
 		tTreeMan_->Fill("WPT",WPT);
 		tTreeMan_->Fill("MT",MT);

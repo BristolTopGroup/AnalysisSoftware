@@ -59,21 +59,11 @@ public:
 
     void addBranchToTree(std::string branchName, std::string branchLabel, TTreePointer tree);
 
-    boost::shared_ptr<float> getBranchVariable(std::string branchLabel);
-
     void setBranchVariable(std::string branchLabel, float value);
-
-    boost::shared_ptr<TTree> getBranchTree(std::string branchLabel);
 
     unsigned int size() const;
 
     void writeToFile(boost::shared_ptr<TFile> treeFile);
-
-    void setPrefix(std::string pre);
-
-    void setSuffix(std::string suf);
-
-    const VariableMap getAllVariables();
 
     bool contains(std::string name);
 

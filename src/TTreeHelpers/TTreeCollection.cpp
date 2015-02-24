@@ -22,16 +22,8 @@ void TBranchCollection::addBranchToTree(std::string branchName, std::string bran
 
 void TBranchCollection::addBranchToTree(std::string branchName, std::string branchLabel, TTreePointer tree);
 
-TBranchCollection::VarPointer TBranchCollection::getBranchVariable(std::string branchLabel) {
-    return varMap[branchLabel];
-}
-
 void TBranchCollection::setBranchVariable(std::string branchLabel, float value) {
     *varMap[branchLabel] = value;
-}
-
-TBranchCollection::TTreePointer TBranchCollection::getBranchTree(std::string branchLabel) {
-    return treeMap[branchLabel];
 }
 
 unsigned int TBranchCollection::size() const {
@@ -44,18 +36,6 @@ void TBranchCollection::writeToFile(boost::shared_ptr<TFile> treeFile) {
     writeDirectories();
     tTreeFile->Cd(path.c_str());
     writeTrees();
-}
-
-void TBranchCollection::setPrefix(std::string pre){
-    prefix = pre;
-}
-
-void TBranchCollection::setSuffix(std::string suf){
-    suffix = suf;
-}
-
-const TBranchCollection::VariableMap TBranchCollection::getAllVariables(){
-    return varMap;
 }
 
 bool TBranchCollection::contains(std::string name){
