@@ -38,17 +38,8 @@ JetReader::JetReader() : //
 		NEFReader(), //
 		CHFReader(), //
 		NCHReader(), //
-		btagCombinedSecondaryVertexReader(), //
-		btagCombinedSecondaryVertexMVAReader(), //
-		btagJetBProbabilityReader(), //
-		btagJetProbabilityReader(), //
-		btagSimpleSecondaryVertexHEReader(), //
-		btagSimpleSecondaryVertexHPReader(), //
-		btagSoftMuonReader(), //
-		btagSoftMuonByIP3dReader(), //
-		btagSoftMuonByPtReader(), //
-		btagTrackCountingHighPurityReader(), //
-		btagTrackCountingHighEfficiencyReader(), //
+		btagCSVv2Reader(), //
+		isBtagReader(), //
 		PartonFlavour(),
 		jets(), //
 		usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05), //
@@ -56,46 +47,36 @@ JetReader::JetReader() : //
 
 }
 JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
-		energyReader(input, JetAlgorithm::prefixes.at(algo) + ".Energy"), //
-		JECUncReader(input, JetAlgorithm::prefixes.at(algo) + ".JECUnc"), //
-		L1OffJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L1OffJEC"),
-		L2L3ResJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L2L3ResJEC"),
-		L2RelJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L2RelJEC"),
-		L3AbsJECReader(input, JetAlgorithm::prefixes.at(algo) + ".L3AbsJEC"),
-		pxReader(input, JetAlgorithm::prefixes.at(algo) + ".Px"), //
-		pyReader(input, JetAlgorithm::prefixes.at(algo) + ".Py"), //
-		pzReader(input, JetAlgorithm::prefixes.at(algo) + ".Pz"), //
-		pxRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PxRAW"), //
-		pyRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PyRAW"), //
-		pzRawReader(input, JetAlgorithm::prefixes.at(algo) + ".PzRAW"), //
-		massReader(input, JetAlgorithm::prefixes.at(algo) + ".Mass"), //
-		chargeReader(input, JetAlgorithm::prefixes.at(algo) + ".Charge"), //
-		matchedGeneratedJetEnergyReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Energy"), //
-		matchedGeneratedJetPxReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Px"), //
-		matchedGeneratedJetPyReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Py"), //
-		matchedGeneratedJetPzReader(input, JetAlgorithm::prefixes.at(algo) + ".GenJet.Pz"), //
-		emfReader(input, JetAlgorithm::prefixes.at(algo) + ".EMF"), //
-		n90HitsReader(input, JetAlgorithm::prefixes.at(algo) + ".n90Hits"), //
-		fHPDReader(input, JetAlgorithm::prefixes.at(algo) + ".fHPD"), //
-		NODReader(input, JetAlgorithm::prefixes.at(algo) + ".NConstituents"), //
-		CEFReader(input, JetAlgorithm::prefixes.at(algo) + ".ChargedEmEnergyFraction"), //
-		NHFReader(input, JetAlgorithm::prefixes.at(algo) + ".NeutralHadronEnergyFraction"), //
-		NEFReader(input, JetAlgorithm::prefixes.at(algo) + ".NeutralEmEnergyFraction"), //
-		CHFReader(input, JetAlgorithm::prefixes.at(algo) + ".ChargedHadronEnergyFraction"), //
-		NCHReader(input, JetAlgorithm::prefixes.at(algo) + ".ChargedMultiplicity"), //
-		btagCombinedSecondaryVertexReader(input, JetAlgorithm::prefixes.at(algo) + ".CombinedSecondaryVertexBJetTag"), //
-		btagCombinedSecondaryVertexMVAReader(input,
-				JetAlgorithm::prefixes.at(algo) + ".CombinedSecondaryVertexMVABJetTag"), //
-		btagJetBProbabilityReader(input, JetAlgorithm::prefixes.at(algo) + ".JetBProbabilityBTag"), //
-		btagJetProbabilityReader(input, JetAlgorithm::prefixes.at(algo) + ".JetProbabilityBTag"), //
-		btagSimpleSecondaryVertexHEReader(input, JetAlgorithm::prefixes.at(algo) + ".SimpleSecondaryVertexHighEffBTag"), //
-		btagSimpleSecondaryVertexHPReader(input, JetAlgorithm::prefixes.at(algo) + ".SimpleSecondaryVertexHighPurBTag"), //
-		btagSoftMuonReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonBJetTag"), //
-		btagSoftMuonByIP3dReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonByIP3dBJetTag"), //
-		btagSoftMuonByPtReader(input, JetAlgorithm::prefixes.at(algo) + ".SoftMuonByPtBJetTag"), //
-		btagTrackCountingHighPurityReader(input, JetAlgorithm::prefixes.at(algo) + ".TrackCountingHighPurBTag"), //
-		btagTrackCountingHighEfficiencyReader(input, JetAlgorithm::prefixes.at(algo) + ".TrackCountingHighEffBTag"), //
-		PartonFlavour(input, JetAlgorithm::prefixes.at(algo) + ".PartonFlavour"),//
+		energyReader(input, "Jets.Energy"), //
+		JECUncReader(input, "Jets.JECUnc"), //
+		L1OffJECReader(input, "Jets.L1OffJEC"),
+		L2L3ResJECReader(input, "Jets.L2L3ResJEC"),
+		L2RelJECReader(input, "Jets.L2RelJEC"),
+		L3AbsJECReader(input, "Jets.L3AbsJEC"),
+		pxReader(input, "Jets.Px"), //
+		pyReader(input, "Jets.Py"), //
+		pzReader(input, "Jets.Pz"), //
+		pxRawReader(input, "Jets.PxRAW"), //
+		pyRawReader(input, "Jets.PyRAW"), //
+		pzRawReader(input, "Jets.PzRAW"), //
+		massReader(input, "Jets.Mass"), //
+		chargeReader(input, "Jets.Charge"), //
+		matchedGeneratedJetEnergyReader(input, "Jets.GenJet.Energy"), //
+		matchedGeneratedJetPxReader(input, "Jets.GenJet.Px"), //
+		matchedGeneratedJetPyReader(input, "Jets.GenJet.Py"), //
+		matchedGeneratedJetPzReader(input, "Jets.GenJet.Pz"), //
+		emfReader(input, "Jets.EMF"), //
+		n90HitsReader(input, "Jets.n90Hits"), //
+		fHPDReader(input, "Jets.fHPD"), //
+		NODReader(input, "Jets.NConstituents"), //
+		CEFReader(input, "Jets.ChargedEmEnergyFraction"), //
+		NHFReader(input, "Jets.NeutralHadronEnergyFraction"), //
+		NEFReader(input, "Jets.NeutralEmEnergyFraction"), //
+		CHFReader(input, "Jets.ChargedHadronEnergyFraction"), //
+		NCHReader(input, "Jets.ChargedMultiplicity"), //
+		btagCSVv2Reader(input, "Jets.combinedInclusiveSecondaryVertexV2BJetTags"), //
+		isBtagReader(input, "Jets.passesMediumCSV"), //
+		PartonFlavour(input, "Jets.PartonFlavour"),//
 		jets(), //
 		usedAlgorithm(algo), //
 		isRealData(false) {
@@ -130,7 +111,7 @@ void JetReader::readJets(bool isRealData) {
 		JetPointer jet(new Jet(energy, px, py, pz));
 
 		//get matched gen jet variables if MC, applyJetSmearing is True and there is a matchedGeneratedJet:
-		if (Globals::applyJetSmearing && !isRealData) {
+		if (!isRealData) {
 			double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
 			if (matchedGeneratedJetEnergy !=0) {
 				double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
@@ -141,16 +122,17 @@ void JetReader::readJets(bool isRealData) {
 
 				//store matched generated jet variables in a matchedGeneratedJet pointer
 				JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
-
-				//smear the unsmeared jet
-				const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
-
-				FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
-				jet->setFourVector(smearedJetFourVector);
-
-				//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
-				jet->set_unsmeared_jet(unsmearedJet);
 				jet->set_matched_generated_jet(matchedGeneratedJet);
+				if ( Globals::applyJetSmearing ) {
+					//smear the unsmeared jet
+					const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
+
+					FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
+					jet->setFourVector(smearedJetFourVector);
+
+					//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
+					jet->set_unsmeared_jet(unsmearedJet);
+				}
 			}
 		}
 
@@ -178,31 +160,9 @@ void JetReader::readJets(bool isRealData) {
 		}
 
 		//set b-tagging
-		//combined secondary vertex
-		jet->setDiscriminatorForBtagType(btagCombinedSecondaryVertexReader.getVariableAt(jetIndex),
-				BtagAlgorithm::CombinedSecondaryVertex);
-		jet->setDiscriminatorForBtagType(btagCombinedSecondaryVertexMVAReader.getVariableAt(jetIndex),
-				BtagAlgorithm::CombinedSecondaryVertexMVA);
-		//jet (b) probability
-		jet->setDiscriminatorForBtagType(btagJetBProbabilityReader.getVariableAt(jetIndex),
-				BtagAlgorithm::JetBProbability);
-		jet->setDiscriminatorForBtagType(btagJetProbabilityReader.getVariableAt(jetIndex),
-				BtagAlgorithm::JetProbability);
-		//simple secondary vertex
-		jet->setDiscriminatorForBtagType(btagSimpleSecondaryVertexHEReader.getVariableAt(jetIndex),
-				BtagAlgorithm::SimpleSecondaryVertexHighEfficiency);
-		jet->setDiscriminatorForBtagType(btagSimpleSecondaryVertexHPReader.getVariableAt(jetIndex),
-				BtagAlgorithm::SimpleSecondaryVertexHighPurity);
-		//soft muon
-		jet->setDiscriminatorForBtagType(btagSoftMuonReader.getVariableAt(jetIndex), BtagAlgorithm::SoftMuon);
-		jet->setDiscriminatorForBtagType(btagSoftMuonByIP3dReader.getVariableAt(jetIndex),
-				BtagAlgorithm::SoftMuonByIP3d);
-		jet->setDiscriminatorForBtagType(btagSoftMuonByPtReader.getVariableAt(jetIndex), BtagAlgorithm::SoftMuonByPt);
-		//track counting
-		jet->setDiscriminatorForBtagType(btagTrackCountingHighPurityReader.getVariableAt(jetIndex),
-				BtagAlgorithm::TrackCountingHighPurity);
-		jet->setDiscriminatorForBtagType(btagTrackCountingHighEfficiencyReader.getVariableAt(jetIndex),
-				BtagAlgorithm::TrackCountingHighEfficiency);
+		jet->setDiscriminatorForBtagType(btagCSVv2Reader.getVariableAt(jetIndex),
+				BtagAlgorithm::CombinedSecondaryVertexV2);
+		jet->setIsBJet(isBtagReader.getBoolVariableAt(jetIndex));
 
 		//parton flavour
 		jet->setPartonFlavour(PartonFlavour.getIntVariableAt(jetIndex));
@@ -249,17 +209,9 @@ void JetReader::initialise() {
 		fHPDReader.initialise();
 	}
 
-	btagCombinedSecondaryVertexReader.initialise();
-	btagCombinedSecondaryVertexMVAReader.initialise();
-	btagJetBProbabilityReader.initialise();
-	btagJetProbabilityReader.initialise();
-	btagSimpleSecondaryVertexHEReader.initialise();
-	btagSimpleSecondaryVertexHPReader.initialise();
-	btagSoftMuonReader.initialise();
-	btagSoftMuonByIP3dReader.initialise();
-	btagSoftMuonByPtReader.initialise();
-	btagTrackCountingHighPurityReader.initialise();
-	btagTrackCountingHighEfficiencyReader.initialise();
+	btagCSVv2Reader.initialise();
+	isBtagReader.initialise();
+
 	PartonFlavour.initialise();
 	if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
 		NODReader.initialise();

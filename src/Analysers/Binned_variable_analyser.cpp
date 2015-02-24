@@ -70,7 +70,9 @@ void Binned_variable_analyser::analyse(double variable,
 			string folder = variable_.name + "_bin_" + previousBin + "-" + bin;
 			histMan_->setCurrentHistogramFolder(
 					histogramFolder_ + "/" + folder);
-			histMan_->H1D_BJetBinned(fit_variable_name)->Fill(
+			// histMan_->H1D_BJetBinned(fit_variable_name)->Fill(
+			// 		fit_variable_value, weight_);
+			histMan_->H1D(fit_variable_name)->Fill(
 					fit_variable_value, weight_);
 		}
 	}
@@ -117,11 +119,16 @@ void Binned_variable_analyser::createHistograms() {
 					|| variable_.bins.empty())
 				throw "Binned_Variable_analyser: fit_variable_bins and/or variable_bins have not been specified!";
 
-			if (fit_variable.bins.empty())
-				histMan_->addH1D_BJetBinned(fit_variable.name,
+			if (fit_variable.bins.empty()) {
+				// histMan_->addH1D_BJetBinned(fit_variable.name,
+				// 		fit_variable.name, fit_variable.n_bins,
+				// 		fit_variable.min, fit_variable.max);
+
+				histMan_->addH1D(fit_variable.name,
 						fit_variable.name, fit_variable.n_bins,
 						fit_variable.min, fit_variable.max);
 			//no alternative at the moment
+			}
 		}
 	}
 
