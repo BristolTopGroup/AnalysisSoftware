@@ -35,6 +35,9 @@ void METAnalyser::analyse(const EventPtr event) {
 		// 	histMan_->H2D("RecoMET_vs_GenMET")->Fill(event->GenMET()->et(), met->et(), weight_);
 		// }
 
+		tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+		tTreeMan_->Fill("MET",met->et());
+
 		// histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
 		histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
 		histMan_->H1D("METsignificance")->Fill(met->significance(), weight_);
@@ -109,16 +112,28 @@ void METAnalyser::createHistograms() {
 	}
 }
 
+void METAnalyser::createTTrees() {
+	tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+	tTreeMan_->addBranch("HT", "HT", "MET");
+	tTreeMan_->addBranch("MET", "MET", "MET");
+	tTreeMan_->addBranch("ST", "ST", "MET");
+	tTreeMan_->addBranch("WPT", "WPT", "MET");
+	tTreeMan_->addBranch("MT", "MT", "MET");
+}
+
 void METAnalyser::analyse(const EventPtr event, const ParticlePointer particle, const JetCollection jets) {
 	analyse_HT(event, jets);
-	// analyse_ST(event, particle, jets);
-	// analyse(event, particle);
+	analyse_ST(event, particle, jets);
+	analyse(event, particle);
 }
 
 void METAnalyser::analyse_HT(const EventPtr event, const JetCollection jets) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = event->weight() * prescale_ * scale_;
 	histMan_->H1D("HT")->Fill(Event::HT(jets), weight_);
+
+	tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+	tTreeMan_->Fill("HT",Event::HT(jets));
 }
 
 void METAnalyser::analyse_ST(const EventPtr event, const ParticlePointer particle, const JetCollection jets) {
@@ -135,11 +150,25 @@ void METAnalyser::analyse_ST(const EventPtr event, const ParticlePointer particl
 			continue;
 
 		const METPointer met(event->MET(metType));
+
+		float ST = Event::ST(jets, particle, met);
+		float WPT = Event::WPT(particle, met);
+		float MT = Event::MT(particle, met);
+
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + prefix);
-		histMan_->H1D("ST")->Fill(Event::ST(jets, particle, met), weight_);
-		histMan_->H1D("WPT")->Fill(Event::WPT(particle, met), weight_);
-		histMan_->H1D("MT")->Fill(Event::MT(particle, met), weight_);
+		histMan_->H1D("ST")->Fill(ST, weight_);
+		histMan_->H1D("WPT")->Fill(WPT, weight_);
+		histMan_->H1D("MT")->Fill(MT, weight_);
+
+		tTreeMan_->setCurrentTreeAndFolder(histogramFolder_,"MET");
+		tTreeMan_->Fill("ST",ST);
+		tTreeMan_->Fill("WPT",WPT);
+		tTreeMan_->Fill("MT",MT);
 	}
+}
+
+METAnalyser::METAnalyser(HistogramManagerPtr histMan, TTreeManagerPtr tTreeMan, std::string histogramFolder) :
+		BasicAnalyser(histMan, tTreeMan, histogramFolder) {
 }
 
 METAnalyser::METAnalyser(HistogramManagerPtr histMan, std::string histogramFolder) :

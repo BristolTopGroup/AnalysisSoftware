@@ -112,7 +112,7 @@ for setting,value in settings.iteritems():
 inputFiles = datasets[sample]
 
 #number of events to be processed
-maxEvents = 10000# 0 == all
+maxEvents = 50000# 0 == all
 
 #Jet Energy Resolutions files (L7 corrections)
 bJetResoFile = toolsFolder + "data/bJetReso.root"

@@ -24,6 +24,7 @@
 #include <iostream>
 #include <string>
 #include "../interface/HistHelpers/HistogramManager.h"
+#include "../interface/TTreeHelpers/TTreeManager.h"
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
 //Analysers
@@ -51,6 +52,7 @@ private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
     BAT::EventPtr currentEvent;
     boost::shared_ptr<BAT::HistogramManager> histMan;
+    boost::shared_ptr<BAT::TTreeManager> ttreeMan;
     std::vector<BAT::InterestingEvent> interestingEvents, brokenEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
     boost::shared_ptr<BAT::EventWeightProvider> weights;

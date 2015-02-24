@@ -11,6 +11,20 @@ namespace BAT {
 BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan,
 		std::string histogramFolder) :
 		histMan_(histMan), //
+		tTreeMan_(), //
+		histogramFolder_(histogramFolder), //
+		weight_(1.), //
+		prescale_(1), //
+		scale_(1.), //
+		have_histograms_been_created_(false) {
+
+}
+
+BasicAnalyser::BasicAnalyser(HistogramManagerPtr histMan,
+		TTreeManagerPtr tTreeMan,
+		std::string histogramFolder) :
+		histMan_(histMan), //
+		tTreeMan_(tTreeMan), //
 		histogramFolder_(histogramFolder), //
 		weight_(1.), //
 		prescale_(1), //

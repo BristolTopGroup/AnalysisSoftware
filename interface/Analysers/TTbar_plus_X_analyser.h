@@ -25,6 +25,7 @@ namespace BAT {
 class TTbar_plus_X_analyser: public BAT::BasicAnalyser {
 public:
 	TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::string histogramFolder = "TTbar_plus_X_analysis");
+	TTbar_plus_X_analyser(HistogramManagerPtr histMan, TTreeManagerPtr ttreeMan, std::string histogramFolder = "TTbar_plus_X_analysis");
 	virtual ~TTbar_plus_X_analyser();
 	virtual void analyse(const EventPtr);
 	virtual void createHistograms();

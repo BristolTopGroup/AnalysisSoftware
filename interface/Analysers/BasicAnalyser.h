@@ -11,6 +11,7 @@
 #include <string>
 #include <boost/scoped_ptr.hpp>
 #include "../HistHelpers/HistogramManager.h"
+#include "../TTreeHelpers/TTreeManager.h"
 #include "../Event.h"
 
 namespace BAT {
@@ -24,6 +25,7 @@ namespace BAT {
 class BasicAnalyser {
 protected:
 	HistogramManagerPtr histMan_;
+	TTreeManagerPtr tTreeMan_;
 	std::string histogramFolder_;
 	double weight_;
 	unsigned int prescale_;
@@ -39,6 +41,7 @@ public:
 	 * Analysers are created at the beginning of the analysis.
 	 */
 	BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "BasicAnalyser");
+	BasicAnalyser(HistogramManagerPtr histMan, TTreeManagerPtr tTreeMan, std::string histogramFolder = "BasicAnalyser");
 	virtual ~BasicAnalyser();
 	/**
 	 * The main functionality of an analyser is available in the analyse function.
