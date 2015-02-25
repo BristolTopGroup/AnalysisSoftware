@@ -20,7 +20,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	const PseudoTopParticlesPointer pseudoTopParticles = event->PseudoTopParticles();
 	const ParticleCollection pseudoTops = pseudoTopParticles->getPseudoTops();
 
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	treeMan_->setCurrentFolder(histogramFolder_);
 
 	ParticleCollection pseudoTopsForTTbar;
 
@@ -28,33 +28,38 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		// cout << "Getting pseudo top number : " << ptIndex << endl;
 		const ParticlePointer pseudoTop = pseudoTops[ptIndex];
 		pseudoTopsForTTbar.push_back( pseudoTop );
-		histMan_->H1D("pseudoTop_pT")->Fill(pseudoTop->pt() , weight_);
-		histMan_->H1D("pseudoTop_y")->Fill(pseudoTop->rapidity() , weight_);
+		treeMan_->Fill("pseudoTop_pT", pseudoTop->pt() );
+		treeMan_->Fill("pseudoTop_y", pseudoTop->rapidity() );
 	}
 
 	if ( pseudoTopsForTTbar.size() == 2 ) {
 		ParticlePointer pseudoTTbar( new Particle( *pseudoTopsForTTbar[0] + *pseudoTopsForTTbar[1] ) );
 
-		histMan_->H1D("pseudoTTbar_pT")->Fill(pseudoTTbar->pt() , weight_);
-		histMan_->H1D("pseudoTTbar_y")->Fill(pseudoTTbar->rapidity() , weight_);
-		histMan_->H1D("pseudoTTbar_m")->Fill(pseudoTTbar->mass() , weight_);
+		treeMan_->Fill("pseudoTTbar_pT", pseudoTTbar->pt() );
+		treeMan_->Fill("pseudoTTbar_y", pseudoTTbar->rapidity() );
+		treeMan_->Fill("pseudoTTbar_m", pseudoTTbar->mass() );
 	}
 }
 
-void PseudoTopAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
+void PseudoTopAnalyser::createTrees() {
 
-	histMan_->addH1D("pseudoTop_pT", "pseudoTop pT; p_{T}^{t} [GeV]; events/20 GeV", 25, 0, 500);
-	histMan_->addH1D("pseudoTop_y", "pseudoTop y; y^t; ; events/0.1", 50, -2.5, 2.5);
-
-	histMan_->addH1D("pseudoTTbar_pT", "pseudoTTbar pT; p_{T}^{t#bar{t}} [GeV]; events/20 GeV", 25, 0, 500);
-	histMan_->addH1D("pseudoTTbar_y", "pseudoTTbar y; y^{t#bar{t}} [GeV]; events/0.1", 50, -2.5, 2.5);
-	histMan_->addH1D("pseudoTTbar_m", "pseudoTTbar m; m^{t#bar{t}} [GeV]; events/20 GeV", 80, 0, 1600);
+	treeMan_->setCurrentFolder(histogramFolder_);
+	treeMan_->addBranch("pseudoTop_pT","pseudoTop_pT","PseudoTop");
+	treeMan_->addBranch("pseudoTop_y","pseudoTop_y","PseudoTop");
+	treeMan_->addBranch("pseudoTTbar_pT","pseudoTTbar_pT","PseudoTop");
+	treeMan_->addBranch("pseudoTTbar_y","pseudoTTbar_y","PseudoTop");
+	treeMan_->addBranch("pseudoTTbar_m","pseudoTTbar_m","PseudoTop");
 
 }
 
-PseudoTopAnalyser::PseudoTopAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, histogramFolder) {
+void PseudoTopAnalyser::createHistograms() {
+
+cout << "I shouldn't be here" << endl;
+
+}
+
+PseudoTopAnalyser::PseudoTopAnalyser(boost::shared_ptr<HistogramManager> histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
+		BasicAnalyser(histMan, treeMan, histogramFolder) {
 }
 
 PseudoTopAnalyser::~PseudoTopAnalyser() {

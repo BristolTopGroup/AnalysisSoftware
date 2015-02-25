@@ -14,11 +14,12 @@ namespace BAT {
 
 class PseudoTopAnalyser: public BAT::BasicAnalyser {
 public:
-	PseudoTopAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "TTbar_plus_X_analysis/PseudoTop");
+	PseudoTopAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis/PseudoTop");
 	virtual ~PseudoTopAnalyser();
 	void analyse(const EventPtr);
 
 	void createHistograms();
+	void createTrees();
 
 protected:
 	void fillHistograms(std::string subcollection, std::string suffix = "");

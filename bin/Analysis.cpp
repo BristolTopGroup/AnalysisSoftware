@@ -152,11 +152,11 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	pseudoTopAnalyser_->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by pseudoTopAnalyser: " << numberOfHistograms - lastNumberOfHistograms
-			<< endl;
-	lastNumberOfHistograms = numberOfHistograms;
+	pseudoTopAnalyser_->createTrees();
+	// numberOfHistograms = histMan->size();
+	// cout << "Number of histograms added by pseudoTopAnalyser: " << numberOfHistograms - lastNumberOfHistograms
+	// 		<< endl;
+	// lastNumberOfHistograms = numberOfHistograms;
 
 	histMan->setCurrentHistogramFolder("");
 	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
@@ -181,7 +181,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		muonAnalyser(new MuonAnalyser(histMan)), //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
-		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan)) {
+		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)) {
 	histMan->enableDebugMode(true);
 }
 
