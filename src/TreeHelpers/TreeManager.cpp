@@ -1,11 +1,11 @@
 /*
- * TTreeManager.cpp
+ * TreeManager.cpp
  *
  *  Created on: 5 Feb 2015
  *      Author: ejclemen
  */
 
-#include "../../interface/TTreeHelpers/TTreeManager.h"
+#include "../../interface/TreeHelpers/TreeManager.h"
 #include "../../interface/Readers/NTupleEventReader.h"
 #include "../../interface/GlobalVariables.h"
 #include <boost/algorithm/string/predicate.hpp>
@@ -16,73 +16,73 @@ using namespace boost;
 using namespace std;
 namespace BAT {
 
-TTreeManager::TTreeManager() : //
-		seenDataTypes(), //
-		treeFiles(), //
-		currentDataType(DataType::ElectronHad), //
-		currentTreeFolder(""), //
-		collection() {
+TreeManager::TreeManager() : //
+		seenDataTypes_(), //
+		treeFiles_(), //
+		currentDataType_(DataType::ElectronHad), //
+		currentFolder_(""), //
+		collection_() {
 }
 
-TTreeManager::~TTreeManager() {
+TreeManager::~TreeManager() {
 }
 
-void TTreeManager::addBranch(std::string branchName, std::string branchLabel, std::string treeName) {
+void TreeManager::addBranch(std::string branchName, std::string branchLabel, std::string treeName) {
 
 	// Check if folder exists
 	// And check if tree of the same name in this folder exists
-	if (collection.find(currentTreeFolder) == collection.end() )
-		addFolder(currentTreeFolder);
+	if (collection_.find(currentFolder_) == collection_.end() )
+		addFolder(currentFolder_);
 
 	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
-		if (seenDataTypes.at(type)) {
-			if (  collection[currentTreeFolder][type]->treeMap.find(currentTreeFolder) == collection[currentTreeFolder][type]->treeMap.end() ) {
-				addTreeToFolder(currentTreeFolder, type, treeName);				
+		if (seenDataTypes_.at(type)) {
+			if (  collection_[currentFolder_][type]->treeMap_.find(currentFolder_) == collection_[currentFolder_][type]->treeMap_.end() ) {
+				addTreeToFolder(treeName, currentFolder_, type);				
 			}
 
 			// Add branch to tree
-			collection[currentTreeFolder][type]->addBranchToTree(branchName, branchLabel, collection[currentTreeFolder].at(type)->treeMap[currentTreeFolder]);
+			collection_[currentFolder_][type]->addBranchToTree(branchName, branchLabel, collection_[currentFolder_].at(type)->treeMap_[currentFolder_]);
 		}
 	}
 
 }
 
-void TTreeManager::Fill(std::string branchLabel, float fillValue) {
-	collection[currentTreeFolder][currentDataType]->setBranchVariable( branchLabel, fillValue );
+void TreeManager::Fill(std::string branchLabel, float fillValue) {
+	collection_[currentFolder_][currentDataType_]->setBranchVariable( branchLabel, fillValue );
 }
 
-void TTreeManager::FillTrees() {
+void TreeManager::FillTrees() {
 	// Loop over all known trees, and call "Fill"
 	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
-		if (seenDataTypes.at(type)) {
+		if (seenDataTypes_.at(type)) {
 
-			for ( boost::unordered_map<std::string, boost::shared_ptr<TTree>>::const_iterator iter = collection[currentTreeFolder][type]->treeMap.begin(); iter != collection[currentTreeFolder][type]->treeMap.end(); ++iter) {
+			for ( boost::unordered_map<std::string, boost::shared_ptr<TTree>>::const_iterator iter = collection_[currentFolder_][type]->treeMap_.begin(); iter != collection_[currentFolder_][type]->treeMap_.end(); ++iter) {
 				iter->second->Fill();
 			}
 		}
     }
 }
 
-void TTreeManager::setCurrentDataType(DataType::value type) {
-	currentDataType = type;
+void TreeManager::setCurrentDataType(DataType::value type) {
+	currentDataType_ = type;
 }
 
-void TTreeManager::prepareForSeenDataTypes( const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& seenDataTypes ) {
-	this->seenDataTypes = seenDataTypes;
+void TreeManager::prepareForSeenDataTypes( const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& seenDataTypes_ ) {
+	this->seenDataTypes_ = seenDataTypes_;
 
 	for (unsigned type = 0; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
-		if (seenDataTypes.at(type)) {
+		if (seenDataTypes_.at(type)) {
 			const std::string filename = "tree_" + assembleFilename((DataType::value) type);
 			boost::shared_ptr<TFile> file(new TFile(filename.c_str(), "RECREATE"));
 			file->SetCompressionLevel(7);
 
-			treeFiles.at(type) = file;
-			collection[""].at(type) = TBranchCollectionRef(new TBranchCollection());
+			treeFiles_.at(type) = file;
+			collection_[""].at(type) = TBranchCollectionRef(new TBranchCollection());
 		}
 	}
 }
 
-const std::string TTreeManager::assembleFilename(DataType::value type) const {
+const std::string TreeManager::assembleFilename(DataType::value type) const {
 	const std::string name = DataType::names[type];
 	std::stringstream str;
 	std::string electronAlgo = ElectronAlgorithm::names[Globals::electronAlgorithm];
@@ -120,36 +120,36 @@ const std::string TTreeManager::assembleFilename(DataType::value type) const {
 
 }
 
-void TTreeManager::writeToDisk() {
+void TreeManager::writeToDisk() {
 	for (unsigned type = 0; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
-		if (seenDataTypes.at(type)) {
-			for (unordered_map<std::string, TBranchArray>::iterator iter = collection.begin(); iter != collection.end();
+		if (seenDataTypes_.at(type)) {
+			for (unordered_map<std::string, TBranchArray>::iterator iter = collection_.begin(); iter != collection_.end();
 					++iter) {
-				iter->second[type]->writeToFile(treeFiles.at(type));
+				iter->second[type]->writeToFile(treeFiles_.at(type));
 			}
 
-			treeFiles.at(type)->Write();
-			treeFiles.at(type)->Close();
+			treeFiles_.at(type)->Write();
+			treeFiles_.at(type)->Close();
 		}
 
 	}
 }
-void TTreeManager::addFolder(string folder)
+void TreeManager::addFolder(string folder)
  {
 	for (unsigned type = 0; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
-		if (seenDataTypes.at(type))
-			collection[folder].at(type) = TBranchCollectionRef(new TBranchCollection(folder));
+		if (seenDataTypes_.at(type))
+			collection_[folder].at(type) = TBranchCollectionRef(new TBranchCollection(folder));
 	}
 }
 
-void TTreeManager::addTreeToFolder(string folder, unsigned int dataType, string treeName) {
-			collection[folder].at(dataType)->treeMap[folder] = boost::shared_ptr<TTree>(new TTree(treeName.c_str(),treeName.c_str()));
-			collection[folder].at(dataType)->treeMap[folder]->SetDirectory(0);
-			collection[folder].at(dataType)->addBranchToTree("EventWeight","EventWeight",collection[folder].at(dataType)->treeMap[folder]);
+void TreeManager::addTreeToFolder(string treeName, string folder, unsigned int dataType) {
+			collection_[folder].at(dataType)->treeMap_[folder] = boost::shared_ptr<TTree>(new TTree(treeName.c_str(),treeName.c_str()));
+			collection_[folder].at(dataType)->treeMap_[folder]->SetDirectory(0);
+			collection_[folder].at(dataType)->addBranchToTree("EventWeight","EventWeight",collection_[folder].at(dataType)->treeMap_[folder]);
 }
 
-void TTreeManager::setCurrentTreeFolder(std::string collection) {
-	currentTreeFolder = collection;
+void TreeManager::setCurrentFolder(std::string collection) {
+	currentFolder_ = collection;
 }
 
 } //end namespace BAT

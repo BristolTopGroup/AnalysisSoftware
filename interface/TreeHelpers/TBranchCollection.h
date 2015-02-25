@@ -1,5 +1,5 @@
 /*
- * TTreeCollection.h
+ * TBranchCollection.h
  *
  *  Created on: 5 Feb 2015
  *      Author: ejclemen
@@ -23,33 +23,33 @@ namespace BAT {
 
 class TBranchCollection {
     typedef boost::shared_ptr<TBranch> TBranchPointer;
-    typedef boost::shared_ptr<TTree> TTreePointer;
+    typedef boost::shared_ptr<TTree> TreePointer;
     typedef boost::shared_ptr<float> VarPointer;
-    typedef boost::unordered_map<std::string, TTreePointer> TTreeMap;
+    typedef boost::unordered_map<std::string, TreePointer> TreeMap;
     typedef boost::unordered_map<std::string, TBranchPointer> TBranchMap;
     typedef boost::unordered_map<std::string, VarPointer> VariableMap;
 
 protected:
-    boost::shared_ptr<TFile> tTreeFile;
-    std::string path;
-    std::vector<std::string> directories;
-    std::vector<TTreePointer> trees;
-    std::string prefix, suffix;
+    boost::shared_ptr<TFile> treeFile_;
+    std::string path_;
+    std::vector<std::string> directories_;
+    std::vector<TreePointer> trees_;
+    std::string prefix_, suffix_;
 public:
 
     // FIXME Put as protected and provide getters and setters
-    TTreeMap treeMap;
-    VariableMap varMap;
+    TreeMap treeMap_;
+    VariableMap varMap_;
 
     TBranchCollection(std::string virtualPath = "") :
-        tTreeFile(),
-        path(virtualPath),
-        directories(getDirectoriesFromPath(path)),
-        trees(),
-        prefix(""),
-        suffix(""),
-        treeMap(),
-        varMap() {
+        treeFile_(),
+        path_(virtualPath),
+        directories_(getDirectoriesFromPath(path_)),
+        trees_(),
+        prefix_(""),
+        suffix_(""),
+        treeMap_(),
+        varMap_() {
 
     }
 
@@ -57,7 +57,7 @@ public:
 
     }
 
-    void addBranchToTree(std::string branchName, std::string branchLabel, TTreePointer tree);
+    void addBranchToTree(std::string branchName, std::string branchLabel, TreePointer tree);
 
     void setBranchVariable(std::string branchLabel, float value);
 

@@ -1,13 +1,13 @@
 /*
- * TTreeManager.h
+ * TreeManager.h
  *
  *  Created on: 5 Feb 2015
  *      Author: ejclemen
  */
 
-#ifndef TTreeManager_H_
-#define TTreeManager_H_
-#include "TTreeCollection.h"
+#ifndef TREEMANAGER_H_
+#define TREEMANAGER_H_
+#include "TBranchCollection.h"
 #include "TTree.h"
 #include "TBranch.h"
 #include "../../interface/DataTypes.h"
@@ -36,10 +36,10 @@ struct BranchAccessException: public std::exception {
 };
 
 typedef unsigned short ushort;
-class TTreeManager {
+class TreeManager {
 public:
-	TTreeManager();
-	virtual ~TTreeManager();
+	TreeManager();
+	virtual ~TreeManager();
 	void addBranch(std::string branchName, std::string branchLabel, std::string treeName);
 
 	void Fill(std::string branchLabel, float fillValue);
@@ -49,21 +49,21 @@ public:
 	void prepareForSeenDataTypes(const boost::array<bool, DataType::NUMBER_OF_DATA_TYPES>& seenDataTypes);
 
 	void addFolder(std::string folder);
-	void addTreeToFolder(std::string folder, unsigned int dataType, std::string treeName);
+	void addTreeToFolder(std::string treeName, std::string folder, unsigned int dataType );
 
-	void setCurrentTreeFolder(std::string folder);
+	void setCurrentFolder(std::string folder);
 
 	void writeToDisk();
 
 private:
 
-	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
-	boost::array<boost::shared_ptr<TFile>, DataType::NUMBER_OF_DATA_TYPES> treeFiles;
+	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes_;
+	boost::array<boost::shared_ptr<TFile>, DataType::NUMBER_OF_DATA_TYPES> treeFiles_;
 
-	DataType::value currentDataType;
-	std::string currentTreeFolder;
+	DataType::value currentDataType_;
+	std::string currentFolder_;
 
-	boost::unordered_map<std::string, TBranchArray> collection;
+	boost::unordered_map<std::string, TBranchArray> collection_;
 
 	std::vector<double> bjetbin_weights_;
 
@@ -71,8 +71,8 @@ private:
 
 };
 
-typedef boost::shared_ptr<TTreeManager> TTreeManagerPtr;
+typedef boost::shared_ptr<TreeManager> TreeManagerPtr;
 
 }
 
-#endif /* TTreeManager_H_ */
+#endif /* TREEMANAGER_H_ */

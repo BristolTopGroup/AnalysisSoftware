@@ -449,10 +449,10 @@ void TTbar_plus_X_analyser::createHistograms() {
 
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();
-	metAnalyserEPlusJetsRefSelection_->createTTrees();
+	metAnalyserEPlusJetsRefSelection_->createTrees();
 	electronAnalyserRefSelection_->createHistograms();
 	metAnalyserMuPlusJetsRefSelection_->createHistograms();
-	metAnalyserMuPlusJetsRefSelection_->createTTrees();
+	metAnalyserMuPlusJetsRefSelection_->createTrees();
 	muonAnalyserRefSelection_->createHistograms();
 
 	vertexAnalyserEPlusJetsRefSelection_->createHistograms();
@@ -460,14 +460,14 @@ void TTbar_plus_X_analyser::createHistograms() {
 	//QCD region
 	qcdNonIsoElectronAnalyser_->createHistograms();
 	metAnalyserqcdNonIsoElectronSelection_->createHistograms();
-	metAnalyserqcdNonIsoElectronSelection_->createTTrees();
+	metAnalyserqcdNonIsoElectronSelection_->createTrees();
 	qcdNonIsoMuonAnalyser_->createHistograms();
 	metAnalyserqcdNonIsoMuonSelection_->createHistograms();
-	metAnalyserqcdNonIsoMuonSelection_->createTTrees();
+	metAnalyserqcdNonIsoMuonSelection_->createTrees();
 	
 	qcdConversionsElectronAnalyser_->createHistograms();
 	metAnalyserqcdConversionSelection_->createHistograms();
-	metAnalyserqcdConversionSelection_->createTTrees();
+	metAnalyserqcdConversionSelection_->createTrees();
 
 	qcdEPlusjetsPFRelIsoElectronAnalyser_->createHistograms();
 
@@ -482,8 +482,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	hitFitAnalyserMuPlusJetsRefSelection_->createHistograms();
 }
 
-TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TTreeManagerPtr ttreeMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, ttreeMan, histogramFolder), //
+TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
+		BasicAnalyser(histMan, treeMan, histogramFolder), //
 
 		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
 		topMuplusJetsRefSelection_(new TopPairMuPlusJetsReferenceSelection()), //
@@ -495,8 +495,8 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TTreeM
 
 		//analysers
 		//signal regions
-		metAnalyserEPlusJetsRefSelection_(new METAnalyser(histMan, ttreeMan, histogramFolder + "/EPlusJets/Ref selection/MET")), //
-		metAnalyserMuPlusJetsRefSelection_(new METAnalyser(histMan, ttreeMan, histogramFolder + "/MuPlusJets/Ref selection/MET")), //
+		metAnalyserEPlusJetsRefSelection_(new METAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/MET")), //
+		metAnalyserMuPlusJetsRefSelection_(new METAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/MET")), //
 		electronAnalyserRefSelection_(
 				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/Electron", true)), //
 		muonAnalyserRefSelection_(new MuonAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Muon", true)), //
@@ -506,14 +506,14 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TTreeM
 				new VertexAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/Vertices")), //
 		//QCD region
 		metAnalyserqcdNonIsoElectronSelection_(
-				new METAnalyser(histMan, ttreeMan, histogramFolder + "/EPlusJets/QCD non iso e+jets/MET")), //
+				new METAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/QCD non iso e+jets/MET")), //
 		metAnalyserqcdNonIsoMuonSelection_(
-				new METAnalyser(histMan, ttreeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/MET")), //
+				new METAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/MET")), //
 		qcdNonIsoElectronAnalyser_(
 				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCD non iso e+jets/Electron", true)), //
 		qcdNonIsoMuonAnalyser_(
 				new MuonAnalyser(histMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Muon", true)), //
-		metAnalyserqcdConversionSelection_(new METAnalyser(histMan, ttreeMan, histogramFolder + "/EPlusJets/QCDConversions/MET")), //
+		metAnalyserqcdConversionSelection_(new METAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/QCDConversions/MET")), //
 		qcdConversionsElectronAnalyser_(
 				new ElectronAnalyser(histMan, histogramFolder + "/EPlusJets/QCDConversions/Electron", true)), //
 		qcdEPlusjetsPFRelIsoElectronAnalyser_(

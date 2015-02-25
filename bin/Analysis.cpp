@@ -57,7 +57,7 @@ void Analysis::analyse() {
 
 		eventcountAnalyser->analyse(currentEvent);
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		ttreeMan->FillTrees();
+		treeMan->FillTrees();
 	}
 }
 
@@ -78,7 +78,7 @@ void Analysis::initiateEvent() {
 	histMan->setCurrentJetBin(currentEvent->Jets().size());
 	histMan->setCurrentBJetBin(0);
 
-	ttreeMan->setCurrentDataType(currentEvent->getDataType());
+	treeMan->setCurrentDataType(currentEvent->getDataType());
 
 	// Ignore PU and PDF weights for now
 	if (!currentEvent->isRealData()) {
@@ -142,7 +142,7 @@ void Analysis::printSummary() {
 
 void Analysis::createHistograms() {
 	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
-	ttreeMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
+	treeMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
 	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
 
@@ -167,7 +167,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		eventReader(new NTupleEventReader()), //
 		currentEvent(), //
 		histMan(new BAT::HistogramManager()), //
-		ttreeMan(new BAT::TTreeManager()), //
+		treeMan(new BAT::TreeManager()), //
 		interestingEvents(), //
 		brokenEvents(), //
 		eventCheck(), //
@@ -184,12 +184,12 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		hltriggerQCDAnalyserExclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_exclusive", true)), //
 		jetAnalyser(new JetAnalyser(histMan)), //
 		mcAnalyser(new MCAnalyser(histMan)), //
-		metAnalyser(new METAnalyser(histMan, ttreeMan)), //
+		metAnalyser(new METAnalyser(histMan, treeMan)), //
 		// mttbarAnalyser(new MTtbarAnalyser(histMan)), //
 		muonAnalyser(new MuonAnalyser(histMan)), //
 		// mvAnalyser(new MVAnalyser(histMan)), //
 		// neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
-		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, ttreeMan)), //
+		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
 		binningAnalyser(new BinningAnalyser(histMan)) {
 	histMan->enableDebugMode(true);
@@ -202,7 +202,7 @@ Analysis::~Analysis() {
 void Analysis::finishAnalysis() {
 	printSummary();
 	histMan->writeToDisk();
-	ttreeMan->writeToDisk();
+	treeMan->writeToDisk();
 }
 
 void Analysis::addInputFile(const char* fileName) {
