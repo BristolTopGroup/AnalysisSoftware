@@ -87,3 +87,33 @@ Instructions for this can be found in [condor/README.md](condor/README.md)
 
 # Bugs
 Please report any problems on our [issues page](https://github.com/BristolTopGroup/AnalysisSoftware/issues).
+
+# Run tests
+## Boost unit tests 
+Running all tests
+```
+make test
+# or
+./AnalysisSoftware_test --log_level=message
+```
+Running a specific test suite:
+```
+./AnalysisSoftware_test --log_level=message --run_test=DataTypeTests
+```
+
+Running a specific test:
+```
+./AnalysisSoftware_test --log_level=message --run_test=DataTypeTests/NoAmbiguousMappingHard
+```
+
+
+## Python unit tests
+Python tests require ```nose``` to be installed:
+```
+pip install nose --upgrade
+```
+
+You can then run the tests with:
+```
+time nosetests -v test/*.py
+```

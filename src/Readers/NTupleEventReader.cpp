@@ -116,7 +116,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	// 	triggerPrescales->push_back(0);
 	// }
 
-	currentEvent->setDataType(getDataType(getCurrentFile()));
+	currentEvent->setDataType(DataType::getDataType(getCurrentFile()));
 	currentEvent->setFile(getCurrentFile());
 	// currentEvent->setHLTs(triggers);
 	// currentEvent->setHLTPrescales(triggerPrescales);
@@ -314,18 +314,6 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 
 }
 
-DataType::value NTupleEventReader::getDataType(const std::string filename) {
-	DataType::value filetype = DataType::ElectronHad;
-
-	for (unsigned int index = 0; index < DataType::names.size(); ++index) {
-		const std::string searchString(DataType::names.at(index));
-		if (filename.find(searchString) != std::string::npos) {
-			filetype = (DataType::value) index;
-		}
-	}
-	return filetype;
-}
-
 unsigned long NTupleEventReader::getNumberOfProccessedEvents() const {
 	return processedEvents;
 }
@@ -355,7 +343,7 @@ void NTupleEventReader::readDataTypes() {
 	TChainElement* file = 0;
 	while ((file = (TChainElement*) nextFile()) != 0) {
 		string fileName = file->GetTitle();
-		DataType::value type = getDataType(fileName);
+		DataType::value type = DataType::getDataType(fileName);
 		seenDataTypes.at(type) = true;
 	}
 }
