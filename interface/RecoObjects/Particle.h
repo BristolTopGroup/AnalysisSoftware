@@ -30,6 +30,7 @@ public:
 	virtual ~Particle();
 	Particle operator+(const Particle &other) const;
 	Particle & operator=(const Particle &rightHandSide);
+	Particle & operator+=(const Particle &rightHandSide);
 	double mass() const;
 	double d0() const;
 	double d0_wrtBeamSpot() const;
