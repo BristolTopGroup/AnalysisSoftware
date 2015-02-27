@@ -57,6 +57,7 @@ void Analysis::analyse() {
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		pseudoTopAnalyser_->analyse(currentEvent);
+		unfoldingRecoAnalyser_->analyse(currentEvent);
 		treeMan->FillTrees();
 	}
 }
@@ -153,10 +154,7 @@ void Analysis::createHistograms() {
 	lastNumberOfHistograms = numberOfHistograms;
 
 	pseudoTopAnalyser_->createTrees();
-	// numberOfHistograms = histMan->size();
-	// cout << "Number of histograms added by pseudoTopAnalyser: " << numberOfHistograms - lastNumberOfHistograms
-	// 		<< endl;
-	// lastNumberOfHistograms = numberOfHistograms;
+	unfoldingRecoAnalyser_->createTrees();
 
 	histMan->setCurrentHistogramFolder("");
 	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
@@ -181,7 +179,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		muonAnalyser(new MuonAnalyser(histMan)), //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
-		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)) {
+		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)),
+		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)) {
 	histMan->enableDebugMode(true);
 }
 
