@@ -14,9 +14,9 @@ BOOST_AUTO_TEST_CASE( AllDataTypesHaveMapping ) {
 }
 
 BOOST_AUTO_TEST_CASE( NoAmbiguousMappingSoft ) {
-	for (auto i = 0; i < DataType::names.size(); ++i) {
+	for (std::size_t i = 0, max = DataType::names.size() ; i < max; ++i) {
 		DataType::value name1 = DataType::getDataType(DataType::names.at(i));
-		for (auto j = 0; j < DataType::names.size(); ++j) {
+		for (std::size_t j = 0; j < max; ++j) {
 			DataType::value name2 = DataType::getDataType(DataType::names.at(j));
 			if (i != j) {
 				// there should be no overlap with sub-strings
@@ -27,10 +27,11 @@ BOOST_AUTO_TEST_CASE( NoAmbiguousMappingSoft ) {
 }
 
 BOOST_AUTO_TEST_CASE( NoAmbiguousMappingHard ) {
-	for (auto i = (DataType::names.size()); i-- > 0;) {
+	std::size_t max = DataType::names.size();
+	for (std::size_t i = max; i-- > 0;) {
 		DataType::names.at(0);
 		DataType::value name1 = DataType::getDataType(DataType::names.at(i));
-		for (auto j = 0; j < DataType::names.size(); ++j) {
+		for (std::size_t j = 0; j < max; ++j) {
 			DataType::value name2 = DataType::getDataType(DataType::names.at(j));
 			if (i != j) {
 				// there should be no overlap with sub-strings
