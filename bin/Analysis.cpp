@@ -56,8 +56,8 @@ void Analysis::analyse() {
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		treeMan->FillTrees();
 		pseudoTopAnalyser_->analyse(currentEvent);
+		treeMan->FillTrees();
 	}
 }
 

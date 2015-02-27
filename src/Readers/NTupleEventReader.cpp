@@ -142,7 +142,6 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	// 	std::cout << "Gen Particles etc." << std::endl;
 	// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());
 		currentEvent->setGenJets(genJetReader->getGenJets());
-		// cout << "Got " << pseudoTopReader->getPseudoTopParticles()->getPseudoTops().size() << " pseudo tops" << endl;
 		currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
 	// 	currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 	// 	currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
