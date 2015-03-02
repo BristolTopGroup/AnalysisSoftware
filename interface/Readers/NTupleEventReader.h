@@ -84,7 +84,8 @@ private:
 	// std::vector<boost::shared_ptr<METCorrReader> > metCorrReaders;
 
 
-	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesSelectionReader;
+	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesOfflineSelectionReader;
+	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesGenSelectionReader;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electron;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muon;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDNonisolated;

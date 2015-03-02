@@ -33,6 +33,8 @@ Event::Event() : //
 		passesElectronConversionSelection_(false),
 		passesMuonSelection_(false),
 		passesMuonQCDSelection_(false),
+		isSemiLeptonicElectron_(false),
+		isSemiLeptonicMuon_(false),
 		selectionOutputInfo_electron(),
 		selectionOutputInfo_muon(),
 		genParticles(), //
@@ -156,6 +158,22 @@ const bool Event::PassesMuonSelection() const {
 
 const bool Event::PassesMuonQCDSelection() const {
 	if ( passesMuonQCDSelection_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::isSemiLeptonicElectron() const {
+	if ( isSemiLeptonicElectron_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::isSemiLeptonicMuon() const {
+	if ( isSemiLeptonicMuon_ ) {
 		return true;
 	}
 
@@ -379,7 +397,7 @@ void Event::setPassesMuonQCDSelection( bool passesMuonQCDSelection ) {
 	passesMuonQCDSelection_ = passesMuonQCDSelection;
 }
 
-void Event::setPassSelectionInfo( std::vector<unsigned int> passSelections ) {
+void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelections ) {
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
 		if ( passSelections[selection] == 1 ) setPassesMuonSelection( true );
 		if ( passSelections[selection] == 2 ) setPassesElectronSelection( true );
@@ -389,6 +407,20 @@ void Event::setPassSelectionInfo( std::vector<unsigned int> passSelections ) {
 	}
 }
 
+void Event::setIsSemiLeptonicElectron( bool isSemiLeptonicElectron ) {
+	isSemiLeptonicElectron_ = isSemiLeptonicElectron;
+}
+
+void Event::setIsSemiLeptonicMuon( bool isSemiLeptonicMuon ) {
+	isSemiLeptonicMuon_ = isSemiLeptonicMuon;
+}
+
+void Event::setPassGenSelectionInfo( std::vector<unsigned int> passSelections ) {
+	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
+		if ( passSelections[selection] == 1 ) setIsSemiLeptonicElectron( true );
+		if ( passSelections[selection] == 2 ) setIsSemiLeptonicMuon( true );
+	}
+}
 
 void Event::setElectronSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo) {
 	selectionOutputInfo_electron = newSelectionOutputInfo;

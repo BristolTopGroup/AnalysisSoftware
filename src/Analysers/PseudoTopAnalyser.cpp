@@ -17,6 +17,12 @@ namespace BAT {
 void PseudoTopAnalyser::analyse(const EventPtr event) {
 	weight_ = event->weight();
 
+	treeMan_->setCurrentFolder(histogramFolder_);
+
+	// Store gen selection criteria
+	treeMan_->Fill("isSemiLeptonicElectron", event->isSemiLeptonicElectron());
+	treeMan_->Fill("isSemiLeptonicMuon", event->isSemiLeptonicMuon());
+
 	const PseudoTopParticlesPointer pseudoTopParticles = event->PseudoTopParticles();
 	const ParticleCollection pseudoTops = pseudoTopParticles->getPseudoTops();
 	const ParticlePointer pseudoLeptonicW = pseudoTopParticles->getPseudoLeptonicW();
@@ -25,8 +31,6 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	const ParticlePointer pseudoMET = pseudoTopParticles->getPseudoMET();
 	const ParticlePointer pseudoNeutrino = pseudoTopParticles->getPseudoNeutrino();
 	const JetCollection pseudoJets = pseudoTopParticles->getPseudoJets();
-
-	treeMan_->setCurrentFolder(histogramFolder_);
 
 	ParticleCollection pseudoTopsForTTbar;
 
@@ -85,6 +89,10 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 void PseudoTopAnalyser::createTrees() {
 
 	treeMan_->setCurrentFolder(histogramFolder_);
+	// Generator level selecton
+	treeMan_->addBranch("isSemiLeptonicElectron","isSemiLeptonicElectron","Unfolding");
+	treeMan_->addBranch("isSemiLeptonicMuon","isSemiLeptonicMuon","Unfolding");
+
 	// Branches for top
 	treeMan_->addBranch("pseudoTop_pT","pseudoTop_pT","Unfolding");
 	treeMan_->addBranch("pseudoTop_y","pseudoTop_y","Unfolding");

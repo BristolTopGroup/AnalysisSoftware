@@ -25,6 +25,9 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	else if ( event->PassesMuonSelection() ) selectionCriteria = SelectionCriteria::MuonPlusJetsReference;
 
 
+	if ( event->PassesElectronSelection() && event->PassesMuonSelection() ) {
+		cout << "-------------> This should not happen <-------------" << endl;
+	}
 	// Store selection flags first
 	treeMan_->Fill("passSelection",selectionCriteria);
 
