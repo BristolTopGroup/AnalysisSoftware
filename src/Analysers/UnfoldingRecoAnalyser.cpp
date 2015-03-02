@@ -44,23 +44,18 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("WPT",Event::WPT(signalLepton,met));
 	treeMan_->Fill("MT",Event::MT(signalLepton,met));
 
-
-	// Store pseudo ST
-	// treeMan_->Fill("pseudoST", event->ST( pseudoJets, pseudoLepton, METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) ) );
 }
 
 void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->setCurrentFolder(histogramFolder_);
-	treeMan_->addBranch("passSelection","passSelection","Unfolding");
+	treeMan_->addBranch("passSelection", "F", "Unfolding");
 
-	treeMan_->addBranch("MET","MET","Unfolding");
-	treeMan_->addBranch("HT","HT","Unfolding");
-	treeMan_->addBranch("ST","ST","Unfolding");
-	treeMan_->addBranch("WPT","WPT","Unfolding");
-	treeMan_->addBranch("MT","MT","Unfolding");	
-
-	// treeMan_->addBranch("pseudoST","pseudoST","Unfolding");
+	treeMan_->addBranch("MET", "F", "Unfolding");
+	treeMan_->addBranch("HT", "F", "Unfolding");
+	treeMan_->addBranch("ST", "F", "Unfolding");
+	treeMan_->addBranch("WPT", "F", "Unfolding");
+	treeMan_->addBranch("MT", "F", "Unfolding");	
 }
 
 void UnfoldingRecoAnalyser::createHistograms() {

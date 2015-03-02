@@ -114,12 +114,11 @@ void METAnalyser::createHistograms() {
 
 void METAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
-	// treeMan_->addBranch("EventWeight", "EventWeight", "MET");
-	treeMan_->addBranch("HT", "HT", "MET");
-	treeMan_->addBranch("MET", "MET", "MET");
-	treeMan_->addBranch("ST", "ST", "MET");
-	treeMan_->addBranch("WPT", "WPT", "MET");
-	treeMan_->addBranch("MT", "MT", "MET");
+	treeMan_->addBranch("HT", "F", "MET");
+	treeMan_->addBranch("MET", "F", "MET");
+	treeMan_->addBranch("ST", "F", "MET");
+	treeMan_->addBranch("WPT", "F", "MET");
+	treeMan_->addBranch("MT", "F", "MET");
 }
 
 void METAnalyser::analyse(const EventPtr event, const ParticlePointer particle, const JetCollection jets) {
