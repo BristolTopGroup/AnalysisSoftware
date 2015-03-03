@@ -141,6 +141,14 @@ Particle & Particle::operator =(const Particle &rightHandSide) {
 	return *this;
 }
 
+Particle & Particle::operator +=(const Particle &rightHandSide) {
+	fourvector = this->getFourVector() + rightHandSide.getFourVector();
+	// set mass to 0 since only dynamic mass makes sense from here on
+	particleMass = 0;
+	particleCharge = this->charge() + rightHandSide.charge();
+	return *this;
+}
+
 Particle Particle::operator +(const Particle &other) const {
 	Particle result(*this);
 	FourVector vector = result.getFourVector() + other.getFourVector();
