@@ -1,7 +1,6 @@
 # Check if cmake has the required version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR)
 set(PROJECT_NAME_STR AnalysisSoftware)
-set(PROJECT_LIB_NAME BristolAnalysisTools)
 PROJECT(${PROJECT_NAME_STR})
 set(PROJECT_LIB_NAME BristolAnalysisTools)
 
@@ -47,6 +46,15 @@ MESSAGE(STATUS "** Python Include path: ${PYTHON_INCLUDE_DIRS}")
 MESSAGE(STATUS "** Python Libraries: ${PYTHON_LIBRARIES}")
 include_directories(${PYTHON_INCLUDE_DIRS})
 
+# add external
+include(ExternalProject)
+MESSAGE(STATUS "Adding external projects in ${PROJECT_SOURCE_DIR}/external")
+include_directories(${PROJECT_SOURCE_DIR}/external)
+# add external/TopQuarkAnalysis/TopHitFit
+MESSAGE(STATUS "Adding external project TopQuarkAnalysis/TopHitFit")
+add_subdirectory(${PROJECT_SOURCE_DIR}/external/TopQuarkAnalysis/TopHitFit/)
+link_directories(${PROJECT_SOURCE_DIR}/external/TopQuarkAnalysis/TopHitFit/)
+
 #Check the compiler and set the compile and link flags
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-O3 -std=c++11")
@@ -62,22 +70,20 @@ file(GLOB_RECURSE SRC_COMMON "src/*.cpp")
 include(CheckSTLContainers.cmake)
 CHECK_STL_CONTAINERS()
 #Excluding unnecessary files
-file(GLOB_RECURSE SRC_EXCLUDE "src/*HitFitAnalyser.cpp")
-list(REMOVE_ITEM SRC_COMMON ${SRC_EXCLUDE})
+#file(GLOB_RECURSE SRC_EXCLUDE "src/*HitFitAnalyser.cpp")
+#list(REMOVE_ITEM SRC_COMMON ${SRC_EXCLUDE})
 #adding the library
 add_library(${PROJECT_LIB_NAME} SHARED ${SRC_COMMON})
 target_link_libraries(${PROJECT_LIB_NAME}
 		${Boost_LIBRARIES}
         ${PYTHON_LIBRARIES}
         ${ROOT_LIBRARIES}
+        TopQuarkAnalysis
         )
 #Adding the executable
 add_executable(${PROJECT_NAME_STR} ${SRC})
 target_link_libraries(${PROJECT_NAME_STR}
         ${PROJECT_LIB_NAME}
-        #${Boost_LIBRARIES}
-        #${PYTHON_LIBRARIES}
-        #${ROOT_LIBRARIES}
     )
 
 # tests
@@ -87,9 +93,6 @@ include_directories(${COMMON_INCLUDES})
 file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
 target_link_libraries(${PROJECT_TEST_NAME}
-		${Boost_LIBRARIES}
-        ${PYTHON_LIBRARIES}
-        ${ROOT_LIBRARIES}
         ${PROJECT_LIB_NAME}
         )
 add_test(test1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_TEST_NAME})
