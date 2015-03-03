@@ -10,13 +10,7 @@
 #include "../../interface/GlobalVariables.h"
 #include "../../interface/Event.h"
 
-#include "../../interface/Selections/QCDNonIsolatedElectronSelection.h"
-#include "../../interface/Selections/QCDConversionsSelection.h"
-#include "../../interface/Selections/QCDPFRelIsoEPlusJetsSelection.h"
-//muons
-#include "../../interface/Selections/QCDPFRelIsoMuPlusJetsSelection.h"
-#include "../../interface/Selections/QCDNonIsolatedMuonSelection.h"
- 
+
 namespace BAT {
 
 void TTbar_plus_X_analyser::analyse(const EventPtr event) {
@@ -484,14 +478,6 @@ void TTbar_plus_X_analyser::createHistograms() {
 
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
 		BasicAnalyser(histMan, treeMan, histogramFolder), //
-
-		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection()), //
-		topMuplusJetsRefSelection_(new TopPairMuPlusJetsReferenceSelection()), //
-		//QCD selections with respect to reference selection
-		qcdNonIsoElectronSelection_(new QCDNonIsolatedElectronSelection()), //
-		qcdConversionSelection_(new QCDConversionsSelection()), //
-		qcd_noniso_muon_plus_jets_selection_(new QCDNonIsolatedMuonSelection()), //
-		qcdPFRelIsoEPlusJetsSelection_(new QCDPFRelIsoEPlusJetsSelection()), //
 
 		//analysers
 		//signal regions

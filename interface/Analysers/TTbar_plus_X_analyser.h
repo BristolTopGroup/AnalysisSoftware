@@ -35,13 +35,6 @@ public:
 	void muPlusJetsSignalAnalysis(const EventPtr);
 
 private:
-	//signal selections
-	SelectionPointer topEplusJetsRefSelection_, topMuplusJetsRefSelection_;
-	//QCD selections with respect to reference selection
-	SelectionPointer qcdNonIsoElectronSelection_, qcdConversionSelection_;
-	SelectionPointer qcd_noniso_muon_plus_jets_selection_;
-	SelectionPointer qcdPFRelIsoEPlusJetsSelection_;
-
 	/**
 	 * Analysers
 	 */

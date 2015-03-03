@@ -28,8 +28,6 @@ namespace BAT {
 class Event;
 typedef boost::shared_ptr<Event> EventPtr;
 }
-//include BasicSelection to have access to the selections.
-#include "Selections/BasicSelection.h"
 #include "GlobalVariables.h"
 namespace BAT {
 

@@ -55,7 +55,6 @@ void Analysis::analyse() {
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
-		eventcountAnalyser->analyse(currentEvent);
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		treeMan->FillTrees();
 	}
@@ -146,11 +145,6 @@ void Analysis::createHistograms() {
 
 	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
 
-	eventcountAnalyser->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by eventcountAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-	lastNumberOfHistograms = numberOfHistograms;
-
 	ttbar_plus_X_analyser_->createHistograms();
 	numberOfHistograms = histMan->size();
 	cout << "Number of histograms added by ttbar_plus_X_analyser: " << numberOfHistograms - lastNumberOfHistograms
@@ -174,24 +168,12 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-		abcdMethodAnalyser_(new ABCDMethodAnalyser(histMan)), //
-		// bjetAnalyser(new BJetAnalyser(histMan)), //
-		// diElectronAnalyser(new DiElectronAnalyser(histMan)), //
 		electronAnalyser(new ElectronAnalyser(histMan)), //
-		eventcountAnalyser(new EventCountAnalyser(histMan)), //
-		hltriggerAnalyser(new HLTriggerTurnOnAnalyser(histMan)), //
-		hltriggerQCDAnalyserInclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_inclusive", false)), //
-		hltriggerQCDAnalyserExclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_exclusive", true)), //
 		jetAnalyser(new JetAnalyser(histMan)), //
-		mcAnalyser(new MCAnalyser(histMan)), //
 		metAnalyser(new METAnalyser(histMan, treeMan)), //
-		// mttbarAnalyser(new MTtbarAnalyser(histMan)), //
 		muonAnalyser(new MuonAnalyser(histMan)), //
-		// mvAnalyser(new MVAnalyser(histMan)), //
-		// neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
-		vertexAnalyser(new VertexAnalyser(histMan)),
-		binningAnalyser(new BinningAnalyser(histMan)) {
+		vertexAnalyser(new VertexAnalyser(histMan)) {
 	histMan->enableDebugMode(true);
 }
 
