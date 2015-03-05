@@ -106,13 +106,13 @@ custom_file_suffix = settings['custom_file_suffix']
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
     print setting, '=', value
-# input_folders = datasets[sample]
-# filetype = '*.root'
-# inputFiles = [path + '/' + filetype for path in input_folders]
-inputFiles = datasets[sample]
+input_folders = datasets[sample]
+filetype = '*.root'
+inputFiles = [path + '/' + filetype for path in input_folders]
+# inputFiles = datasets[sample]
 
 #number of events to be processed
-maxEvents = 10000# 0 == all
+maxEvents = 0# 0 == all
 
 #Jet Energy Resolutions files (L7 corrections)
 bJetResoFile = toolsFolder + "data/bJetReso.root"
