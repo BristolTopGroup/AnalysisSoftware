@@ -69,6 +69,15 @@ JetCollection PseudoTopParticles::getPseudoJets() const {
 	return pseudoJets_;
 }
 
+void PseudoTopParticles::setAllPseudoLeptons( ParticleCollection newPseudoLeptons ) {
+	allPseudoLeptons_.clear();
+	allPseudoLeptons_ = newPseudoLeptons;
+}
+
+ParticleCollection PseudoTopParticles::getAllPseudoLeptons() const {
+	return allPseudoLeptons_;
+}
+
 void PseudoTopParticles::setPseudoBs( ParticleCollection newPseudoBs ) {
 	pseudoBs_.clear();
 	pseudoBs_ = newPseudoBs;

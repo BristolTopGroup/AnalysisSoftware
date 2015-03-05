@@ -54,10 +54,15 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     pseudoTop_jet_pxReader(input, "PseudoTopJets.Px"),
     pseudoTop_jet_pyReader(input, "PseudoTopJets.Py"),
     pseudoTop_jet_pzReader(input, "PseudoTopJets.Pz"),
+    pseudoTop_lepton_energyReader(input, "PseudoTopLeptons.Energy"),
+    pseudoTop_lepton_pxReader(input, "PseudoTopLeptons.Px"),
+    pseudoTop_lepton_pyReader(input, "PseudoTopLeptons.Py"),
+    pseudoTop_lepton_pzReader(input, "PseudoTopLeptons.Pz"),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new Particle() ),
     newLepton_( new MCParticle() ),
+    newAllLeptons_(),
     newJets_(),
     newPseudoBs_(),
     newNeutrino_( new Particle() ),
@@ -75,6 +80,7 @@ const PseudoTopParticlesPointer& PseudoTopReader::getPseudoTopParticles() {
     newPseudoTops_.clear();
     newLeptonicW_.reset();
     newLepton_.reset();
+    newAllLeptons_.clear();
     newNeutrino_.reset();
     newJets_.clear();
     newPseudoBs_.clear();
@@ -199,6 +205,18 @@ void PseudoTopReader::readPseudoTopParticles() {
     }
 
     pseudoTopParticles_->setPseudoJets( newJets_ );
+
+    // Get leptons for selection criteria
+    for (unsigned int index = 0; index < pseudoTop_lepton_energyReader.size(); index++) {
+        double energy = pseudoTop_lepton_energyReader.getVariableAt(index);
+        double px = pseudoTop_lepton_pxReader.getVariableAt(index);
+        double py = pseudoTop_lepton_pyReader.getVariableAt(index);
+        double pz = pseudoTop_lepton_pzReader.getVariableAt(index);
+        newAllLeptons_.push_back( ParticlePointer( new Particle( energy, px, py, pz )) );
+    }
+
+    pseudoTopParticles_->setAllPseudoLeptons( newAllLeptons_ );
+
 }
 
 
@@ -219,6 +237,11 @@ void PseudoTopReader::initialise() {
     pseudoTop_jet_pxReader.initialise();
     pseudoTop_jet_pyReader.initialise();
     pseudoTop_jet_pzReader.initialise();
+
+    pseudoTop_lepton_energyReader.initialise();
+    pseudoTop_lepton_pxReader.initialise();
+    pseudoTop_lepton_pyReader.initialise();
+    pseudoTop_lepton_pzReader.initialise();
 }
 
 }

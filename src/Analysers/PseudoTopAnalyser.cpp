@@ -14,6 +14,17 @@ using namespace std;
 
 namespace BAT {
 
+double const PseudoTopAnalyser::minLeptonPt_ = 30;
+double const PseudoTopAnalyser::maxLeptonAbsEta_ = 2.4;
+double const PseudoTopAnalyser::minVetoLeptonPt_ = 15;
+double const PseudoTopAnalyser::maxVetoLeptonAbsEta_ = 2.5;
+double const PseudoTopAnalyser::minNeutrinoSumPt_ = 30;
+double const PseudoTopAnalyser::minWMt_ = 30;
+unsigned int const PseudoTopAnalyser::minNJets_ = 4;
+unsigned int const PseudoTopAnalyser::minNBJets_ = 2;
+double const PseudoTopAnalyser::minJetPt_ = 30;
+double const PseudoTopAnalyser::maxJetAbsEta_ = 2.4;
+
 void PseudoTopAnalyser::analyse(const EventPtr event) {
 	weight_ = event->weight();
 
@@ -27,6 +38,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	const ParticleCollection pseudoTops = pseudoTopParticles->getPseudoTops();
 	const ParticlePointer pseudoLeptonicW = pseudoTopParticles->getPseudoLeptonicW();
 	const MCParticlePointer pseudoLepton = pseudoTopParticles->getPseudoLepton();
+	const ParticleCollection allPseudoLeptons = pseudoTopParticles->getAllPseudoLeptons();
 	const ParticleCollection pseudoBs = pseudoTopParticles->getPseudoBs();
 	const ParticlePointer pseudoMET = pseudoTopParticles->getPseudoMET();
 	const ParticlePointer pseudoNeutrino = pseudoTopParticles->getPseudoNeutrino();
@@ -39,6 +51,14 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// Also only consider events that are semi leptonic at the pseudo top level
 	if ( !pseudoTopParticles->isSemiLeptonic() ) return;
+
+	// Check if event passes event selection (at pseudo top level)
+	if ( passesEventSelection( pseudoLepton, pseudoNeutrino, pseudoJets, pseudoBs, allPseudoLeptons, pseudoMET ) ) {
+		treeMan_->Fill("passesEventSelection",1);
+	}
+	else {
+		treeMan_->Fill("passesEventSelection",0);
+	}
 
 	// Store info on top
 	for ( unsigned int ptIndex = 0; ptIndex < pseudoTops.size(); ++ ptIndex ) {
@@ -93,6 +113,8 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("isSemiLeptonicElectron","isSemiLeptonicElectron","Unfolding");
 	treeMan_->addBranch("isSemiLeptonicMuon","isSemiLeptonicMuon","Unfolding");
 
+	treeMan_->addBranch("passesEventSelection","passesEventSelection","Unfolding");
+
 	// Branches for top
 	treeMan_->addBranch("pseudoTop_pT","pseudoTop_pT","Unfolding");
 	treeMan_->addBranch("pseudoTop_y","pseudoTop_y","Unfolding");
@@ -114,6 +136,62 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("pseudoST","pseudoST","Unfolding");
 	treeMan_->addBranch("pseudoWPT","pseudoWPT","Unfolding");
 	treeMan_->addBranch("pseudoMT","pseudoMT","Unfolding");
+
+}
+
+bool PseudoTopAnalyser::passesEventSelection( const ParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const ParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET ) {
+
+	// Event selection taken from here : https://twiki.cern.ch/twiki/bin/view/LHCPhysics/ParticleLevelTopDefinitions
+	unsigned int numberGoodLeptons = 0;
+	unsigned int numberVetoLeptons = 0;
+	for ( unsigned int leptonIndex = 0; leptonIndex < allPseudoLeptons.size(); ++ leptonIndex ) {
+		const ParticlePointer lepton = allPseudoLeptons.at(leptonIndex);
+
+		// Check if this is a good signal type lepton
+		if ( lepton->pt() > minLeptonPt_ && fabs(lepton->eta()) > maxLeptonAbsEta_ ) {
+			++numberGoodLeptons;
+		}
+		
+		// Check if this is a veto lepton
+		if ( lepton->pt() > minVetoLeptonPt_ && fabs(lepton->eta()) > maxVetoLeptonAbsEta_ ) {
+			++numberVetoLeptons;
+		}
+	}
+
+	// Neutrino pt sum
+	bool passesNeutrinoSumPt = false;
+	if ( pseudoMET->pt() > minNeutrinoSumPt_ ) passesNeutrinoSumPt = true;
+
+	// W MT
+	double genMT = sqrt( 2 * pseudoLepton->pt() * pseudoNeutrino->pt() * ( 1 - cos(pseudoLepton->phi() - pseudoNeutrino->phi() ) ) );
+	bool passesWMT = false;
+	if (genMT > minWMt_) passesWMT = true;
+
+	// Jets
+	unsigned int numberGoodJets = 0;
+	for ( unsigned int jetIndex = 0; jetIndex < pseudoJets.size(); ++ jetIndex ) {
+		const JetPointer jet = pseudoJets.at(jetIndex);
+
+		// Check if this is a good jet
+		if ( jet->pt() > minJetPt_ && fabs(jet->eta()) > maxJetAbsEta_ ) {
+			++numberGoodJets;
+		}		
+	}
+
+	// B Jets
+	unsigned int numberGoodBJets = 0;
+	for ( unsigned int jetIndex = 0; jetIndex < pseudoBs.size(); ++ jetIndex ) {
+		const ParticlePointer bjet = pseudoBs.at(jetIndex);
+
+		// Check if this is a good jet
+		if ( bjet->pt() > minJetPt_ && fabs(bjet->eta()) > maxJetAbsEta_ ) {
+			++numberGoodBJets;
+		}		
+	}
+	
+
+	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && passesNeutrinoSumPt && passesWMT && numberGoodJets >= minNJets_ && numberGoodBJets >= minNBJets_ ) return true;
+	else return false;
 
 }
 

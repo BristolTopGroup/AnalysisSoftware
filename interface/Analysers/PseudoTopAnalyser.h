@@ -21,8 +21,21 @@ public:
 	void createHistograms();
 	void createTrees();
 
+	static double const minLeptonPt_;
+	static double const maxLeptonAbsEta_;
+	static double const minVetoLeptonPt_;
+	static double const maxVetoLeptonAbsEta_;
+	static double const minNeutrinoSumPt_;
+	static double const minWMt_;
+	static unsigned int const minNJets_;
+	static unsigned int const minNBJets_;
+	static double const minJetPt_;
+	static double const maxJetAbsEta_;
+
 protected:
 	void fillHistograms(std::string subcollection, std::string suffix = "");
+
+	bool passesEventSelection(const ParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const ParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET);
 };
 typedef boost::scoped_ptr<PseudoTopAnalyser> PseudoTopAnalyserLocalPtr;
 typedef boost::shared_ptr<PseudoTopAnalyser> PseudoTopAnalyserPtr;

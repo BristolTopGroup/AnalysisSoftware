@@ -33,10 +33,16 @@ private:
     VariableReader<MultiDoublePointer> pseudoTop_jet_pyReader;
     VariableReader<MultiDoublePointer> pseudoTop_jet_pzReader;
 
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_energyReader;
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_pxReader;
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_pyReader;
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_pzReader;    
+
     PseudoTopParticlesPointer pseudoTopParticles_;
     ParticleCollection newPseudoTops_;
     ParticlePointer newLeptonicW_;
     MCParticlePointer newLepton_;
+    ParticleCollection newAllLeptons_;
     JetCollection newJets_;
     ParticleCollection newPseudoBs_;
     ParticlePointer newNeutrino_;
