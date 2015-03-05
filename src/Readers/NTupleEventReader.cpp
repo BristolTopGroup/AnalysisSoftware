@@ -38,7 +38,7 @@ NTupleEventReader::NTupleEventReader() :
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
-		passesSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesSelection")),
+		passesSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
 		selectionOutputReader_electron(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsReference)), //
 		selectionOutputReader_muon(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsReference)), //
 		selectionOutputReader_electronQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDNonIsolated)), //
