@@ -172,7 +172,6 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		qcdNonIsoElectronAnalyser_->analyse(event);
 		qcdNonIsoElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 
-		// cout << signalElectron->eta() << endl;
 		metAnalyserqcdNonIsoElectronSelection_->analyse(event, signalLepton, jets);
 		qcd_noniso_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -471,6 +470,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	// W boson simple reconstruction
 	wAnalyserEPlusJetsRefSelection_->createHistograms();
 	wAnalyserMuPlusJetsRefSelection_->createHistograms();
+	wAnalyserEPlusJetsRefSelection_->createTrees();
+	wAnalyserMuPlusJetsRefSelection_->createTrees();
 
 	hitFitAnalyserEPlusJetsRefSelection_->createHistograms();
 	hitFitAnalyserMuPlusJetsRefSelection_->createHistograms();
@@ -628,8 +629,8 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, SelectionCriteria::ElectronPlusJetsReference, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
 		jetAnalyserMuPlusJetsRefSelection_(
 				new JetAnalyser(histMan, SelectionCriteria::MuonPlusJetsReference, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
-		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
-		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
+		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
+		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
 		hitFitAnalyserEPlusJetsRefSelection_(new HitFitAnalyser(histMan, true, histogramFolder + "/EPlusJets/Ref selection/HitFit")), //
 		hitFitAnalyserMuPlusJetsRefSelection_(new HitFitAnalyser(histMan, false, histogramFolder + "/MuPlusJets/Ref selection/HitFit")), //
 		electron_variables_(), //

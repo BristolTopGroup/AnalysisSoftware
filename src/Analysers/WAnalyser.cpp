@@ -40,6 +40,7 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 	// Need these for some gen level studies
 	const JetCollection genJets( event->GenJets() );
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
+	treeMan_->setCurrentFolder(histogramFolder_);
 
 	// Get each jet pair combination and form a W candidate
 	for ( unsigned int jet1Index=0; jet1Index < jetsWithoutBs.size()-1; ++jet1Index ) {
@@ -47,28 +48,8 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 			JetPointer jet1 = jetsWithoutBs[jet1Index];
 			JetPointer jet2 = jetsWithoutBs[jet2Index];
 
-			// Jets with most recent JEC
-			double JEC = jet1->getJEC();
-			ParticlePointer jet1Raw = jet1->raw_jet();
-			ParticlePointer jet1Corr(new Particle(jet1Raw->energy()*JEC, jet1Raw->px()*JEC, jet1Raw->py()*JEC, jet1Raw->pz()*JEC));
-			JEC = jet2->getJEC();
-			ParticlePointer jet2Raw = jet2->raw_jet();
-			ParticlePointer jet2Corr(new Particle(jet2Raw->energy()*JEC, jet2Raw->px()*JEC, jet2Raw->py()*JEC, jet2Raw->pz()*JEC));
-
-			// cout << "Jet 1 : " << jet1->energy() << " " << jet1Raw->energy() << " " << jet1->getJEC() << " " << jet1Corr->energy() << endl;
-			// cout << "Jet 2 : " << jet2->energy() << " " << jet2Raw->energy() << " " << jet2->getJEC() << " " << jet2Corr->energy() << endl;
-			if ( jet1Corr->pt() > 30 && jet2Corr->pt() > 30 ) {
-				Particle hadronicWCorr(*jet1Corr + *jet2Corr);
-
-				histMan_->H1D("hadronicWMass_newJEC")->Fill(hadronicWCorr.mass() , weight_);
-				histMan_->H1D("jetJEC_newJEC")->Fill(jet1->getJEC() , weight_);
-				histMan_->H1D("jetJEC_newJEC")->Fill(jet2->getJEC() , weight_);
-				histMan_->H1D("jetPt_newJEC")->Fill(jet1Corr->pt() , weight_);
-				histMan_->H1D("jetPt_newJEC")->Fill(jet2Corr->pt() , weight_);
-				histMan_->H1D("jetEta_newJEC")->Fill(jet1Corr->eta() , weight_);
-				histMan_->H1D("jetEta_newJEC")->Fill(jet2Corr->eta() , weight_);
-			}
-
+			// W mass from RAW jets
+			// Note there will be some bias, as only jets with corrected pt > 30 are in the ntuple
 			if ( jet1Raw->pt() > 30 && jet2Raw->pt() > 30 ) {
 				Particle hadronicWRaw(*jet1Raw + *jet2Raw);
 
@@ -90,6 +71,14 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 			histMan_->H1D("jetEta")->Fill(jet1->eta() , weight_);
 			histMan_->H1D("jetEta")->Fill(jet2->eta() , weight_);
 
+			treeMan_->setCurrentFolder(histogramFolder_);
+			treeMan_->Fill("mjj",hadronicW.mass());
+			treeMan_->Fill("jetPt",jet1->pt());
+			treeMan_->Fill("jetPt",jet2->pt());
+			treeMan_->Fill("jetEta",jet1->eta());
+			treeMan_->Fill("jetEta",jet2->eta());
+			treeMan_->Fill("NPU",event->Vertices().size());
+
 			// Look at matched generator jets
 			const ParticlePointer genJet1 = jet1->matched_generated_jet();
 			const ParticlePointer genJet2 = jet2->matched_generated_jet();
@@ -101,6 +90,12 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 				histMan_->H1D("jetPt_genJet")->Fill(genJet2->pt() , weight_);
 				histMan_->H1D("jetEta_genJet")->Fill(genJet1->eta() , weight_);
 				histMan_->H1D("jetEta_genJet")->Fill(genJet2->eta() , weight_);
+
+				treeMan_->Fill("mjj_genJet",hadronicW.mass());
+				treeMan_->Fill("genJetPt",genJet1->pt());
+				treeMan_->Fill("genJetPt",genJet2->pt());
+				treeMan_->Fill("genJetEta",genJet1->eta());
+				treeMan_->Fill("genJetEta",genJet2->eta());
 
 				// Now check if these gen jets correspond to those matched to the W decay products
 				const TTGenInfoPointer ttGen( event->TTGenInfo() );
@@ -189,6 +184,12 @@ void WAnalyser::analyseHadronicW_partons(const EventPtr event) {
 		histMan_->H1D("jetEta_partons")->Fill(quarkParton->eta() , weight_);
 		histMan_->H1D("jetEta_partons")->Fill(quarkBarParton->eta() , weight_);
 
+		treeMan_->Fill("mjj_parton",hadronicW_fromPartons.mass());
+		treeMan_->Fill("partonPt",quarkParton->pt());
+		treeMan_->Fill("partonPt",quarkBarParton->pt());
+		treeMan_->Fill("partonEta",quarkParton->eta());
+		treeMan_->Fill("partonEta",quarkBarParton->eta());
+
 		// Get gen jets associated with partons
 		// Note these gen jets are not cleaned against leptons.  But as we are considering the ones matched to the quarks from W decay, this shouldn't be too much of a problem
 		const JetCollection genJets( event->GenJets() );
@@ -240,11 +241,6 @@ void WAnalyser::createHistograms() {
 	histMan_->addH1D("jetPt", "jet pt; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
 	histMan_->addH1D("jetEta", "jet eta; #eta; events/0.06", 100, -3, 3);
 
-	histMan_->addH1D("hadronicWMass_newJEC", "hadronic W mass with new JEC; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetJEC_newJEC", "jet JEC; JEC; events/0.07", 50, 0, 3.5);
-	histMan_->addH1D("jetPt_newJEC", "jet pt with new JEC; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta_newJEC", "jet eta with new JEC; #eta; events/0.06", 100, -3, 3);
-
 	histMan_->addH1D("hadronicWMass_RAW", "hadronic W mass with RAW jets; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
 	histMan_->addH1D("jetPt_RAW", "jet pt with RAW jets; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
 	histMan_->addH1D("jetEta_RAW", "jet eta with RAW jets; #eta; events/0.06", 100, -3, 3);
@@ -270,11 +266,26 @@ void WAnalyser::createHistograms() {
 	histMan_->addH1D("jetEta_cleanedReco", "jet eta; #eta; events/0.06", 100, -3, 3);
 	histMan_->addH1D("minDeltaR_cleanedReco", "deltaR to nearest jet; #Delta R; events/0.013", 100, 0, 1.3);
 
-
 }
 
-WAnalyser::WAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, histogramFolder) {
+void WAnalyser::createTrees() {
+	treeMan_->setCurrentFolder(histogramFolder_);
+
+	treeMan_->addBranch("mjj", "F", "W Bosons");
+	treeMan_->addBranch("mjj_genJet", "F", "W Bosons");
+	treeMan_->addBranch("mjj_parton", "F", "W Bosons");
+	treeMan_->addBranch("jetPt", "F", "W Bosons", false);
+	treeMan_->addBranch("jetEta", "F", "W Bosons", false);
+	treeMan_->addBranch("genJetPt", "F", "W Bosons", false);
+	treeMan_->addBranch("genJetEta", "F", "W Bosons", false);
+	treeMan_->addBranch("partonPt", "F", "W Bosons", false);
+	treeMan_->addBranch("partonEta", "F", "W Bosons", false);
+
+	treeMan_->addBranch("NPU", "F", "W Bosons");
+}
+
+WAnalyser::WAnalyser(boost::shared_ptr<HistogramManager> histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder) :
+		BasicAnalyser(histMan, treeMan, histogramFolder) {
 }
 
 WAnalyser::~WAnalyser() {
