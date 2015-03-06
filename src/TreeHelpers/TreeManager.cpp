@@ -31,8 +31,10 @@ void TreeManager::addBranch(std::string branchLabel, std::string varType, std::s
 
 	// Check if folder exists
 	// And check if tree of the same name in this folder exists
-	if (collection_.find(currentFolder_) == collection_.end() )
+	if (collection_.find(currentFolder_) == collection_.end() ) {
 		addFolder(currentFolder_);
+	}
+
 
 	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes_.at(type)) {
@@ -53,18 +55,20 @@ void TreeManager::Fill(std::string branchLabel, float fillValue) {
 
 void TreeManager::FillTrees() {
 	// Loop over all known trees, and call "Fill"
-	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
-		if (seenDataTypes_.at(type)) {
+	for ( boost::unordered_map<std::string, TBranchArray>::const_iterator dirIter = collection_.begin(); dirIter != collection_.end(); ++dirIter ) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+			if (seenDataTypes_.at(type)) {
 
-			for ( boost::unordered_map<std::string, boost::shared_ptr<TTree>>::const_iterator iter = collection_[currentFolder_][type]->treeMap_.begin(); iter != collection_[currentFolder_][type]->treeMap_.end(); ++iter) {
-				iter->second->Fill();
+				for ( boost::unordered_map<std::string, boost::shared_ptr<TTree>>::const_iterator iter = dirIter->second[type]->treeMap_.begin(); iter != dirIter->second[type]->treeMap_.end(); ++iter) {
+					iter->second->Fill();
+				}
+
+			// Reset all variables
+				dirIter->second[type]->resetBranchVariables();
+
 			}
-
-		    // Reset all variables
-			collection_[currentFolder_][type]->resetBranchVariables();
-
 		}
-    }
+	}
 }
 
 void TreeManager::setCurrentDataType(DataType::value type) {
