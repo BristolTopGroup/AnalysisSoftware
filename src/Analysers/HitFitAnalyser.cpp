@@ -344,6 +344,8 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, cons
 		hitfitLepWMass_(80.4), //
 		hitfitHadWMass_(80.4), //
 		hitfitTopMass_(0.0), //
+		lepton_charge(0.0),
+		do_MC_matching(false),
 		// Tells hit fit whether event contains a signal electron or a signal muon
 		isElectronChannel_(isElectronChannel), //
 		// The following three initializers instantiate the translator between PAT objects

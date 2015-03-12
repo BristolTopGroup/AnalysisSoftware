@@ -20,8 +20,6 @@ void TBranchCollection::addBranchToTree(std::string branchName, std::string bran
 	tree->Branch( branchName.c_str(), varMap_[branchLabel].get(), ( branchName+"/F").c_str() );
 }
 
-void TBranchCollection::addBranchToTree(std::string branchName, std::string branchLabel, TreePointer tree);
-
 void TBranchCollection::setBranchVariable(std::string branchLabel, float value) {
     *varMap_[branchLabel] = value;
 }
