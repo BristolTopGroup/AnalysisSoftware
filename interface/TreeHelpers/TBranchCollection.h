@@ -68,15 +68,12 @@ public:
 
     unsigned int size() const;
 
-    void writeToFile(boost::shared_ptr<TFile> treeFile);
-
     bool contains(std::string name);
     bool vectorContains(std::string name);
 
-private:
-    void writeDirectories();
-    void writeTrees();
+    void writeDirectory( std::string folder, boost::shared_ptr<TFile> treeFile );
 
+private:
 };
 
 typedef boost::shared_ptr<TBranchCollection > TBranchCollectionRef;

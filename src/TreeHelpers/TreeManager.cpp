@@ -43,6 +43,7 @@ void TreeManager::addBranch(std::string branchLabel, std::string varType, std::s
 			}
 
 			// Add branch to tree
+			treeFiles_.at(type)->Cd(currentFolder_.c_str());
 			collection_[currentFolder_][type]->addBranchToTree(branchLabel, varType, collection_[currentFolder_].at(type)->treeMap_[currentFolder_], isSingleValuePerEvent);
 		}
 	}
@@ -85,7 +86,7 @@ void TreeManager::prepareForSeenDataTypes( const boost::array<bool, DataType::NU
 			file->SetCompressionLevel(7);
 
 			treeFiles_.at(type) = file;
-			collection_[""].at(type) = TBranchCollectionRef(new TBranchCollection());
+			// collection_[""].at(type) = TBranchCollectionRef(new TBranchCollection());
 		}
 	}
 }
@@ -131,28 +132,28 @@ const std::string TreeManager::assembleFilename(DataType::value type) const {
 void TreeManager::writeToDisk() {
 	for (unsigned type = 0; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes_.at(type)) {
-			for (unordered_map<std::string, TBranchArray>::iterator iter = collection_.begin(); iter != collection_.end();
-					++iter) {
-				iter->second[type]->writeToFile(treeFiles_.at(type));
-			}
-
 			treeFiles_.at(type)->Write();
-			treeFiles_.at(type)->Close();
+			// treeFiles_.at(type)->Close();
 		}
 
 	}
 }
+
 void TreeManager::addFolder(string folder)
- {
+{
 	for (unsigned type = 0; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
-		if (seenDataTypes_.at(type))
+		if (seenDataTypes_.at(type)) {
+			treeFiles_.at(type)->Cd(folder.c_str());
+			collection_[folder].at(type)->writeDirectory( folder, treeFiles_.at(type) );		
 			collection_[folder].at(type) = TBranchCollectionRef(new TBranchCollection(folder));
+		}
+
 	}
 }
 
 void TreeManager::addTreeToFolder(string treeName, string folder, unsigned int dataType) {
 			collection_[folder].at(dataType)->treeMap_[folder] = boost::shared_ptr<TTree>(new TTree(treeName.c_str(),treeName.c_str()));
-			collection_[folder].at(dataType)->treeMap_[folder]->SetDirectory(0);
+			collection_[folder].at(dataType)->treeMap_[folder]->SetDirectory( treeFiles_.at(dataType)->GetDirectory(folder.c_str() ) );
 			collection_[folder].at(dataType)->addBranchToTree("EventWeight","F",collection_[folder].at(dataType)->treeMap_[folder]);
 }
 
