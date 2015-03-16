@@ -24,12 +24,12 @@ Jet::Jet() :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
-		energyRaw(-9999), //
-		pxRaw(-9999), //
-		pyRaw(-9999), //
-		pzRaw(-9999), //
-		JEC(1), //
-		JECUncertainty(-9999), //
+		energyRaw_(-9999), //
+		pxRaw_(-9999), //
+		pyRaw_(-9999), //
+		pzRaw_(-9999), //
+		JEC_(1), //
+		JECUncertainty_(-9999), //
 		l1OffJEC(0), //
 		l2l3ResJEC(0), //
 		l2RelJEC(0), //
@@ -55,7 +55,7 @@ Jet::Jet() :
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
 		smearedJet(), //
-		rawJet()
+		rawJet_()
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -75,12 +75,12 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
-		energyRaw(-9999), //
-		pxRaw(-9999), //
-		pyRaw(-9999), //
-		pzRaw(-9999), //
-		JEC(1), //
-		JECUncertainty(-9999), //
+		energyRaw_(-9999), //
+		pxRaw_(-9999), //
+		pyRaw_(-9999), //
+		pzRaw_(-9999), //
+		JEC_(1), //
+		JECUncertainty_(-9999), //
 		l1OffJEC(0), //
 		l2l3ResJEC(0), //
 		l2RelJEC(0), //
@@ -106,7 +106,7 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
 		smearedJet(), //
-		rawJet()
+		rawJet_()
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -138,11 +138,11 @@ const ParticlePointer Jet::unsmeared_jet() {
 }
 
 void Jet::set_raw_jet(const ParticlePointer rawjet) {
-	rawJet = rawjet;
+	rawJet_ = rawjet;
 }
 
 const ParticlePointer Jet::raw_jet() {
-	return rawJet;
+	return rawJet_;
 }
 
 const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic) {
@@ -275,27 +275,27 @@ double Jet::NCH() const {
 }
 
 double Jet::EnergyRaw() const {
-	return energyRaw;
+	return energyRaw_;
 }
 
 double Jet::PxRaw() const {
-	return pxRaw;
+	return pxRaw_;
 }
 
 double Jet::PyRaw() const {
-	return pyRaw;
+	return pyRaw_;
 }
 
 double Jet::PzRaw() const {
-	return pzRaw;
+	return pzRaw_;
 }
 
-double Jet::getJEC() const {
-	return JEC;
+double Jet::JEC() const {
+	return JEC_;
 }
 
 double Jet::JECUnc() const {
-	return JECUncertainty;
+	return JECUncertainty_;
 }
 
 double Jet::L1OffJEC() const {
@@ -315,27 +315,27 @@ double Jet::L3AbsJEC() const {
 }
 
 void Jet::setEnergyRaw(double energy) {
-	energyRaw = energy;
+	energyRaw_ = energy;
 }
 
 void Jet::setPxRaw(double px) {
-	pxRaw = px;
+	pxRaw_ = px;
 }
 
 void Jet::setPyRaw(double py) {
-	pyRaw = py;
+	pyRaw_ = py;
 }
 
 void Jet::setPzRaw(double pz) {
-	pzRaw = pz;
+	pzRaw_ = pz;
 }
 
 void Jet::setJEC(double newJEC) {
-	JEC = newJEC;
+	JEC_ = newJEC;
 }
 
 void Jet::setJECUnc(double JECUnc) {
-	JECUncertainty = JECUnc;
+	JECUncertainty_ = JECUnc;
 }
 
 void Jet::setL1OffJEC(double JEC) {

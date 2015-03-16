@@ -12,20 +12,20 @@ using namespace std;
 namespace BAT {
 
 PseudoTopReader::PseudoTopReader() :
-    pseudoTop_pdgIdReader(),
-    pseudoTop_energyReader(),
-	pseudoTop_pxReader(),
-	pseudoTop_pyReader(),
-	pseudoTop_pzReader(),
-    pseudoTop_neutrino_pdgIdReader(),
-    pseudoTop_neutrino_energyReader(),
-    pseudoTop_neutrino_pxReader(),
-    pseudoTop_neutrino_pyReader(),
-    pseudoTop_neutrino_pzReader(),
-    pseudoTop_jet_energyReader(),
-    pseudoTop_jet_pxReader(),
-    pseudoTop_jet_pyReader(),
-    pseudoTop_jet_pzReader(),
+    pseudoTop_pdgIdReader_(),
+    pseudoTop_energyReader_(),
+	pseudoTop_pxReader_(),
+	pseudoTop_pyReader_(),
+	pseudoTop_pzReader_(),
+    pseudoTop_neutrino_pdgIdReader_(),
+    pseudoTop_neutrino_energyReader_(),
+    pseudoTop_neutrino_pxReader_(),
+    pseudoTop_neutrino_pyReader_(),
+    pseudoTop_neutrino_pzReader_(),
+    pseudoTop_jet_energyReader_(),
+    pseudoTop_jet_pxReader_(),
+    pseudoTop_jet_pyReader_(),
+    pseudoTop_jet_pzReader_(),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new Particle() ),
@@ -40,24 +40,24 @@ PseudoTopReader::PseudoTopReader() :
 }
 
 PseudoTopReader::PseudoTopReader(TChainPointer input) :
-    pseudoTop_pdgIdReader(input, "PseudoTops.PdgId"),
-    pseudoTop_energyReader(input, "PseudoTops.Energy"),
-    pseudoTop_pxReader(input, "PseudoTops.Px"),
-    pseudoTop_pyReader(input, "PseudoTops.Py"),
-    pseudoTop_pzReader(input, "PseudoTops.Pz"),
-    pseudoTop_neutrino_pdgIdReader(input, "PseudoTopNeutrinos.PdgId"),
-    pseudoTop_neutrino_energyReader(input, "PseudoTopNeutrinos.Energy"),
-    pseudoTop_neutrino_pxReader(input, "PseudoTopNeutrinos.Px"),
-    pseudoTop_neutrino_pyReader(input, "PseudoTopNeutrinos.Py"),
-    pseudoTop_neutrino_pzReader(input, "PseudoTopNeutrinos.Pz"),
-    pseudoTop_jet_energyReader(input, "PseudoTopJets.Energy"),
-    pseudoTop_jet_pxReader(input, "PseudoTopJets.Px"),
-    pseudoTop_jet_pyReader(input, "PseudoTopJets.Py"),
-    pseudoTop_jet_pzReader(input, "PseudoTopJets.Pz"),
-    pseudoTop_lepton_energyReader(input, "PseudoTopLeptons.Energy"),
-    pseudoTop_lepton_pxReader(input, "PseudoTopLeptons.Px"),
-    pseudoTop_lepton_pyReader(input, "PseudoTopLeptons.Py"),
-    pseudoTop_lepton_pzReader(input, "PseudoTopLeptons.Pz"),
+    pseudoTop_pdgIdReader_(input, "PseudoTops.PdgId"),
+    pseudoTop_energyReader_(input, "PseudoTops.Energy"),
+    pseudoTop_pxReader_(input, "PseudoTops.Px"),
+    pseudoTop_pyReader_(input, "PseudoTops.Py"),
+    pseudoTop_pzReader_(input, "PseudoTops.Pz"),
+    pseudoTop_neutrino_pdgIdReader_(input, "PseudoTopNeutrinos.PdgId"),
+    pseudoTop_neutrino_energyReader_(input, "PseudoTopNeutrinos.Energy"),
+    pseudoTop_neutrino_pxReader_(input, "PseudoTopNeutrinos.Px"),
+    pseudoTop_neutrino_pyReader_(input, "PseudoTopNeutrinos.Py"),
+    pseudoTop_neutrino_pzReader_(input, "PseudoTopNeutrinos.Pz"),
+    pseudoTop_jet_energyReader_(input, "PseudoTopJets.Energy"),
+    pseudoTop_jet_pxReader_(input, "PseudoTopJets.Px"),
+    pseudoTop_jet_pyReader_(input, "PseudoTopJets.Py"),
+    pseudoTop_jet_pzReader_(input, "PseudoTopJets.Pz"),
+    pseudoTop_lepton_energyReader_(input, "PseudoTopLeptons.Energy"),
+    pseudoTop_lepton_pxReader_(input, "PseudoTopLeptons.Px"),
+    pseudoTop_lepton_pyReader_(input, "PseudoTopLeptons.Py"),
+    pseudoTop_lepton_pzReader_(input, "PseudoTopLeptons.Pz"),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new Particle() ),
@@ -98,12 +98,12 @@ void PseudoTopReader::readPseudoTopParticles() {
     ParticlePointer wMinus( new Particle() );
 
     // Go through pseudo top decay chain and extract info
-    for (unsigned int index = 0; index < pseudoTop_pdgIdReader.size(); index++) {
-        int pdgId = pseudoTop_pdgIdReader.getIntVariableAt(index);
-        double energy = pseudoTop_energyReader.getVariableAt(index);
-        double px = pseudoTop_pxReader.getVariableAt(index);
-        double py = pseudoTop_pyReader.getVariableAt(index);
-        double pz = pseudoTop_pzReader.getVariableAt(index);
+    for (unsigned int index = 0; index < pseudoTop_pdgIdReader_.size(); index++) {
+        int pdgId = pseudoTop_pdgIdReader_.getIntVariableAt(index);
+        double energy = pseudoTop_energyReader_.getVariableAt(index);
+        double px = pseudoTop_pxReader_.getVariableAt(index);
+        double py = pseudoTop_pyReader_.getVariableAt(index);
+        double pz = pseudoTop_pzReader_.getVariableAt(index);
 
         // Pseudo tops
         if ( fabs(pdgId) == 6 ) {
@@ -178,12 +178,12 @@ void PseudoTopReader::readPseudoTopParticles() {
 
     // Get neutrinos and calculate MET
     ParticlePointer pseudoMet = ParticlePointer( new Particle(0,0,0,0) );
-    for (unsigned int index = 0; index < pseudoTop_neutrino_pdgIdReader.size(); index++) {
-        // double pdgId = pseudoTop_neutrino_pdgIdReader.getIntVariableAt(index);
-        double energy = pseudoTop_neutrino_energyReader.getVariableAt(index);
-        double px = pseudoTop_neutrino_pxReader.getVariableAt(index);
-        double py = pseudoTop_neutrino_pyReader.getVariableAt(index);
-        double pz = pseudoTop_neutrino_pzReader.getVariableAt(index);
+    for (unsigned int index = 0; index < pseudoTop_neutrino_pdgIdReader_.size(); index++) {
+        // double pdgId = pseudoTop_neutrino_pdgIdReader_.getIntVariableAt(index);
+        double energy = pseudoTop_neutrino_energyReader_.getVariableAt(index);
+        double px = pseudoTop_neutrino_pxReader_.getVariableAt(index);
+        double py = pseudoTop_neutrino_pyReader_.getVariableAt(index);
+        double pz = pseudoTop_neutrino_pzReader_.getVariableAt(index);
 
         *pseudoMet = Particle( *pseudoMet + Particle(energy,px,py,pz) );
 
@@ -196,22 +196,22 @@ void PseudoTopReader::readPseudoTopParticles() {
     pseudoTopParticles_->setPseudoMET( ParticlePointer( pseudoMet ) );
 
     // Get Jets for HT calculation
-    for (unsigned int index = 0; index < pseudoTop_jet_energyReader.size(); index++) {
-        double energy = pseudoTop_jet_energyReader.getVariableAt(index);
-        double px = pseudoTop_jet_pxReader.getVariableAt(index);
-        double py = pseudoTop_jet_pyReader.getVariableAt(index);
-        double pz = pseudoTop_jet_pzReader.getVariableAt(index);
+    for (unsigned int index = 0; index < pseudoTop_jet_energyReader_.size(); index++) {
+        double energy = pseudoTop_jet_energyReader_.getVariableAt(index);
+        double px = pseudoTop_jet_pxReader_.getVariableAt(index);
+        double py = pseudoTop_jet_pyReader_.getVariableAt(index);
+        double pz = pseudoTop_jet_pzReader_.getVariableAt(index);
         newJets_.push_back( JetPointer( new Jet( energy, px, py, pz )) );
     }
 
     pseudoTopParticles_->setPseudoJets( newJets_ );
 
     // Get leptons for selection criteria
-    for (unsigned int index = 0; index < pseudoTop_lepton_energyReader.size(); index++) {
-        double energy = pseudoTop_lepton_energyReader.getVariableAt(index);
-        double px = pseudoTop_lepton_pxReader.getVariableAt(index);
-        double py = pseudoTop_lepton_pyReader.getVariableAt(index);
-        double pz = pseudoTop_lepton_pzReader.getVariableAt(index);
+    for (unsigned int index = 0; index < pseudoTop_lepton_energyReader_.size(); index++) {
+        double energy = pseudoTop_lepton_energyReader_.getVariableAt(index);
+        double px = pseudoTop_lepton_pxReader_.getVariableAt(index);
+        double py = pseudoTop_lepton_pyReader_.getVariableAt(index);
+        double pz = pseudoTop_lepton_pzReader_.getVariableAt(index);
         newAllLeptons_.push_back( ParticlePointer( new Particle( energy, px, py, pz )) );
     }
 
@@ -221,27 +221,27 @@ void PseudoTopReader::readPseudoTopParticles() {
 
 
 void PseudoTopReader::initialise() {
-    pseudoTop_pdgIdReader.initialise();
-    pseudoTop_energyReader.initialise();
-    pseudoTop_pxReader.initialise();
-    pseudoTop_pyReader.initialise();
-    pseudoTop_pzReader.initialise();
+    pseudoTop_pdgIdReader_.initialise();
+    pseudoTop_energyReader_.initialise();
+    pseudoTop_pxReader_.initialise();
+    pseudoTop_pyReader_.initialise();
+    pseudoTop_pzReader_.initialise();
 
-    pseudoTop_neutrino_pdgIdReader.initialise();
-    pseudoTop_neutrino_energyReader.initialise();
-    pseudoTop_neutrino_pxReader.initialise();
-    pseudoTop_neutrino_pyReader.initialise();
-    pseudoTop_neutrino_pzReader.initialise();
+    pseudoTop_neutrino_pdgIdReader_.initialise();
+    pseudoTop_neutrino_energyReader_.initialise();
+    pseudoTop_neutrino_pxReader_.initialise();
+    pseudoTop_neutrino_pyReader_.initialise();
+    pseudoTop_neutrino_pzReader_.initialise();
 
-    pseudoTop_jet_energyReader.initialise();
-    pseudoTop_jet_pxReader.initialise();
-    pseudoTop_jet_pyReader.initialise();
-    pseudoTop_jet_pzReader.initialise();
+    pseudoTop_jet_energyReader_.initialise();
+    pseudoTop_jet_pxReader_.initialise();
+    pseudoTop_jet_pyReader_.initialise();
+    pseudoTop_jet_pzReader_.initialise();
 
-    pseudoTop_lepton_energyReader.initialise();
-    pseudoTop_lepton_pxReader.initialise();
-    pseudoTop_lepton_pyReader.initialise();
-    pseudoTop_lepton_pzReader.initialise();
+    pseudoTop_lepton_energyReader_.initialise();
+    pseudoTop_lepton_pxReader_.initialise();
+    pseudoTop_lepton_pyReader_.initialise();
+    pseudoTop_lepton_pzReader_.initialise();
 }
 
 }

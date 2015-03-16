@@ -16,27 +16,27 @@ namespace BAT {
 
 class PseudoTopReader {
 private:
-    VariableReader<MultiIntPointer> pseudoTop_pdgIdReader;
-    VariableReader<MultiDoublePointer> pseudoTop_energyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_pxReader;
-    VariableReader<MultiDoublePointer> pseudoTop_pyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_pzReader;
+    VariableReader<MultiIntPointer> pseudoTop_pdgIdReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_energyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_pxReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_pyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_pzReader_;
 
-    VariableReader<MultiIntPointer> pseudoTop_neutrino_pdgIdReader;
-    VariableReader<MultiDoublePointer> pseudoTop_neutrino_energyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_neutrino_pxReader;
-    VariableReader<MultiDoublePointer> pseudoTop_neutrino_pyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_neutrino_pzReader;
+    VariableReader<MultiIntPointer> pseudoTop_neutrino_pdgIdReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_neutrino_energyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_neutrino_pxReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_neutrino_pyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_neutrino_pzReader_;
 
-    VariableReader<MultiDoublePointer> pseudoTop_jet_energyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_jet_pxReader;
-    VariableReader<MultiDoublePointer> pseudoTop_jet_pyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_jet_pzReader;
+    VariableReader<MultiDoublePointer> pseudoTop_jet_energyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_jet_pxReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_jet_pyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_jet_pzReader_;
 
-    VariableReader<MultiDoublePointer> pseudoTop_lepton_energyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_lepton_pxReader;
-    VariableReader<MultiDoublePointer> pseudoTop_lepton_pyReader;
-    VariableReader<MultiDoublePointer> pseudoTop_lepton_pzReader;    
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_energyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_pxReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_pyReader_;
+    VariableReader<MultiDoublePointer> pseudoTop_lepton_pzReader_;
 
     PseudoTopParticlesPointer pseudoTopParticles_;
     ParticleCollection newPseudoTops_;

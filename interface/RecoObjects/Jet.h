@@ -86,7 +86,7 @@ public:
 	double PxRaw() const;
 	double PyRaw() const;
 	double PzRaw() const;
-	double getJEC() const;
+	double JEC() const;
 	double JECUnc() const;
 	double L1OffJEC() const;
 	double L2L3ResJEC() const;
@@ -135,7 +135,7 @@ private:
 	int numberOfDaughters;
 	double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;
 	double chargedHadronEnergyFraction, chargedMultiplicity;
-	double energyRaw, pxRaw, pyRaw, pzRaw, JEC, JECUncertainty;
+	double energyRaw_, pxRaw_, pyRaw_, pzRaw_, JEC_, JECUncertainty_;
 	double l1OffJEC, l2l3ResJEC, l2RelJEC, l3AbsJEC;
 	int partonFlavour_;
 
@@ -158,7 +158,7 @@ private:
 	ParticlePointer matchedGeneratedJet;
 	ParticlePointer unsmearedJet;
 	ParticlePointer smearedJet;
-	ParticlePointer rawJet;
+	ParticlePointer rawJet_;
 };
 
 typedef boost::shared_ptr<Jet> JetPointer;
