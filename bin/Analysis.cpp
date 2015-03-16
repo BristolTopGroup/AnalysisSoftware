@@ -23,12 +23,15 @@ using namespace BAT;
 using namespace std;
 
 void Analysis::analyse() {
-	createHistograms();
 	cout << "detected samples:" << endl;
 	for (unsigned int sample = 0; sample < DataType::NUMBER_OF_DATA_TYPES; ++sample) {
 		if (eventReader->getSeenDatatypes()[sample])
 			cout << DataType::names[sample] << endl;
 	}
+
+	createHistograms();
+
+
 	while (eventReader->hasNextEvent()) {
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
@@ -155,8 +158,10 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	pseudoTopAnalyser_->createTrees();
-	unfoldingRecoAnalyser_->createTrees();
+	if ( eventReader->getSeenDatatypes()[DataType::TTJets] ) {
+		pseudoTopAnalyser_->createTrees();
+		unfoldingRecoAnalyser_->createTrees();
+	}
 
 	histMan->setCurrentHistogramFolder("");
 	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
