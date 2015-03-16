@@ -50,6 +50,9 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 
 			// W mass from RAW jets
 			// Note there will be some bias, as only jets with corrected pt > 30 are in the ntuple
+			ParticlePointer jet1Raw = jet1->raw_jet();
+			ParticlePointer jet2Raw = jet2->raw_jet();
+
 			if ( jet1Raw->pt() > 30 && jet2Raw->pt() > 30 ) {
 				Particle hadronicWRaw(*jet1Raw + *jet2Raw);
 
