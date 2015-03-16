@@ -39,12 +39,12 @@ private:
     VariableReader<MultiDoublePointer> pseudoTop_lepton_pzReader_;
 
     PseudoTopParticlesPointer pseudoTopParticles_;
-    ParticleCollection newPseudoTops_;
-    ParticlePointer newLeptonicW_;
+    MCParticleCollection newPseudoTops_;
+    MCParticlePointer newLeptonicW_;
     MCParticlePointer newLepton_;
     ParticleCollection newAllLeptons_;
     JetCollection newJets_;
-    ParticleCollection newPseudoBs_;
+    MCParticleCollection newPseudoBs_;
     ParticlePointer newNeutrino_;
     ParticlePointer newPseudoMET_;
 

@@ -35,7 +35,7 @@ public:
 protected:
 	void fillHistograms(std::string subcollection, std::string suffix = "");
 
-	bool passesEventSelection(const ParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const ParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET);
+	bool passesEventSelection(const MCParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET);
 };
 typedef boost::scoped_ptr<PseudoTopAnalyser> PseudoTopAnalyserLocalPtr;
 typedef boost::shared_ptr<PseudoTopAnalyser> PseudoTopAnalyserPtr;

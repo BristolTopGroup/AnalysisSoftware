@@ -37,11 +37,11 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	// cout << Bool_t(event->isSemiLeptonicElectron()) << " " << event->isSemiLeptonicElectron() << " " << event->isSemiLeptonicMuon() << endl;
 
 	const PseudoTopParticlesPointer pseudoTopParticles = event->PseudoTopParticles();
-	const ParticleCollection pseudoTops = pseudoTopParticles->getPseudoTops();
-	const ParticlePointer pseudoLeptonicW = pseudoTopParticles->getPseudoLeptonicW();
+	const MCParticleCollection pseudoTops = pseudoTopParticles->getPseudoTops();
+	const MCParticlePointer pseudoLeptonicW = pseudoTopParticles->getPseudoLeptonicW();
 	const MCParticlePointer pseudoLepton = pseudoTopParticles->getPseudoLepton();
 	const ParticleCollection allPseudoLeptons = pseudoTopParticles->getAllPseudoLeptons();
-	const ParticleCollection pseudoBs = pseudoTopParticles->getPseudoBs();
+	const MCParticleCollection pseudoBs = pseudoTopParticles->getPseudoBs();
 	const ParticlePointer pseudoMET = pseudoTopParticles->getPseudoMET();
 	const ParticlePointer pseudoNeutrino = pseudoTopParticles->getPseudoNeutrino();
 	const JetCollection pseudoJets = pseudoTopParticles->getPseudoJets();
@@ -141,7 +141,7 @@ void PseudoTopAnalyser::createTrees() {
 
 }
 
-bool PseudoTopAnalyser::passesEventSelection( const ParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const ParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET ) {
+bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET ) {
 
 	// Event selection taken from here : https://twiki.cern.ch/twiki/bin/view/LHCPhysics/ParticleLevelTopDefinitions
 	unsigned int numberGoodLeptons = 0;

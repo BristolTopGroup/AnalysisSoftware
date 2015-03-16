@@ -23,17 +23,17 @@ public:
 
 	virtual ~PseudoTopParticles();
 
-	void setPseudoTops( ParticleCollection newPseudoTops );
-	ParticleCollection getPseudoTops() const;
+	void setPseudoTops( MCParticleCollection newPseudoTops );
+	MCParticleCollection getPseudoTops() const;
 
-	void setPseudoLeptonicW( ParticlePointer newLeptonicW );
-	ParticlePointer getPseudoLeptonicW() const;
+	void setPseudoLeptonicW( MCParticlePointer newLeptonicW );
+	MCParticlePointer getPseudoLeptonicW() const;
 
 	void setPseudoLepton( MCParticlePointer newPseudoLepton );
 	MCParticlePointer getPseudoLepton() const;
 
-	void setPseudoBs( ParticleCollection newPseudoBs );
-	ParticleCollection getPseudoBs() const;
+	void setPseudoBs( MCParticleCollection newPseudoBs );
+	MCParticleCollection getPseudoBs() const;
 
 	void setPseudoJets( JetCollection newPseudoJets );
 	JetCollection getPseudoJets() const;
@@ -51,12 +51,12 @@ public:
 	bool isSemiLeptonic() const;
 protected:
 
-	ParticleCollection pseudoTops_;
-	ParticlePointer pseudoLeptonicW_;
+	MCParticleCollection pseudoTops_;
+	MCParticlePointer pseudoLeptonicW_;
 	MCParticlePointer pseudoLepton_;
 	ParticleCollection allPseudoLeptons_;
 	JetCollection pseudoJets_;
-	ParticleCollection pseudoBs_;
+	MCParticleCollection pseudoBs_;
 	ParticlePointer pseudoNeutrino_;
 	ParticlePointer pseudoMET_;
 

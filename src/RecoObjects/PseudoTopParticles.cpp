@@ -14,7 +14,7 @@ namespace BAT {
 
 PseudoTopParticles::PseudoTopParticles() :
 		pseudoTops_(),
-		pseudoLeptonicW_( new Particle() ),
+		pseudoLeptonicW_( new MCParticle() ),
 		pseudoLepton_( new MCParticle() ),
 		pseudoJets_(),
 		pseudoBs_(),
@@ -35,20 +35,20 @@ PseudoTopParticles::PseudoTopParticles() :
 PseudoTopParticles::~PseudoTopParticles() {
 }
 
-void PseudoTopParticles::setPseudoTops( ParticleCollection newPseudoTops ) {
+void PseudoTopParticles::setPseudoTops( MCParticleCollection newPseudoTops ) {
 	pseudoTops_.clear();
 	pseudoTops_ = newPseudoTops;
 }
 
-ParticleCollection PseudoTopParticles::getPseudoTops() const {
+MCParticleCollection PseudoTopParticles::getPseudoTops() const {
 	return pseudoTops_;
 }
 
-void PseudoTopParticles::setPseudoLeptonicW( ParticlePointer newLeptonicW ) {
+void PseudoTopParticles::setPseudoLeptonicW( MCParticlePointer newLeptonicW ) {
 	pseudoLeptonicW_ = newLeptonicW;
 }
 
-ParticlePointer PseudoTopParticles::getPseudoLeptonicW() const {
+MCParticlePointer PseudoTopParticles::getPseudoLeptonicW() const {
 	return pseudoLeptonicW_;
 }
 
@@ -78,12 +78,12 @@ ParticleCollection PseudoTopParticles::getAllPseudoLeptons() const {
 	return allPseudoLeptons_;
 }
 
-void PseudoTopParticles::setPseudoBs( ParticleCollection newPseudoBs ) {
+void PseudoTopParticles::setPseudoBs( MCParticleCollection newPseudoBs ) {
 	pseudoBs_.clear();
 	pseudoBs_ = newPseudoBs;
 }
 
-ParticleCollection PseudoTopParticles::getPseudoBs() const {
+MCParticleCollection PseudoTopParticles::getPseudoBs() const {
 	return pseudoBs_;
 }
 

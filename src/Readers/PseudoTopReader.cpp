@@ -26,9 +26,13 @@ PseudoTopReader::PseudoTopReader() :
     pseudoTop_jet_pxReader_(),
     pseudoTop_jet_pyReader_(),
     pseudoTop_jet_pzReader_(),
+    pseudoTop_lepton_energyReader_(),
+    pseudoTop_lepton_pxReader_(),
+    pseudoTop_lepton_pyReader_(),
+    pseudoTop_lepton_pzReader_(),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
-    newLeptonicW_( new Particle() ),
+    newLeptonicW_( new MCParticle() ),
     newLepton_( new MCParticle() ),
     newJets_(),
     newPseudoBs_(),
@@ -60,7 +64,7 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     pseudoTop_lepton_pzReader_(input, "PseudoTopLeptons.Pz"),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
-    newLeptonicW_( new Particle() ),
+    newLeptonicW_( new MCParticle() ),
     newLepton_( new MCParticle() ),
     newAllLeptons_(),
     newJets_(),
@@ -94,8 +98,8 @@ const PseudoTopParticlesPointer& PseudoTopReader::getPseudoTopParticles() {
 void PseudoTopReader::readPseudoTopParticles() {
 
 
-    ParticlePointer wPlus( new Particle() );
-    ParticlePointer wMinus( new Particle() );
+    MCParticlePointer wPlus( new MCParticle() );
+    MCParticlePointer wMinus( new MCParticle() );
 
     // Go through pseudo top decay chain and extract info
     for (unsigned int index = 0; index < pseudoTop_pdgIdReader_.size(); index++) {
@@ -107,7 +111,9 @@ void PseudoTopReader::readPseudoTopParticles() {
 
         // Pseudo tops
         if ( fabs(pdgId) == 6 ) {
-            newPseudoTops_.push_back( ParticlePointer( new Particle( energy, px, py, pz )) );
+            MCParticlePointer newPseudoTop = MCParticlePointer( new MCParticle( energy, px, py, pz ) );
+            newPseudoTop->setPdgId( pdgId );
+            newPseudoTops_.push_back( newPseudoTop );
         }
         // Leptons
         else if ( fabs(pdgId) == 11 || fabs(pdgId) == 13 ) {
@@ -144,15 +150,19 @@ void PseudoTopReader::readPseudoTopParticles() {
         }
         // Bs
         else if ( fabs(pdgId) == 5 ) {
-            newPseudoBs_.push_back( ParticlePointer( new Particle( energy, px, py, pz )) );            
+            MCParticlePointer newPseudoB = MCParticlePointer( new MCParticle( energy, px, py, pz ) );
+            newPseudoB->setPdgId( pdgId );
+            newPseudoBs_.push_back( newPseudoB );            
         }
         // Ws
         else if ( fabs( pdgId ) == 24 ) {
             if ( pdgId > 0 ) {
-                wPlus = ParticlePointer( new Particle( energy, px, py, pz));
+                wPlus = MCParticlePointer( new MCParticle( energy, px, py, pz));
+                wPlus->setPdgId( pdgId );
             }
             else if ( pdgId < 0 ) {
-                wMinus = ParticlePointer( new Particle( energy, px, py, pz));
+                wMinus = MCParticlePointer( new MCParticle( energy, px, py, pz));
+                wMinus->setPdgId( pdgId );
             }
         }
     }
