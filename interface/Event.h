@@ -13,6 +13,7 @@
 #include "RecoObjects/Vertex.h"
 #include "RecoObjects/MET.h"
 #include "RecoObjects/MCParticle.h"
+#include "RecoObjects/PseudoTopParticles.h"
 #include "RecoObjects/SelectionOutputInfo.h"
 #include "RecoObjects/TTGenInfo.h"
 #include "DataTypes.h"
@@ -61,6 +62,9 @@ protected:
 	bool passesElectronConversionSelection_;
 	bool passesMuonSelection_;
 	bool passesMuonQCDSelection_;
+
+	bool isSemiLeptonicElectron_;
+	bool isSemiLeptonicMuon_;
 	SelectionOutputInfo selectionOutputInfo_electron;
 	SelectionOutputInfo selectionOutputInfo_muon;
 	SelectionOutputInfo selectionOutputInfo_electronQCDNonisolated;
@@ -69,6 +73,7 @@ protected:
 
 	TTGenInfoPointer ttGenInfo_;
 
+	PseudoTopParticlesPointer pseudoTopParticles_;
 	MCParticleCollection genParticles;
 
 	METCollection mets_;
@@ -119,13 +124,17 @@ public:
 	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
 	void setPassesMuonSelection(bool passesMuonSelection);
 	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
-	void setPassSelectionInfo( std::vector<unsigned int> );
+	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
+	void setPassGenSelectionInfo( std::vector<unsigned int> );
+	void setIsSemiLeptonicElectron( bool isSemiLeptonicElectron );
+	void setIsSemiLeptonicMuon( bool isSemiLeptonicMuon );
 	void setElectronSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setMuonSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setElectronQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setElectronConversionSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setTTGenInfo(TTGenInfoPointer ttGenInfo );
+	void setPseudoTopParticles(PseudoTopParticlesPointer newPseudoParticles );
 	void setMETs(const std::vector<METPointer> mets);
 	void setGenMET(const METPointer met);
 	void setTTbarHypothesis(const TtbarHypothesis newHypo);
@@ -187,7 +196,12 @@ public:
 	const bool PassesMuonSelection() const;
 	const bool PassesMuonQCDSelection() const;
 
+	const bool isSemiLeptonicElectron() const;
+	const bool isSemiLeptonicMuon() const;
+	
 	const TTGenInfoPointer TTGenInfo() const;
+
+	const PseudoTopParticlesPointer PseudoTopParticles() const;
 
 	const LeptonPointer getSignalLepton( unsigned int selectionCriteria ) const;
 	const JetCollection getCleanedJets( unsigned int selectionCriteria ) const;

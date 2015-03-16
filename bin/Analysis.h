@@ -37,6 +37,9 @@
 #include "../interface/Analysers/VertexAnalyser.h"
 #include "../interface/TopPairEventCandidate.h"
 
+#include "../interface/Analysers/PseudoTopAnalyser.h"
+#include "../interface/Analysers/UnfoldingRecoAnalyser.h"
+
 class Analysis {
 private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
@@ -54,6 +57,9 @@ private:
     boost::scoped_ptr<BAT::MuonAnalyser> muonAnalyser;
     BAT::TTbar_plus_X_analyser_local_ptr ttbar_plus_X_analyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
+
+    BAT::PseudoTopAnalyserLocalPtr pseudoTopAnalyser_;
+    BAT::UnfoldingRecoAnalyserLocalPtr unfoldingRecoAnalyser_;
 
 public:
     Analysis(std::string fileForPileUpReweighting);

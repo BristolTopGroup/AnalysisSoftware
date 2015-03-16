@@ -25,9 +25,11 @@ class TBranchCollection {
     typedef boost::shared_ptr<TBranch> TBranchPointer;
     typedef boost::shared_ptr<TTree> TreePointer;
     typedef boost::shared_ptr<float> VarPointer;
+    typedef boost::shared_ptr<std::vector<float> > VarVectorPointer;
     typedef boost::unordered_map<std::string, TreePointer> TreeMap;
     typedef boost::unordered_map<std::string, TBranchPointer> TBranchMap;
     typedef boost::unordered_map<std::string, VarPointer> VariableMap;
+    typedef boost::unordered_map<std::string, VarVectorPointer > VariableVectorMap;
 
 protected:
     boost::shared_ptr<TFile> treeFile_;
@@ -40,6 +42,7 @@ public:
     // FIXME Put as protected and provide getters and setters
     TreeMap treeMap_;
     VariableMap varMap_;
+    VariableVectorMap varVectorMap_;
 
     TBranchCollection(std::string virtualPath = "") :
         treeFile_(),
@@ -49,7 +52,8 @@ public:
         prefix_(""),
         suffix_(""),
         treeMap_(),
-        varMap_() {
+        varMap_(),
+        varVectorMap_() {
 
     }
 
@@ -57,20 +61,19 @@ public:
 
     }
 
-    void addBranchToTree(std::string branchName, std::string branchLabel, TreePointer tree);
+    void addBranchToTree(std::string branchLabel, std::string varType, TreePointer tree, bool isSingleValuePerEvent=true);
 
     void setBranchVariable(std::string branchLabel, float value);
+    void resetBranchVariables();
 
     unsigned int size() const;
 
-    void writeToFile(boost::shared_ptr<TFile> treeFile);
-
     bool contains(std::string name);
+    bool vectorContains(std::string name);
+
+    void writeDirectory( std::string folder, boost::shared_ptr<TFile> treeFile );
 
 private:
-    void writeDirectories();
-    void writeTrees();
-
 };
 
 typedef boost::shared_ptr<TBranchCollection > TBranchCollectionRef;

@@ -32,13 +32,15 @@ NTupleEventReader::NTupleEventReader() :
 		trackReader(new TrackReader(input)), //
 		electronReader(new ElectronReader(input, Globals::electronAlgorithm)), //
 		genParticleReader(new GenParticleReader(input)), //
+		pseudoTopReader( new PseudoTopReader(input)), //
 		jetReader(new JetReader(input, Globals::jetAlgorithm)), //
 		genJetReader(new GenJetReader(input)), //
 		muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
-		passesSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesSelection")),
+		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
+		passesGenSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesGenSelection")),
 		selectionOutputReader_electron(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsReference)), //
 		selectionOutputReader_muon(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsReference)), //
 		selectionOutputReader_electronQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDNonIsolated)), //
@@ -128,12 +130,14 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setElectrons(electronReader->getElectrons());
 	currentEvent->setMuons(muonReader->getMuons());
 
-	currentEvent->setPassSelectionInfo( *passesSelectionReader->getVariable() );
+	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
 	currentEvent->setElectronSelectionOutputInfo( selectionOutputReader_electron->getSelectionOutputInfo() );
 	currentEvent->setMuonSelectionOutputInfo( selectionOutputReader_muon->getSelectionOutputInfo() );
 	currentEvent->setElectronQCDNonisolatedSelectionOutputInfo( selectionOutputReader_electronQCDNonisolated->getSelectionOutputInfo() );
 	currentEvent->setElectronConversionSelectionOutputInfo( selectionOutputReader_electronQCDConversion->getSelectionOutputInfo() );
 	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
+
+	currentEvent->setPassGenSelectionInfo( *passesGenSelectionReader->getVariable() );
 
 	currentEvent->setTTGenInfo( ttGenInfoReader->getTTGenInfo());
 
@@ -141,6 +145,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	// 	std::cout << "Gen Particles etc." << std::endl;
 	// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());
 		currentEvent->setGenJets(genJetReader->getGenJets());
+		currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
 	// 	currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 	// 	currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
 
@@ -250,11 +255,13 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			trackReader->initialise();
 		electronReader->initialise();
 		genParticleReader->initialise();
+		pseudoTopReader->initialise();
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
 
-		passesSelectionReader->initialise();
+		passesOfflineSelectionReader->initialise();
+		passesGenSelectionReader->initialise();
 		selectionOutputReader_electron->initialise();
 		selectionOutputReader_muon->initialise();
 		selectionOutputReader_electronQCDNonisolated->initialise();

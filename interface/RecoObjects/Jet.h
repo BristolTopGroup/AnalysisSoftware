@@ -64,6 +64,9 @@ public:
 	static const ParticlePointer smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic);
 //	const ParticlePointer smeared_Jet();
 
+	void set_raw_jet( const ParticlePointer rawJet );
+	const ParticlePointer raw_jet();
+
 	double emf() const;
 	double n90Hits() const;
 	double fHPD() const;
@@ -79,9 +82,11 @@ public:
 	//Quarks: d=1, u=2, s=3, c=4, b=5 (antimatter with flipped sign)
 	// gluons = 21
 	int partonFlavour() const;
+	double EnergyRaw() const;
 	double PxRaw() const;
 	double PyRaw() const;
 	double PzRaw() const;
+	double JEC() const;
 	double JECUnc() const;
 	double L1OffJEC() const;
 	double L2L3ResJEC() const;
@@ -89,9 +94,11 @@ public:
 	double L3AbsJEC() const;
 	double getBTagDiscriminator(BtagAlgorithm::value type) const;
 
+	void setEnergyRaw(double energy);
 	void setPxRaw(double px);
 	void setPyRaw(double py);
 	void setPzRaw(double pz);
+	void setJEC(double JEC);	
 	void setJECUnc(double JECUnc);
 	void setL1OffJEC(double JEC);
 	void setL2L3ResJEC(double JEC);
@@ -128,7 +135,7 @@ private:
 	int numberOfDaughters;
 	double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;
 	double chargedHadronEnergyFraction, chargedMultiplicity;
-	double pxRaw, pyRaw, pzRaw, JECUncertainty;
+	double energyRaw_, pxRaw_, pyRaw_, pzRaw_, JEC_, JECUncertainty_;
 	double l1OffJEC, l2l3ResJEC, l2RelJEC, l3AbsJEC;
 	int partonFlavour_;
 
@@ -151,6 +158,7 @@ private:
 	ParticlePointer matchedGeneratedJet;
 	ParticlePointer unsmearedJet;
 	ParticlePointer smearedJet;
+	ParticlePointer rawJet_;
 };
 
 typedef boost::shared_ptr<Jet> JetPointer;

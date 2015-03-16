@@ -101,7 +101,6 @@ def main(options, args = []):
         matrix, samples = build_matrix(options.energy, options.sample)
     else:
         matrix, samples = build_matrix(options.energy)
-    print matrix
     if options.return_n_jobs:
         if options.operation == 'test' or options.operation == 'single':
             return 1

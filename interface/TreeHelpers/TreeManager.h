@@ -40,7 +40,7 @@ class TreeManager {
 public:
 	TreeManager();
 	virtual ~TreeManager();
-	void addBranch(std::string branchName, std::string branchLabel, std::string treeName);
+	void addBranch(std::string branchLabel, std::string varType, std::string treeName, bool isSingleValuePerEvent=true);
 
 	void Fill(std::string branchLabel, float fillValue);
 	void FillTrees();
