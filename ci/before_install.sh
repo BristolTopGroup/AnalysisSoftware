@@ -6,6 +6,7 @@
 
 #set -e
 sudo add-apt-repository --yes ppa:kalakris/cmake
+sudo add-apt-repository --yes ppa:jp-ellis/geant4
 # add repositories for gcc ${GCC_VERSION} and clang $CLANG_VERSION (set in .travis.yml)
 sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
 sudo add-apt-repository --yes 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise main'
@@ -14,6 +15,9 @@ wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
 # Needed because sometimes travis' repositories get out of date
 sudo apt-get update -q
 # Install the dependencies we need
-time sudo apt-get -q install cmake clang-${CLANG_VERSION} libclang-${CLANG_VERSION}-dev gcc-${GCC_VERSION} g++-${GCC_VERSION} boost${BOOST_VERSION} python-setuptools python-dev python-unit
+time sudo apt-get -q install cmake clang-${CLANG_VERSION} libclang-${CLANG_VERSION}-dev gcc-${GCC_VERSION}\
+ g++-${GCC_VERSION} boost${BOOST_VERSION} python-setuptools python-dev python-unit clhep clhep-dev
+# fix for badly packed CLHEP
+sudo dpkg -i --force-overwrite /var/cache/apt/archives/clhep-dev_*.deb
 sudo pip install nose --upgrade
 nosetests -V

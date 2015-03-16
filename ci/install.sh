@@ -39,6 +39,5 @@ which clang
 echo "using CXX: ${CXX}"
 
 ls -lah /usr/bin/ | grep clang
-
 cmake CMakelists.txt
 make
