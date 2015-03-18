@@ -21,17 +21,17 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 
 	int selectionCriteria = -1;
 
-	if ( event->PassesElectronSelection() ) selectionCriteria = SelectionCriteria::ElectronPlusJetsReference;
-	else if ( event->PassesMuonSelection() ) selectionCriteria = SelectionCriteria::MuonPlusJetsReference;
+	if ( event->PassesElectronTriggerAndSelection() ) selectionCriteria = SelectionCriteria::ElectronPlusJetsReference;
+	else if ( event->PassesMuonTriggerAndSelection() ) selectionCriteria = SelectionCriteria::MuonPlusJetsReference;
 
 
-	if ( event->PassesElectronSelection() && event->PassesMuonSelection() ) {
+	if ( event->PassesElectronTriggerAndSelection() && event->PassesMuonTriggerAndSelection() ) {
 		cout << "-------------> This should not happen <-------------" << endl;
 	}
 	// Store selection flags first
 	treeMan_->Fill("passSelection",selectionCriteria);
 
-	if ( !( event->PassesMuonSelection() || event->PassesElectronSelection() )) return;
+	if ( !( event->PassesMuonTriggerAndSelection() || event->PassesElectronTriggerAndSelection() )) return;
 
 	const JetCollection jets(event->getCleanedJets( selectionCriteria ));
 	const LeptonPointer signalLepton = event->getSignalLepton( selectionCriteria );

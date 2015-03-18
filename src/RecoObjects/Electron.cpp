@@ -94,14 +94,6 @@ double Electron::hcalIsolationPUCorrected(double rho) const {
 	return hcalIsolation() - rho * effectiveArea;
 }
 
-double Electron::relativeIsolation() const {
-	return (ecal_Isolation_DR03_ + hcal_Isolation_DR03_ + tracker_Isolation_DR03_) / this->et();
-}
-
-double Electron::relativeIsolationPUCorrected(double rho) const {
-	return (ecalIsolationPUCorrected(rho) + hcalIsolationPUCorrected(rho) + tracker_Isolation_DR03_) / this->et();
-}
-
 bool Electron::isHEEPIsolated() const {
 	if (isInBarrelRegion())
 		return (ecal_Isolation_DR03_ + hcal_Isolation_DR03_) < 2 + 0.03 * et();
@@ -347,44 +339,14 @@ void Electron::setDCotThetaToNextTrack(double dCotTheta) {
 }
 
 double Electron::pfRelativeIsolation(double coneSize, bool deltaBetaCorrection) const {
-	return pfIsolation(coneSize, deltaBetaCorrection) / et();
-}
-
-double Electron::pfRelativeIsolationRhoCorrected() const {
-/*	//https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection#Isolation_cone_R_0_3
-//	2.0<fabs(eta)<2.2 	Aeff(NH) = 0.023 +/- 0.001 	Aeff(gamma) = 0.089 +/- 0.002 	Aeff(gamma+NH) = 0.11 +/- 0.003
-//	2.2<fabs(eta)<2.3 	Aeff(NH) = 0.023 +/- 0.002 	Aeff(gamma) = 0.092 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.004
-//	2.3<fabs(eta)<2.4 	Aeff(NH) = 0.021 +/- 0.002 	Aeff(gamma) = 0.097 +/- 0.004 	Aeff(gamma+NH) = 0.12 +/- 0.005
-//	fabs(eta)>2.4 	Aeff(NH) = 0.021 +/- 0.003 	Aeff(gamma) = 0.11 +/- 0.004 	Aeff(gamma+NH) = 0.13 +/- 0.006
-
-	if(coneSize != 0.3){
-		//TODO: put exception or warning
-		return 9999999;
+	if ( coneSize == 0.3 ) {
+		return PFRelIso03();
+	}
+	else if ( coneSize == 0.4 ) {
+		return PFRelIso04();
 	}
 
-
-	double SCeta(fabs(superClusterEta()));
-	double effArea(0);
-	if (SCeta < 1.0)
-		effArea = 0.10;
-	else if (SCeta < 1.479)
-		effArea = 0.12;
-	else if (SCeta < 2.0)
-		effArea = 0.085;
-	else if (SCeta < 2.2)
-		effArea = 0.11;
-	else if (SCeta < 2.3)
-		effArea = 0.12;
-	else if (SCeta < 2.4)
-		effArea = 0.12;
-	else
-		effArea = 0.13;
-
-	double neutralIso = PFGammaIsolation(coneSize) + PFNeutralHadronIsolation(coneSize);
-	double correctedIso = PFChargedHadronIsolation(coneSize) + max(neutralIso - rho * effArea, 0.);*/
-
-
-	return PFRelativeIsolationRho_DR03_;
+	return 999;
 }
 
 ElectronAlgorithm::value Electron::algorithm() const {

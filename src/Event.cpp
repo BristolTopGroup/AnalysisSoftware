@@ -124,6 +124,22 @@ void Event::setGenJets(JetCollection jets) {
 	genJets = jets;
 }
 
+const bool Event::PassesElectronChannelTrigger() const {
+	if ( passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonChannelTrigger() const {
+	if ( passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
 const bool Event::PassesElectronSelection() const {
 	if ( passesElectronSelection_ ) {
 		return true;
@@ -163,6 +179,47 @@ const bool Event::PassesMuonQCDSelection() const {
 
 	return false;
 }
+
+const bool Event::PassesElectronTriggerAndSelection() const {
+	if ( passesElectronSelection_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronTriggerAndQCDSelection() const {
+	if ( passesElectronQCDSelection_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronTriggerAndConversionSelection() const {
+	if ( passesElectronConversionSelection_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonTriggerAndSelection() const {
+	if ( passesMuonSelection_ && passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonTriggerAndQCDSelection() const {
+	if ( passesMuonQCDSelection_ && passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
 
 const bool Event::isSemiLeptonicElectron() const {
 	if ( isSemiLeptonicElectron_ ) {
@@ -320,61 +377,17 @@ JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm:
 	return bjets;
 }
 
-const ElectronPointer Event::MostIsolatedElectron(const ElectronCollection& electrons, bool usePFIso) const {
-	float bestIsolation = 999999999;
-	unsigned int bestIsolatedLepton = 990;
-	for (unsigned int index = 0; index < electrons.size(); ++index) {
-		float currentIsolation = 999999999;
-		if (usePFIso)
-			currentIsolation = electrons.at(index)->pfRelativeIsolation();
-		else
-			currentIsolation = electrons.at(index)->relativeIsolation();
-
-		if (currentIsolation < bestIsolation) {
-			bestIsolation = currentIsolation;
-			bestIsolatedLepton = index;
-		}
-	}
-	return electrons.at(bestIsolatedLepton);
-}
-
-const MuonPointer Event::MostIsolatedMuon(const MuonCollection& muons, bool usePFIso) const {
-	float bestIsolation = 999999999;
-	unsigned int bestIsolatedLepton = 990;
-	for (unsigned int index = 0; index < muons.size(); ++index) {
-		float currentIsolation = 999999999;
-		if (usePFIso)
-			currentIsolation = muons.at(index)->pfRelativeIsolation();
-		else
-			currentIsolation = muons.at(index)->relativeIsolation();
-
-		if (currentIsolation < bestIsolation) {
-			bestIsolation = currentIsolation;
-			bestIsolatedLepton = index;
-		}
-	}
-	return muons.at(bestIsolatedLepton);
-}
-
-const ElectronPointer Event::MostIsolatedElectron(const ElectronCollection& electrons) const {
-	return MostIsolatedElectron(electrons, false);
-}
-
-const ElectronPointer Event::MostPFIsolatedElectron(const ElectronCollection& electrons) const {
-	return MostIsolatedElectron(electrons, true);
-}
-
-const MuonPointer Event::MostIsolatedMuon(const MuonCollection& muons) const {
-	return MostIsolatedMuon(muons, false);
-}
-
-const MuonPointer Event::MostPFIsolatedMuon(const MuonCollection& muons) const {
-	return MostIsolatedMuon(muons, true);
-}
-
 void Event::setMuons(MuonCollection muons) {
 	allMuons.clear();
 	allMuons = muons;
+}
+
+void Event::setPassesElectronChannelTrigger( bool passesTrigger ) {
+	passesElectronChannelTrigger_ = passesTrigger;
+}
+
+void Event::setPassesMuonChannelTrigger( bool passesTrigger ) {
+	passesMuonChannelTrigger_ = passesTrigger;
 }
 
 void Event::setPassesElectronSelection( bool passesElectronSelection ) {

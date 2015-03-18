@@ -23,9 +23,8 @@ void MuonAnalyser::analyse(const EventPtr event) {
 		histMan_->H1D("All_Muon_Eta")->Fill(muon->eta(), weight_);
 		histMan_->H1D("All_Muon_AbsEta")->Fill(fabs(muon->eta()), weight_);
 		histMan_->H1D("All_Muon_Phi")->Fill(muon->phi(), weight_);
-		histMan_->H1D("All_Muon_pfIsolation_03")->Fill(muon->pfRelativeIsolation(0.3, true), weight_);
-		histMan_->H1D("All_Muon_pfIsolation_04")->Fill(muon->pfRelativeIsolation(0.4, true), weight_);
-		histMan_->H1D("All_Muon_pfIsolation_05")->Fill(muon->pfRelativeIsolation(0.5, true), weight_);
+		histMan_->H1D("All_Muon_pfIsolation_03")->Fill(muon->PFRelIso03(), weight_);
+		histMan_->H1D("All_Muon_pfIsolation_04")->Fill(muon->PFRelIso04(), weight_);
 
 		histMan_->H1D("All_Muon_dB")->Fill(muon->d0(), weight_);
 	}
@@ -37,14 +36,12 @@ void MuonAnalyser::analyseMuon(const MuonPointer muon, double weight) {
 
 	histMan_->H1D("muon_eta")->Fill(muon->eta(), weight_);
 	histMan_->H1D("muon_AbsEta")->Fill(fabs(muon->eta()), weight_);
-	histMan_->H1D("muon_pfIsolation_03")->Fill(muon->pfRelativeIsolation(0.3, true), weight_);
-	histMan_->H1D("muon_pfIsolation_04")->Fill(muon->pfRelativeIsolation(0.4, true), weight_);
+	histMan_->H1D("muon_pfIsolation_03_DeltaBeta")->Fill(muon->PFRelIso03DeltaBeta(), weight_);
+	histMan_->H1D("muon_pfIsolation_04_DeltaBeta")->Fill(muon->PFRelIso04DeltaBeta(), weight_);
 
 	if (!ttbarPlusMETAnalysisSetup_) {
 		histMan_->H1D("muon_pT")->Fill(muon->pt(), weight_);
 		histMan_->H1D("muon_phi")->Fill(muon->phi(), weight_);
-
-		histMan_->H1D("muon_pfIsolation_05")->Fill(muon->pfRelativeIsolation(0.5, true), weight_);
 
 		histMan_->H1D("muon_dB")->Fill(muon->d0(), weight_);
 	}
@@ -74,8 +71,6 @@ void MuonAnalyser::createHistograms() {
 					"Muon relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D("All_Muon_pfIsolation_04",
 					"Muon relative pf isolation (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
-			histMan_->addH1D("All_Muon_pfIsolation_05",
-					"Muon relative pf isolation (DR=0.5); PF relative isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D("All_Muon_dB", "Muon dB(PV); dB/cm; Events/(0.001)", 200, 0, 0.2);
 		}
 		//single muon histograms for analyseMuon
@@ -91,9 +86,9 @@ void MuonAnalyser::createHistograms() {
 	}
 	histMan_->addH1D("muon_eta", "Muon #eta; #eta(#mu); Events/(0.02)", 300, -3, 3);
 	histMan_->addH1D("muon_AbsEta", "Muon |#eta|; |#eta(#mu)|; Events/(0.01)", 300, 0, 3);
-	histMan_->addH1D("muon_pfIsolation_03",
+	histMan_->addH1D("muon_pfIsolation_03_DeltaBeta",
 			"Muon relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
-	histMan_->addH1D("muon_pfIsolation_04",
+	histMan_->addH1D("muon_pfIsolation_04_DeltaBeta",
 			"Muon relative pf isolation (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
 
 }

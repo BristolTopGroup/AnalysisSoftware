@@ -34,25 +34,21 @@ private:
 	VariableReader<MultiDoublePointer> hcalIsolationReader;
 	VariableReader<MultiDoublePointer> trackerIsolationReader;
 
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR03_;
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR04_;
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR05_;
-	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR05_;
-	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR05_;
-	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR05_;
-
 	//new iso
-	VariableReader<MultiDoublePointer> PFDeltaBeta_Isolation_DR04_;
-	VariableReader<MultiDoublePointer> sumChargedHadronPt04_;
-	VariableReader<MultiDoublePointer> sumNeutralHadronPt04_;
-	VariableReader<MultiDoublePointer> sumPhotonPt04_;
-	VariableReader<MultiDoublePointer> sumPUPt04_;
+	VariableReader<MultiDoublePointer> PFRelIso03Reader_;
+	VariableReader<MultiDoublePointer> PFRelIso04Reader_;
+	VariableReader<MultiDoublePointer> PFRelIso03DeltaBetaReader_;
+	VariableReader<MultiDoublePointer> PFRelIso04DeltaBetaReader_;
+
+	VariableReader<MultiDoublePointer> sumChargedHadronPt03Reader_;
+	VariableReader<MultiDoublePointer> sumNeutralHadronPt03Reader_;
+	VariableReader<MultiDoublePointer> sumPhotonPt03Reader_;
+	VariableReader<MultiDoublePointer> sumPUPt03Reader_;
+
+	VariableReader<MultiDoublePointer> sumChargedHadronPt04Reader_;
+	VariableReader<MultiDoublePointer> sumNeutralHadronPt04Reader_;
+	VariableReader<MultiDoublePointer> sumPhotonPt04Reader_;
+	VariableReader<MultiDoublePointer> sumPUPt04Reader_;
 
 	VariableReader<MultiBoolPointer> isGlobalMuon;
 	VariableReader<MultiBoolPointer> isTrackerMuon;

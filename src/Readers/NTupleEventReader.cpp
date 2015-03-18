@@ -39,6 +39,9 @@ NTupleEventReader::NTupleEventReader() :
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle32eta2p1WP85Gsf.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1IterTrk02.Fired")),
+
 		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
 		passesGenSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesGenSelection")),
 		selectionOutputReader_electron(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsReference)), //
@@ -129,6 +132,9 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	//fill leptons BEFORE jets for jet cleaning
 	currentEvent->setElectrons(electronReader->getElectrons());
 	currentEvent->setMuons(muonReader->getMuons());
+
+	currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
+	currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
 
 	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
 	currentEvent->setElectronSelectionOutputInfo( selectionOutputReader_electron->getSelectionOutputInfo() );
@@ -259,6 +265,9 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
+
+		passesElectronChannelTriggerReader->initialise();
+		passesMuonChannelTriggerReader->initialise();
 
 		passesOfflineSelectionReader->initialise();
 		passesGenSelectionReader->initialise();

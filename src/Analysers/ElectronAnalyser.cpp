@@ -22,10 +22,7 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 		histMan_->H1D("All_Electron_Eta")->Fill(electron->eta(), weight_);
 		histMan_->H1D("All_Electron_AbsEta")->Fill(fabs(electron->eta()), weight_);
 		histMan_->H1D("All_Electron_Phi")->Fill(electron->phi(), weight_);
-		histMan_->H1D("All_Electron_pfIsolation_03")->Fill(electron->pfRelativeIsolation(0.3), weight_);
-		histMan_->H1D("All_Electron_pfIsolation_04")->Fill(electron->pfRelativeIsolation(0.4), weight_);
-		histMan_->H1D("All_Electron_pfIsolation_05")->Fill(electron->pfRelativeIsolation(0.5), weight_);
-		histMan_->H1D("All_Electron_rhoCorrectedIso_03")->Fill(electron->pfRelativeIsolationRhoCorrected(), weight_);
+		histMan_->H1D("All_Electron_pfIsolation_03_deltaBeta")->Fill(electron->PFRelIso03DeltaBeta(), weight_);
 
 		histMan_->H1D("All_Electron_sigma_ietaieta")->Fill(electron->sigmaIEtaIEta(), weight_);
 		histMan_->H1D("All_Electron_dPhi_in")->Fill(electron->dPhiIn(), weight_);
@@ -46,15 +43,11 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 
 	histMan_->H1D("electron_eta")->Fill(electron->eta(), weight_);
 	histMan_->H1D("electron_AbsEta")->Fill(fabs(electron->eta()), weight_);
-	histMan_->H1D("electron_rhoCorrectedIso_03")->Fill(electron->pfRelativeIsolationRhoCorrected(), weight_);
-	histMan_->H1D("electron_pfIsolation_03")->Fill(electron->pfRelativeIsolation(0.3), weight_);
+	histMan_->H1D("electron_pfIsolation_03_deltaBeta")->Fill(electron->PFRelIso03DeltaBeta(), weight_);
 
 	if (!ttbarPlusMETAnalysisSetup_) {
 		histMan_->H1D("electron_pT")->Fill(electron->pt(), weight_);
 		histMan_->H1D("electron_phi")->Fill(electron->phi(), weight_);
-
-		histMan_->H1D("electron_pfIsolation_04")->Fill(electron->pfRelativeIsolation(0.4), weight_);
-		histMan_->H1D("electron_pfIsolation_05")->Fill(electron->pfRelativeIsolation(0.5), weight_);
 
 		histMan_->H1D("electron_sigma_ietaieta")->Fill(electron->sigmaIEtaIEta(), weight_);
 		histMan_->H1D("electron_dPhi_in")->Fill(electron->dPhiIn(), weight_);
@@ -86,12 +79,8 @@ void ElectronAnalyser::createHistograms() {
 			histMan_->addH1D("All_Electron_Eta", "Electron #eta; #eta(e); Events/(0.02)", 300, -3, 3);
 			histMan_->addH1D("All_Electron_AbsEta", "Electron |#eta|; |#eta(e)|; Events/(0.01)", 300, 0, 3);
 			histMan_->addH1D("All_Electron_Phi", "Electron #phi; #phi(e); Events/(0.02)", 400, -4, 4);
-			histMan_->addH1D("All_Electron_pfIsolation_03",
+			histMan_->addH1D("All_Electron_pfIsolation_03_deltaBeta",
 					"Electron relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
-			histMan_->addH1D("All_Electron_pfIsolation_04",
-					"Electron relative pf isolation (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
-			histMan_->addH1D("All_Electron_pfIsolation_05",
-					"Electron relative pf isolation (DR=0.5); PF relative isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D("All_Electron_rhoCorrectedIso_03",
 					"Electron rho-corrected isolation (DR=0.3); rho-corrected isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D("All_Electron_sigma_ietaieta",
@@ -111,11 +100,6 @@ void ElectronAnalyser::createHistograms() {
 			histMan_->addH1D("electron_phi", "Electron #phi; #phi(e); Events/(0.05)", 400, -4, 4);
 
 			//b-jet binning useful for QCD estimates
-
-			histMan_->addH1D("electron_pfIsolation_04",
-					"Electron relative pf isolation (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
-			histMan_->addH1D("electron_pfIsolation_05",
-					"Electron relative pf isolation (DR=0.5); PF relative isolation; Events/(0.01)", 500, 0, 5);
 			histMan_->addH1D("electron_sigma_ietaieta",
 					"Electron #sigma_{i#etai#eta}; #sigma_{i#etai#eta}; Events/(0.001)", 100, 0, 0.1);
 			histMan_->addH1D("electron_dPhi_in", "Electron #Delta#Phi_{in}; #Delta#Phi_{in}; Events/(0.01)", 200, -1,
@@ -133,10 +117,8 @@ void ElectronAnalyser::createHistograms() {
 	if (singleElectronOnly_) {
 		histMan_->addH1D("electron_eta", "Electron #eta; #eta(e); Events/(0.02)", 300, -3, 3);
 		histMan_->addH1D("electron_AbsEta", "Electron |#eta|; |#eta(e)|; Events/(0.01)", 300, 0, 3);
-		histMan_->addH1D("electron_rhoCorrectedIso_03",
-							"Electron rho-corrected isolation (DR=0.3); rho-corrected isolation; Events/(0.01)", 500, 0, 5);
-		histMan_->addH1D("electron_pfIsolation_03",
-				"Electron relative pf isolation (DR=0.3); PF relative isolation; Events/(0.01)", 500, 0, 5);
+		histMan_->addH1D("electron_pfIsolation_03_deltaBeta",
+				"Electron relative pf isolation (DR=0.3) w/ delta beta; PF relative isolation with delta beta; Events/(0.01)", 500, 0, 5);
 	}
 
 }

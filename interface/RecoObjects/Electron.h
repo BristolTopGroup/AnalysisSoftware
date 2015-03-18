@@ -118,10 +118,7 @@ public:
     void setPassConversionVeto(bool passes);
 
     double getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic, int run_number) const;
-    double relativeIsolation() const;
-    double relativeIsolationPUCorrected(double rho) const;
     virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
-    virtual double pfRelativeIsolationRhoCorrected() const;
 
     virtual bool isInBarrelRegion() const;
     bool isInCrack() const;

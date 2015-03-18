@@ -57,6 +57,9 @@ protected:
 
 	MuonCollection allMuons;
 
+	bool passesElectronChannelTrigger_;
+	bool passesMuonChannelTrigger_;
+
 	bool passesElectronSelection_;
 	bool passesElectronQCDSelection_;
 	bool passesElectronConversionSelection_;
@@ -119,6 +122,8 @@ public:
 	void setJets(JetCollection jets);
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
+	void setPassesElectronChannelTrigger( bool passesTrigger );
+	void setPassesMuonChannelTrigger( bool passesTrigger );
 	void setPassesElectronSelection(bool passesElectronSelection);
 	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
 	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
@@ -182,19 +187,20 @@ public:
 
 	const TtbarHypothesis ttbarHypothesis() const;
 
-	const ElectronPointer MostIsolatedElectron(const ElectronCollection&, bool usePFIso) const;
-	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;
-	const ElectronPointer MostPFIsolatedElectron(const ElectronCollection&) const;
-
-	const MuonPointer MostIsolatedMuon(const MuonCollection&, bool usePFIso) const;
-	const MuonPointer MostIsolatedMuon(const MuonCollection& muons) const;
-	const MuonPointer MostPFIsolatedMuon(const MuonCollection&) const;
+	const bool PassesElectronChannelTrigger() const;
+	const bool PassesMuonChannelTrigger() const;
 
 	const bool PassesElectronSelection() const;
 	const bool PassesElectronQCDSelection() const;
 	const bool PassesElectronConversionSelection() const;
 	const bool PassesMuonSelection() const;
 	const bool PassesMuonQCDSelection() const;
+
+	const bool PassesElectronTriggerAndSelection() const;
+	const bool PassesMuonTriggerAndSelection() const;
+	const bool PassesElectronTriggerAndQCDSelection() const;
+	const bool PassesElectronTriggerAndConversionSelection() const;
+	const bool PassesMuonTriggerAndQCDSelection() const;
 
 	const bool isSemiLeptonicElectron() const;
 	const bool isSemiLeptonicMuon() const;
