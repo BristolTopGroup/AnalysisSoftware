@@ -57,10 +57,15 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 		histMan_->H1D("electron_mvaNonTrigV0")->Fill(electron->mvaNonTrigV0(), weight_);
 		histMan_->H1D("electron_dB")->Fill(electron->d0(), weight_);
 	}
+
+	treeMan_->setCurrentFolder(histogramFolder_);
+	treeMan_->Fill("pt", electron->pt() );
+	treeMan_->Fill("eta", electron->eta() );	
+	treeMan_->Fill("relIso_03_deltaBeta", electron->PFRelIso03DeltaBeta() );	
 }
 
-ElectronAnalyser::ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder, bool singleElectronOnly) :
-		BasicAnalyser(histMan, histogramFolder), //
+ElectronAnalyser::ElectronAnalyser(HistogramManagerPtr histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder, bool singleElectronOnly) :
+		BasicAnalyser(histMan, treeMan, histogramFolder), //
 		singleElectronOnly_(singleElectronOnly), //
 		ttbarPlusMETAnalysisSetup_(false) {
 
@@ -121,6 +126,14 @@ void ElectronAnalyser::createHistograms() {
 				"Electron relative pf isolation (DR=0.3) w/ delta beta; PF relative isolation with delta beta; Events/(0.01)", 500, 0, 5);
 	}
 
+}
+
+void ElectronAnalyser::createTrees() {
+	treeMan_->setCurrentFolder(histogramFolder_);
+
+	treeMan_->addBranch("pt", "F", "Electrons");
+	treeMan_->addBranch("eta", "F", "Electrons");	
+	treeMan_->addBranch("relIso_03_deltaBeta", "F", "Electrons");	
 }
 
 void ElectronAnalyser::useTTbarPlusMETSetup(bool use) {

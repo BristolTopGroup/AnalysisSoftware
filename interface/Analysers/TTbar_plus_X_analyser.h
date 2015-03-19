@@ -51,8 +51,6 @@ private:
 	//QCD region electrons from conversions
 	METAnalyserLocalPtr metAnalyserqcdConversionSelection_;
 	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyser_;
-	//No iso
-	ElectronAnalyserLocalPtr qcdEPlusjetsPFRelIsoElectronAnalyser_;
 
 	std::vector<double> metBins_, ht_bins_, st_bins_, mt_bins_, wpt_bins_;
 	std::vector<double> mttbar_bins_, yttbar_bins_, pttbar_bins_, pttop_bins_, yt_bins_;

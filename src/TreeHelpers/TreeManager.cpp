@@ -65,7 +65,7 @@ void TreeManager::FillTrees() {
 				}
 
 			// Reset all variables
-				dirIter->second[type]->resetBranchVariables();
+			dirIter->second[type]->resetBranchVariables();
 
 			}
 		}

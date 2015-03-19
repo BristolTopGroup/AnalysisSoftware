@@ -45,10 +45,15 @@ void MuonAnalyser::analyseMuon(const MuonPointer muon, double weight) {
 
 		histMan_->H1D("muon_dB")->Fill(muon->d0(), weight_);
 	}
+
+	treeMan_->setCurrentFolder(histogramFolder_);
+	treeMan_->Fill("pt", muon->pt() );
+	treeMan_->Fill("eta", muon->eta() );	
+	treeMan_->Fill("relIso_04_deltaBeta", muon->PFRelIso04DeltaBeta() );	
 }
 
-MuonAnalyser::MuonAnalyser(HistogramManagerPtr histMan, std::string histogramFolder, bool singleMuonOnly) :
-		BasicAnalyser(histMan, histogramFolder), //
+MuonAnalyser::MuonAnalyser(HistogramManagerPtr histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder, bool singleMuonOnly) :
+		BasicAnalyser(histMan, treeMan, histogramFolder), //
 		singleMuonOnly_(singleMuonOnly), //
 		ttbarPlusMETAnalysisSetup_(false) {
 
@@ -91,6 +96,14 @@ void MuonAnalyser::createHistograms() {
 	histMan_->addH1D("muon_pfIsolation_04_DeltaBeta",
 			"Muon relative pf isolation (DR=0.4); PF relative isolation; Events/(0.01)", 500, 0, 5);
 
+}
+
+void MuonAnalyser::createTrees() {
+	treeMan_->setCurrentFolder(histogramFolder_);
+
+	treeMan_->addBranch("pt", "F", "Muons");
+	treeMan_->addBranch("eta", "F", "Muons");	
+	treeMan_->addBranch("relIso_04_deltaBeta", "F", "Muons");	
 }
 
 void MuonAnalyser::useTTbarPlusMETSetup(bool use) {
