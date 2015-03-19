@@ -113,12 +113,14 @@ datasets_8TeV = {'SingleElectron' : [data_path_8TeV + 'SingleElectron/nTuple_v11
 #             'TTH_Inclusive_M-125' : [mc_path_8TeV + 'TTH_Inclusive_M-125_8TeV_pythia6'],
             }
 
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v13/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v14/'
 data_path_13TeV = ''
 datasets_13TeV = {
             'TTJet' : [ mc_path_13TeV + 'TTJets_Madgraph_PU20bx25' ],
             'TTJet_PU30bx50' : [ mc_path_13TeV + 'TTJets_Madgraph_PU30bx50'],
             'TTJets_PU4bx50' : [ mc_path_13TeV + 'TTJets_Madgraph_PU4bx50'],
+
+            'TT_Pythia8' : [ mc_path_13TeV + 'TT_Pythia8_PU20bx25' ],
 
             'DYJetsToLL' : [ mc_path_13TeV + 'DYJetsToLL_M50_PU20bx25' ],
             'WJets' : [ mc_path_13TeV + 'WJets_PU20bx25' ],
