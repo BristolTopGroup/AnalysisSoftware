@@ -15,13 +15,14 @@ namespace BAT {
 
 class JetAnalyser: public BAT::BasicAnalyser {
 public:
-	JetAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "JetAnalysis");
-	JetAnalyser(HistogramManagerPtr histMan, unsigned int selectionCriteria, std::string histogramFolder = "JetAnalysis");
+	JetAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "JetAnalysis");
+	JetAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, unsigned int selectionCriteria, std::string histogramFolder = "JetAnalysis");
 	virtual ~JetAnalyser();
 
 	void analyse(const EventPtr);
 //	void analyseJets(JetCollection jets, double weight);
 	void createHistograms();
+	void createTrees();
 
 private:
 	SelectionCriteria::selection selection;
