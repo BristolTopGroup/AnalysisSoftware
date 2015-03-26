@@ -59,6 +59,8 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 	}
 
 	treeMan_->setCurrentFolder(histogramFolder_);
+	treeMan_->Fill("EventWeight", weight_ );
+
 	treeMan_->Fill("pt", electron->pt() );
 	treeMan_->Fill("eta", electron->eta() );	
 	treeMan_->Fill("relIso_03_deltaBeta", electron->PFRelIso03DeltaBeta() );	

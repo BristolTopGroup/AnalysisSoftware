@@ -47,6 +47,7 @@ void MuonAnalyser::analyseMuon(const MuonPointer muon, double weight) {
 	}
 
 	treeMan_->setCurrentFolder(histogramFolder_);
+	treeMan_->Fill("EventWeight", weight_ );
 	treeMan_->Fill("pt", muon->pt() );
 	treeMan_->Fill("eta", muon->eta() );	
 	treeMan_->Fill("relIso_04_deltaBeta", muon->PFRelIso04DeltaBeta() );	
