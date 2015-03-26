@@ -16,7 +16,7 @@ void TBranchCollection::addBranchToTree(std::string branchLabel, std::string var
 
     if ( isSingleValuePerEvent ) {
         // Make variable associated with this branch
-        varMap_[branchLabel] = VarPointer(new float() );
+        varMap_[branchLabel] = VarPointer(new float( -99 ) );
         // Make branch
         tree->Branch( branchLabel.c_str(), varMap_[branchLabel].get(), ( branchLabel+"/"+varType).c_str() );
     }
