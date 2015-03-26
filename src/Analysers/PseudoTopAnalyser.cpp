@@ -83,10 +83,22 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("pseudoLepton_eta", pseudoLepton->eta() );
 
 	// Store info on Bs
-	for ( unsigned int pbIndex = 0; pbIndex < pseudoBs.size(); ++ pbIndex ) {
-		treeMan_->Fill("pseudoB_pT", pseudoBs[pbIndex]->pt() );
-		treeMan_->Fill("pseudoB_eta", pseudoBs[pbIndex]->eta() );
+	if ( pseudoBs.size() != 2 ) {
+		cout << "Odd number of pseudo bs : " << pseudoBs.size() << endl;
 	}
+	unsigned int leadingPsuedoBIndex = 0;
+	if ( pseudoBs[1]->pt() > pseudoBs[0]->pt() ) {
+		leadingPsuedoBIndex = 1;
+	}
+	unsigned int subleadingPsuedoBIndex = ( leadingPsuedoBIndex == 0 ) ? 1 : 0;
+	treeMan_->Fill("pseudoB_pT", pseudoBs[leadingPsuedoBIndex]->pt() );
+	treeMan_->Fill("pseudoB_eta", pseudoBs[leadingPsuedoBIndex]->eta() );
+	treeMan_->Fill("pseudoB_pT", pseudoBs[subleadingPsuedoBIndex]->pt() );
+	treeMan_->Fill("pseudoB_eta", pseudoBs[subleadingPsuedoBIndex]->eta() );
+	// for ( unsigned int pbIndex = 0; pbIndex < pseudoBs.size(); ++pbIndex ) {
+	// 	treeMan_->Fill("pseudoB_pT", pseudoBs[pbIndex]->pt() );
+	// 	treeMan_->Fill("pseudoB_eta", pseudoBs[pbIndex]->eta() );
+	// }
 
 	// Store pseudo MET
 	treeMan_->Fill("pseudoMET", pseudoMET->et() );
