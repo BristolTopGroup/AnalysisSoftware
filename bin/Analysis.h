@@ -29,7 +29,6 @@
 #include "../interface/RecoObjects/Particle.h"
 //Analysers
 #include "../interface/Analysers/BJetAnalyser.h"
-#include "../interface/Analysers/JetAnalyser.h"
 #include "../interface/Analysers/METAnalyser.h"
 #include "../interface/Analysers/TTbar_plus_X_analyser.h"
 #include "../interface/Analysers/VertexAnalyser.h"
@@ -49,7 +48,6 @@ private:
     boost::shared_ptr<BAT::EventWeightProvider> weights;
     float weight, pileUpWeight;
 
-    boost::scoped_ptr<BAT::JetAnalyser> jetAnalyser;
     boost::scoped_ptr<BAT::METAnalyser> metAnalyser;
     BAT::TTbar_plus_X_analyser_local_ptr ttbar_plus_X_analyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;

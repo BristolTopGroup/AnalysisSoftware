@@ -180,7 +180,6 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-		jetAnalyser(new JetAnalyser(histMan)), //
 		metAnalyser(new METAnalyser(histMan, treeMan)), //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
