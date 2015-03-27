@@ -16,13 +16,14 @@ void JetAnalyser::analyse(const EventPtr event) {
 	
 	weight_ = event->weight() * prescale_ * scale_;
 	// const JetCollection jets = event->Jets();
-	const JetCollection jets(event->getCleanedJets( selection ));
-	const JetCollection bjets(event->getCleanedBJets( selection ));
+	const JetCollection jets(event->CleanedJets());
+	const JetCollection bjets(event->CleanedBJets());
 
 	unsigned int numberOfBJets(bjets.size());
 	unsigned int numberOfBJets_ptG30(0);
 	unsigned int numberOfJets(0);
 	unsigned int numberOfJets_ptG30(0);
+
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
 
@@ -119,7 +120,6 @@ void JetAnalyser::createHistograms() {
 
 void JetAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
-
 	treeMan_->addBranch("pt", "F", "Jets", false);
 	treeMan_->addBranch("eta", "F", "Jets", false);
 	treeMan_->addBranch("phi", "F", "Jets", false);

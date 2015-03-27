@@ -33,8 +33,8 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 
 	if ( !( event->PassesMuonTriggerAndSelection() || event->PassesElectronTriggerAndSelection() )) return;
 
-	const JetCollection jets(event->getCleanedJets( selectionCriteria ));
-	const JetCollection bjets(event->getCleanedBJets( selectionCriteria ));
+	const JetCollection jets(event->CleanedJets());
+	const JetCollection bjets(event->CleanedBJets());
 	const LeptonPointer signalLepton = event->getSignalLepton( selectionCriteria );
 	METAlgorithm::value metType = (METAlgorithm::value) 0;
 	const METPointer met(event->MET(metType));

@@ -24,9 +24,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 	// if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesElectronTriggerAndSelection() ) {
-		const JetCollection jets(event->getCleanedJets( SelectionCriteria::ElectronPlusJetsReference ));
+		const JetCollection jets(event->CleanedJets());
 		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::ElectronPlusJetsReference );
-		const JetCollection bJets(event->getCleanedBJets( SelectionCriteria::ElectronPlusJetsReference ));
+		const JetCollection bJets(event->CleanedBJets());
 
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::ElectronPlusJetsReference );
 
@@ -171,9 +171,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 	if ( event->PassesElectronTriggerAndQCDSelection() ) {
 
-		const JetCollection jets(event->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ));
+		const JetCollection jets(event->CleanedJets());
 		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated );
-		const JetCollection bJets(event->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ));
+		const JetCollection bJets(event->CleanedBJets());
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::ElectronPlusJetsQCDNonIsolated );
 
 		double bjetWeight = 1;
@@ -249,9 +249,9 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 	if ( event->PassesElectronTriggerAndConversionSelection() ) {
 		
-		const JetCollection jets(event->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDConversion ));
+		const JetCollection jets(event->CleanedJets());
 		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::ElectronPlusJetsQCDConversion );
-		const JetCollection bJets(event->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDConversion ));
+		const JetCollection bJets(event->CleanedBJets());
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::ElectronPlusJetsQCDConversion );
 
 		double bjetWeight = 1;
@@ -328,9 +328,9 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesMuonTriggerAndSelection() ) {
-		const JetCollection jets(event->getCleanedJets( SelectionCriteria::MuonPlusJetsReference ));
+		const JetCollection jets(event->CleanedJets());
 		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::MuonPlusJetsReference );
-		const JetCollection bJets(event->getCleanedBJets( SelectionCriteria::MuonPlusJetsReference ));
+		const JetCollection bJets(event->CleanedBJets());
 
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsReference );
 
@@ -440,9 +440,9 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 	//selection with respect to reference selection
 	if ( event->PassesMuonTriggerAndQCDSelection() ) {
 
-		const JetCollection jets(event->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ));
+		const JetCollection jets(event->CleanedJets());
 		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated );
-		const JetCollection bJets(event->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ));
+		const JetCollection bJets(event->CleanedBJets());
 
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsQCDNonIsolated );
 
@@ -610,6 +610,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 
 	jetAnalyserEPlusJetsRefSelection_->createHistograms();
 	jetAnalyserMuPlusJetsRefSelection_->createHistograms();
+	jetAnalyserEPlusJetsRefSelection_->createTrees();
+	jetAnalyserMuPlusJetsRefSelection_->createTrees();
 
 	// W boson simple reconstruction
 	wAnalyserEPlusJetsRefSelection_->createHistograms();
@@ -768,9 +770,9 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_yt_Analysis")), //
 
-		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, SelectionCriteria::ElectronPlusJetsReference, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
+		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsReference, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
 		jetAnalyserMuPlusJetsRefSelection_(
-				new JetAnalyser(histMan, SelectionCriteria::MuonPlusJetsReference, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
+				new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsReference, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
 		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
 		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
 		hitFitAnalyserEPlusJetsRefSelection_(new HitFitAnalyser(histMan, true, histogramFolder + "/EPlusJets/Ref selection/HitFit")), //

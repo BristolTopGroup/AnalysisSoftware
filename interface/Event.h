@@ -53,6 +53,8 @@ protected:
 	ElectronCollection allElectrons;
 
 	JetCollection allJets;
+	JetCollection cleanedJets_;
+	JetCollection cleanedBJets_;
 	JetCollection genJets;
 
 	MuonCollection allMuons;
@@ -120,6 +122,8 @@ public:
 	void setGenParticles(MCParticleCollection genParticles);
 	void setElectrons(ElectronCollection electrons);
 	void setJets(JetCollection jets);
+	void setCleanedJets(JetCollection jets);
+	void setCleanedBJets(JetCollection bjets);
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
 	void setPassesElectronChannelTrigger( bool passesTrigger );
@@ -130,6 +134,7 @@ public:
 	void setPassesMuonSelection(bool passesMuonSelection);
 	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
 	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
+	const bool passesJetSelection( const unsigned int selectionCriteria );
 	void setPassGenSelectionInfo( std::vector<unsigned int> );
 	void setIsSemiLeptonicElectron( bool isSemiLeptonicElectron );
 	void setIsSemiLeptonicMuon( bool isSemiLeptonicMuon );
@@ -179,6 +184,8 @@ public:
 	const ElectronCollection& Electrons() const;
 	const ElectronCollection& QCDElectrons() const;
 	const JetCollection& Jets() const;
+	const JetCollection& CleanedJets() const;
+	const JetCollection& CleanedBJets() const;
 	const JetCollection& GenJets() const;
 	const MuonCollection& Muons() const;
 	const METPointer MET() const;
@@ -260,6 +267,10 @@ public:
 	static double ST(const JetCollection, const ParticlePointer, const METPointer);
 	static double MT(const ParticlePointer, const METPointer);
 	static double WPT(const ParticlePointer, const METPointer);
+
+	static double const minJetPt_;
+	static unsigned int const minNJets_;
+	static unsigned int const minNBJets_;
 
 };
 

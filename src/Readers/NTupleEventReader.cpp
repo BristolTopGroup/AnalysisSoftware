@@ -133,15 +133,20 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setElectrons(electronReader->getElectrons());
 	currentEvent->setMuons(muonReader->getMuons());
 
+	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
+
 	currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
 	currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
 
-	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
+	// Set info that depends on selection criteria e.g. cleaned jets
+	// Must do this before setPassOfflineSelectionInfo, as this selects on the cleaned jets
 	currentEvent->setElectronSelectionOutputInfo( selectionOutputReader_electron->getSelectionOutputInfo() );
 	currentEvent->setMuonSelectionOutputInfo( selectionOutputReader_muon->getSelectionOutputInfo() );
 	currentEvent->setElectronQCDNonisolatedSelectionOutputInfo( selectionOutputReader_electronQCDNonisolated->getSelectionOutputInfo() );
 	currentEvent->setElectronConversionSelectionOutputInfo( selectionOutputReader_electronQCDConversion->getSelectionOutputInfo() );
 	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
+
+	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
 
 	currentEvent->setPassGenSelectionInfo( *passesGenSelectionReader->getVariable() );
 
@@ -165,7 +170,28 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	}
 
-	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
+	// Get and set the cleaned jets for this event
+	// After knowing which selection criteria are satisfied
+	if( currentEvent->PassesElectronSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsReference ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsReference ) );
+	}
+	else if ( currentEvent->PassesMuonSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsReference ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsReference ) );
+	}
+	else if ( currentEvent->PassesElectronQCDSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) );
+	}
+	else if ( currentEvent->PassesElectronConversionSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );		
+	}
+	else if ( currentEvent->PassesMuonQCDSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
+	}
 
 	double sysShiftMetCorrectionX = 0;
 	double sysShiftMetCorrectionY = 0;

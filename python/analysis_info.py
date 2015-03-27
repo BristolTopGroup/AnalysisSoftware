@@ -153,6 +153,8 @@ datasets_13TeV = {
             }
 
 analysis_modes_13TeV = ['central',
+                 'JES_down',
+                 'JES_up',
                  ]
 
 analysisModes = ['central',
