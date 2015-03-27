@@ -82,14 +82,14 @@ void setUpOnce() {
 }
 
 void setConfiguration(ConfigFile config) {
-	cout << "Using set-up for nTuple version " << config.nTupleVersion() << endl;
+	// cout << "Using set-up for nTuple version " << config.nTupleVersion() << endl;
 	cout << "Using set-up for center of mass energy = " << config.centerOfMassEnergy() << endl;
 	cout << "Loading configuration..." << endl;
 	cout << "Using config-file '" << config.configPath() << endl;
 	cout << "Using Dataset info file:  '" << config.datasetInfoFile() << endl;
-	cout << "Using pileup-file '" << config.PUFile() << endl;
-	cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
-	cout << config.lightJetResoFile() << endl;
+	// cout << "Using pileup-file '" << config.PUFile() << endl;
+	// cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
+	// cout << config.lightJetResoFile() << endl;
 	if (config.jesSystematic()!=0)
 		cout << "Varying all the jets by " << config.jesSystematic() << " sigma(s) (JEC uncertainty)\n";
 	long maxEvents(config.maxEvents());
