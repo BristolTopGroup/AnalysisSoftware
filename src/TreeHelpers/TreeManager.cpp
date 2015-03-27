@@ -38,13 +38,13 @@ void TreeManager::addBranch(std::string branchLabel, std::string varType, std::s
 
 	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes_.at(type)) {
-			if (  collection_[currentFolder_][type]->treeMap_.find(currentFolder_) == collection_[currentFolder_][type]->treeMap_.end() ) {
-				addTreeToFolder(treeName, currentFolder_, type);				
+			if (  collection_[currentFolder_][type]->treeMap_.find(treeName) == collection_[currentFolder_][type]->treeMap_.end() ) {
+				addTreeToFolder(treeName, currentFolder_, type);
 			}
 
 			// Add branch to tree
 			treeFiles_.at(type)->Cd(currentFolder_.c_str());
-			collection_[currentFolder_][type]->addBranchToTree(branchLabel, varType, collection_[currentFolder_].at(type)->treeMap_[currentFolder_], isSingleValuePerEvent);
+			collection_[currentFolder_][type]->addBranchToTree(branchLabel, varType, collection_[currentFolder_].at(type)->treeMap_[treeName], isSingleValuePerEvent);
 		}
 	}
 
@@ -152,9 +152,9 @@ void TreeManager::addFolder(string folder)
 }
 
 void TreeManager::addTreeToFolder(string treeName, string folder, unsigned int dataType) {
-			collection_[folder].at(dataType)->treeMap_[folder] = boost::shared_ptr<TTree>(new TTree(treeName.c_str(),treeName.c_str()));
-			collection_[folder].at(dataType)->treeMap_[folder]->SetDirectory( treeFiles_.at(dataType)->GetDirectory(folder.c_str() ) );
-			collection_[folder].at(dataType)->addBranchToTree("EventWeight","F",collection_[folder].at(dataType)->treeMap_[folder]);
+			collection_[folder].at(dataType)->treeMap_[treeName] = boost::shared_ptr<TTree>(new TTree(treeName.c_str(),treeName.c_str()));
+			collection_[folder].at(dataType)->treeMap_[treeName]->SetDirectory( treeFiles_.at(dataType)->GetDirectory(folder.c_str() ) );
+			collection_[folder].at(dataType)->addBranchToTree("EventWeight","F",collection_[folder].at(dataType)->treeMap_[treeName]);
 }
 
 void TreeManager::setCurrentFolder(std::string collection) {
