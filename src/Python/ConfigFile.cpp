@@ -466,6 +466,10 @@ void ConfigFile::loadIntoMemory() {
 	//JES systematic
 	Globals::JESsystematic = jesSystematic();
 
+	// Change tree name for JEC variations
+	if ( Globals::JESsystematic == -1 ) Globals::treePrefix_ += "_JESDown";
+	else if ( Globals::JESsystematic == 1 ) Globals::treePrefix_ += "_JESUp";
+
 	//Jet Smearing systematic
 	Globals::JetSmearingSystematic = jetSmearingSystematic();
 	std::cout << "ConfigFile.cpp: Globals::JetSmearingSystematic = " << Globals::JetSmearingSystematic << std::endl;

@@ -120,11 +120,11 @@ void JetAnalyser::createHistograms() {
 
 void JetAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
-	treeMan_->addBranch("pt", "F", "Jets", false);
-	treeMan_->addBranch("eta", "F", "Jets", false);
-	treeMan_->addBranch("phi", "F", "Jets", false);
-	treeMan_->addBranch("NJets", "F", "Jets");
-	treeMan_->addBranch("NBJets", "F", "Jets");
+	treeMan_->addBranch("pt", "F", "Jets" + Globals::treePrefix_, false);
+	treeMan_->addBranch("eta", "F", "Jets" + Globals::treePrefix_, false);
+	treeMan_->addBranch("phi", "F", "Jets" + Globals::treePrefix_, false);
+	treeMan_->addBranch("NJets", "F", "Jets" + Globals::treePrefix_);
+	treeMan_->addBranch("NBJets", "F", "Jets" + Globals::treePrefix_);
 
 }
 

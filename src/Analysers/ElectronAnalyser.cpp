@@ -133,9 +133,9 @@ void ElectronAnalyser::createHistograms() {
 void ElectronAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
 
-	treeMan_->addBranch("pt", "F", "Electrons");
-	treeMan_->addBranch("eta", "F", "Electrons");	
-	treeMan_->addBranch("relIso_03_deltaBeta", "F", "Electrons");	
+	treeMan_->addBranch("pt", "F", "Electrons" + Globals::treePrefix_);
+	treeMan_->addBranch("eta", "F", "Electrons" + Globals::treePrefix_);	
+	treeMan_->addBranch("relIso_03_deltaBeta", "F", "Electrons" + Globals::treePrefix_);	
 }
 
 void ElectronAnalyser::useTTbarPlusMETSetup(bool use) {

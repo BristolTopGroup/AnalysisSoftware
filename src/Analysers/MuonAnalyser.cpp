@@ -102,9 +102,9 @@ void MuonAnalyser::createHistograms() {
 void MuonAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
 
-	treeMan_->addBranch("pt", "F", "Muons");
-	treeMan_->addBranch("eta", "F", "Muons");	
-	treeMan_->addBranch("relIso_04_deltaBeta", "F", "Muons");	
+	treeMan_->addBranch("pt", "F", "Muons" + Globals::treePrefix_);
+	treeMan_->addBranch("eta", "F", "Muons" + Globals::treePrefix_);	
+	treeMan_->addBranch("relIso_04_deltaBeta", "F", "Muons" + Globals::treePrefix_);	
 }
 
 void MuonAnalyser::useTTbarPlusMETSetup(bool use) {

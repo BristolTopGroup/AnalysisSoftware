@@ -59,7 +59,7 @@ void Analysis::analyse() {
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		if ( currentEvent->getDataType() == DataType::TTJets ) {
+		if ( currentEvent->getDataType() == DataType::TTJets && Globals::treePrefix_ == "" ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 		}

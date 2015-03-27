@@ -72,4 +72,6 @@ bool Globals::applyTopPtReweighting = false;
 std::string Globals::custom_file_suffix = "";
 unsigned int Globals::pdfWeightNumber = 0;
 
+std::string Globals::treePrefix_ = "";
+
 }

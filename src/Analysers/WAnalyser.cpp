@@ -274,17 +274,17 @@ void WAnalyser::createHistograms() {
 void WAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
 
-	treeMan_->addBranch("mjj", "F", "W Bosons");
-	treeMan_->addBranch("mjj_genJet", "F", "W Bosons");
-	treeMan_->addBranch("mjj_parton", "F", "W Bosons");
-	treeMan_->addBranch("jetPt", "F", "W Bosons", false);
-	treeMan_->addBranch("jetEta", "F", "W Bosons", false);
-	treeMan_->addBranch("genJetPt", "F", "W Bosons", false);
-	treeMan_->addBranch("genJetEta", "F", "W Bosons", false);
-	treeMan_->addBranch("partonPt", "F", "W Bosons", false);
-	treeMan_->addBranch("partonEta", "F", "W Bosons", false);
+	treeMan_->addBranch("mjj", "F", "W Bosons" + Globals::treePrefix_);
+	treeMan_->addBranch("mjj_genJet", "F", "W Bosons" + Globals::treePrefix_);
+	treeMan_->addBranch("mjj_parton", "F", "W Bosons" + Globals::treePrefix_);
+	treeMan_->addBranch("jetPt", "F", "W Bosons" + Globals::treePrefix_, false);
+	treeMan_->addBranch("jetEta", "F", "W Bosons" + Globals::treePrefix_, false);
+	treeMan_->addBranch("genJetPt", "F", "W Bosons" + Globals::treePrefix_, false);
+	treeMan_->addBranch("genJetEta", "F", "W Bosons" + Globals::treePrefix_, false);
+	treeMan_->addBranch("partonPt", "F", "W Bosons" + Globals::treePrefix_, false);
+	treeMan_->addBranch("partonEta", "F", "W Bosons" + Globals::treePrefix_, false);
 
-	treeMan_->addBranch("NPU", "F", "W Bosons");
+	treeMan_->addBranch("NPU", "F", "W Bosons" + Globals::treePrefix_);
 }
 
 WAnalyser::WAnalyser(boost::shared_ptr<HistogramManager> histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder) :

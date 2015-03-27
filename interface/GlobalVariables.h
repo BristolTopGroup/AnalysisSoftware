@@ -78,6 +78,8 @@ struct Globals {
 	//miscellaneous
 	static std::string custom_file_suffix;
 	static unsigned int pdfWeightNumber;
+
+	static std::string treePrefix_;
 };
 
 }
