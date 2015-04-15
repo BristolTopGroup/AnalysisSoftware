@@ -75,6 +75,9 @@ NTupleEventReader::NTupleEventReader() :
 		metReaders.at(index) = boost::shared_ptr<METReader>(new METReader(input, (METAlgorithm::value) index));
 	}
 
+	for (unsigned int i = 0; i < DataType::NUMBER_OF_DATA_TYPES; ++i)
+		seenDataTypes.at(i) = false;
+
 }
 
 NTupleEventReader::~NTupleEventReader() {
