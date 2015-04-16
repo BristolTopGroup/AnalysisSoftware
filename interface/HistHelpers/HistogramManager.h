@@ -174,6 +174,12 @@ public:
 	void beginDataType(DataType::value type);
 	void endDataType();
 
+	bool contains1D(std::string histname);
+	bool contains2D(std::string histname);
+	bool contains3D(std::string histname);
+
+	bool hasFolder(std::string folder) const;
+
 private:
 
 	void add1DHistogramFolder(std::string folder);
