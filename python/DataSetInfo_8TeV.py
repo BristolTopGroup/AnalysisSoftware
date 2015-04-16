@@ -18,8 +18,8 @@
 
 datasetInfo = {}
 #if using the designated subset:
-#cross-section from http://arxiv.org/pdf/1303.6254v1.pdf
-datasetInfo['TTJet'] = {"cross-section": 245.8, "NumberOfProcessedEvents":6706068}
+#cross-section from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/TtbarNNLO
+datasetInfo['TTJet'] = {"cross-section": 252.89, "NumberOfProcessedEvents":6706068}
 #cross-sections from ??
 datasetInfo['WJetsToLNu'] = {"cross-section": 36257.2, "NumberOfProcessedEvents":57708550} #not used
 #cross-sections from PREP (search for: W*Jet*8TeV*madgraph)
