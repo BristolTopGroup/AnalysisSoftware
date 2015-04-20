@@ -71,6 +71,8 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
+		treeMan_->Fill("MuonUp",1.0);
+		treeMan_->Fill("MuonDown",1.0);
 
 		// metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		// electronAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -218,6 +220,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
+		treeMan_->Fill("MuonUp",1.0);
+		treeMan_->Fill("MuonDown",1.0);
 
 		qcdNonIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 		metAnalyserqcdNonIsoElectronSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -227,6 +231,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		metAnalyserqcdNonIsoElectronSelection_->analyse(event, signalLepton, jets);
 		qcd_noniso_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
+
+		jetAnalyserEPlusJetsQCDNonIsoSelection_->analyse(event);
 
 		vector<double> fit_variable_values;
 		fit_variable_values.push_back(fabs(signalElectron->eta()));
@@ -303,6 +309,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
+		treeMan_->Fill("MuonUp",1.0);
+		treeMan_->Fill("MuonDown",1.0);
 
 		qcdConversionsElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 		metAnalyserqcdConversionSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -310,6 +318,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		qcdConversionsElectronAnalyser_->analyse(event);
 		qcdConversionsElectronAnalyser_->analyseElectron(signalElectron, event->weight());
 		metAnalyserqcdConversionSelection_->analyse(event, signalLepton, jets);
+
+		jetAnalyserEPlusJetsConversionSelection_->analyse(event);
 
 		qcd_conversion_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;
@@ -398,6 +408,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		treeMan_->Fill("MuonUp",muonEfficiencyCorrection_up);
 		treeMan_->Fill("MuonDown",muonEfficiencyCorrection_down);
+		treeMan_->Fill("ElectronUp",1.0);
+		treeMan_->Fill("ElectronDown",1.0);
 
 		metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		muonAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -512,6 +524,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 		treeMan_->Fill("MuonUp",muonEfficiencyCorrection_up);
 		treeMan_->Fill("MuonDown",muonEfficiencyCorrection_down);
+		treeMan_->Fill("ElectronUp",1.0);
+		treeMan_->Fill("ElectronDown",1.0);
 
 		qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 		metAnalyserqcdNonIsoMuonSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -519,6 +533,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		qcdNonIsoMuonAnalyser_->analyse(event);
 		qcdNonIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
 		metAnalyserqcdNonIsoMuonSelection_->analyse(event, signalLepton, jets);
+
+		jetAnalyserMuPlusJetsQCDNonIsoSelection_->analyse(event);
 
 		qcd_noniso_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;
@@ -580,8 +596,10 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronUp", "F", "SystematicWeights" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronDown", "F", "SystematicWeights" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
@@ -593,8 +611,10 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronUp", "F", "SystematicWeights" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronDown", "F", "SystematicWeights" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
@@ -606,8 +626,10 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronUp", "F", "SystematicWeights" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronDown", "F", "SystematicWeights" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
@@ -619,8 +641,10 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonUp", "F", "SystematicWeights" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonDown", "F", "SystematicWeights" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
@@ -632,8 +656,10 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonUp", "F", "SystematicWeights" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonDown", "F", "SystematicWeights" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();
@@ -664,8 +690,15 @@ void TTbar_plus_X_analyser::createHistograms() {
 
 	jetAnalyserEPlusJetsRefSelection_->createHistograms();
 	jetAnalyserMuPlusJetsRefSelection_->createHistograms();
+	jetAnalyserEPlusJetsQCDNonIsoSelection_->createHistograms();
+	jetAnalyserEPlusJetsConversionSelection_->createHistograms();
+	jetAnalyserMuPlusJetsQCDNonIsoSelection_->createHistograms();
+
 	jetAnalyserEPlusJetsRefSelection_->createTrees();
 	jetAnalyserMuPlusJetsRefSelection_->createTrees();
+	jetAnalyserEPlusJetsQCDNonIsoSelection_->createTrees();
+	jetAnalyserEPlusJetsConversionSelection_->createTrees();
+	jetAnalyserMuPlusJetsQCDNonIsoSelection_->createTrees();
 
 	// W boson simple reconstruction
 	wAnalyserEPlusJetsRefSelection_->createHistograms();
@@ -827,6 +860,9 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsReference, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
 		jetAnalyserMuPlusJetsRefSelection_(
 				new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsReference, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
+		jetAnalyserEPlusJetsQCDNonIsoSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsQCDNonIsolated, histogramFolder + "/EPlusJets/QCD non iso e+jets/Jets")), //
+		jetAnalyserEPlusJetsConversionSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsQCDConversion, histogramFolder + "/EPlusJets/QCDConversions/Jets")), //
+		jetAnalyserMuPlusJetsQCDNonIsoSelection_( new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsQCDNonIsolated, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Jets")), //
 		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
 		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
 		hitFitAnalyserEPlusJetsRefSelection_(new HitFitAnalyser(histMan, true, histogramFolder + "/EPlusJets/Ref selection/HitFit")), //

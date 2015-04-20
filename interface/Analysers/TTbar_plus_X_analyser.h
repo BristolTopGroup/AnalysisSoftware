@@ -131,6 +131,7 @@ private:
 	Binned_Variable_analyser_ptr ref_selection_binned_yt_analyser_muon_;
 
 	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_, jetAnalyserMuPlusJetsRefSelection_;
+	JetAnalyserLocalPtr jetAnalyserEPlusJetsQCDNonIsoSelection_, jetAnalyserEPlusJetsConversionSelection_, jetAnalyserMuPlusJetsQCDNonIsoSelection_;
 
 	// W simple reco analyser
 	WAnalyserLocalPtr wAnalyserEPlusJetsRefSelection_, wAnalyserMuPlusJetsRefSelection_;
