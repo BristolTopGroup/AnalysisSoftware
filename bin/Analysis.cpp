@@ -59,7 +59,7 @@ void Analysis::analyse() {
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		if ( currentEvent->getDataType() == DataType::TTJets && Globals::treePrefix_ == "" ) {
+		if ( ( currentEvent->getDataType() == DataType::TTJets || currentEvent->getDataType() == DataType::TT_Pythia8 ) && Globals::treePrefix_ == "" ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 		}
@@ -158,7 +158,8 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	if ( eventReader->getSeenDatatypes()[DataType::TTJets] ) {
+	if ( ( eventReader->getSeenDatatypes()[DataType::TTJets] || eventReader->getSeenDatatypes()[DataType::TT_Pythia8] )
+		&& Globals::treePrefix_ == "" ) {
 		pseudoTopAnalyser_->createTrees();
 		unfoldingRecoAnalyser_->createTrees();
 	}

@@ -35,6 +35,10 @@ void TBranchCollection::setBranchVariable(std::string branchLabel, float value) 
     else if ( vectorContains(branchLabel) ) {
         varVectorMap_[branchLabel]->push_back(value);
     }
+    else {
+        cout << "WARNING : Trying to fill branch that doesn't exist in this folder" << endl;
+        cout << "Branch label : " << branchLabel << endl;
+    }
 }
 
 void TBranchCollection::resetBranchVariables() {
