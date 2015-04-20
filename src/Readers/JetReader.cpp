@@ -113,7 +113,7 @@ void JetReader::readJets(bool isRealData) {
 
 		double JEC = JECReader.getVariableAt(jetIndex);
 		double JECUnc = JECUncReader.getVariableAt(jetIndex);
-		JECUnc = 0.03;
+		JECUnc = 0.02;
 		// cout << Globals::JESsystematic << " " << JECUnc << endl;
 		//applying JES + or - systematic, 0 by default)
 		energy = energy * (1+JECUnc*Globals::JESsystematic);
