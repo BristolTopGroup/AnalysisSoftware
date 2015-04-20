@@ -187,6 +187,7 @@ void WAnalyser::analyseHadronicW_partons(const EventPtr event) {
 		histMan_->H1D("jetEta_partons")->Fill(quarkParton->eta() , weight_);
 		histMan_->H1D("jetEta_partons")->Fill(quarkBarParton->eta() , weight_);
 
+		treeMan_->setCurrentFolder(histogramFolder_);
 		treeMan_->Fill("mjj_parton",hadronicW_fromPartons.mass());
 		treeMan_->Fill("partonPt",quarkParton->pt());
 		treeMan_->Fill("partonPt",quarkBarParton->pt());
