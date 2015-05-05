@@ -872,68 +872,64 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 
 	//bins: start is always assumed to be 0 and the last is read as > X
 	//MET bins:
-	// old: [0.0, 31.0, 58.0, 96.0, 142.0, 191.0, inf]
-	// new: [0.0, 27.0, 52.0, 87.0, 129.0, 171.0, inf]
+	// old: [0., 27., 52., 87., 129., 171., inf]
 	metBins_.push_back(0.);
 	metBins_.push_back(27.);
 	metBins_.push_back(52.);
 	metBins_.push_back(87.);
-	metBins_.push_back(129.);
-	metBins_.push_back(171.);
+	metBins_.push_back(130.);
+	metBins_.push_back(172.);
+
 	//HT:
-	// old: [0.0, 190.0, 225.0, 262.0, 302.0, 345.0, 392.0, 445.0, 501.0, 562.0, 623.0, 689.0, 766.0, inf]
-	// new: [0.0, 187.0, 217.0, 250.0, 287.0, 327.0, 369.0, 414.0, 464.0, 517.0, 575.0, 634.0, 696.0, 772.0, inf]
-	ht_bins_.push_back(0.);
-	ht_bins_.push_back(187.0);
-	ht_bins_.push_back(217.0);
-	ht_bins_.push_back(250.0);
-	ht_bins_.push_back(287.0);
-	ht_bins_.push_back(327.0);
-	ht_bins_.push_back(369.0);
-	ht_bins_.push_back(414.0);
-	ht_bins_.push_back(464.0);
-	ht_bins_.push_back(517.0);
-	ht_bins_.push_back(575.0);
-	ht_bins_.push_back(634.0);
-	ht_bins_.push_back(696.0);
-	ht_bins_.push_back(772.0);
+	// old: [0., 187., 217., 250., 287., 327., 369., 414., 414., 464., 517., 575., 634., 696., 772., inf]
+	ht_bins_.push_back(120.0);
+	ht_bins_.push_back(185.0);
+	ht_bins_.push_back(215.0);
+	ht_bins_.push_back(247.0);
+	ht_bins_.push_back(283.0);
+	ht_bins_.push_back(323.0);
+	ht_bins_.push_back(365.0);
+	ht_bins_.push_back(409.0);
+	ht_bins_.push_back(458.0);
+	ht_bins_.push_back(512.0);
+	ht_bins_.push_back(570.0);
+	ht_bins_.push_back(629.0);
+	ht_bins_.push_back(691.0);
+	ht_bins_.push_back(769.0);
 
 	//ST:
-	// old: [0.0, 285.0, 329.0, 376.0, 428.0, 484.0, 544.0, 609.0, 678.0, 751.0, 830.0, 911.0, 1028.0, inf]
-	// new: [0.0, 281.0, 324.0, 367.0, 415.0, 466.0, 521.0, 581.0, 645.0, 714.0, 783.0, 861.0, 946.0, inf]
-	st_bins_.push_back(0.);
-	st_bins_.push_back(281.0);
-	st_bins_.push_back(324.0);
-	st_bins_.push_back(367.0);
-	st_bins_.push_back(415.0);
-	st_bins_.push_back(466.0);
-	st_bins_.push_back(521.0);
-	st_bins_.push_back(581.0);
-	st_bins_.push_back(645.0);
-	st_bins_.push_back(714.0);
-	st_bins_.push_back(783.0);
-	st_bins_.push_back(861.0);
-	st_bins_.push_back(946.0);
+	// old: [0.0, 281.0, 324.0, 367.0, 415.0, 466.0, 521.0, 581.0, 645.0, 714.0, 783.0, 861.0, 946.0, inf]
+	st_bins_.push_back(146.0);
+	st_bins_.push_back(277.0);
+	st_bins_.push_back(319.0);
+	st_bins_.push_back(361.0);
+	st_bins_.push_back(408.0);
+	st_bins_.push_back(459.0);
+	st_bins_.push_back(514.0);
+	st_bins_.push_back(573.0);
+	st_bins_.push_back(637.0);
+	st_bins_.push_back(705.0);
+	st_bins_.push_back(774.0);
+	st_bins_.push_back(854.0);
+	st_bins_.push_back(940.0);
 
 	//MT:
-	// old: [0.0, 28.0, 66.0, inf]
-	// new: [0.0, 23.0, 58.0, inf]
+	// old: [0., 23., 58., inf]
 	mt_bins_.push_back(0.);
 	mt_bins_.push_back(23.0);
 	mt_bins_.push_back(58.0);
 
 	//WPT:
-	// old: [0.0, 31.0, 59.0, 88.0, 118.0, 151.0, 187.0, 227.0, 267.0, inf]
-	// new: [0.0, 27.0, 52.0, 78.0, 105.0, 134.0, 165.0, 198.0, 235.0, inf]
+	// old: [0., 27., 52., 78., 105., 134., 165., 198., 235., inf]
 	wpt_bins_.push_back(0.);
 	wpt_bins_.push_back(27.0);
 	wpt_bins_.push_back(52.0);
 	wpt_bins_.push_back(78.0);
 	wpt_bins_.push_back(105.0);
 	wpt_bins_.push_back(134.0);
-	wpt_bins_.push_back(165.0);
-	wpt_bins_.push_back(198.0);
-	wpt_bins_.push_back(235.0);
+	wpt_bins_.push_back(166.0);
+	wpt_bins_.push_back(200.0);
+	wpt_bins_.push_back(237.0);
 
 	// mttbar
 	// Estimated from previous papers
