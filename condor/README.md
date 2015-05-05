@@ -18,9 +18,13 @@ To run just a test:
 ```shell
 BristolAnalysis/Tools/condor/condor.sh --operation=test
 ```
-to run a single sample
+to run one mode for a single sample
 ```shell
 BristolAnalysis/Tools/condor/condor.sh --operation=single --mode=central --energy=7 --sample=TTJet --cores 1
+```
+to run all modes for a single sample
+```shell
+BristolAnalysis/Tools/condor/condor.sh --operation=single-sample-analysis --energy=7 --sample=TTJet --cores 1
 ```
 to run the full analysis (many jobs!)
 ```shell

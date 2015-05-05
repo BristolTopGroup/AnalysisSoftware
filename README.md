@@ -54,12 +54,16 @@ cmsenv
 # get the code from the repository
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git BristolAnalysis/Tools
 
+# get submodules:
+git submodule init && git submodule update
+
 # compile
 scram b -j2
 
 hash -r #or rehash in case that BAT cannot be found
 
 # test run the code:
+BAT_Tests
 nohup BAT BristolAnalysis/Tools/python/test_cfg.py &> test.log &
 ```
 
