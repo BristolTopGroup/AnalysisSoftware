@@ -8,6 +8,8 @@
 #ifndef JET_H_
 #define JET_H_
 #include "Particle.h"
+#include "MCParticle.h"
+#include "TTGenInfo.h"
 #include "TF1.h"
 #include "TEfficiency.h"
 #include <vector>
@@ -15,6 +17,10 @@
 #include <boost/array.hpp>
 
 namespace BAT {
+
+class Jet;
+typedef boost::shared_ptr<Jet> JetPointer;
+typedef std::vector<JetPointer> JetCollection;
 
 namespace BtagAlgorithm {
 enum value {
@@ -58,6 +64,12 @@ public:
 
 	void set_matched_generated_jet(const ParticlePointer matchedgeneratedjet);
 	const ParticlePointer matched_generated_jet();
+
+	void set_matched_parton(const MCParticlePointer matchedparton);
+	const MCParticlePointer matched_parton();
+
+	void set_ttbar_decay_parton( TTPartons::partonType ttbarDecayParton );
+	const TTPartons::partonType ttbar_decay_parton();
 
 	void set_unsmeared_jet(const ParticlePointer unsmearedjet);
 	const ParticlePointer unsmeared_jet();
@@ -156,13 +168,14 @@ private:
 	double eta_smeared;
 
 	ParticlePointer matchedGeneratedJet;
+	MCParticlePointer matchedParton;
 	ParticlePointer unsmearedJet;
 	ParticlePointer smearedJet;
 	ParticlePointer rawJet_;
+
+	TTPartons::partonType ttbar_decay_parton_;
 };
 
-typedef boost::shared_ptr<Jet> JetPointer;
-typedef std::vector<JetPointer> JetCollection;
 }
 
 #endif /* JET_H_ */

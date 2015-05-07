@@ -15,6 +15,18 @@ namespace BAT {
 class TTGenInfo;
 typedef boost::shared_ptr<TTGenInfo> TTGenInfoPointer;
 
+namespace TTPartons {
+enum partonType {
+    Undefined,
+    Lepton,
+    Neutrino,
+    Quark,
+    QuarkBar,
+    LepB,
+    HadB
+};
+}
+
 class TTGenInfo {
 
 public:

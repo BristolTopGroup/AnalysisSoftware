@@ -122,6 +122,7 @@ public:
 	void setGenParticles(MCParticleCollection genParticles);
 	void setElectrons(ElectronCollection electrons);
 	void setJets(JetCollection jets);
+	void setJetTTBarPartons();
 	void setCleanedJets(JetCollection jets);
 	void setCleanedBJets(JetCollection bjets);
 	void setGenJets(JetCollection genJets);

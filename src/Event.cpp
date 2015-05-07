@@ -125,6 +125,28 @@ void Event::setJets(JetCollection jets) {
 	allJets = jets;
 }
 
+void Event::setJetTTBarPartons() {
+	// Loop over all jets, and set the parton if it matches to one from ttbar decay
+	const TTGenInfoPointer ttGen( this->TTGenInfo() );
+	ParticlePointer quark = ttGen->getQuark();
+	ParticlePointer quarkBar = ttGen->getQuarkBar();
+
+	// Only consider if there are partons from top decay
+	if ( quark == 0 || quarkBar == 0 ) return;
+
+	for ( unsigned int jetIndex = 0; jetIndex < allJets.size(); ++jetIndex ) {
+		JetPointer jet = allJets[jetIndex];
+
+		// Skip if jet doesn't have a matched parton
+		if ( jet->matched_parton() == 0 ) continue;
+
+		FourVector partonFV = jet->matched_parton()->getFourVector();
+
+		if ( partonFV == quark->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::Quark );			
+		else if ( partonFV == quarkBar->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::QuarkBar );
+	}
+}
+
 void Event::setCleanedJets(JetCollection jets) {
 	cleanedJets_.clear();
 

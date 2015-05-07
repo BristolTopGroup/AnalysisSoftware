@@ -155,6 +155,9 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	currentEvent->setTTGenInfo( ttGenInfoReader->getTTGenInfo());
 
+	// Have to do this after setting jets and TTGenInfo
+	currentEvent->setJetTTBarPartons();
+
 	if (!currentEvent->isRealData()) {
 	// 	std::cout << "Gen Particles etc." << std::endl;
 	// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());

@@ -45,6 +45,12 @@ protected:
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPyReader;
 	VariableReader<MultiDoublePointer> matchedGeneratedJetPzReader;
 
+	VariableReader<MultiDoublePointer> matchedPartonEnergyReader;
+	VariableReader<MultiDoublePointer> matchedPartonPxReader;
+	VariableReader<MultiDoublePointer> matchedPartonPyReader;
+	VariableReader<MultiDoublePointer> matchedPartonPzReader;
+	VariableReader<MultiIntPointer> matchedPartonPdgIdReader;
+
 	VariableReader<MultiDoublePointer> emfReader;
 	VariableReader<unsigned int> numberOfJetsReader;
 	VariableReader<MultiIntPointer> n90HitsReader;
