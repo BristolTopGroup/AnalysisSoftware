@@ -50,6 +50,9 @@ BOOST_FIXTURE_TEST_CASE(test_zero_start_var, TestSetup) {
 	analyser->set_variables(zero_start_var, fit_variable);
 	analyser->createHistograms();
 	BOOST_CHECK_EQUAL(histMan->size(), zero_var_bins.size());
+	analyser->set_variables(zero_start_var, fit_variable);
+	analyser->createHistograms();
+	BOOST_CHECK_EQUAL(histMan->size(), zero_var_bins.size() * 5);
 
 	// this folder should not exist
 	string folder = "TestBinnedVariableAnalyser/" + zero_start_var.name + "_bin_0-0";

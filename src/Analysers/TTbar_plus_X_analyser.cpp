@@ -872,14 +872,14 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 
 	//bins: start is always assumed to be 0 and the last is read as > X
 	//MET bins:
-	// old: [0.0, 31.0, 58.0, 96.0, 142.0, 191.0, inf]
-	// new: [0.0, 27.0, 52.0, 87.0, 129.0, 171.0, inf]
+	// old: [0., 27., 52., 87., 129., 171., inf]
 	metBins_.push_back(0.);
 	metBins_.push_back(27.);
 	metBins_.push_back(52.);
 	metBins_.push_back(87.);
-	metBins_.push_back(129.);
-	metBins_.push_back(171.);
+	metBins_.push_back(130.);
+	metBins_.push_back(172.);
+
 	//HT:
 	// old: [0.0, 190.0, 225.0, 262.0, 302.0, 345.0, 392.0, 445.0, 501.0, 562.0, 623.0, 689.0, 766.0, inf]
 	// new: [0.0, 187.0, 217.0, 250.0, 287.0, 327.0, 369.0, 414.0, 464.0, 517.0, 575.0, 634.0, 696.0, 772.0, inf]
@@ -923,17 +923,16 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 	mt_bins_.push_back(58.0);
 
 	//WPT:
-	// old: [0.0, 31.0, 59.0, 88.0, 118.0, 151.0, 187.0, 227.0, 267.0, inf]
-	// new: [0.0, 27.0, 52.0, 78.0, 105.0, 134.0, 165.0, 198.0, 235.0, inf]
+	// old: [0., 27., 52., 78., 105., 134., 165., 198., 235., inf]
 	wpt_bins_.push_back(0.);
 	wpt_bins_.push_back(27.0);
 	wpt_bins_.push_back(52.0);
 	wpt_bins_.push_back(78.0);
 	wpt_bins_.push_back(105.0);
 	wpt_bins_.push_back(134.0);
-	wpt_bins_.push_back(165.0);
-	wpt_bins_.push_back(198.0);
-	wpt_bins_.push_back(235.0);
+	wpt_bins_.push_back(166.0);
+	wpt_bins_.push_back(200.0);
+	wpt_bins_.push_back(237.0);
 
 	// mttbar
 	// Estimated from previous papers

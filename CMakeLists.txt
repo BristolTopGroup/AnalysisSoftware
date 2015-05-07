@@ -1,6 +1,7 @@
 # Check if cmake has the required version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR)
 set(PROJECT_NAME_STR AnalysisSoftware)
+set(PROJECT_LIB_NAME BristolAnalysisTools)
 PROJECT(${PROJECT_NAME_STR})
 set(PROJECT_LIB_NAME BristolAnalysisTools)
 
