@@ -26,12 +26,11 @@ namespace BAT {
 
 class HitFitAnalyser: public BasicAnalyser {
 private:
-	std::string outFileName;
-	ofstream outFile;
 
 //    BAT::TtbarHypothesis trueFourVectors;
 	BAT::TtbarHypothesis truthMatchEvent;
 	BAT::JetCollection jetsForFitting;
+	BAT::JetCollection bJetsForFitting;
 
 	std::string FitterPath_;
 	std::string hitfitDefault_;
@@ -66,7 +65,7 @@ private:
 	BAT::TtbarHypothesis BatEvent(const hitfit::Lepjets_Event& ev);
 
 public:
-	HitFitAnalyser(HistogramManagerPtr histMan, const bool isElectronChannel, std::string histogramFolder = "hitfitStudy" );
+	HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder = "hitfitStudy" );
 	virtual ~HitFitAnalyser();
 
 	void analyse(const EventPtr);
