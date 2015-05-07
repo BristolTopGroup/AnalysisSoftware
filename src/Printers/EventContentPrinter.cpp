@@ -82,14 +82,14 @@ extern void printElectron(const ElectronPointer electron) {
 	cout << setw(30) << "" << setw(30) << "rel. iso." << setw(30) << "" << setw(30)
 			<< "superClusterEta" << endl;
 
-	cout << setw(30) << "" << setw(30) << electron->relativeIsolation() << setw(30)
-			<< "" << setw(30) << electron->superClusterEta() << endl;
+	// cout << setw(30) << "" << setw(30) << electron->relativeIsolation() << setw(30)
+	// 		<< "" << setw(30) << electron->superClusterEta() << endl;
 
 	cout << setw(30) << "dCotTheta" << setw(30) << "pf rel. iso." << setw(30) << "dist" << setw(30)
 				<< " " << endl;
 
-		cout << setw(30) << electron->dCotThetaToClosestTrack()<< setw(30) << electron->pfRelativeIsolation(0.3) << setw(30)
-				<< electron->distToClosestTrack() << setw(30) << "" << endl;
+		// cout << setw(30) << electron->dCotThetaToClosestTrack()<< setw(30) << electron->pfRelativeIsolation(0.3) << setw(30)
+		// 		<< electron->distToClosestTrack() << setw(30) << "" << endl;
 
 	//    cout << setw(30) << "isTrackerDriven" << setw(30) << "swiss_cross" << setw(30) << "isLoose" << setw(30)
 	//            << "isEcalDriven" << endl;
@@ -99,7 +99,7 @@ extern void printMuon(const MuonPointer muon) {
 	printParticle(muon);
 	cout << "Muon Information" << endl;
 	cout << setw(30) << "is global" << setw(30) << "is tracker" << setw(30) << "PF RelIso DR=0.3" << setw(30) << "----" << endl;
-	cout << setw(30) << muon->isGlobal() << setw(30) << "" << setw(30) << muon->pfRelativeIsolation(0.3) << setw(30) << "" << endl;
+	// cout << setw(30) << muon->isGlobal() << setw(30) << "" << setw(30) << muon->pfRelativeIsolation(0.3) << setw(30) << "" << endl;
 
 }
 

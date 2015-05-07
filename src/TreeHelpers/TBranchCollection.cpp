@@ -16,7 +16,7 @@ void TBranchCollection::addBranchToTree(std::string branchLabel, std::string var
 
     if ( isSingleValuePerEvent ) {
         // Make variable associated with this branch
-        varMap_[branchLabel] = VarPointer(new float() );
+        varMap_[branchLabel] = VarPointer(new float( -99 ) );
         // Make branch
         tree->Branch( branchLabel.c_str(), varMap_[branchLabel].get(), ( branchLabel+"/"+varType).c_str() );
     }
@@ -34,6 +34,10 @@ void TBranchCollection::setBranchVariable(std::string branchLabel, float value) 
     }
     else if ( vectorContains(branchLabel) ) {
         varVectorMap_[branchLabel]->push_back(value);
+    }
+    else {
+        cout << "WARNING : Trying to fill branch that doesn't exist in this folder" << endl;
+        cout << "Branch label : " << branchLabel << endl;
     }
 }
 

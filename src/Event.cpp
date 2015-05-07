@@ -18,6 +18,10 @@ namespace BAT {
 bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = true;
 
+double const Event::minJetPt_ = 30;
+unsigned int const Event::minNJets_ = 4;
+unsigned int const Event::minNBJets_ = 2;
+
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
 		HLTPrescales(new std::vector<int>()), //
@@ -26,6 +30,8 @@ Event::Event() : //
 		tracks(), //
 		allElectrons(), //
 		allJets(), //
+		cleanedJets_(), //
+		cleanedBJets_(),
 		genJets(), //
 		allMuons(), //
 		passesElectronSelection_(false),
@@ -119,9 +125,37 @@ void Event::setJets(JetCollection jets) {
 	allJets = jets;
 }
 
+void Event::setCleanedJets(JetCollection jets) {
+	cleanedJets_.clear();
+
+	cleanedJets_ = jets;
+}
+
+void Event::setCleanedBJets(JetCollection bjets) {
+	cleanedBJets_.clear();
+
+	cleanedBJets_ = bjets;
+}
+
 void Event::setGenJets(JetCollection jets) {
 	genJets.clear();
 	genJets = jets;
+}
+
+const bool Event::PassesElectronChannelTrigger() const {
+	if ( passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonChannelTrigger() const {
+	if ( passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
 }
 
 const bool Event::PassesElectronSelection() const {
@@ -163,6 +197,47 @@ const bool Event::PassesMuonQCDSelection() const {
 
 	return false;
 }
+
+const bool Event::PassesElectronTriggerAndSelection() const {
+	if ( passesElectronSelection_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronTriggerAndQCDSelection() const {
+	if ( passesElectronQCDSelection_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronTriggerAndConversionSelection() const {
+	if ( passesElectronConversionSelection_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonTriggerAndSelection() const {
+	if ( passesMuonSelection_ && passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonTriggerAndQCDSelection() const {
+	if ( passesMuonQCDSelection_ && passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
 
 const bool Event::isSemiLeptonicElectron() const {
 	if ( isSemiLeptonicElectron_ ) {
@@ -320,61 +395,17 @@ JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm:
 	return bjets;
 }
 
-const ElectronPointer Event::MostIsolatedElectron(const ElectronCollection& electrons, bool usePFIso) const {
-	float bestIsolation = 999999999;
-	unsigned int bestIsolatedLepton = 990;
-	for (unsigned int index = 0; index < electrons.size(); ++index) {
-		float currentIsolation = 999999999;
-		if (usePFIso)
-			currentIsolation = electrons.at(index)->pfRelativeIsolation();
-		else
-			currentIsolation = electrons.at(index)->relativeIsolation();
-
-		if (currentIsolation < bestIsolation) {
-			bestIsolation = currentIsolation;
-			bestIsolatedLepton = index;
-		}
-	}
-	return electrons.at(bestIsolatedLepton);
-}
-
-const MuonPointer Event::MostIsolatedMuon(const MuonCollection& muons, bool usePFIso) const {
-	float bestIsolation = 999999999;
-	unsigned int bestIsolatedLepton = 990;
-	for (unsigned int index = 0; index < muons.size(); ++index) {
-		float currentIsolation = 999999999;
-		if (usePFIso)
-			currentIsolation = muons.at(index)->pfRelativeIsolation();
-		else
-			currentIsolation = muons.at(index)->relativeIsolation();
-
-		if (currentIsolation < bestIsolation) {
-			bestIsolation = currentIsolation;
-			bestIsolatedLepton = index;
-		}
-	}
-	return muons.at(bestIsolatedLepton);
-}
-
-const ElectronPointer Event::MostIsolatedElectron(const ElectronCollection& electrons) const {
-	return MostIsolatedElectron(electrons, false);
-}
-
-const ElectronPointer Event::MostPFIsolatedElectron(const ElectronCollection& electrons) const {
-	return MostIsolatedElectron(electrons, true);
-}
-
-const MuonPointer Event::MostIsolatedMuon(const MuonCollection& muons) const {
-	return MostIsolatedMuon(muons, false);
-}
-
-const MuonPointer Event::MostPFIsolatedMuon(const MuonCollection& muons) const {
-	return MostIsolatedMuon(muons, true);
-}
-
 void Event::setMuons(MuonCollection muons) {
 	allMuons.clear();
 	allMuons = muons;
+}
+
+void Event::setPassesElectronChannelTrigger( bool passesTrigger ) {
+	passesElectronChannelTrigger_ = passesTrigger;
+}
+
+void Event::setPassesMuonChannelTrigger( bool passesTrigger ) {
+	passesMuonChannelTrigger_ = passesTrigger;
 }
 
 void Event::setPassesElectronSelection( bool passesElectronSelection ) {
@@ -398,13 +429,45 @@ void Event::setPassesMuonQCDSelection( bool passesMuonQCDSelection ) {
 }
 
 void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelections ) {
-	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
-		if ( passSelections[selection] == 1 ) setPassesMuonSelection( true );
-		if ( passSelections[selection] == 2 ) setPassesElectronSelection( true );
-		if ( passSelections[selection] == 3 ) setPassesMuonQCDSelection( true );
-		if ( passSelections[selection] == 4 ) setPassesElectronQCDSelection( true );
-		if ( passSelections[selection] == 5 ) setPassesElectronConversionSelection( true );
+	if ( passSelections.size() > 1 ) {
+		cout << "SHIT PANIC" << endl;
+		for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
+			if ( passSelections[selection] != 2 && passSelections[selection] != 4 )
+				cout << selection << " " << passSelections[selection] << endl;
+		}
+ 
 	}
+	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
+		if ( passSelections[selection] == 1 && passesJetSelection( selection ) ) setPassesMuonSelection( true );
+		if ( passSelections[selection] == 2 && passesJetSelection( selection ) ) setPassesElectronSelection( true );
+		if ( passSelections[selection] == 3 && passesJetSelection( selection ) ) setPassesMuonQCDSelection( true );
+		if ( passSelections[selection] == 4 && passesJetSelection( selection ) ) setPassesElectronQCDSelection( true );
+		if ( passSelections[selection] == 5 && passesJetSelection( selection ) ) setPassesElectronConversionSelection( true );
+	}
+}
+
+const bool Event::passesJetSelection( const unsigned int selectionCriteria ) {
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+	const JetCollection jets = getCleanedJets( selection );
+	unsigned int nJetPass = 0;
+	for ( unsigned int jetIndex = 0; jetIndex < jets.size(); ++jetIndex ) {
+		const JetPointer jet = jets.at(jetIndex);
+		if ( jet->pt() >= minJetPt_ ) ++nJetPass;
+	}
+
+	if ( nJetPass < minNJets_ ) return false;
+
+	const JetCollection bjets = getCleanedBJets( selection );
+	unsigned int nBJetPass = 0;
+	for ( unsigned int bJetIndex = 0; bJetIndex < bjets.size(); ++bJetIndex ) {
+		const JetPointer bjet = bjets.at(bJetIndex);
+		if ( bjet->pt() >= minJetPt_ ) ++nBJetPass;
+	}
+
+	if ( nBJetPass < minNBJets_ ) return false;
+
+	return true;
 }
 
 void Event::setIsSemiLeptonicElectron( bool isSemiLeptonicElectron ) {
@@ -515,6 +578,14 @@ const ElectronCollection& Event::Electrons() const {
 
 const JetCollection& Event::Jets() const {
 	return allJets;
+}
+
+const JetCollection& Event::CleanedJets() const {
+	return cleanedJets_;
+}
+
+const JetCollection& Event::CleanedBJets() const {
+	return cleanedBJets_;
 }
 
 const JetCollection& Event::GenJets() const {

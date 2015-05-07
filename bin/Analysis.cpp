@@ -59,7 +59,7 @@ void Analysis::analyse() {
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		if ( currentEvent->getDataType() == DataType::TTJets ) {
+		if ( ( currentEvent->getDataType() == DataType::TTJets || currentEvent->getDataType() == DataType::TT_Pythia8 ) && Globals::treePrefix_ == "" ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 		}
@@ -158,7 +158,8 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	if ( eventReader->getSeenDatatypes()[DataType::TTJets] ) {
+	if ( ( eventReader->getSeenDatatypes()[DataType::TTJets] || eventReader->getSeenDatatypes()[DataType::TT_Pythia8] )
+		&& Globals::treePrefix_ == "" ) {
 		pseudoTopAnalyser_->createTrees();
 		unfoldingRecoAnalyser_->createTrees();
 	}
@@ -180,10 +181,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-		electronAnalyser(new ElectronAnalyser(histMan)), //
-		jetAnalyser(new JetAnalyser(histMan)), //
 		metAnalyser(new METAnalyser(histMan, treeMan)), //
-		muonAnalyser(new MuonAnalyser(histMan)), //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
 		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)),

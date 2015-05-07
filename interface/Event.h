@@ -53,9 +53,14 @@ protected:
 	ElectronCollection allElectrons;
 
 	JetCollection allJets;
+	JetCollection cleanedJets_;
+	JetCollection cleanedBJets_;
 	JetCollection genJets;
 
 	MuonCollection allMuons;
+
+	bool passesElectronChannelTrigger_;
+	bool passesMuonChannelTrigger_;
 
 	bool passesElectronSelection_;
 	bool passesElectronQCDSelection_;
@@ -117,14 +122,19 @@ public:
 	void setGenParticles(MCParticleCollection genParticles);
 	void setElectrons(ElectronCollection electrons);
 	void setJets(JetCollection jets);
+	void setCleanedJets(JetCollection jets);
+	void setCleanedBJets(JetCollection bjets);
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
+	void setPassesElectronChannelTrigger( bool passesTrigger );
+	void setPassesMuonChannelTrigger( bool passesTrigger );
 	void setPassesElectronSelection(bool passesElectronSelection);
 	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
 	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
 	void setPassesMuonSelection(bool passesMuonSelection);
 	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
 	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
+	const bool passesJetSelection( const unsigned int selectionCriteria );
 	void setPassGenSelectionInfo( std::vector<unsigned int> );
 	void setIsSemiLeptonicElectron( bool isSemiLeptonicElectron );
 	void setIsSemiLeptonicMuon( bool isSemiLeptonicMuon );
@@ -174,6 +184,8 @@ public:
 	const ElectronCollection& Electrons() const;
 	const ElectronCollection& QCDElectrons() const;
 	const JetCollection& Jets() const;
+	const JetCollection& CleanedJets() const;
+	const JetCollection& CleanedBJets() const;
 	const JetCollection& GenJets() const;
 	const MuonCollection& Muons() const;
 	const METPointer MET() const;
@@ -182,19 +194,20 @@ public:
 
 	const TtbarHypothesis ttbarHypothesis() const;
 
-	const ElectronPointer MostIsolatedElectron(const ElectronCollection&, bool usePFIso) const;
-	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;
-	const ElectronPointer MostPFIsolatedElectron(const ElectronCollection&) const;
-
-	const MuonPointer MostIsolatedMuon(const MuonCollection&, bool usePFIso) const;
-	const MuonPointer MostIsolatedMuon(const MuonCollection& muons) const;
-	const MuonPointer MostPFIsolatedMuon(const MuonCollection&) const;
+	const bool PassesElectronChannelTrigger() const;
+	const bool PassesMuonChannelTrigger() const;
 
 	const bool PassesElectronSelection() const;
 	const bool PassesElectronQCDSelection() const;
 	const bool PassesElectronConversionSelection() const;
 	const bool PassesMuonSelection() const;
 	const bool PassesMuonQCDSelection() const;
+
+	const bool PassesElectronTriggerAndSelection() const;
+	const bool PassesMuonTriggerAndSelection() const;
+	const bool PassesElectronTriggerAndQCDSelection() const;
+	const bool PassesElectronTriggerAndConversionSelection() const;
+	const bool PassesMuonTriggerAndQCDSelection() const;
 
 	const bool isSemiLeptonicElectron() const;
 	const bool isSemiLeptonicMuon() const;
@@ -254,6 +267,10 @@ public:
 	static double ST(const JetCollection, const ParticlePointer, const METPointer);
 	static double MT(const ParticlePointer, const METPointer);
 	static double WPT(const ParticlePointer, const METPointer);
+
+	static double const minJetPt_;
+	static unsigned int const minNJets_;
+	static unsigned int const minNBJets_;
 
 };
 

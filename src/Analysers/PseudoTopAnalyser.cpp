@@ -56,10 +56,10 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// Check if event passes event selection (at pseudo top level)
 	if ( passesEventSelection( pseudoLepton, pseudoNeutrino, pseudoJets, pseudoBs, allPseudoLeptons, pseudoMET ) ) {
-		treeMan_->Fill("passesEventSelection",1);
+		treeMan_->Fill("passesGenEventSelection",1);
 	}
 	else {
-		treeMan_->Fill("passesEventSelection",0);
+		treeMan_->Fill("passesGenEventSelection",0);
 	}
 
 	// Store info on top
@@ -83,10 +83,22 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("pseudoLepton_eta", pseudoLepton->eta() );
 
 	// Store info on Bs
-	for ( unsigned int pbIndex = 0; pbIndex < pseudoBs.size(); ++ pbIndex ) {
-		treeMan_->Fill("pseudoB_pT", pseudoBs[pbIndex]->pt() );
-		treeMan_->Fill("pseudoB_eta", pseudoBs[pbIndex]->eta() );
+	if ( pseudoBs.size() != 2 ) {
+		cout << "Odd number of pseudo bs : " << pseudoBs.size() << endl;
 	}
+	unsigned int leadingPsuedoBIndex = 0;
+	if ( pseudoBs[1]->pt() > pseudoBs[0]->pt() ) {
+		leadingPsuedoBIndex = 1;
+	}
+	unsigned int subleadingPsuedoBIndex = ( leadingPsuedoBIndex == 0 ) ? 1 : 0;
+	treeMan_->Fill("pseudoB_pT", pseudoBs[leadingPsuedoBIndex]->pt() );
+	treeMan_->Fill("pseudoB_eta", pseudoBs[leadingPsuedoBIndex]->eta() );
+	treeMan_->Fill("pseudoB_pT", pseudoBs[subleadingPsuedoBIndex]->pt() );
+	treeMan_->Fill("pseudoB_eta", pseudoBs[subleadingPsuedoBIndex]->eta() );
+	// for ( unsigned int pbIndex = 0; pbIndex < pseudoBs.size(); ++pbIndex ) {
+	// 	treeMan_->Fill("pseudoB_pT", pseudoBs[pbIndex]->pt() );
+	// 	treeMan_->Fill("pseudoB_eta", pseudoBs[pbIndex]->eta() );
+	// }
 
 	// Store pseudo MET
 	treeMan_->Fill("pseudoMET", pseudoMET->et() );
@@ -115,7 +127,7 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("isSemiLeptonicElectron", "F","Unfolding");
 	treeMan_->addBranch("isSemiLeptonicMuon", "F","Unfolding");
 
-	treeMan_->addBranch("passesEventSelection","F","Unfolding");
+	treeMan_->addBranch("passesGenEventSelection","F","Unfolding");
 
 	// Branches for top
 	treeMan_->addBranch("pseudoTop_pT", "F", "Unfolding", false);
@@ -150,12 +162,12 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		const ParticlePointer lepton = allPseudoLeptons.at(leptonIndex);
 
 		// Check if this is a good signal type lepton
-		if ( lepton->pt() > minLeptonPt_ && fabs(lepton->eta()) > maxLeptonAbsEta_ ) {
+		if ( lepton->pt() > minLeptonPt_ && fabs(lepton->eta()) < maxLeptonAbsEta_ ) {
 			++numberGoodLeptons;
 		}
 		
 		// Check if this is a veto lepton
-		if ( lepton->pt() > minVetoLeptonPt_ && fabs(lepton->eta()) > maxVetoLeptonAbsEta_ ) {
+		if ( lepton->pt() > minVetoLeptonPt_ && fabs(lepton->eta()) < maxVetoLeptonAbsEta_ ) {
 			++numberVetoLeptons;
 		}
 	}
@@ -175,7 +187,7 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		const JetPointer jet = pseudoJets.at(jetIndex);
 
 		// Check if this is a good jet
-		if ( jet->pt() > minJetPt_ && fabs(jet->eta()) > maxJetAbsEta_ ) {
+		if ( jet->pt() > minJetPt_ && fabs(jet->eta()) < maxJetAbsEta_ ) {
 			++numberGoodJets;
 		}		
 	}
@@ -186,13 +198,14 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		const ParticlePointer bjet = pseudoBs.at(jetIndex);
 
 		// Check if this is a good jet
-		if ( bjet->pt() > minJetPt_ && fabs(bjet->eta()) > maxJetAbsEta_ ) {
+		if ( bjet->pt() > minJetPt_ && fabs(bjet->eta()) < maxJetAbsEta_ ) {
 			++numberGoodBJets;
 		}		
 	}
 	
-
-	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && passesNeutrinoSumPt && passesWMT && numberGoodJets >= minNJets_ && numberGoodBJets >= minNBJets_ ) return true;
+	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && passesNeutrinoSumPt && passesWMT && numberGoodJets >= minNJets_ && numberGoodBJets >= minNBJets_ ) {
+		return true;
+	}
 	else return false;
 
 }
