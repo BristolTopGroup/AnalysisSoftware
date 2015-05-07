@@ -33,6 +33,7 @@ void Analysis::analyse() {
 
 
 	while (eventReader->hasNextEvent()) {
+
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
@@ -62,6 +63,7 @@ void Analysis::analyse() {
 		if ( ( currentEvent->getDataType() == DataType::TTJets || currentEvent->getDataType() == DataType::TT_Pythia8 ) && Globals::treePrefix_ == "" ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
+			// likelihoodInputAnalyser_->analyse(currentEvent);
 		}
 		treeMan->FillTrees();
 	}
@@ -162,6 +164,7 @@ void Analysis::createHistograms() {
 		&& Globals::treePrefix_ == "" ) {
 		pseudoTopAnalyser_->createTrees();
 		unfoldingRecoAnalyser_->createTrees();
+		likelihoodInputAnalyser_->createTrees();
 	}
 
 	histMan->setCurrentHistogramFolder("");
@@ -185,7 +188,8 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
 		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)),
-		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)) {
+		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)),
+		likelihoodInputAnalyser_(new LikelihoodInputAnalyser(histMan, treeMan)) {
 	histMan->enableDebugMode(true);
 }
 

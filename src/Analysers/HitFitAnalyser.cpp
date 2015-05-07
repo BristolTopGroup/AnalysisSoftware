@@ -235,6 +235,7 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 				}
 			}
 
+			treeMan_->Fill("FitChiSquaredAllSolutions",fitResult.chisq());
 		}
 		if (fitResult.chisq() > 0.0 && fitResult.chisq() < bestChi2) {
 			bestChi2 = fitResult.chisq();
@@ -393,6 +394,24 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 			BAT::Jet newJet(**j);
 			newJet.setFourVector(hfJet);
 
+			if (hfJType == hitfit::lepb_label)
+				*newLepB = newJet;
+			if (hfJType == hitfit::hadb_label)
+				*newHadB = newJet;
+			if (hfJType == hitfit::hadw1_label)
+				*newWj1 = newJet;
+			if (hfJType == hitfit::hadw2_label)
+				*newWj2 = newJet;
+		}
+	}
+
+	for (BAT::JetCollection::const_iterator j = bJetsForFitting.begin(); j != bJetsForFitting.end(); ++i, ++j) {
+		FourVector hfJet = fourVectorFromHitFit(ev.jet(i).p());
+		int hfJType = ev.jet(i).type();
+//    if ((*j)->getFourVector().DeltaR(hfJet) < 0.005) {
+		if (hfJType != hitfit::unknown_label) {
+			BAT::Jet newJet(**j);
+			newJet.setFourVector(hfJet);
 			if (hfJType == hitfit::lepb_label)
 				*newLepB = newJet;
 			if (hfJType == hitfit::hadb_label)

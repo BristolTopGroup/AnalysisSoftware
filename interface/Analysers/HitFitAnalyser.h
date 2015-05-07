@@ -73,7 +73,8 @@ public:
 	BAT::TtbarHypothesis analyseAndReturn(const EventPtr, const JetCollection jets, const JetCollection bjets, const LeptonPointer selectedLepton );
 	void setMCTTbarHypothesis(const TtbarHypothesis& mcEvent);
 	void createHistograms();
-	void printFile(const string filename);
+	void createTrees();
+	int positionOfLastTTBarJet(const JetCollection jets);
 };
 typedef boost::scoped_ptr<HitFitAnalyser> HitFitAnalyserLocalPtr;
 typedef boost::shared_ptr<HitFitAnalyser> HitFitAnalyserPtr;

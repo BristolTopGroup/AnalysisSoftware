@@ -17,6 +17,8 @@
 #include "WAnalyser.h"
 #include "HitFitAnalyser.h"
 #include "Binned_variable_analyser.h"
+#include "../Rochester/NeutrinoSolver.h"
+#include "../Rochester/TTBarSolver.h"
 
 #include <string>
 

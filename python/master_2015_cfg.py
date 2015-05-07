@@ -117,13 +117,16 @@ custom_file_suffix = settings['custom_file_suffix']
 
 input_folders = datasets[sample]
 filetype = '*.root'
+
 if ntupleToProcess > 0 :
     filetype = '*%03d.root' % ntupleToProcess
     print 'Will only consider ntuple : ',filetype
     settings['custom_file_suffix'] += str(ntupleToProcess)
     custom_file_suffix = settings['custom_file_suffix']
+
 inputFiles = [path + '/' + filetype for path in input_folders]
 # inputFiles = datasets[sample]
+print inputFiles
 
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():

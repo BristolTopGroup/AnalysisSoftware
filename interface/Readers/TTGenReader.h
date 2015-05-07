@@ -26,6 +26,25 @@ private:
     VariableReader<double> quarkBarPzReader;
     VariableReader<double> quarkBarEReader;
     VariableReader<int> quarkBarGenJetIndexReader;
+    VariableReader<double> leptonicBPxReader;
+    VariableReader<double> leptonicBPyReader;
+    VariableReader<double> leptonicBPzReader;
+    VariableReader<double> leptonicBEReader;
+    VariableReader<int> leptonicBGenJetIndexReader;
+    VariableReader<double> hadronicBPxReader;
+    VariableReader<double> hadronicBPyReader;
+    VariableReader<double> hadronicBPzReader;
+    VariableReader<double> hadronicBEReader;
+    VariableReader<int> hadronicBGenJetIndexReader;
+    VariableReader<double> singleleptonPxReader;
+    VariableReader<double> singleleptonPyReader;
+    VariableReader<double> singleleptonPzReader;
+    VariableReader<double> singleleptonEReader;
+    VariableReader<double> singleneutrinoPxReader;
+    VariableReader<double> singleneutrinoPyReader;
+    VariableReader<double> singleneutrinoPzReader;
+    VariableReader<double> singleneutrinoEReader;
+
 
     TTGenInfoPointer ttGenInfo_;
     void readTTGenInfo();

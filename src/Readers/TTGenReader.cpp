@@ -19,7 +19,25 @@ TTGenReader::TTGenReader() :
     quarkBarPyReader(),
     quarkBarPzReader(),
     quarkBarEReader(),
-    quarkBarGenJetIndexReader() {
+    quarkBarGenJetIndexReader(), 
+    leptonicBPxReader(),
+    leptonicBPyReader(),
+    leptonicBPzReader(),
+    leptonicBEReader(),
+    leptonicBGenJetIndexReader(),
+    hadronicBPxReader(),
+    hadronicBPyReader(),
+    hadronicBPzReader(),
+    hadronicBEReader(),
+    hadronicBGenJetIndexReader(),
+    singleleptonPxReader(),
+    singleleptonPyReader(),
+    singleleptonPzReader(),
+    singleleptonEReader(),
+    singleneutrinoPxReader(),
+    singleneutrinoPyReader(),
+    singleneutrinoPzReader(),
+    singleneutrinoEReader() {
 
 }
 
@@ -33,7 +51,25 @@ TTGenReader::TTGenReader(TChainPointer input) :
     quarkBarPyReader(input, "Event.hadronicdecayquarkbarPy"),
     quarkBarPzReader(input, "Event.hadronicdecayquarkbarPz"),
     quarkBarEReader(input, "Event.hadronicdecayquarkbarEnergy"),
-    quarkBarGenJetIndexReader(input, "Event.hadronicDecayQuarkBarGenJetIndex") {
+    quarkBarGenJetIndexReader(input, "Event.hadronicDecayQuarkBarGenJetIndex"), 
+    leptonicBPxReader(input, "Event.leptonicBPx"),
+    leptonicBPyReader(input, "Event.leptonicBPy"),
+    leptonicBPzReader(input, "Event.leptonicBPz"),
+    leptonicBEReader(input, "Event.leptonicBEnergy"),
+    leptonicBGenJetIndexReader(input, "Event.leptonicBGenJetIndex"), 
+    hadronicBPxReader(input, "Event.hadronicBPx"),
+    hadronicBPyReader(input, "Event.hadronicBPy"),
+    hadronicBPzReader(input, "Event.hadronicBPz"),
+    hadronicBEReader(input, "Event.hadronicBEnergy"),
+    hadronicBGenJetIndexReader(input, "Event.hadronicBGenJetIndex"),
+    singleleptonPxReader(input, "Event.SingleLeptonPx"),
+    singleleptonPyReader(input, "Event.SingleLeptonPy"),
+    singleleptonPzReader(input, "Event.SingleLeptonPz"),
+    singleleptonEReader(input, "Event.SingleLeptonEnergy"),
+    singleneutrinoPxReader(input, "Event.SingleNeutrinoPx"),
+    singleneutrinoPyReader(input, "Event.SingleNeutrinoPy"),
+    singleneutrinoPzReader(input, "Event.SingleNeutrinoPz"),
+    singleneutrinoEReader(input, "Event.SingleNeutrinoEnergy") {
 
 }
 
@@ -67,7 +103,63 @@ void TTGenReader::readTTGenInfo() {
     // Get index of gen jet associated with quark bar parton
     int qBarGenJetIndex = quarkBarGenJetIndexReader.getVariable();
 
-    ttGenInfo_ = TTGenInfoPointer( new TTGenInfo( quark, quarkBar, qGenJetIndex, qBarGenJetIndex ) );
+    // Make leptonic b quark particle
+    double leptonicBPx = leptonicBPxReader.getVariable();
+    double leptonicBPy = leptonicBPyReader.getVariable();
+    double leptonicBPz = leptonicBPzReader.getVariable();
+    double leptonicBE = leptonicBEReader.getVariable();
+    ParticlePointer leptonicB(new Particle(leptonicBE, leptonicBPx, leptonicBPy, leptonicBPz));
+
+    // Get index of gen jet associated with leptonic B
+    int leptonicBGenJetIndex = leptonicBGenJetIndexReader.getVariable();
+
+    // Make hadronic b quark particle
+    double hadronicBPx = hadronicBPxReader.getVariable();
+    double hadronicBPy = hadronicBPyReader.getVariable();
+    double hadronicBPz = hadronicBPzReader.getVariable();
+    double hadronicBE = hadronicBEReader.getVariable();
+    ParticlePointer hadronicB(new Particle(hadronicBE, hadronicBPx, hadronicBPy, hadronicBPz));
+
+    // Get index of gen jet associated with hadronic B
+    int hadronicBGenJetIndex = hadronicBGenJetIndexReader.getVariable();
+
+    // Make Single Lepton particle
+    double singleleptonPx = singleleptonPxReader.getVariable();
+    double singleleptonPy = singleleptonPyReader.getVariable();
+    double singleleptonPz = singleleptonPzReader.getVariable();
+    double singleleptonE = singleleptonEReader.getVariable();
+    ParticlePointer singlelepton(new Particle(singleleptonE, singleleptonPx, singleleptonPy, singleleptonPz));
+    // Make Single Neutrino particle
+    double singleneutrinoPx = singleneutrinoPxReader.getVariable();
+    double singleneutrinoPy = singleneutrinoPyReader.getVariable();
+    double singleneutrinoPz = singleneutrinoPzReader.getVariable();
+    double singleneutrinoE = singleneutrinoEReader.getVariable();
+    ParticlePointer singleneutrino(new Particle(singleneutrinoE, singleneutrinoPx, singleneutrinoPy, singleneutrinoPz));
+
+    // check it works
+    // std::cout << "-------------------------------------" << std::endl;
+    // std::cout << "Single Neutrino Energy:" << singleneutrino->energy() << std::endl;
+    // std::cout << "Single Neutrino Px:" << singleneutrino->px() << std::endl;
+    // std::cout << "Single Neutrino Py:" << singleneutrino->py() << std::endl;
+    // std::cout << "Single Neutrino Pz:" << singleneutrino->pz() << std::endl << std::endl;
+    // std::cout << "-------------------------------------" << std::endl;
+    // std::cout << "Single Lepton Energy:" << singlelepton->energy() << std::endl;
+    // std::cout << "Single Lepton Px:" << singlelepton->px() << std::endl;
+    // std::cout << "Single Lepton Py:" << singlelepton->py() << std::endl;
+    // std::cout << "Single Lepton Pz:" << singlelepton->pz() << std::endl << std::endl;
+    // std::cout << "-------------------------------------" << std::endl;
+    // std::cout << "Leptonic B Energy:" << leptonicB->energy() << std::endl;
+    // std::cout << "Leptonic B Px:" << leptonicB->px() << std::endl;
+    // std::cout << "Leptonic B Py:" << leptonicB->py() << std::endl;
+    // std::cout << "Leptonic B Pz:" << leptonicB->pz() << std::endl << std::endl;
+    // std::cout << "-------------------------------------" << std::endl;
+    // std::cout << "Hadronic B Energy:" << hadronicB->energy() << std::endl;
+    // std::cout << "Hadronic B Px:" << hadronicB->px() << std::endl;
+    // std::cout << "Hadronic B Py:" << hadronicB->py() << std::endl;
+    // std::cout << "Hadronic B Pz:" << hadronicB->pz() << std::endl;
+    // std::cout << "-------------------------------------" << std::endl;
+
+    ttGenInfo_ = TTGenInfoPointer( new TTGenInfo( quark, quarkBar, leptonicB, hadronicB, singlelepton, singleneutrino, qGenJetIndex, qBarGenJetIndex, leptonicBGenJetIndex, hadronicBGenJetIndex ) );
 
 }
 
@@ -83,6 +175,24 @@ void TTGenReader::initialise() {
     quarkBarPzReader.initialise();
     quarkBarEReader.initialise();
     quarkBarGenJetIndexReader.initialise();
+    leptonicBPxReader.initialise();
+    leptonicBPyReader.initialise();
+    leptonicBPzReader.initialise();
+    leptonicBEReader.initialise();
+    leptonicBGenJetIndexReader.initialise();
+    hadronicBPxReader.initialise();
+    hadronicBPyReader.initialise();
+    hadronicBPzReader.initialise();
+    hadronicBEReader.initialise();
+    hadronicBGenJetIndexReader.initialise();
+    singleleptonPxReader.initialise();
+    singleleptonPyReader.initialise();
+    singleleptonPzReader.initialise();
+    singleleptonEReader.initialise();
+    singleneutrinoPxReader.initialise();
+    singleneutrinoPyReader.initialise();
+    singleneutrinoPzReader.initialise();
+    singleneutrinoEReader.initialise();
 }
 
 }
