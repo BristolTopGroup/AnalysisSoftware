@@ -673,5 +673,22 @@ unsigned int HistogramManager::size3D(DataType::value type) const {
 	}
 	return size;
 }
+
+bool HistogramManager::contains1D(std::string histname) {
+	return collection1D[currentHistogramFolder][currentDataType]->contains(histname);
+}
+
+bool HistogramManager::contains2D(std::string histname) {
+	return collection2D[currentHistogramFolder][currentDataType]->contains(histname);
+}
+
+bool HistogramManager::contains3D(std::string histname) {
+	return collection3D[currentHistogramFolder][currentDataType]->contains(histname);
+}
+
+bool HistogramManager::hasFolder(std::string folder) const {
+	return collection1D.find(folder) != collection1D.end();
+}
+
 } //end namespace BAT
 

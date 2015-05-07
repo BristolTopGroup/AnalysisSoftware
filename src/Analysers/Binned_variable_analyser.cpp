@@ -50,24 +50,18 @@ void Binned_variable_analyser::analyse(double variable,
 		double fit_variable_value, double weight, string fit_variable_name) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	weight_ = weight * prescale_ * scale_;
-	for (unsigned int index = 0; index < variable_.bins.size() + 1; ++index) {
+	for (unsigned int index = 0; index < variable_.bins.size(); ++index) {
 		double upperCut =
-				index < variable_.bins.size() ?
-						variable_.bins.at(index) : 999999.;
-		double lowerCut = index == 0 ? 0. : variable_.bins.at(index - 1);
+				index < variable_.bins.size() - 1 ?
+						variable_.bins.at(index + 1) : 999999.;
+		double lowerCut = variable_.bins.at(index);
 
 		if (variable >= lowerCut && variable < upperCut) { //find right bin
-			string bin =
-					index < variable_.bins.size() ?
-							boost::lexical_cast<string>(
-									variable_.bins.at(index)) :
+			string lower_edge = boost::lexical_cast<string>(variable_.bins.at(index));
+			string upper_edge =
+					index < variable_.bins.size() - 1 ? boost::lexical_cast<string>(variable_.bins.at(index + 1)) :
 							"inf";
-			string previousBin =
-					index == 0 ?
-							"0" :
-							boost::lexical_cast<string>(
-									variable_.bins.at(index - 1));
-			string folder = variable_.name + "_bin_" + previousBin + "-" + bin;
+			string folder = variable_.name + "_bin_" + lower_edge + "-" + upper_edge;
 			histMan_->setCurrentHistogramFolder(
 					histogramFolder_ + "/" + folder);
 			// histMan_->H1D_BJetBinned(fit_variable_name)->Fill(
@@ -100,17 +94,12 @@ void Binned_variable_analyser::analyse_correlations(
 void Binned_variable_analyser::createHistograms() {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
-	for (unsigned int index = 0; index < variable_.bins.size() + 1; ++index) {
-		string bin =
-				index < variable_.bins.size() ?
-						boost::lexical_cast<string>(variable_.bins.at(index)) :
-						"inf";
-		string previousBin =
-				index == 0 ?
-						"0" :
-						boost::lexical_cast<string>(
-								variable_.bins.at(index - 1));
-		string folder = variable_.name + "_bin_" + previousBin + "-" + bin;
+	for (unsigned int index = 0; index < variable_.bins.size(); ++index) {
+		string lower_edge = boost::lexical_cast<string>(variable_.bins.at(index));
+		string upper_edge =
+				index < variable_.bins.size() - 1 ? boost::lexical_cast<string>(variable_.bins.at(index + 1)) : "inf";
+
+		string folder = variable_.name + "_bin_" + lower_edge + "-" + upper_edge;
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/" + folder);
 		// create all fit variable histograms
 		for (unsigned int i = 0; i < fit_variables_.size(); ++i) {
