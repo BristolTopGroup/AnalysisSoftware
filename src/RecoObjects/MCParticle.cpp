@@ -73,17 +73,4 @@ bool MCParticle::isNeutrino() const {
 		return false;
 }
 
-unsigned short MCParticle::getClosestJetIndex(const JetCollection& jets) const {
-	unsigned short idOfClosest = 999;
-	double closestDR = 999.;
-	for (unsigned short index = 0; index < jets.size(); ++index) {
-		double DR = deltaR(jets.at(index));
-		if (DR < closestDR) {
-			closestDR = DR;
-			idOfClosest = index;
-		}
-	}
-	return idOfClosest;
-}
-
 }
