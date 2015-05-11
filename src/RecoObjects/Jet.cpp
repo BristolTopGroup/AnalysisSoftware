@@ -24,10 +24,12 @@ Jet::Jet() :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
-		pxRaw(-9999), //
-		pyRaw(-9999), //
-		pzRaw(-9999), //
-		JECUncertainty(-9999), //
+		energyRaw_(-9999), //
+		pxRaw_(-9999), //
+		pyRaw_(-9999), //
+		pzRaw_(-9999), //
+		JEC_(1), //
+		JECUncertainty_(-9999), //
 		l1OffJEC(0), //
 		l2l3ResJEC(0), //
 		l2RelJEC(0), //
@@ -52,7 +54,8 @@ Jet::Jet() :
 		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
-		smearedJet() //
+		smearedJet(), //
+		rawJet_()
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -72,10 +75,12 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		neutralEmEnergyFraction(1), //
 		chargedHadronEnergyFraction(1), //
 		chargedMultiplicity(0), //
-		pxRaw(-9999), //
-		pyRaw(-9999), //
-		pzRaw(-9999), //
-		JECUncertainty(-9999), //
+		energyRaw_(-9999), //
+		pxRaw_(-9999), //
+		pyRaw_(-9999), //
+		pzRaw_(-9999), //
+		JEC_(1), //
+		JECUncertainty_(-9999), //
 		l1OffJEC(0), //
 		l2l3ResJEC(0), //
 		l2RelJEC(0), //
@@ -100,7 +105,8 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		//
 		matchedGeneratedJet(), //
 		unsmearedJet(), //
-		smearedJet() //
+		smearedJet(), //
+		rawJet_()
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -129,6 +135,14 @@ void Jet::set_unsmeared_jet(const ParticlePointer unsmearedjet) {
 
 const ParticlePointer Jet::unsmeared_jet() {
 	return unsmearedJet;
+}
+
+void Jet::set_raw_jet(const ParticlePointer rawjet) {
+	rawJet_ = rawjet;
+}
+
+const ParticlePointer Jet::raw_jet() {
+	return rawJet_;
 }
 
 const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic) {
@@ -260,20 +274,28 @@ double Jet::NCH() const {
 	return chargedMultiplicity;
 }
 
+double Jet::EnergyRaw() const {
+	return energyRaw_;
+}
+
 double Jet::PxRaw() const {
-	return pxRaw;
+	return pxRaw_;
 }
 
 double Jet::PyRaw() const {
-	return pyRaw;
+	return pyRaw_;
 }
 
 double Jet::PzRaw() const {
-	return pzRaw;
+	return pzRaw_;
+}
+
+double Jet::JEC() const {
+	return JEC_;
 }
 
 double Jet::JECUnc() const {
-	return JECUncertainty;
+	return JECUncertainty_;
 }
 
 double Jet::L1OffJEC() const {
@@ -292,20 +314,28 @@ double Jet::L3AbsJEC() const {
 	return l3AbsJEC;
 }
 
+void Jet::setEnergyRaw(double energy) {
+	energyRaw_ = energy;
+}
+
 void Jet::setPxRaw(double px) {
-	pxRaw = px;
+	pxRaw_ = px;
 }
 
 void Jet::setPyRaw(double py) {
-	pyRaw = py;
+	pyRaw_ = py;
 }
 
 void Jet::setPzRaw(double pz) {
-	pzRaw = pz;
+	pzRaw_ = pz;
+}
+
+void Jet::setJEC(double newJEC) {
+	JEC_ = newJEC;
 }
 
 void Jet::setJECUnc(double JECUnc) {
-	JECUncertainty = JECUnc;
+	JECUncertainty_ = JECUnc;
 }
 
 void Jet::setL1OffJEC(double JEC) {
@@ -342,6 +372,10 @@ void Jet::setFHPD(double fHPD) {
 
 void Jet::setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value type) {
 	btag_discriminators[type] = discriminator;
+}
+
+void Jet::setIsBJet( bool isItAB ) {
+	isBJet_ = isItAB;
 }
 
 void Jet::setNOD(int nod) {
@@ -410,80 +444,13 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 	double cut(9998);
 	switch (type) {
 
-	case BtagAlgorithm::CombinedSecondaryVertex:
+	case BtagAlgorithm::CombinedSecondaryVertexV2:
 		if (wp == BtagAlgorithm::LOOSE)
-			cut = 0.244;
+			cut = 0.423;
 		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 0.679;
+			cut = 0.814;
 		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 0.898;
-		break;
-
-	case BtagAlgorithm::CombinedSecondaryVertexMVA:
-		//same as without MVA? No hints found
-		//according to
-		//https://cms-btag-validation.web.cern.ch/cms-btag-validation/validation/index_RecoB_CMSSW_4_2_1_TTbar_421_vs_420_Startup.html
-		//these cuts should be lower
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 0.244;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 0.679;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 0.898;
-		break;
-
-	case BtagAlgorithm::JetBProbability:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 1.33;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 2.55;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 3.74;
-		break;
-
-	case BtagAlgorithm::JetProbability:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 0.275;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 0.545;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 0.790;
-		break;
-
-	case BtagAlgorithm::SimpleSecondaryVertexHighEfficiency:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 9998; //no input found
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 1.74;
-		else if (wp == BtagAlgorithm::TIGHT) //not supported
-			cut = 3.05;
-		break;
-
-	case BtagAlgorithm::SimpleSecondaryVertexHighPurity:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 9998; //no input found
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 9998; //no input found
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 2.;
-		break;
-
-	case BtagAlgorithm::TrackCountingHighEfficiency:
-		if (wp == BtagAlgorithm::LOOSE)
-			cut = 1.7;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 3.3;
-		else if (wp == BtagAlgorithm::TIGHT) //not supported
-			cut = 10.2;
-		break;
-
-	case BtagAlgorithm::TrackCountingHighPurity:
-		if (wp == BtagAlgorithm::LOOSE) //not supported
-			cut = 1.19;
-		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 1.93;
-		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 3.41;
+			cut = 0.941;
 		break;
 
 	default:
@@ -493,8 +460,13 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 	return btag_discriminators[type] > cut;
 }
 
+bool Jet::isBJet() const {
+	return isBJet_;
+}
+
 double Jet::btagSSVHE() const {
-	return btag_discriminators[BtagAlgorithm::SimpleSecondaryVertexHighEfficiency];
+	return -1;
+	// return btag_discriminators[BtagAlgorithm::SimpleSecondaryVertexHighEfficiency];
 }
 
 double Jet::getBJetL7EtCorrection() const {

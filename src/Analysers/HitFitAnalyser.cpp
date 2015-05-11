@@ -16,25 +16,43 @@
 using namespace BAT;
 
 void HitFitAnalyser::analyse(const EventPtr event) {
+}
+
+BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, const JetCollection jets, const JetCollection bjets, const LeptonPointer selectedLepton ) {
+
 	weight_ = event->weight() * prescale_ * scale_;
-	//fit only the events that pass full ttbar selection
-	if (!topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event))
-		;
-	return;
 
-	const JetCollection jets = topEplusJetsRefSelection_->cleanedJets(event);
-	LeptonPointer selectedLepton = topEplusJetsRefSelection_->signalLepton(event);
-	METPointer met = event->MET();
+	// const JetCollection jets(event->getCleanedJets( SelectionCriteria::ElectronPlusJetsReference ));
+	// const JetCollection bJets(event->getCleanedBJets( SelectionCriteria::ElectronPlusJetsReference ));
+	// const LeptonPointer selectedLepton = event->getSignalLepton( SelectionCriteria::ElectronPlusJetsReference );
 
-	histMan_->H1D("m3_diff")->Fill(fabs(truthMatchEvent.M3() - TtbarHypothesis::M3(jets)));
+	string metPrefix = METAlgorithm::names.at(0);
+	const METPointer met(event->MET((METAlgorithm::value) 0));
 
-	boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
-			new ChiSquaredBasedTopPairReconstruction(selectedLepton, met, jets));
-	if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
-		cout << chi2Reco->getDetailsOnFailure();
-		return;
-	}
-	TtbarHypothesisPointer bestTopHypothesis = chi2Reco->getBestSolution();
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
+
+	// cout << "Lepton eta : " << selectedLepton->eta() << endl;
+	// for ( unsigned int i = 0; i < jets.size(); ++i ) {
+	// 	cout << "Jet " << i << " eta : " << jets[i]->eta() << endl;
+	// }
+
+
+	// const JetCollection jets = topEplusJetsRefSelection_->cleanedJets(event);
+	// LeptonPointer selectedLepton = topEplusJetsRefSelection_->signalLepton(event);
+	// METPointer met = event->MET();
+
+	// histMan_->H1D("m3_diff")->Fill(fabs(truthMatchEvent.M3() - TtbarHypothesis::M3(jets)));
+
+	// cout << "Doing chi2" << endl;
+	// boost::scoped_ptr<ChiSquaredBasedTopPairReconstruction> chi2Reco(
+	// 		new ChiSquaredBasedTopPairReconstruction(selectedLepton, met, jets));
+	// if (!chi2Reco->meetsInitialCriteria()) { //reports details on failure and skips event
+	// 	cout << chi2Reco->getDetailsOnFailure();
+	// 	return;
+	// }
+	// cout << "Done chi2" << endl;
+	// TtbarHypothesisPointer bestTopHypothesis = chi2Reco->getBestSolution();
+	// cout << "Got results" << endl;
 
 	//set MC matching flag
 	if (event->getDataType() == DataType::TTJets)
@@ -49,8 +67,6 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	//temporary file for jet fit info (ugly but works)
 	string tempFileName = "temp.txt";
 	ofstream tempFile(tempFileName.c_str());
-
-	histMan_->setCurrentHistogramFolder("hitfitStudy");
 
 	if (Globals::produceFitterASCIIoutput) {
 		//write the event info into ASCII file
@@ -119,9 +135,17 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	// Clear the internal state
 	hhFitter.clear();
 
-	const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedLepton));
-	//TODO: fix the fitter to accept lepton class OR particle!!
-	hhFitter.AddLepton(*signalElectron);
+	if ( isElectronChannel_ ) {
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(selectedLepton));
+		//TODO: fix the fitter to accept lepton class OR particle!!
+		hhFitter.AddLepton(*signalElectron);		
+	}
+	else {
+	const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(selectedLepton));
+		//TODO: fix the fitter to accept lepton class OR particle!!
+		hhFitter.AddLepton(*signalMuon);
+	}
+
 
 	// Add jets into HitFit
 	for (size_t jet = 0; jet != jetsForFitting.size(); ++jet) {
@@ -153,7 +177,7 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 	size_t nHitFit = hhFitter.FitAllPermutation();
 
 //   // Get the number of jets
-//   nHitFitJet      = hhFitter.GetEvent().njets();
+	// nHitFitJet      = hhFitter.GetEvent().njets();
 
 	// Get the input events for all permutations
 	hitfitEventsInput = hhFitter.GetUnfittedEvent();
@@ -245,6 +269,16 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		lepton_charge = selectedLepton->charge();
 		BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev());
 
+		histMan_->H1D("FittedTopPtBestSolution")->Fill(newHyp.leptonicTop->pt(), weight_);
+		histMan_->H1D("FittedTopPtBestSolution")->Fill(newHyp.hadronicTop->pt(), weight_);
+		histMan_->H1D("FittedTopRapidityBestSolution")->Fill(newHyp.leptonicTop->rapidity(), weight_);
+		histMan_->H1D("FittedTopRapidityBestSolution")->Fill(newHyp.hadronicTop->rapidity(), weight_);
+
+		histMan_->H1D("FittedTTbarMassBestSolution")->Fill(newHyp.resonance->mass(), weight_);
+		histMan_->H1D("FittedTTbarPtBestSolution")->Fill(newHyp.resonance->pt(), weight_);
+		histMan_->H1D("FittedTTbarRapidityBestSolution")->Fill(newHyp.resonance->rapidity(), weight_);
+
+
 		if (Globals::produceFitterASCIIoutput) {
 			//outFile << "goodCombi: " << hitfitResult[bestX2pos].mt() << "  ";
 			outFile << "goodCombi: ";
@@ -279,20 +313,24 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 		}
 		tempFile.close();
 
+		return newHyp;
+
 	} else {
 		if (Globals::produceFitterASCIIoutput)
 			outFile << "No solutions found by HitFit for this event" << std::endl;
 	}
 
+	return BAT::TtbarHypothesis();
+
 }
 
-HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, std::string histogramFolder) :
+HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, const bool isElectronChannel, std::string histogramFolder ) :
 		BasicAnalyser(histMan, histogramFolder), //
 		outFileName("FitResults.txt"), //
 		outFile(outFileName.c_str()), //
 		// The following five initializers read the config parameters for the
 		// ASCII text files which contains the physics object resolutions.
-		FitterPath_(Globals::TQAFPath), //
+		FitterPath_("./"), //
 		hitfitDefault_(FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"), //
 		hitfitElectronResolution_(
 				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"), //
@@ -306,26 +344,31 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, std:
 		hitfitLepWMass_(80.4), //
 		hitfitHadWMass_(80.4), //
 		hitfitTopMass_(0.0), //
+		lepton_charge(0.0),
+		do_MC_matching(false),
+		// Tells hit fit whether event contains a signal electron or a signal muon
+		isElectronChannel_(isElectronChannel), //
 		// The following three initializers instantiate the translator between PAT objects
 		// and HitFit objects using the ASCII text files which contains the resolutions.
 		electronTranslator_(hitfitElectronResolution_), //
 		muonTranslator_(hitfitMuonResolution_), //
 		jetTranslator_(hitfitUdscJetResolution_, hitfitBJetResolution_), //
-		metTranslator_(hitfitMETResolution_), //
-		topEplusJetsRefSelection_(new TopPairEPlusJetsReferenceSelection())
-
+		metTranslator_(hitfitMETResolution_)
 {
 
 }
 
 BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 	// Do the electron
-	//BAT::ElectronPointer newEle(new BAT::Electron(*truthMatchEvent.electronFromW));
-	BAT::ElectronPointer newEle(new BAT::Electron());
+	BAT::LeptonPointer newLepton(new BAT::Electron());
+	if ( !isElectronChannel_ ) {
+		newLepton = BAT::LeptonPointer(new BAT::Muon());
+	}
+
 	if (ev.nleps() > 0) {
-		newEle->setFourVector(fourVectorFromHitFit(ev.lep(0).p()));
+		newLepton->setFourVector(fourVectorFromHitFit(ev.lep(0).p()));
 	} else {
-		std::cout << "No electron in HitFit event!" << std::endl;
+		std::cout << "No lepton in HitFit event!" << std::endl;
 	}
 
 	// Do the neutrino
@@ -334,8 +377,8 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 	newMet->setFourVector(fourVectorFromHitFit(ev.met()));
 
 	// Do the jets
-	BAT::JetPointer newLep(new BAT::Jet());
-	BAT::JetPointer newHad(new BAT::Jet());
+	BAT::JetPointer newLepB(new BAT::Jet());
+	BAT::JetPointer newHadB(new BAT::Jet());
 	BAT::JetPointer newWj1(new BAT::Jet());
 	BAT::JetPointer newWj2(new BAT::Jet());
 
@@ -351,9 +394,9 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 			newJet.setFourVector(hfJet);
 
 			if (hfJType == hitfit::lepb_label)
-				*newLep = newJet;
+				*newLepB = newJet;
 			if (hfJType == hitfit::hadb_label)
-				*newHad = newJet;
+				*newHadB = newJet;
 			if (hfJType == hitfit::hadw1_label)
 				*newWj1 = newJet;
 			if (hfJType == hitfit::hadw2_label)
@@ -361,89 +404,91 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 		}
 	}
 
-	BAT::TtbarHypothesis hyp(newEle, newMet, newLep, newHad, newWj1, newWj2);
+	BAT::TtbarHypothesis hyp(newLepton, newMet, newLepB, newHadB, newWj1, newWj2);
+	hyp.combineReconstructedObjects();
 
 	// do MC matching study
-	if (do_MC_matching) {
-		//Particle Pointers for best fitted hypothesis
-		BAT::ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW;
-		leptonicW = ParticlePointer(new Particle(*newMet + *newEle));
-		if (newWj1 != newWj2)
-			hadronicW = ParticlePointer(new Particle(*newWj1 + *newWj2));
-		else
-			hadronicW = newWj1;
-		leptonicTop = ParticlePointer(new Particle(*newLep + *leptonicW));
-		hadronicTop = ParticlePointer(new Particle(*newHad + *hadronicW));
+	// if (do_MC_matching) {
+	// 	cout << "Doing MC matching" << endl;
+	// 	//Particle Pointers for best fitted hypothesis
+	// 	BAT::ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW;
+	// 	leptonicW = ParticlePointer(new Particle(*newMet + *newEle));
+	// 	if (newWj1 != newWj2)
+	// 		hadronicW = ParticlePointer(new Particle(*newWj1 + *newWj2));
+	// 	else
+	// 		hadronicW = newWj1;
+	// 	leptonicTop = ParticlePointer(new Particle(*newLep + *leptonicW));
+	// 	hadronicTop = ParticlePointer(new Particle(*newHad + *hadronicW));
 
-		double deltaRelectron, deltaRhadronicBjet, deltaRleptonicBjet, deltaRWjet1, deltaRWjet2, sumDeltaR;
-		deltaRelectron = truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW);
-		deltaRhadronicBjet = truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet);
-		deltaRleptonicBjet = truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet);
+	// 	double deltaRelectron, deltaRhadronicBjet, deltaRleptonicBjet, deltaRWjet1, deltaRWjet2, sumDeltaR;
+	// 	deltaRelectron = truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW);
+	// 	deltaRhadronicBjet = truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet);
+	// 	deltaRleptonicBjet = truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet);
 
-		histMan_->H1D("deltaPtElectron")->Fill(
-				(truthMatchEvent.leptonFromW->pt() - hyp.leptonFromW->pt()) / truthMatchEvent.leptonFromW->pt());
-		histMan_->H1D("deltaRelectron")->Fill(truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW));
-		histMan_->H1D("deltaPtHadronicBjet")->Fill(
-				(truthMatchEvent.hadronicBJet->pt() - hyp.hadronicBJet->pt()) / truthMatchEvent.hadronicBJet->pt());
-		histMan_->H1D("deltaRhadronicBjet")->Fill(truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet));
-		histMan_->H1D("deltaPtLeptonicBjet")->Fill(
-				(truthMatchEvent.leptonicBjet->pt() - hyp.leptonicBjet->pt()) / truthMatchEvent.leptonicBjet->pt());
-		histMan_->H1D("deltaRleptonicBjet")->Fill(truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet));
-		if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW) < truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
-			deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW);
-			deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW);
-			histMan_->H1D("deltaPtWjet1")->Fill(
-					(truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-			histMan_->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW));
-			histMan_->H1D("deltaPtWjet2")->Fill(
-					(truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet2FromW->pt());
-			histMan_->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW));
-		} else {
-			deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW);
-			deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW);
-			histMan_->H1D("deltaPtWjet1")->Fill(
-					(truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-			histMan_->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW));
-			histMan_->H1D("deltaPtWjet2")->Fill(
-					(truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet2FromW->pt());
-			histMan_->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW));
-		}
+	// 	histMan_->H1D("deltaPtElectron")->Fill(
+	// 			(truthMatchEvent.leptonFromW->pt() - hyp.leptonFromW->pt()) / truthMatchEvent.leptonFromW->pt());
+	// 	histMan_->H1D("deltaRelectron")->Fill(truthMatchEvent.leptonFromW->deltaR(hyp.leptonFromW));
+	// 	histMan_->H1D("deltaPtHadronicBjet")->Fill(
+	// 			(truthMatchEvent.hadronicBJet->pt() - hyp.hadronicBJet->pt()) / truthMatchEvent.hadronicBJet->pt());
+	// 	histMan_->H1D("deltaRhadronicBjet")->Fill(truthMatchEvent.hadronicBJet->deltaR(hyp.hadronicBJet));
+	// 	histMan_->H1D("deltaPtLeptonicBjet")->Fill(
+	// 			(truthMatchEvent.leptonicBjet->pt() - hyp.leptonicBjet->pt()) / truthMatchEvent.leptonicBjet->pt());
+	// 	histMan_->H1D("deltaRleptonicBjet")->Fill(truthMatchEvent.leptonicBjet->deltaR(hyp.leptonicBjet));
+	// 	if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW) < truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
+	// 		deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW);
+	// 		deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW);
+	// 		histMan_->H1D("deltaPtWjet1")->Fill(
+	// 				(truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet1FromW->pt());
+	// 		histMan_->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW));
+	// 		histMan_->H1D("deltaPtWjet2")->Fill(
+	// 				(truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet2FromW->pt());
+	// 		histMan_->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet2FromW));
+	// 	} else {
+	// 		deltaRWjet1 = truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW);
+	// 		deltaRWjet2 = truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW);
+	// 		histMan_->H1D("deltaPtWjet1")->Fill(
+	// 				(truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet1FromW->pt());
+	// 		histMan_->H1D("deltaRWjet1")->Fill(truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW));
+	// 		histMan_->H1D("deltaPtWjet2")->Fill(
+	// 				(truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet2FromW->pt());
+	// 		histMan_->H1D("deltaRWjet2")->Fill(truthMatchEvent.jet2FromW->deltaR(hyp.jet1FromW));
+	// 	}
 
-		sumDeltaR = deltaRelectron + deltaRhadronicBjet + deltaRleptonicBjet + deltaRWjet1 + deltaRWjet2;
-		histMan_->H1D("SumDeltaR")->Fill(sumDeltaR);
+	// 	sumDeltaR = deltaRelectron + deltaRhadronicBjet + deltaRleptonicBjet + deltaRWjet1 + deltaRWjet2;
+	// 	histMan_->H1D("SumDeltaR")->Fill(sumDeltaR);
 
-		histMan_->H1D("deltaLeptonicTopMass")->Fill(
-				(truthMatchEvent.leptonicTop->mass() - leptonicTop->mass()) / truthMatchEvent.leptonicTop->mass());
-		histMan_->H1D("deltaHadronicTopMass")->Fill(
-				(truthMatchEvent.hadronicTop->mass() - hadronicTop->mass()) / truthMatchEvent.hadronicTop->mass());
+	// 	histMan_->H1D("deltaLeptonicTopMass")->Fill(
+	// 			(truthMatchEvent.leptonicTop->mass() - leptonicTop->mass()) / truthMatchEvent.leptonicTop->mass());
+	// 	histMan_->H1D("deltaHadronicTopMass")->Fill(
+	// 			(truthMatchEvent.hadronicTop->mass() - hadronicTop->mass()) / truthMatchEvent.hadronicTop->mass());
 
-		if (sumDeltaR < 0.4) {
-			if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW) < truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
-				histMan_->H1D("deltaPtWjet1Best")->Fill(
-						(truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-				histMan_->H1D("deltaPtWjet2Best")->Fill(
-						(truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet2FromW->pt());
-			} else {
-				histMan_->H1D("deltaPtWjet1")->Fill(
-						(truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet1FromW->pt());
-				histMan_->H1D("deltaPtWjet2")->Fill(
-						(truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet2FromW->pt());
-			}
-			histMan_->H1D("deltaPtElectronBest")->Fill(
-					(truthMatchEvent.leptonFromW->pt() - hyp.leptonFromW->pt()) / truthMatchEvent.leptonFromW->pt());
-			histMan_->H1D("deltaPtHadronicBjetBest")->Fill(
-					(truthMatchEvent.hadronicBJet->pt() - hyp.hadronicBJet->pt()) / truthMatchEvent.hadronicBJet->pt());
-			histMan_->H1D("deltaPtLeptonicBjetBest")->Fill(
-					(truthMatchEvent.leptonicBjet->pt() - hyp.leptonicBjet->pt()) / truthMatchEvent.leptonicBjet->pt());
-			histMan_->H1D("deltaLeptonicTopMassBest")->Fill(
-					(truthMatchEvent.leptonicTop->mass() - leptonicTop->mass()) / truthMatchEvent.leptonicTop->mass());
-			histMan_->H1D("deltaHadronicTopMassBest")->Fill(
-					(truthMatchEvent.hadronicTop->mass() - hadronicTop->mass()) / truthMatchEvent.hadronicTop->mass());
-		}
-	}
+	// 	if (sumDeltaR < 0.4) {
+	// 		if (truthMatchEvent.jet1FromW->deltaR(hyp.jet1FromW) < truthMatchEvent.jet1FromW->deltaR(hyp.jet2FromW)) {
+	// 			histMan_->H1D("deltaPtWjet1Best")->Fill(
+	// 					(truthMatchEvent.jet1FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet1FromW->pt());
+	// 			histMan_->H1D("deltaPtWjet2Best")->Fill(
+	// 					(truthMatchEvent.jet2FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet2FromW->pt());
+	// 		} else {
+	// 			histMan_->H1D("deltaPtWjet1")->Fill(
+	// 					(truthMatchEvent.jet1FromW->pt() - hyp.jet2FromW->pt()) / truthMatchEvent.jet1FromW->pt());
+	// 			histMan_->H1D("deltaPtWjet2")->Fill(
+	// 					(truthMatchEvent.jet2FromW->pt() - hyp.jet1FromW->pt()) / truthMatchEvent.jet2FromW->pt());
+	// 		}
+	// 		histMan_->H1D("deltaPtElectronBest")->Fill(
+	// 				(truthMatchEvent.leptonFromW->pt() - hyp.leptonFromW->pt()) / truthMatchEvent.leptonFromW->pt());
+	// 		histMan_->H1D("deltaPtHadronicBjetBest")->Fill(
+	// 				(truthMatchEvent.hadronicBJet->pt() - hyp.hadronicBJet->pt()) / truthMatchEvent.hadronicBJet->pt());
+	// 		histMan_->H1D("deltaPtLeptonicBjetBest")->Fill(
+	// 				(truthMatchEvent.leptonicBjet->pt() - hyp.leptonicBjet->pt()) / truthMatchEvent.leptonicBjet->pt());
+	// 		histMan_->H1D("deltaLeptonicTopMassBest")->Fill(
+	// 				(truthMatchEvent.leptonicTop->mass() - leptonicTop->mass()) / truthMatchEvent.leptonicTop->mass());
+	// 		histMan_->H1D("deltaHadronicTopMassBest")->Fill(
+	// 				(truthMatchEvent.hadronicTop->mass() - hadronicTop->mass()) / truthMatchEvent.hadronicTop->mass());
+	// 	}
+	// }
 
 	if (Globals::produceFitterASCIIoutput) {
-		outFile << newEle->phi() << "  " << newEle->eta() << "  " << newEle->pt() << "  " << lepton_charge << "  "
+		outFile << newLepton->phi() << "  " << newLepton->eta() << "  " << newLepton->pt() << "  " << lepton_charge << "  "
 				<< newMet->px() << "  " << newMet->py() << endl;
 		outFile << jetsForFitting[0]->pt() << "  " << jetsForFitting[0]->eta() << "  " << jetsForFitting[0]->phi()
 				<< "  " << jetsForFitting[0]->btagSSVHE() << "  ";
@@ -463,6 +508,7 @@ FourVector HitFitAnalyser::fourVectorFromHitFit(const hitfit::Fourvec& v) {
 }
 
 void HitFitAnalyser::setMCTTbarHypothesis(const TtbarHypothesis& mcEvent) {
+	cout << "Setting truth event" << endl;
 	truthMatchEvent = mcEvent;
 }
 
@@ -495,12 +541,25 @@ HitFitAnalyser::~HitFitAnalyser() {
 }
 
 void HitFitAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder("hitfitStudy");
+	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	histMan_->addH1D("AllJetsPt", "All jets Pt", 100, 0., 600.);
 	histMan_->addH1D("FittedTopMassAllSolutions", "Fitted top mass all solutions", 100, 0., 400.);
+	histMan_->addH1D("FittedTopPtAllSolutions", "Fitted top pt all solutions", 100, 0., 400.);
+
+	histMan_->addH1D("FittedTTbarMassAllSolutions", "Fitted ttbar mass all solutions", 100, 0., 1600.);
+	histMan_->addH1D("FittedTTbarPtAllSolutions", "Fitted ttbar pt all solutions", 100, 0., 1600.);
+
+
 	histMan_->addH1D("FitChiSquaredAllSolutions", "Fit chi-squared all solutions", 100, 0., 20.);
 	histMan_->addH1D("FitLogChiSqdAllSolutions", "Fit log(chi-sqd) all solutions", 100, -5., 5.);
 	histMan_->addH1D("FittedTopMassBestSolution", "Fitted top mass best solution", 100, 0., 400.);
+	histMan_->addH1D("FittedTopPtBestSolution", "Fitted top pt best solution", 20, 0., 400.);
+	histMan_->addH1D("FittedTopRapidityBestSolution", "Fitted top pt best solution", 50, -2.5, 2.5);
+
+	histMan_->addH1D("FittedTTbarMassBestSolution", "Fitted ttbar mass best solution", 80, 0., 1600.);
+	histMan_->addH1D("FittedTTbarPtBestSolution", "Fitted ttbar pt best solution", 15, 0., 300.);
+	histMan_->addH1D("FittedTTbarRapidityBestSolution", "Fitted ttbar pt best solution", 50, -2.5, 2.5);
+
 	histMan_->addH1D("FitChiSquaredBestSolution", "Fit chi-squared best solution", 100, 0., 20.);
 	histMan_->addH1D("FitLogChiSqdBestSolution", "Fit log(chi-sqd) best solutions", 100, -5., 5.);
 

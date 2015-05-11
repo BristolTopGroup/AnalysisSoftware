@@ -23,6 +23,9 @@
 #include "GenMETReader.h"
 #include "TrackReader.h"
 #include "GenParticleReader.h"
+#include "PseudoTopReader.h"
+#include "SelectionOutputReader.h"
+#include "TTGenReader.h"
 #include "../DataTypes.h"
 #include <string>
 
@@ -66,18 +69,33 @@ private:
 	long currentEventEntry;
 	unsigned long numberOfFiles;
 	boost::shared_ptr<TChain> input;
-	boost::shared_ptr<VariableReader<MultiIntPointer> > hltReader;
-	boost::shared_ptr<VariableReader<MultiIntPointer> > hltPrescaleReader;
+	// boost::shared_ptr<VariableReader<MultiIntPointer> > hltReader;
+	// boost::shared_ptr<VariableReader<MultiIntPointer> > hltPrescaleReader;
 	boost::scoped_ptr<VertexReader> vertexReader;
 	boost::scoped_ptr<TrackReader> trackReader;
 	boost::scoped_ptr<ElectronReader> electronReader;
 	boost::scoped_ptr<GenParticleReader> genParticleReader;
+	boost::scoped_ptr<PseudoTopReader> pseudoTopReader;
 	boost::scoped_ptr<JetReader> jetReader;
 	boost::scoped_ptr<GenJetReader> genJetReader;
 	boost::scoped_ptr<MuonReader> muonReader;
 //	boost::scoped_ptr<GenMETReader> genMetReader;
 	std::vector<boost::shared_ptr<METReader> > metReaders;
-	std::vector<boost::shared_ptr<METCorrReader> > metCorrReaders;
+	// std::vector<boost::shared_ptr<METCorrReader> > metCorrReaders;
+
+
+	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelTriggerReader;
+	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelTriggerReader;
+
+	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesOfflineSelectionReader;
+	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesGenSelectionReader;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electron;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muon;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDNonisolated;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDConversion;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated;
+
+	boost::scoped_ptr<TTGenReader> ttGenInfoReader;	
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;

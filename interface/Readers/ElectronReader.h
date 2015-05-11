@@ -10,6 +10,7 @@
 #include "VariableReader.h"
 #include "../RecoObjects/Electron.h"
 #include <boost/scoped_ptr.hpp>
+#include <iostream>
 
 namespace BAT {
 class ElectronReader {
@@ -33,30 +34,21 @@ private:
 	VariableReader<MultiDoublePointer> ecalIsolationReader_DR03_;
 	VariableReader<MultiDoublePointer> hcalIsolationReader_DR03_;
 	VariableReader<MultiDoublePointer> trackerIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> ecalIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> hcalIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> trackerIsolationReader_DR04_;
 
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR03_;
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR04_;
-	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR04_;
-	VariableReader<MultiDoublePointer> PFGammaIsolationReader_DR05_;
-	VariableReader<MultiDoublePointer> PFChargedHadronIsolationReader_DR05_;
-	VariableReader<MultiDoublePointer> PFNeutralHadronIsolationReader_DR05_;
-	VariableReader<MultiDoublePointer> PFPUChargedHadron_Isolation_DR05_;
-	VariableReader<MultiDoublePointer> PFRelativeIsolationRho_DR03_;
+	VariableReader<MultiDoublePointer> PFRelIso03Reader_;
+	VariableReader<MultiDoublePointer> PFRelIso04Reader_;
+	VariableReader<MultiDoublePointer> PFRelIso03DeltaBetaReader_;
+	VariableReader<MultiDoublePointer> PFRelIso04DeltaBetaReader_;
 
-	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR02_;
-	VariableReader<MultiDoublePointer> DirectionalIsolationReader_DR03_;
-	VariableReader<MultiDoublePointer> DirectionalIsolationReaderWithGaussianFallOff_DR02_;
-	VariableReader<MultiDoublePointer> DirectionalIsolationReaderWithGaussianFallOff_DR03_;
-	VariableReader<MultiDoublePointer> PFIsolationReaderWithGaussianFallOff_DR02_;
-	VariableReader<MultiDoublePointer> PFIsolationReaderWithGaussianFallOff_DR03_;
+	VariableReader<MultiDoublePointer> sumChargedHadronPt03Reader_;
+	VariableReader<MultiDoublePointer> sumNeutralHadronPt03Reader_;
+	VariableReader<MultiDoublePointer> sumPhotonPt03Reader_;
+	VariableReader<MultiDoublePointer> sumPUPt03Reader_;
+
+	VariableReader<MultiDoublePointer> sumChargedHadronPt04Reader_;
+	VariableReader<MultiDoublePointer> sumNeutralHadronPt04Reader_;
+	VariableReader<MultiDoublePointer> sumPhotonPt04Reader_;
+	VariableReader<MultiDoublePointer> sumPUPt04Reader_;
 
 	VariableReader<MultiDoublePointer> sigmaIEtaIEtaReader;
 	VariableReader<MultiDoublePointer> dPhiInReader;

@@ -24,6 +24,7 @@ public:
 
 protected:
 	VariableReader<MultiDoublePointer> energyReader;
+	VariableReader<MultiDoublePointer> JECReader;
 	VariableReader<MultiDoublePointer> JECUncReader;
 	VariableReader<MultiDoublePointer> L1OffJECReader;
 	VariableReader<MultiDoublePointer> L2L3ResJECReader;
@@ -32,6 +33,7 @@ protected:
 	VariableReader<MultiDoublePointer> pxReader;
 	VariableReader<MultiDoublePointer> pyReader;
 	VariableReader<MultiDoublePointer> pzReader;
+	VariableReader<MultiDoublePointer> energyRawReader;
 	VariableReader<MultiDoublePointer> pxRawReader;
 	VariableReader<MultiDoublePointer> pyRawReader;
 	VariableReader<MultiDoublePointer> pzRawReader;
@@ -55,19 +57,8 @@ protected:
 	VariableReader<MultiDoublePointer> CHFReader;
 	VariableReader<MultiIntPointer> NCHReader;
 
-	VariableReader<MultiDoublePointer> btagCombinedSecondaryVertexReader;
-	VariableReader<MultiDoublePointer> btagCombinedSecondaryVertexMVAReader;
-	VariableReader<MultiDoublePointer> btagJetBProbabilityReader;
-	VariableReader<MultiDoublePointer> btagJetProbabilityReader;
-	VariableReader<MultiDoublePointer> btagSimpleSecondaryVertexHEReader;
-	VariableReader<MultiDoublePointer> btagSimpleSecondaryVertexHPReader;
-	VariableReader<MultiDoublePointer> btagSoftElectronByIP3dReader;
-	VariableReader<MultiDoublePointer> btagSoftElectronByPtReader;
-	VariableReader<MultiDoublePointer> btagSoftMuonReader;
-	VariableReader<MultiDoublePointer> btagSoftMuonByIP3dReader;
-	VariableReader<MultiDoublePointer> btagSoftMuonByPtReader;
-	VariableReader<MultiDoublePointer> btagTrackCountingHighPurityReader;
-	VariableReader<MultiDoublePointer> btagTrackCountingHighEfficiencyReader;
+	VariableReader<MultiDoublePointer> btagCSVv2Reader;
+	VariableReader<MultiBoolPointer> isBtagReader;
 
 	VariableReader<MultiIntPointer> PartonFlavour;
 

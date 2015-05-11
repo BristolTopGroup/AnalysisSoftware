@@ -18,19 +18,7 @@ namespace BAT {
 
 namespace BtagAlgorithm {
 enum value {
-	CombinedSecondaryVertex,
-	CombinedSecondaryVertexMVA,
-	JetBProbability,
-	JetProbability,
-	SimpleSecondaryVertexHighEfficiency,
-	SimpleSecondaryVertexHighPurity,
-//	SoftElectronByIP3d,
-//	SoftElectronByPt,
-	SoftMuon,
-	SoftMuonByIP3d,
-	SoftMuonByPt,
-	TrackCountingHighEfficiency,
-	TrackCountingHighPurity,
+	CombinedSecondaryVertexV2,	
 	NUMBER_OF_BTAGALGORITHMS
 };
 
@@ -38,19 +26,7 @@ enum workingPoint {
 	LOOSE, MEDIUM, TIGHT
 };
 const boost::array<std::string, BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS> names = { {
-		"CombinedSecondaryVertex",//
-		"CombinedSecondaryVertexMVA",//
-		"JetBProbability",//
-		"JetProbability",//
-		"SimpleSecondaryVertexHighEfficiency",//
-		"SimpleSecondaryVertexHighPurity",//
-//		"SoftElectronByIP3d",//
-//		"SoftElectronByPt",//
-		"SoftMuon",//
-		"SoftMuonByIP3d",//
-		"SoftMuonByPt",//
-		"TrackCountingHighEfficiency",//
-		"TrackCountingHighPurity"
+		"CombinedSecondaryVertexV2"//
 	}}
 	;
 }
@@ -75,8 +51,9 @@ public:
 	Jet(double energy, double px, double py, double pz);
 	virtual ~Jet();
 	bool isGood() const;
-	bool isBJet(BtagAlgorithm::value type = BtagAlgorithm::SimpleSecondaryVertexHighEfficiency,
-			BtagAlgorithm::workingPoint wp = BtagAlgorithm::MEDIUM) const;
+	bool isBJet(BtagAlgorithm::value type,
+			BtagAlgorithm::workingPoint wp) const;
+	bool isBJet() const;
 	JetAlgorithm::value getUsedAlgorithm() const;
 
 	void set_matched_generated_jet(const ParticlePointer matchedgeneratedjet);
@@ -86,6 +63,9 @@ public:
 	const ParticlePointer unsmeared_jet();
 	static const ParticlePointer smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic);
 //	const ParticlePointer smeared_Jet();
+
+	void set_raw_jet( const ParticlePointer rawJet );
+	const ParticlePointer raw_jet();
 
 	double emf() const;
 	double n90Hits() const;
@@ -102,9 +82,11 @@ public:
 	//Quarks: d=1, u=2, s=3, c=4, b=5 (antimatter with flipped sign)
 	// gluons = 21
 	int partonFlavour() const;
+	double EnergyRaw() const;
 	double PxRaw() const;
 	double PyRaw() const;
 	double PzRaw() const;
+	double JEC() const;
 	double JECUnc() const;
 	double L1OffJEC() const;
 	double L2L3ResJEC() const;
@@ -112,9 +94,11 @@ public:
 	double L3AbsJEC() const;
 	double getBTagDiscriminator(BtagAlgorithm::value type) const;
 
+	void setEnergyRaw(double energy);
 	void setPxRaw(double px);
 	void setPyRaw(double py);
 	void setPzRaw(double pz);
+	void setJEC(double JEC);	
 	void setJECUnc(double JECUnc);
 	void setL1OffJEC(double JEC);
 	void setL2L3ResJEC(double JEC);
@@ -125,6 +109,7 @@ public:
 	void setN90Hits(int n90Hits);
 	void setFHPD(double fHPD);
 	void setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value type);
+	void setIsBJet( bool isBJet );
 	void setNOD(int nod);
 	void setCEF(double cef);
 	void setNHF(double nhf);
@@ -145,11 +130,12 @@ private:
 	int numberOfRecHitsContaining90PercentOfTheJetEnergy;
 	double fractionOfEnergyIntheHottestHPDReadout;
 	std::vector<double> btag_discriminators;
+	bool isBJet_;
 	//	double btagInData;
 	int numberOfDaughters;
 	double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;
 	double chargedHadronEnergyFraction, chargedMultiplicity;
-	double pxRaw, pyRaw, pzRaw, JECUncertainty;
+	double energyRaw_, pxRaw_, pyRaw_, pzRaw_, JEC_, JECUncertainty_;
 	double l1OffJEC, l2l3ResJEC, l2RelJEC, l3AbsJEC;
 	int partonFlavour_;
 
@@ -172,6 +158,7 @@ private:
 	ParticlePointer matchedGeneratedJet;
 	ParticlePointer unsmearedJet;
 	ParticlePointer smearedJet;
+	ParticlePointer rawJet_;
 };
 
 typedef boost::shared_ptr<Jet> JetPointer;

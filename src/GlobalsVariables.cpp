@@ -20,7 +20,7 @@ std::string Globals::selectedEventsOutputfile = "selectedEvents.txt";
 std::string Globals::selectedEventsWithMetaDataOutputfile = "selectedEventsWithMetaData.txt";
 PileUpReweightingMethod::value Globals::pileUpReweightingMethod = PileUpReweightingMethod::averagePileUp;
 boost::shared_ptr<TH1D> Globals::estimatedPileup = boost::shared_ptr<TH1D>(new TH1D("tmp", "tmp", 25, 0, 25));
-unsigned int Globals::NTupleVersion = 6;
+unsigned int Globals::NTupleVersion = 0;
 bool Globals::verbose = true;
 
 //kinematic fit
@@ -61,15 +61,17 @@ boost::array< boost::shared_ptr<TF1>, 12 > Globals::lightL7Corrections = {{
 		boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1, boosted_TF1}};
 
 //MET
-METAlgorithm::value Globals::metAlgorithm = METAlgorithm::patType1CorrectedPFMet;
+METAlgorithm::value Globals::metAlgorithm = METAlgorithm::MET;
 bool Globals::applySysShiftMetCorrection = false;
 bool Globals::applyType0MetCorrection = false;
 bool Globals::applyType1MetCorrection = false;
 
 //top pt reweighting
-bool Globals::applyTopPtReweighting = true;
+bool Globals::applyTopPtReweighting = false;
 
 std::string Globals::custom_file_suffix = "";
 unsigned int Globals::pdfWeightNumber = 0;
+
+std::string Globals::treePrefix_ = "";
 
 }

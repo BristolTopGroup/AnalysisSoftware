@@ -28,8 +28,10 @@ def test_get_mode_process_0():
 def test_build_matrix():
     matrix_7TeV, _ = job_mapper.build_matrix(energy = 7)
     matrix_8TeV, _ = job_mapper.build_matrix(energy = 8)
-    assert len(matrix_7TeV) == (len(analysis_info.datasets_7TeV.keys()) * len(job_mapper.analysis_modes))
-    assert len(matrix_8TeV) == (len(analysis_info.datasets_8TeV.keys()) * len(job_mapper.analysis_modes))
+    matrix_13TeV, _ = job_mapper.build_matrix(energy = 13)
+    assert len(matrix_7TeV) == (len(analysis_info.datasets_7TeV.keys()) * len(analysis_info.analysisModes))
+    assert len(matrix_8TeV) == (len(analysis_info.datasets_8TeV.keys()) * len(analysis_info.analysisModes))
+    assert len(matrix_13TeV) == (len(analysis_info.datasets_13TeV.keys()) * len(analysis_info.analysis_modes_13TeV))
     
     # test if all are unique
     set_7TeV = set(matrix_7TeV)
@@ -51,7 +53,9 @@ def test_test_option():
     assert job_mapper.main(params) == 1
     
 def test_test_option_with_defaults():
-    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_mode', '--mode', 'JES_up'])
+    params, _ = job_mapper.parse_args(['--operation', 'test', '--return_mode', '--mode', 'JES_up', '--energy', '7'])
+    print params
+    print "ddsd", job_mapper.main(params)
     assert job_mapper.main(params) == 'JES_up'
     params, _ = job_mapper.parse_args(['--operation', 'test', '--return_sample', '--sample', 'SingleElectron', '--energy', '8'])
     assert job_mapper.main(params) == 'SingleElectron'

@@ -42,6 +42,7 @@ public:
 	double pz() const;
 	double pt() const;
 	double eta() const;
+	double rapidity() const;
 	double phi() const;
 	double theta() const;
 	double massFromEnergyAndMomentum() const;

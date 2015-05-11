@@ -13,9 +13,13 @@
 #include "RecoObjects/Vertex.h"
 #include "RecoObjects/MET.h"
 #include "RecoObjects/MCParticle.h"
+#include "RecoObjects/PseudoTopParticles.h"
+#include "RecoObjects/SelectionOutputInfo.h"
+#include "RecoObjects/TTGenInfo.h"
 #include "DataTypes.h"
 #include "Printers/EventContentPrinter.h"
 #include "HighLevelTriggers.h"
+#include "TtbarHypothesis.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -25,10 +29,19 @@ namespace BAT {
 class Event;
 typedef boost::shared_ptr<Event> EventPtr;
 }
-//include BasicSelection to have access to the selections.
-#include "Selections/BasicSelection.h"
 #include "GlobalVariables.h"
 namespace BAT {
+
+namespace SelectionCriteria {
+enum selection {
+	ElectronPlusJetsReference,
+	MuonPlusJetsReference,
+	ElectronPlusJetsQCDNonIsolated,
+	ElectronPlusJetsQCDConversion,
+	MuonPlusJetsQCDNonIsolated,
+	NUMBER_OF_SELECTION_STEPS
+};
+}
 
 class Event {
 protected:
@@ -40,14 +53,38 @@ protected:
 	ElectronCollection allElectrons;
 
 	JetCollection allJets;
+	JetCollection cleanedJets_;
+	JetCollection cleanedBJets_;
 	JetCollection genJets;
 
 	MuonCollection allMuons;
 
+	bool passesElectronChannelTrigger_;
+	bool passesMuonChannelTrigger_;
+
+	bool passesElectronSelection_;
+	bool passesElectronQCDSelection_;
+	bool passesElectronConversionSelection_;
+	bool passesMuonSelection_;
+	bool passesMuonQCDSelection_;
+
+	bool isSemiLeptonicElectron_;
+	bool isSemiLeptonicMuon_;
+	SelectionOutputInfo selectionOutputInfo_electron;
+	SelectionOutputInfo selectionOutputInfo_muon;
+	SelectionOutputInfo selectionOutputInfo_electronQCDNonisolated;
+	SelectionOutputInfo selectionOutputInfo_electronQCDConversion;
+	SelectionOutputInfo selectionOutputInfo_muonQCDNonisolated;
+
+	TTGenInfoPointer ttGenInfo_;
+
+	PseudoTopParticlesPointer pseudoTopParticles_;
 	MCParticleCollection genParticles;
 
 	METCollection mets_;
 	METPointer genMet_;
+
+	TtbarHypothesis ttbarHypothesis_;
 
 	DataType::value dataType;
 	unsigned long runNumber;
@@ -85,10 +122,32 @@ public:
 	void setGenParticles(MCParticleCollection genParticles);
 	void setElectrons(ElectronCollection electrons);
 	void setJets(JetCollection jets);
+	void setCleanedJets(JetCollection jets);
+	void setCleanedBJets(JetCollection bjets);
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
+	void setPassesElectronChannelTrigger( bool passesTrigger );
+	void setPassesMuonChannelTrigger( bool passesTrigger );
+	void setPassesElectronSelection(bool passesElectronSelection);
+	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
+	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
+	void setPassesMuonSelection(bool passesMuonSelection);
+	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
+	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
+	const bool passesJetSelection( const unsigned int selectionCriteria );
+	void setPassGenSelectionInfo( std::vector<unsigned int> );
+	void setIsSemiLeptonicElectron( bool isSemiLeptonicElectron );
+	void setIsSemiLeptonicMuon( bool isSemiLeptonicMuon );
+	void setElectronSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setMuonSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setElectronQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setElectronConversionSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setTTGenInfo(TTGenInfoPointer ttGenInfo );
+	void setPseudoTopParticles(PseudoTopParticlesPointer newPseudoParticles );
 	void setMETs(const std::vector<METPointer> mets);
 	void setGenMET(const METPointer met);
+	void setTTbarHypothesis(const TtbarHypothesis newHypo);
 	void setHLTs(const boost::shared_ptr<std::vector<int> >);
 	void setHLTPrescales(const boost::shared_ptr<std::vector<int> >);
 	void setFile(std::string file);
@@ -125,19 +184,42 @@ public:
 	const ElectronCollection& Electrons() const;
 	const ElectronCollection& QCDElectrons() const;
 	const JetCollection& Jets() const;
+	const JetCollection& CleanedJets() const;
+	const JetCollection& CleanedBJets() const;
 	const JetCollection& GenJets() const;
 	const MuonCollection& Muons() const;
 	const METPointer MET() const;
 	const METPointer MET(METAlgorithm::value type) const;
 	const METPointer GenMET() const;
 
-	const ElectronPointer MostIsolatedElectron(const ElectronCollection&, bool usePFIso) const;
-	const ElectronPointer MostIsolatedElectron(const ElectronCollection&) const;
-	const ElectronPointer MostPFIsolatedElectron(const ElectronCollection&) const;
+	const TtbarHypothesis ttbarHypothesis() const;
 
-	const MuonPointer MostIsolatedMuon(const MuonCollection&, bool usePFIso) const;
-	const MuonPointer MostIsolatedMuon(const MuonCollection& muons) const;
-	const MuonPointer MostPFIsolatedMuon(const MuonCollection&) const;
+	const bool PassesElectronChannelTrigger() const;
+	const bool PassesMuonChannelTrigger() const;
+
+	const bool PassesElectronSelection() const;
+	const bool PassesElectronQCDSelection() const;
+	const bool PassesElectronConversionSelection() const;
+	const bool PassesMuonSelection() const;
+	const bool PassesMuonQCDSelection() const;
+
+	const bool PassesElectronTriggerAndSelection() const;
+	const bool PassesMuonTriggerAndSelection() const;
+	const bool PassesElectronTriggerAndQCDSelection() const;
+	const bool PassesElectronTriggerAndConversionSelection() const;
+	const bool PassesMuonTriggerAndQCDSelection() const;
+
+	const bool isSemiLeptonicElectron() const;
+	const bool isSemiLeptonicMuon() const;
+	
+	const TTGenInfoPointer TTGenInfo() const;
+
+	const PseudoTopParticlesPointer PseudoTopParticles() const;
+
+	const LeptonPointer getSignalLepton( unsigned int selectionCriteria ) const;
+	const JetCollection getCleanedJets( unsigned int selectionCriteria ) const;
+	const JetCollection getCleanedBJets( unsigned int selectionCriteria ) const;
+	const unsigned int getNBJets( unsigned int selectionCriteria ) const;
 
 	JetCollection GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
 			BtagAlgorithm::workingPoint WP = BtagAlgorithm::MEDIUM) const;
@@ -185,6 +267,10 @@ public:
 	static double ST(const JetCollection, const ParticlePointer, const METPointer);
 	static double MT(const ParticlePointer, const METPointer);
 	static double WPT(const ParticlePointer, const METPointer);
+
+	static double const minJetPt_;
+	static unsigned int const minNJets_;
+	static unsigned int const minNBJets_;
 
 };
 

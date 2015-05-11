@@ -33,6 +33,12 @@ unsigned int VariableReader<MultiIntPointer>::size() const{
 }
 
 template<>
+unsigned int VariableReader<MultiUIntPointer>::size() const{
+    throwExceptionIfNotItitialised();
+    return variable->size();
+}
+
+template<>
 unsigned int VariableReader<MultiBoolPointer>::size() const{
     throwExceptionIfNotItitialised();
     return variable->size();
@@ -57,7 +63,7 @@ int VariableReader<MultiIntPointer>::getIntVariableAt(unsigned int index) const{
 }
 
 template<>
-unsigned int VariableReader<MultiIntPointer>::getUIntVariableAt(unsigned int index) const{
+unsigned int VariableReader<MultiUIntPointer>::getUIntVariableAt(unsigned int index) const{
     throwExceptionIfNotItitialised();
     return variable->at(index);
 }

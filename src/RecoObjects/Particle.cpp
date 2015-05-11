@@ -89,6 +89,10 @@ double Particle::eta() const {
 	return fourvector.Eta();
 }
 
+double Particle::rapidity() const {
+	return fourvector.Rapidity();
+}
+
 double Particle::phi() const {
 	return fourvector.Phi();
 }

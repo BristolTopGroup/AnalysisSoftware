@@ -46,6 +46,10 @@ struct TestSetup {
 };
 BOOST_AUTO_TEST_SUITE (TestBinnedVariableAnalyser)
 BOOST_FIXTURE_TEST_CASE(test_zero_start_var, TestSetup) {
+	TH1F::AddDirectory(false);
+	analyser->set_variables(zero_start_var, fit_variable);
+	analyser->createHistograms();
+	BOOST_CHECK_EQUAL(histMan->size(), zero_var_bins.size());
 	analyser->set_variables(zero_start_var, fit_variable);
 	analyser->createHistograms();
 	BOOST_CHECK_EQUAL(histMan->size(), zero_var_bins.size() * 5);
@@ -60,13 +64,14 @@ BOOST_FIXTURE_TEST_CASE(test_zero_start_var, TestSetup) {
 	// this should go into the first bin
 	analyser->analyse(0.5, 3, 1.);
 	histMan->setCurrentHistogramFolder(folder);
-	BOOST_CHECK_EQUAL(histMan->H1D("fit_var_0btag")->Integral(), 1);
+	// only check further if histograms are created
+	BOOST_CHECK_EQUAL(histMan->H1D("fit_var")->Integral(), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_non_zero_start_var, TestSetup) {
 	analyser->set_variables(non_zero_start_var, fit_variable);
 	analyser->createHistograms();
-	BOOST_CHECK_EQUAL(histMan->size(), non_zero_var_bins.size() * 5);
+	BOOST_CHECK_EQUAL(histMan->size(), non_zero_var_bins.size());
 
 	// this folder should not exist
 	string folder = "TestBinnedVariableAnalyser/" + non_zero_start_var.name + "_bin_0-1";
@@ -78,12 +83,12 @@ BOOST_FIXTURE_TEST_CASE(test_non_zero_start_var, TestSetup) {
 	// this should not go anywhere
 	analyser->analyse(0.5, 3, 1.);
 	histMan->setCurrentHistogramFolder(folder);
-	BOOST_CHECK_EQUAL(histMan->H1D("fit_var_0btag")->Integral(), 0);
+	BOOST_CHECK_EQUAL(histMan->H1D("fit_var")->Integral(), 0);
 
 	// but this should
 	analyser->analyse(4, 3, 1.);
 	histMan->setCurrentHistogramFolder(folder);
-	BOOST_CHECK_EQUAL(histMan->H1D("fit_var_0btag")->Integral(), 1);
+	BOOST_CHECK_EQUAL(histMan->H1D("fit_var")->Integral(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

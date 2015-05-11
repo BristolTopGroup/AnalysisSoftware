@@ -1,0 +1,83 @@
+ 
+# Changlelog
+This is not a full changlog but instead contains only selected changes that we want to keep special track of.
+For everything else, please have a look at the releases.
+
+## 03.03.2015 Removing old analysers/selections: pull [#145](https://github.com/BristolTopGroup/AnalysisSoftware/pull/145)
+Deleted files:
+ - interface/Analysers/ABCDMethodAnalyser.h
+ - interface/Analysers/BinningAnalyser.h
+ - interface/Analysers/DiElectronAnalyser.h
+ - interface/Analysers/DiffVariablesAnalyser.h
+ - interface/Analysers/Efficiency.h
+ - interface/Analysers/EventCountAnalyser.h
+ - interface/Analysers/HLTriggerQCDAnalyser.h
+ - interface/Analysers/HLTriggerTurnOnAnalyser.h
+ - interface/Analysers/MCAnalyser.h
+ - interface/Analysers/METBinnedElectronAnalyser.h
+ - interface/Analysers/MTtbarAnalyser.h
+ - interface/Analysers/MVAnalyser.h
+ - interface/Analysers/NeutrinoReconstructionAnalyser.h
+ - interface/Analysers/TTbarPlusMETAnalyser.h
+ - interface/Selections/BasicSelection.h
+ - interface/Selections/MCTTbarEPlusJetsPlusZInvisibleSelection.h
+ - interface/Selections/MCTTbarEplusJetsPlusZSelection.h
+ - interface/Selections/MCTTbarEplusJetsSelection.h
+ - interface/Selections/NoIsolationMuonSelection.h
+ - interface/Selections/QCDAntiIDEPlusJetsSelection.h
+ - interface/Selections/QCDBCToESelection.h
+ - interface/Selections/QCDConversionsAsymJetsMETSelection.h
+ - interface/Selections/QCDConversionsAsymJetsSelection.h
+ - interface/Selections/QCDConversionsSelection.h
+ - interface/Selections/QCDNoIsoNoIDSelection.h
+ - interface/Selections/QCDNonIsolatedElectronAsymJetsMETSelection.h
+ - interface/Selections/QCDNonIsolatedElectronAsymJetsSelection.h
+ - interface/Selections/QCDNonIsolatedElectronSelection.h
+ - interface/Selections/QCDNonIsolatedMuonSelection.h
+ - interface/Selections/QCDPFRelIsoEPlusAsymJetsMET.h
+ - interface/Selections/QCDPFRelIsoEPlusAsymJetsSelection.h
+ - interface/Selections/QCDPFRelIsoEPlusJetsSelection.h
+ - interface/Selections/QCDPFRelIsoMuPlusJetsSelection.h
+ - interface/Selections/TopPairEPlusJetsRefAsymJetsMETSelection.h
+ - interface/Selections/TopPairEPlusJetsReferenceSelection.h
+ - interface/Selections/TopPairEplusJetsRefAsymJetsSelection.h
+ - interface/Selections/TopPairMuPlusJetsReferenceSelection.h
+ - interface/Selections/TopPairMuPlusJetsReferenceSelection2011.h
+ - src/Analysers/ABCDMethodAnalyser.cpp
+ - src/Analysers/BinningAnalyser.cpp
+ - src/Analysers/DiElectronAnalyser.cpp
+ - src/Analysers/DiffVariablesAnalyser.cpp
+ - src/Analysers/Efficiency.cpp
+ - src/Analysers/EventCountAnalyser.cpp
+ - src/Analysers/HLTriggerQCDAnalyser.cpp
+ - src/Analysers/HLTriggerTurnOnAnalyser.cpp
+ - src/Analysers/MCAnalyser.cpp
+ - src/Analysers/METBinnedElectronAnalyser.cpp
+ - src/Analysers/MTtbarAnalyser.cpp
+ - src/Analysers/MVAnalyser.cpp
+ - src/Analysers/NeutrinoReconstructionAnalyser.cpp
+ - src/Analysers/TTbarPlusMETAnalyser.cpp
+ - src/Selections/BasicSelection.cpp
+ - src/Selections/MCTTbarEPlusJetsPlusZInvisibleSelection.cpp
+ - src/Selections/MCTTbarEplusJetsPlusZSelection.cpp
+ - src/Selections/MCTTbarEplusJetsSelection.cpp
+ - src/Selections/NoIsolationMuonSelection.cpp
+ - src/Selections/QCDAntiIDEPlusJetsSelection.cpp
+ - src/Selections/QCDBCToESelection.cpp
+ - src/Selections/QCDConversionsAsymJetsMETSelection.cpp
+ - src/Selections/QCDConversionsAsymJetsSelection.cpp
+ - src/Selections/QCDConversionsSelection.cpp
+ - src/Selections/QCDNoIsoNoIDSelection.cpp
+ - src/Selections/QCDNonIsolatedElectronAsymJetsMETSelection.cpp
+ - src/Selections/QCDNonIsolatedElectronAsymJetsSelection.cpp
+ - src/Selections/QCDNonIsolatedElectronSelection.cpp
+ - src/Selections/QCDNonIsolatedMuonSelection.cpp
+ - src/Selections/QCDPFRelIsoEPlusAsymJetsMET.cpp
+ - src/Selections/QCDPFRelIsoEPlusAsymJetsSelection.cpp
+ - src/Selections/QCDPFRelIsoEPlusJetsSelection.cpp
+ - src/Selections/QCDPFRelIsoMuPlusJetsSelection.cpp
+ - src/Selections/TopPairEPlusJetsRefAsymJetsMETSelection.cpp
+ - src/Selections/TopPairEPlusJetsReferenceSelection.cpp
+ - src/Selections/TopPairEplusJetsPlusMETSelection.cpp
+ - src/Selections/TopPairMuPlusJetsReferenceSelection.cpp
+ - src/Selections/TopPairMuPlusJetsReferenceSelection2011.cpp

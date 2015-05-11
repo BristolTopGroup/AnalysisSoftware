@@ -16,7 +16,7 @@
 using namespace std;
 namespace BAT {
 
-const char * NTupleEventReader::EVENT_CHAIN = "rootTupleTree/tree";
+const char * NTupleEventReader::EVENT_CHAIN = "nTupleTree/tree";
 
 bool NTupleEventReader::loadTracks = false;
 
@@ -26,18 +26,30 @@ NTupleEventReader::NTupleEventReader() :
 		currentEventEntry(0), //
 		numberOfFiles(0), //
 		input(new TChain(NTupleEventReader::EVENT_CHAIN)), //
-		hltReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTResults")), //
-		hltPrescaleReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTPrescales")), //
+		// hltReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTResults")), //
+		// hltPrescaleReader(new VariableReader<MultiIntPointer>(input, "Trigger.HLTPrescales")), //
 		vertexReader(new VertexReader(input)), //
 		trackReader(new TrackReader(input)), //
 		electronReader(new ElectronReader(input, Globals::electronAlgorithm)), //
 		genParticleReader(new GenParticleReader(input)), //
+		pseudoTopReader( new PseudoTopReader(input)), //
 		jetReader(new JetReader(input, Globals::jetAlgorithm)), //
 		genJetReader(new GenJetReader(input)), //
 		muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
-		metCorrReaders(), //
+		// metCorrReaders(), //
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle32eta2p1WP85Gsf.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1IterTrk02.Fired")),
+
+		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
+		passesGenSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesGenSelection")),
+		selectionOutputReader_electron(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsReference)), //
+		selectionOutputReader_muon(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsReference)), //
+		selectionOutputReader_electronQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDNonIsolated)), //
+		selectionOutputReader_electronQCDConversion(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDConversion)), //
+		selectionOutputReader_muonQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsQCDNonIsolated)), //
+		ttGenInfoReader( new TTGenReader(input)), //
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
@@ -63,11 +75,11 @@ NTupleEventReader::NTupleEventReader() :
 		currentEvent(), //
 		seenDataTypes() {
 	metReaders.resize(METAlgorithm::NUMBER_OF_METALGORITHMS);
-	metCorrReaders.resize(METCorrections::NUMBER_OF_METCORRECTIONS);
+	// metCorrReaders.resize(METCorrections::NUMBER_OF_METCORRECTIONS);
 
-	for (unsigned int index = 0; index < METCorrections::NUMBER_OF_METCORRECTIONS; ++ index) {
-		metCorrReaders.at(index) = boost::shared_ptr<METCorrReader>(new METCorrReader(input, (METCorrections::value) index));
-	}
+	// for (unsigned int index = 0; index < METCorrections::NUMBER_OF_METCORRECTIONS; ++ index) {
+	// 	metCorrReaders.at(index) = boost::shared_ptr<METCorrReader>(new METCorrReader(input, (METCorrections::value) index));
+	// }
 
 	for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
@@ -98,24 +110,24 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent = EventPtr(new Event());
 	selectNextNtupleEvent();
 
-	boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
-	boost::shared_ptr<std::vector<int> > triggerPrescales(new std::vector<int>());
+	// boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
+	// boost::shared_ptr<std::vector<int> > triggerPrescales(new std::vector<int>());
 
-	//    assert(hltReader->size() == HLTriggers::NUMBER_OF_TRIGGERS);
-	for (unsigned int i = 0; i < hltReader->size(); i++) {
-		triggers->push_back(hltReader->getIntVariableAt(i));
-		triggerPrescales->push_back(hltPrescaleReader->getIntVariableAt(i));
-	}
+	// //    assert(hltReader->size() == HLTriggers::NUMBER_OF_TRIGGERS);
+	// for (unsigned int i = 0; i < hltReader->size(); i++) {
+	// 	triggers->push_back(hltReader->getIntVariableAt(i));
+	// 	triggerPrescales->push_back(hltPrescaleReader->getIntVariableAt(i));
+	// }
 
-	while (triggers->size() < HLTriggers::NUMBER_OF_TRIGGERS) {
-		triggers->push_back(0);
-		triggerPrescales->push_back(0);
-	}
+	// while (triggers->size() < HLTriggers::NUMBER_OF_TRIGGERS) {
+	// 	triggers->push_back(0);
+	// 	triggerPrescales->push_back(0);
+	// }
 
 	currentEvent->setDataType(DataType::getDataType(getCurrentFile()));
 	currentEvent->setFile(getCurrentFile());
-	currentEvent->setHLTs(triggers);
-	currentEvent->setHLTPrescales(triggerPrescales);
+	// currentEvent->setHLTs(triggers);
+	// currentEvent->setHLTPrescales(triggerPrescales);
 	currentEvent->setVertices(vertexReader->getVertices());
 
 	if (NTupleEventReader::loadTracks)
@@ -124,23 +136,65 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setElectrons(electronReader->getElectrons());
 	currentEvent->setMuons(muonReader->getMuons());
 
-	if (!currentEvent->isRealData()) {
-		currentEvent->setGenParticles(genParticleReader->getGenParticles());
-		currentEvent->setGenJets(genJetReader->getGenJets());
-		currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
-		currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
+	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
 
-		if (Globals::NTupleVersion >= 6) {
-			currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
-			currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
-			currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
-			currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
-			currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
-		}
+	currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
+	currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+
+	// Set info that depends on selection criteria e.g. cleaned jets
+	// Must do this before setPassOfflineSelectionInfo, as this selects on the cleaned jets
+	currentEvent->setElectronSelectionOutputInfo( selectionOutputReader_electron->getSelectionOutputInfo() );
+	currentEvent->setMuonSelectionOutputInfo( selectionOutputReader_muon->getSelectionOutputInfo() );
+	currentEvent->setElectronQCDNonisolatedSelectionOutputInfo( selectionOutputReader_electronQCDNonisolated->getSelectionOutputInfo() );
+	currentEvent->setElectronConversionSelectionOutputInfo( selectionOutputReader_electronQCDConversion->getSelectionOutputInfo() );
+	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
+
+	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
+
+	currentEvent->setPassGenSelectionInfo( *passesGenSelectionReader->getVariable() );
+
+	currentEvent->setTTGenInfo( ttGenInfoReader->getTTGenInfo());
+
+	if (!currentEvent->isRealData()) {
+	// 	std::cout << "Gen Particles etc." << std::endl;
+	// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());
+		currentEvent->setGenJets(genJetReader->getGenJets());
+		currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
+	// 	currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
+	// 	currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
+
+	// 	if (Globals::NTupleVersion >= 6) {
+	// 		currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
+	// 		currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
+	// 		currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
+	// 		currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
+	// 		currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
+	// 	}
 
 	}
 
-	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
+	// Get and set the cleaned jets for this event
+	// After knowing which selection criteria are satisfied
+	if( currentEvent->PassesElectronSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsReference ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsReference ) );
+	}
+	else if ( currentEvent->PassesMuonSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsReference ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsReference ) );
+	}
+	else if ( currentEvent->PassesElectronQCDSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) );
+	}
+	else if ( currentEvent->PassesElectronConversionSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );		
+	}
+	else if ( currentEvent->PassesMuonQCDSelection() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
+	}
 
 	double sysShiftMetCorrectionX = 0;
 	double sysShiftMetCorrectionY = 0;
@@ -149,23 +203,23 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	double type1MetCorrectionX = 0;
 	double type1MetCorrectionY = 0;
 
-	if (Globals::NTupleVersion > 8) {
-		if (Globals::applySysShiftMetCorrection) {
-			metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->readMETCorrections();
-			sysShiftMetCorrectionX = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getXcorrection();
-			sysShiftMetCorrectionY = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getYcorrection();
-		}
-		if (Globals::applyType0MetCorrection) {
-			metCorrReaders.at(METCorrections::pfMetType0Corrections)->readMETCorrections();
-			type0MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getXcorrection();
-			type0MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getYcorrection();
-		}
-		if (Globals::applyType1MetCorrection) {
-			metCorrReaders.at(METCorrections::pfMetType1Corrections)->readMETCorrections();
-			type1MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getXcorrection();
-			type1MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getYcorrection();
-		}
-	}
+	// if (Globals::NTupleVersion > 8) {
+	// 	if (Globals::applySysShiftMetCorrection) {
+	// 		metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->readMETCorrections();
+	// 		sysShiftMetCorrectionX = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getXcorrection();
+	// 		sysShiftMetCorrectionY = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getYcorrection();
+	// 	}
+	// 	if (Globals::applyType0MetCorrection) {
+	// 		metCorrReaders.at(METCorrections::pfMetType0Corrections)->readMETCorrections();
+	// 		type0MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getXcorrection();
+	// 		type0MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getYcorrection();
+	// 	}
+	// 	if (Globals::applyType1MetCorrection) {
+	// 		metCorrReaders.at(METCorrections::pfMetType1Corrections)->readMETCorrections();
+	// 		type1MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getXcorrection();
+	// 		type1MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getYcorrection();
+	// 	}
+	// }
 
 	double totalMetCorrectionX = sysShiftMetCorrectionX + type0MetCorrectionX + type1MetCorrectionX;
 	double totalMetCorrectionY = sysShiftMetCorrectionY + type0MetCorrectionY + type1MetCorrectionY;
@@ -176,7 +230,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
 			continue;
 		bool isMCOnlyMET = MET::isMCOnlyMETType(index);
-		if (isMCOnlyMET && currentEvent->isRealData())
+		// if (isMCOnlyMET && currentEvent->isRealData())
+		if (isMCOnlyMET)
 			continue;
 		const METPointer met(metReaders.at(index)->getMET(totalMetCorrectionX, totalMetCorrectionY));
 		if (Globals::NTupleVersion >= 7){
@@ -228,19 +283,35 @@ bool NTupleEventReader::hasNextEvent() {
 void NTupleEventReader::initiateReadersIfNotSet() {
 	if (areReadersSet == false) {
 		input->SetBranchStatus("*", 0);
-		hltReader->initialise();
-		hltPrescaleReader->initialise();
+		// hltReader->initialise();
+		// hltPrescaleReader->initialise();
 		vertexReader->initialise();
 		if (NTupleEventReader::loadTracks)
 			trackReader->initialise();
 		electronReader->initialise();
 		genParticleReader->initialise();
+		pseudoTopReader->initialise();
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
+
+		passesElectronChannelTriggerReader->initialise();
+		passesMuonChannelTriggerReader->initialise();
+
+		passesOfflineSelectionReader->initialise();
+		passesGenSelectionReader->initialise();
+		selectionOutputReader_electron->initialise();
+		selectionOutputReader_muon->initialise();
+		selectionOutputReader_electronQCDNonisolated->initialise();
+		selectionOutputReader_electronQCDConversion->initialise();
+		selectionOutputReader_muonQCDNonisolated->initialise();
+
+		ttGenInfoReader->initialise();
+
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();
+
 		if (Globals::NTupleVersion >= 6) { //MC only info!
 			PDFWeightsReader->initialiseBlindly();
 			PileupInfoReader->initialiseBlindly();
@@ -266,11 +337,11 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			TrackingPOGFilters->initialise();
 		}
 
-		if (Globals::NTupleVersion > 8) {
-			for (unsigned int index = 0; index < METCorrections::NUMBER_OF_METCORRECTIONS; ++index) {
-				metCorrReaders.at(index)->initialise();
-			}
-		}
+		// if (Globals::NTupleVersion > 8) {
+		// 	for (unsigned int index = 0; index < METCorrections::NUMBER_OF_METCORRECTIONS; ++index) {
+		// 		metCorrReaders.at(index)->initialise();
+		// 	}
+		// }
 
 		for (unsigned int index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 			if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, index))
@@ -282,6 +353,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 				metReaders.at(index)->initialise();
 
 		}
+
 		areReadersSet = true;
 	}
 

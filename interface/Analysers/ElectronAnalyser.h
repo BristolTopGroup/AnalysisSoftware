@@ -14,7 +14,7 @@ namespace BAT {
 
 class ElectronAnalyser: public BasicAnalyser {
 public:
-	ElectronAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "ElectronAnalysis",
+	ElectronAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "ElectronAnalysis",
 			bool singleElectronOnly = false);
 	virtual ~ElectronAnalyser();
 
@@ -27,6 +27,7 @@ public:
 	 */
 	void analyseElectron(const ElectronPointer electron, double weight);
 	void createHistograms();
+	void createTrees();
 
 	void useTTbarPlusMETSetup(bool use);
 private:

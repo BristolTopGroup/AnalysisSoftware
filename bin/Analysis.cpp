@@ -13,7 +13,6 @@
 #include "../interface/EventCounter.h"
 #include <cmath>
 #include <math.h>
-#include "../interface/Printers/EventTablePrinter.h"
 #include "../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
 #include "../interface/LumiReWeighting.h"
 #include "../interface/GlobalVariables.h"
@@ -24,12 +23,15 @@ using namespace BAT;
 using namespace std;
 
 void Analysis::analyse() {
-	createHistograms();
 	cout << "detected samples:" << endl;
 	for (unsigned int sample = 0; sample < DataType::NUMBER_OF_DATA_TYPES; ++sample) {
 		if (eventReader->getSeenDatatypes()[sample])
 			cout << DataType::names[sample] << endl;
 	}
+
+	createHistograms();
+
+
 	while (eventReader->hasNextEvent()) {
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
@@ -39,7 +41,7 @@ void Analysis::analyse() {
 		unsigned int numberOfBJets(0);
 		for (unsigned int index = 0; index < numberOfJets; ++index) {
 			const JetPointer jet(currentEvent->Jets().at(index));
-			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertex, BtagAlgorithm::MEDIUM))
+			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM))
 				++numberOfBJets;
 		}
 		histMan->setCurrentBJetBin(numberOfBJets);
@@ -56,11 +58,12 @@ void Analysis::analyse() {
 		} else
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
-		eventcountAnalyser->analyse(currentEvent);
-//		mttbarAnalyser->analyse(currentEvent);
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		diffVariablesAnalyser->analyse(currentEvent);
-//		binningAnalyser->analyse(currentEvent);
+		if ( ( currentEvent->getDataType() == DataType::TTJets || currentEvent->getDataType() == DataType::TT_Pythia8 ) && Globals::treePrefix_ == "" ) {
+			pseudoTopAnalyser_->analyse(currentEvent);
+			unfoldingRecoAnalyser_->analyse(currentEvent);
+		}
+		treeMan->FillTrees();
 	}
 }
 
@@ -81,22 +84,26 @@ void Analysis::initiateEvent() {
 	histMan->setCurrentJetBin(currentEvent->Jets().size());
 	histMan->setCurrentBJetBin(0);
 
+	treeMan->setCurrentDataType(currentEvent->getDataType());
+
+	// Ignore PU and PDF weights for now
 	if (!currentEvent->isRealData()) {
 		weight = weights->getWeight(currentEvent->getDataType());
-		//TODO: fix this dirty little thing
-		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
-		weight *= pileUpWeight;
-		if (Globals::pdfWeightNumber != 0) {
-			try {
-				double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
-				weight *= pdf_weight;
+	// 	//TODO: fix this dirty little thing
+	// 	std::cout << "Getting PU weight" << std::endl;
+	// 	pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
+	// 	weight *= pileUpWeight;
+	// 	if (Globals::pdfWeightNumber != 0) {
+	// 		try {
+	// 			double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
+	// 			weight *= pdf_weight;
 
-				histMan->setCurrentHistogramFolder("");
-				histMan->H1D("PDFweights")->Fill(pdf_weight);
-			} catch (exception& e) {
-				cout << "PDF weight assigning exception: " << e.what() << endl;
-			}
-		}
+	// 			histMan->setCurrentHistogramFolder("");
+	// 			histMan->H1D("PDFweights")->Fill(pdf_weight);
+	// 		} catch (exception& e) {
+	// 			cout << "PDF weight assigning exception: " << e.what() << endl;
+	// 		}
+	// 	}
 	}
 
 	//top pt weight
@@ -141,12 +148,9 @@ void Analysis::printSummary() {
 
 void Analysis::createHistograms() {
 	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
-	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
+	treeMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
-	eventcountAnalyser->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by eventcountAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-	lastNumberOfHistograms = numberOfHistograms;
+	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
 
 	ttbar_plus_X_analyser_->createHistograms();
 	numberOfHistograms = histMan->size();
@@ -154,10 +158,11 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	diffVariablesAnalyser->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by diffVariablesAnalyser: " << numberOfHistograms - lastNumberOfHistograms << endl;
-	lastNumberOfHistograms = numberOfHistograms;
+	if ( ( eventReader->getSeenDatatypes()[DataType::TTJets] || eventReader->getSeenDatatypes()[DataType::TT_Pythia8] )
+		&& Globals::treePrefix_ == "" ) {
+		pseudoTopAnalyser_->createTrees();
+		unfoldingRecoAnalyser_->createTrees();
+	}
 
 	histMan->setCurrentHistogramFolder("");
 	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
@@ -169,31 +174,18 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		eventReader(new NTupleEventReader()), //
 		currentEvent(), //
 		histMan(new BAT::HistogramManager()), //
+		treeMan(new BAT::TreeManager()), //
 		interestingEvents(), //
 		brokenEvents(), //
 		eventCheck(), //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-		abcdMethodAnalyser_(new ABCDMethodAnalyser(histMan)), //
-		bjetAnalyser(new BJetAnalyser(histMan)), //
-		diElectronAnalyser(new DiElectronAnalyser(histMan)), //
-		electronAnalyser(new ElectronAnalyser(histMan)), //
-		eventcountAnalyser(new EventCountAnalyser(histMan)), //
-		hltriggerAnalyser(new HLTriggerTurnOnAnalyser(histMan)), //
-		hltriggerQCDAnalyserInclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_inclusive", false)), //
-		hltriggerQCDAnalyserExclusive_(new HLTriggerQCDAnalyser(histMan, "HLTQCDAnalyser_exclusive", true)), //
-		jetAnalyser(new JetAnalyser(histMan)), //
-		mcAnalyser(new MCAnalyser(histMan)), //
-		metAnalyser(new METAnalyser(histMan)), //
-		mttbarAnalyser(new MTtbarAnalyser(histMan)), //
-		muonAnalyser(new MuonAnalyser(histMan)), //
-		mvAnalyser(new MVAnalyser(histMan)), //
-		neutrinoRecoAnalyser(new NeutrinoReconstructionAnalyser(histMan)), //
-		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan)), //
+		metAnalyser(new METAnalyser(histMan, treeMan)), //
+		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
-		diffVariablesAnalyser(new DiffVariablesAnalyser(histMan)),
-		binningAnalyser(new BinningAnalyser(histMan)) {
+		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)),
+		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)) {
 	histMan->enableDebugMode(true);
 }
 
@@ -204,6 +196,7 @@ Analysis::~Analysis() {
 void Analysis::finishAnalysis() {
 	printSummary();
 	histMan->writeToDisk();
+	treeMan->writeToDisk();
 }
 
 void Analysis::addInputFile(const char* fileName) {

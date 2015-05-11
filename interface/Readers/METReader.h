@@ -15,7 +15,7 @@ namespace BAT {
 class METReader {
 public:
 	METReader();
-	METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::patMETsPFlow);
+	METReader(TChainPointer input, METAlgorithm::value algo = METAlgorithm::MET);
 	const METPointer getMET(double corrx, double corry);
 	virtual ~METReader();
 	void initialise();
