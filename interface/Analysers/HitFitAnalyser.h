@@ -45,6 +45,7 @@ private:
 	double hitfitTopMass_;
 	double lepton_charge;
 	bool do_MC_matching;
+	bool allTTBarJetsPassedToFit_;
 
 	bool isElectronChannel_;
 
@@ -62,7 +63,7 @@ private:
 
 private:
 	FourVector fourVectorFromHitFit(const hitfit::Fourvec& v);
-	BAT::TtbarHypothesis BatEvent(const hitfit::Lepjets_Event& ev);
+	BAT::TtbarHypothesis BatEvent(const hitfit::Lepjets_Event& ev, const EventPtr event);
 
 public:
 	HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder = "hitfitStudy" );
