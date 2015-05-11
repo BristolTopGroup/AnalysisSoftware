@@ -31,8 +31,10 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 	const METPointer met(event->MET((METAlgorithm::value) 0));
 
 	// Get cleaned jets that aren't b tagged
-	JetCollection jetsWithoutBs;
-	for ( unsigned int jetIndex=0; jetIndex < jets.size(); ++jetIndex ) {
+	JetCollection leadingLightJets;
+	JetCollection leadingBJets;
+	unsigned int maxNJet = std::min(5, int(jets.size()));
+	for ( unsigned int jetIndex=0; jetIndex < maxNJet; ++jetIndex ) {
 		bool isBJet = false;
 		JetPointer thisJet = jets[jetIndex];
 		for ( unsigned int bJetIndex=0; bJetIndex < bjets.size(); ++bJetIndex ) {
@@ -42,7 +44,8 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 				break;
 			}
 		}
-		if ( !isBJet ) jetsWithoutBs.push_back( thisJet );
+		if ( !isBJet ) leadingLightJets.push_back( thisJet );
+		else leadingBJets.push_back( thisJet );
 	}
 
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
@@ -56,12 +59,12 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 	//prepare the jets collection
 	// Copy jets into an array
 	JetCollection jetCopy;
-	for (JetCollection::const_iterator j = jetsWithoutBs.begin(); j != jetsWithoutBs.end(); ++j) {
+	for (JetCollection::const_iterator j = leadingLightJets.begin(); j != leadingLightJets.end(); ++j) {
 		jetCopy.push_back(*j);
 	}
 
 	JetCollection bJetCopy;
-	for (JetCollection::const_iterator j = bjets.begin(); j != bjets.end(); ++j) {
+	for (JetCollection::const_iterator j = leadingBJets.begin(); j != leadingBJets.end(); ++j) {
 		bJetCopy.push_back(*j);
 	}
 
@@ -72,16 +75,16 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 	unsigned numJetsToFit = jetCopy.size();
 
 	if (jetCopy.size() >= 2) {
-		if (numJetsToFit > 2)
-			numJetsToFit = 2;
+		if (numJetsToFit > 5)
+			numJetsToFit = 5;
 		jetsForFitting.insert(jetsForFitting.begin(), jetCopy.begin(), jetCopy.begin() + numJetsToFit);
 	}
 
 	bJetsForFitting.clear();
-	numJetsToFit = jetCopy.size();
+	numJetsToFit = bJetCopy.size();
 	if (bJetCopy.size() >= 2) {
-		if (numJetsToFit > 2)
-			numJetsToFit = 2;
+		if (numJetsToFit > 5)
+			numJetsToFit = 5;
 		bJetsForFitting.insert(bJetsForFitting.begin(), bJetCopy.begin(), bJetCopy.begin() + numJetsToFit);
 	}
 
@@ -105,11 +108,37 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 
 
 	// Add jets into HitFit
+	// Also check if jets matched to ttbar partons are in the jets passed to the fit
+	bool quarkInCollection = false, quarkBarInCollection = false, lebBInCollection = false, hadBInCollection = false;
 	for (size_t jet = 0; jet != jetsForFitting.size(); ++jet) {
 		hhFitter.AddJet(*jetsForFitting.at(jet));
+		// cout << "Adding light jet with csv : " << jetsForFitting.at(jet)->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2) << endl;
+		if ( jetsForFitting.at(jet)->ttbar_decay_parton() ) {
+			int partonPdg = jetsForFitting.at(jet)->ttbar_decay_parton();
+			if ( partonPdg == 3 ) quarkInCollection = true;
+			else if ( partonPdg == 4 ) quarkBarInCollection = true;
+			else if ( partonPdg == 5 ) lebBInCollection = true;
+			else if ( partonPdg == 6 ) hadBInCollection = true;
+		}
 	}
 	for (size_t jet = 0; jet != bJetsForFitting.size(); ++jet) {
 		hhFitter.AddBJet(*bJetsForFitting.at(jet));
+		// cout << "Adding b jet with csv : " << bJetsForFitting.at(jet)->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2) << endl;
+		if ( bJetsForFitting.at(jet)->ttbar_decay_parton() ) {
+			int partonPdg = bJetsForFitting.at(jet)->ttbar_decay_parton();
+			if ( partonPdg == 3 ) quarkInCollection = true;
+			else if ( partonPdg == 4 ) quarkBarInCollection = true;
+			else if ( partonPdg == 5 ) lebBInCollection = true;
+			else if ( partonPdg == 6 ) hadBInCollection = true;
+		}
+
+	}
+
+	// Check if jets matched to ttbar partons are in the jets passed to the fit
+	if (do_MC_matching) {
+		if ( quarkInCollection && quarkBarInCollection && lebBInCollection && hadBInCollection  ) {
+			allTTBarJetsPassedToFit_ = true;
+		}
 	}
 
 	// Add missing transverse energy into HitFit
@@ -174,7 +203,8 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 
 		//pass hitfit event into BAT format
 		lepton_charge = selectedLepton->charge();
-		BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev());
+		// cout << "Best chi2 : " << hitfitResult[bestX2pos].chisq() << endl;
+		BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev(), event);
 
 		treeMan_->Fill("FittedLeptonicTopPtBestSolution", newHyp.leptonicTop->pt());
 		treeMan_->Fill("FittedHadronicTopPtBestSolution", newHyp.hadronicTop->pt());
@@ -237,6 +267,7 @@ HitFitAnalyser::HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeM
 		hitfitTopMass_(172.5), //
 		lepton_charge(0.0),
 		do_MC_matching(false),
+		allTTBarJetsPassedToFit_(false),
 		// Tells hit fit whether event contains a signal electron or a signal muon
 		isElectronChannel_(isElectronChannel), //
 		// The following three initializers instantiate the translator between PAT objects
@@ -249,7 +280,7 @@ HitFitAnalyser::HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeM
 
 }
 
-BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
+BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, const EventPtr event ) {
 	// Do the electron
 	BAT::LeptonPointer newLepton(new BAT::Electron());
 	if ( !isElectronChannel_ ) {
@@ -319,18 +350,45 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev) {
 	// do MC matching study
 	if (do_MC_matching) {
 
-		// Check if jets are in correct position
-		// cout << "Lep B parton : " << newLepB->ttbar_decay_parton() << endl;
-		// cout << "Had B parton : " << newHadB->ttbar_decay_parton() << endl;
-		// cout << "W 1 parton : " << newWj1->ttbar_decay_parton() << endl;
-		// cout << "W 2 parton : " << newWj2->ttbar_decay_parton() << endl;
 
+		// Check if jets are in correct position
 		if ( ( newWj1->ttbar_decay_parton() == 3 || newWj1->ttbar_decay_parton() == 4 ) &&
-			 ( newWj2->ttbar_decay_parton() == 3 || newWj2->ttbar_decay_parton() == 4 ) ) {
+			 ( newWj2->ttbar_decay_parton() == 3 || newWj2->ttbar_decay_parton() == 4 ) && 
+			 ( newLepB->ttbar_decay_parton() == 5 ) &&
+			 ( newHadB->ttbar_decay_parton() == 6 ) ) {
+			// Correct
 			treeMan_->Fill("SolutionCategory", 1 );
 		}
-		else {
+		else if ( !( event->isSemiLeptonicElectron() || event->isSemiLeptonicMuon() ) ) {
+			// Not a genuine semi leptonic event
 			treeMan_->Fill("SolutionCategory", 2 );
+		}
+		else if ( !allTTBarJetsPassedToFit_ ) {
+			// Not all jets from ttbar were passed to fit
+			treeMan_->Fill("SolutionCategory", 3 );
+		}
+		else if ( allTTBarJetsPassedToFit_ && ( newWj1->ttbar_decay_parton() == 0 || newWj2->ttbar_decay_parton() == 0 || newLepB->ttbar_decay_parton() == 0 || newHadB->ttbar_decay_parton() != 0 ) ) {
+			// All ttbar jets were available, but at least one incorrect jet used
+			treeMan_->Fill("SolutionCategory", 4 );
+		}
+		else if ( ( newWj1->ttbar_decay_parton() == 3 || newWj1->ttbar_decay_parton() == 4 ) &&
+			 ( newWj2->ttbar_decay_parton() == 3 || newWj2->ttbar_decay_parton() == 4 ) && 
+			 ( newLepB->ttbar_decay_parton() == 6 ) &&
+			 ( newHadB->ttbar_decay_parton() == 5 ) ) {
+			// B jets swapped, but W's correct
+			treeMan_->Fill("SolutionCategory", 5 );
+		}
+		else if ( ( ( newWj1->ttbar_decay_parton() == 5 || newWj1->ttbar_decay_parton() == 6 ) ||
+			 ( newWj2->ttbar_decay_parton() == 5 || newWj2->ttbar_decay_parton() == 6 ) ) || 
+			 ( ( newLepB->ttbar_decay_parton() == 3 || newLepB->ttbar_decay_parton() == 4 ) ||
+			 ( newHadB->ttbar_decay_parton() == 3 || newHadB->ttbar_decay_parton() == 4 ) ) ) {
+			// Light jet from W assigned as one of b's
+			// Or B jet from top assigend as light jet
+			treeMan_->Fill("SolutionCategory", 6 );
+		}
+		else {
+			// Just plain wrong
+			treeMan_->Fill("SolutionCategory", 7 );
 		}
 	// 	cout << "Doing MC matching" << endl;
 	// 	//Particle Pointers for best fitted hypothesis
