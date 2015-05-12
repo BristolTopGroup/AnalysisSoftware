@@ -132,6 +132,9 @@ print 'Parsed config settings:'
 for setting,value in settings.iteritems():
     print setting, '=', value
 
+#number of events to be processed
+maxEvents = 0# 0 == all
+
 #Jet Energy Resolutions files (L7 corrections)
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
