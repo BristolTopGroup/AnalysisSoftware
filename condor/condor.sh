@@ -16,6 +16,7 @@
 # --sample=<valid sample> (TTJet, etc) 
 # --mode=<valid mode of operation> (central, JES_up, etc)
 # --cmssw=53X|73X|74X
+# --splitTTJet
 NOW=$(date +"%d-%m-%Y")
 # remove Analysis.tar in case it exists. We want to ship the latest code!
 if [ -f "Analysis.tar" ]; then
@@ -33,7 +34,7 @@ operation=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_operation`
 energy=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_energy`
 cmssw_version=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_cmssw`
 noop=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_noop`
-
+splitTTJet=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_splitTTJet`
 job_description="job.description.$NOW"
 cp BristolAnalysis/Tools/condor/job.description.template $job_description;
 # inject all parameters into job.description arguments
@@ -44,13 +45,17 @@ if [ $operation == "test" ] || [ $operation == "single" ]; then
 	
 	mode=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_mode`
 	sample=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_sample`
-	
+
 	set1="--operation=$operation --cores=$cores --mode=$mode --sample=$sample"
-	set2="--sample=$sample --energy=$energy --cmssw=$cmssw_version"
+	set2="--energy=$energy --cmssw=$cmssw_version"
+	n_jobs=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_n_jobs`
 	other_params="$set1 $set2"
-	
+	if [ $splitTTJet == "True" ]; then
+		other_params="$set1 $set2 --splitTTJet"
+	fi
+
 	sed -i "s/%other_params%/${other_params}/g" $job_description
-	sed -i "s/%n_jobs%/1/g" $job_description
+	sed -i "s/%n_jobs%/${n_jobs}/g" $job_description
 	
 fi
 if [ $operation == "single-sample-analysis" ]; then
@@ -63,6 +68,10 @@ if [ $operation == "single-sample-analysis" ]; then
 	other_params="$set1 $set2"
 	n_jobs=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_n_jobs`
 	
+	if [ $splitTTJet == "True" ]; then
+		other_params="$set1 $set2 --splitTTJet"
+	fi
+
 	sed -i "s/%other_params%/${other_params}/g" $job_description
 	sed -i "s/%n_jobs%/${n_jobs}/g" $job_description
 fi
@@ -74,6 +83,10 @@ if [ $operation == "analysis" ]; then
 	set2="--energy=$energy --cmssw=$cmssw_version"
 	other_params="$set1 $set2"
 	n_jobs=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_n_jobs`
+	
+	if [ $splitTTJet == "True" ]; then
+		other_params="$set1 $set2 --splitTTJet"
+	fi
 	
 	sed -i "s/%other_params%/${other_params}/g" $job_description
 	sed -i "s/%n_jobs%/${n_jobs}/g" $job_description
