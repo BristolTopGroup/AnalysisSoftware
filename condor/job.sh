@@ -37,7 +37,11 @@ while [ $local_process -lt $range_for_loop ] ; do
 	analysisMode=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_mode --process $local_process`
 	energy=`BristolAnalysis/Tools/condor/job_mapper "$@"  --return_energy`
 	operation=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_operation`
+	splitTTJet=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_splitTTJet`
+	ntupleToProcess=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_ntupleToProcess --process $local_process`
+
 	echo "I will run sample=${sample} in mode=${analysisMode} for centre-of-mass energy of ${energy} TeV"
+	echo "Analysing ntuple number "$ntupleToProcess
 
 	python_config=master_PHYS14_cfg.py
 	if [ $energy -eq 7 ]; then
@@ -51,7 +55,11 @@ while [ $local_process -lt $range_for_loop ] ; do
 	fi
 
 	log_file=${sample}_${analysisMode}_${energy}TeV_${cmssw_version}.log
-	sample="$sample" analysisMode="$analysisMode" ${exe} ${toolsFolder}python/${python_config} ${TQAFPath} &> $log_file &
+	if [ $ntupleToProcess -ne -1 ]; then
+		log_file=${sample}_${analysisMode}_${ntupleToProcess}_${energy}TeV_${cmssw_version}.log
+	fi
+
+	sample="$sample" analysisMode="$analysisMode" ntupleToProcess=$ntupleToProcess ${exe} ${toolsFolder}python/${python_config} ${TQAFPath} &> $log_file &
 	
 	let local_process+=1
 done

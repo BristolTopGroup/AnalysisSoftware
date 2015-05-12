@@ -85,7 +85,13 @@ if sample in ['TTJets-mcatnlo','TTJets-powheg']:
         settings['custom_file_suffix'] = suffixes[sample]
     else:
         settings['custom_file_suffix'] = suffixes[sample] + '_' + settings['custom_file_suffix']    
-    
+
+
+# Option to process a single ntuple of a sample rather than all of them
+ntupleToProcess = -1
+if os.environ.has_key('ntupleToProcess'):
+    ntupleToProcess = int(os.environ['ntupleToProcess'])
+
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = False
@@ -108,6 +114,10 @@ for setting,value in settings.iteritems():
     print setting, '=', value
 input_folders = datasets[sample]
 filetype = '*.root'
+if ntupleToProcess > 0 :
+    filetype = '*%03d.root' % ntupleToProcess
+    print 'Will only consider ntuple : ',filetype
+    settings['custom_file_suffix'] += str(ntupleToProcess)   
 inputFiles = [path + '/' + filetype for path in input_folders]
 # inputFiles = datasets[sample]
 
