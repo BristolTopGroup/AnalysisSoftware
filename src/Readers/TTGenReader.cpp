@@ -136,29 +136,6 @@ void TTGenReader::readTTGenInfo() {
     double singleneutrinoE = singleneutrinoEReader.getVariable();
     ParticlePointer singleneutrino(new Particle(singleneutrinoE, singleneutrinoPx, singleneutrinoPy, singleneutrinoPz));
 
-    // check it works
-    // std::cout << "-------------------------------------" << std::endl;
-    // std::cout << "Single Neutrino Energy:" << singleneutrino->energy() << std::endl;
-    // std::cout << "Single Neutrino Px:" << singleneutrino->px() << std::endl;
-    // std::cout << "Single Neutrino Py:" << singleneutrino->py() << std::endl;
-    // std::cout << "Single Neutrino Pz:" << singleneutrino->pz() << std::endl << std::endl;
-    // std::cout << "-------------------------------------" << std::endl;
-    // std::cout << "Single Lepton Energy:" << singlelepton->energy() << std::endl;
-    // std::cout << "Single Lepton Px:" << singlelepton->px() << std::endl;
-    // std::cout << "Single Lepton Py:" << singlelepton->py() << std::endl;
-    // std::cout << "Single Lepton Pz:" << singlelepton->pz() << std::endl << std::endl;
-    // std::cout << "-------------------------------------" << std::endl;
-    // std::cout << "Leptonic B Energy:" << leptonicB->energy() << std::endl;
-    // std::cout << "Leptonic B Px:" << leptonicB->px() << std::endl;
-    // std::cout << "Leptonic B Py:" << leptonicB->py() << std::endl;
-    // std::cout << "Leptonic B Pz:" << leptonicB->pz() << std::endl << std::endl;
-    // std::cout << "-------------------------------------" << std::endl;
-    // std::cout << "Hadronic B Energy:" << hadronicB->energy() << std::endl;
-    // std::cout << "Hadronic B Px:" << hadronicB->px() << std::endl;
-    // std::cout << "Hadronic B Py:" << hadronicB->py() << std::endl;
-    // std::cout << "Hadronic B Pz:" << hadronicB->pz() << std::endl;
-    // std::cout << "-------------------------------------" << std::endl;
-
     ttGenInfo_ = TTGenInfoPointer( new TTGenInfo( quark, quarkBar, leptonicB, hadronicB, singlelepton, singleneutrino, qGenJetIndex, qBarGenJetIndex, leptonicBGenJetIndex, hadronicBGenJetIndex ) );
 
 }

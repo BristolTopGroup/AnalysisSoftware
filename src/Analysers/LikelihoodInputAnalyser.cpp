@@ -7,7 +7,6 @@
 #include "../../interface/Analysers/LikelihoodInputAnalyser.h"
 #include "../../interface/GlobalVariables.h"
 #include <boost/scoped_ptr.hpp>
-#include "../Rochester/NeutrinoSolver.cc"
 
 using namespace BAT;
 
@@ -17,12 +16,12 @@ void LikelihoodInputAnalyser::analyse(const EventPtr event) {
 	weight_ = event->weight();
 	treeMan_->setCurrentFolder(histogramFolder_);
 	unsigned int parton = 0;
-	double CSV;
+	double CSV = -1;
 
 	const JetCollection AllJets(event->Jets());
 	const JetCollection jets(event->CleanedJets());
 	const JetCollection bjets(event->CleanedBJets());
-	const JetCollection genJets( event->GenJets() );
+	// const JetCollection genJets( event->GenJets() );
 
 	METAlgorithm::value metType = (METAlgorithm::value) 0;
 	const METPointer met(event->MET(metType));
@@ -31,43 +30,26 @@ void LikelihoodInputAnalyser::analyse(const EventPtr event) {
 		for ( unsigned int AllJetIndex=0; AllJetIndex < AllJets.size(); ++AllJetIndex ) {
 
 			JetPointer AllJet = AllJets[AllJetIndex];
-			parton = AllJet->ttbar_decay_parton();
+
+			if (AllJet->matched_parton() == 0) continue;//if null pointer
+
+			parton = abs(AllJet->matched_parton()->pdgId());
 			CSV = AllJet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
 
-
-			// // Look at matched generator jets <----------- something im working on (lookiong at differences between jet pt and gen jet pt etc)
-			// const ParticlePointer genJet = AllJet->matched_generated_jet();
-			// if ( genJet != 0 ) {
-			// 	treeMan_->Fill("genJetPt",genJet->pt());
-			// 	treeMan_->Fill("genJetEta",genJet->eta());
-			// 	treeMan_->Fill("JetPt", AllJet->getFourVector().Pt());
-			// 	treeMan_->Fill("JetEta", AllJet->getFourVector().Eta());
-			// }
-
-
-
 			if ( abs(CSV) >= 11 ){
-				cout << "CSV : " << CSV << " Run Number : " << event->runnumber() << " Event Number : " << event->eventnumber() << " Lumi Number : " << event->lumiblock() << endl;
-				// event->inspect(); //For more info on events failing
+				// cout << "CSV : " << CSV << " Run Number : " << event->runnumber() << " Event Number : " << event->eventnumber() << " Lumi Number : " << event->lumiblock() << endl;
+				// event->inspect(); //For more info on events failing CSV
 				continue;
 				}
 
-			if ( parton == 3 || parton == 4 ){
+			if ( (parton >= 1 && parton <= 4) || (parton == 21) ){
 				treeMan_->Fill("LightJets", CSV);
 				// cout << "LightJet CSV : " << CSV << endl;
-				if ( CSV == -10 ){
-					treeMan_->Fill("LightJetPt", AllJet->getFourVector().Pt());
-					treeMan_->Fill("LightJetEta", AllJet->getFourVector().Eta());
-				}
 			}
 
-			else if ( parton == 5 || parton == 6 ){
+			else if ( parton == 5 ){
 				treeMan_->Fill("BJets", CSV);
 				// cout << "BJet CSV : " << CSV << endl;
-				if ( CSV == -10 ){
-					treeMan_->Fill("BJetPt", AllJet->getFourVector().Pt());
-					treeMan_->Fill("BJetEta", AllJet->getFourVector().Eta());
-				}
 			}
 
 			else{
@@ -77,7 +59,6 @@ void LikelihoodInputAnalyser::analyse(const EventPtr event) {
 	}
 
 
-
 	// Require one of the event selections to have been satisfied, and we have a genuine ttbar event
 	int selectionCriteria = -1;
 	if ( event->PassesElectronTriggerAndSelection() && event->isSemiLeptonicElectron() ) selectionCriteria = SelectionCriteria::ElectronPlusJetsReference;
@@ -85,15 +66,10 @@ void LikelihoodInputAnalyser::analyse(const EventPtr event) {
 	if ( selectionCriteria < 0 ) return;
 
 	// Get objects
-
 	const LeptonPointer signalLepton = event->getSignalLepton( selectionCriteria );
 
 	JetCollection jetsWithoutBs;
-	FourVector TopHad, TopLep, WHad, WLep;
-	unsigned int BestLepbjetIndex, BestHadbjetIndex, BestLightjet1Index, BestLightjet2Index;
-	BestLightjet2Index = BestLightjet1Index = BestHadbjetIndex = BestLepbjetIndex = 99;
-	double TopMassDiff, CurrentTopMassDiff;
-	CurrentTopMassDiff = 9999;
+	FourVector WLep, TopLep, WHad, TopHad;
 
 	// Get cleaned jets that aren't b tagged
 	for ( unsigned int jetIndex=0; jetIndex < jets.size(); ++jetIndex ) {
@@ -123,6 +99,7 @@ void LikelihoodInputAnalyser::analyse(const EventPtr event) {
 		bool leptonicB = false;
 		bool hadronicB = false;
 		bool mistaggedB = false;
+		double CorrectEvent = 0;
 
 		if (bjet->ttbar_decay_parton() == 5){
 			leptonicB = true;
@@ -180,73 +157,37 @@ void LikelihoodInputAnalyser::analyse(const EventPtr event) {
 					JetPointer AltBjet = bjets[AltbjetIndex];
 
 					TopHad = WHad + AltBjet->getFourVector();
-					TopMassDiff = TopLep.M()-TopHad.M();
-
 					// cout << "Mass of Hadronic Top : " << TopHad.M() << "GeV" << endl;
-					// cout << "Top Mass Difference : " << abs(TopMassDiff) << endl;
-					// cout << "-----------------------------------------" << endl;
-					if (abs(TopMassDiff) < CurrentTopMassDiff){
-						CurrentTopMassDiff = TopMassDiff;
-						BestLightjet1Index = jet1Index;
-						BestLightjet2Index = jet2Index;
-						BestHadbjetIndex = AltbjetIndex;
-						BestLepbjetIndex = bjetIndex;
-						// cout << " Best Indices : " << BestLightjet1Index << BestLightjet2Index << BestLepbjetIndex << BestHadbjetIndex << endl;
+
+					if (AltBjet->ttbar_decay_parton() == 6 && leptonicB == true){
+						CorrectEvent = 1;
 					}
 
+					treeMan_->Fill("LeptonicTop_Pt",TopLep.Pt() );
+					treeMan_->Fill("LeptonicTop_Energy",TopLep.Energy() );
+					treeMan_->Fill("LeptonicTop_Mass",TopLep.M() );
+
+					treeMan_->Fill("LeptonicW_Pt",WLep.Pt());
+					treeMan_->Fill("LeptonicW_Energy",WLep.Energy());
+					treeMan_->Fill("LeptonicW_Mass",WLep.M() );
+
+					treeMan_->Fill("HadronicTop_Pt",TopHad.Pt());
+					treeMan_->Fill("HadronicTop_Energy",TopHad.Energy());
+					treeMan_->Fill("HadronicTop_Mass",TopHad.M() );
+
+					treeMan_->Fill("HadronicW_Pt",WHad.Pt());
+					treeMan_->Fill("HadronicW_Energy",WHad.Energy());
+					treeMan_->Fill("HadronicW_Mass",WHad.M() );
+
+					treeMan_->Fill("CorrectReconstruction", CorrectEvent);
 				}
-
 			}
-
-		}
-
-		WHad = jetsWithoutBs[BestLightjet1Index]->getFourVector() + jetsWithoutBs[BestLightjet2Index]->getFourVector();
-		TopHad = WHad + bjets[BestHadbjetIndex]->getFourVector() ;
-
-		if (leptonicB == true){
-
-			treeMan_->Fill("TrueLeptonicTop_Pt",TopLep.Pt() );
-			treeMan_->Fill("TrueLeptonicTop_Energy",TopLep.Energy() );
-			treeMan_->Fill("TrueLeptonicTop_Mass",TopLep.M() );
-
-			treeMan_->Fill("TrueLeptonicW_Pt",WLep.Pt());
-			treeMan_->Fill("TrueLeptonicW_Energy",WLep.Energy());
-			treeMan_->Fill("TrueLeptonicW_Mass",WLep.M() );
-
-			treeMan_->Fill("TrueHadronicTop_Pt",TopHad.Pt());
-			treeMan_->Fill("TrueHadronicTop_Energy",TopHad.Energy());
-			treeMan_->Fill("TrueHadronicTop_Mass",TopHad.M() );
-
-			treeMan_->Fill("TrueHadronicW_Pt",WHad.Pt());
-			treeMan_->Fill("TrueHadronicW_Energy",WHad.Energy());
-			treeMan_->Fill("TrueHadronicW_Mass",WHad.M() );
-		}
-
-		else {
-
-			treeMan_->Fill("FalseLeptonicTop_Pt",TopLep.Pt());
-			treeMan_->Fill("FalseLeptonicTop_Energy",TopLep.Energy());
-			treeMan_->Fill("FalseLeptonicTop_Mass",TopLep.M());
-
-			treeMan_->Fill("FalseLeptonicW_Pt",WLep.Pt());
-			treeMan_->Fill("FalseLeptonicW_Energy",WLep.Energy());
-			treeMan_->Fill("FalseLeptonicW_Mass",WLep.M());
-
-			treeMan_->Fill("FalseHadronicTop_Pt",TopHad.Pt());
-			treeMan_->Fill("FalseHadronicTop_Energy",TopHad.Energy());
-			treeMan_->Fill("FalseHadronicTop_Mass",TopHad.M() );
-
-			treeMan_->Fill("FalseHadronicW_Pt",WHad.Pt());
-			treeMan_->Fill("FalseHadronicW_Energy",WHad.Energy());
-			treeMan_->Fill("FalseHadronicW_Mass",WHad.M() );
-		
 		}
 	}
 }
 
 LikelihoodInputAnalyser::LikelihoodInputAnalyser(HistogramManagerPtr histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder ) :
-		BasicAnalyser(histMan, treeMan, histogramFolder)
-{
+		BasicAnalyser(histMan, treeMan, histogramFolder){
 
 }
 
@@ -267,47 +208,22 @@ void LikelihoodInputAnalyser::createTrees() {
 
 	treeMan_->addBranch("BJets", "F", "CSV" + Globals::treePrefix_);
 	treeMan_->addBranch("LightJets", "F", "CSV" + Globals::treePrefix_);
-	treeMan_->addBranch("LightJetPt", "F", "CSV" + Globals::treePrefix_);
-	treeMan_->addBranch("LightJetEta", "F", "CSV" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetPt", "F", "CSV" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetEta", "F", "CSV" + Globals::treePrefix_);
 
-	// treeMan_->addBranch("genJetPt", "F", "CSV" + Globals::treePrefix_);
-	// treeMan_->addBranch("genJetEta", "F", "CSV" + Globals::treePrefix_);
-	// treeMan_->addBranch("JetPt", "F", "CSV" + Globals::treePrefix_);
-	// treeMan_->addBranch("JetEta", "F", "CSV" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonicTop_Pt", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonicTop_Energy", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonicTop_Mass", "F", "TopReco" + Globals::treePrefix_);
 
+	treeMan_->addBranch("HadronicTop_Pt", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("HadronicTop_Energy", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("HadronicTop_Mass", "F", "TopReco" + Globals::treePrefix_);
 
-	treeMan_->addBranch("TrueLeptonicTop_Pt", "F", "LeptonicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueLeptonicTop_Energy", "F", "LeptonicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueLeptonicTop_Mass", "F", "LeptonicTop" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonicW_Pt", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonicW_Energy", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonicW_Mass", "F", "TopReco" + Globals::treePrefix_);
 
-	treeMan_->addBranch("TrueHadronicTop_Pt", "F", "HadronicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueHadronicTop_Energy", "F", "HadronicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueHadronicTop_Mass", "F", "HadronicTop" + Globals::treePrefix_);
-
-	treeMan_->addBranch("TrueLeptonicW_Pt", "F", "LeptonicW" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueLeptonicW_Energy", "F", "LeptonicW" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueLeptonicW_Mass", "F", "LeptonicW" + Globals::treePrefix_);
-
-	treeMan_->addBranch("TrueHadronicW_Pt", "F", "HadronicW" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueHadronicW_Energy", "F", "HadronicW" + Globals::treePrefix_);
-	treeMan_->addBranch("TrueHadronicW_Mass", "F", "HadronicW" + Globals::treePrefix_);
-
-
-	treeMan_->addBranch("FalseLeptonicTop_Pt", "F", "LeptonicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseLeptonicTop_Energy", "F", "LeptonicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseLeptonicTop_Mass", "F", "LeptonicTop" + Globals::treePrefix_);
-
-	treeMan_->addBranch("FalseHadronicTop_Pt", "F", "HadronicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseHadronicTop_Energy", "F", "HadronicTop" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseHadronicTop_Mass", "F", "HadronicTop" + Globals::treePrefix_);
-
-	treeMan_->addBranch("FalseLeptonicW_Pt", "F", "LeptonicW" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseLeptonicW_Energy", "F", "LeptonicW" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseLeptonicW_Mass", "F", "LeptonicW" + Globals::treePrefix_);
-
-	treeMan_->addBranch("FalseHadronicW_Pt", "F", "HadronicW" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseHadronicW_Energy", "F", "HadronicW" + Globals::treePrefix_);
-	treeMan_->addBranch("FalseHadronicW_Mass", "F", "HadronicW" + Globals::treePrefix_);
+	treeMan_->addBranch("HadronicW_Pt", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("HadronicW_Energy", "F", "TopReco" + Globals::treePrefix_);
+	treeMan_->addBranch("HadronicW_Mass", "F", "TopReco" + Globals::treePrefix_);
+	
+	treeMan_->addBranch("CorrectReconstruction", "F", "TopReco"+ Globals::treePrefix_);
 }

@@ -20,6 +20,7 @@ default_settings = {
             'PUFile':'PileUp_2012_69300_truth_finebin.root',
             'MuonScaleFactors':'nofile.root',
             'PUFile':'noFile.root',
+            'TTbarLikelihoodFile' : 'LikelihoodInputAnalyserOutput.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
@@ -44,6 +45,7 @@ analysis_settings = {
                                 },
                      'PU_up':{'PUFile':'PileUp_2012_72765_truth_finebin.root',
                               'custom_file_suffix':'PU_72765mb'},
+
                      'Test': {'custom_file_suffix':'TESTING'}
                      }
 
@@ -108,6 +110,9 @@ getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
+
+TTbarLikelihoodFile = toolsFolder + "/data/" + settings['TTbarLikelihoodFile']
+
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
 JetSmearingSystematic = settings['JetSmearingSystematic']
@@ -133,7 +138,10 @@ for setting,value in settings.iteritems():
     print setting, '=', value
 
 #number of events to be processed
-maxEvents = 0# 0 == all
+
+maxEvents = 0100000# 0 == all
+
+
 
 #Jet Energy Resolutions files (L7 corrections)
 bJetResoFile = toolsFolder + "data/bJetReso.root"

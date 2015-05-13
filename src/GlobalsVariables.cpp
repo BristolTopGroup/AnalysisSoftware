@@ -28,6 +28,22 @@ std::string Globals::TQAFPath = "";
 bool Globals::useHitFit = false;
 bool Globals::produceFitterASCIIoutput = false;
 
+// Likelihood ttbar reco
+boost::shared_ptr<TH1F> Globals::csvCorrectPermHistogram = boost::shared_ptr<TH1F>(new TH1F());
+boost::shared_ptr<TH1F> Globals::csvIncorrectPermHistogram = boost::shared_ptr<TH1F>(new TH1F());
+boost::shared_ptr<TH1F> Globals::NuChiCorrectPermHistogram = boost::shared_ptr<TH1F>(new TH1F());
+boost::shared_ptr<TH1F> Globals::NuChiIncorrectPermHistogram = boost::shared_ptr<TH1F>(new TH1F());
+
+boost::shared_ptr<TH2F> Globals::HadronicRecoCorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::HadronicRecoIncorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::LeptonicRecoCorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::LeptonicRecoIncorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
+
+
+
+
+
+
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
 int Globals::ElectronScaleFactorSystematic = 0;
