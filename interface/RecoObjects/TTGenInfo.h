@@ -17,13 +17,13 @@ typedef boost::shared_ptr<TTGenInfo> TTGenInfoPointer;
 
 namespace TTPartons {
 enum partonType {
-    Undefined,
-    Lepton,
-    Neutrino,
-    Quark,
-    QuarkBar,
-    LepB,
-    HadB
+    Undefined=0,
+    Lepton=1,
+    Neutrino=2,
+    Quark=3,
+    QuarkBar=4,
+    LepB=5,
+    HadB=6
 };
 }
 
