@@ -30,6 +30,10 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 	string metPrefix = METAlgorithm::names.at(0);
 	const METPointer met(event->MET((METAlgorithm::value) 0));
 
+	int lastTTBarJetPosition = positionOfLastTTBarJet( jets );
+	if ( lastTTBarJetPosition != -1 ) treeMan_->Fill("PositionOfLastTTbarJet", lastTTBarJetPosition + 1 );
+	else treeMan_->Fill("PositionOfLastTTbarJet", lastTTBarJetPosition );
+
 	// Get cleaned jets that aren't b tagged
 	JetCollection leadingLightJets;
 	JetCollection leadingBJets;
@@ -471,6 +475,26 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 	return hyp;
 }
 
+int HitFitAnalyser::positionOfLastTTBarJet(const JetCollection jets) {
+	// Loop over jets and find position of last jet that comes from ttbar decay
+	bool foundHadB = false;
+	bool foundLepB = false;
+	bool foundQ = false;
+	bool foundQBar = false;
+	for ( unsigned int jetIndex=0; jetIndex < jets.size(); ++jetIndex ) {
+		JetPointer jet = jets[jetIndex];
+
+		if ( jet->ttbar_decay_parton() == 3 ) foundQ = true;
+		else if ( jet->ttbar_decay_parton() == 4 ) foundQBar = true;
+		else if ( jet->ttbar_decay_parton() == 5 ) foundLepB = true;
+		else if ( jet->ttbar_decay_parton() == 6 ) foundHadB = true;
+
+		if ( foundQ && foundQBar && foundLepB && foundHadB ) return jetIndex;
+	}
+	return -1;
+
+}
+
 FourVector HitFitAnalyser::fourVectorFromHitFit(const hitfit::Fourvec& v) {
 	FourVector result(v.x(), v.y(), v.z(), v.t());
 	return result;
@@ -566,5 +590,6 @@ void HitFitAnalyser::createTrees() {
 
 	treeMan_->addBranch("SolutionCategory", "F", "HitFit" + Globals::treePrefix_);
 
+	treeMan_->addBranch("PositionOfLastTTbarJet", "F", "HitFit" + Globals::treePrefix_);
 }
 
