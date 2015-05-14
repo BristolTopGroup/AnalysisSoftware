@@ -388,6 +388,37 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 			// Just plain wrong
 			treeMan_->Fill(SolutionCategoryHist, 8 );
 		}
+		else if ( !allTTBarJetsPassSelection_ ) {
+			// Not all jets from ttbar passed jet selection
+			treeMan_->Fill("SolutionCategory", 3 );			
+		}
+		else if ( !allTTBarJetsPassedToFit_ ) {
+			// Not all jets from ttbar were passed to fit
+			treeMan_->Fill("SolutionCategory", 4 );
+		}
+		else if ( allTTBarJetsPassedToFit_ && ( newWj1->ttbar_decay_parton() == 0 || newWj2->ttbar_decay_parton() == 0 || newLepB->ttbar_decay_parton() == 0 || newHadB->ttbar_decay_parton() != 0 ) ) {
+			// All ttbar jets were available, but at least one incorrect jet used
+			treeMan_->Fill("SolutionCategory", 5 );
+		}
+		else if ( ( newWj1->ttbar_decay_parton() == 3 || newWj1->ttbar_decay_parton() == 4 ) &&
+			 ( newWj2->ttbar_decay_parton() == 3 || newWj2->ttbar_decay_parton() == 4 ) && 
+			 ( newLepB->ttbar_decay_parton() == 6 ) &&
+			 ( newHadB->ttbar_decay_parton() == 5 ) ) {
+			// B jets swapped, but W's correct
+			treeMan_->Fill("SolutionCategory", 6 );
+		}
+		else if ( ( ( newWj1->ttbar_decay_parton() == 5 || newWj1->ttbar_decay_parton() == 6 ) ||
+			 ( newWj2->ttbar_decay_parton() == 5 || newWj2->ttbar_decay_parton() == 6 ) ) || 
+			 ( ( newLepB->ttbar_decay_parton() == 3 || newLepB->ttbar_decay_parton() == 4 ) ||
+			 ( newHadB->ttbar_decay_parton() == 3 || newHadB->ttbar_decay_parton() == 4 ) ) ) {
+			// Light jet from W assigned as one of b's
+			// Or B jet from top assigend as light jet
+			treeMan_->Fill("SolutionCategory", 7 );
+		}
+		else {
+			// Just plain wrong
+			treeMan_->Fill("SolutionCategory", 8 );
+		}
 	// 	cout << "Doing MC matching" << endl;
 	// 	//Particle Pointers for best fitted hypothesis
 	// 	BAT::ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW;
