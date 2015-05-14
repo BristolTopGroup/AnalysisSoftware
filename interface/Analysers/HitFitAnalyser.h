@@ -46,6 +46,7 @@ private:
 	double lepton_charge;
 	bool do_MC_matching;
 	bool allTTBarJetsPassedToFit_;
+	bool allTTBarJetsPassSelection_;
 
 	bool isElectronChannel_;
 

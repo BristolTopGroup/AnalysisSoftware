@@ -30,10 +30,6 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 	string metPrefix = METAlgorithm::names.at(0);
 	const METPointer met(event->MET((METAlgorithm::value) 0));
 
-	int lastTTBarJetPosition = positionOfLastTTBarJet( jets );
-	if ( lastTTBarJetPosition != -1 ) treeMan_->Fill("PositionOfLastTTbarJet", lastTTBarJetPosition + 1 );
-	else treeMan_->Fill("PositionOfLastTTbarJet", lastTTBarJetPosition );
-
 	// Get cleaned jets that aren't b tagged
 	JetCollection leadingLightJets;
 	JetCollection leadingBJets;
@@ -143,6 +139,12 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 		if ( quarkInCollection && quarkBarInCollection && lebBInCollection && hadBInCollection  ) {
 			allTTBarJetsPassedToFit_ = true;
 		}
+		int lastTTBarJetPosition = positionOfLastTTBarJet( jets );
+		if ( lastTTBarJetPosition != -1 ) {
+			allTTBarJetsPassSelection_ = true;
+			treeMan_->Fill("PositionOfLastTTbarJet", lastTTBarJetPosition + 1 );
+		}
+		else treeMan_->Fill("PositionOfLastTTbarJet", lastTTBarJetPosition );
 	}
 
 	// Add missing transverse energy into HitFit
@@ -272,6 +274,7 @@ HitFitAnalyser::HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeM
 		lepton_charge(0.0),
 		do_MC_matching(false),
 		allTTBarJetsPassedToFit_(false),
+		allTTBarJetsPassSelection_(false),
 		// Tells hit fit whether event contains a signal electron or a signal muon
 		isElectronChannel_(isElectronChannel), //
 		// The following three initializers instantiate the translator between PAT objects
@@ -367,20 +370,24 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 			// Not a genuine semi leptonic event
 			treeMan_->Fill("SolutionCategory", 2 );
 		}
+		else if ( !allTTBarJetsPassSelection_ ) {
+			// Not all jets from ttbar passed jet selection
+			treeMan_->Fill("SolutionCategory", 3 );			
+		}
 		else if ( !allTTBarJetsPassedToFit_ ) {
 			// Not all jets from ttbar were passed to fit
-			treeMan_->Fill("SolutionCategory", 3 );
+			treeMan_->Fill("SolutionCategory", 4 );
 		}
 		else if ( allTTBarJetsPassedToFit_ && ( newWj1->ttbar_decay_parton() == 0 || newWj2->ttbar_decay_parton() == 0 || newLepB->ttbar_decay_parton() == 0 || newHadB->ttbar_decay_parton() != 0 ) ) {
 			// All ttbar jets were available, but at least one incorrect jet used
-			treeMan_->Fill("SolutionCategory", 4 );
+			treeMan_->Fill("SolutionCategory", 5 );
 		}
 		else if ( ( newWj1->ttbar_decay_parton() == 3 || newWj1->ttbar_decay_parton() == 4 ) &&
 			 ( newWj2->ttbar_decay_parton() == 3 || newWj2->ttbar_decay_parton() == 4 ) && 
 			 ( newLepB->ttbar_decay_parton() == 6 ) &&
 			 ( newHadB->ttbar_decay_parton() == 5 ) ) {
 			// B jets swapped, but W's correct
-			treeMan_->Fill("SolutionCategory", 5 );
+			treeMan_->Fill("SolutionCategory", 6 );
 		}
 		else if ( ( ( newWj1->ttbar_decay_parton() == 5 || newWj1->ttbar_decay_parton() == 6 ) ||
 			 ( newWj2->ttbar_decay_parton() == 5 || newWj2->ttbar_decay_parton() == 6 ) ) || 
@@ -388,11 +395,11 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 			 ( newHadB->ttbar_decay_parton() == 3 || newHadB->ttbar_decay_parton() == 4 ) ) ) {
 			// Light jet from W assigned as one of b's
 			// Or B jet from top assigend as light jet
-			treeMan_->Fill("SolutionCategory", 6 );
+			treeMan_->Fill("SolutionCategory", 7 );
 		}
 		else {
 			// Just plain wrong
-			treeMan_->Fill("SolutionCategory", 7 );
+			treeMan_->Fill("SolutionCategory", 8 );
 		}
 	// 	cout << "Doing MC matching" << endl;
 	// 	//Particle Pointers for best fitted hypothesis
