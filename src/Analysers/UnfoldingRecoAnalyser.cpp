@@ -52,6 +52,17 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("bEta", bjets[0]->eta() );
 	treeMan_->Fill("bPt", bjets[1]->pt() );
 	treeMan_->Fill("bEta", bjets[1]->eta() );
+
+	BAT::TtbarHypothesis topHypothesis = event->ttbarHypothesis();
+	if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+		treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+		treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+		treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+		treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+		treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+		treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+		treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+	}
 }
 
 void UnfoldingRecoAnalyser::createTrees() {
@@ -64,6 +75,14 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("ST", "F", "Unfolding");
 	treeMan_->addBranch("WPT", "F", "Unfolding");
 	treeMan_->addBranch("MT", "F", "Unfolding");
+
+	treeMan_->addBranch("lepTopPt", "F", "Unfolding");
+	treeMan_->addBranch("hadTopPt", "F", "Unfolding");
+	treeMan_->addBranch("lepTopRap", "F", "Unfolding");
+	treeMan_->addBranch("hadTopRap", "F", "Unfolding");
+	treeMan_->addBranch("ttbarPt", "F", "Unfolding");
+	treeMan_->addBranch("ttbarM", "F", "Unfolding");
+	treeMan_->addBranch("ttbarRap", "F", "Unfolding");
 
 	treeMan_->addBranch("leptonPt", "F", "Unfolding");
 	treeMan_->addBranch("leptonEta", "F", "Unfolding");
