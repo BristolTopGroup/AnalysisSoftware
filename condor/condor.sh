@@ -76,6 +76,24 @@ if [ $operation == "single-sample-analysis" ]; then
 	sed -i "s/%n_jobs%/${n_jobs}/g" $job_description
 fi
 
+if [ $operation == "single-mode-analysis" ]; then
+	echo "Running single mode analysis";
+	
+	mode=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_mode`
+	echo "Mode "$mode	
+	set1="--operation=$operation --cores=$cores --mode=$mode"
+	set2="--energy=$energy --cmssw=$cmssw_version"
+	other_params="$set1 $set2"
+	n_jobs=`BristolAnalysis/Tools/condor/job_mapper "$@" --return_n_jobs`
+	echo $n_jobs
+	if [ $splitTTJet == "True" ]; then
+		other_params="$set1 $set2 --splitTTJet"
+	fi
+
+	sed -i "s/%other_params%/${other_params}/g" $job_description
+	sed -i "s/%n_jobs%/${n_jobs}/g" $job_description
+fi
+
 if [ $operation == "analysis" ]; then
 	echo "lets do analysis"
 		
