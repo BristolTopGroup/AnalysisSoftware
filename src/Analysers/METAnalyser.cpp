@@ -69,6 +69,9 @@ void METAnalyser::analyseTransverseMass(const EventPtr event, const ParticlePoin
 		histMan_->H1D("DeltaPhi_lepton_MET")->Fill(delPhi, weight_);
 		if (met->et() < 20)
 			histMan_->H1D("Transverse_Mass_MET20")->Fill(MT, weight_);
+		histMan_->H2D("MET_vs_leptonPt")->Fill(particle->pt(), met->et(), weight_);
+		histMan_->H1D("MET_plus_leptonPt")->Fill(particle->pt() + met->et(), weight_);
+		histMan_->H2D("MET_vs_leptonEta")->Fill(particle->eta(), met->et(), weight_);
 	}
 }
 
@@ -106,9 +109,18 @@ void METAnalyser::createHistograms() {
 		histMan_->addH1D("Angle_lepton_MET", "angle(lepton,MET);angle(l,MET); Events/0.01", 320, 0, 3.2);
 		histMan_->addH1D("DeltaPhi_lepton_MET", "#Delta#phi(lepton,MET);angle(l,MET); Events/0.01", 320, 0,
 				3.2);
-		// histMan_->addH1D("DeltaPhi_lepton_MET", "#Delta#phi(lepton,MET);angle(l,MET); Events/0.01", 320, 0,
-		// 		3.2);
-
+		histMan_->addH2D("MET_vs_leptonPt",
+				"Missing transverse energy vs. Lepton p_{T}; Lepton p_{T}/(5 GeV); #slash{E}_{T}/(5 GeV)",
+				200, 0, 1000, 200, 0, 1000);
+		histMan_->addH1D("MET_plus_leptonPt",
+				"Missing transverse energy plus Lepton p_{T}; Lepton p_{T} + #slash{E}_{T}/(5 GeV)",
+				200, 0, 1000);
+		histMan_->addH2D("MET_vs_leptonEta",
+				"Missing transverse energy vs. Lepton #eta; Lepton #eta/(5 GeV); #slash{E}_{T}/(5 GeV)",
+				300, -3, 3, 200, 0, 1000);
+		histMan_->addH2D("HT_vs_MET_plus_leptonPt",
+				"HT vs.Missing transverse energy plus Lepton p_{T}; Lepton p_{T} + #slash{E}_{T}/(5 GeV); {H}_{T}/(5 GeV)",
+				200, 0, 1000, 200, 0, 1000);
 	}
 }
 
@@ -165,6 +177,8 @@ void METAnalyser::analyse_ST(const EventPtr event, const ParticlePointer particl
 		treeMan_->Fill("ST",ST);
 		treeMan_->Fill("WPT",WPT);
 		treeMan_->Fill("MT",MT);
+
+		histMan_->H2D("HT_vs_MET_plus_leptonPt")->Fill(particle->pt() + met->et(), Event::HT(jets), weight_);
 	}
 }
 

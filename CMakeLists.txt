@@ -1,6 +1,7 @@
 # Check if cmake has the required version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0 FATAL_ERROR)
 set(PROJECT_NAME_STR AnalysisSoftware)
+set(PROJECT_LIB_NAME BristolAnalysisTools)
 PROJECT(${PROJECT_NAME_STR})
 set(PROJECT_LIB_NAME BristolAnalysisTools)
 
@@ -93,6 +94,9 @@ include_directories(${COMMON_INCLUDES})
 file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
 target_link_libraries(${PROJECT_TEST_NAME}
+		${Boost_LIBRARIES}
+        ${PYTHON_LIBRARIES}
+        ${ROOT_LIBRARIES}
         ${PROJECT_LIB_NAME}
         )
 add_test(test1 ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_TEST_NAME})
