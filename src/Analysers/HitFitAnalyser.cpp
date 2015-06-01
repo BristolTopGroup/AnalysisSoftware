@@ -19,7 +19,6 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 }
 
 BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, const JetCollection jets, const JetCollection bjets, const LeptonPointer selectedLepton ) {
-
 	weight_ = event->weight() * prescale_ * scale_;
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
@@ -178,15 +177,27 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 //   // Loop over all permutations and extract the information
 	for (size_t fit = 0; fit != nHitFit; ++fit) {
 
-		// Get the event before the fit
-		hitfit::Lepjets_Event unfittedEvent = hitfitEventsInput[fit];
-
 		// Get the event after the fit
 		hitfit::Fit_Result fitResult = hitfitResult[fit];
 
 		if (hitfitResult[fit].chisq() > 0.0) {
 
 			treeMan_->Fill("FitChiSquaredAllSolutions",fitResult.chisq());
+		// 	histMan_->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), weight_);
+			// histMan_->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), weight_);
+		// 	histMan_->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), weight_);
+		// 	const hitfit::Column_Vector &px = fitResult.pullx();
+		// 	const hitfit::Column_Vector &py = fitResult.pully();
+		// 	double sumPx = 0.0;
+		// 	for (int i = 0; i < px.num_row(); ++i) {
+		// 		histMan_->H1D("PullDistAllVarsAllSolutions")->Fill(px[i]);
+		// 		histMan_->H2D("PullDistPerVarAllSolutions")->Fill(px[i], i);
+		// 		sumPx += px[i] * px[i];
+		// 	}
+		// 	histMan_->H1D("PullSumSquaredAllSolutions")->Fill(sumPx);
+		// 	for (int i = 0; i < py.num_row(); ++i) {
+		// 		histMan_->H1D("PullDistYVarsAllSolutions")->Fill(py[i]);
+		// 	}
 		}
 		// Is this the permutation with smallest chi2?
 		if (fitResult.chisq() > 0.0 && fitResult.chisq() < bestChi2) {
@@ -206,11 +217,11 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 		// histMan_->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), weight_);
 
 		treeMan_->Fill("FitChiSquaredBestSolutions",hitfitResult[bestX2pos].chisq());
+		treeMan_->Fill("FitChiSquaredProbabilityBestSolutions",TMath::Prob(hitfitResult[bestX2pos].chisq(),1));
 
 		//pass hitfit event into BAT format
 		lepton_charge = selectedLepton->charge();
-		// cout << "Best chi2 : " << hitfitResult[bestX2pos].chisq() << endl;
-		BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev(), event);
+		BAT::TtbarHypothesis newHyp = BatEvent(hitfitResult[bestX2pos].ev(), event, "SolutionCategory");
 
 		treeMan_->Fill("FittedLeptonicTopPtBestSolution", newHyp.leptonicTop->pt());
 		treeMan_->Fill("FittedHadronicTopPtBestSolution", newHyp.hadronicTop->pt());
@@ -220,33 +231,30 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 		treeMan_->Fill("FittedTTbarPtBestSolution", newHyp.resonance->pt());
 		treeMan_->Fill("FittedTTbarRapidityBestSolution", newHyp.resonance->rapidity());
 
-		// const hitfit::Column_Vector &px = hitfitResult[bestX2pos].pullx();
-		// const hitfit::Column_Vector &py = hitfitResult[bestX2pos].pully();
-		// double sumPx = 0.0;
-		// for (int i = 0; i < px.num_row(); ++i) {
-		// 	histMan_->H1D("PullDistAllVarsBestSolution")->Fill(px[i]);
-		// 	histMan_->H2D("PullDistPerVarBestSolution")->Fill(px[i], i);
-		// 	sumPx += px[i] * px[i];
-		// }
-		// histMan_->H1D("PullSumSquaredBestSolution")->Fill(sumPx);
-		// for (int i = 0; i < py.num_row(); ++i) {
-		// 	histMan_->H1D("PullDistYVarsBestSolution")->Fill(py[i]);
-		// }
+		// Get the event before the fit
+		hitfit::Lepjets_Event unfittedEvent = hitfitEventsInput[bestX2pos];
 
-		// histMan_->H1D("FittedTopPtBestSolution")->Fill(newHyp.leptonicTop->pt(), weight_);
-		// histMan_->H1D("FittedTopPtBestSolution")->Fill(newHyp.hadronicTop->pt(), weight_);
-		// histMan_->H1D("FittedTopRapidityBestSolution")->Fill(newHyp.leptonicTop->rapidity(), weight_);
-		// histMan_->H1D("FittedTopRapidityBestSolution")->Fill(newHyp.hadronicTop->rapidity(), weight_);
+		// Now need to perform second kinematic fit
+		hitfit::Fit_Result secondFitResult = performSecondKinematicFit( unfittedEvent, event);
+		BAT::TtbarHypothesis newHyp_afterSecondFit = BatEvent(secondFitResult.ev(), event, "SolutionCategory_second");
 
-		// histMan_->H1D("FittedTTbarMassBestSolution")->Fill(newHyp.resonance->mass(), weight_);
-		// histMan_->H1D("FittedTTbarPtBestSolution")->Fill(newHyp.resonance->pt(), weight_);
-		// histMan_->H1D("FittedTTbarRapidityBestSolution")->Fill(newHyp.resonance->rapidity(), weight_);
+		treeMan_->Fill("FitChiSquaredBestSolutions_second",secondFitResult.chisq());
+		treeMan_->Fill("FitChiSquaredProbabilityBestSolutions_second",TMath::Prob(secondFitResult.chisq(),2));
 
-		return newHyp;
+		treeMan_->Fill("FittedLeptonicTopPtBestSolution_second", newHyp_afterSecondFit.leptonicTop->pt());
+		treeMan_->Fill("FittedHadronicTopPtBestSolution_second", newHyp_afterSecondFit.hadronicTop->pt());
+		treeMan_->Fill("FittedLeptonicTopRapidityBestSolution_second", newHyp_afterSecondFit.leptonicTop->rapidity());
+		treeMan_->Fill("FittedHadronicTopRapidityBestSolution_second", newHyp_afterSecondFit.hadronicTop->rapidity());
+		treeMan_->Fill("FittedTTbarMassBestSolution_second", newHyp_afterSecondFit.resonance->mass());
+		treeMan_->Fill("FittedTTbarPtBestSolution_second", newHyp_afterSecondFit.resonance->pt());
+		treeMan_->Fill("FittedTTbarRapidityBestSolution_second", newHyp_afterSecondFit.resonance->rapidity());
+
+		return newHyp_afterSecondFit;
 
 	} else {
 		// cout << "No HitFit solution found for this event" << endl;
 		treeMan_->Fill("SolutionCategory", 0 );
+		treeMan_->Fill("SolutionCategory_second", 0);
 	}
 
 	return BAT::TtbarHypothesis();
@@ -287,7 +295,7 @@ HitFitAnalyser::HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeM
 
 }
 
-BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, const EventPtr event ) {
+BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, const EventPtr event, const string SolutionCategoryHist ) {
 	// Do the electron
 	BAT::LeptonPointer newLepton(new BAT::Electron());
 	if ( !isElectronChannel_ ) {
@@ -311,43 +319,22 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 	BAT::JetPointer newWj1(new BAT::Jet());
 	BAT::JetPointer newWj2(new BAT::Jet());
 
-	// We need to match up the jets in the HitFit event against the input ones
-	// Assume that HitFit has preserved the jet order
-	std::vector<hitfit::Lepjets_Event_Jet>::size_type i = 0;
-	for (BAT::JetCollection::const_iterator j = jetsForFitting.begin(); j != jetsForFitting.end(); ++i, ++j) {
-		FourVector hfJet = fourVectorFromHitFit(ev.jet(i).p());
-		int hfJType = ev.jet(i).type();
-//    if ((*j)->getFourVector().DeltaR(hfJet) < 0.005) {
-		if (hfJType != hitfit::unknown_label) {
-			BAT::Jet newJet(**j);
-			newJet.setFourVector(hfJet);
+	// Loop over jets in event
+	for ( size_t fit_i = 0; fit_i < ev.njets(); ++fit_i ) {
+		FourVector jetFV = fourVectorFromHitFit(ev.jet(fit_i).p());
+		int jetType = ev.jet(fit_i).type();
 
-			if (hfJType == hitfit::lepb_label)
-				*newLepB = newJet;
-			if (hfJType == hitfit::hadb_label)
-				*newHadB = newJet;
-			if (hfJType == hitfit::hadw1_label)
-				*newWj1 = newJet;
-			if (hfJType == hitfit::hadw2_label)
-				*newWj2 = newJet;
+		if ( jetType == hitfit::lepb_label ) {
+			newLepB->setFourVector( jetFV );
 		}
-	}
-
-	for (BAT::JetCollection::const_iterator j = bJetsForFitting.begin(); j != bJetsForFitting.end(); ++i, ++j) {
-		FourVector hfJet = fourVectorFromHitFit(ev.jet(i).p());
-		int hfJType = ev.jet(i).type();
-//    if ((*j)->getFourVector().DeltaR(hfJet) < 0.005) {
-		if (hfJType != hitfit::unknown_label) {
-			BAT::Jet newJet(**j);
-			newJet.setFourVector(hfJet);
-			if (hfJType == hitfit::lepb_label)
-				*newLepB = newJet;
-			if (hfJType == hitfit::hadb_label)
-				*newHadB = newJet;
-			if (hfJType == hitfit::hadw1_label)
-				*newWj1 = newJet;
-			if (hfJType == hitfit::hadw2_label)
-				*newWj2 = newJet;
+		else if ( jetType == hitfit::hadb_label ) {
+			newHadB->setFourVector( jetFV );
+		}
+		else if ( jetType == hitfit::hadw1_label ) {
+			newWj1->setFourVector( jetFV );
+		}
+		else if ( jetType == hitfit::hadw2_label ) {
+			newWj2->setFourVector( jetFV );
 		}
 	}
 
@@ -355,7 +342,7 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 	hyp.combineReconstructedObjects();
 
 	// do MC matching study
-	if (do_MC_matching) {
+	if (do_MC_matching && SolutionCategoryHist != "") {
 
 
 		// Check if jets are in correct position
@@ -364,30 +351,30 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 			 ( newLepB->ttbar_decay_parton() == 5 ) &&
 			 ( newHadB->ttbar_decay_parton() == 6 ) ) {
 			// Correct
-			treeMan_->Fill("SolutionCategory", 1 );
+			treeMan_->Fill(SolutionCategoryHist, 1 );
 		}
 		else if ( !( event->isSemiLeptonicElectron() || event->isSemiLeptonicMuon() ) ) {
 			// Not a genuine semi leptonic event
-			treeMan_->Fill("SolutionCategory", 2 );
+			treeMan_->Fill(SolutionCategoryHist, 2 );
 		}
 		else if ( !allTTBarJetsPassSelection_ ) {
 			// Not all jets from ttbar passed jet selection
-			treeMan_->Fill("SolutionCategory", 3 );			
+			treeMan_->Fill(SolutionCategoryHist, 3 );			
 		}
 		else if ( !allTTBarJetsPassedToFit_ ) {
 			// Not all jets from ttbar were passed to fit
-			treeMan_->Fill("SolutionCategory", 4 );
+			treeMan_->Fill(SolutionCategoryHist, 4 );
 		}
 		else if ( allTTBarJetsPassedToFit_ && ( newWj1->ttbar_decay_parton() == 0 || newWj2->ttbar_decay_parton() == 0 || newLepB->ttbar_decay_parton() == 0 || newHadB->ttbar_decay_parton() != 0 ) ) {
 			// All ttbar jets were available, but at least one incorrect jet used
-			treeMan_->Fill("SolutionCategory", 5 );
+			treeMan_->Fill(SolutionCategoryHist, 5 );
 		}
 		else if ( ( newWj1->ttbar_decay_parton() == 3 || newWj1->ttbar_decay_parton() == 4 ) &&
 			 ( newWj2->ttbar_decay_parton() == 3 || newWj2->ttbar_decay_parton() == 4 ) && 
 			 ( newLepB->ttbar_decay_parton() == 6 ) &&
 			 ( newHadB->ttbar_decay_parton() == 5 ) ) {
 			// B jets swapped, but W's correct
-			treeMan_->Fill("SolutionCategory", 6 );
+			treeMan_->Fill(SolutionCategoryHist, 6 );
 		}
 		else if ( ( ( newWj1->ttbar_decay_parton() == 5 || newWj1->ttbar_decay_parton() == 6 ) ||
 			 ( newWj2->ttbar_decay_parton() == 5 || newWj2->ttbar_decay_parton() == 6 ) ) || 
@@ -395,11 +382,11 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 			 ( newHadB->ttbar_decay_parton() == 3 || newHadB->ttbar_decay_parton() == 4 ) ) ) {
 			// Light jet from W assigned as one of b's
 			// Or B jet from top assigend as light jet
-			treeMan_->Fill("SolutionCategory", 7 );
+			treeMan_->Fill(SolutionCategoryHist, 7 );
 		}
 		else {
 			// Just plain wrong
-			treeMan_->Fill("SolutionCategory", 8 );
+			treeMan_->Fill(SolutionCategoryHist, 8 );
 		}
 	// 	cout << "Doing MC matching" << endl;
 	// 	//Particle Pointers for best fitted hypothesis
@@ -481,6 +468,73 @@ BAT::TtbarHypothesis HitFitAnalyser::BatEvent(const hitfit::Lepjets_Event& ev, c
 
 	return hyp;
 }
+
+
+hitfit::Fit_Result HitFitAnalyser::performSecondKinematicFit(const hitfit::Lepjets_Event& unfittedEvent, const EventPtr event ) {
+
+	// Same as first, but without top mass constraint
+	// However recosntructed tops still constrained to have same mass
+	BatHitFit hhFitter(electronTranslator_, muonTranslator_, jetTranslator_, metTranslator_, hitfitDefault_,
+				hitfitLepWMass_, hitfitHadWMass_, 0);
+
+	// Clear the internal state
+	hhFitter.clear();
+
+	BAT::TtbarHypothesis unfittedBatEvent = BatEvent(unfittedEvent, event, "");
+
+
+	// Add the lepton to the fit
+	if ( isElectronChannel_ ) {
+		BAT::ElectronPointer newLepton(new BAT::Electron());
+		newLepton->setFourVector(unfittedBatEvent.leptonFromW->getFourVector());
+		hhFitter.AddLepton( *newLepton );
+	}
+	else {
+		BAT::MuonPointer newLepton(new BAT::Muon());
+		newLepton->setFourVector(unfittedBatEvent.leptonFromW->getFourVector());
+		hhFitter.AddLepton( *newLepton );
+	}
+
+	// Add the MET to the fit
+	// Add missing transverse energy into HitFit
+	hhFitter.SetMet(*unfittedBatEvent.met);
+
+	// Add jets to the fit
+	hhFitter.AddJet( *unfittedBatEvent.jet1FromW );
+	hhFitter.AddJet( *unfittedBatEvent.jet2FromW );
+
+	// Add b jets to the fit
+	hhFitter.AddBJet( *unfittedBatEvent.leptonicBjet );
+	hhFitter.AddBJet( *unfittedBatEvent.hadronicBJet );
+
+	// Perform the fit
+	size_t nHitFit = hhFitter.FitAllPermutation();
+
+	// Get fit results
+	std::vector<hitfit::Fit_Result> hitfitResult = hhFitter.GetFitAllPermutation();
+
+	unsigned int bestChi2 = 9999;
+	unsigned int bestSolution = 0;
+	// Loop over solutions, and get the permutation that matches the intended permutation
+	for (size_t fit = 0; fit != nHitFit; ++fit) {
+		// Get the event after the fit
+		hitfit::Fit_Result fitResult = hitfitResult[fit];
+		if ( fitResult.ev().jet_permutation() == "WWbB" ) {
+			double chi2 = fitResult.chisq();
+			if ( chi2 < bestChi2 ) {
+				bestChi2 = chi2;
+				bestSolution = fit;
+			}
+		}
+	}
+
+	hitfit::Fit_Result bestFitResult = hitfitResult[bestSolution];
+
+	return bestFitResult;
+
+
+}
+
 
 int HitFitAnalyser::positionOfLastTTBarJet(const JetCollection jets) {
 	// Loop over jets and find position of last jet that comes from ttbar decay
@@ -584,8 +638,12 @@ void HitFitAnalyser::createHistograms() {
 
 void HitFitAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
-	treeMan_->addBranch("FitChiSquaredAllSolutions", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FitChiSquaredAllSolutions", "F", "HitFit" + Globals::treePrefix_, false);
 	treeMan_->addBranch("FitChiSquaredBestSolutions", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FitChiSquaredProbabilityBestSolutions", "F", "HitFit" + Globals::treePrefix_);
+
+	treeMan_->addBranch("FitChiSquaredBestSolutions_second", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FitChiSquaredProbabilityBestSolutions_second", "F", "HitFit" + Globals::treePrefix_);
 
 	treeMan_->addBranch("FittedLeptonicTopPtBestSolution", "F", "HitFit" + Globals::treePrefix_);
 	treeMan_->addBranch("FittedHadronicTopPtBestSolution", "F", "HitFit" + Globals::treePrefix_);
@@ -595,7 +653,16 @@ void HitFitAnalyser::createTrees() {
 	treeMan_->addBranch("FittedTTbarPtBestSolution", "F", "HitFit" + Globals::treePrefix_);
 	treeMan_->addBranch("FittedTTbarRapidityBestSolution", "F", "HitFit" + Globals::treePrefix_);
 
+	treeMan_->addBranch("FittedLeptonicTopPtBestSolution_second", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FittedHadronicTopPtBestSolution_second", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FittedLeptonicTopRapidityBestSolution_second", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FittedHadronicTopRapidityBestSolution_second", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FittedTTbarMassBestSolution_second", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FittedTTbarPtBestSolution_second", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("FittedTTbarRapidityBestSolution_second", "F", "HitFit" + Globals::treePrefix_);
+
 	treeMan_->addBranch("SolutionCategory", "F", "HitFit" + Globals::treePrefix_);
+	treeMan_->addBranch("SolutionCategory_second", "F", "HitFit" + Globals::treePrefix_);
 
 	treeMan_->addBranch("PositionOfLastTTbarJet", "F", "HitFit" + Globals::treePrefix_);
 }

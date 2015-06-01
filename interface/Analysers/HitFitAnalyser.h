@@ -64,7 +64,9 @@ private:
 
 private:
 	FourVector fourVectorFromHitFit(const hitfit::Fourvec& v);
-	BAT::TtbarHypothesis BatEvent(const hitfit::Lepjets_Event& ev, const EventPtr event);
+	BAT::TtbarHypothesis BatEvent(const hitfit::Lepjets_Event& ev, const EventPtr event, const string solutionCategoryHistogram );
+
+	hitfit::Fit_Result performSecondKinematicFit(const hitfit::Lepjets_Event& unfittedEvent, const EventPtr event);
 
 public:
 	HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder = "hitfitStudy" );
