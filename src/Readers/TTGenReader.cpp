@@ -37,7 +37,20 @@ TTGenReader::TTGenReader() :
     singleneutrinoPxReader(),
     singleneutrinoPyReader(),
     singleneutrinoPzReader(),
-    singleneutrinoEReader() {
+    singleneutrinoEReader(),
+    leptonicWPxReader(),
+    leptonicWPyReader(),
+    leptonicWPzReader(),
+    leptonicWEReader(),
+    leptonicTopPxReader(),
+    leptonicTopPyReader(),
+    leptonicTopPzReader(),
+    leptonicTopEReader(),
+    hadronicTopPxReader(),
+    hadronicTopPyReader(),
+    hadronicTopPzReader(),
+    hadronicTopEReader()
+{
 
 }
 
@@ -69,7 +82,22 @@ TTGenReader::TTGenReader(TChainPointer input) :
     singleneutrinoPxReader(input, "Event.SingleNeutrinoPx"),
     singleneutrinoPyReader(input, "Event.SingleNeutrinoPy"),
     singleneutrinoPzReader(input, "Event.SingleNeutrinoPz"),
-    singleneutrinoEReader(input, "Event.SingleNeutrinoEnergy") {
+    singleneutrinoEReader(input, "Event.SingleNeutrinoEnergy"),
+
+    leptonicWPxReader(input, "Event.leptonicWPx"),
+    leptonicWPyReader(input, "Event.leptonicWPy"),
+    leptonicWPzReader(input, "Event.leptonicWPz"),
+    leptonicWEReader(input, "Event.leptonicWEnergy"),
+
+    leptonicTopPxReader(input, "Event.leptonicTopPx"),
+    leptonicTopPyReader(input, "Event.leptonicTopPy"),
+    leptonicTopPzReader(input, "Event.leptonicTopPz"),
+    leptonicTopEReader(input, "Event.leptonicTopEnergy"),
+
+    hadronicTopPxReader(input, "Event.hadronicTopPx"),
+    hadronicTopPyReader(input, "Event.hadronicTopPy"),
+    hadronicTopPzReader(input, "Event.hadronicTopPz"),
+    hadronicTopEReader(input, "Event.hadronicTopEnergy"){
 
 }
 
@@ -136,8 +164,28 @@ void TTGenReader::readTTGenInfo() {
     double singleneutrinoE = singleneutrinoEReader.getVariable();
     ParticlePointer singleneutrino(new Particle(singleneutrinoE, singleneutrinoPx, singleneutrinoPy, singleneutrinoPz));
 
-    ttGenInfo_ = TTGenInfoPointer( new TTGenInfo( quark, quarkBar, leptonicB, hadronicB, singlelepton, singleneutrino, qGenJetIndex, qBarGenJetIndex, leptonicBGenJetIndex, hadronicBGenJetIndex ) );
+    // Leptonic W
+    double leptonicWPx = leptonicWPxReader.getVariable();
+    double leptonicWPy = leptonicWPyReader.getVariable();
+    double leptonicWPz = leptonicWPzReader.getVariable();
+    double leptonicWE = leptonicWEReader.getVariable();
+    ParticlePointer leptonicW(new Particle(leptonicWE, leptonicWPx, leptonicWPy, leptonicWPz));    
 
+    // Leptonic Top
+    double leptonicTopPx = leptonicTopPxReader.getVariable();
+    double leptonicTopPy = leptonicTopPyReader.getVariable();
+    double leptonicTopPz = leptonicTopPzReader.getVariable();
+    double leptonicTopE = leptonicTopEReader.getVariable();
+    ParticlePointer leptonicTop(new Particle(leptonicTopE, leptonicTopPx, leptonicTopPy, leptonicTopPz));    
+
+    // Hadronic Top
+    double hadronicTopPx = hadronicTopPxReader.getVariable();
+    double hadronicTopPy = hadronicTopPyReader.getVariable();
+    double hadronicTopPz = hadronicTopPzReader.getVariable();
+    double hadronicTopE = hadronicTopEReader.getVariable();
+    ParticlePointer hadronicTop(new Particle(hadronicTopE, hadronicTopPx, hadronicTopPy, hadronicTopPz));   
+
+    ttGenInfo_ = TTGenInfoPointer( new TTGenInfo( leptonicTop, hadronicTop, leptonicW, quark, quarkBar, leptonicB, hadronicB, singlelepton, singleneutrino, qGenJetIndex, qBarGenJetIndex, leptonicBGenJetIndex, hadronicBGenJetIndex ) );
 }
 
 void TTGenReader::initialise() {
@@ -170,6 +218,20 @@ void TTGenReader::initialise() {
     singleneutrinoPyReader.initialise();
     singleneutrinoPzReader.initialise();
     singleneutrinoEReader.initialise();
+
+    leptonicWPxReader.initialise();
+    leptonicWPyReader.initialise();
+    leptonicWPzReader.initialise();
+    leptonicWEReader.initialise();
+
+    leptonicTopPxReader.initialise();
+    leptonicTopPyReader.initialise();
+    leptonicTopPzReader.initialise();
+    leptonicTopEReader.initialise();
+    hadronicTopPxReader.initialise();
+    hadronicTopPyReader.initialise();
+    hadronicTopPzReader.initialise();
+    hadronicTopEReader.initialise();
 }
 
 }

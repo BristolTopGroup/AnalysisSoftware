@@ -16,6 +16,7 @@ namespace BAT {
 
 class TTGenReader {
 private:
+    // Final decay products
     VariableReader<double> quarkPxReader;
     VariableReader<double> quarkPyReader;
     VariableReader<double> quarkPzReader;
@@ -45,6 +46,21 @@ private:
     VariableReader<double> singleneutrinoPzReader;
     VariableReader<double> singleneutrinoEReader;
 
+    // W
+    VariableReader<double> leptonicWPxReader;
+    VariableReader<double> leptonicWPyReader;
+    VariableReader<double> leptonicWPzReader;
+    VariableReader<double> leptonicWEReader;
+
+    // Tops
+    VariableReader<double> leptonicTopPxReader;
+    VariableReader<double> leptonicTopPyReader;
+    VariableReader<double> leptonicTopPzReader;
+    VariableReader<double> leptonicTopEReader;
+    VariableReader<double> hadronicTopPxReader;
+    VariableReader<double> hadronicTopPyReader;
+    VariableReader<double> hadronicTopPzReader;
+    VariableReader<double> hadronicTopEReader;
 
     TTGenInfoPointer ttGenInfo_;
     void readTTGenInfo();

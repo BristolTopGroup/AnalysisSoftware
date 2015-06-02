@@ -31,8 +31,13 @@ class TTGenInfo {
 
 public:
     TTGenInfo();
-    TTGenInfo(ParticlePointer quark, ParticlePointer quarkBar, ParticlePointer leptonicB, ParticlePointer hadronicB, ParticlePointer singlelepton, ParticlePointer singleneutrino, int quarkGenJetIndex, int quarkBarGenJetIndex, int leptonicBGenJetIndex, int hadronicBGenJetIndex ) ;
+    TTGenInfo(ParticlePointer leptonicTop, ParticlePointer hadronicTop, ParticlePointer leptonicW, ParticlePointer quark, ParticlePointer quarkBar, ParticlePointer leptonicB, ParticlePointer hadronicB, ParticlePointer singlelepton, ParticlePointer singleneutrino, int quarkGenJetIndex, int quarkBarGenJetIndex, int leptonicBGenJetIndex, int hadronicBGenJetIndex ) ;
     virtual ~TTGenInfo();
+
+    const ParticlePointer getLeptonicTop();
+    const ParticlePointer getHadronicTop();
+
+    const ParticlePointer getLeptonicW();
 
     const ParticlePointer getQuark();
     const ParticlePointer getQuarkBar();
@@ -50,6 +55,11 @@ public:
     const int gethadronicBGenJetIndex();
 
 private:
+    ParticlePointer leptonicTop_;
+    ParticlePointer hadronicTop_;
+
+    ParticlePointer leptonicW_;
+
     ParticlePointer quark_;
     ParticlePointer quarkBar_;
 

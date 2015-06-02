@@ -13,7 +13,12 @@ TTGenInfo::TTGenInfo()
 {
 
 }
-TTGenInfo::TTGenInfo(ParticlePointer quark, ParticlePointer quarkBar, ParticlePointer leptonicB, ParticlePointer hadronicB, ParticlePointer singlelepton, ParticlePointer singleneutrino, int quarkGenJetIndex, int quarkBarGenJetIndex, int leptonicBGenJetIndex, int hadronicBGenJetIndex ) :
+TTGenInfo::TTGenInfo(ParticlePointer leptonicTop, ParticlePointer hadronicTop, ParticlePointer leptonicW, ParticlePointer quark, ParticlePointer quarkBar, ParticlePointer leptonicB, ParticlePointer hadronicB, ParticlePointer singlelepton, ParticlePointer singleneutrino, int quarkGenJetIndex, int quarkBarGenJetIndex, int leptonicBGenJetIndex, int hadronicBGenJetIndex ) :
+
+    leptonicTop_(leptonicTop),
+    hadronicTop_(hadronicTop),
+
+    leptonicW_(leptonicW),
 
     quark_(quark),
     quarkBar_(quarkBar),
@@ -34,6 +39,18 @@ TTGenInfo::TTGenInfo(ParticlePointer quark, ParticlePointer quarkBar, ParticlePo
 
 
 TTGenInfo::~TTGenInfo() {
+}
+
+const ParticlePointer TTGenInfo::getLeptonicTop() {
+    return leptonicTop_;
+}
+
+const ParticlePointer TTGenInfo::getHadronicTop() {
+    return hadronicTop_;
+}
+
+const ParticlePointer TTGenInfo::getLeptonicW() {
+    return leptonicW_;
 }
 
 const ParticlePointer TTGenInfo::getQuark() {
