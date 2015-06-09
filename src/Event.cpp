@@ -430,7 +430,6 @@ void Event::setPassesMuonQCDSelection( bool passesMuonQCDSelection ) {
 
 void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelections ) {
 	if ( passSelections.size() > 1 ) {
-		cout << "SHIT PANIC" << endl;
 		for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
 			if ( passSelections[selection] != 2 && passSelections[selection] != 4 )
 				cout << selection << " " << passSelections[selection] << endl;
