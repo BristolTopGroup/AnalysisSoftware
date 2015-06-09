@@ -5,13 +5,45 @@ if os.environ.has_key('toolsFolder'):
     
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
-centerOfMassEnergy = 8
+centerOfMassEnergy = 13
 nTuple_version = 0
 #number of events to be processed
 maxEvents = 100000
 verbose = True
 
-if centerOfMassEnergy == 8:
+if centerOfMassEnergy == 13:
+    lumi = 5000.#pb-1
+    PUFile = 'noFile.root'
+    #+5%
+#    PUFile = toolsFolder + "data/PileUp_2012_72765_truth_finebin.root"
+    #-5%
+#    PUFile = toolsFolder + "data/PileUp_2012_65835_truth_finebin.root"
+
+    #apply the met corrections
+    applyMetSysShiftCorr = False
+    applyMetType0Corr = False
+
+    #Apply Jet Smearing
+    applyJetSmearing = False
+    JetSmearingSystematic = 0
+
+    #Apply Top Pt Reweighting
+    applyTopPtReweighting = False
+
+    #Lepton Scale Factors
+    ElectronScaleFactorSystematic = 0
+    MuonScaleFactorSystematic = 0
+
+    getMuonScaleFactorsFromFile = False
+    MuonScaleFactorsFile = toolsFolder + ""
+
+    getElectronScaleFactorsFromFile = False
+    ElectronIdIsoScaleFactorsFile = 'noFile.root'
+    ElectronTriggerScaleFactorsFile = 'noFile.root'
+
+    getHadronTriggerFromFile = False
+    hadronTriggerFile = 'noFile.root'
+elif centerOfMassEnergy == 8:
     #File for pile-up re-weighting
     #integrated luminosity the MC simulation will be scaled to
     lumi = 19584#pb-1
@@ -93,7 +125,7 @@ hadronTriggerFile = ''
 useHitFit = False
 produceFitterASCIIoutput = False
 inputFiles = [
-    '/storage/ec6821/NTupleProd/CMSSW_7_2_3/src/ntuple_TTJets_madgraph.root'     # 53X 8TeV data
+    '/hdfs/TopQuarkGroup/run2/ntuples/v18/TTJets_Madgraph_PU30bx50/ntuple_merged_001.root'     # 74X 13TeV MC
               ]
 
 #relative Path from calling BAT to the TopQuarkAnalysis folder

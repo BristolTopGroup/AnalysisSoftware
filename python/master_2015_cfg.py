@@ -160,7 +160,7 @@ centerOfMassEnergy = 13
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
 if centerOfMassEnergy == 13:
-    datasetInfoFile = toolsFolder + "python/DataSetInfo_PHYS14.py"
+    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV.py"
 
 
 nTuple_version = 0

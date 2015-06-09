@@ -64,9 +64,8 @@ scram b -j2
 hash -r #or rehash in case that BAT cannot be found
 
 # test run the code:
-sample=TTJet analysisMode=central maxEvents=100 BAT BristolAnalysis/Tools/python/master_PHYS14_cfg.py
 #../tmp/slc6_amd64_gcc491/src/BristolAnalysis/Tools/test/BAT_Tests/BAT_Tests
-#nohup BAT BristolAnalysis/Tools/python/test_cfg.py &> test.log &
+nohup BAT BristolAnalysis/Tools/python/test_cfg.py &> test.log &
 ```
 
 ## Eclipse
