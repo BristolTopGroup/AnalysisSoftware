@@ -58,6 +58,11 @@ def getAnalysisSettings(analysisMode):
 
 
 #config start
+#number of events to be processed
+maxEvents = 0# 0 == all
+if os.environ.has_key('maxEvents'):
+    maxEvents = int(os.environ['maxEvents'])
+
 toolsFolder = 'BristolAnalysis/Tools/'
 if os.environ.has_key('toolsFolder'):
     toolsFolder = os.environ['toolsFolder']
@@ -124,9 +129,6 @@ print 'Parsed config settings:'
 for setting,value in settings.iteritems():
     print setting, '=', value
 
-#number of events to be processed
-maxEvents = 0# 0 == all
-
 #Jet Energy Resolutions files (L7 corrections)
 bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
@@ -158,7 +160,7 @@ centerOfMassEnergy = 13
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
 if centerOfMassEnergy == 13:
-    datasetInfoFile = toolsFolder + "python/DataSetInfo_PHYS14.py"
+    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV.py"
 
 
 nTuple_version = 0

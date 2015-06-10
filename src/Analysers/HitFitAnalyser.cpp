@@ -330,7 +330,7 @@ HitFitAnalyser::HitFitAnalyser(boost::shared_ptr<HistogramManager> histMan, cons
 		outFile(outFileName.c_str()), //
 		// The following five initializers read the config parameters for the
 		// ASCII text files which contains the physics object resolutions.
-		FitterPath_("./"), //
+		FitterPath_(Globals::TQAFPath), //
 		hitfitDefault_(FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/setting/RunHitFitConfiguration.txt"), //
 		hitfitElectronResolution_(
 				FitterPath_ + "TopQuarkAnalysis/TopHitFit/data/resolution/tqafElectronResolution.txt"), //

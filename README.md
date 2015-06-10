@@ -8,6 +8,7 @@ Analysis software for TTbar+X differential cross section analysis (TOP-12-042)
 To setup the stand-alone version of the code:
 
 ```
+# this section will be revisited, please use CMSSW setup for now
 # get the code from the repository
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git AnalysisSoftware
 cd AnalysisSoftware
@@ -40,30 +41,30 @@ nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 To setup the code using CMSSW:
 
 ```
-# on soolin (scientific linux 5 machines)
-export SCRAM_ARCH=slc5_amd64_gcc462
-cmsrel CMSSW_6_0_0
-cd CMSSW_6_0_0/src
+# on soolin (and other scientific linux 6 machines)
+export SCRAM_ARCH=slc6_amd64_gcc491
+# This version comes with ROOT 6.02/05
+scram p -n CMSSW_7_5_0_pre5_AS CMSSW_7_5_0_pre5
+cd CMSSW_7_5_0_pre4_AS/src/
 cmsenv
-# OR on DICE (scientific linux 6 machines)
-. $VO_CMS_SW_DIR/cmsset_default.sh # echo $SCRAM_ARCH should now return slc6_amd64_gcc472
-cmsrel CMSSW_6_2_12
-cd CMSSW_6_2_12/src
-cmsenv
+# initialise CMS git
+git cms-init
 
 # get the code from the repository
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git BristolAnalysis/Tools
+cd BristolAnalysis/Tools
 
 # get submodules:
 git submodule init && git submodule update
-
+cd -
+ln -s BristolAnalysis/Tools/external/TopQuarkAnalysis TopQuarkAnalysis
 # compile
 scram b -j2
 
 hash -r #or rehash in case that BAT cannot be found
 
 # test run the code:
-BAT_Tests
+#../tmp/slc6_amd64_gcc491/src/BristolAnalysis/Tools/test/BAT_Tests/BAT_Tests
 nohup BAT BristolAnalysis/Tools/python/test_cfg.py &> test.log &
 ```
 
