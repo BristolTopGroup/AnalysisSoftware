@@ -52,7 +52,7 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
 	//set MC matching flag
-	if (event->getDataType() == DataType::TTJets)
+	if (event->getDataType() == DataType::TTJets_amcatnloFXFX)
 		do_MC_matching = true;
 	else
 		do_MC_matching = false;

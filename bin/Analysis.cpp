@@ -60,7 +60,7 @@ void Analysis::analyse() {
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		if ( ( currentEvent->getDataType() == DataType::TTJets || currentEvent->getDataType() == DataType::TT_Pythia8 ) && Globals::treePrefix_ == "" ) {
+		if ( ( currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX || currentEvent->getDataType() == DataType::TTJets_madgraphMLM ) && Globals::treePrefix_ == "" ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 			partonAnalyser_->analyse(currentEvent);
@@ -110,7 +110,7 @@ void Analysis::initiateEvent() {
 	}
 
 	//top pt weight
-	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets){
+	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
 
 	double topPtweight = 1.;
 	topPtweight = weights->reweightTopPt(currentEvent);
@@ -161,7 +161,7 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	if ( ( eventReader->getSeenDatatypes()[DataType::TTJets] || eventReader->getSeenDatatypes()[DataType::TT_Pythia8] )
+	if ( ( eventReader->getSeenDatatypes()[DataType::TTJets_amcatnloFXFX] || eventReader->getSeenDatatypes()[DataType::TTJets_madgraphMLM] )
 		&& Globals::treePrefix_ == "" ) {
 		pseudoTopAnalyser_->createTrees();
 		unfoldingRecoAnalyser_->createTrees();
