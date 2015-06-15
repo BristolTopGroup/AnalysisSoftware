@@ -26,6 +26,7 @@ PseudoTopReader::PseudoTopReader() :
     pseudoTop_jet_pxReader_(),
     pseudoTop_jet_pyReader_(),
     pseudoTop_jet_pzReader_(),
+    pseudoTop_jet_pdgIdReader_(),
     pseudoTop_lepton_energyReader_(),
     pseudoTop_lepton_pxReader_(),
     pseudoTop_lepton_pyReader_(),
@@ -58,6 +59,7 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     pseudoTop_jet_pxReader_(input, "PseudoTopJets.Px"),
     pseudoTop_jet_pyReader_(input, "PseudoTopJets.Py"),
     pseudoTop_jet_pzReader_(input, "PseudoTopJets.Pz"),
+    pseudoTop_jet_pdgIdReader_(input, "PseudoTopJets.pdgId"),
     pseudoTop_lepton_energyReader_(input, "PseudoTopLeptons.Energy"),
     pseudoTop_lepton_pxReader_(input, "PseudoTopLeptons.Px"),
     pseudoTop_lepton_pyReader_(input, "PseudoTopLeptons.Py"),
@@ -96,7 +98,6 @@ const PseudoTopParticlesPointer& PseudoTopReader::getPseudoTopParticles() {
 }
 
 void PseudoTopReader::readPseudoTopParticles() {
-
 
     MCParticlePointer wPlus( new MCParticle() );
     MCParticlePointer wMinus( new MCParticle() );
@@ -152,7 +153,7 @@ void PseudoTopReader::readPseudoTopParticles() {
         else if ( fabs(pdgId) == 5 ) {
             MCParticlePointer newPseudoB = MCParticlePointer( new MCParticle( energy, px, py, pz ) );
             newPseudoB->setPdgId( pdgId );
-            newPseudoBs_.push_back( newPseudoB );            
+            newPseudoBs_.push_back( newPseudoB );
         }
         // Ws
         else if ( fabs( pdgId ) == 24 ) {
@@ -178,6 +179,9 @@ void PseudoTopReader::readPseudoTopParticles() {
             newLeptonicW_ = wMinus;
         }        
     }
+    else if ( newLepton_ == 0 ) {
+        isSemiLeptonic_ = false;
+    }
 
     pseudoTopParticles_->setPseudoTops( newPseudoTops_ );
     pseudoTopParticles_->setPseudoLeptonicW( newLeptonicW_ );
@@ -196,11 +200,6 @@ void PseudoTopReader::readPseudoTopParticles() {
         double pz = pseudoTop_neutrino_pzReader_.getVariableAt(index);
 
         *pseudoMet = Particle( *pseudoMet + Particle(energy,px,py,pz) );
-
-        // if ( fabs( pseudoMet->pt() - pseudoMet->et() ) > 1 ) {
-        //     cout << pseudoMet->pt() << " " << pseudoMet->et() << endl;
-        //     cout << pdgId << " " << energy << " " << px << " " << py << " " << pz << " " << endl;
-        // }
     }
 
     pseudoTopParticles_->setPseudoMET( ParticlePointer( pseudoMet ) );
@@ -211,7 +210,10 @@ void PseudoTopReader::readPseudoTopParticles() {
         double px = pseudoTop_jet_pxReader_.getVariableAt(index);
         double py = pseudoTop_jet_pyReader_.getVariableAt(index);
         double pz = pseudoTop_jet_pzReader_.getVariableAt(index);
-        newJets_.push_back( JetPointer( new Jet( energy, px, py, pz )) );
+        int pdgId = pseudoTop_jet_pdgIdReader_.getIntVariableAt(index);
+        JetPointer newJet( new Jet( energy, px, py, pz) );
+        newJet->setPartonFlavour(pdgId);
+        newJets_.push_back( newJet );
     }
 
     pseudoTopParticles_->setPseudoJets( newJets_ );
@@ -247,7 +249,8 @@ void PseudoTopReader::initialise() {
     pseudoTop_jet_pxReader_.initialise();
     pseudoTop_jet_pyReader_.initialise();
     pseudoTop_jet_pzReader_.initialise();
-
+    pseudoTop_jet_pdgIdReader_.initialise();
+    
     pseudoTop_lepton_energyReader_.initialise();
     pseudoTop_lepton_pxReader_.initialise();
     pseudoTop_lepton_pyReader_.initialise();
