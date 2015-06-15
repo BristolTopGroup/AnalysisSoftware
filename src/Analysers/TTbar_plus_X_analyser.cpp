@@ -75,17 +75,19 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 
-		BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
-		event->setTTbarHypothesis( topHypothesis );
-		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
-		if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
-			treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
-			treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
-			treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
-			treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
-			treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
-			treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
-			treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
 		}
 
 		// metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -235,17 +237,19 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 
-		BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
-		event->setTTbarHypothesis( topHypothesis );
-		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
-		if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
-			treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
-			treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
-			treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
-			treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
-			treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
-			treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
-			treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
 		}
 
 		qcdNonIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
@@ -337,17 +341,19 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 
-		BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsConversionSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
-		event->setTTbarHypothesis( topHypothesis );
-		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
-		if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
-			treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
-			treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
-			treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
-			treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
-			treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
-			treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
-			treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsConversionSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
 		}
 
 		qcdConversionsElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
@@ -449,17 +455,19 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("ElectronUp",1.0);
 		treeMan_->Fill("ElectronDown",1.0);
 
-		BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
-		event->setTTbarHypothesis( topHypothesis );
-		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
-		if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
-			treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
-			treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
-			treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
-			treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
-			treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
-			treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
-			treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
 		}
 
 		metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -577,17 +585,19 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("ElectronUp",1.0);
 		treeMan_->Fill("ElectronDown",1.0);
 
-		BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
-		event->setTTbarHypothesis( topHypothesis );
-		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
-		if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
-			treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
-			treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
-			treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
-			treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
-			treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
-			treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
-			treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
 		}
 
 		qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
