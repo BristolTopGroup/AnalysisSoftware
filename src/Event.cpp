@@ -22,6 +22,9 @@ double const Event::minJetPt_ = 30;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
+double const Event::minSignalMuonPt_ = 26;
+double const Event::minSignalElectronPt_ = 34;
+
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
 		HLTPrescales(new std::vector<int>()), //
@@ -462,18 +465,19 @@ void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelection
 		}
  
 	}
+
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
-		if ( passSelections[selection] == 1 && passesJetSelection( selection ) ) setPassesMuonSelection( true );
-		if ( passSelections[selection] == 2 && passesJetSelection( selection ) ) setPassesElectronSelection( true );
-		if ( passSelections[selection] == 3 && passesJetSelection( selection ) ) setPassesMuonQCDSelection( true );
-		if ( passSelections[selection] == 4 && passesJetSelection( selection ) ) setPassesElectronQCDSelection( true );
-		if ( passSelections[selection] == 5 && passesJetSelection( selection ) ) setPassesElectronConversionSelection( true );
+		SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(passSelections[selection]);
+
+		if ( passSelections[selection] == 1 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesMuonSelection( true );
+		if ( passSelections[selection] == 2 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronSelection( true );
+		if ( passSelections[selection] == 3 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesMuonQCDSelection( true );
+		if ( passSelections[selection] == 4 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronQCDSelection( true );
+		if ( passSelections[selection] == 5 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronConversionSelection( true );
 	}
 }
 
-const bool Event::passesJetSelection( const unsigned int selectionCriteria ) {
-	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
-
+const bool Event::passesJetSelection( const unsigned int selection ) {
 	const JetCollection jets = getCleanedJets( selection );
 	unsigned int nJetPass = 0;
 	for ( unsigned int jetIndex = 0; jetIndex < jets.size(); ++jetIndex ) {
@@ -493,6 +497,29 @@ const bool Event::passesJetSelection( const unsigned int selectionCriteria ) {
 	if ( nBJetPass < minNBJets_ ) return false;
 
 	return true;
+}
+
+const bool Event::passesSignalLeptonSelection( const unsigned int selectionCriteria ) {
+
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+	LeptonPointer signalLepton = getSignalLepton( selectionCriteria );
+	if ( signalLepton == 0 ) return false;
+	double ptThreshold = 99999999;
+
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ||
+			selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ||
+			selection == SelectionCriteria::ElectronPlusJetsQCDConversion
+	 ) {
+		ptThreshold = minSignalElectronPt_;
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ||
+		 		selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		ptThreshold = minSignalMuonPt_;
+	}
+
+	if ( signalLepton->pt() > ptThreshold ) return true;
+	else return false;
 }
 
 void Event::setIsSemiLeptonicElectron( bool isSemiLeptonicElectron ) {
@@ -892,8 +919,18 @@ double Event::HT(const JetCollection jets) {
 
 double Event::ST(const JetCollection jets, const ParticlePointer lepton, const METPointer met) {
 	// ST = HT + MET + lepton pt
-	double ht = Event::HT(jets);
-	return ht + met->et() + lepton->pt();
+	double ht = 0;
+	if ( jets.size() > 0 ) ht = Event::HT(jets);
+
+	if ( lepton == 0 && met == 0 )
+		return ht;
+	else if ( lepton == 0 )
+		return ht + met->et();
+	else if ( met == 0 )
+		return ht + lepton->pt();
+	else
+		return ht + met->et() + lepton->pt();
+
 }
 
 double Event::MT(const ParticlePointer particle, const METPointer met) {
