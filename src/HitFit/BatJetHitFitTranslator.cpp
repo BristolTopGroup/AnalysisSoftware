@@ -13,7 +13,7 @@
  */
 
 
-#include <TopQuarkAnalysis/TopHitFit/interface/JetTranslatorBase.h>
+#include "TopQuarkAnalysis/TopHitFit/interface/JetTranslatorBase.h"
 #include "../../interface/RecoObjects/Jet.h"
 
 namespace hitfit {
@@ -122,12 +122,14 @@ JetTranslatorBase<BAT::Jet>::operator()(const BAT::Jet& jet,
 
     if (type == hitfit::hadb_label || type == hitfit::lepb_label || type == hitfit::higgs_label) {
         jet_resolution = bResolution_.GetResolution(jet_eta);
-        double bCorr = 1 - jet.getBJetL7EtCorrection();
-        p = Fourvec(bCorr*jet.px(), bCorr*jet.py(), bCorr*jet.pz(), bCorr*jet.energy());
+        // double bCorr = 1 - jet.getBJetL7EtCorrection();
+        // p = Fourvec(bCorr*jet.px(), bCorr*jet.py(), bCorr*jet.pz(), bCorr*jet.energy());
+        p = Fourvec(jet.px(), jet.py(), jet.pz(), jet.energy());
+
     } else {
         jet_resolution = udscResolution_.GetResolution(jet_eta);
-        double lightCorr = 1 - jet.getLightJetL7EtCorrection();
-        p = Fourvec(lightCorr*jet.px(), lightCorr*jet.py(), lightCorr*jet.pz(), lightCorr*jet.energy());
+        // double lightCorr = 1 - jet.getLightJetL7EtCorrection();
+        p = Fourvec(jet.px(), jet.py(), jet.pz(), jet.energy());
     }
 
     bool isBJet = jet.isBJet();

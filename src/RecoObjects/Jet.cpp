@@ -7,6 +7,7 @@
 
 #include "../../interface/RecoObjects/Jet.h"
 #include "../../interface/GlobalVariables.h"
+#include "../../interface/RecoObjects/TTGenInfo.h"
 #include <algorithm>
 
 namespace BAT {
@@ -53,9 +54,11 @@ Jet::Jet() :
 		eta_smeared(0.), //
 		//
 		matchedGeneratedJet(), //
+		matchedParton(), //
 		unsmearedJet(), //
 		smearedJet(), //
-		rawJet_()
+		rawJet_(), //
+		ttbar_decay_parton_(TTPartons::partonType::Undefined)
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -104,9 +107,11 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		eta_smeared(0.), //
 		//
 		matchedGeneratedJet(), //
+		matchedParton(), //
 		unsmearedJet(), //
 		smearedJet(), //
-		rawJet_()
+		rawJet_(),
+		ttbar_decay_parton_(TTPartons::partonType::Undefined)
 {
 	for (unsigned int btag = 0; btag < btag_discriminators.size(); ++btag) {
 		btag_discriminators[btag] = -9999;
@@ -127,6 +132,22 @@ void Jet::set_matched_generated_jet(const ParticlePointer matchedgeneratedjet) {
 
 const ParticlePointer Jet::matched_generated_jet() {
 	return matchedGeneratedJet;
+}
+
+void Jet::set_matched_parton(const MCParticlePointer matchedparton) {
+	matchedParton = matchedparton;
+}
+
+const MCParticlePointer Jet::matched_parton() {
+	return matchedParton;
+}
+
+void Jet::set_ttbar_decay_parton( TTPartons::partonType ttbarDecayParton ) {
+	ttbar_decay_parton_ = ttbarDecayParton;
+}
+
+const TTPartons::partonType Jet::ttbar_decay_parton() {
+	return ttbar_decay_parton_;
 }
 
 void Jet::set_unsmeared_jet(const ParticlePointer unsmearedjet) {

@@ -18,7 +18,11 @@ TtbarHypothesis::TtbarHypothesis() :
 		leptonicChi2(99999.), //
 		hadronicChi2(99999.), //
 		globalChi2(99999.), //
+		neutrinoChi2(99999.),//
 		discriminator(999999), //
+		NuChi2Discriminator(99999),
+		MassDiscriminator(99999),
+		CSVDiscriminator(99999),
 		hadronicTop(), //
 		leptonicTop(), //
 		leptonicW(), //
@@ -43,7 +47,11 @@ TtbarHypothesis::TtbarHypothesis(const LeptonPointer& lepton,
 		leptonicChi2(99999.), //
 		hadronicChi2(99999.), //
 		globalChi2(99999.), //
+		neutrinoChi2(99999.),//
 		discriminator(999999), //
+		NuChi2Discriminator(99999),
+		MassDiscriminator(99999),
+		CSVDiscriminator(99999),
 		hadronicTop(), //
 		leptonicTop(), //
 		leptonicW(new Particle(*lepton + *neut)), //
@@ -62,6 +70,19 @@ TtbarHypothesis::TtbarHypothesis(const LeptonPointer& lepton,
 
 TtbarHypothesis::~TtbarHypothesis() {
 
+}
+
+bool TtbarHypothesis::isCorrect() const {
+	bool isCorrect = false;
+	if (hadronicBJet->ttbar_decay_parton() == 6){
+		if (leptonicBjet->ttbar_decay_parton() == 5){
+			if ((jet1FromW->ttbar_decay_parton() == 3 && jet2FromW->ttbar_decay_parton() == 4 ) || (jet2FromW->ttbar_decay_parton() == 3 && jet1FromW->ttbar_decay_parton() == 4 )){
+					isCorrect = true;
+			}
+		}
+	}
+	// std::cout << "Event Reconstruction is : " << isCorrect << std::endl;
+	return isCorrect;
 }
 
 bool TtbarHypothesis::isValid() const {
@@ -172,5 +193,6 @@ double TtbarHypothesis::sumPt() const {
 double TtbarHypothesis::PtTtbarSystem() const {
 	return resonance->pt();
 }
+
 
 } // namespace BAT

@@ -34,11 +34,11 @@ namespace BAT {
 
 namespace SelectionCriteria {
 enum selection {
-	ElectronPlusJetsReference,
-	MuonPlusJetsReference,
-	ElectronPlusJetsQCDNonIsolated,
-	ElectronPlusJetsQCDConversion,
-	MuonPlusJetsQCDNonIsolated,
+	MuonPlusJetsReference = 1,
+	ElectronPlusJetsReference = 2,
+	MuonPlusJetsQCDNonIsolated = 3,
+	ElectronPlusJetsQCDNonIsolated = 4,
+	ElectronPlusJetsQCDConversion = 5,
 	NUMBER_OF_SELECTION_STEPS
 };
 }
@@ -122,6 +122,7 @@ public:
 	void setGenParticles(MCParticleCollection genParticles);
 	void setElectrons(ElectronCollection electrons);
 	void setJets(JetCollection jets);
+	void setJetTTBarPartons();
 	void setCleanedJets(JetCollection jets);
 	void setCleanedBJets(JetCollection bjets);
 	void setGenJets(JetCollection genJets);
@@ -135,6 +136,7 @@ public:
 	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
 	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
 	const bool passesJetSelection( const unsigned int selectionCriteria );
+	const bool passesSignalLeptonSelection( const unsigned int selectionCriteria );
 	void setPassGenSelectionInfo( std::vector<unsigned int> );
 	void setIsSemiLeptonicElectron( bool isSemiLeptonicElectron );
 	void setIsSemiLeptonicMuon( bool isSemiLeptonicMuon );
@@ -271,6 +273,9 @@ public:
 	static double const minJetPt_;
 	static unsigned int const minNJets_;
 	static unsigned int const minNBJets_;
+
+	static double const minSignalMuonPt_;
+	static double const minSignalElectronPt_;
 
 };
 

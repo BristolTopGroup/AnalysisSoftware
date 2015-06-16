@@ -43,7 +43,7 @@ while [ $local_process -lt $range_for_loop ] ; do
 	echo "I will run sample=${sample} in mode=${analysisMode} for centre-of-mass energy of ${energy} TeV"
 	echo "Analysing ntuple number "$ntupleToProcess
 
-	python_config=master_PHYS14_cfg.py
+	python_config=master_2015_cfg.py
 	if [ $energy -eq 7 ]; then
 		python_config=master_2011_53X_cfg.py
 	fi

@@ -36,13 +36,14 @@ public:
 		const JetPointer& hadWJet1,  const JetPointer& hadWJet2 );
 
 	virtual ~TtbarHypothesis();
-	double totalChi2, leptonicChi2, hadronicChi2, globalChi2, discriminator;
+	double totalChi2, leptonicChi2, hadronicChi2, globalChi2, neutrinoChi2, discriminator, NuChi2Discriminator, MassDiscriminator, CSVDiscriminator;
 	ParticlePointer hadronicTop, leptonicTop, leptonicW, hadronicW, resonance, neutrinoFromW;
 	JetPointer leptonicBjet, hadronicBJet, jet1FromW, jet2FromW;
 	LeptonPointer leptonFromW;
 	METPointer met;
 	Decay::value decayChannel;
 
+	bool isCorrect() const;
 	double M3() const;
 	static double M3(const JetCollection jets);
 
