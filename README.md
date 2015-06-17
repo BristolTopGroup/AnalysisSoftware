@@ -41,11 +41,10 @@ nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 To setup the code using CMSSW:
 
 ```
-# on soolin (and other scientific linux 6 machines)
-export SCRAM_ARCH=slc6_amd64_gcc491
+. /cvmfs/cms.cern.ch//cmsset_default.sh
 # This version comes with ROOT 6.02/05
-scram p -n CMSSW_7_5_0_pre5_AS CMSSW_7_5_0_pre5
-cd CMSSW_7_5_0_pre4_AS/src/
+scram p -n CMSSW_7_5_0_AS CMSSW_7_5_0
+cd CMSSW_7_5_0_AS/src/
 cmsenv
 # initialise CMS git
 git cms-init
