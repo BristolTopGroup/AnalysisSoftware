@@ -11,7 +11,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
-using namespace boost;
 namespace BAT {
 
 HistogramManager::HistogramManager() : //
@@ -354,17 +353,17 @@ void HistogramManager::writeToDisk() {
 //			createJetSummedHistograms((DataType::value) type);
 //			createBJetSummedHistograms((DataType::value) type);
 
-			for (unordered_map<std::string, TH1Array>::iterator iter = collection1D.begin(); iter != collection1D.end();
+			for (boost::unordered_map<std::string, TH1Array>::iterator iter = collection1D.begin(); iter != collection1D.end();
 					++iter) {
 				iter->second[type]->writeToFile(histFiles.at(type));
 			}
 
-			for (unordered_map<std::string, TH2Array>::iterator iter = collection2D.begin(); iter != collection2D.end();
+			for (boost::unordered_map<std::string, TH2Array>::iterator iter = collection2D.begin(); iter != collection2D.end();
 					++iter) {
 				iter->second[type]->writeToFile(histFiles.at(type));
 			}
 
-			for (unordered_map<std::string, TH3Array>::iterator iter = collection3D.begin(); iter != collection3D.end();
+			for (boost::unordered_map<std::string, TH3Array>::iterator iter = collection3D.begin(); iter != collection3D.end();
 					++iter) {
 				iter->second[type]->writeToFile(histFiles.at(type));
 			}
@@ -384,13 +383,13 @@ void HistogramManager::createJetSummedHistograms(DataType::value type) {
 
 void HistogramManager::createJetSummedHistograms1D(DataType::value type) {
 	for (unsigned short jetbinSum = 0; jetbinSum < JetBinSummed::NUMBER_OF_SUMMED_JET_BINS; ++jetbinSum) {
-		for (unordered_map<std::string, TH1Array>::iterator iter = collection1D.begin(); iter != collection1D.end();
+		for (boost::unordered_map<std::string, TH1Array>::iterator iter = collection1D.begin(); iter != collection1D.end();
 				++iter) {
 			string collectionName = iter->first;
 			TH1CollectionRef coll = iter->second[type];
-			unordered_map<std::string, TH1Ptr> histMap = coll->getAllHistograms();
+			boost::unordered_map<std::string, TH1Ptr> histMap = coll->getAllHistograms();
 
-			for (unordered_map<std::string, TH1Ptr>::const_iterator histIter = histMap.begin();
+			for (boost::unordered_map<std::string, TH1Ptr>::const_iterator histIter = histMap.begin();
 					histIter != histMap.end(); ++histIter) {
 				string name = histIter->first;
 				//check if it is a jet-binned histogram
@@ -417,13 +416,13 @@ void HistogramManager::createJetSummedHistograms1D(DataType::value type) {
 
 void HistogramManager::createJetSummedHistograms2D(DataType::value type) {
 	for (unsigned short jetbinSum = 0; jetbinSum < JetBinSummed::NUMBER_OF_SUMMED_JET_BINS; ++jetbinSum) {
-		for (unordered_map<std::string, TH2Array>::iterator iter = collection2D.begin(); iter != collection2D.end();
+		for (boost::unordered_map<std::string, TH2Array>::iterator iter = collection2D.begin(); iter != collection2D.end();
 				++iter) {
 			string collectionName = iter->first;
 			TH2CollectionRef coll = iter->second[type];
-			unordered_map<std::string, TH2Ptr> histMap = coll->getAllHistograms();
+			boost::unordered_map<std::string, TH2Ptr> histMap = coll->getAllHistograms();
 
-			for (unordered_map<std::string, TH2Ptr>::const_iterator histIter = histMap.begin();
+			for (boost::unordered_map<std::string, TH2Ptr>::const_iterator histIter = histMap.begin();
 					histIter != histMap.end(); ++histIter) {
 				string name = histIter->first;
 				//check if it is a jet-binned histogram
@@ -450,13 +449,13 @@ void HistogramManager::createJetSummedHistograms2D(DataType::value type) {
 
 void HistogramManager::createJetSummedHistograms3D(DataType::value type) {
 	for (unsigned short jetbinSum = 0; jetbinSum < JetBinSummed::NUMBER_OF_SUMMED_JET_BINS; ++jetbinSum) {
-		for (unordered_map<std::string, TH3Array>::iterator iter = collection3D.begin(); iter != collection3D.end();
+		for (boost::unordered_map<std::string, TH3Array>::iterator iter = collection3D.begin(); iter != collection3D.end();
 				++iter) {
 			string collectionName = iter->first;
 			TH3CollectionRef coll = iter->second[type];
-			unordered_map<std::string, TH3Ptr> histMap = coll->getAllHistograms();
+			boost::unordered_map<std::string, TH3Ptr> histMap = coll->getAllHistograms();
 
-			for (unordered_map<std::string, TH3Ptr>::const_iterator histIter = histMap.begin();
+			for (boost::unordered_map<std::string, TH3Ptr>::const_iterator histIter = histMap.begin();
 					histIter != histMap.end(); ++histIter) {
 				string name = histIter->first;
 				//check if it is a jet-binned histogram
@@ -496,13 +495,13 @@ void HistogramManager::createBJetSummedHistograms(DataType::value type) {
  */
 void HistogramManager::createBJetSummedHistograms1D(DataType::value type) {
 	for (unsigned short jetbinSum = 0; jetbinSum < BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS; ++jetbinSum) {
-		for (unordered_map<std::string, TH1Array>::iterator iter = collection1D.begin(); iter != collection1D.end();
+		for (boost::unordered_map<std::string, TH1Array>::iterator iter = collection1D.begin(); iter != collection1D.end();
 				++iter) {
 			string collectionName = iter->first;
 			TH1CollectionRef coll = iter->second[type];
-			unordered_map<std::string, TH1Ptr> histMap = coll->getAllHistograms();
+			boost::unordered_map<std::string, TH1Ptr> histMap = coll->getAllHistograms();
 
-			for (unordered_map<std::string, TH1Ptr>::const_iterator histIter = histMap.begin();
+			for (boost::unordered_map<std::string, TH1Ptr>::const_iterator histIter = histMap.begin();
 					histIter != histMap.end(); ++histIter) {
 				string name = histIter->first;
 				//check if it is a Bjet-binned histogram
@@ -531,13 +530,13 @@ void HistogramManager::createBJetSummedHistograms1D(DataType::value type) {
 
 void HistogramManager::createBJetSummedHistograms2D(DataType::value type) {
 	for (unsigned short jetbinSum = 0; jetbinSum < BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS; ++jetbinSum) {
-		for (unordered_map<std::string, TH2Array>::iterator iter = collection2D.begin(); iter != collection2D.end();
+		for (boost::unordered_map<std::string, TH2Array>::iterator iter = collection2D.begin(); iter != collection2D.end();
 				++iter) {
 			string collectionName = iter->first;
 			TH2CollectionRef coll = iter->second[type];
-			unordered_map<std::string, TH2Ptr> histMap = coll->getAllHistograms();
+			boost::unordered_map<std::string, TH2Ptr> histMap = coll->getAllHistograms();
 
-			for (unordered_map<std::string, TH2Ptr>::const_iterator histIter = histMap.begin();
+			for (boost::unordered_map<std::string, TH2Ptr>::const_iterator histIter = histMap.begin();
 					histIter != histMap.end(); ++histIter) {
 				string name = histIter->first;
 				//check if it is a Bjet-binned histogram
@@ -566,13 +565,13 @@ void HistogramManager::createBJetSummedHistograms2D(DataType::value type) {
 
 void HistogramManager::createBJetSummedHistograms3D(DataType::value type) {
 	for (unsigned short jetbinSum = 0; jetbinSum < BJetBinSummed::NUMBER_OF_SUMMED_BJET_BINS; ++jetbinSum) {
-		for (unordered_map<std::string, TH3Array>::iterator iter = collection3D.begin(); iter != collection3D.end();
+		for (boost::unordered_map<std::string, TH3Array>::iterator iter = collection3D.begin(); iter != collection3D.end();
 				++iter) {
 			string collectionName = iter->first;
 			TH3CollectionRef coll = iter->second[type];
-			unordered_map<std::string, TH3Ptr> histMap = coll->getAllHistograms();
+			boost::unordered_map<std::string, TH3Ptr> histMap = coll->getAllHistograms();
 
-			for (unordered_map<std::string, TH3Ptr>::const_iterator histIter = histMap.begin();
+			for (boost::unordered_map<std::string, TH3Ptr>::const_iterator histIter = histMap.begin();
 					histIter != histMap.end(); ++histIter) {
 				string name = histIter->first;
 				//check if it is a Bjet-binned histogram
@@ -649,7 +648,7 @@ unsigned int HistogramManager::size() const {
 
 unsigned int HistogramManager::size1D(DataType::value type) const {
 	unsigned int size(0);
-	for (unordered_map<std::string, TH1Array>::const_iterator iter = collection1D.begin(); iter != collection1D.end();
+	for (boost::unordered_map<std::string, TH1Array>::const_iterator iter = collection1D.begin(); iter != collection1D.end();
 			++iter) {
 		size += iter->second[type]->size();
 	}
@@ -658,7 +657,7 @@ unsigned int HistogramManager::size1D(DataType::value type) const {
 
 unsigned int HistogramManager::size2D(DataType::value type) const {
 	unsigned int size(0);
-	for (unordered_map<std::string, TH2Array>::const_iterator iter = collection2D.begin(); iter != collection2D.end();
+	for (boost::unordered_map<std::string, TH2Array>::const_iterator iter = collection2D.begin(); iter != collection2D.end();
 			++iter) {
 		size += iter->second[type]->size();
 	}
@@ -667,7 +666,7 @@ unsigned int HistogramManager::size2D(DataType::value type) const {
 
 unsigned int HistogramManager::size3D(DataType::value type) const {
 	unsigned int size(0);
-	for (unordered_map<std::string, TH3Array>::const_iterator iter = collection3D.begin(); iter != collection3D.end();
+	for (boost::unordered_map<std::string, TH3Array>::const_iterator iter = collection3D.begin(); iter != collection3D.end();
 			++iter) {
 		size += iter->second[type]->size();
 	}
@@ -691,4 +690,3 @@ bool HistogramManager::hasFolder(std::string folder) const {
 }
 
 } //end namespace BAT
-
