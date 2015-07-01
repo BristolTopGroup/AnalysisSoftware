@@ -147,7 +147,7 @@ void Event::setJetTTBarPartons() {
 
 		FourVector partonFV = jet->matched_parton()->getFourVector();
 
-		if ( partonFV == quark->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::Quark );	
+		if ( partonFV == quark->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::Quark );
 		else if ( partonFV == quarkBar->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::QuarkBar );
 		else if ( partonFV == hadronicB->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::HadB );
 		else if ( partonFV == leptonicB->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::LepB );
@@ -314,10 +314,10 @@ const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) con
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muonQCDNonisolated.getSignalLeptonIndex();
-		return allMuons[signalLeptonIndex];		
+		return allMuons[signalLeptonIndex];
 	}
 
-	
+
 	return LeptonPointer();
 }
 
@@ -463,7 +463,7 @@ void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelection
 			if ( passSelections[selection] != 2 && passSelections[selection] != 4 )
 				cout << selection << " " << passSelections[selection] << endl;
 		}
- 
+
 	}
 
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
@@ -919,18 +919,11 @@ double Event::HT(const JetCollection jets) {
 
 double Event::ST(const JetCollection jets, const ParticlePointer lepton, const METPointer met) {
 	// ST = HT + MET + lepton pt
-	double ht = 0;
-	if ( jets.size() > 0 ) ht = Event::HT(jets);
+	double ht = Event::HT(jets);
+	double MET = met == 0 ? 0 : met->et();
+	double lpt = lepton == 0 ? 0 : lepton->pt();
 
-	if ( lepton == 0 && met == 0 )
-		return ht;
-	else if ( lepton == 0 )
-		return ht + met->et();
-	else if ( met == 0 )
-		return ht + lepton->pt();
-	else
-		return ht + met->et() + lepton->pt();
-
+	return ht + MET + lpt;
 }
 
 double Event::MT(const ParticlePointer particle, const METPointer met) {
