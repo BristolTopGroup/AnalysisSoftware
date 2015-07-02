@@ -16,6 +16,8 @@
 #include "JetAnalyser.h"
 #include "WAnalyser.h"
 #include "HitFitAnalyser.h"
+#include "LikelihoodRecoAnalyser.h"
+
 #include "Binned_variable_analyser.h"
 
 #include <string>
@@ -139,6 +141,13 @@ private:
 	// HitFit Analyser
 	HitFitAnalyserLocalPtr hitFitAnalyserEPlusJetsRefSelection_;
 	HitFitAnalyserLocalPtr hitFitAnalyserMuPlusJetsRefSelection_;
+	HitFitAnalyserLocalPtr hitFitAnalyserEPlusJetsQCDSelection_;
+	HitFitAnalyserLocalPtr hitFitAnalyserEPlusJetsConversionSelection_;
+	HitFitAnalyserLocalPtr hitFitAnalyserMuPlusJetsQCDSelection_;
+
+	// Likelihood ttbar reco analyser
+	LikelihoodRecoAnalyserLocalPtr likelihoodRecoAnalyserEPlusJetsRefSelection_;
+	LikelihoodRecoAnalyserLocalPtr likelihoodRecoAnalyserMuPlusJetsRefSelection_;
 
 	// variable definitions
 	std::vector<Variable> electron_variables_, muon_variables_;

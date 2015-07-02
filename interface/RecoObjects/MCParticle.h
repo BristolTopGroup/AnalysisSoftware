@@ -8,7 +8,6 @@
 #ifndef MCPARTICLE_H_
 #define MCPARTICLE_H_
 #include "Particle.h"
-#include "Jet.h"
 
 namespace BAT {
 class MCParticle;
@@ -29,7 +28,6 @@ public:
 	bool isQuark() const;
 	bool isLepton() const;
 	bool isNeutrino() const;
-	unsigned short getClosestJetIndex(const JetCollection& jets) const;
 protected:
 	int particlePdgId;
 	int particleMotherIndex;

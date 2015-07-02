@@ -25,3 +25,4 @@ Root_IO_Performance.root
 /Testing/
 AnalysisSoftware_test
 CTest*
+condor/job_mapperc

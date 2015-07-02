@@ -33,6 +33,7 @@ void Analysis::analyse() {
 
 
 	while (eventReader->hasNextEvent()) {
+
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
@@ -59,9 +60,11 @@ void Analysis::analyse() {
 			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		if ( ( currentEvent->getDataType() == DataType::TTJets || currentEvent->getDataType() == DataType::TT_Pythia8 ) && Globals::treePrefix_ == "" ) {
+		if ( ( currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX || currentEvent->getDataType() == DataType::TTJets_madgraphMLM ) && Globals::treePrefix_ == "" ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
+			partonAnalyser_->analyse(currentEvent);
+			// likelihoodInputAnalyser_->analyse(currentEvent);
 		}
 		treeMan->FillTrees();
 	}
@@ -107,7 +110,7 @@ void Analysis::initiateEvent() {
 	}
 
 	//top pt weight
-	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets){
+	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
 
 	double topPtweight = 1.;
 	topPtweight = weights->reweightTopPt(currentEvent);
@@ -158,10 +161,12 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	if ( ( eventReader->getSeenDatatypes()[DataType::TTJets] || eventReader->getSeenDatatypes()[DataType::TT_Pythia8] )
+	if ( ( eventReader->getSeenDatatypes()[DataType::TTJets_amcatnloFXFX] || eventReader->getSeenDatatypes()[DataType::TTJets_madgraphMLM] )
 		&& Globals::treePrefix_ == "" ) {
 		pseudoTopAnalyser_->createTrees();
 		unfoldingRecoAnalyser_->createTrees();
+		partonAnalyser_->createTrees();
+		likelihoodInputAnalyser_->createTrees();
 	}
 
 	histMan->setCurrentHistogramFolder("");
@@ -185,7 +190,9 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
 		vertexAnalyser(new VertexAnalyser(histMan)),
 		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)),
-		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)) {
+		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)),
+		partonAnalyser_(new PartonAnalyser(histMan, treeMan)),
+		likelihoodInputAnalyser_(new LikelihoodInputAnalyser(histMan, treeMan)) {
 	histMan->enableDebugMode(true);
 }
 

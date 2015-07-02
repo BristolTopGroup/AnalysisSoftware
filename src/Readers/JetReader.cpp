@@ -34,6 +34,11 @@ JetReader::JetReader() : //
 		matchedGeneratedJetPxReader(), ////
 		matchedGeneratedJetPyReader(), ////
 		matchedGeneratedJetPzReader(), ////
+		matchedPartonEnergyReader(), ////
+		matchedPartonPxReader(), ////
+		matchedPartonPyReader(), ////
+		matchedPartonPzReader(), ////
+		matchedPartonPdgIdReader(), ////
 		emfReader(), ////
 		n90HitsReader(), ////
 		fHPDReader(), ////
@@ -72,6 +77,11 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		matchedGeneratedJetPxReader(input, "Jets.GenJet.Px"), //
 		matchedGeneratedJetPyReader(input, "Jets.GenJet.Py"), //
 		matchedGeneratedJetPzReader(input, "Jets.GenJet.Pz"), //
+		matchedPartonEnergyReader(input, "Jets.GenParton.Energy"), //
+		matchedPartonPxReader(input, "Jets.GenParton.Px"), //
+		matchedPartonPyReader(input, "Jets.GenParton.Py"), //
+		matchedPartonPzReader(input, "Jets.GenParton.Pz"), //
+		matchedPartonPdgIdReader(input, "Jets.GenParton.PdgId"), //
 		emfReader(input, "Jets.EMF"), //
 		n90HitsReader(input, "Jets.n90Hits"), //
 		fHPDReader(input, "Jets.fHPD"), //
@@ -134,7 +144,6 @@ void JetReader::readJets(bool isRealData) {
 				double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
 				double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
 
-
 				//store matched generated jet variables in a matchedGeneratedJet pointer
 				JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
 				jet->set_matched_generated_jet(matchedGeneratedJet);
@@ -148,6 +157,20 @@ void JetReader::readJets(bool isRealData) {
 					//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
 					jet->set_unsmeared_jet(unsmearedJet);
 				}
+			}
+
+			double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
+			if (matchedPartonEnergy !=0) {
+				double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
+				double matchedPartonPx = matchedPartonPxReader.getVariableAt(jetIndex); //
+				double matchedPartonPy = matchedPartonPyReader.getVariableAt(jetIndex); //
+				double matchedPartonPz = matchedPartonPzReader.getVariableAt(jetIndex); //
+				double matchedPartonPdgId = matchedPartonPdgIdReader.getIntVariableAt(jetIndex); //
+
+				// Store as mc particle pointer
+				MCParticlePointer matchedParton( new MCParticle(matchedPartonEnergy, matchedPartonPx, matchedPartonPy, matchedPartonPz));
+				matchedParton->setPdgId( matchedPartonPdgId );
+				jet->set_matched_parton( matchedParton );
 			}
 		}
 
@@ -227,6 +250,12 @@ void JetReader::initialise() {
 	matchedGeneratedJetPxReader.initialiseBlindly();
 	matchedGeneratedJetPyReader.initialiseBlindly();
 	matchedGeneratedJetPzReader.initialiseBlindly();
+
+	matchedPartonEnergyReader.initialise();
+	matchedPartonPxReader.initialise();
+	matchedPartonPyReader.initialise();
+	matchedPartonPzReader.initialise();
+	matchedPartonPdgIdReader.initialise();
 
 	if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 		emfReader.initialise();

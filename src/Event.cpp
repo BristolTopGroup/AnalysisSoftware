@@ -22,6 +22,9 @@ double const Event::minJetPt_ = 30;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
+double const Event::minSignalMuonPt_ = 26;
+double const Event::minSignalElectronPt_ = 34;
+
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
 		HLTPrescales(new std::vector<int>()), //
@@ -123,6 +126,32 @@ void Event::setJets(JetCollection jets) {
 	allJets.clear();
 
 	allJets = jets;
+}
+
+void Event::setJetTTBarPartons() {
+	// Loop over all jets, and set the parton if it matches to one from ttbar decay
+	const TTGenInfoPointer ttGen( this->TTGenInfo() );
+	ParticlePointer quark = ttGen->getQuark();
+	ParticlePointer quarkBar = ttGen->getQuarkBar();
+	ParticlePointer hadronicB = ttGen->gethadronicB();
+	ParticlePointer leptonicB = ttGen->getleptonicB();
+
+	// Only consider if there are partons from top decay
+	if ( quark == 0 || quarkBar == 0 ) return;
+
+	for ( unsigned int jetIndex = 0; jetIndex < allJets.size(); ++jetIndex ) {
+		JetPointer jet = allJets[jetIndex];
+
+		// Skip if jet doesn't have a matched parton
+		if ( jet->matched_parton() == 0 ) continue;
+
+		FourVector partonFV = jet->matched_parton()->getFourVector();
+
+		if ( partonFV == quark->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::Quark );
+		else if ( partonFV == quarkBar->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::QuarkBar );
+		else if ( partonFV == hadronicB->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::HadB );
+		else if ( partonFV == leptonicB->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::LepB );
+	}
 }
 
 void Event::setCleanedJets(JetCollection jets) {
@@ -285,10 +314,10 @@ const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) con
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muonQCDNonisolated.getSignalLeptonIndex();
-		return allMuons[signalLeptonIndex];		
+		return allMuons[signalLeptonIndex];
 	}
 
-	
+
 	return LeptonPointer();
 }
 
@@ -434,20 +463,21 @@ void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelection
 			if ( passSelections[selection] != 2 && passSelections[selection] != 4 )
 				cout << selection << " " << passSelections[selection] << endl;
 		}
- 
+
 	}
+
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
-		if ( passSelections[selection] == 1 && passesJetSelection( selection ) ) setPassesMuonSelection( true );
-		if ( passSelections[selection] == 2 && passesJetSelection( selection ) ) setPassesElectronSelection( true );
-		if ( passSelections[selection] == 3 && passesJetSelection( selection ) ) setPassesMuonQCDSelection( true );
-		if ( passSelections[selection] == 4 && passesJetSelection( selection ) ) setPassesElectronQCDSelection( true );
-		if ( passSelections[selection] == 5 && passesJetSelection( selection ) ) setPassesElectronConversionSelection( true );
+		SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(passSelections[selection]);
+
+		if ( passSelections[selection] == 1 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesMuonSelection( true );
+		if ( passSelections[selection] == 2 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronSelection( true );
+		if ( passSelections[selection] == 3 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesMuonQCDSelection( true );
+		if ( passSelections[selection] == 4 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronQCDSelection( true );
+		if ( passSelections[selection] == 5 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronConversionSelection( true );
 	}
 }
 
-const bool Event::passesJetSelection( const unsigned int selectionCriteria ) {
-	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
-
+const bool Event::passesJetSelection( const unsigned int selection ) {
 	const JetCollection jets = getCleanedJets( selection );
 	unsigned int nJetPass = 0;
 	for ( unsigned int jetIndex = 0; jetIndex < jets.size(); ++jetIndex ) {
@@ -467,6 +497,29 @@ const bool Event::passesJetSelection( const unsigned int selectionCriteria ) {
 	if ( nBJetPass < minNBJets_ ) return false;
 
 	return true;
+}
+
+const bool Event::passesSignalLeptonSelection( const unsigned int selectionCriteria ) {
+
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+	LeptonPointer signalLepton = getSignalLepton( selectionCriteria );
+	if ( signalLepton == 0 ) return false;
+	double ptThreshold = 99999999;
+
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ||
+			selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ||
+			selection == SelectionCriteria::ElectronPlusJetsQCDConversion
+	 ) {
+		ptThreshold = minSignalElectronPt_;
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ||
+		 		selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		ptThreshold = minSignalMuonPt_;
+	}
+
+	if ( signalLepton->pt() > ptThreshold ) return true;
+	else return false;
 }
 
 void Event::setIsSemiLeptonicElectron( bool isSemiLeptonicElectron ) {
@@ -867,7 +920,10 @@ double Event::HT(const JetCollection jets) {
 double Event::ST(const JetCollection jets, const ParticlePointer lepton, const METPointer met) {
 	// ST = HT + MET + lepton pt
 	double ht = Event::HT(jets);
-	return ht + met->et() + lepton->pt();
+	double MET = met == 0 ? 0 : met->et();
+	double lpt = lepton == 0 ? 0 : lepton->pt();
+
+	return ht + MET + lpt;
 }
 
 double Event::MT(const ParticlePointer particle, const METPointer met) {

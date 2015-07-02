@@ -36,6 +36,8 @@
 
 #include "../interface/Analysers/PseudoTopAnalyser.h"
 #include "../interface/Analysers/UnfoldingRecoAnalyser.h"
+#include "../interface/Analysers/PartonAnalyser.h"
+#include "../interface/Analysers/LikelihoodInputAnalyser.h"
 
 class Analysis {
 private:
@@ -54,6 +56,9 @@ private:
 
     BAT::PseudoTopAnalyserLocalPtr pseudoTopAnalyser_;
     BAT::UnfoldingRecoAnalyserLocalPtr unfoldingRecoAnalyser_;
+    BAT::PartonAnalyserLocalPtr partonAnalyser_;
+
+    BAT::LikelihoodInputAnalyserLocalPtr likelihoodInputAnalyser_;
 
 public:
     Analysis(std::string fileForPileUpReweighting);

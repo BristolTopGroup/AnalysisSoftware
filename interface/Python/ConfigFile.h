@@ -31,6 +31,7 @@ public:
 	long maxEvents() const;
 	std::string datasetInfoFile() const;
 	std::string PUFile() const;
+	std::string TTbarLikelihoodFile() const;
 	std::string MuonScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
 	std::string ElectronIdIsoScaleFactorsFile() const;
@@ -71,6 +72,7 @@ private:
 	long maxEvents_;
 	std::string datasetInfoFile_;
 	std::string pileUpFile_;
+	std::string ttbarLikelihoodFile_;
 	bool getMuonScaleFactorsFromFile_;
 	std::string muonScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
@@ -112,6 +114,16 @@ private:
 	boost::shared_ptr<TH2F> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
+	
+
+	void getCSVCorrectPermHistogram(std::string ttbarLikelihoodFile);
+	void getCSVIncorrectPermHistogram(std::string ttbarLikelihoodFile);
+	void getNuChiCorrectPermHistogram(std::string ttbarLikelihoodFile);
+	void getNuChiIncorrectPermHistogram(std::string ttbarLikelihoodFile);
+	void getHadronicRecoCorrectPermHistogram(std::string ttbarLikelihoodFile);
+	void getHadronicRecoIncorrectPermHistogram(std::string ttbarLikelihoodFile);
+	void getLeptonicRecoCorrectPermHistogram(std::string ttbarLikelihoodFile);
+	void getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikelihoodFile);
 };
 
 } /* namespace BAT */

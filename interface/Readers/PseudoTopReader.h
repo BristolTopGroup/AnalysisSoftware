@@ -32,6 +32,7 @@ private:
     VariableReader<MultiDoublePointer> pseudoTop_jet_pxReader_;
     VariableReader<MultiDoublePointer> pseudoTop_jet_pyReader_;
     VariableReader<MultiDoublePointer> pseudoTop_jet_pzReader_;
+    VariableReader<MultiIntPointer> pseudoTop_jet_pdgIdReader_;
 
     VariableReader<MultiDoublePointer> pseudoTop_lepton_energyReader_;
     VariableReader<MultiDoublePointer> pseudoTop_lepton_pxReader_;

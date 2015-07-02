@@ -11,6 +11,7 @@
 #include "../../interface/Event.h"
 
 
+
 namespace BAT {
 
 void TTbar_plus_X_analyser::analyse(const EventPtr event) {
@@ -74,6 +75,21 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
+		}
+
 		// metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		// electronAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		// vertexAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -91,9 +107,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		wAnalyserEPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
 		wAnalyserEPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
-		// hitFitAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-		// BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
-		// event->setTTbarHypothesis( topHypothesis );
+		likelihoodRecoAnalyserEPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
 
 		// ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -223,6 +237,21 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
+		}
+
 		qcdNonIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 		metAnalyserqcdNonIsoElectronSelection_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -311,6 +340,21 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
+
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsConversionSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
+		}
 
 		qcdConversionsElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 		metAnalyserqcdConversionSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -411,6 +455,21 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("ElectronUp",1.0);
 		treeMan_->Fill("ElectronDown",1.0);
 
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
+		}
+
 		metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		muonAnalyserRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		vertexAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -428,9 +487,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
 		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
-		// hitFitAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
-		// BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
-		// event->setTTbarHypothesis( topHypothesis );
+		likelihoodRecoAnalyserMuPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
+
 
 		ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;
@@ -527,6 +585,21 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("ElectronUp",1.0);
 		treeMan_->Fill("ElectronDown",1.0);
 
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
+		}
+
 		qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 		metAnalyserqcdNonIsoMuonSelection_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -596,6 +669,13 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
@@ -611,6 +691,13 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);	
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
@@ -626,6 +713,13 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);	
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
@@ -641,6 +735,13 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
@@ -656,6 +757,13 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);	
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
@@ -708,6 +816,21 @@ void TTbar_plus_X_analyser::createHistograms() {
 
 	hitFitAnalyserEPlusJetsRefSelection_->createHistograms();
 	hitFitAnalyserMuPlusJetsRefSelection_->createHistograms();
+	hitFitAnalyserEPlusJetsQCDSelection_->createHistograms();
+	hitFitAnalyserEPlusJetsConversionSelection_->createHistograms();
+	hitFitAnalyserMuPlusJetsQCDSelection_->createHistograms();
+
+	hitFitAnalyserEPlusJetsRefSelection_->createTrees();
+	hitFitAnalyserMuPlusJetsRefSelection_->createTrees();
+	hitFitAnalyserEPlusJetsQCDSelection_->createTrees();
+	hitFitAnalyserEPlusJetsConversionSelection_->createTrees();
+	hitFitAnalyserMuPlusJetsQCDSelection_->createTrees();
+
+	likelihoodRecoAnalyserEPlusJetsRefSelection_->createHistograms();
+	likelihoodRecoAnalyserMuPlusJetsRefSelection_->createHistograms();
+	likelihoodRecoAnalyserEPlusJetsRefSelection_->createTrees();
+	likelihoodRecoAnalyserMuPlusJetsRefSelection_->createTrees();
+
 }
 
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
@@ -865,8 +988,13 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		jetAnalyserMuPlusJetsQCDNonIsoSelection_( new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsQCDNonIsolated, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Jets")), //
 		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
 		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
-		hitFitAnalyserEPlusJetsRefSelection_(new HitFitAnalyser(histMan, true, histogramFolder + "/EPlusJets/Ref selection/HitFit")), //
-		hitFitAnalyserMuPlusJetsRefSelection_(new HitFitAnalyser(histMan, false, histogramFolder + "/MuPlusJets/Ref selection/HitFit")), //
+		hitFitAnalyserEPlusJetsRefSelection_(new HitFitAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/Ref selection/HitFit")), //
+		hitFitAnalyserMuPlusJetsRefSelection_(new HitFitAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/Ref selection/HitFit")), //
+		hitFitAnalyserEPlusJetsQCDSelection_(new HitFitAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/QCD non iso e+jets/HitFit")), //
+		hitFitAnalyserEPlusJetsConversionSelection_(new HitFitAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/QCDConversions/HitFit")), //
+		hitFitAnalyserMuPlusJetsQCDSelection_(new HitFitAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/HitFit")), //		
+		likelihoodRecoAnalyserEPlusJetsRefSelection_(new LikelihoodRecoAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/Ref selection/LikelihoodReco")), //
+		likelihoodRecoAnalyserMuPlusJetsRefSelection_(new LikelihoodRecoAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/Ref selection/LikelihoodReco")), //
 		electron_variables_(), //
 		muon_variables_() {
 

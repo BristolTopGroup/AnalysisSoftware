@@ -78,7 +78,7 @@ def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = 
         if not chosen_sample in samples:
             sys.exit("ERROR Trying to run unknown sample '%s'" % options.sample)
         for mode in analysis_modes_:
-            if splitTTJet and chosen_sample == 'TTJet':
+            if splitTTJet and 'TTJets' in chosen_sample:
                 for ntupleIndex in range(1,numberOfInputFiles(chosen_sample,energy)+1):
                     result.append((chosen_sample, mode,ntupleIndex))
             else:
@@ -87,7 +87,7 @@ def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = 
     else:
         for sample in samples:
             for mode in analysis_modes_:
-                if splitTTJet and sample is 'TTJet':
+                if splitTTJet and 'TTJets' in sample:
                     for ntupleIndex in range(1,numberOfInputFiles(sample,energy)+1):
                         result.append((sample, mode,ntupleIndex))
                 else:
