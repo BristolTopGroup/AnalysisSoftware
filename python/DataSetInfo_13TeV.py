@@ -28,6 +28,8 @@ datasetInfo['SingleMu'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 datasetInfo['TTJets_amcatnloFXFX'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 42730273 }
 datasetInfo['TTJets_madgraphMLM'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 11339232 }
 
+datasetInfo['TTJets_synch'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 47000 }
+
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/CMS/StandardModelCrossSectionsat13TeV
 datasetInfo['DYJetsToLL'] = { "cross-section" : 6025.2, "NumberOfProcessedEvents" : 298504 }
 datasetInfo['WJetsToLNu'] = { "cross-section" : 61526.7, "NumberOfProcessedEvents" : 24151270 }
