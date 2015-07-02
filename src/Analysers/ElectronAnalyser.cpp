@@ -63,6 +63,7 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 
 	treeMan_->Fill("pt", electron->pt() );
 	treeMan_->Fill("eta", electron->eta() );	
+	treeMan_->Fill("etaSC", electron->superClusterEta() );
 	treeMan_->Fill("relIso_03_deltaBeta", electron->PFRelIso03DeltaBeta() );	
 }
 
@@ -134,7 +135,8 @@ void ElectronAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
 
 	treeMan_->addBranch("pt", "F", "Electrons" + Globals::treePrefix_);
-	treeMan_->addBranch("eta", "F", "Electrons" + Globals::treePrefix_);	
+	treeMan_->addBranch("eta", "F", "Electrons" + Globals::treePrefix_);
+	treeMan_->addBranch("etaSC", "F", "Electrons" + Globals::treePrefix_);
 	treeMan_->addBranch("relIso_03_deltaBeta", "F", "Electrons" + Globals::treePrefix_);	
 }
 
