@@ -39,7 +39,7 @@ NTupleEventReader::NTupleEventReader() :
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle32eta2p1WP75Gsf.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75Gsf.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1.Fired")),
 
 		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
@@ -138,8 +138,10 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
 
-	currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
-	currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+	// currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
+	// currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+	currentEvent->setPassesElectronChannelTrigger( true );
+	currentEvent->setPassesMuonChannelTrigger( true );
 
 	// Set info that depends on selection criteria e.g. cleaned jets
 	// Must do this before setPassOfflineSelectionInfo, as this selects on the cleaned jets
@@ -150,7 +152,6 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
 
 	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
-
 	currentEvent->setPassGenSelectionInfo( *passesGenSelectionReader->getVariable() );
 
 	currentEvent->setTTGenInfo( ttGenInfoReader->getTTGenInfo());
