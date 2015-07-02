@@ -120,6 +120,7 @@ data_path_13TeV = ''
 datasets_13TeV = {
             'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX' ],
             'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM'],
+            'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch'],
 
             'DYJetsToLL' : [ mc_path_13TeV + 'DYJetsToLL_M50' ],
             'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu' ],
