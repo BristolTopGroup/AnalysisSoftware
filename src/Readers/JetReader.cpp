@@ -121,7 +121,11 @@ void JetReader::readJets(bool isRealData) {
 		double pyRaw = pyRawReader.getVariableAt(jetIndex);
 		double pzRaw = pzRawReader.getVariableAt(jetIndex);
 
-		double JEC = JECReader.getVariableAt(jetIndex);
+		double JEC = 1.0;
+		if ( JECReader.size() > jetIndex ) {
+			JEC = JECReader.getVariableAt(jetIndex);
+		}
+
 		double JECUnc = JECUncReader.getVariableAt(jetIndex);
 		JECUnc = 0.02;
 		// cout << Globals::JESsystematic << " " << JECUnc << endl;
