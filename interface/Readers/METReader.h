@@ -27,6 +27,7 @@ private:
 	VariableReader<MultiDoublePointer> multiExReader;
 	VariableReader<MultiDoublePointer> multiEyReader;
 	VariableReader<double> significanceReader;
+	VariableReader<MultiDoublePointer> shiftedMETReader;
 	METPointer met;
 	METAlgorithm::value usedAlgorithm;
 	void readMET(double corrx, double corry);
