@@ -103,6 +103,7 @@ protected:
 
 	std::vector<int> genNumberOfPileUpVertices;
 	std::vector<int> trueNumberOfPileUpVertices_;
+	double generatorWeight_;
 	std::vector<double> pdfWeights;
 
 	double ptdensityRho;
@@ -163,6 +164,7 @@ public:
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
 	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
+	void setGeneratorWeight( double generatorWeight );
 	void setPDFWeights(std::vector<double> pdfWeights);
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
@@ -240,6 +242,7 @@ public:
 	static bool usePFIsolation;
 
 	const std::vector<int> GeneratedPileUpVertices() const;
+	const double generatorWeight() const;
 	const std::vector<double> PDFWeights() const;
 	double averageNumberOfVertices() const;
 	double inTimeOnlyNumberOfVertices() const;
