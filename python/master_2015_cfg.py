@@ -131,7 +131,6 @@ if ntupleToProcess > 0 :
 
 inputFiles = [path + '/' + filetype for path in input_folders]
 # inputFiles = datasets[sample]
-print inputFiles
 
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
@@ -169,7 +168,7 @@ centerOfMassEnergy = 13
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
 if centerOfMassEnergy == 13:
-    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV.py"
+    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV_50ns.py"
 
 
 nTuple_version = 0
