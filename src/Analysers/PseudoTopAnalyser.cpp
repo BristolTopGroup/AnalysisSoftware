@@ -147,6 +147,9 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("pseudoMT", MT );
 	}
 
+	// NJets && NBJets
+	treeMan_->Fill("NPseudoJets", pseudoJets.size() );
+	treeMan_->Fill("NPseudoBJets", pseudoBs.size() );
 }
 
 void PseudoTopAnalyser::createTrees() {
@@ -180,6 +183,10 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding");
 	treeMan_->addBranch("pseudoWPT", "F","Unfolding");
 	treeMan_->addBranch("pseudoMT", "F","Unfolding");
+
+	// Number of pseudo jets
+	treeMan_->addBranch("NPseudoJets", "F", "Unfolding");
+	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding");
 
 }
 
