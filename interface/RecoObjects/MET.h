@@ -70,9 +70,15 @@ const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = {
 		void setSumET(double sumET);
 		static bool isMCOnlyMETType(unsigned int type);
 		static bool isAvailableInNTupleVersion(unsigned int ntupleVersion, unsigned int type);
+
+		void setMETUncertinaties( std::vector<double> newUncertainties );
+		std::vector< double > getAllMETUncertainties( );
+		double getMETForUncertainty( unsigned int unc_i );
 	private:
 		METAlgorithm::value usedAlgorithm;
 		double significance_, sumET_;
+
+		std::vector< double > metUncertaintyPt_;
 	};
 
 	typedef boost::shared_ptr<MET> METPointer;
