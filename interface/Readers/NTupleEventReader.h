@@ -95,11 +95,13 @@ private:
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDConversion;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated;
 
-	boost::scoped_ptr<TTGenReader> ttGenInfoReader;	
+	boost::scoped_ptr<TTGenReader> ttGenInfoReader;
 
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > lumiBlockReader;
+
+	boost::scoped_ptr<VariableReader<double> > generatorWeightReader_;
 	boost::scoped_ptr<VariableReader<MultiDoublePointer> > PDFWeightsReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;

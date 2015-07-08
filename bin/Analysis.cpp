@@ -118,6 +118,10 @@ void Analysis::initiateEvent() {
 	weight *= topPtweight;
 	}
 
+	// include generator weight
+	// 1, except for amcatnlo samples (so far?)
+	weight *= currentEvent->generatorWeight();
+
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);
 

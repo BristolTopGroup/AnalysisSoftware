@@ -66,6 +66,7 @@ Event::Event() : //
 		isBeamScraping_(true), //
 		genNumberOfPileUpVertices(0), //
 		trueNumberOfPileUpVertices_(0), //
+		generatorWeight_(1), //
 		pdfWeights(), //
 		ptdensityRho(0.), //
 		file_(""), //
@@ -747,6 +748,14 @@ bool Event::HLT(HLTriggers::value trigger) const {
 
 void Event::setGenNumberOfPileUpVertices(std::vector<int> pileup) {
 	genNumberOfPileUpVertices = pileup;
+}
+
+void Event::setGeneratorWeight( double generatorWeight ) {
+	generatorWeight_ = generatorWeight;
+}
+
+const double Event::generatorWeight() const {
+	return generatorWeight_;
 }
 
 void Event::setPDFWeights(std::vector<double> pdfWeights) {
