@@ -93,6 +93,27 @@ const DataType::value Event::getDataType() const {
 	return dataType;
 }
 
+bool Event::isTTJet( DataType::value type) const {
+	if (
+		type == DataType::TTJets_amcatnloFXFX ||
+		type == DataType::TTJets_madgraphMLM ||
+		type == DataType::TTJets_PowhegPythia8 ||
+		type == DataType::TTJets_PowhegPythia8_scaleDown ||
+		type == DataType::TTJets_PowhegPythia8_scaleUp ||
+		type == DataType::TTJets_amcatnloFXFX ||
+		type == DataType::TTJets_amcatnloFXFX_scaleDown ||
+		type == DataType::TTJets_amcatnloFXFX_scaleUp ||
+		type == DataType::TTJets_amcatnloFXFX_mtop1695 ||
+		type == DataType::TTJets_amcatnloFXFX_mtop1755 ||
+		type == DataType::TTJets_madgraphMLM ||
+		type == DataType::TTJets_powhegPythia6 ||
+		type == DataType::TTJets_synch
+		)
+		return true;
+	else
+		return false;
+}
+
 void Event::setDataType(DataType::value type) {
 	dataType = type;
 }
@@ -458,13 +479,12 @@ void Event::setPassesMuonQCDSelection( bool passesMuonQCDSelection ) {
 }
 
 void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelections ) {
-	if ( passSelections.size() > 1 ) {
-		for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
-			if ( passSelections[selection] != 2 && passSelections[selection] != 4 )
-				cout << selection << " " << passSelections[selection] << endl;
-		}
-
-	}
+	// if ( passSelections.size() > 1 ) {
+	// 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
+	// 		if ( passSelections[selection] != 2 && passSelections[selection] != 4 )
+	// 			cout << selection << " " << passSelections[selection] << endl;
+	// 	}
+	// }
 
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
 		SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(passSelections[selection]);
