@@ -63,6 +63,9 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
 		treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
 	}
+
+	treeMan_->Fill("NJets", jets.size() );
+	treeMan_->Fill("NBJets", bjets.size() );
 }
 
 void UnfoldingRecoAnalyser::createTrees() {
@@ -75,6 +78,9 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("ST", "F", "Unfolding");
 	treeMan_->addBranch("WPT", "F", "Unfolding");
 	treeMan_->addBranch("MT", "F", "Unfolding");
+
+	treeMan_->addBranch("NJets", "F", "Unfolding");
+	treeMan_->addBranch("NBJets", "F", "Unfolding");
 
 	treeMan_->addBranch("lepTopPt", "F", "Unfolding");
 	treeMan_->addBranch("hadTopPt", "F", "Unfolding");
