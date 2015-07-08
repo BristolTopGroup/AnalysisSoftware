@@ -10,8 +10,8 @@ echo "I got the following parameters: $@"
 # source CMSSW env
 . $VO_CMS_SW_DIR/cmsset_default.sh
 # get CMSSW
-scramv1 project CMSSW CMSSW_7_4_0_pre7
-cd CMSSW_7_4_0_pre7/src/
+scramv1 project CMSSW CMSSW_7_4_5
+cd CMSSW_7_4_5/src/
 eval `scramv1 runtime -sh`
 # get analysis software
 tar -xf ../../Analysis.tar
