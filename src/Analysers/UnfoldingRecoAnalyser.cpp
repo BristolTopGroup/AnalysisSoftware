@@ -39,6 +39,7 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	METAlgorithm::value metType = (METAlgorithm::value) 0;
 	const METPointer met(event->MET(metType));
 
+	treeMan_->Fill("EventWeight", event->weight());
 	treeMan_->Fill("MET",met->et());
 	treeMan_->Fill("HT",Event::HT(jets));
 	treeMan_->Fill("ST",Event::ST(jets,signalLepton,met));
@@ -66,7 +67,14 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 
 	treeMan_->Fill("NJets", jets.size() );
 	treeMan_->Fill("NBJets", bjets.size() );
+
+	double centralLHEWeight = event->centralLHEWeight();
+	for ( unsigned int unc_i = 0; unc_i < event->generatorSystematicWeights().size(); ++unc_i ) {
+		double weight = event->generatorSystematicWeights().at( unc_i );
+		treeMan_->Fill("generatorSystematicWeight", weight/centralLHEWeight);
+	}
 }
+
 
 void UnfoldingRecoAnalyser::createTrees() {
 
@@ -95,6 +103,8 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->addBranch("bPt", "F", "Unfolding", false);
 	treeMan_->addBranch("bEta", "F", "Unfolding", false);
+
+	treeMan_->addBranch("generatorSystematicWeight", "F", "Unfolding", false);
 }
 
 void UnfoldingRecoAnalyser::createHistograms() {
