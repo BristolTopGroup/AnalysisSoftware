@@ -92,7 +92,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		// MET Uncertainties
 		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			treeMan_->Fill("MET_Uncertainties",MET_main->getMETForUncertainty( unc_i ));
+			double METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+			treeMan_->Fill("MET_METUncertainties",METForUnc_i);
+			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalElectron, METForUnc_i));
 		}
 
 		// metAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -259,7 +261,9 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		// MET Uncertainties
 		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			treeMan_->Fill("MET_Uncertainties",MET_main->getMETForUncertainty( unc_i ));
+			double METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+			treeMan_->Fill("MET_METUncertainties",METForUnc_i);
+			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalElectron, METForUnc_i));
 		}
 
 		qcdNonIsoElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
@@ -368,7 +372,9 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		// MET Uncertainties
 		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			treeMan_->Fill("MET_Uncertainties",MET_main->getMETForUncertainty( unc_i ));
+			double METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+			treeMan_->Fill("MET_METUncertainties",METForUnc_i);
+			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalElectron, METForUnc_i));
 		}
 
 		qcdConversionsElectronAnalyser_->setScale(bjetWeight * efficiencyCorrection);
@@ -487,7 +493,9 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		// MET Uncertainties
 		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			treeMan_->Fill("MET_Uncertainties",MET_main->getMETForUncertainty( unc_i ));
+			double METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+			treeMan_->Fill("MET_METUncertainties",METForUnc_i);
+			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalMuon, METForUnc_i));
 		}
 
 		metAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
@@ -622,7 +630,9 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 		// MET Uncertainties
 		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			treeMan_->Fill("MET_Uncertainties",MET_main->getMETForUncertainty( unc_i ));
+			double METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+			treeMan_->Fill("MET_METUncertainties",METForUnc_i);
+			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalMuon, METForUnc_i));
 		}
 
 		qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
@@ -687,8 +697,9 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_Uncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("absolute_eta", "F", "FitVariables" + Globals::treePrefix_);
@@ -710,8 +721,9 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_Uncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("absolute_eta", "F", "FitVariables" + Globals::treePrefix_);
@@ -733,8 +745,9 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_Uncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("absolute_eta", "F", "FitVariables" + Globals::treePrefix_);
@@ -756,8 +769,9 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_Uncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("absolute_eta", "F", "FitVariables" + Globals::treePrefix_);
@@ -779,8 +793,9 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_Uncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("absolute_eta", "F", "FitVariables" + Globals::treePrefix_);
