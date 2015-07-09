@@ -54,7 +54,8 @@ NTupleEventReader::NTupleEventReader() :
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
 		generatorWeightReader_(new VariableReader<double>(input, "Event.generatorWeight")), //
-		PDFWeightsReader(new VariableReader<MultiDoublePointer>(input, "Event.PDFWeights")), //
+		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
+		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
 		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
 		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
@@ -177,6 +178,10 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	// 	}
 
 		currentEvent->setGeneratorWeight( generatorWeightReader_->getVariable() );
+
+		currentEvent->setGeneratorSystematicWeights( *systematicWeightsReader_->getVariable() );
+
+		currentEvent->setCentralLHEWeight( centralLHEWeightReader_->getVariable() );
 	}
 
 	// Get and set the cleaned jets for this event
@@ -319,9 +324,10 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		lumiBlockReader->initialise();
 
 		generatorWeightReader_->initialise();
+		systematicWeightsReader_->initialise();
+		centralLHEWeightReader_->initialise();
 
 		if (Globals::NTupleVersion >= 6) { //MC only info!
-			PDFWeightsReader->initialiseBlindly();
 			PileupInfoReader->initialiseBlindly();
 			TruePileupInfoReader->initialiseBlindly();
 			PUWeightInTimeOnly_->initialiseBlindly();

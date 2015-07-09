@@ -67,7 +67,7 @@ Event::Event() : //
 		genNumberOfPileUpVertices(0), //
 		trueNumberOfPileUpVertices_(0), //
 		generatorWeight_(1), //
-		pdfWeights(), //
+		generatorSystematicWeights_(), //
 		ptdensityRho(0.), //
 		file_(""), //
 		passesCSCTightBeamHaloFilter_(false), //
@@ -758,12 +758,20 @@ const double Event::generatorWeight() const {
 	return generatorWeight_;
 }
 
-void Event::setPDFWeights(std::vector<double> pdfWeights) {
-	this->pdfWeights = pdfWeights;
+void Event::setCentralLHEWeight( double centralLHEWeight ) {
+	centralLHEWeight_ = centralLHEWeight;
 }
 
-const std::vector<double> Event::PDFWeights() const {
-	return pdfWeights;
+const double Event::centralLHEWeight() const {
+	return centralLHEWeight_;
+}
+
+void Event::setGeneratorSystematicWeights(std::vector<double> generatorSystematicWeights) {
+	generatorSystematicWeights_ = generatorSystematicWeights;
+}
+
+const std::vector<double> Event::generatorSystematicWeights() const {
+	return generatorSystematicWeights_;
 }
 
 const std::vector<int> Event::GeneratedPileUpVertices() const {
