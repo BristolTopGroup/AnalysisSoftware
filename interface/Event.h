@@ -274,6 +274,7 @@ public:
 	static double M_bl(const JetCollection, const ParticlePointer);
 	static double angle_bl(const JetCollection, const ParticlePointer);
 	static double ST(const JetCollection, const ParticlePointer, const METPointer);
+	static double ST(const JetCollection, const ParticlePointer, const double MET);
 	static double MT(const ParticlePointer, const METPointer);
 	static double WPT(const ParticlePointer, const METPointer);
 
