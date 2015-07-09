@@ -963,6 +963,15 @@ double Event::ST(const JetCollection jets, const ParticlePointer lepton, const M
 	return ht + MET + lpt;
 }
 
+// Temporary function until new version of ntuples!
+double Event::ST(const JetCollection jets, const ParticlePointer lepton, const double MET) {
+	// ST = HT + MET + lepton pt
+	double ht = Event::HT(jets);
+	double lpt = lepton == 0 ? 0 : lepton->pt();
+
+	return ht + MET + lpt;
+}
+
 double Event::MT(const ParticlePointer particle, const METPointer met) {
 	double energySquared = pow(particle->et() + met->et(), 2);
 	double momentumSquared = pow(particle->px() + met->px(), 2) + pow(particle->py() + met->py(), 2);
