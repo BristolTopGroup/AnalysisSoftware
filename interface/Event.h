@@ -104,7 +104,8 @@ protected:
 	std::vector<int> genNumberOfPileUpVertices;
 	std::vector<int> trueNumberOfPileUpVertices_;
 	double generatorWeight_;
-	std::vector<double> pdfWeights;
+	double centralLHEWeight_;
+	std::vector<double> generatorSystematicWeights_;
 
 	double ptdensityRho;
 	std::string file_;
@@ -165,7 +166,8 @@ public:
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
 	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
 	void setGeneratorWeight( double generatorWeight );
-	void setPDFWeights(std::vector<double> pdfWeights);
+	void setCentralLHEWeight( double centralLHEWeight );
+	void setGeneratorSystematicWeights( std::vector<double> generatorSystematicWeights );
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
 	void setPUWeight3BX(double puweight);
@@ -243,7 +245,8 @@ public:
 
 	const std::vector<int> GeneratedPileUpVertices() const;
 	const double generatorWeight() const;
-	const std::vector<double> PDFWeights() const;
+	const double centralLHEWeight() const;
+	const std::vector<double> generatorSystematicWeights() const;
 	double averageNumberOfVertices() const;
 	double inTimeOnlyNumberOfVertices() const;
 	double rho() const;
