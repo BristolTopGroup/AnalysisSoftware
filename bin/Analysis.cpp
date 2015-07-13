@@ -111,11 +111,10 @@ void Analysis::initiateEvent() {
 
 	//top pt weight
 	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
+		double topPtweight = 1.;
+		topPtweight = weights->reweightTopPt(currentEvent);
 
-	double topPtweight = 1.;
-	topPtweight = weights->reweightTopPt(currentEvent);
-
-	weight *= topPtweight;
+		weight *= topPtweight;
 	}
 
 	// include generator weight
