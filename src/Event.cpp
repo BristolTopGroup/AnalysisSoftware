@@ -99,11 +99,13 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_amcatnloFXFX ||
 		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_PowhegPythia8 ||
-		type == DataType::TTJets_PowhegPythia8_scaleDown ||
-		type == DataType::TTJets_PowhegPythia8_scaleUp ||
+		type == DataType::TTJets_PowhegPythia8_scaledown ||
+		type == DataType::TTJets_PowhegPythia8_scaleup ||
+		type == DataType::TTJets_PowhegPythia8_mtop1695 ||
+		type == DataType::TTJets_PowhegPythia8_mtop1755 ||
 		type == DataType::TTJets_amcatnloFXFX ||
-		type == DataType::TTJets_amcatnloFXFX_scaleDown ||
-		type == DataType::TTJets_amcatnloFXFX_scaleUp ||
+		type == DataType::TTJets_amcatnloFXFX_scaledown ||
+		type == DataType::TTJets_amcatnloFXFX_scaleup ||
 		type == DataType::TTJets_amcatnloFXFX_mtop1695 ||
 		type == DataType::TTJets_amcatnloFXFX_mtop1755 ||
 		type == DataType::TTJets_madgraphMLM ||
