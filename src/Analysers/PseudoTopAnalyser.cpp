@@ -15,14 +15,14 @@ using namespace std;
 namespace BAT {
 
 double const PseudoTopAnalyser::minLeptonPt_ = 30;
-double const PseudoTopAnalyser::maxLeptonAbsEta_ = 2.4;
+double const PseudoTopAnalyser::maxLeptonAbsEta_ = 2.1;
 double const PseudoTopAnalyser::minVetoLeptonPt_ = 15;
-double const PseudoTopAnalyser::maxVetoLeptonAbsEta_ = 2.5;
+double const PseudoTopAnalyser::maxVetoLeptonAbsEta_ = 2.1;
 double const PseudoTopAnalyser::minNeutrinoSumPt_ = 30;
 double const PseudoTopAnalyser::minWMt_ = 30;
 unsigned int const PseudoTopAnalyser::minNJets_ = 4;
 unsigned int const PseudoTopAnalyser::minNBJets_ = 2;
-double const PseudoTopAnalyser::minJetPt_ = 30;
+double const PseudoTopAnalyser::minJetPt_ = 25;
 double const PseudoTopAnalyser::maxJetAbsEta_ = 2.4;
 
 void PseudoTopAnalyser::analyse(const EventPtr event) {
