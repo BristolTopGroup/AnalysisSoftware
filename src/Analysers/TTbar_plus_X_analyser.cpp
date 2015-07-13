@@ -40,9 +40,10 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		// double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
-		double electronEfficiencyCorrection = 1, electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
+		// double electronEfficiencyCorrection = 1;
+		double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
 		if ( !event->isRealData() ) {
-			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
+			// electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
 			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
 			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
 		}
@@ -57,7 +58,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
-		treeMan_->Fill("EventWeight", event->weight() * electronEfficiencyCorrection);
+		treeMan_->Fill("EventWeight", event->weight());
 		treeMan_->Fill("absolute_eta",fabs(signalElectron->eta()));
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
@@ -223,9 +224,10 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 		double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()) * hadronTriggerLegCorrection;
-		double electronEfficiencyCorrection = 1, electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
+		// double electronEfficiencyCorrection = 1, 
+		double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
 		if ( !event->isRealData() ) {
-			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
+			// electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
 			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
 			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
 		}
@@ -235,7 +237,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
-		treeMan_->Fill("EventWeight", event->weight() * electronEfficiencyCorrection);
+		treeMan_->Fill("EventWeight", event->weight());
 		treeMan_->Fill("absolute_eta",fabs(signalElectron->eta()));
 		treeMan_->Fill("M3",Event::M3(jets));
 		treeMan_->Fill("HT",Event::HT(jets));
@@ -335,9 +337,10 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 		double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber()) * hadronTriggerLegCorrection;
-		double electronEfficiencyCorrection = 1, electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
+		// double electronEfficiencyCorrection = 1;
+		double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
 		if ( !event->isRealData() ) {
-			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
+			// electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
 			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
 			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
 		}
@@ -346,7 +349,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
-		treeMan_->Fill("EventWeight", event->weight() * electronEfficiencyCorrection);
+		treeMan_->Fill("EventWeight", event->weight() );
 		treeMan_->Fill("absolute_eta",fabs(signalElectron->eta()));
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
@@ -451,9 +454,10 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
 
-		double muonEfficiencyCorrection = 1, muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
+		// double muonEfficiencyCorrection = 1;
+		double muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
 		if ( !event->isRealData() ) {
-			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
+			// muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
 			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
 			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
 		}
@@ -467,7 +471,7 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
-		treeMan_->Fill("EventWeight", event->weight() * muonEfficiencyCorrection);
+		treeMan_->Fill("EventWeight", event->weight() );
 		treeMan_->Fill("absolute_eta",fabs(signalMuon->eta()));
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
@@ -596,9 +600,10 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		double efficiencyCorrection = 1.;//event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection(true, Globals::MuonScaleFactorSystematic, event->runnumber());
 
-		double muonEfficiencyCorrection = 1, muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
+		// double muonEfficiencyCorrection = 1;
+		double muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
 		if ( !event->isRealData() ) {
-			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
+			// muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
 			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
 			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
 		}
@@ -606,7 +611,7 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
-		treeMan_->Fill("EventWeight", event->weight() * muonEfficiencyCorrection);
+		treeMan_->Fill("EventWeight", event->weight() );
 		treeMan_->Fill("absolute_eta",fabs(signalMuon->eta()));
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
