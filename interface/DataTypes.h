@@ -19,12 +19,14 @@ enum value {
 	SingleMu,
 
 	TTJets_PowhegPythia8,
-	TTJets_PowhegPythia8_scaleDown,
-	TTJets_PowhegPythia8_scaleUp,
+	TTJets_PowhegPythia8_scaledown,
+	TTJets_PowhegPythia8_scaleup,
+	TTJets_PowhegPythia8_mtop1695,
+	TTJets_PowhegPythia8_mtop1755,
 
 	TTJets_amcatnloFXFX,
-	TTJets_amcatnloFXFX_scaleDown,
-	TTJets_amcatnloFXFX_scaleUp,
+	TTJets_amcatnloFXFX_scaledown,
+	TTJets_amcatnloFXFX_scaleup,
 	TTJets_amcatnloFXFX_mtop1695,
 	TTJets_amcatnloFXFX_mtop1755,
 
@@ -77,12 +79,14 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"SingleMu",//
 
 		"TTJets_PowhegPythia8",
-		"TTJets_PowhegPythia8_scaleDown",
-		"TTJets_PowhegPythia8_scaleUp",
+		"TTJets_PowhegPythia8_scaledown",
+		"TTJets_PowhegPythia8_scaleup",
+		"TTJets_PowhegPythia8_mtop1695",
+		"TTJets_PowhegPythia8_mtop1755",
 
 		"TTJets_amcatnloFXFX",
-		"TTJets_amcatnloFXFX_scaleDown",
-		"TTJets_amcatnloFXFX_scaleUp",
+		"TTJets_amcatnloFXFX_scaledown",
+		"TTJets_amcatnloFXFX_scaleup",
 		"TTJets_amcatnloFXFX_mtop1695",
 		"TTJets_amcatnloFXFX_mtop1755",
 
