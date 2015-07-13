@@ -119,12 +119,14 @@ mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v21/'
 data_path_13TeV = ''
 datasets_13TeV = {
             'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
-            # 'TTJets_PowhegPythia8_scaleDown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],
-            'TTJets_PowhegPythia8_scaleUp' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaleup' ],
+            'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],
+            'TTJets_PowhegPythia8_scaleup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaleup' ],
+            'TTJets_PowhegPythia8_mtop1695' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695' ],
+            'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755' ],
             
             'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX' ],
-            'TTJets_amcatnloFXFX_scaleDown' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaledown' ],
-            'TTJets_amcatnloFXFX_scaleUp' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaleup' ],
+            'TTJets_amcatnloFXFX_scaledown' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaledown' ],
+            'TTJets_amcatnloFXFX_scaleup' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaleup' ],
             'TTJets_amcatnloFXFX_mtop1695' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1695' ],
             'TTJets_amcatnloFXFX_mtop1755' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1755' ],
             
