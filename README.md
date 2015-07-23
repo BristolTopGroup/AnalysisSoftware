@@ -41,11 +41,10 @@ nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 To setup the code using CMSSW:
 
 ```
-# on soolin (and other scientific linux 6 machines)
-export SCRAM_ARCH=slc6_amd64_gcc491
+. /cvmfs/cms.cern.ch//cmsset_default.sh
 # This version comes with ROOT 6.02/05
-scram p -n CMSSW_7_5_0_pre5_AS CMSSW_7_5_0_pre5
-cd CMSSW_7_5_0_pre4_AS/src/
+scram p -n CMSSW_7_5_0_AS CMSSW_7_5_0
+cd CMSSW_7_5_0_AS/src/
 cmsenv
 # initialise CMS git
 git cms-init
@@ -68,6 +67,21 @@ hash -r #or rehash in case that BAT cannot be found
 nohup BAT BristolAnalysis/Tools/python/test_cfg.py &> test.log &
 ```
 
+## CLHEP
+This is not needed for CMSSW setup
+```
+mkdir /software
+cd /software
+wget http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/clhep-2.2.0.8.tgz
+tar xzf clhep-2.2.0.8.tgz
+mkdir /software/2.2.0.8/build
+cd /software/2.2.0.8/build
+cmake /software/2.2.0.8/CLHEP
+make jobs=2
+make install
+```
+
+
 ## Eclipse
 If you want like to use Eclipse for the development of the code, initial
 project files are provided in the ```eclipse/``` folder. You can copy them into
@@ -85,6 +99,66 @@ You should import it ```under Preferences->C/C++->Code Style->Formatter```
 
 # Notes
 More information can be found at [Bristol Analysis Tools twiki page](https://twiki.cern.ch/twiki/bin/view/CMS/BristolAnalysisTools)
+
+## Special notes for OS X users
+### boost & boost-python
+Install boost and boost python using [homebrew](http://brew.sh/):
+```
+brew install boost boost-python --c++11
+```
+
+
+### Python header issue
+You might find yourself running into a compilation problem as described in issue #115.
+The solution is to replace (in ```/System/Library/Frameworks/Python.framework/Headers/pyport.h```)
+```
+#undef isalnum
+#define isalnum(c) iswalnum(btowc(c))
+#ifdef isalpha
+#define isalpha(c) iswalpha(btowc(c))
+#undef islower
+#define islower(c) iswlower(btowc(c))
+#undef isspace
+#define isspace(c) iswspace(btowc(c))
+#undef isupper
+#define isupper(c) iswupper(btowc(c))
+#undef tolower
+#define tolower(c) towlower(btowc(c))
+#undef toupper
+#define toupper(c) towupper(btowc(c))
+```
+with
+```
+#ifdef isalnum
+#undef isalnum
+#define isalnum(c) iswalnum(btowc(c))
+#endif
+#ifdef isalpha
+#undef isalpha
+#define isalpha(c) iswalpha(btowc(c))
+#endif
+#ifdef islower
+#undef islower
+#define islower(c) iswlower(btowc(c))
+#endif
+#ifdef isspace
+#undef isspace
+#define isspace(c) iswspace(btowc(c))
+#endif
+#ifdef isupper
+#undef isupper
+#define isupper(c) iswupper(btowc(c))
+#endif
+#ifdef tolower
+#undef tolower
+#define tolower(c) towlower(btowc(c))
+#endif
+#ifdef toupper
+#undef toupper
+#define toupper(c) towupper(btowc(c))
+#endif
+```
+(from https://codereview.appspot.com/179049/patch/1/2)
 
 ## HTCondor
 Once the software is set up one can use HTCondor to submit jobs to a cluster.
