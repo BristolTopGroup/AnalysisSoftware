@@ -17,6 +17,7 @@
 #include "WAnalyser.h"
 #include "HitFitAnalyser.h"
 #include "LikelihoodRecoAnalyser.h"
+#include "DougsBTagEffAnalyser.h"
 
 #include "Binned_variable_analyser.h"
 
@@ -148,6 +149,10 @@ private:
 	// Likelihood ttbar reco analyser
 	LikelihoodRecoAnalyserLocalPtr likelihoodRecoAnalyserEPlusJetsRefSelection_;
 	LikelihoodRecoAnalyserLocalPtr likelihoodRecoAnalyserMuPlusJetsRefSelection_;
+
+	// BTag Efficiency
+	BTagEffAnalyserLocalPtr BTagEffAnalyserEPlusJetsRefSelection_;
+	BTagEffAnalyserLocalPtr BTagEffAnalyserMuPlusJetsRefSelection_;
 
 	// variable definitions
 	std::vector<Variable> electron_variables_, muon_variables_;
