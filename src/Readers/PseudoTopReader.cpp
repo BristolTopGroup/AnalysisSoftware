@@ -233,28 +233,28 @@ void PseudoTopReader::readPseudoTopParticles() {
 
 
 void PseudoTopReader::initialise() {
-    pseudoTop_pdgIdReader_.initialise();
-    pseudoTop_energyReader_.initialise();
-    pseudoTop_pxReader_.initialise();
-    pseudoTop_pyReader_.initialise();
-    pseudoTop_pzReader_.initialise();
+    pseudoTop_pdgIdReader_.initialiseBlindly();
+    pseudoTop_energyReader_.initialiseBlindly();
+    pseudoTop_pxReader_.initialiseBlindly();
+    pseudoTop_pyReader_.initialiseBlindly();
+    pseudoTop_pzReader_.initialiseBlindly();
 
-    pseudoTop_neutrino_pdgIdReader_.initialise();
-    pseudoTop_neutrino_energyReader_.initialise();
-    pseudoTop_neutrino_pxReader_.initialise();
-    pseudoTop_neutrino_pyReader_.initialise();
-    pseudoTop_neutrino_pzReader_.initialise();
+    pseudoTop_neutrino_pdgIdReader_.initialiseBlindly();
+    pseudoTop_neutrino_energyReader_.initialiseBlindly();
+    pseudoTop_neutrino_pxReader_.initialiseBlindly();
+    pseudoTop_neutrino_pyReader_.initialiseBlindly();
+    pseudoTop_neutrino_pzReader_.initialiseBlindly();
 
-    pseudoTop_jet_energyReader_.initialise();
-    pseudoTop_jet_pxReader_.initialise();
-    pseudoTop_jet_pyReader_.initialise();
-    pseudoTop_jet_pzReader_.initialise();
-    pseudoTop_jet_pdgIdReader_.initialise();
+    pseudoTop_jet_energyReader_.initialiseBlindly();
+    pseudoTop_jet_pxReader_.initialiseBlindly();
+    pseudoTop_jet_pyReader_.initialiseBlindly();
+    pseudoTop_jet_pzReader_.initialiseBlindly();
+    pseudoTop_jet_pdgIdReader_.initialiseBlindly();
     
-    pseudoTop_lepton_energyReader_.initialise();
-    pseudoTop_lepton_pxReader_.initialise();
-    pseudoTop_lepton_pyReader_.initialise();
-    pseudoTop_lepton_pzReader_.initialise();
+    pseudoTop_lepton_energyReader_.initialiseBlindly();
+    pseudoTop_lepton_pxReader_.initialiseBlindly();
+    pseudoTop_lepton_pyReader_.initialiseBlindly();
+    pseudoTop_lepton_pzReader_.initialiseBlindly();
 }
 
 }
