@@ -260,7 +260,7 @@ const bool Event::PassesElectronTriggerAndSelection() const {
 }
 
 const bool Event::PassesElectronTriggerAndQCDSelection() const {
-	if ( passesElectronQCDSelection_ && passesElectronChannelTrigger_ ) {
+	if ( passesElectronQCDSelection_ && passesElectronChannelQCDTrigger_ ) {
 		return true;
 	}
 
@@ -268,7 +268,7 @@ const bool Event::PassesElectronTriggerAndQCDSelection() const {
 }
 
 const bool Event::PassesElectronTriggerAndConversionSelection() const {
-	if ( passesElectronConversionSelection_ && passesElectronChannelTrigger_ ) {
+	if ( passesElectronConversionSelection_ && passesElectronChannelQCDTrigger_ ) {
 		return true;
 	}
 
@@ -276,7 +276,7 @@ const bool Event::PassesElectronTriggerAndConversionSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelection() const {
-	if ( passesMuonSelection_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonSelection_ && passesMuonChannelQCDTrigger_ ) {
 		return true;
 	}
 
@@ -457,8 +457,16 @@ void Event::setPassesElectronChannelTrigger( bool passesTrigger ) {
 	passesElectronChannelTrigger_ = passesTrigger;
 }
 
+void Event::setPassesElectronChannelQCDTrigger( bool passesTrigger ) {
+	passesElectronChannelQCDTrigger_ = passesTrigger;
+}
+
 void Event::setPassesMuonChannelTrigger( bool passesTrigger ) {
 	passesMuonChannelTrigger_ = passesTrigger;
+}
+
+void Event::setPassesMuonChannelQCDTrigger( bool passesTrigger ) {
+	passesMuonChannelQCDTrigger_ = passesTrigger;
 }
 
 void Event::setPassesElectronSelection( bool passesElectronSelection ) {

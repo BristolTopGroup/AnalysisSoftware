@@ -41,6 +41,8 @@ NTupleEventReader::NTupleEventReader() :
 		// metCorrReaders(), //
 		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPTightGsf.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1.Fired")),
+		passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75GsfMC.Fired")),
+		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1MC.Fired")),
 
 		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
 		passesGenSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesGenSelection")),
@@ -144,10 +146,16 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	if (currentEvent->isRealData()) {
 		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelTriggerReader->getVariable() );
+
 	}
 	else {
 		currentEvent->setPassesElectronChannelTrigger( true );
 		currentEvent->setPassesMuonChannelTrigger( true );
+
+		currentEvent->setPassesElectronChannelQCDTrigger( true );
+		currentEvent->setPassesMuonChannelQCDTrigger( true );
 	}
 
 	// Set info that depends on selection criteria e.g. cleaned jets
@@ -306,15 +314,15 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			trackReader->initialise();
 		electronReader->initialise();
 		genParticleReader->initialise();
-		cout << "Initiating pseudo top" << endl;
 		pseudoTopReader->initialise();
-		cout << "Done" << endl;
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
 
 		passesElectronChannelTriggerReader->initialiseBlindly();
 		passesMuonChannelTriggerReader->initialiseBlindly();
+		passesElectronChannelQCDTriggerReader->initialiseBlindly();
+		passesMuonChannelQCDTriggerReader->initialiseBlindly();
 
 		passesOfflineSelectionReader->initialise();
 		passesGenSelectionReader->initialise();

@@ -86,6 +86,8 @@ private:
 
 	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelTriggerReader;
+	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelQCDTriggerReader;
+	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelQCDTriggerReader;
 
 	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesOfflineSelectionReader;
 	boost::scoped_ptr<VariableReader<MultiUIntPointer> > passesGenSelectionReader;

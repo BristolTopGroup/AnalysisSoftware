@@ -60,7 +60,9 @@ protected:
 	MuonCollection allMuons;
 
 	bool passesElectronChannelTrigger_;
+	bool passesElectronChannelQCDTrigger_;
 	bool passesMuonChannelTrigger_;
+	bool passesMuonChannelQCDTrigger_;
 
 	bool passesElectronSelection_;
 	bool passesElectronQCDSelection_;
@@ -131,7 +133,9 @@ public:
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
 	void setPassesElectronChannelTrigger( bool passesTrigger );
+	void setPassesElectronChannelQCDTrigger( bool passesTrigger );
 	void setPassesMuonChannelTrigger( bool passesTrigger );
+	void setPassesMuonChannelQCDTrigger( bool passesTrigger );
 	void setPassesElectronSelection(bool passesElectronSelection);
 	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
 	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
