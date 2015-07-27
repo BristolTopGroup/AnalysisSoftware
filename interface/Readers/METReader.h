@@ -28,6 +28,9 @@ private:
 	VariableReader<MultiDoublePointer> multiEyReader;
 	VariableReader<double> significanceReader;
 	VariableReader<MultiDoublePointer> shiftedMETReader;
+	VariableReader<MultiDoublePointer> shiftedMET_Px_Reader;
+	VariableReader<MultiDoublePointer> shiftedMET_Py_Reader;
+
 	METPointer met;
 	METAlgorithm::value usedAlgorithm;
 	void readMET(double corrx, double corry);
