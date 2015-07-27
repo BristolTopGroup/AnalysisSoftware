@@ -39,7 +39,7 @@ NTupleEventReader::NTupleEventReader() :
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75Gsf.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPTightGsf.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1.Fired")),
 
 		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
@@ -98,6 +98,7 @@ NTupleEventReader::~NTupleEventReader() {
 }
 
 void NTupleEventReader::addInputFile(const TString fileName) {
+	cout << fileName << endl;
 	unsigned long filesAdded = input->Add(fileName, -1); //-1 == number of events is not read!
 	if (filesAdded <= 0)
 		throw NoFileFoundException("No file found in '" + TString(fileName) + "'");
@@ -140,10 +141,14 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
 
-	// currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
-	// currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
-	currentEvent->setPassesElectronChannelTrigger( true );
-	currentEvent->setPassesMuonChannelTrigger( true );
+	if (currentEvent->isRealData()) {
+		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+	}
+	else {
+		currentEvent->setPassesElectronChannelTrigger( true );
+		currentEvent->setPassesMuonChannelTrigger( true );
+	}
 
 	// Set info that depends on selection criteria e.g. cleaned jets
 	// Must do this before setPassOfflineSelectionInfo, as this selects on the cleaned jets
@@ -301,13 +306,15 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 			trackReader->initialise();
 		electronReader->initialise();
 		genParticleReader->initialise();
+		cout << "Initiating pseudo top" << endl;
 		pseudoTopReader->initialise();
+		cout << "Done" << endl;
 		jetReader->initialise();
 		genJetReader->initialise();
 		muonReader->initialise();
 
-		passesElectronChannelTriggerReader->initialise();
-		passesMuonChannelTriggerReader->initialise();
+		passesElectronChannelTriggerReader->initialiseBlindly();
+		passesMuonChannelTriggerReader->initialiseBlindly();
 
 		passesOfflineSelectionReader->initialise();
 		passesGenSelectionReader->initialise();
