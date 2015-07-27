@@ -18,12 +18,12 @@ namespace BAT {
 bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = true;
 
-double const Event::minJetPt_ = 30;
+double const Event::minJetPt_ = 25;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
-double const Event::minSignalMuonPt_ = 26;
-double const Event::minSignalElectronPt_ = 34;
+double const Event::minSignalMuonPt_ = 30;
+double const Event::minSignalElectronPt_ = 30;
 
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
@@ -87,7 +87,7 @@ Event::~Event() {
 
 bool Event::isRealData() const {
 	return dataType == DataType::ElectronHad || dataType == DataType::MuHad || dataType == DataType::SingleElectron
-			|| dataType == DataType::SingleMu;
+			|| dataType == DataType::SingleMuon;
 }
 
 const DataType::value Event::getDataType() const {
@@ -501,6 +501,9 @@ void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelection
 }
 
 const bool Event::passesJetSelection( const unsigned int selection ) {
+
+	SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(selection);
+
 	const JetCollection jets = getCleanedJets( selection );
 	unsigned int nJetPass = 0;
 	for ( unsigned int jetIndex = 0; jetIndex < jets.size(); ++jetIndex ) {
@@ -508,7 +511,13 @@ const bool Event::passesJetSelection( const unsigned int selection ) {
 		if ( jet->pt() >= minJetPt_ ) ++nJetPass;
 	}
 
-	if ( nJetPass < minNJets_ ) return false;
+	if ( selectionCriteria == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+		if ( nJetPass < 3 ) return false;
+	}
+	else {
+		if ( nJetPass < minNJets_ ) return false;
+	}
+
 
 	const JetCollection bjets = getCleanedBJets( selection );
 	unsigned int nBJetPass = 0;
@@ -517,7 +526,14 @@ const bool Event::passesJetSelection( const unsigned int selection ) {
 		if ( bjet->pt() >= minJetPt_ ) ++nBJetPass;
 	}
 
-	if ( nBJetPass < minNBJets_ ) return false;
+	if ( selectionCriteria == SelectionCriteria::ElectronPlusJetsReference ||
+		 selectionCriteria == SelectionCriteria::MuonPlusJetsReference ) {
+		if ( nBJetPass < minNBJets_ ) return false;		
+	}
+	else {
+		if ( nBJetPass != 0 ) return false;
+	}
+
 
 	return true;
 }
@@ -950,7 +966,7 @@ double Event::HT(const JetCollection jets) {
 	double ht(0);
 	//Take ALL the jets!
 	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if(jets.at(index)->pt() > 30)
+		if(jets.at(index)->pt() > 25)
 			ht += jets.at(index)->pt();
 	}
 	return ht;
@@ -960,15 +976,6 @@ double Event::ST(const JetCollection jets, const ParticlePointer lepton, const M
 	// ST = HT + MET + lepton pt
 	double ht = Event::HT(jets);
 	double MET = met == 0 ? 0 : met->et();
-	double lpt = lepton == 0 ? 0 : lepton->pt();
-
-	return ht + MET + lpt;
-}
-
-// Temporary function until new version of ntuples!
-double Event::ST(const JetCollection jets, const ParticlePointer lepton, const double MET) {
-	// ST = HT + MET + lepton pt
-	double ht = Event::HT(jets);
 	double lpt = lepton == 0 ? 0 : lepton->pt();
 
 	return ht + MET + lpt;
@@ -1000,9 +1007,9 @@ double Event::M3(const JetCollection jets) {
 					++index2) {
 				for (unsigned int index3 = index2 + 1; index3 < jets.size();
 						++index3) {
-					if ( jets.at(index1)->pt() <= 30 ||
-						 jets.at(index2)->pt() <= 30 ||
-						 jets.at(index3)->pt() <= 30 )
+					if ( jets.at(index1)->pt() <= 25 ||
+						 jets.at(index2)->pt() <= 25 ||
+						 jets.at(index3)->pt() <= 25 )
 						continue;
 					FourVector m3Vector(
 							jets.at(index1)->getFourVector()
@@ -1027,14 +1034,18 @@ double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton) {
 		// store the jets as particle pointers
 		ParticleCollection particles;
 		for (unsigned int i = 0; i < b_jets.size(); ++i) {
-			if ( b_jets.at(i)->pt() <= 30 ) continue;
+			if ( b_jets.at(i)->pt() <= 25 ) continue;
 			particles.push_back(b_jets.at(i));
 		}
-		// find closest b_jet
-		unsigned short closest_b_jet_index = lepton->getClosest(particles);
-		JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
-		ParticlePointer pseudo_particle(new Particle(*closest_b_jet + *lepton));
-		m_bl = pseudo_particle->mass();
+
+		if ( particles.size() > 0 ) {
+
+			// find closest b_jet
+			unsigned short closest_b_jet_index = lepton->getClosest(particles);
+			JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
+			ParticlePointer pseudo_particle(new Particle(*closest_b_jet + *lepton));
+			m_bl = pseudo_particle->mass();
+		}
 	}
 	return m_bl;
 }
@@ -1046,13 +1057,17 @@ double Event::angle_bl(const JetCollection b_jets,
 		// store the jets as particle pointers
 		ParticleCollection particles;
 		for (unsigned int i = 0; i < b_jets.size(); ++i) {
-			if ( b_jets.at(i)->pt() <= 30 ) continue;
+			if ( b_jets.at(i)->pt() <= 25 ) continue;
 			particles.push_back(b_jets.at(i));
 		}
-		// find closest b_jet
-		unsigned short closest_b_jet_index = lepton->getClosest(particles);
-		JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
-		angle = lepton->angle(closest_b_jet);
+
+		if ( particles.size() > 0 ) {
+
+			// find closest b_jet
+			unsigned short closest_b_jet_index = lepton->getClosest(particles);
+			JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
+			angle = lepton->angle(closest_b_jet);
+		}
 	}
 	return angle;
 }
