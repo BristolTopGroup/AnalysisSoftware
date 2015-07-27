@@ -25,8 +25,9 @@ void JetAnalyser::analyse(const EventPtr event) {
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
 
-		++numberOfJets;
+		if (jet->pt() < 25 ) continue;
 
+		++numberOfJets;
 		if (index < 5) {
 			stringstream temp;
 			temp << "jet" << (index + 1);
@@ -45,15 +46,17 @@ void JetAnalyser::analyse(const EventPtr event) {
 	for (unsigned int index = 0; index < bjets.size(); ++index) {
 		const JetPointer bJet(bjets.at(index));
 
+		if ( bJet->pt() < 25 ) continue;
+
 		treeMan_->Fill("bjet_pt", bJet->pt());
 		treeMan_->Fill("bjet_eta", bJet->eta());
 		treeMan_->Fill("bjet_phi", bJet->phi());
 	}
 
-	if ( numberOfJets < 4 ) {
-		cout << "Fewer than 4 good cleaned jets with pt > 25 GeV : " << numberOfJets << endl;
-		cout << numberOfJets << " " << numberOfBJets << endl;
-	}
+	// if ( numberOfJets < 4 ) {
+	// 	cout << "Fewer than 4 good cleaned jets with pt > 25 GeV : " << numberOfJets << endl;
+	// 	cout << numberOfJets << " " << numberOfBJets << endl;
+	// }
 
 	treeMan_->Fill("NJets", numberOfJets);
 	treeMan_->Fill("NBJets", numberOfBJets);
