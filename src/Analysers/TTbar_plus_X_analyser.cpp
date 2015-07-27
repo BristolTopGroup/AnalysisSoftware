@@ -106,6 +106,8 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		metAnalyserEPlusJetsRefSelection_->analyse(event, signalLepton, jets);
 
+
+
 		electronAnalyserRefSelection_->analyse(event);
 		electronAnalyserRefSelection_->analyseElectron(signalElectron, event->weight());
 
@@ -117,6 +119,13 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		wAnalyserEPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
 		likelihoodRecoAnalyserEPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
+		BTagEffAnalyserEPlusJetsRefSelection_->analyse(event);
+
+
+
+
+
+
 
 		// ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -134,7 +143,6 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		// 	ref_selection_binned_Ptttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
 		// 	ref_selection_binned_Ptttbar_analyser_electron_->analyse( topHypothesis.resonance->pt(), fit_variable_values, event->weight() );
-
 		// 	ref_selection_binned_yttbar_analyser_electron_->setScale( bjetWeight * efficiencyCorrection );
 		// 	ref_selection_binned_yttbar_analyser_electron_->analyse( topHypothesis.resonance->rapidity(), fit_variable_values, event->weight() );
 
@@ -224,6 +232,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
 			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
 		}
+
 
 		// MET
 		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
@@ -524,6 +533,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
 		likelihoodRecoAnalyserMuPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
+		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
+
 
 
 		ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
@@ -891,6 +902,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	likelihoodRecoAnalyserEPlusJetsRefSelection_->createTrees();
 	likelihoodRecoAnalyserMuPlusJetsRefSelection_->createTrees();
 
+	BTagEffAnalyserEPlusJetsRefSelection_->createTrees();
+	BTagEffAnalyserMuPlusJetsRefSelection_->createTrees();
 }
 
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
@@ -1041,8 +1054,7 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_yt_Analysis")), //
 
 		jetAnalyserEPlusJetsRefSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsReference, histogramFolder + "/EPlusJets/Ref selection/Jets")), //
-		jetAnalyserMuPlusJetsRefSelection_(
-				new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsReference, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
+		jetAnalyserMuPlusJetsRefSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsReference, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
 		jetAnalyserEPlusJetsQCDNonIsoSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsQCDNonIsolated, histogramFolder + "/EPlusJets/QCD non iso e+jets/Jets")), //
 		jetAnalyserEPlusJetsConversionSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsQCDConversion, histogramFolder + "/EPlusJets/QCDConversions/Jets")), //
 		jetAnalyserMuPlusJetsQCDNonIsoSelection_( new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsQCDNonIsolated, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Jets")), //
@@ -1055,8 +1067,10 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		hitFitAnalyserMuPlusJetsQCDSelection_(new HitFitAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/HitFit")), //		
 		likelihoodRecoAnalyserEPlusJetsRefSelection_(new LikelihoodRecoAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/Ref selection/LikelihoodReco")), //
 		likelihoodRecoAnalyserMuPlusJetsRefSelection_(new LikelihoodRecoAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/Ref selection/LikelihoodReco")), //
+		BTagEffAnalyserEPlusJetsRefSelection_(new BTagEff(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/BTagEfficiencies")), //
+		BTagEffAnalyserMuPlusJetsRefSelection_(new BTagEff(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/BTagEfficiencies")), //
 		electron_variables_(), //
-		muon_variables_() {
+		muon_variables_(){
 
 	//bins: start is always assumed to be 0 and the last is read as > X
 	//MET bins:
