@@ -50,6 +50,9 @@ JetReader::JetReader() : //
 		NCHReader(), //
 		btagCSVv2Reader(), //
 		isBtagReader(), //
+		btagSFReader(), //
+		btagSFUpReader(), //
+		btagSFDownReader(), //
 		PartonFlavour(),
 		jets(), //
 		usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05), //
@@ -93,6 +96,9 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		NCHReader(input, "Jets.ChargedMultiplicity"), //
 		btagCSVv2Reader(input, "Jets.combinedInclusiveSecondaryVertexV2BJetTags"), //
 		isBtagReader(input, "Jets.passesMediumCSV"), //
+		btagSFReader(input, "Jets.btagSF"), //
+		btagSFUpReader(input, "Jets.btagSFUp"), //
+		btagSFDownReader(input, "Jets.btagSFDown"), //
 		PartonFlavour(input, "Jets.PartonFlavour"),//
 		jets(), //
 		usedAlgorithm(algo), //
@@ -214,6 +220,12 @@ void JetReader::readJets(bool isRealData) {
 				BtagAlgorithm::CombinedSecondaryVertexV2);
 		jet->setIsBJet(isBtagReader.getBoolVariableAt(jetIndex));
 
+		if ( !isRealData ) {
+			jet->setBTagSF( btagSFReader.getVariableAt( jetIndex ) );
+			jet->setBTagSFUp( btagSFUpReader.getVariableAt( jetIndex ) );
+			jet->setBTagSFDown( btagSFDownReader.getVariableAt( jetIndex ) );
+		}
+
 		//parton flavour
 		jet->setPartonFlavour(PartonFlavour.getIntVariableAt(jetIndex));
 
@@ -269,6 +281,9 @@ void JetReader::initialise() {
 
 	btagCSVv2Reader.initialise();
 	isBtagReader.initialise();
+	btagSFReader.initialise();
+	btagSFUpReader.initialise();
+	btagSFDownReader.initialise();
 
 	PartonFlavour.initialise();
 	if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {

@@ -19,18 +19,9 @@ public:
 	bool filter(unsigned int t) const;
 
 	double getEfficiency( const unsigned int, const JetPointer ) const;
-	std::vector<double> getScaleFactor( const double, const JetPointer ) const;
-
-	std::vector<double> getBScaleFactor(const JetPointer, double uncertaintyFactor = 1.) const;
 	double getBEfficiency(const JetPointer) const;
-	std::vector<double> getCScaleFactor(const JetPointer) const;
 	double getCEfficiency(const JetPointer) const;
-	std::vector<double> getUDSGScaleFactor(const JetPointer) const;
 	double getUDSGEfficiency(const JetPointer) const;
-
-	double getMeanUDSGScaleFactor(double jetPT, double jetEta) const;
-	double getMinUDSGScaleFactor(double jetPT, double jetEta) const;
-	double getMaxUDSGScaleFactor(double jetPT, double jetEta) const;
 
 	double getMeanUDSGEfficiency(double jetPT) const;
 private:
