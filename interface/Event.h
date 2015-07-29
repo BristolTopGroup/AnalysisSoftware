@@ -68,6 +68,12 @@ protected:
 	bool passesMuonSelection_;
 	bool passesMuonQCDSelection_;
 
+	bool passesElectronSelectionNoB_;
+	bool passesElectronQCDSelectionNoB_;
+	bool passesElectronConversionSelectionNoB_;
+	bool passesMuonSelectionNoB_;
+	bool passesMuonQCDSelectionNoB_;
+
 	bool isSemiLeptonicElectron_;
 	bool isSemiLeptonicMuon_;
 	SelectionOutputInfo selectionOutputInfo_electron;
@@ -137,8 +143,14 @@ public:
 	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
 	void setPassesMuonSelection(bool passesMuonSelection);
 	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
+	void setPassesElectronSelectionNoB(bool passesElectronSelectionNoB);
+	void setPassesElectronQCDSelectionNoB(bool passesElectronQCDSelectionNoB);
+	void setPassesElectronConversionSelectionNoB(bool passesElectronConversionSelectionNoB);
+	void setPassesMuonSelectionNoB(bool passesMuonSelectionNoB);
+	void setPassesMuonQCDSelectionNoB(bool passesMuonQCDSelectionNoB);
 	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
 	const bool passesJetSelection( const unsigned int selectionCriteria );
+	const bool passesBJetSelection( const unsigned int selectionCriteria );
 	const bool passesSignalLeptonSelection( const unsigned int selectionCriteria );
 	void setPassGenSelectionInfo( std::vector<unsigned int> );
 	void setIsSemiLeptonicElectron( bool isSemiLeptonicElectron );
@@ -215,6 +227,18 @@ public:
 	const bool PassesElectronTriggerAndQCDSelection() const;
 	const bool PassesElectronTriggerAndConversionSelection() const;
 	const bool PassesMuonTriggerAndQCDSelection() const;
+	
+	const bool PassesElectronSelectionNoB() const;
+	const bool PassesElectronQCDSelectionNoB() const;
+	const bool PassesElectronConversionSelectionNoB() const;
+	const bool PassesMuonSelectionNoB() const;
+	const bool PassesMuonQCDSelectionNoB() const;
+
+	const bool PassesElectronTriggerAndSelectionNoB() const;
+	const bool PassesMuonTriggerAndSelectionNoB() const;
+	const bool PassesElectronTriggerAndQCDSelectionNoB() const;
+	const bool PassesElectronTriggerAndConversionSelectionNoB() const;
+	const bool PassesMuonTriggerAndQCDSelectionNoB() const;
 
 	const bool isSemiLeptonicElectron() const;
 	const bool isSemiLeptonicMuon() const;

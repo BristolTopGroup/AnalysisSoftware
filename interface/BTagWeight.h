@@ -2,6 +2,8 @@
 #define BTagWeight_H
 
 #include "RecoObjects/Jet.h"
+#include <boost/shared_ptr.hpp>
+#include <iostream>
 /**
  * Original by Andrea Rizzi
  * Modified by Lukasz Kreczko
@@ -19,11 +21,13 @@ public:
 	bool filter(unsigned int t) const;
 
 	double getEfficiency( const unsigned int, const JetPointer ) const;
-	double getBEfficiency(const JetPointer) const;
+	float getBEfficiency(const JetPointer) const;
 	double getCEfficiency(const JetPointer) const;
-	double getUDSGEfficiency(const JetPointer) const;
+	// double getMeanUDSGEfficiency(const JetPointer);
+	double getUDSEfficiency(const JetPointer) const;
+	double getGEfficiency(const JetPointer) const;
 
-	double getMeanUDSGEfficiency(double jetPT) const;
+	// double getMeanUDSGEfficiency(double jetPT) const;
 private:
 	unsigned int minNumberOfTags_;
 	unsigned int maxNumberOfTags_;
