@@ -33,6 +33,7 @@ public:
 	std::string datasetInfoFile() const;
 	std::string PUFile() const;
 	std::string TTbarLikelihoodFile() const;
+	std::string BTagEfficiencyFile() const;
 	std::string MuonScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
 	std::string ElectronIdIsoScaleFactorsFile() const;
@@ -74,6 +75,7 @@ private:
 	std::string datasetInfoFile_;
 	std::string pileUpFile_;
 	std::string ttbarLikelihoodFile_;
+	std::string btagEfficiencyFile_;
 	bool getMuonScaleFactorsFromFile_;
 	std::string muonScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
@@ -125,6 +127,13 @@ private:
 	void getHadronicRecoIncorrectPermHistogram(std::string ttbarLikelihoodFile);
 	void getLeptonicRecoCorrectPermHistogram(std::string ttbarLikelihoodFile);
 	void getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikelihoodFile);
+
+	void getbQuarkJet(std::string btagEfficiencyFile);
+	void getcQuarkJet(std::string btagEfficiencyFile);
+	void getudsQuarkJet(std::string btagEfficiencyFile);
+	void getgluonJet(std::string btagEfficiencyFile);
+
+
 };
 
 } /* namespace BAT */

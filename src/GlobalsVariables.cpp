@@ -39,8 +39,11 @@ boost::shared_ptr<TH2F> Globals::HadronicRecoIncorrectPermHistogram = boost::sha
 boost::shared_ptr<TH2F> Globals::LeptonicRecoCorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH2F> Globals::LeptonicRecoIncorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
 
-
-
+// BTagging efficiencies
+boost::shared_ptr<TH2F> Globals::bQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::cQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::udsQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::gluonJet = boost::shared_ptr<TH2F>(new TH2F());
 
 
 

@@ -42,6 +42,11 @@ Event::Event() : //
 		passesElectronConversionSelection_(false),
 		passesMuonSelection_(false),
 		passesMuonQCDSelection_(false),
+		passesElectronSelectionNoB_(false),
+		passesElectronQCDSelectionNoB_(false),
+		passesElectronConversionSelectionNoB_(false),
+		passesMuonSelectionNoB_(false),
+		passesMuonQCDSelectionNoB_(false),
 		isSemiLeptonicElectron_(false),
 		isSemiLeptonicMuon_(false),
 		selectionOutputInfo_electron(),
@@ -291,6 +296,85 @@ const bool Event::PassesMuonTriggerAndQCDSelection() const {
 	return false;
 }
 
+const bool Event::PassesElectronSelectionNoB() const {
+	if ( passesElectronSelectionNoB_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronQCDSelectionNoB() const {
+	if ( passesElectronQCDSelectionNoB_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronConversionSelectionNoB() const {
+	if ( passesElectronConversionSelectionNoB_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonSelectionNoB() const {
+	if ( passesMuonSelectionNoB_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonQCDSelectionNoB() const {
+	if ( passesMuonQCDSelectionNoB_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronTriggerAndSelectionNoB() const {
+	if ( passesElectronSelectionNoB_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronTriggerAndQCDSelectionNoB() const {
+	if ( passesElectronQCDSelectionNoB_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesElectronTriggerAndConversionSelectionNoB() const {
+	if ( passesElectronConversionSelectionNoB_ && passesElectronChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonTriggerAndSelectionNoB() const {
+	if ( passesMuonSelectionNoB_ && passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
+const bool Event::PassesMuonTriggerAndQCDSelectionNoB() const {
+	if ( passesMuonQCDSelectionNoB_ && passesMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
 
 const bool Event::isSemiLeptonicElectron() const {
 	if ( isSemiLeptonicElectron_ ) {
@@ -489,6 +573,26 @@ void Event::setPassesMuonQCDSelection( bool passesMuonQCDSelection ) {
 	passesMuonQCDSelection_ = passesMuonQCDSelection;
 }
 
+
+void Event::setPassesElectronSelectionNoB( bool passesElectronSelectionNoB ) {
+	passesElectronSelectionNoB_ = passesElectronSelectionNoB;
+}
+
+void Event::setPassesElectronQCDSelectionNoB( bool passesElectronQCDSelectionNoB ) {
+	passesElectronQCDSelectionNoB_ = passesElectronQCDSelectionNoB;
+}
+
+void Event::setPassesElectronConversionSelectionNoB( bool passesElectronConversionSelectionNoB ) {
+	passesElectronConversionSelectionNoB_ = passesElectronConversionSelectionNoB;
+}
+
+void Event::setPassesMuonSelectionNoB( bool passesMuonSelectionNoB ) {
+	passesMuonSelectionNoB_ = passesMuonSelectionNoB;
+}
+
+void Event::setPassesMuonQCDSelectionNoB( bool passesMuonQCDSelectionNoB ) {
+	passesMuonQCDSelectionNoB_ = passesMuonQCDSelectionNoB;
+}
 void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelections ) {
 	// if ( passSelections.size() > 1 ) {
 	// 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
@@ -500,15 +604,30 @@ void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelection
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
 		SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(passSelections[selection]);
 
-		if ( passSelections[selection] == 1 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesMuonSelection( true );
-		if ( passSelections[selection] == 2 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronSelection( true );
-		if ( passSelections[selection] == 3 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesMuonQCDSelection( true );
-		if ( passSelections[selection] == 4 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronQCDSelection( true );
-		if ( passSelections[selection] == 5 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ) setPassesElectronConversionSelection( true );
+		if ( passSelections[selection] == 1 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ){
+			setPassesMuonSelectionNoB( true );
+			if ( passesBJetSelection( selectionCriteria ) ) setPassesMuonSelection( true );
+		}
+		if ( passSelections[selection] == 2 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ){
+			setPassesElectronSelectionNoB( true );
+			if ( passesBJetSelection( selectionCriteria ) ) setPassesElectronSelection( true );
+		}
+		if ( passSelections[selection] == 3 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ){
+			setPassesMuonQCDSelectionNoB( true );
+			if ( passesBJetSelection( selectionCriteria ) ) setPassesMuonQCDSelection( true );
+		}
+		if ( passSelections[selection] == 4 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ){
+			setPassesElectronQCDSelectionNoB( true );
+			if ( passesBJetSelection( selectionCriteria ) ) setPassesElectronQCDSelection( true );
+		}
+		if ( passSelections[selection] == 5 && passesJetSelection( selectionCriteria ) && passesSignalLeptonSelection( selectionCriteria ) ){
+			setPassesElectronConversionSelectionNoB( true );
+			if ( passesBJetSelection( selectionCriteria ) ) setPassesElectronConversionSelection( true );
+		}
 	}
 }
 
-const bool Event::passesJetSelection( const unsigned int selection ) {
+const bool Event::passesJetSelection( const unsigned int selection ) { 
 
 	SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(selection);
 
@@ -526,6 +645,12 @@ const bool Event::passesJetSelection( const unsigned int selection ) {
 		if ( nJetPass < minNJets_ ) return false;
 //	}
 
+	return true;
+}
+
+const bool Event::passesBJetSelection( const unsigned int selection ) { 
+
+	SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(selection);
 
 	const JetCollection bjets = getCleanedBJets( selection );
 	unsigned int nBJetPass = 0;
@@ -541,9 +666,8 @@ const bool Event::passesJetSelection( const unsigned int selection ) {
 	else {
 		if ( nBJetPass != 0 ) return false;
 	}
-
-
 	return true;
+
 }
 
 const bool Event::passesSignalLeptonSelection( const unsigned int selectionCriteria ) {

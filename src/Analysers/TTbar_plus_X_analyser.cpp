@@ -23,6 +23,10 @@ void TTbar_plus_X_analyser::analyse(const EventPtr event) {
 
 void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
+	if (event->PassesElectronTriggerAndSelectionNoB()){
+		BTagEffAnalyserEPlusJetsRefSelection_->analyse(event);
+	}
+
 	// if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesElectronTriggerAndSelection() ) {
 		const JetCollection jets(event->CleanedJets());
@@ -121,7 +125,6 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		wAnalyserEPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
 		likelihoodRecoAnalyserEPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
-		BTagEffAnalyserEPlusJetsRefSelection_->analyse(event);
 
 
 
@@ -443,6 +446,10 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
+	if (event->PassesMuonTriggerAndSelectionNoB()){
+		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
+	}
+
 	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesMuonTriggerAndSelection() ) {
 		const JetCollection jets(event->CleanedJets());
@@ -535,9 +542,6 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW_partons(event);
 
 		likelihoodRecoAnalyserMuPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
-		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
-
-
 
 		ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;

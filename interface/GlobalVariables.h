@@ -50,6 +50,12 @@ struct Globals {
 	static boost::shared_ptr<TH2F> LeptonicRecoCorrectPermHistogram;
 	static boost::shared_ptr<TH2F> LeptonicRecoIncorrectPermHistogram;
 
+	// BTagging efficiencies
+	static boost::shared_ptr<TH2F> bQuarkJet;
+	static boost::shared_ptr<TH2F> cQuarkJet;
+	static boost::shared_ptr<TH2F> udsQuarkJet;
+	static boost::shared_ptr<TH2F> gluonJet;
+
 	//electrons
 	static ElectronAlgorithm::value electronAlgorithm;
 	static int ElectronScaleFactorSystematic;

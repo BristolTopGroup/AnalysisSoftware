@@ -21,6 +21,7 @@ default_settings = {
             'MuonIdIsoScaleFactorsFile':'nofile.root',
             'PUFile':'noFile.root',
             'TTbarLikelihoodFile' : 'LikelihoodInputAnalyserOutput.root',
+            'BTagEfficiencyFile' : 'BTagEfficiency.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
@@ -111,7 +112,8 @@ hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 
-TTbarLikelihoodFile = toolsFolder + "/data/" + settings['TTbarLikelihoodFile']
+TTbarLikelihoodFile = toolsFolder + "data/" + settings['TTbarLikelihoodFile']
+BTagEfficiencyFile = toolsFolder + "data/" + settings['BTagEfficiencyFile']
 
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
