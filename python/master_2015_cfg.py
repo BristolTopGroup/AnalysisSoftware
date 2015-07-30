@@ -103,7 +103,7 @@ if os.environ.has_key('ntupleToProcess'):
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = False
 getElectronScaleFactorsFromFile = True
-ElectronIdIsoScaleFactorsFile = 'noFile.root'
+ElectronIdIsoScaleFactorsFile = '/users/ec6821/Electron_ID_Iso_Ali_30072015.root'
 ElectronTriggerScaleFactorsFile = '/storage/ec6821/DailyPythonScripts/CMSSW_7_4_7_patch2/src/DailyPythonScripts/experimental/ElectronTriggerEfficiencies.root'
 MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
 getHadronTriggerFromFile = True

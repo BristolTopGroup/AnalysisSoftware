@@ -429,8 +429,16 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	}
 
 	triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
-	// cout << "Trigger efficiency for pt : " << electronPt << " : " << triggerEfficiency << endl;
-	return triggerEfficiency;
+
+	// ID & isolation scalefactor
+	double idIsoSF(1.);
+	boost::shared_ptr<TH2D> electronIDIsoScaleFactorsHistogram(Globals::electronIdIsoScaleFactorsHistogram);
+	double electronEta = eta();
+	bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
+	idIsoSF = electronIDIsoScaleFactorsHistogram->GetBinContent( bin );
+
+	double efficiencyCorrection = triggerEfficiency * idIsoSF;
+	return efficiencyCorrection;
 }
 
 // double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic, int run_number) const {

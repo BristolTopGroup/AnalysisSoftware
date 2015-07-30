@@ -457,9 +457,11 @@ void ConfigFile::loadIntoMemory() {
 		std::cout << "No muon scale factors file, corrections will be set to 1." << std::endl;
 	}
 
-	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) ) {
+	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) ) {
 		std::cout << "Getting electron scale factors from file " << ElectronTriggerScaleFactorsFile() << std::endl;
 		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
+		Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+
 	}
 
 	// if (Globals::energyInTeV == 7 && getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) && boost::filesystem::exists(ElectronTriggerScaleFactorsFile())) {
@@ -570,7 +572,7 @@ boost::shared_ptr<TH3F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	return triggerHistogram;
 }
 
-boost::shared_ptr<TH2F> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile) {
+boost::shared_ptr<TH2D> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile) {
 	using namespace std;
 
 	if (!boost::filesystem::exists(electronIdIsoScaleFactorsFile)) {
@@ -579,7 +581,8 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::s
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronIdIsoScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> idIsoHistogram((TH2F*) file->Get("scaleFactors")->Clone());
+	boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
+	boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
 	file->Close();
 
 	return idIsoHistogram;

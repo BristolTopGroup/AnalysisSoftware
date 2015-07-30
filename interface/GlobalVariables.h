@@ -54,7 +54,7 @@ struct Globals {
 	static ElectronAlgorithm::value electronAlgorithm;
 	static int ElectronScaleFactorSystematic;
 	static boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram;
-	static boost::shared_ptr<TH2F> electronIdIsoScaleFactorsHistogram;
+	static boost::shared_ptr<TH2D> electronIdIsoScaleFactorsHistogram;
 
 	//muons
 	static MuonAlgorithm::value muonAlgorithm;

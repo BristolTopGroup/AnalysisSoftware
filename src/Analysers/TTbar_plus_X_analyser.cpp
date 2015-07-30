@@ -39,7 +39,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		// const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-		double triggerEfficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(0);
+		double electronEfficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(0);
 
 		// double electronEfficiencyCorrection = 1;
 		double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
@@ -72,7 +72,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_main));
 		treeMan_->Fill("MT",Event::MT(signalElectron, MET_main));
 
-		treeMan_->Fill("ElectronTriggerEfficiencyCorrection",triggerEfficiencyCorrection);
+		treeMan_->Fill("ElectronTriggerEfficiencyCorrection",electronEfficiencyCorrection);
 		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
 		treeMan_->Fill("MuonUp",1.0);

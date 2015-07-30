@@ -112,7 +112,7 @@ private:
 	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH3F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH1F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
-	boost::shared_ptr<TH2F> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
+	boost::shared_ptr<TH2D> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
 	
