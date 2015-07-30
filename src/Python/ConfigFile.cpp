@@ -31,7 +31,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		pileUpFile_(PythonParser::getAttributeFromPyObject<string>(config, "PUFile")), //
 		ttbarLikelihoodFile_(PythonParser::getAttributeFromPyObject<string>(config, "TTbarLikelihoodFile")), //
 		getMuonScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getMuonScaleFactorsFromFile")), //
-		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonScaleFactorsFile")), //
+		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonIdIsoScaleFactorsFile")), //
 		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
 		electronIdIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdIsoScaleFactorsFile")), //
 		electronTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronTriggerScaleFactorsFile")), //
@@ -217,8 +217,8 @@ string ConfigFile::TTbarLikelihoodFile() const {
 }
 
 string ConfigFile::MuonScaleFactorsFile() const {
-	if (programOptions.count("MuonScaleFactorsFile"))
-		return programOptions["MuonScaleFactorsFile"].as<std::string>();
+	if (programOptions.count("MuonIdIsoScaleFactorsFile"))
+		return programOptions["MuonIdIsoScaleFactorsFile"].as<std::string>();
 	else
 		return muonScaleFactorsFile_;
 }
@@ -449,12 +449,10 @@ void ConfigFile::loadIntoMemory() {
 	std::cout << "ConfigFile.cpp: Globals::ElectronScaleFactorSystematic = " << Globals::ElectronScaleFactorSystematic << std::endl;
 	std::cout << "ConfigFile.cpp: Globals::MuonScaleFactorSystematic = " << Globals::MuonScaleFactorSystematic << std::endl;
 
-	if (Globals::energyInTeV == 7 && getMuonScaleFactorsFromFile_ && boost::filesystem::exists(MuonScaleFactorsFile())) {
+	if ( getMuonScaleFactorsFromFile_ && boost::filesystem::exists(MuonScaleFactorsFile())) {
 		std::cout << "Getting muon scale factors from file " << MuonScaleFactorsFile() << "." << std::endl;
 		Globals::muonIdIsoScaleFactorsHistogram = getMuonIdIsoScaleFactorsHistogram(MuonScaleFactorsFile());
-		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonScaleFactorsFile());
-	} else {
-		std::cout << "No muon scale factors file, corrections will be set to 1." << std::endl;
+		// Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonScaleFactorsFile());
 	}
 
 	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) ) {
@@ -551,7 +549,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonIdIsoScaleFactorsHistogram(std::strin
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> idIsoHistogram((TH2F*) file->Get("SF_2011_TIGHT_ISO_PT25_PtrgL_eta_pt_PLOT")->Clone());
+	boost::shared_ptr<TH2F> idIsoHistogram((TH2F*) file->Get("SF_totErr")->Clone());
 	file->Close();
 
 	return idIsoHistogram;

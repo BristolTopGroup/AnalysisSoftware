@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 namespace BAT {
 const double initialBigValue = 123456789;
 
@@ -160,16 +162,14 @@ double Muon::relTrkIso() const {
 
 
 double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
-	if ( muon_scale_factor_systematic == 0 ) {
-		return 1.;
-	}
-	else if ( muon_scale_factor_systematic == -1 ) {
-		return 0.99;
-	}
-	else if ( muon_scale_factor_systematic == 1 ) {
-		return 1.01;
-	}
+	
+	double idIsoSF(1.);
+	boost::shared_ptr<TH2F> muonIDIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram);
+	double muonPt = pt();
+	double muonEta = eta();
+	double bin = muonIDIsoScaleFactorsHistogram->FindBin( muonEta, muonPt );
+	idIsoSF = muonIDIsoScaleFactorsHistogram->GetBinContent( bin );
 
-	return 0.;
+	return idIsoSF;
 }
 }

@@ -18,7 +18,7 @@ default_settings = {
             'JESsystematic':0,
             'JetSmearingSystematic':0,
             'PUFile':'PileUp_2012_69300_truth_finebin.root',
-            'MuonScaleFactors':'nofile.root',
+            'MuonIdIsoScaleFactorsFile':'nofile.root',
             'PUFile':'noFile.root',
             'TTbarLikelihoodFile' : 'LikelihoodInputAnalyserOutput.root',
             'BTagSystematic':0,
@@ -101,11 +101,11 @@ if os.environ.has_key('ntupleToProcess'):
 
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
-getMuonScaleFactorsFromFile = False
+getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
 ElectronIdIsoScaleFactorsFile = '/users/ec6821/Electron_ID_Iso_Ali_30072015.root'
 ElectronTriggerScaleFactorsFile = '/storage/ec6821/DailyPythonScripts/CMSSW_7_4_7_patch2/src/DailyPythonScripts/experimental/ElectronTriggerEfficiencies.root'
-MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
+MuonIdIsoScaleFactorsFile = '/users/ec6821/muonGlobalSF_20150722_Mirena_30072015.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']

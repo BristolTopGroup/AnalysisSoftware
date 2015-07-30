@@ -42,12 +42,12 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		double electronEfficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(0);
 
 		// double electronEfficiencyCorrection = 1;
-		double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
-		if ( !event->isRealData() ) {
-			// electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
-			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
-			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
-		}
+		// double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
+		// if ( !event->isRealData() ) {
+		// 	// electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
+		// 	electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
+		// 	electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
+		// }
 
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		histMan_->H1D("BTagWeights")->Fill(bjetWeight);
@@ -72,9 +72,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_main));
 		treeMan_->Fill("MT",Event::MT(signalElectron, MET_main));
 
-		treeMan_->Fill("ElectronTriggerEfficiencyCorrection",electronEfficiencyCorrection);
-		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
-		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
+		treeMan_->Fill("ElectronEfficiencyCorrection",electronEfficiencyCorrection);
+		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection*1.04);
+		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection*0.96);
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 
@@ -457,15 +457,14 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
-
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection( 0 );
 		// double muonEfficiencyCorrection = 1;
-		double muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
-		if ( !event->isRealData() ) {
-			// muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
-			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
-			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
-		}
+		// double muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
+		// if ( !event->isRealData() ) {
+		// 	// muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
+		// 	muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
+		// 	muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
+		// }
 
 		histMan_->setCurrentBJetBin(numberOfBjets);
 		histMan_->H1D("BTagWeights")->Fill(bjetWeight);
@@ -489,8 +488,9 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("WPT",Event::WPT(signalMuon, MET_main));
 		treeMan_->Fill("MT",Event::MT(signalMuon, MET_main));
 
-		treeMan_->Fill("MuonUp",muonEfficiencyCorrection_up);
-		treeMan_->Fill("MuonDown",muonEfficiencyCorrection_down);
+		treeMan_->Fill("MuonEfficiencyCorrection",efficiencyCorrection);
+		treeMan_->Fill("MuonUp",efficiencyCorrection*1.04);
+		treeMan_->Fill("MuonDown",efficiencyCorrection*0.96);
 		treeMan_->Fill("ElectronUp",1.0);
 		treeMan_->Fill("ElectronDown",1.0);
 
@@ -737,7 +737,7 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronTriggerEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
@@ -813,6 +813,7 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
