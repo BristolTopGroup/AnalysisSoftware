@@ -17,7 +17,7 @@
 #include "WAnalyser.h"
 #include "HitFitAnalyser.h"
 #include "LikelihoodRecoAnalyser.h"
-#include "DougsBTagEffAnalyser.h"
+#include "BTagEfficiencyAnalyser.h"
 
 #include "Binned_variable_analyser.h"
 

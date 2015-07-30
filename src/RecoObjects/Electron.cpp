@@ -396,20 +396,42 @@ double Electron::mvaNonTrigV0() const {
 	return mvaNonTrigV0_;
 }
 
+// double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) const {
+// 	if ( electron_scale_factor_systematic == 0 ) {
+// 		return 1.;
+// 	}
+// 	else if ( electron_scale_factor_systematic == -1 ) {
+// 		return 0.99;
+// 	}
+// 	else if ( electron_scale_factor_systematic == 1 ) {
+// 		return 1.01;
+// 	}
+
+// 	return 0.;
+// }
+
+
 double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) const {
-	if ( electron_scale_factor_systematic == 0 ) {
-		return 1.;
+
+	double triggerEfficiency(1.);
+	boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
+	double electronPt = pt();
+	double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
+	// cout << "Electron pt : " << electronPt << endl;
+	// cout << "Max pt in histogram" << endl;
+	// cout << maxPt << endl;
+	unsigned int bin = 0;
+	if ( electronPt <= maxPt ) {
+		bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
 	}
-	else if ( electron_scale_factor_systematic == -1 ) {
-		return 0.99;
-	}
-	else if ( electron_scale_factor_systematic == 1 ) {
-		return 1.01;
+	else {
+		bin = electronTriggerScaleFactorsHistogram->GetNbinsX();
 	}
 
-	return 0.;
+	triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
+	// cout << "Trigger efficiency for pt : " << electronPt << " : " << triggerEfficiency << endl;
+	return triggerEfficiency;
 }
-
 
 // double Electron::getEfficiencyCorrection(bool qcd, int electron_scale_factor_systematic, int run_number) const {
 // 	double correction(1.);

@@ -39,7 +39,8 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		// const LeptonPointer signalLepton = topEplusJetsRefSelection_->signalLepton(event);
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-		// double efficiencyCorrection = 1;//event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(false, Globals::ElectronScaleFactorSystematic, event->runnumber());
+		double triggerEfficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(0);
+
 		// double electronEfficiencyCorrection = 1;
 		double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
 		if ( !event->isRealData() ) {
@@ -71,6 +72,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_main));
 		treeMan_->Fill("MT",Event::MT(signalElectron, MET_main));
 
+		treeMan_->Fill("ElectronTriggerEfficiencyCorrection",triggerEfficiencyCorrection);
 		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
 		treeMan_->Fill("MuonUp",1.0);
@@ -735,6 +737,7 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronTriggerEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
@@ -759,7 +762,7 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);	
+	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);

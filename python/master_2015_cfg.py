@@ -102,9 +102,9 @@ if os.environ.has_key('ntupleToProcess'):
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = False
-getElectronScaleFactorsFromFile = False
+getElectronScaleFactorsFromFile = True
 ElectronIdIsoScaleFactorsFile = 'noFile.root'
-ElectronTriggerScaleFactorsFile = 'noFile.root'
+ElectronTriggerScaleFactorsFile = '/storage/ec6821/DailyPythonScripts/CMSSW_7_4_7_patch2/src/DailyPythonScripts/experimental/ElectronTriggerEfficiencies.root'
 MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''

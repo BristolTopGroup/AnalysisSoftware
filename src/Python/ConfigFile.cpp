@@ -457,13 +457,18 @@ void ConfigFile::loadIntoMemory() {
 		std::cout << "No muon scale factors file, corrections will be set to 1." << std::endl;
 	}
 
-	if (Globals::energyInTeV == 7 && getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) && boost::filesystem::exists(ElectronTriggerScaleFactorsFile())) {
-		std::cout << "Getting electron scale factors from file " << ElectronIdIsoScaleFactorsFile() << " and " << ElectronTriggerScaleFactorsFile() << "." << std::endl;
-		Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) ) {
+		std::cout << "Getting electron scale factors from file " << ElectronTriggerScaleFactorsFile() << std::endl;
 		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
-	} else {
-		std::cout << "No electron scale factors file, corrections will be set to 1." << std::endl;
 	}
+
+	// if (Globals::energyInTeV == 7 && getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) && boost::filesystem::exists(ElectronTriggerScaleFactorsFile())) {
+	// 	std::cout << "Getting electron scale factors from file " << ElectronIdIsoScaleFactorsFile() << " and " << ElectronTriggerScaleFactorsFile() << "." << std::endl;
+	// 	Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+	// 	Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
+	// } else {
+	// 	std::cout << "No electron scale factors file, corrections will be set to 1." << std::endl;
+	// }
 
 	if ( Globals::energyInTeV == 7 && getHadronTriggerFromFile_ ) {
 		std::cout << "Getting electron trigger hadron leg efficiencies from file " << hadronTriggerFile() << "." << std::endl;
@@ -580,7 +585,7 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::s
 	return idIsoHistogram;
 }
 
-boost::shared_ptr<TEfficiency> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
+boost::shared_ptr<TH1F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
 	using namespace std;
 
 	if (!boost::filesystem::exists(electronTriggerScaleFactorsFile)) {
@@ -589,7 +594,11 @@ boost::shared_ptr<TEfficiency> ConfigFile::getElectronTriggerScaleFactorsHistogr
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronTriggerScaleFactorsFile.c_str()));
-	boost::shared_ptr<TEfficiency> triggerHistogram((TEfficiency*) file->Get("data")->Clone());
+	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("GsfElectronHLTMedium/HLT/fit_eff_plots/probe_pt_PLOT") );
+	boost::shared_ptr<TH1F> triggerHistogram((TH1F*) file->Get("eff"));
+	
+
+	// boost::shared_ptr<TEfficiency> triggerHistogram((TEfficiency*) file->Get("data")->Clone());
 	file->Close();
 
 	return triggerHistogram;
@@ -604,6 +613,7 @@ void ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(hadronTriggerFile.c_str()));
+
 	Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_1")->Clone("data_1"));
 	Globals::hadronTriggerLegEfficiencyHistogram_isoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_2")->Clone("data_2"));
 	Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_3")->Clone("data_3"));

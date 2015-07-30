@@ -48,7 +48,7 @@ boost::shared_ptr<TH2F> Globals::LeptonicRecoIncorrectPermHistogram = boost::sha
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
 int Globals::ElectronScaleFactorSystematic = 0;
 boost::shared_ptr<TH2F> Globals::electronIdIsoScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
-boost::shared_ptr<TEfficiency> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TEfficiency>(new TEfficiency("electronEffic","electronEffic",1,0));
+boost::shared_ptr<TH1F> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TH1F>(new TH1F());
 
 //muons
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
