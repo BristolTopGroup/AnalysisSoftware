@@ -276,7 +276,7 @@ const bool Event::PassesElectronTriggerAndConversionSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelection() const {
-	if ( passesMuonSelection_ && passesMuonChannelQCDTrigger_ ) {
+	if ( passesMuonSelection_ && passesMuonChannelTrigger_ ) {
 		return true;
 	}
 
@@ -284,7 +284,7 @@ const bool Event::PassesMuonTriggerAndSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndQCDSelection() const {
-	if ( passesMuonQCDSelection_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonQCDSelection_ && passesMuonChannelQCDTrigger_ ) {
 		return true;
 	}
 
@@ -519,12 +519,12 @@ const bool Event::passesJetSelection( const unsigned int selection ) {
 		if ( jet->pt() >= minJetPt_ ) ++nJetPass;
 	}
 
-	if ( selectionCriteria == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
-		if ( nJetPass < 3 ) return false;
-	}
-	else {
+//	if ( selectionCriteria == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
+//		if ( nJetPass < 3 ) return false;
+//	}
+//	else {
 		if ( nJetPass < minNJets_ ) return false;
-	}
+//	}
 
 
 	const JetCollection bjets = getCleanedBJets( selection );

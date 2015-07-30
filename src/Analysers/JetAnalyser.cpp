@@ -19,7 +19,7 @@ void JetAnalyser::analyse(const EventPtr event) {
 	const JetCollection jets(event->CleanedJets());
 	const JetCollection bjets(event->CleanedBJets());
 
-	unsigned int numberOfBJets(bjets.size());
+	unsigned int numberOfBJets(0);
 	unsigned int numberOfJets(0);
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
@@ -47,6 +47,8 @@ void JetAnalyser::analyse(const EventPtr event) {
 		const JetPointer bJet(bjets.at(index));
 
 		if ( bJet->pt() < 25 ) continue;
+
+		++numberOfBJets;
 
 		treeMan_->Fill("bjet_pt", bJet->pt());
 		treeMan_->Fill("bjet_eta", bJet->eta());

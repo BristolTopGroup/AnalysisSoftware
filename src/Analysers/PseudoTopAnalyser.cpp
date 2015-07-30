@@ -148,8 +148,21 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	}
 
 	// NJets && NBJets
-	treeMan_->Fill("NPseudoJets", pseudoJets.size() );
-	treeMan_->Fill("NPseudoBJets", pseudoBs.size() );
+	unsigned int numberOfBJets(0);
+	unsigned int numberOfJets(0);
+	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
+		const JetPointer jet(pseudoJets.at(index));
+		if (jet->pt() < 25 ) continue;
+		++numberOfJets;
+	}
+	for (unsigned int index = 0; index < pseudoBs.size(); ++index) {
+		const MCParticlePointer bJet(pseudoBs.at(index));
+		if ( bJet->pt() < 25 ) continue;
+		++numberOfBJets;
+	}
+
+	treeMan_->Fill("NPseudoJets", numberOfJets );
+	treeMan_->Fill("NPseudoBJets", numberOfBJets );
 }
 
 void PseudoTopAnalyser::createTrees() {
