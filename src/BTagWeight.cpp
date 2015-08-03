@@ -440,14 +440,9 @@ double BTagWeight::getGEfficiency(const JetPointer jet) const {
 	return BTagEff;
 }
 
-
-
-
-
 void BTagWeight::setNumberOfBtags(unsigned int min, unsigned int max) {
 	minNumberOfTags_ = min;
 	maxNumberOfTags_ = max;
-
 }
 
 }
