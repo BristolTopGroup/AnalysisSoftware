@@ -22,7 +22,7 @@ double const Event::minJetPt_ = 25;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
-double const Event::minSignalMuonPt_ = 30;
+double const Event::minSignalMuonPt_ = 23;
 double const Event::minSignalElectronPt_ = 30;
 
 Event::Event() : //

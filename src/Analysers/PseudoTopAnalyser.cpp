@@ -14,7 +14,7 @@ using namespace std;
 
 namespace BAT {
 
-double const PseudoTopAnalyser::minLeptonPt_ = 30;
+double const PseudoTopAnalyser::minLeptonPt_ = 23;
 double const PseudoTopAnalyser::maxLeptonAbsEta_ = 2.4;
 double const PseudoTopAnalyser::minVetoLeptonPt_ = 15;
 double const PseudoTopAnalyser::maxVetoLeptonAbsEta_ = 2.5;
