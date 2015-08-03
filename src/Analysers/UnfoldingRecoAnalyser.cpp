@@ -56,6 +56,18 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("leptonPt", signalLepton->pt() );
 	treeMan_->Fill("leptonEta", signalLepton->eta() );
 
+	// Get lepton scale factor
+	if ( event->PassesMuonTriggerAndSelection() ) {
+		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+		double efficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
+		treeMan_->Fill("LeptonEfficiencyCorrection", efficiencyCorrection);
+	}
+	else if ( event->PassesElectronTriggerAndSelection() ) {
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );	
+		treeMan_->Fill("LeptonEfficiencyCorrection", efficiencyCorrection);
+	}
+
 	treeMan_->Fill("bPt", bjets[0]->pt() );
 	treeMan_->Fill("bEta", bjets[0]->eta() );
 	treeMan_->Fill("bPt", bjets[1]->pt() );
@@ -72,19 +84,8 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
 	}
 
-	unsigned int numberOfBJets(0);
-	unsigned int numberOfJets(0);
-	for (unsigned int index = 0; index < jets.size(); ++index) {
-		const JetPointer jet(jets.at(index));
-		if (jet->pt() < 25 ) continue;
-		++numberOfJets;
-	}
-	for (unsigned int index = 0; index < bjets.size(); ++index) {
-		const JetPointer bJet(bjets.at(index));
-		if ( bJet->pt() < 25 ) continue;
-		++numberOfBJets;
-	}
-
+	unsigned int numberOfBJets(event->NJets(jets));
+	unsigned int numberOfJets(event->NJets(bjets));
 	treeMan_->Fill("NJets", numberOfJets );
 	treeMan_->Fill("NBJets", numberOfBJets );
 }
@@ -114,6 +115,7 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->addBranch("leptonPt", "F", "Unfolding");
 	treeMan_->addBranch("leptonEta", "F", "Unfolding");
+	treeMan_->addBranch("LeptonEfficiencyCorrection", "F", "Unfolding");
 
 	treeMan_->addBranch("bPt", "F", "Unfolding", false);
 	treeMan_->addBranch("bEta", "F", "Unfolding", false);

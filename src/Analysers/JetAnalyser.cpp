@@ -19,15 +19,17 @@ void JetAnalyser::analyse(const EventPtr event) {
 	const JetCollection jets(event->CleanedJets());
 	const JetCollection bjets(event->CleanedBJets());
 
-	unsigned int numberOfBJets(0);
-	unsigned int numberOfJets(0);
+	unsigned int numberOfBJets = event->NJets(bjets);
+	unsigned int numberOfJets = event->NJets(jets);
+
+	treeMan_->Fill("NJets", numberOfJets);
+	treeMan_->Fill("NBJets", numberOfBJets);
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
 
 		if (jet->pt() < 25 ) continue;
 
-		++numberOfJets;
 		if (index < 5) {
 			stringstream temp;
 			temp << "jet" << (index + 1);
@@ -48,8 +50,6 @@ void JetAnalyser::analyse(const EventPtr event) {
 
 		if ( bJet->pt() < 25 ) continue;
 
-		++numberOfBJets;
-
 		treeMan_->Fill("bjet_pt", bJet->pt());
 		treeMan_->Fill("bjet_eta", bJet->eta());
 		treeMan_->Fill("bjet_phi", bJet->phi());
@@ -60,8 +60,7 @@ void JetAnalyser::analyse(const EventPtr event) {
 	// 	cout << numberOfJets << " " << numberOfBJets << endl;
 	// }
 
-	treeMan_->Fill("NJets", numberOfJets);
-	treeMan_->Fill("NBJets", numberOfBJets);
+
 	treeMan_->Fill("EventWeight", weight_ );
 
 	if ( event->PassesMuonTriggerAndSelection() ) {

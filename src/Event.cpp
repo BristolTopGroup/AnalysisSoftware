@@ -62,6 +62,7 @@ Event::Event() : //
 		lumiBlock(0), //
 		eventWeight(1.), //
 		pileUpWeight_(1.), //
+		bJetWeight_(1.), //
 		PUWeightInTimeOnly_(1.), //
 		PUWeight3BX_(1.), //
 //		PUWeight3D_(1.), //
@@ -777,6 +778,10 @@ void Event::setPileUpWeight(double weight) {
 	pileUpWeight_ = weight;
 }
 
+void Event::setBJetWeight(double weight) {
+	bJetWeight_ = weight;
+}
+
 void Event::setBeamScrapingVeto(bool isScraping) {
 	isBeamScraping_ = isScraping;
 }
@@ -869,6 +874,10 @@ double Event::weight() const {
 
 double Event::PileUpWeight() const {
 	return pileUpWeight_;
+}
+
+double Event::BJetWeight() const {
+	return bJetWeight_;
 }
 
 void Event::inspect() const {
@@ -1200,6 +1209,18 @@ double Event::angle_bl(const JetCollection b_jets,
 		}
 	}
 	return angle;
+}
+
+unsigned int Event::NJets(const JetCollection jets) {
+	unsigned int nJets(0);
+	for (unsigned int index = 0; index < jets.size(); ++index) {
+		const JetPointer jet(jets.at(index));
+
+		if ( jet->pt() < 25 ) continue;
+
+		++nJets;
+	}
+	return nJets;
 }
 
 
