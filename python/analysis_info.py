@@ -115,7 +115,7 @@ datasets_8TeV = {
  #             'TTH_Inclusive_M-125' : [mc_path_8TeV + 'TTH_Inclusive_M-125_8TeV_pythia6'],
             }
 
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v23/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v24/'
 data_path_13TeV = ''
 datasets_13TeV = {
             'SingleMuon' : [ mc_path_13TeV + 'SingleMuon' ],
@@ -148,7 +148,7 @@ datasets_13TeV = {
             'T_tw' : [mc_path_13TeV + 'T_tw'],
             'Tbar_tw' : [mc_path_13TeV + 'Tbar_tw'],
 
-            'GJets_15to6000' : [mc_path_13TeV + 'GJets_15to6000'],
+            # 'GJets_15to6000' : [mc_path_13TeV + 'GJets_15to6000'],
 
             'QCD_EMEnriched_15to20' : [mc_path_13TeV + 'QCD_EMEnriched_15to20'],
             'QCD_EMEnriched_20to30' : [mc_path_13TeV + 'QCD_EMEnriched_20to30'],
