@@ -39,10 +39,10 @@ NTupleEventReader::NTupleEventReader() :
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPTightGsf.Fired")),
-		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPLooseGsf.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1.Fired")),
 		passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75GsfMC.Fired")),
-		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1MC.Fired")),
+		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1MC.Fired")),
 
 		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
 		passesGenSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesGenSelection")),
