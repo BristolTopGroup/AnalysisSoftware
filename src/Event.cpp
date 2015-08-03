@@ -629,8 +629,6 @@ void Event::setPassOfflineSelectionInfo( std::vector<unsigned int> passSelection
 
 const bool Event::passesJetSelection( const unsigned int selection ) { 
 
-	SelectionCriteria::selection selectionCriteria = SelectionCriteria::selection(selection);
-
 	const JetCollection jets = getCleanedJets( selection );
 	unsigned int nJetPass = 0;
 	for ( unsigned int jetIndex = 0; jetIndex < jets.size(); ++jetIndex ) {
