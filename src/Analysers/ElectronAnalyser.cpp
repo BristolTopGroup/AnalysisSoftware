@@ -64,7 +64,11 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 	treeMan_->Fill("pt", electron->pt() );
 	treeMan_->Fill("eta", electron->eta() );	
 	treeMan_->Fill("etaSC", electron->superClusterEta() );
-	treeMan_->Fill("relIso_03_deltaBeta", electron->PFRelIso03DeltaBeta() );	
+	treeMan_->Fill("relIso_03_deltaBeta", electron->PFRelIso03DeltaBeta() );
+
+	double efficiencyCorrection = electron->getEfficiencyCorrection( 0 );	
+	treeMan_->Fill("ElectronEfficiencyCorrection", efficiencyCorrection);
+
 }
 
 ElectronAnalyser::ElectronAnalyser(HistogramManagerPtr histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder, bool singleElectronOnly) :
@@ -137,7 +141,9 @@ void ElectronAnalyser::createTrees() {
 	treeMan_->addBranch("pt", "F", "Electrons" + Globals::treePrefix_);
 	treeMan_->addBranch("eta", "F", "Electrons" + Globals::treePrefix_);
 	treeMan_->addBranch("etaSC", "F", "Electrons" + Globals::treePrefix_);
-	treeMan_->addBranch("relIso_03_deltaBeta", "F", "Electrons" + Globals::treePrefix_);	
+	treeMan_->addBranch("relIso_03_deltaBeta", "F", "Electrons" + Globals::treePrefix_);
+
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "Electrons" + Globals::treePrefix_);
 }
 
 void ElectronAnalyser::useTTbarPlusMETSetup(bool use) {

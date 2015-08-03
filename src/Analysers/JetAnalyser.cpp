@@ -63,6 +63,19 @@ void JetAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("NJets", numberOfJets);
 	treeMan_->Fill("NBJets", numberOfBJets);
 	treeMan_->Fill("EventWeight", weight_ );
+
+	if ( event->PassesMuonTriggerAndSelection() ) {
+		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsReference );
+		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection( 0 );
+		treeMan_->Fill("MuonEfficiencyCorrection", efficiencyCorrection);
+	}
+	else if ( event->PassesElectronTriggerAndSelection() ) {
+		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::ElectronPlusJetsReference );
+		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+		double efficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection( 0 );	
+		treeMan_->Fill("ElectronEfficiencyCorrection", efficiencyCorrection);
+	}
 }
 
 void JetAnalyser::createHistograms() {
@@ -88,6 +101,9 @@ void JetAnalyser::createTrees() {
 	treeMan_->addBranch("bjet_phi", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("NJets", "F", "Jets" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "Jets" + Globals::treePrefix_);
+
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "Jets" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "Jets" + Globals::treePrefix_);
 
 	for (unsigned int index = 0; index < 5; ++index) {
 		stringstream temp;
