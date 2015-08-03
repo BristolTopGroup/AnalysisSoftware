@@ -37,27 +37,6 @@ void Analysis::analyse() {
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
-		const JetCollection jets(currentEvent->Jets());
-		unsigned int numberOfJets(jets.size());
-		unsigned int numberOfBJets(0);
-		for (unsigned int index = 0; index < numberOfJets; ++index) {
-			const JetPointer jet(currentEvent->Jets().at(index));
-			if (jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM))
-				++numberOfBJets;
-		}
-		histMan->setCurrentBJetBin(numberOfBJets);
-		histMan->setCurrentJetBin(numberOfJets);
-
-		vector<double> bjetWeights;
-		if (currentEvent->isRealData()) {
-			for (unsigned int index = 0; index <= numberOfBJets; ++index) {
-				if (index == numberOfBJets)
-					bjetWeights.push_back(1.);
-				else
-					bjetWeights.push_back(0);
-			}
-		} else
-			bjetWeights = BjetWeights(jets, numberOfBJets);
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) && Globals::treePrefix_ == "" ) {
