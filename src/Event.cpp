@@ -1202,5 +1202,17 @@ double Event::angle_bl(const JetCollection b_jets,
 	return angle;
 }
 
+unsigned int Event::NJets(const JetCollection jets) {
+	unsigned int nJets(0);
+	for (unsigned int index = 0; index < jets.size(); ++index) {
+		const JetPointer jet(jets.at(index));
+
+		if ( jet->pt() < 25 ) continue;
+
+		++nJets;
+	}
+	return nJets;
+}
+
 
 }
