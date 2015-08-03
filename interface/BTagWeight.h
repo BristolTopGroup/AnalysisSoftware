@@ -38,7 +38,7 @@ private:
 
 };
 
-std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfBtags);
+double BjetWeights(const JetCollection jets);
 }
 #endif
 

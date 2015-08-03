@@ -8,20 +8,11 @@
 
 namespace BAT {
 
-std::vector<double> BjetWeights(const JetCollection jets, unsigned int numberOfBtags) {
+double BjetWeight(const JetCollection jets) {
 	boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
 
-
-	double event_weight = btagWeight->weight( jets );
-	std::vector<double> event_weights;
-	for (unsigned int nTag = 0; nTag <= numberOfBtags; ++nTag) { // >= 4 is our last b-tag bin!
-		btagWeight->setNumberOfBtags(nTag, 20);
-		if ( nTag == numberOfBtags )
-			event_weights.push_back(event_weight);
-		else
-			event_weights.push_back(0.);
-	}
-	return event_weights;
+	double weight = btagWeight->weight( jets );
+	return weight;
 }
 
 BTagWeight::BTagWeight() :

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 #include "../../interface/HighLevelTriggers.h"
+#include "../../interface/BTagWeight.h"
 
 using namespace std;
 namespace BAT {
@@ -219,6 +220,11 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
 	}
+
+	// Set bjet weight
+	boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
+	double bweight = btagWeight->weight( currentEvent->CleanedJets() );
+	currentEvent->setBJetWeight( bweight );
 
 	double sysShiftMetCorrectionX = 0;
 	double sysShiftMetCorrectionY = 0;

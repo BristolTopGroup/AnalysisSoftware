@@ -62,6 +62,7 @@ Event::Event() : //
 		lumiBlock(0), //
 		eventWeight(1.), //
 		pileUpWeight_(1.), //
+		bJetWeight_(1.), //
 		PUWeightInTimeOnly_(1.), //
 		PUWeight3BX_(1.), //
 //		PUWeight3D_(1.), //
@@ -777,6 +778,10 @@ void Event::setPileUpWeight(double weight) {
 	pileUpWeight_ = weight;
 }
 
+void Event::setBJetWeight(double weight) {
+	bJetWeight_ = weight;
+}
+
 void Event::setBeamScrapingVeto(bool isScraping) {
 	isBeamScraping_ = isScraping;
 }
@@ -869,6 +874,10 @@ double Event::weight() const {
 
 double Event::PileUpWeight() const {
 	return pileUpWeight_;
+}
+
+double Event::BJetWeight() const {
+	return bJetWeight_;
 }
 
 void Event::inspect() const {

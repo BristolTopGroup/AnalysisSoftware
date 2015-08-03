@@ -26,6 +26,7 @@
 #include "PseudoTopReader.h"
 #include "SelectionOutputReader.h"
 #include "TTGenReader.h"
+#include "../BTagWeight.h"
 #include "../DataTypes.h"
 #include <string>
 

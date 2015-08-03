@@ -101,7 +101,7 @@ protected:
 	unsigned long lumiBlock;
 	double eventWeight;
 	double pileUpWeight_;
-	std::vector<double> bjetWeights_;
+	double bJetWeight_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
 			PUWeightShiftUp_, PUWeightShiftDown_;
@@ -178,6 +178,7 @@ public:
 	void setLumiBlock(unsigned long block);
 	void setEventWeight(double weight);
 	void setPileUpWeight(double weight);
+	void setBJetWeight(double weight);
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
 	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
@@ -265,6 +266,7 @@ public:
 	unsigned long lumiblock() const;
 	double weight() const;
 	double PileUpWeight() const;
+	double BJetWeight() const;
 	void inspect() const;
 	bool HLT(HLTriggers::value trigger) const;
 	int HLTPrescale(HLTriggers::value trigger) const;
