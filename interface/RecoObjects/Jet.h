@@ -61,6 +61,7 @@ public:
 			BtagAlgorithm::workingPoint wp) const;
 	bool isBJet() const;
 	JetAlgorithm::value getUsedAlgorithm() const;
+	double getBTagSF( int systematic = 0 ) const;
 
 	void set_matched_generated_jet(const ParticlePointer matchedgeneratedjet);
 	const ParticlePointer matched_generated_jet();
@@ -122,6 +123,9 @@ public:
 	void setFHPD(double fHPD);
 	void setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value type);
 	void setIsBJet( bool isBJet );
+	void setBTagSF( double sf );
+	void setBTagSFUp( double sf );
+	void setBTagSFDown( double sf );
 	void setNOD(int nod);
 	void setCEF(double cef);
 	void setNHF(double nhf);
@@ -141,8 +145,13 @@ private:
 	double electromagneticFraction;
 	int numberOfRecHitsContaining90PercentOfTheJetEnergy;
 	double fractionOfEnergyIntheHottestHPDReadout;
+
 	std::vector<double> btag_discriminators;
 	bool isBJet_;
+	double btagSF_;
+	double btagSF_up_;
+	double btagSF_down_;
+
 	//	double btagInData;
 	int numberOfDaughters;
 	double chargedEmEnergyFraction, neutralHadronEnergyFraction, neutralEmEnergyFraction;

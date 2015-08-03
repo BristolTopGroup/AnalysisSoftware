@@ -14,44 +14,48 @@
 
 namespace BAT {
 
+class MET;
+
 namespace METCorrections {
-enum value {
-	// pfMetSysShiftCorrections,
-	// pfMetType0Corrections,
-	// pfMetType1Corrections,
-	NUMBER_OF_METCORRECTIONS
-};
+	enum value {
+		// pfMetSysShiftCorrections,
+		// pfMetType0Corrections,
+		// pfMetType1Corrections,
+		NUMBER_OF_METCORRECTIONS
+	};
 
-const boost::array<std::string, METCorrections::NUMBER_OF_METCORRECTIONS> prefixes = {
-		//MET correction names as stored in the nTuples
-				// "pfMetSysShiftCorrections", //
-				// "pfMetType0Corrections", //
-				// "pfMetType1Corrections"  
-};
-
+	const boost::array<std::string, METCorrections::NUMBER_OF_METCORRECTIONS> prefixes = {
+			//MET correction names as stored in the nTuples
+					// "pfMetSysShiftCorrections", //
+					// "pfMetType0Corrections", //
+					// "pfMetType1Corrections"  
+	};
 }
 
 namespace METAlgorithm {
-enum value {
+	enum value {
 
-	// 2015 miniAOD
-	MET,
-	NUMBER_OF_METALGORITHMS
-};
+		// 2015 miniAOD
+		MET,
+		NUMBER_OF_METALGORITHMS
+	};
 
-const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes = { {
+	const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> prefixes = { {
 
-	// 2015 miniAOD
-	"MET",
+		// 2015 miniAOD
+		"MET",
 
-		} };
+	} };
 
-const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
-	// 2015 miniAOD
-	"MET",
+	const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
+		// 2015 miniAOD
+		"MET",
 
-} };
-	}
+	} };
+}
+
+	typedef boost::shared_ptr<MET> METPointer;
+	typedef std::vector<METPointer> METCollection;
 
 	class MET: public Particle {
 	public:
@@ -70,13 +74,18 @@ const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = {
 		void setSumET(double sumET);
 		static bool isMCOnlyMETType(unsigned int type);
 		static bool isAvailableInNTupleVersion(unsigned int ntupleVersion, unsigned int type);
+
+		void setMETUncertinaties( std::vector<double> newUncertainties );
+		void setMET_Px_Uncertinaties( std::vector<double> newUncertainties );
+		void setMET_Py_Uncertinaties( std::vector<double> newUncertainties );
+		std::vector< double > getAllMETUncertainties( );
+		BAT::METPointer getMETForUncertainty( unsigned int unc_i );
 	private:
 		METAlgorithm::value usedAlgorithm;
 		double significance_, sumET_;
-	};
 
-	typedef boost::shared_ptr<MET> METPointer;
-	typedef std::vector<METPointer> METCollection;
+		std::vector< double > metUncertaintyPt_, metUncertaintyPx_, metUncertaintyPy_;
+	};
 
 	}
 

@@ -66,6 +66,10 @@ protected:
 	VariableReader<MultiDoublePointer> btagCSVv2Reader;
 	VariableReader<MultiBoolPointer> isBtagReader;
 
+	VariableReader<MultiDoublePointer> btagSFReader;
+	VariableReader<MultiDoublePointer> btagSFUpReader;
+	VariableReader<MultiDoublePointer> btagSFDownReader;
+
 	VariableReader<MultiIntPointer> PartonFlavour;
 
 

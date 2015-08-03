@@ -19,6 +19,14 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 
 	treeMan_->setCurrentFolder(histogramFolder_);
 
+	treeMan_->Fill("EventWeight", event->weight());
+
+	double centralLHEWeight = event->centralLHEWeight();
+	for ( unsigned int unc_i = 0; unc_i < event->generatorSystematicWeights().size(); ++unc_i ) {
+		double weight = event->generatorSystematicWeights().at( unc_i );
+		treeMan_->Fill("generatorSystematicWeight", weight/centralLHEWeight);
+	}
+
 	int selectionCriteria = -1;
 
 	if ( event->PassesElectronTriggerAndSelection() ) selectionCriteria = SelectionCriteria::ElectronPlusJetsReference;
@@ -63,7 +71,11 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
 		treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
 	}
+
+	treeMan_->Fill("NJets", jets.size() );
+	treeMan_->Fill("NBJets", bjets.size() );
 }
+
 
 void UnfoldingRecoAnalyser::createTrees() {
 
@@ -75,6 +87,9 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("ST", "F", "Unfolding");
 	treeMan_->addBranch("WPT", "F", "Unfolding");
 	treeMan_->addBranch("MT", "F", "Unfolding");
+
+	treeMan_->addBranch("NJets", "F", "Unfolding");
+	treeMan_->addBranch("NBJets", "F", "Unfolding");
 
 	treeMan_->addBranch("lepTopPt", "F", "Unfolding");
 	treeMan_->addBranch("hadTopPt", "F", "Unfolding");
@@ -89,6 +104,8 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->addBranch("bPt", "F", "Unfolding", false);
 	treeMan_->addBranch("bEta", "F", "Unfolding", false);
+
+	treeMan_->addBranch("generatorSystematicWeight", "F", "Unfolding", false);
 }
 
 void UnfoldingRecoAnalyser::createHistograms() {

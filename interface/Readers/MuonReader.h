@@ -34,6 +34,8 @@ private:
 	VariableReader<MultiDoublePointer> hcalIsolationReader;
 	VariableReader<MultiDoublePointer> trackerIsolationReader;
 
+	VariableReader<MultiDoublePointer> relTrackIsolationReader_;
+
 	//new iso
 	VariableReader<MultiDoublePointer> PFRelIso03Reader_;
 	VariableReader<MultiDoublePointer> PFRelIso04Reader_;

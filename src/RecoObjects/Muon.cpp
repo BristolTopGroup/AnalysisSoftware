@@ -27,7 +27,8 @@ Muon::Muon() :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1),
+		relTrkIso_(-1) {
 
 }
 
@@ -44,7 +45,8 @@ Muon::Muon(double energy, double px, double py, double pz) :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1),
+		relTrkIso_(-1) {
 
 }
 
@@ -146,6 +148,16 @@ int Muon::pixelLayersWithMeasurement() const {
 double Muon::normChi2() const {
 	return normalisedChi2_;
 }
+
+void Muon::setRelTrkIsolation( double relIso ) {
+	relTrkIso_ = relIso;
+}
+
+double Muon::relTrkIso() const {
+	return relTrkIso_;
+}
+
+
 
 double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	if ( muon_scale_factor_systematic == 0 ) {

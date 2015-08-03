@@ -41,6 +41,7 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 	const JetCollection genJets( event->GenJets() );
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
+	treeMan_->Fill("EventWeight", event->weight());
 
 	// Get each jet pair combination and form a W candidate
 	for ( unsigned int jet1Index=0; jet1Index < jetsWithoutBs.size()-1; ++jet1Index ) {
