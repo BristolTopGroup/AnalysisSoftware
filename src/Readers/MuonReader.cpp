@@ -24,6 +24,7 @@ MuonReader::MuonReader() :
 		ecalIsolationReader(), //
 		hcalIsolationReader(), //
 		trackerIsolationReader(), //
+		relTrackIsolationReader_(), //
 		PFRelIso03Reader_(), //
 		PFRelIso04Reader_(), //
 		PFRelIso03DeltaBetaReader_(), //
@@ -65,7 +66,7 @@ MuonReader::MuonReader(TChainPointer input, MuonAlgorithm::value algo) :
 		ecalIsolationReader(input, "Muons.EcalIso03"), //
 		hcalIsolationReader(input, "Muons.HcalIso03"), //
 		trackerIsolationReader(input, "Muons.TrkIso03"), //
-
+		relTrackIsolationReader_(input, "Muons.RelTrkIso03"), //
 		PFRelIso03Reader_(input, "Muons.PFRelIso03"), //
 		PFRelIso04Reader_(input, "Muons.PFRelIso04"), //
 		PFRelIso03DeltaBetaReader_(input, "Muons.PFRelIso03DeltaBeta"), //
@@ -108,6 +109,8 @@ void MuonReader::initialise() {
 	ecalIsolationReader.initialise();
 	hcalIsolationReader.initialise();
 	trackerIsolationReader.initialise();
+
+	// relTrackIsolationReader_.initialise();
 
 	PFRelIso03Reader_.initialise();
 	PFRelIso04Reader_.initialise();
@@ -166,6 +169,8 @@ void MuonReader::readMuons() {
 		muon->setEcalIsolation(ecalIsolationReader.getVariableAt(index));
 		muon->setHcalIsolation(hcalIsolationReader.getVariableAt(index));
 		muon->setTrackerIsolation(trackerIsolationReader.getVariableAt(index));
+
+		// muon->setRelTrkIsolation(relTrackIsolationReader_.getVariableAt(index));
 
 		muon->setPFRelIso03(PFRelIso03Reader_.getVariableAt(index));
 		muon->setPFRelIso04(PFRelIso04Reader_.getVariableAt(index));

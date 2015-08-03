@@ -13,14 +13,16 @@ MET::MET() :
 		Particle(), //
 		usedAlgorithm(METAlgorithm::MET), //
 		significance_(-1), //
-		sumET_(-1) {
+		sumET_(-1),
+		metUncertaintyPt_() {
 }
 
 MET::MET(double ex, double ey) :
 		Particle(sqrt(ex * ex + ey * ey), ex, ey, 0), //
 		usedAlgorithm(METAlgorithm::MET), //
 		significance_(-1), //
-		sumET_(-1) {
+		sumET_(-1),
+		metUncertaintyPt_() {
 
 }
 
@@ -81,4 +83,32 @@ bool MET::isAvailableInNTupleVersion(unsigned int ntupleVersion, unsigned int ty
 return true;
 }
 
+void MET::setMETUncertinaties( std::vector<double> newUncertainties ) {
+	metUncertaintyPt_ = newUncertainties;
 }
+
+void MET::setMET_Px_Uncertinaties( std::vector<double> newUncertainties ) {
+	metUncertaintyPx_ = newUncertainties;
+}
+
+void MET::setMET_Py_Uncertinaties( std::vector<double> newUncertainties ) {
+	metUncertaintyPy_ = newUncertainties;
+}
+
+std::vector< double > MET::getAllMETUncertainties( ) {
+	return metUncertaintyPt_;
+}
+
+
+METPointer MET::getMETForUncertainty( unsigned int unc_i ) {
+	if ( unc_i < metUncertaintyPx_.size() ) {
+		METPointer newMet = METPointer( new MET(metUncertaintyPx_.at( unc_i ), metUncertaintyPy_.at( unc_i )));
+		return newMet;
+	}
+	else {
+		return 0;
+	}
+}
+
+}
+

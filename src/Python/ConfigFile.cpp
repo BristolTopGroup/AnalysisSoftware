@@ -30,6 +30,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		datasetInfoFile_(PythonParser::getAttributeFromPyObject<string>(config, "datasetInfoFile")), //
 		pileUpFile_(PythonParser::getAttributeFromPyObject<string>(config, "PUFile")), //
 		ttbarLikelihoodFile_(PythonParser::getAttributeFromPyObject<string>(config, "TTbarLikelihoodFile")), //
+		btagEfficiencyFile_(PythonParser::getAttributeFromPyObject<string>(config, "BTagEfficiencyFile")), //
 		getMuonScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getMuonScaleFactorsFromFile")), //
 		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonScaleFactorsFile")), //
 		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
@@ -103,6 +104,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 			"Dataset information file for event weight calculation");
 	desc.add_options()("PUFile", value<std::string>(), "set input PU file for PU re-weighting");
 	desc.add_options()("TTbarLikelihoodFile", value<std::string>(), "set input file for ttbar likelihood reconstruction");
+	desc.add_options()("BTagEfficiencyFile", value<std::string>(), "set input file for b tag efficiency");
 	desc.add_options()("getMuonScaleFactorsFromFile", value<bool>(), "state whether we are getting the muon scale factors from a file or not");
 	desc.add_options()("MuonScaleFactorsFile", value<std::string>(), "set input file for muon scale factors");
 	desc.add_options()("getElectronScaleFactorsFromFile", value<bool>(), "state whether we are getting the electron scale factors from a file or not");
@@ -214,6 +216,13 @@ string ConfigFile::TTbarLikelihoodFile() const {
 		return programOptions["TTbarLikelihoodFile"].as<std::string>();
 	else
 		return ttbarLikelihoodFile_;
+}
+
+string ConfigFile::BTagEfficiencyFile() const {
+	if (programOptions.count("BTagEfficiencyFile"))
+		return programOptions["BTagEfficiencyFile"].as<std::string>();
+	else
+		return btagEfficiencyFile_;
 }
 
 string ConfigFile::MuonScaleFactorsFile() const {
@@ -485,6 +494,10 @@ void ConfigFile::loadIntoMemory() {
 	getLeptonicRecoCorrectPermHistogram( TTbarLikelihoodFile() );
 	getLeptonicRecoIncorrectPermHistogram( TTbarLikelihoodFile() );
 
+	getbQuarkJet( BTagEfficiencyFile() );
+	getcQuarkJet( BTagEfficiencyFile() );
+	getudsQuarkJet( BTagEfficiencyFile() );
+	getgluonJet( BTagEfficiencyFile() );
 
 
 	//JES systematic
@@ -724,6 +737,60 @@ void ConfigFile::getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikeliho
 
 
 
+
+
+
+void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getbQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+	std::cout << btagEfficiencyFile.c_str();
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+
+	Globals::bQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("bQuarkJets_BTags_Hist")->Clone();
+	
+	file->Close();
+}
+
+void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getcQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+	Globals::cQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("cQuarkJets_BTags_Hist")->Clone();
+	file->Close();
+}
+void ConfigFile::getudsQuarkJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getudsQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+	Globals::udsQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("udsQuarkJets_BTags_Hist")->Clone();
+	file->Close();
+}
+void ConfigFile::getgluonJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getgluonJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+	Globals::gluonJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("gluonQuarkJets_BTags_Hist")->Clone();
+	file->Close();
+}
 
 
 
