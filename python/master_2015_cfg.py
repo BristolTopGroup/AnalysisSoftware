@@ -103,9 +103,9 @@ if os.environ.has_key('ntupleToProcess'):
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
-ElectronIdIsoScaleFactorsFile = '/users/ec6821/Electron_ID_Iso_Ali_30072015.root'
-ElectronTriggerScaleFactorsFile = '/storage/ec6821/DailyPythonScripts/CMSSW_7_4_7_patch2/src/DailyPythonScripts/experimental/ElectronTriggerEfficiencies.root'
-MuonIdIsoScaleFactorsFile = '/users/ec6821/muonGlobalSF_20150722_Mirena_30072015.root'
+ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Electron_ID_Iso_Ali_30072015.root'
+ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEfficiencies.root'
+MuonIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/muonGlobalSF_20150722_Mirena_30072015.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
