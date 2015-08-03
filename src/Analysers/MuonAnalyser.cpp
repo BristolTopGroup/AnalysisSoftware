@@ -50,7 +50,12 @@ void MuonAnalyser::analyseMuon(const MuonPointer muon, double weight) {
 	treeMan_->Fill("EventWeight", weight_ );
 	treeMan_->Fill("pt", muon->pt() );
 	treeMan_->Fill("eta", muon->eta() );	
-	treeMan_->Fill("relIso_04_deltaBeta", muon->PFRelIso04DeltaBeta() );	
+	treeMan_->Fill("relIso_04_deltaBeta", muon->PFRelIso04DeltaBeta() );
+
+	treeMan_->Fill("relTrkIso", muon->relTrkIso() );
+
+	double efficiencyCorrection = muon->getEfficiencyCorrection( 0 );	
+	treeMan_->Fill("MuonEfficiencyCorrection", efficiencyCorrection);
 }
 
 MuonAnalyser::MuonAnalyser(HistogramManagerPtr histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder, bool singleMuonOnly) :
@@ -104,7 +109,9 @@ void MuonAnalyser::createTrees() {
 
 	treeMan_->addBranch("pt", "F", "Muons" + Globals::treePrefix_);
 	treeMan_->addBranch("eta", "F", "Muons" + Globals::treePrefix_);	
-	treeMan_->addBranch("relIso_04_deltaBeta", "F", "Muons" + Globals::treePrefix_);	
+	treeMan_->addBranch("relIso_04_deltaBeta", "F", "Muons" + Globals::treePrefix_);
+	treeMan_->addBranch("relTrkIso", "F", "Muons" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "Muons" + Globals::treePrefix_);
 }
 
 void MuonAnalyser::useTTbarPlusMETSetup(bool use) {

@@ -14,7 +14,7 @@ using namespace std;
 
 namespace BAT {
 
-double const PseudoTopAnalyser::minLeptonPt_ = 30;
+double const PseudoTopAnalyser::minLeptonPt_ = 23;
 double const PseudoTopAnalyser::maxLeptonAbsEta_ = 2.4;
 double const PseudoTopAnalyser::minVetoLeptonPt_ = 15;
 double const PseudoTopAnalyser::maxVetoLeptonAbsEta_ = 2.5;
@@ -22,7 +22,7 @@ double const PseudoTopAnalyser::minNeutrinoSumPt_ = 30;
 double const PseudoTopAnalyser::minWMt_ = 30;
 unsigned int const PseudoTopAnalyser::minNJets_ = 4;
 unsigned int const PseudoTopAnalyser::minNBJets_ = 2;
-double const PseudoTopAnalyser::minJetPt_ = 30;
+double const PseudoTopAnalyser::minJetPt_ = 25;
 double const PseudoTopAnalyser::maxJetAbsEta_ = 2.4;
 
 void PseudoTopAnalyser::analyse(const EventPtr event) {
@@ -147,6 +147,22 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("pseudoMT", MT );
 	}
 
+	// NJets && NBJets
+	unsigned int numberOfBJets(0);
+	unsigned int numberOfJets(0);
+	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
+		const JetPointer jet(pseudoJets.at(index));
+		if (jet->pt() < 25 ) continue;
+		++numberOfJets;
+	}
+	for (unsigned int index = 0; index < pseudoBs.size(); ++index) {
+		const MCParticlePointer bJet(pseudoBs.at(index));
+		if ( bJet->pt() < 25 ) continue;
+		++numberOfBJets;
+	}
+
+	treeMan_->Fill("NPseudoJets", numberOfJets );
+	treeMan_->Fill("NPseudoBJets", numberOfBJets );
 }
 
 void PseudoTopAnalyser::createTrees() {
@@ -180,6 +196,10 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding");
 	treeMan_->addBranch("pseudoWPT", "F","Unfolding");
 	treeMan_->addBranch("pseudoMT", "F","Unfolding");
+
+	// Number of pseudo jets
+	treeMan_->addBranch("NPseudoJets", "F", "Unfolding");
+	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding");
 
 }
 

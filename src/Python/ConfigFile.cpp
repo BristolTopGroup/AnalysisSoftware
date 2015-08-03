@@ -30,8 +30,9 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		datasetInfoFile_(PythonParser::getAttributeFromPyObject<string>(config, "datasetInfoFile")), //
 		pileUpFile_(PythonParser::getAttributeFromPyObject<string>(config, "PUFile")), //
 		ttbarLikelihoodFile_(PythonParser::getAttributeFromPyObject<string>(config, "TTbarLikelihoodFile")), //
+		btagEfficiencyFile_(PythonParser::getAttributeFromPyObject<string>(config, "BTagEfficiencyFile")), //
 		getMuonScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getMuonScaleFactorsFromFile")), //
-		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonScaleFactorsFile")), //
+		muonScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonIdIsoScaleFactorsFile")), //
 		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
 		electronIdIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdIsoScaleFactorsFile")), //
 		electronTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronTriggerScaleFactorsFile")), //
@@ -103,6 +104,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 			"Dataset information file for event weight calculation");
 	desc.add_options()("PUFile", value<std::string>(), "set input PU file for PU re-weighting");
 	desc.add_options()("TTbarLikelihoodFile", value<std::string>(), "set input file for ttbar likelihood reconstruction");
+	desc.add_options()("BTagEfficiencyFile", value<std::string>(), "set input file for b tag efficiency");
 	desc.add_options()("getMuonScaleFactorsFromFile", value<bool>(), "state whether we are getting the muon scale factors from a file or not");
 	desc.add_options()("MuonScaleFactorsFile", value<std::string>(), "set input file for muon scale factors");
 	desc.add_options()("getElectronScaleFactorsFromFile", value<bool>(), "state whether we are getting the electron scale factors from a file or not");
@@ -216,9 +218,16 @@ string ConfigFile::TTbarLikelihoodFile() const {
 		return ttbarLikelihoodFile_;
 }
 
+string ConfigFile::BTagEfficiencyFile() const {
+	if (programOptions.count("BTagEfficiencyFile"))
+		return programOptions["BTagEfficiencyFile"].as<std::string>();
+	else
+		return btagEfficiencyFile_;
+}
+
 string ConfigFile::MuonScaleFactorsFile() const {
-	if (programOptions.count("MuonScaleFactorsFile"))
-		return programOptions["MuonScaleFactorsFile"].as<std::string>();
+	if (programOptions.count("MuonIdIsoScaleFactorsFile"))
+		return programOptions["MuonIdIsoScaleFactorsFile"].as<std::string>();
 	else
 		return muonScaleFactorsFile_;
 }
@@ -449,21 +458,26 @@ void ConfigFile::loadIntoMemory() {
 	std::cout << "ConfigFile.cpp: Globals::ElectronScaleFactorSystematic = " << Globals::ElectronScaleFactorSystematic << std::endl;
 	std::cout << "ConfigFile.cpp: Globals::MuonScaleFactorSystematic = " << Globals::MuonScaleFactorSystematic << std::endl;
 
-	if (Globals::energyInTeV == 7 && getMuonScaleFactorsFromFile_ && boost::filesystem::exists(MuonScaleFactorsFile())) {
+	if ( getMuonScaleFactorsFromFile_ && boost::filesystem::exists(MuonScaleFactorsFile())) {
 		std::cout << "Getting muon scale factors from file " << MuonScaleFactorsFile() << "." << std::endl;
 		Globals::muonIdIsoScaleFactorsHistogram = getMuonIdIsoScaleFactorsHistogram(MuonScaleFactorsFile());
-		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonScaleFactorsFile());
-	} else {
-		std::cout << "No muon scale factors file, corrections will be set to 1." << std::endl;
+		// Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonScaleFactorsFile());
 	}
 
-	if (Globals::energyInTeV == 7 && getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) && boost::filesystem::exists(ElectronTriggerScaleFactorsFile())) {
-		std::cout << "Getting electron scale factors from file " << ElectronIdIsoScaleFactorsFile() << " and " << ElectronTriggerScaleFactorsFile() << "." << std::endl;
-		Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) ) {
+		std::cout << "Getting electron scale factors from file " << ElectronTriggerScaleFactorsFile() << std::endl;
 		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
-	} else {
-		std::cout << "No electron scale factors file, corrections will be set to 1." << std::endl;
+		Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+
 	}
+
+	// if (Globals::energyInTeV == 7 && getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) && boost::filesystem::exists(ElectronTriggerScaleFactorsFile())) {
+	// 	std::cout << "Getting electron scale factors from file " << ElectronIdIsoScaleFactorsFile() << " and " << ElectronTriggerScaleFactorsFile() << "." << std::endl;
+	// 	Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+	// 	Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
+	// } else {
+	// 	std::cout << "No electron scale factors file, corrections will be set to 1." << std::endl;
+	// }
 
 	if ( Globals::energyInTeV == 7 && getHadronTriggerFromFile_ ) {
 		std::cout << "Getting electron trigger hadron leg efficiencies from file " << hadronTriggerFile() << "." << std::endl;
@@ -485,6 +499,10 @@ void ConfigFile::loadIntoMemory() {
 	getLeptonicRecoCorrectPermHistogram( TTbarLikelihoodFile() );
 	getLeptonicRecoIncorrectPermHistogram( TTbarLikelihoodFile() );
 
+	getbQuarkJet( BTagEfficiencyFile() );
+	getcQuarkJet( BTagEfficiencyFile() );
+	getudsQuarkJet( BTagEfficiencyFile() );
+	getgluonJet( BTagEfficiencyFile() );
 
 
 	//JES systematic
@@ -544,7 +562,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonIdIsoScaleFactorsHistogram(std::strin
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> idIsoHistogram((TH2F*) file->Get("SF_2011_TIGHT_ISO_PT25_PtrgL_eta_pt_PLOT")->Clone());
+	boost::shared_ptr<TH2F> idIsoHistogram((TH2F*) file->Get("SF_totErr")->Clone());
 	file->Close();
 
 	return idIsoHistogram;
@@ -565,7 +583,7 @@ boost::shared_ptr<TH3F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	return triggerHistogram;
 }
 
-boost::shared_ptr<TH2F> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile) {
+boost::shared_ptr<TH2D> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile) {
 	using namespace std;
 
 	if (!boost::filesystem::exists(electronIdIsoScaleFactorsFile)) {
@@ -574,13 +592,14 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::s
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronIdIsoScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> idIsoHistogram((TH2F*) file->Get("scaleFactors")->Clone());
+	boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
+	boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
 	file->Close();
 
 	return idIsoHistogram;
 }
 
-boost::shared_ptr<TEfficiency> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
+boost::shared_ptr<TH1F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
 	using namespace std;
 
 	if (!boost::filesystem::exists(electronTriggerScaleFactorsFile)) {
@@ -589,7 +608,11 @@ boost::shared_ptr<TEfficiency> ConfigFile::getElectronTriggerScaleFactorsHistogr
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronTriggerScaleFactorsFile.c_str()));
-	boost::shared_ptr<TEfficiency> triggerHistogram((TEfficiency*) file->Get("data")->Clone());
+	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("GsfElectronHLTMedium/HLT/fit_eff_plots/probe_pt_PLOT") );
+	boost::shared_ptr<TH1F> triggerHistogram((TH1F*) file->Get("eff"));
+	
+
+	// boost::shared_ptr<TEfficiency> triggerHistogram((TEfficiency*) file->Get("data")->Clone());
 	file->Close();
 
 	return triggerHistogram;
@@ -604,6 +627,7 @@ void ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(hadronTriggerFile.c_str()));
+
 	Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_1")->Clone("data_1"));
 	Globals::hadronTriggerLegEfficiencyHistogram_isoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_2")->Clone("data_2"));
 	Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_3")->Clone("data_3"));
@@ -724,6 +748,60 @@ void ConfigFile::getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikeliho
 
 
 
+
+
+
+void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getbQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+	std::cout << btagEfficiencyFile.c_str();
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+
+	Globals::bQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("bQuarkJets_BTags_Hist")->Clone();
+	
+	file->Close();
+}
+
+void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getcQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+	Globals::cQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("cQuarkJets_BTags_Hist")->Clone();
+	file->Close();
+}
+void ConfigFile::getudsQuarkJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getudsQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+	Globals::udsQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("udsQuarkJets_BTags_Hist")->Clone();
+	file->Close();
+}
+void ConfigFile::getgluonJet(std::string btagEfficiencyFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+		cerr << "ConfigFile::getgluonJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		throw "Could not find file " + btagEfficiencyFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+	Globals::gluonJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("gluonQuarkJets_BTags_Hist")->Clone();
+	file->Close();
+}
 
 
 

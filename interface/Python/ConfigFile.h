@@ -16,6 +16,7 @@
 #include "TH1D.h"
 #include "TH2F.h"
 #include "TH3F.h"
+#include "TCanvas.h"
 #include "TEfficiency.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
@@ -32,6 +33,7 @@ public:
 	std::string datasetInfoFile() const;
 	std::string PUFile() const;
 	std::string TTbarLikelihoodFile() const;
+	std::string BTagEfficiencyFile() const;
 	std::string MuonScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
 	std::string ElectronIdIsoScaleFactorsFile() const;
@@ -73,6 +75,7 @@ private:
 	std::string datasetInfoFile_;
 	std::string pileUpFile_;
 	std::string ttbarLikelihoodFile_;
+	std::string btagEfficiencyFile_;
 	bool getMuonScaleFactorsFromFile_;
 	std::string muonScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
@@ -110,8 +113,8 @@ private:
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
 	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH3F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
-	boost::shared_ptr<TEfficiency> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
-	boost::shared_ptr<TH2F> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
+	boost::shared_ptr<TH1F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
+	boost::shared_ptr<TH2D> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
 	
@@ -124,6 +127,13 @@ private:
 	void getHadronicRecoIncorrectPermHistogram(std::string ttbarLikelihoodFile);
 	void getLeptonicRecoCorrectPermHistogram(std::string ttbarLikelihoodFile);
 	void getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikelihoodFile);
+
+	void getbQuarkJet(std::string btagEfficiencyFile);
+	void getcQuarkJet(std::string btagEfficiencyFile);
+	void getudsQuarkJet(std::string btagEfficiencyFile);
+	void getgluonJet(std::string btagEfficiencyFile);
+
+
 };
 
 } /* namespace BAT */

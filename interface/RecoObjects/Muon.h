@@ -65,6 +65,9 @@ public:
 	void setNumberOfMatchedStations(int nMatchedStations);
 	void setNumberOfMatches(int nMatches);
 
+	void setRelTrkIsolation( double relIso );
+	double relTrkIso() const;
+
 	//other
 	double getEfficiencyCorrection(int muon_scale_factor_systematic) const;
 
@@ -75,6 +78,7 @@ private:
 	int numberOfValidMuonHits_, numberOfValidPixelHits_, numberOfValidHits_, pixelLayersWithMeasurement_, trackerLayersWithMeasurement_;
 	int numberOfMatches_, numberOfMatchedStations_;
 
+	double relTrkIso_;
 };
 
 typedef boost::shared_ptr<Muon> MuonPointer;

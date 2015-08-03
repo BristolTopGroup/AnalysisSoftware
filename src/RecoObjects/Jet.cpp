@@ -19,6 +19,9 @@ Jet::Jet() :
 		numberOfRecHitsContaining90PercentOfTheJetEnergy(0.), //
 		fractionOfEnergyIntheHottestHPDReadout(0.), //
 		btag_discriminators(BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS), //
+		btagSF_(0), //
+		btagSF_up_(0), //
+		btagSF_down_(0), //
 		numberOfDaughters(0), //
 		chargedEmEnergyFraction(1), //
 		neutralHadronEnergyFraction(1), //
@@ -72,6 +75,9 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		numberOfRecHitsContaining90PercentOfTheJetEnergy(0.), //
 		fractionOfEnergyIntheHottestHPDReadout(0.), //
 		btag_discriminators(BtagAlgorithm::NUMBER_OF_BTAGALGORITHMS), //
+		btagSF_(0), //
+		btagSF_up_(0), //
+		btagSF_down_(0), //
 		numberOfDaughters(0), //
 		chargedEmEnergyFraction(1), //
 		neutralHadronEnergyFraction(1), //
@@ -399,6 +405,18 @@ void Jet::setIsBJet( bool isItAB ) {
 	isBJet_ = isItAB;
 }
 
+void Jet::setBTagSF( double sf ) {
+	btagSF_ = sf;
+}
+
+void Jet::setBTagSFUp( double sf ) {
+	btagSF_up_ = sf;
+}
+
+void Jet::setBTagSFDown( double sf ) {
+	btagSF_down_ = sf;
+}
+
 void Jet::setNOD(int nod) {
 	numberOfDaughters = nod;
 }
@@ -457,7 +475,7 @@ bool Jet::FirstDataLooseCaloJetID() const {
 
 /*
  * Values taken from
- * https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideBTagPerformance
+ * https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X50ns
  * The b-tag POG has defined working points "Loose " (L), "Medium" (M) and "Tight" (T) for 10%, 1% and 0.1% light mis tag :
  * more details on these working points can be found on https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP
  */
@@ -467,11 +485,11 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 
 	case BtagAlgorithm::CombinedSecondaryVertexV2:
 		if (wp == BtagAlgorithm::LOOSE)
-			cut = 0.423;
+			cut = 0.605;
 		else if (wp == BtagAlgorithm::MEDIUM)
-			cut = 0.814;
+			cut = 0.890;
 		else if (wp == BtagAlgorithm::TIGHT)
-			cut = 0.941;
+			cut = 0.970;
 		break;
 
 	default:
@@ -484,6 +502,21 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 bool Jet::isBJet() const {
 	return isBJet_;
 }
+
+double Jet::getBTagSF( int systematic ) const {
+	if ( systematic == 0 ) {
+		return btagSF_;
+	}
+	else if ( systematic == 1 ) {
+		return btagSF_up_;
+	}
+	else if ( systematic == -1 ) {
+		return btagSF_down_;
+	}
+
+	return -1;
+}
+
 
 double Jet::btagSSVHE() const {
 	return -1;

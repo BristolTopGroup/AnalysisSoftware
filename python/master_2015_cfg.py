@@ -18,9 +18,10 @@ default_settings = {
             'JESsystematic':0,
             'JetSmearingSystematic':0,
             'PUFile':'PileUp_2012_69300_truth_finebin.root',
-            'MuonScaleFactors':'nofile.root',
+            'MuonIdIsoScaleFactorsFile':'nofile.root',
             'PUFile':'noFile.root',
             'TTbarLikelihoodFile' : 'LikelihoodInputAnalyserOutput.root',
+            'BTagEfficiencyFile' : 'BTagEfficiency.root',
             'BTagSystematic':0,
             'LightTagSystematic':0,
             'custom_file_suffix':'',
@@ -101,17 +102,18 @@ if os.environ.has_key('ntupleToProcess'):
 
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
-getMuonScaleFactorsFromFile = False
-getElectronScaleFactorsFromFile = False
-ElectronIdIsoScaleFactorsFile = 'noFile.root'
-ElectronTriggerScaleFactorsFile = 'noFile.root'
-MuonScaleFactorsFile = toolsFolder + "data/" + settings['MuonScaleFactors']
+getMuonScaleFactorsFromFile = True
+getElectronScaleFactorsFromFile = True
+ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Electron_ID_Iso_Ali_30072015.root'
+ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEfficiencies.root'
+MuonIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/muonGlobalSF_20150722_Mirena_30072015.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
 MuonScaleFactorSystematic = settings['MuonScaleFactorSystematic']
 
-TTbarLikelihoodFile = toolsFolder + "/data/" + settings['TTbarLikelihoodFile']
+TTbarLikelihoodFile = toolsFolder + "data/" + settings['TTbarLikelihoodFile']
+BTagEfficiencyFile = toolsFolder + "data/" + settings['BTagEfficiencyFile']
 
 #JES Systematic, the +/- number of uncertainties to vary the jets with
 JESsystematic = settings['JESsystematic']
@@ -131,7 +133,6 @@ if ntupleToProcess > 0 :
 
 inputFiles = [path + '/' + filetype for path in input_folders]
 # inputFiles = datasets[sample]
-print inputFiles
 
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
@@ -160,7 +161,7 @@ applyMetType0Corr = False
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 5000.#pb-1
+lumi = 40.028#pb-1
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
@@ -169,7 +170,7 @@ centerOfMassEnergy = 13
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
 if centerOfMassEnergy == 13:
-    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV.py"
+    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV_50ns.py"
 
 
 nTuple_version = 0

@@ -81,6 +81,8 @@ def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = 
             if splitTTJet and 'TTJets' in chosen_sample:
                 for ntupleIndex in range(1,numberOfInputFiles(chosen_sample,energy)+1):
                     result.append((chosen_sample, mode,ntupleIndex))
+            elif mode != 'central' and ( 'SingleMuon' in chosen_sample or 'SingleElectron' in chosen_sample ):
+                continue
             else:
                 result.append((chosen_sample, mode, -1))
         return result, [chosen_sample]
@@ -90,6 +92,8 @@ def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = 
                 if splitTTJet and 'TTJets' in sample:
                     for ntupleIndex in range(1,numberOfInputFiles(sample,energy)+1):
                         result.append((sample, mode,ntupleIndex))
+                elif mode != 'central' and ( 'SingleMuon' in chosen_sample or 'SingleElectron' in chosen_sample ):
+                    continue
                 else:
                     result.append((sample, mode, -1))
     return result, samples

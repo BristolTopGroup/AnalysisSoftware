@@ -60,13 +60,21 @@ protected:
 	MuonCollection allMuons;
 
 	bool passesElectronChannelTrigger_;
+	bool passesElectronChannelQCDTrigger_;
 	bool passesMuonChannelTrigger_;
+	bool passesMuonChannelQCDTrigger_;
 
 	bool passesElectronSelection_;
 	bool passesElectronQCDSelection_;
 	bool passesElectronConversionSelection_;
 	bool passesMuonSelection_;
 	bool passesMuonQCDSelection_;
+
+	bool passesElectronSelectionNoB_;
+	bool passesElectronQCDSelectionNoB_;
+	bool passesElectronConversionSelectionNoB_;
+	bool passesMuonSelectionNoB_;
+	bool passesMuonQCDSelectionNoB_;
 
 	bool isSemiLeptonicElectron_;
 	bool isSemiLeptonicMuon_;
@@ -103,7 +111,9 @@ protected:
 
 	std::vector<int> genNumberOfPileUpVertices;
 	std::vector<int> trueNumberOfPileUpVertices_;
-	std::vector<double> pdfWeights;
+	double generatorWeight_;
+	double centralLHEWeight_;
+	std::vector<double> generatorSystematicWeights_;
 
 	double ptdensityRho;
 	std::string file_;
@@ -116,6 +126,7 @@ public:
 	virtual ~Event();
 	bool isRealData() const;
 	const DataType::value getDataType() const;
+	bool isTTJet(DataType::value type) const;
 	void setDataType(DataType::value type);
 	void setVertices(VertexCollection vertices);
 	void setTracks(TrackCollection tracks);
@@ -128,14 +139,22 @@ public:
 	void setGenJets(JetCollection genJets);
 	void setMuons(MuonCollection muons);
 	void setPassesElectronChannelTrigger( bool passesTrigger );
+	void setPassesElectronChannelQCDTrigger( bool passesTrigger );
 	void setPassesMuonChannelTrigger( bool passesTrigger );
+	void setPassesMuonChannelQCDTrigger( bool passesTrigger );
 	void setPassesElectronSelection(bool passesElectronSelection);
 	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
 	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
 	void setPassesMuonSelection(bool passesMuonSelection);
 	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
+	void setPassesElectronSelectionNoB(bool passesElectronSelectionNoB);
+	void setPassesElectronQCDSelectionNoB(bool passesElectronQCDSelectionNoB);
+	void setPassesElectronConversionSelectionNoB(bool passesElectronConversionSelectionNoB);
+	void setPassesMuonSelectionNoB(bool passesMuonSelectionNoB);
+	void setPassesMuonQCDSelectionNoB(bool passesMuonQCDSelectionNoB);
 	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
 	const bool passesJetSelection( const unsigned int selectionCriteria );
+	const bool passesBJetSelection( const unsigned int selectionCriteria );
 	const bool passesSignalLeptonSelection( const unsigned int selectionCriteria );
 	void setPassGenSelectionInfo( std::vector<unsigned int> );
 	void setIsSemiLeptonicElectron( bool isSemiLeptonicElectron );
@@ -162,7 +181,9 @@ public:
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
 	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
-	void setPDFWeights(std::vector<double> pdfWeights);
+	void setGeneratorWeight( double generatorWeight );
+	void setCentralLHEWeight( double centralLHEWeight );
+	void setGeneratorSystematicWeights( std::vector<double> generatorSystematicWeights );
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
 	void setPUWeight3BX(double puweight);
@@ -210,6 +231,18 @@ public:
 	const bool PassesElectronTriggerAndQCDSelection() const;
 	const bool PassesElectronTriggerAndConversionSelection() const;
 	const bool PassesMuonTriggerAndQCDSelection() const;
+	
+	const bool PassesElectronSelectionNoB() const;
+	const bool PassesElectronQCDSelectionNoB() const;
+	const bool PassesElectronConversionSelectionNoB() const;
+	const bool PassesMuonSelectionNoB() const;
+	const bool PassesMuonQCDSelectionNoB() const;
+
+	const bool PassesElectronTriggerAndSelectionNoB() const;
+	const bool PassesMuonTriggerAndSelectionNoB() const;
+	const bool PassesElectronTriggerAndQCDSelectionNoB() const;
+	const bool PassesElectronTriggerAndConversionSelectionNoB() const;
+	const bool PassesMuonTriggerAndQCDSelectionNoB() const;
 
 	const bool isSemiLeptonicElectron() const;
 	const bool isSemiLeptonicMuon() const;
@@ -239,7 +272,9 @@ public:
 	static bool usePFIsolation;
 
 	const std::vector<int> GeneratedPileUpVertices() const;
-	const std::vector<double> PDFWeights() const;
+	const double generatorWeight() const;
+	const double centralLHEWeight() const;
+	const std::vector<double> generatorSystematicWeights() const;
 	double averageNumberOfVertices() const;
 	double inTimeOnlyNumberOfVertices() const;
 	double rho() const;

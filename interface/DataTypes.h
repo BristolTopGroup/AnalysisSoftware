@@ -16,11 +16,25 @@ enum value {
 	ElectronHad,
 	MuHad,
 	SingleElectron,
-	SingleMu,
+	SingleMuon,
+
+	TTJets_PowhegPythia8,
+	TTJets_PowhegPythia8_scaledown,
+	TTJets_PowhegPythia8_scaleup,
+	TTJets_PowhegPythia8_mtop1695,
+	TTJets_PowhegPythia8_mtop1755,
 
 	TTJets_amcatnloFXFX,
+	TTJets_amcatnloFXFX_scaledown,
+	TTJets_amcatnloFXFX_scaleup,
+	TTJets_amcatnloFXFX_mtop1695,
+	TTJets_amcatnloFXFX_mtop1755,
+
 	TTJets_madgraphMLM,
-	DYJetsToLL,
+	TTJets_powhegPythia6,
+
+	TTJets_synch,
+	DYJetsToLL_M50,
 	WJetsToLNu,
 	// TToLeptons_s,
 	// TBarToLeptons_s,
@@ -28,6 +42,7 @@ enum value {
 	TToLeptons_t,
 	T_tw,
 	Tbar_tw,
+	GJets_15to6000,
 	QCD_EMEnriched_15to20,
 	QCD_EMEnriched_20to30,
 	QCD_EMEnriched_30to50,
@@ -35,8 +50,10 @@ enum value {
 	QCD_EMEnriched_80to120,
 	QCD_EMEnriched_120to170,
 	QCD_EMEnriched_170to300,
+	QCD_EMEnriched_300toInf,
 	QCD_bcToE_15to20,
 	QCD_bcToE_20to30,
+	QCD_bcToE_30to80,
 	QCD_bcToE_80to170,
 	QCD_bcToE_170to250,
 	QCD_bcToE_250toInf,
@@ -50,6 +67,7 @@ enum value {
 	QCD_MuEnriched_300to470,
 	QCD_MuEnriched_470to600,
 	QCD_MuEnriched_600to800,
+	QCD_MuEnriched_800to1000,
 	QCD_MuEnriched_1000toInf,
 
 	NUMBER_OF_DATA_TYPES
@@ -60,11 +78,26 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"ElectronHad",//
 		"MuHad", //
 		"SingleElectron",//
-		"SingleMu",//
+		"SingleMuon",//
+
+		"TTJets_PowhegPythia8",
+		"TTJets_PowhegPythia8_scaledown",
+		"TTJets_PowhegPythia8_scaleup",
+		"TTJets_PowhegPythia8_mtop1695",
+		"TTJets_PowhegPythia8_mtop1755",
 
 		"TTJets_amcatnloFXFX",
+		"TTJets_amcatnloFXFX_scaledown",
+		"TTJets_amcatnloFXFX_scaleup",
+		"TTJets_amcatnloFXFX_mtop1695",
+		"TTJets_amcatnloFXFX_mtop1755",
+
 		"TTJets_madgraphMLM",
-		"DYJetsToLL",
+		"TTJets_powhegPythia6",
+
+		"TTJets_synch",
+
+		"DYJetsToLL_M50",
 		"WJetsToLNu",
 		// "TToLeptons_s",
 		// "TBarToLeptons_s",
@@ -72,6 +105,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TToLeptons_t",
 		"T_tw",
 		"Tbar_tw",
+		"GJets_15to6000",
 		"QCD_EMEnriched_15to20",
 		"QCD_EMEnriched_20to30",
 		"QCD_EMEnriched_30to50",
@@ -79,8 +113,10 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_EMEnriched_80to120",
 		"QCD_EMEnriched_120to170",
 		"QCD_EMEnriched_170to300",
+		"QCD_EMEnriched_300toInf",
 		"QCD_bcToE_15to20",
 		"QCD_bcToE_20to30",
+		"QCD_bcToE_30to80",
 		"QCD_bcToE_80to170",
 		"QCD_bcToE_170to250",
 		"QCD_bcToE_250toInf",
@@ -94,6 +130,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_MuEnriched_300to470",
 		"QCD_MuEnriched_470to600",
 		"QCD_MuEnriched_600to800",
+		"QCD_MuEnriched_800to1000",
 		"QCD_MuEnriched_1000toInf"
 		} };
 

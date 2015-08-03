@@ -39,8 +39,10 @@ NTupleEventReader::NTupleEventReader() :
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle32eta2p1WP75Gsf.Fired")),
-		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24eta2p1.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPLooseGsf.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1.Fired")),
+		passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75GsfMC.Fired")),
+		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1MC.Fired")),
 
 		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
 		passesGenSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesGenSelection")),
@@ -53,7 +55,9 @@ NTupleEventReader::NTupleEventReader() :
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
-		PDFWeightsReader(new VariableReader<MultiDoublePointer>(input, "Event.PDFWeights")), //
+		generatorWeightReader_(new VariableReader<double>(input, "Event.generatorWeight")), //
+		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
+		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
 		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
 		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
@@ -96,6 +100,7 @@ NTupleEventReader::~NTupleEventReader() {
 }
 
 void NTupleEventReader::addInputFile(const TString fileName) {
+	cout << fileName << endl;
 	unsigned long filesAdded = input->Add(fileName, -1); //-1 == number of events is not read!
 	if (filesAdded <= 0)
 		throw NoFileFoundException("No file found in '" + TString(fileName) + "'");
@@ -138,8 +143,20 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	currentEvent->setJets(jetReader->getJets(currentEvent->isRealData()));
 
-	currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
-	currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+	if (currentEvent->isRealData()) {
+		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelTriggerReader->getVariable() );
+
+	}
+	else {
+		currentEvent->setPassesElectronChannelTrigger( true );
+		currentEvent->setPassesMuonChannelTrigger( true );
+
+		currentEvent->setPassesElectronChannelQCDTrigger( true );
+		currentEvent->setPassesMuonChannelQCDTrigger( true );
+	}
 
 	// Set info that depends on selection criteria e.g. cleaned jets
 	// Must do this before setPassOfflineSelectionInfo, as this selects on the cleaned jets
@@ -150,7 +167,6 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
 
 	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
-
 	currentEvent->setPassGenSelectionInfo( *passesGenSelectionReader->getVariable() );
 
 	currentEvent->setTTGenInfo( ttGenInfoReader->getTTGenInfo());
@@ -174,6 +190,11 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	// 		currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
 	// 	}
 
+		currentEvent->setGeneratorWeight( generatorWeightReader_->getVariable() );
+
+		currentEvent->setGeneratorSystematicWeights( *systematicWeightsReader_->getVariable() );
+
+		currentEvent->setCentralLHEWeight( centralLHEWeightReader_->getVariable() );
 	}
 
 	// Get and set the cleaned jets for this event
@@ -298,8 +319,10 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		genJetReader->initialise();
 		muonReader->initialise();
 
-		passesElectronChannelTriggerReader->initialise();
-		passesMuonChannelTriggerReader->initialise();
+		passesElectronChannelTriggerReader->initialiseBlindly();
+		passesMuonChannelTriggerReader->initialiseBlindly();
+		passesElectronChannelQCDTriggerReader->initialiseBlindly();
+		passesMuonChannelQCDTriggerReader->initialiseBlindly();
 
 		passesOfflineSelectionReader->initialise();
 		passesGenSelectionReader->initialise();
@@ -315,8 +338,11 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();
 
+		generatorWeightReader_->initialise();
+		systematicWeightsReader_->initialise();
+		centralLHEWeightReader_->initialise();
+
 		if (Globals::NTupleVersion >= 6) { //MC only info!
-			PDFWeightsReader->initialiseBlindly();
 			PileupInfoReader->initialiseBlindly();
 			TruePileupInfoReader->initialiseBlindly();
 			PUWeightInTimeOnly_->initialiseBlindly();

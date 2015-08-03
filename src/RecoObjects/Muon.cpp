@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 namespace BAT {
 const double initialBigValue = 123456789;
 
@@ -27,7 +29,8 @@ Muon::Muon() :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1),
+		relTrkIso_(-1) {
 
 }
 
@@ -44,7 +47,8 @@ Muon::Muon(double energy, double px, double py, double pz) :
 		pixelLayersWithMeasurement_(-1), //
 		trackerLayersWithMeasurement_(-1), //
 		numberOfMatches_(-1), //
-		numberOfMatchedStations_(-1) {
+		numberOfMatchedStations_(-1),
+		relTrkIso_(-1) {
 
 }
 
@@ -147,17 +151,25 @@ double Muon::normChi2() const {
 	return normalisedChi2_;
 }
 
-double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
-	if ( muon_scale_factor_systematic == 0 ) {
-		return 1.;
-	}
-	else if ( muon_scale_factor_systematic == -1 ) {
-		return 0.99;
-	}
-	else if ( muon_scale_factor_systematic == 1 ) {
-		return 1.01;
-	}
+void Muon::setRelTrkIsolation( double relIso ) {
+	relTrkIso_ = relIso;
+}
 
-	return 0.;
+double Muon::relTrkIso() const {
+	return relTrkIso_;
+}
+
+
+
+double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
+	
+	double idIsoSF(1.);
+	boost::shared_ptr<TH2F> muonIDIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram);
+	double muonPt = pt();
+	double muonEta = eta();
+	double bin = muonIDIsoScaleFactorsHistogram->FindBin( muonEta, muonPt );
+	idIsoSF = muonIDIsoScaleFactorsHistogram->GetBinContent( bin );
+
+	return idIsoSF;
 }
 }

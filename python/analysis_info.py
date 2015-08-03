@@ -115,13 +115,29 @@ datasets_8TeV = {
  #             'TTH_Inclusive_M-125' : [mc_path_8TeV + 'TTH_Inclusive_M-125_8TeV_pythia6'],
             }
 
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v20/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v24/'
 data_path_13TeV = ''
 datasets_13TeV = {
-            'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX' ],
-            'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM'],
+            'SingleMuon' : [ mc_path_13TeV + 'SingleMuon' ],
+            'SingleElectron' : [ mc_path_13TeV + 'SingleElectron' ],
 
-            'DYJetsToLL' : [ mc_path_13TeV + 'DYJetsToLL_M50' ],
+            'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
+            'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],
+            'TTJets_PowhegPythia8_scaleup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaleup' ],
+            'TTJets_PowhegPythia8_mtop1695' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695' ],
+            'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755' ],
+            
+            'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX' ],
+            'TTJets_amcatnloFXFX_scaledown' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaledown' ],
+            'TTJets_amcatnloFXFX_scaleup' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaleup' ],
+            'TTJets_amcatnloFXFX_mtop1695' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1695' ],
+            'TTJets_amcatnloFXFX_mtop1755' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1755' ],
+            
+            # 'TTJets_PowhegPythia6' : [ mc_path_13TeV + 'TTJets_PowhegPythia6' ],
+            'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM'],
+            # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch'],
+
+            'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50' ],
             'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu' ],
 
             # 'TToLeptons_s' : [mc_path_13TeV + 'TToLeptons_s_PU20bx25'],
@@ -132,6 +148,7 @@ datasets_13TeV = {
             'T_tw' : [mc_path_13TeV + 'T_tw'],
             'Tbar_tw' : [mc_path_13TeV + 'Tbar_tw'],
 
+            # 'GJets_15to6000' : [mc_path_13TeV + 'GJets_15to6000'],
 
             'QCD_EMEnriched_15to20' : [mc_path_13TeV + 'QCD_EMEnriched_15to20'],
             'QCD_EMEnriched_20to30' : [mc_path_13TeV + 'QCD_EMEnriched_20to30'],
@@ -140,10 +157,11 @@ datasets_13TeV = {
             'QCD_EMEnriched_80to120' : [mc_path_13TeV + 'QCD_EMEnriched_80to120'],
             'QCD_EMEnriched_120to170' : [mc_path_13TeV + 'QCD_EMEnriched_120to170'],
             'QCD_EMEnriched_170to300' : [mc_path_13TeV + 'QCD_EMEnriched_170to300'],
+            'QCD_EMEnriched_300toInf' : [mc_path_13TeV + 'QCD_EMEnriched_300toInf'],
 
             'QCD_bcToE_15to20' : [mc_path_13TeV + 'QCD_bcToE_15to20'],
             'QCD_bcToE_20to30' : [mc_path_13TeV + 'QCD_bcToE_20to30'],
-
+            'QCD_bcToE_30to80' : [mc_path_13TeV + 'QCD_bcToE_30to80'],
             'QCD_bcToE_80to170' : [mc_path_13TeV + 'QCD_bcToE_80to170'],
             'QCD_bcToE_170to250' : [mc_path_13TeV + 'QCD_bcToE_170to250'],
             'QCD_bcToE_250toInf' : [mc_path_13TeV + 'QCD_bcToE_250toInf'],
@@ -158,6 +176,7 @@ datasets_13TeV = {
             'QCD_MuEnriched_300to470': [mc_path_13TeV + 'QCD_MuEnriched_300to470'],
             'QCD_MuEnriched_470to600': [mc_path_13TeV + 'QCD_MuEnriched_470to600'],
             'QCD_MuEnriched_600to800': [mc_path_13TeV + 'QCD_MuEnriched_600to800'],
+            'QCD_MuEnriched_800to1000': [mc_path_13TeV + 'QCD_MuEnriched_800to1000'],
             'QCD_MuEnriched_1000toInf': [mc_path_13TeV + 'QCD_MuEnriched_1000toInf'],
 
 

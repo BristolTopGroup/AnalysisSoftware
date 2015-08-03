@@ -39,16 +39,19 @@ boost::shared_ptr<TH2F> Globals::HadronicRecoIncorrectPermHistogram = boost::sha
 boost::shared_ptr<TH2F> Globals::LeptonicRecoCorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH2F> Globals::LeptonicRecoIncorrectPermHistogram = boost::shared_ptr<TH2F>(new TH2F());
 
-
-
+// BTagging efficiencies
+boost::shared_ptr<TH2F> Globals::bQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::cQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::udsQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::gluonJet = boost::shared_ptr<TH2F>(new TH2F());
 
 
 
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
 int Globals::ElectronScaleFactorSystematic = 0;
-boost::shared_ptr<TH2F> Globals::electronIdIsoScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
-boost::shared_ptr<TEfficiency> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TEfficiency>(new TEfficiency("electronEffic","electronEffic",1,0));
+boost::shared_ptr<TH2D> Globals::electronIdIsoScaleFactorsHistogram = boost::shared_ptr<TH2D>(new TH2D());
+boost::shared_ptr<TH1F> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TH1F>(new TH1F());
 
 //muons
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
