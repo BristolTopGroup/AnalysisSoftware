@@ -190,48 +190,48 @@ void TTGenReader::readTTGenInfo() {
 
 void TTGenReader::initialise() {
 
-    quarkPxReader.initialise();
-    quarkPyReader.initialise();
-    quarkPzReader.initialise();
-    quarkEReader.initialise();
-    quarkGenJetIndexReader.initialise();
-    quarkBarPxReader.initialise();
-    quarkBarPyReader.initialise();
-    quarkBarPzReader.initialise();
-    quarkBarEReader.initialise();
-    quarkBarGenJetIndexReader.initialise();
-    leptonicBPxReader.initialise();
-    leptonicBPyReader.initialise();
-    leptonicBPzReader.initialise();
-    leptonicBEReader.initialise();
-    leptonicBGenJetIndexReader.initialise();
-    hadronicBPxReader.initialise();
-    hadronicBPyReader.initialise();
-    hadronicBPzReader.initialise();
-    hadronicBEReader.initialise();
-    hadronicBGenJetIndexReader.initialise();
-    singleleptonPxReader.initialise();
-    singleleptonPyReader.initialise();
-    singleleptonPzReader.initialise();
-    singleleptonEReader.initialise();
-    singleneutrinoPxReader.initialise();
-    singleneutrinoPyReader.initialise();
-    singleneutrinoPzReader.initialise();
-    singleneutrinoEReader.initialise();
+    quarkPxReader.initialiseBlindly();
+    quarkPyReader.initialiseBlindly();
+    quarkPzReader.initialiseBlindly();
+    quarkEReader.initialiseBlindly();
+    quarkGenJetIndexReader.initialiseBlindly();
+    quarkBarPxReader.initialiseBlindly();
+    quarkBarPyReader.initialiseBlindly();
+    quarkBarPzReader.initialiseBlindly();
+    quarkBarEReader.initialiseBlindly();
+    quarkBarGenJetIndexReader.initialiseBlindly();
+    leptonicBPxReader.initialiseBlindly();
+    leptonicBPyReader.initialiseBlindly();
+    leptonicBPzReader.initialiseBlindly();
+    leptonicBEReader.initialiseBlindly();
+    leptonicBGenJetIndexReader.initialiseBlindly();
+    hadronicBPxReader.initialiseBlindly();
+    hadronicBPyReader.initialiseBlindly();
+    hadronicBPzReader.initialiseBlindly();
+    hadronicBEReader.initialiseBlindly();
+    hadronicBGenJetIndexReader.initialiseBlindly();
+    singleleptonPxReader.initialiseBlindly();
+    singleleptonPyReader.initialiseBlindly();
+    singleleptonPzReader.initialiseBlindly();
+    singleleptonEReader.initialiseBlindly();
+    singleneutrinoPxReader.initialiseBlindly();
+    singleneutrinoPyReader.initialiseBlindly();
+    singleneutrinoPzReader.initialiseBlindly();
+    singleneutrinoEReader.initialiseBlindly();
 
-    leptonicWPxReader.initialise();
-    leptonicWPyReader.initialise();
-    leptonicWPzReader.initialise();
-    leptonicWEReader.initialise();
+    leptonicWPxReader.initialiseBlindly();
+    leptonicWPyReader.initialiseBlindly();
+    leptonicWPzReader.initialiseBlindly();
+    leptonicWEReader.initialiseBlindly();
 
-    leptonicTopPxReader.initialise();
-    leptonicTopPyReader.initialise();
-    leptonicTopPzReader.initialise();
-    leptonicTopEReader.initialise();
-    hadronicTopPxReader.initialise();
-    hadronicTopPyReader.initialise();
-    hadronicTopPzReader.initialise();
-    hadronicTopEReader.initialise();
+    leptonicTopPxReader.initialiseBlindly();
+    leptonicTopPyReader.initialiseBlindly();
+    leptonicTopPzReader.initialiseBlindly();
+    leptonicTopEReader.initialiseBlindly();
+    hadronicTopPxReader.initialiseBlindly();
+    hadronicTopPyReader.initialiseBlindly();
+    hadronicTopPzReader.initialiseBlindly();
+    hadronicTopEReader.initialiseBlindly();
 }
 
 }
