@@ -103,6 +103,7 @@ private:
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > lumiBlockReader;
+	boost::scoped_ptr<VariableReader<bool> > passesMetFilterReader;
 
 	boost::scoped_ptr<VariableReader<double> > generatorWeightReader_;
 	boost::scoped_ptr<VariableReader<double> > centralLHEWeightReader_;
