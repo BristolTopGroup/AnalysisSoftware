@@ -146,43 +146,43 @@ void JetReader::readJets(bool isRealData) {
 		JetPointer jet(new Jet(energy, px, py, pz));
 
 		//get matched gen jet variables if MC, applyJetSmearing is True and there is a matchedGeneratedJet:
-		// if (!isRealData) {
-		// 	double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
-		// 	if (matchedGeneratedJetEnergy !=0) {
-		// 		double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
-		// 		double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
-		// 		double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
-		// 		double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
+		if (!isRealData) {
+			double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
+			if (matchedGeneratedJetEnergy !=0) {
+				double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
+				double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
+				double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
+				double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
 
-		// 		//store matched generated jet variables in a matchedGeneratedJet pointer
-		// 		JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
-		// 		jet->set_matched_generated_jet(matchedGeneratedJet);
-		// 		if ( Globals::applyJetSmearing ) {
-		// 			//smear the unsmeared jet
-		// 			const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
+				//store matched generated jet variables in a matchedGeneratedJet pointer
+				JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
+				jet->set_matched_generated_jet(matchedGeneratedJet);
+				if ( Globals::applyJetSmearing ) {
+					//smear the unsmeared jet
+					const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
 
-		// 			FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
-		// 			jet->setFourVector(smearedJetFourVector);
+					FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
+					jet->setFourVector(smearedJetFourVector);
 
-		// 			//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
-		// 			jet->set_unsmeared_jet(unsmearedJet);
-		// 		}
-		// 	}
+					//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
+					jet->set_unsmeared_jet(unsmearedJet);
+				}
+			}
 
-		// 	double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
-		// 	if (matchedPartonEnergy !=0) {
-		// 		double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
-		// 		double matchedPartonPx = matchedPartonPxReader.getVariableAt(jetIndex); //
-		// 		double matchedPartonPy = matchedPartonPyReader.getVariableAt(jetIndex); //
-		// 		double matchedPartonPz = matchedPartonPzReader.getVariableAt(jetIndex); //
-		// 		double matchedPartonPdgId = matchedPartonPdgIdReader.getIntVariableAt(jetIndex); //
+			double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
+			if (matchedPartonEnergy !=0) {
+				double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
+				double matchedPartonPx = matchedPartonPxReader.getVariableAt(jetIndex); //
+				double matchedPartonPy = matchedPartonPyReader.getVariableAt(jetIndex); //
+				double matchedPartonPz = matchedPartonPzReader.getVariableAt(jetIndex); //
+				double matchedPartonPdgId = matchedPartonPdgIdReader.getIntVariableAt(jetIndex); //
 
-		// 		// Store as mc particle pointer
-		// 		MCParticlePointer matchedParton( new MCParticle(matchedPartonEnergy, matchedPartonPx, matchedPartonPy, matchedPartonPz));
-		// 		matchedParton->setPdgId( matchedPartonPdgId );
-		// 		jet->set_matched_parton( matchedParton );
-		// 	}
-		// }
+				// Store as mc particle pointer
+				MCParticlePointer matchedParton( new MCParticle(matchedPartonEnergy, matchedPartonPx, matchedPartonPy, matchedPartonPz));
+				matchedParton->setPdgId( matchedPartonPdgId );
+				jet->set_matched_parton( matchedParton );
+			}
+		}
 
 		jet->setUsedAlgorithm(usedAlgorithm);
 		jet->setMass(massReader.getVariableAt(jetIndex));
@@ -262,16 +262,16 @@ void JetReader::initialise() {
 	massReader.initialise();
 	chargeReader.initialise();
 
-	// matchedGeneratedJetEnergyReader.initialiseBlindly();
-	// matchedGeneratedJetPxReader.initialiseBlindly();
-	// matchedGeneratedJetPyReader.initialiseBlindly();
-	// matchedGeneratedJetPzReader.initialiseBlindly();
+	matchedGeneratedJetEnergyReader.initialiseBlindly();
+	matchedGeneratedJetPxReader.initialiseBlindly();
+	matchedGeneratedJetPyReader.initialiseBlindly();
+	matchedGeneratedJetPzReader.initialiseBlindly();
 
-	// matchedPartonEnergyReader.initialise();
-	// matchedPartonPxReader.initialise();
-	// matchedPartonPyReader.initialise();
-	// matchedPartonPzReader.initialise();
-	// matchedPartonPdgIdReader.initialise();
+	matchedPartonEnergyReader.initialiseBlindly();
+	matchedPartonPxReader.initialiseBlindly();
+	matchedPartonPyReader.initialiseBlindly();
+	matchedPartonPzReader.initialiseBlindly();
+	matchedPartonPdgIdReader.initialiseBlindly();
 
 	if (usedAlgorithm == JetAlgorithm::Calo_AntiKT_Cone05) {
 		emfReader.initialise();

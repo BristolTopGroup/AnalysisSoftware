@@ -15,8 +15,10 @@ namespace DataType {
 enum value {
 	ElectronHad,
 	MuHad,
-	SingleElectron,
-	SingleMuon,
+	SingleElectron_PromptReco,
+	SingleElectron_Rereco,
+	SingleMuon_PromptReco,
+	SingleMuon_Rereco,
 
 	TTJets_PowhegPythia8,
 	TTJets_PowhegPythia8_scaledown,
@@ -32,6 +34,7 @@ enum value {
 
 	TTJets_madgraphMLM,
 	TTJets_powhegPythia6,
+	TTJets_PowhegHerwigpp,
 
 	TTJets_synch,
 	DYJetsToLL_M50,
@@ -77,8 +80,10 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 //
 		"ElectronHad",//
 		"MuHad", //
-		"SingleElectron",//
-		"SingleMuon",//
+		"SingleElectron_PromptReco",
+		"SingleElectron_Rereco",
+		"SingleMuon_PromptReco",
+		"SingleMuon_Rereco",
 
 		"TTJets_PowhegPythia8",
 		"TTJets_PowhegPythia8_scaledown",
@@ -94,6 +99,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 
 		"TTJets_madgraphMLM",
 		"TTJets_powhegPythia6",
+		"TTJets_PowhegHerwigpp",
 
 		"TTJets_synch",
 

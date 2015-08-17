@@ -47,6 +47,7 @@ Event::Event() : //
 		passesElectronConversionSelectionNoB_(false),
 		passesMuonSelectionNoB_(false),
 		passesMuonQCDSelectionNoB_(false),
+		passesMETFilters_(true),
 		isSemiLeptonicElectron_(false),
 		isSemiLeptonicMuon_(false),
 		selectionOutputInfo_electron(),
@@ -92,8 +93,9 @@ Event::~Event() {
 }
 
 bool Event::isRealData() const {
-	return dataType == DataType::ElectronHad || dataType == DataType::MuHad || dataType == DataType::SingleElectron
-			|| dataType == DataType::SingleMuon;
+	return dataType == DataType::ElectronHad || dataType == DataType::MuHad || 
+			dataType == DataType::SingleElectron_PromptReco || dataType == DataType::SingleElectron_Rereco ||
+			dataType == DataType::SingleMuon_PromptReco || dataType == DataType::SingleMuon_Rereco;
 }
 
 const DataType::value Event::getDataType() const {
@@ -116,6 +118,7 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_amcatnloFXFX_mtop1755 ||
 		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_powhegPythia6 ||
+		type == DataType::TTJets_PowhegHerwigpp ||
 		type == DataType::TTJets_synch
 		)
 		return true;
@@ -1063,6 +1066,14 @@ void Event::setECALLaserCorrFilter(bool result) {
 
 void Event::setTrackingPOGFilters(bool result) {
 	passesTrackingPOGFilters_ = result;
+}
+
+bool Event::passesMETFilters() const {
+	return passesMETFilters_;
+}
+
+void Event::setPassesMETFilters(bool pass) {
+	passesMETFilters_ = pass;
 }
 
 bool Event::passesCSCTightBeamHaloFilter() const {

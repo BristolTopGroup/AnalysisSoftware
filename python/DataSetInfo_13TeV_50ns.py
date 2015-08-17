@@ -21,8 +21,10 @@ datasetInfo = {}
 #Data samples
 datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 datasetInfo['MuHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleElectron'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleMuon'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleElectron_PromptReco'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleElectron_Rereco'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMuon_PromptReco'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMuon_Rereco'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/TtbarNNLO
 datasetInfo['TTJets_PowhegPythia8'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 19665194 }
@@ -40,6 +42,7 @@ datasetInfo['TTJets_amcatnloFXFX_mtop1755'] = { "cross-section" : 831.76, "Numbe
 
 datasetInfo['TTJets_madgraphMLM'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 4992231 }
 datasetInfo['TTJets_powhegPythia6'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 1913779 }
+datasetInfo['TTJets_PowhegHerwigpp'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 4999975 }
 
 datasetInfo['TTJets_synch'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 47000 }
 

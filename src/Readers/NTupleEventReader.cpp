@@ -56,6 +56,7 @@ NTupleEventReader::NTupleEventReader() :
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
+		passesMetFilterReader(new VariableReader<bool>(input, "Event.passesAllMetFitlersOfInterest")), //
 		generatorWeightReader_(new VariableReader<double>(input, "Event.generatorWeight")), //
 		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
 		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
@@ -155,8 +156,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setPassesElectronChannelTrigger( true );
 		currentEvent->setPassesMuonChannelTrigger( true );
 
-		currentEvent->setPassesElectronChannelQCDTrigger( true );
-		currentEvent->setPassesMuonChannelQCDTrigger( true );
+		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelQCDTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelQCDTriggerReader->getVariable() );
 	}
 
 	// Set info that depends on selection criteria e.g. cleaned jets
@@ -170,32 +171,31 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
 	currentEvent->setPassGenSelectionInfo( *passesGenSelectionReader->getVariable() );
 
-	currentEvent->setTTGenInfo( ttGenInfoReader->getTTGenInfo());
-
-	// Have to do this after setting jets and TTGenInfo
-	currentEvent->setJetTTBarPartons();
-
 	if (!currentEvent->isRealData()) {
-	// 	std::cout << "Gen Particles etc." << std::endl;
-	// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());
-		currentEvent->setGenJets(genJetReader->getGenJets());
-		currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
-	// 	currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
-	// 	currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
+		currentEvent->setTTGenInfo( ttGenInfoReader->getTTGenInfo());
+		// Have to do this after setting jets and TTGenInfo
+		currentEvent->setJetTTBarPartons();
 
-	// 	if (Globals::NTupleVersion >= 6) {
-	// 		currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
-	// 		currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
-	// 		currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
-	// 		currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
-	// 		currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
-	// 	}
+		// 	std::cout << "Gen Particles etc." << std::endl;
+		// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());
+			currentEvent->setGenJets(genJetReader->getGenJets());
+			currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
+		// 	currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
+		// 	currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
 
-		currentEvent->setGeneratorWeight( generatorWeightReader_->getVariable() );
+		// 	if (Globals::NTupleVersion >= 6) {
+		// 		currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
+		// 		currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
+		// 		currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
+		// 		currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
+		// 		currentEvent->setPUWeightShiftDown(PUWeightShiftDown_->getVariable());
+		// 	}
 
-		currentEvent->setGeneratorSystematicWeights( *systematicWeightsReader_->getVariable() );
+			currentEvent->setGeneratorWeight( generatorWeightReader_->getVariable() );
 
-		currentEvent->setCentralLHEWeight( centralLHEWeightReader_->getVariable() );
+			currentEvent->setGeneratorSystematicWeights( *systematicWeightsReader_->getVariable() );
+
+			currentEvent->setCentralLHEWeight( centralLHEWeightReader_->getVariable() );
 	}
 
 	// Get and set the cleaned jets for this event
@@ -289,6 +289,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setLocalEventNumber(currentEventEntry);
 	currentEvent->setLumiBlock(lumiBlockReader->getVariable());
 	currentEvent->setBeamScrapingVeto(false);
+	currentEvent->setPassesMETFilters(passesMetFilterReader->getVariable());
 
 	return currentEvent;
 }
@@ -343,10 +344,11 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();
+		passesMetFilterReader->initialiseBlindly();
 
-		generatorWeightReader_->initialise();
-		systematicWeightsReader_->initialise();
-		centralLHEWeightReader_->initialise();
+		generatorWeightReader_->initialiseBlindly();
+		systematicWeightsReader_->initialiseBlindly();
+		centralLHEWeightReader_->initialiseBlindly();
 
 		if (Globals::NTupleVersion >= 6) { //MC only info!
 			PileupInfoReader->initialiseBlindly();

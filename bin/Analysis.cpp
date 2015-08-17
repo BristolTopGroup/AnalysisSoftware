@@ -38,6 +38,9 @@ void Analysis::analyse() {
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
 
+		// Check if MET fitlers are satisfied
+		if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
+
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) && Globals::treePrefix_ == "" ) {
 			pseudoTopAnalyser_->analyse(currentEvent);

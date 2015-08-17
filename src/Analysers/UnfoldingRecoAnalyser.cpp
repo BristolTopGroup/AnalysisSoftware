@@ -84,8 +84,8 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
 	}
 
-	unsigned int numberOfBJets(event->NJets(jets));
-	unsigned int numberOfJets(event->NJets(bjets));
+	unsigned int numberOfJets(event->NJets(jets));
+	unsigned int numberOfBJets(event->NJets(bjets));
 	treeMan_->Fill("NJets", numberOfJets );
 	treeMan_->Fill("NBJets", numberOfBJets );
 }

@@ -115,11 +115,13 @@ datasets_8TeV = {
  #             'TTH_Inclusive_M-125' : [mc_path_8TeV + 'TTH_Inclusive_M-125_8TeV_pythia6'],
             }
 
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v24/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v25/'
 data_path_13TeV = ''
 datasets_13TeV = {
-            'SingleMuon' : [ mc_path_13TeV + 'SingleMuon' ],
-            'SingleElectron' : [ mc_path_13TeV + 'SingleElectron' ],
+            'SingleMuon_PromptReco' : [ mc_path_13TeV + 'SingleMuon_PromptReco' ],
+            'SingleMuon_Rereco' : [ mc_path_13TeV + 'SingleMuon_Rereco' ],
+            'SingleElectron_PromptReco' : [ mc_path_13TeV + 'SingleElectron_PromptReco' ],
+            'SingleElectron_Rereco' : [ mc_path_13TeV + 'SingleElectron_Rereco' ],
 
             'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
             'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],
@@ -128,13 +130,14 @@ datasets_13TeV = {
             'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755' ],
             
             'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX' ],
-            'TTJets_amcatnloFXFX_scaledown' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaledown' ],
-            'TTJets_amcatnloFXFX_scaleup' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaleup' ],
-            'TTJets_amcatnloFXFX_mtop1695' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1695' ],
-            'TTJets_amcatnloFXFX_mtop1755' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1755' ],
+            # 'TTJets_amcatnloFXFX_scaledown' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaledown' ],
+            # 'TTJets_amcatnloFXFX_scaleup' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_scaleup' ],
+            # 'TTJets_amcatnloFXFX_mtop1695' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1695' ],
+            # 'TTJets_amcatnloFXFX_mtop1755' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX_mtop1755' ],
             
             # 'TTJets_PowhegPythia6' : [ mc_path_13TeV + 'TTJets_PowhegPythia6' ],
             'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM'],
+            'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp'],
             # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch'],
 
             'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50' ],
@@ -204,6 +207,8 @@ datasets_13TeV = {
 analysis_modes_13TeV = ['central',
                  'JES_down',
                  'JES_up',
+                 'JetSmearing_down',
+                 'JetSmearing_up',
                  ]
 
 analysisModes = ['central',

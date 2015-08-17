@@ -76,6 +76,8 @@ protected:
 	bool passesMuonSelectionNoB_;
 	bool passesMuonQCDSelectionNoB_;
 
+	bool passesMETFilters_;
+
 	bool isSemiLeptonicElectron_;
 	bool isSemiLeptonicMuon_;
 	SelectionOutputInfo selectionOutputInfo_electron;
@@ -175,6 +177,7 @@ public:
 	void setRunNumber(unsigned long number);
 	void setEventNumber(unsigned long number);
 	void setLocalEventNumber(unsigned long number);
+	void setPassesMETFilters( bool pass );
 	void setLumiBlock(unsigned long block);
 	void setEventWeight(double weight);
 	void setPileUpWeight(double weight);
@@ -298,6 +301,8 @@ public:
 	bool passesEEBadSCFilter() const;
 	bool passesECALLaserCorrFilter() const;
 	bool passesTrackingPOGFilters() const;
+
+	bool passesMETFilters() const;
 
 	static double HT(const JetCollection jets);
 	static double M3(const JetCollection jets);

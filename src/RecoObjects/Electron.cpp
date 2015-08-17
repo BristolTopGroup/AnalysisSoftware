@@ -414,6 +414,7 @@ double Electron::mvaNonTrigV0() const {
 double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) const {
 
 	double triggerEfficiency(1.);
+	double triggerEfficiencyRelativeError(0.05);
 	boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
 	double electronPt = pt();
 	double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
@@ -433,9 +434,19 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	// ID & isolation scalefactor
 	double idIsoSF(1.);
 	boost::shared_ptr<TH2D> electronIDIsoScaleFactorsHistogram(Globals::electronIdIsoScaleFactorsHistogram);
-	double electronEta = eta();
+	double electronEta = fabs(eta());
 	bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
 	idIsoSF = electronIDIsoScaleFactorsHistogram->GetBinContent( bin );
+	double idIsoSFError = electronIDIsoScaleFactorsHistogram->GetBinError( bin );
+
+	if (electron_scale_factor_systematic == -1 ) {
+		idIsoSF -= idIsoSFError;
+		triggerEfficiency = triggerEfficiency * ( 1 - triggerEfficiencyRelativeError );
+	}
+	else if ( electron_scale_factor_systematic == 1 ) {
+		idIsoSF += idIsoSFError;
+		triggerEfficiency = triggerEfficiency * ( 1 + triggerEfficiencyRelativeError );
+	}
 
 	double efficiencyCorrection = triggerEfficiency * idIsoSF;
 	return efficiencyCorrection;

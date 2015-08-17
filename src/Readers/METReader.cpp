@@ -21,14 +21,14 @@ METReader::METReader() :
 }
 
 METReader::METReader(TChainPointer input, METAlgorithm::value algo) :
-		exReader(input, "MET.Ex"), //
-		eyReader(input, "MET.Ey"), //
-		multiExReader(input, "MET.Ex"), //
-		multiEyReader(input, "MET.Ey"), //
-		significanceReader(input, "MET.Significance"), //
-		shiftedMETReader(input, "MET.METUncertaintiesPt"),
-		shiftedMET_Px_Reader(input, "MET.METUncertaintiesPx"),
-		shiftedMET_Py_Reader(input, "MET.METUncertaintiesPy"),
+		exReader(input, "METNoHF.Ex"), //
+		eyReader(input, "METNoHF.Ey"), //
+		multiExReader(input, "METNoHF.Ex"), //
+		multiEyReader(input, "METNoHF.Ey"), //
+		significanceReader(input, "METNoHF.Significance"), //
+		shiftedMETReader(input, "METNoHF.METUncertaintiesPt"),
+		shiftedMET_Px_Reader(input, "METNoHF.METUncertaintiesPx"),
+		shiftedMET_Py_Reader(input, "METNoHF.METUncertaintiesPy"),
 
 		met(), //
 		usedAlgorithm(algo) {
