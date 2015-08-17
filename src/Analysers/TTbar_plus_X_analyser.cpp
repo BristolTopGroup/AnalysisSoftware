@@ -37,14 +37,13 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
-		double electronEfficiencyCorrection = event->isRealData() ? 1. : signalElectron->getEfficiencyCorrection(0);
-		// double electronEfficiencyCorrection = 1;
-		// double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
-		// if ( !event->isRealData() ) {
-		// 	// electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
-		// 	electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
-		// 	electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
-		// }
+		double electronEfficiencyCorrection = 1;
+		double electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
+		if ( !event->isRealData() ) {
+			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
+			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
+			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
+		}
 
 		// MET
 		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
@@ -68,8 +67,8 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("NVertices",	event->Vertices().size());
 
 		treeMan_->Fill("ElectronEfficiencyCorrection",electronEfficiencyCorrection);
-		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection*1.04);
-		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection*0.96);
+		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
+		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 
@@ -115,7 +114,9 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		// wAnalyserEPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		wAnalyserEPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
-		wAnalyserEPlusJetsRefSelection_->analyseHadronicW_partons(event);
+		if ( ! event->isRealData() ) {
+			wAnalyserEPlusJetsRefSelection_->analyseHadronicW_partons(event);			
+		}
 
 		likelihoodRecoAnalyserEPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
 
@@ -432,16 +433,15 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		const JetCollection bJets(event->CleanedBJets());
 
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsReference );
-
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-		double efficiencyCorrection = event->isRealData() ? 1. : signalMuon->getEfficiencyCorrection( 0 );
-		// double muonEfficiencyCorrection = 1;
-		// double muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
-		// if ( !event->isRealData() ) {
-		// 	// muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
-		// 	muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
-		// 	muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
-		// }
+
+		double muonEfficiencyCorrection = 1;
+		double muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
+		if ( !event->isRealData() ) {
+			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
+			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
+			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
+		}
 
 		// histMan_->setCurrentBJetBin(numberOfBjets);
 		// histMan_->H1D("BTagWeights")->Fill(bjetWeight);
@@ -469,9 +469,9 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("NBJets",Event::NJets(bJets));
 		treeMan_->Fill("NVertices",	event->Vertices().size());
 
-		treeMan_->Fill("MuonEfficiencyCorrection",efficiencyCorrection);
-		treeMan_->Fill("MuonUp",efficiencyCorrection*1.04);
-		treeMan_->Fill("MuonDown",efficiencyCorrection*0.96);
+		treeMan_->Fill("MuonEfficiencyCorrection",muonEfficiencyCorrection);
+		treeMan_->Fill("MuonUp",muonEfficiencyCorrection_up);
+		treeMan_->Fill("MuonDown",muonEfficiencyCorrection_down);
 		treeMan_->Fill("ElectronUp",1.0);
 		treeMan_->Fill("ElectronDown",1.0);
 		treeMan_->Fill("BJetWeight",event->BJetWeight());
@@ -514,7 +514,9 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		// wAnalyserMuPlusJetsRefSelection_->setScale(bjetWeight * efficiencyCorrection);
 		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW(event, jets, bJets);
-		wAnalyserMuPlusJetsRefSelection_->analyseHadronicW_partons(event);
+		if ( ! event->isRealData() ) {
+			wAnalyserMuPlusJetsRefSelection_->analyseHadronicW_partons(event);			
+		}
 
 		likelihoodRecoAnalyserMuPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
 
