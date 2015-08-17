@@ -104,7 +104,7 @@ if os.environ.has_key('ntupleToProcess'):
 PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
-ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Electron_ID_Iso_Ali_30072015.root'
+ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
 ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEfficiencies.root'
 MuonIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/muonGlobalSF_20150722_Mirena_30072015.root'
 getHadronTriggerFromFile = True
@@ -144,7 +144,7 @@ bJetResoFile = toolsFolder + "data/bJetReso.root"
 lightJetResoFile = toolsFolder + "data/lightJetReso.root"
 
 #Jet Smearing application
-applyJetSmearing = False
+applyJetSmearing = True
 
 #Apply Top Pt reweighting
 applyTopPtReweighting = False
