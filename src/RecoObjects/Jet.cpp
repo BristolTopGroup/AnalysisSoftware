@@ -179,74 +179,75 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 	if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.5) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 0.990;
+				scaleFactor = 1.053;
 				break;
 			case 1:
-				scaleFactor = 1.115;
+				scaleFactor = 1.105;
 				break;
 			default:
-				scaleFactor = 1.052;
+				scaleFactor = 1.079;
 				break;
 		}
 	}
 	if (fabs(jet->eta()) >= 0.5 && fabs(jet->eta()) < 1.1) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.001;
+				scaleFactor = 1.071;
 				break;
 			case 1:
-				scaleFactor = 1.114;
+				scaleFactor = 1.127;
 				break;
 			default:
-				scaleFactor = 1.057;
+				scaleFactor = 1.099;
 				break;
 		}
 	}
 	if (fabs(jet->eta()) >= 1.1 && fabs(jet->eta()) < 1.7) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.032;
+				scaleFactor = 1.092;
 				break;
 			case 1:
-				scaleFactor = 1.161;
+				scaleFactor = 1.150;
 				break;
 			default:
-				scaleFactor = 1.096;
+				scaleFactor = 1.121;
 				break;
 		}
 	}
 	if (fabs(jet->eta()) >= 1.7 && fabs(jet->eta()) < 2.3) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.042;
+				scaleFactor = 1.162;
 				break;
 			case 1:
-				scaleFactor = 1.228;
+				scaleFactor = 1.254;
 				break;
 			default:
-				scaleFactor = 1.134;
+				scaleFactor = 1.208;
 				break;
 		}
 	}
-	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 5.0) {
+	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 2.8) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.089;
+				scaleFactor = 1.192;
 				break;
 			case 1:
-				scaleFactor = 1.488;
+				scaleFactor = 1.316;
 				break;
 			default:
-				scaleFactor = 1.288;
+				scaleFactor = 1.254;
 				break;
 		}
 	}
 	//use raw scaleFactors from above to calculate the final factors to apply
 	double matchedGeneratedJetpt = gen_jet->pt();
 	double jetPt = jet->pt();
-	double factor = 1-scaleFactor;
-	double deltaPt = factor * (jetPt - matchedGeneratedJetpt);
-	double ptScale = std::max(0.0, ((jetPt + deltaPt)/jetPt));
+
+	double deltaPt = ( scaleFactor - 1 ) * (jetPt - matchedGeneratedJetpt);
+
+	double ptScale = std::max(0.0, ( (jetPt + deltaPt)/jetPt ));
 	
 	//get the unsmeared reconstructed values
 	double energy_unsmeared = jet->energy();

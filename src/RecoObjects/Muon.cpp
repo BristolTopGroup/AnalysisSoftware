@@ -163,13 +163,75 @@ double Muon::relTrkIso() const {
 
 double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	
+	double triggerEfficiency(1.);
+	double triggerEfficiencyRelativeError(0.05);
+	double muonPt = pt();
+	double muonEta = fabs(eta());
+
+	if ( muonPt >=20 && muonPt < 30 ) {
+		if ( muonEta >= 0 && muonEta < 1.2 ) {
+			triggerEfficiency = 0.895;
+		}
+		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
+			triggerEfficiency = 0.817;
+		}
+	}
+	else if ( muonPt >=30 && muonPt < 40 ) {
+		if ( muonEta >= 0 && muonEta < 1.2 ) {
+			triggerEfficiency = 0.926;
+		}
+		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
+			triggerEfficiency = 0.866;
+		}
+	}
+	else if ( muonPt >=40 && muonPt < 50 ) {
+		if ( muonEta >= 0 && muonEta < 1.2 ) {
+			triggerEfficiency = 0.933;
+		}
+		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
+			triggerEfficiency = 0.894;
+		}
+	}
+	else if ( muonPt >=50  ) {
+		if ( muonEta >= 0 && muonEta < 1.2 ) {
+			triggerEfficiency = 0.947;
+		}
+		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
+			triggerEfficiency = 0.893;
+		}
+	}
+	// boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
+	// double electronPt = pt();
+	// double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
+	// // cout << "Electron pt : " << electronPt << endl;
+	// // cout << "Max pt in histogram" << endl;
+	// // cout << maxPt << endl;
+	// unsigned int bin = 0;
+	// if ( electronPt <= maxPt ) {
+	// 	bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
+	// }
+	// else {
+	// 	bin = electronTriggerScaleFactorsHistogram->GetNbinsX();
+	// }
+
+	// triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
+
+
 	double idIsoSF(1.);
 	boost::shared_ptr<TH2F> muonIDIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram);
-	double muonPt = pt();
-	double muonEta = eta();
 	double bin = muonIDIsoScaleFactorsHistogram->FindBin( muonEta, muonPt );
 	idIsoSF = muonIDIsoScaleFactorsHistogram->GetBinContent( bin );
+	double idIsoSFError = muonIDIsoScaleFactorsHistogram->GetBinError( bin );
 
-	return idIsoSF;
+	if (muon_scale_factor_systematic == -1 ) {
+		idIsoSF -= idIsoSFError;
+		triggerEfficiency = triggerEfficiency * ( 1 - triggerEfficiencyRelativeError );
+	}
+	else if ( muon_scale_factor_systematic == 1 ) {
+		idIsoSF += idIsoSFError;
+		triggerEfficiency = triggerEfficiency * ( 1 + triggerEfficiencyRelativeError );
+	}
+
+	return idIsoSF * triggerEfficiency;
 }
 }

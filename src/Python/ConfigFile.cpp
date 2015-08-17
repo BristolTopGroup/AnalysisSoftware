@@ -516,6 +516,10 @@ void ConfigFile::loadIntoMemory() {
 	Globals::JetSmearingSystematic = jetSmearingSystematic();
 	std::cout << "ConfigFile.cpp: Globals::JetSmearingSystematic = " << Globals::JetSmearingSystematic << std::endl;
 
+	// Change tree name for JER variations
+	if ( Globals::JetSmearingSystematic == -1 ) Globals::treePrefix_ += "_JERDown";
+	else if ( Globals::JetSmearingSystematic == 1 ) Globals::treePrefix_ += "_JERUp";
+
 	//b-tag systematics
 	Globals::BJetSystematic = BtagSystematic();
 	Globals::LightJetSystematic = LightTagSystematic();
@@ -592,8 +596,9 @@ boost::shared_ptr<TH2D> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::s
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronIdIsoScaleFactorsFile.c_str()));
-	boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
-	boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
+	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
+	// boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
+	boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) file->Get("GlobalSF")->Clone());
 	file->Close();
 
 	return idIsoHistogram;
