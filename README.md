@@ -34,7 +34,10 @@ make -j24
 export toolsFolder=$PWD/
 
 # For Run2 50ns only you need to produce the PU file first!
+export PATH=/software/miniconda/bin:$PATH
+source activate dps
 python python/get_PU_profile.py
+source deactivate
 # test run the code:
 nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 ```
