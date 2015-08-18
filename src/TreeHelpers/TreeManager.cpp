@@ -152,15 +152,22 @@ void TreeManager::addFolder(string folder)
 }
 
 void TreeManager::addTreeToFolder(string treeName, string folder, unsigned int dataType) {
-			collection_[folder].at(dataType)->treeMap_[treeName] = boost::shared_ptr<TTree>(new TTree(treeName.c_str(),treeName.c_str()));
-			collection_[folder].at(dataType)->treeMap_[treeName]->SetDirectory( treeFiles_.at(dataType)->GetDirectory(folder.c_str() ) );
+	collection_[folder].at(dataType)->treeMap_[treeName] = boost::shared_ptr<TTree>(
+			new TTree(treeName.c_str(), treeName.c_str()));
+	collection_[folder].at(dataType)->treeMap_[treeName]->SetDirectory(
+			treeFiles_.at(dataType)->GetDirectory(folder.c_str()));
 
-			// Add branch for event weight only if it doesn't already exist
-			// e.g. if there are two trees in this directory, there might already be an EventWeight branch
-			// Bad if the two trees in the same directory correspond to different events
-			if ( !collection_[folder].at(dataType)->contains("EventWeight") ) {
-				collection_[folder].at(dataType)->addBranchToTree("EventWeight","F",collection_[folder].at(dataType)->treeMap_[treeName]);				
-			}
+	// Add branch for event weight only if it doesn't already exist
+	// e.g. if there are two trees in this directory, there might already be an EventWeight branch
+	// Bad if the two trees in the same directory correspond to different events
+	if (!collection_[folder].at(dataType)->contains("EventWeight")) {
+		collection_[folder].at(dataType)->addBranchToTree("EventWeight", "F",
+				collection_[folder].at(dataType)->treeMap_[treeName]);
+	}
+	if (!collection_[folder].at(dataType)->contains("PUWeight")) {
+		collection_[folder].at(dataType)->addBranchToTree("PUWeight", "F",
+				collection_[folder].at(dataType)->treeMap_[treeName]);
+	}
 }
 
 void TreeManager::setCurrentFolder(std::string collection) {
