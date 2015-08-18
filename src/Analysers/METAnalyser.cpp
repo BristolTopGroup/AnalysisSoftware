@@ -36,7 +36,7 @@ void METAnalyser::analyse(const EventPtr event) {
 		// }
 
 		treeMan_->setCurrentFolder(histogramFolder_);
-		treeMan_->Fill("MET",met->et());
+		treeMan_->Fill("MET_" + prefix,met->et());
 
 		// histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
 		histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
@@ -127,10 +127,13 @@ void METAnalyser::createHistograms() {
 void METAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
 	treeMan_->addBranch("HT", "F", "MET" + Globals::treePrefix_);
-	treeMan_->addBranch("MET", "F", "MET" + Globals::treePrefix_);
-	treeMan_->addBranch("ST", "F", "MET" + Globals::treePrefix_);
-	treeMan_->addBranch("WPT", "F", "MET" + Globals::treePrefix_);
-	treeMan_->addBranch("MT", "F", "MET" + Globals::treePrefix_);
+	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
+		std::string prefix = METAlgorithm::prefixes.at(index);
+		treeMan_->addBranch("MET_" + prefix, "F", "MET" + Globals::treePrefix_);
+		treeMan_->addBranch("ST_" + prefix, "F", "MET" + Globals::treePrefix_);
+		treeMan_->addBranch("WPT_" + prefix, "F", "MET" + Globals::treePrefix_);
+		treeMan_->addBranch("MT_" + prefix, "F", "MET" + Globals::treePrefix_);
+	}
 }
 
 void METAnalyser::analyse(const EventPtr event, const ParticlePointer particle, const JetCollection jets) {
@@ -174,9 +177,9 @@ void METAnalyser::analyse_ST(const EventPtr event, const ParticlePointer particl
 		histMan_->H1D("MT")->Fill(MT, weight_);
 
 		treeMan_->setCurrentFolder(histogramFolder_);
-		treeMan_->Fill("ST",ST);
-		treeMan_->Fill("WPT",WPT);
-		treeMan_->Fill("MT",MT);
+		treeMan_->Fill("ST_" + prefix,ST);
+		treeMan_->Fill("WPT_" + prefix,WPT);
+		treeMan_->Fill("MT_" + prefix,MT);
 
 		histMan_->H2D("HT_vs_MET_plus_leptonPt")->Fill(particle->pt() + met->et(), Event::HT(jets), weight_);
 	}
