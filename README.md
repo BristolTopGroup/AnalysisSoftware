@@ -33,6 +33,8 @@ make -j24
 # adjust the toolsFolder environment variable
 export toolsFolder=$PWD/
 
+# For Run2 50ns only you need to produce the PU file first!
+python python/get_PU_profile.py
 # test run the code:
 nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 ```
