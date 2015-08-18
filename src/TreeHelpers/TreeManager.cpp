@@ -144,8 +144,8 @@ void TreeManager::addFolder(string folder)
 	for (unsigned type = 0; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes_.at(type)) {
 			treeFiles_.at(type)->Cd(folder.c_str());
-			collection_[folder].at(type)->writeDirectory( folder, treeFiles_.at(type) );		
 			collection_[folder].at(type) = TBranchCollectionRef(new TBranchCollection(folder));
+			collection_[folder].at(type)->writeDirectory( folder, treeFiles_.at(type) );
 		}
 
 	}
