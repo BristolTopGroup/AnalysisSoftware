@@ -50,6 +50,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 		treeMan_->Fill("EventWeight", event->weight());
+		treeMan_->Fill("PUWeight", event->PileUpWeight());
 		treeMan_->Fill("lepton_eta",signalElectron->eta());
 		treeMan_->Fill("lepton_pt",signalElectron->pt());
 		treeMan_->Fill("M3",Event::M3(jets));
@@ -218,6 +219,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
 		treeMan_->Fill("EventWeight", event->weight());
+		treeMan_->Fill("PUWeight", event->PileUpWeight());
 		treeMan_->Fill("lepton_eta",signalElectron->eta());
 		treeMan_->Fill("lepton_pt",signalElectron->pt());
 		treeMan_->Fill("M3",Event::M3(jets));
@@ -326,6 +328,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
 		treeMan_->Fill("EventWeight", event->weight() );
+		treeMan_->Fill("PUWeight", event->PileUpWeight() );
 		treeMan_->Fill("lepton_eta",signalElectron->eta());
 		treeMan_->Fill("lepton_pt",signalElectron->pt());
 		treeMan_->Fill("M3",Event::M3(jets));
@@ -453,6 +456,7 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 		treeMan_->Fill("EventWeight", event->weight() );
+		treeMan_->Fill("PUWeight", event->PileUpWeight() );
 		treeMan_->Fill("lepton_eta",signalMuon->eta());
 		treeMan_->Fill("lepton_pt",signalMuon->pt());
 		treeMan_->Fill("M3",Event::M3(jets));
@@ -586,6 +590,7 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 		treeMan_->Fill("EventWeight", event->weight() );
+		treeMan_->Fill("PUWeight", event->PileUpWeight() );
 		treeMan_->Fill("lepton_eta",signalMuon->eta());
 		treeMan_->Fill("lepton_pt",signalMuon->pt());
 		treeMan_->Fill("M3",Event::M3(jets));

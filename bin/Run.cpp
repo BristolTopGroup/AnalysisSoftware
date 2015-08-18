@@ -87,7 +87,7 @@ void setConfiguration(ConfigFile config) {
 	cout << "Loading configuration..." << endl;
 	cout << "Using config-file '" << config.configPath() << endl;
 	cout << "Using Dataset info file:  '" << config.datasetInfoFile() << endl;
-	// cout << "Using pileup-file '" << config.PUFile() << endl;
+	cout << "Using pileup-file '" << config.PUFile() << endl;
 	// cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
 	// cout << config.lightJetResoFile() << endl;
 	if (config.jesSystematic()!=0)

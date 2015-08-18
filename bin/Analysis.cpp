@@ -75,8 +75,9 @@ void Analysis::initiateEvent() {
 	if (!currentEvent->isRealData()) {
 		weight = weights->getWeight(currentEvent->getDataType());
 	// 	//TODO: fix this dirty little thing
-	// 	std::cout << "Getting PU weight" << std::endl;
+	//	std::cout << "Getting PU weight" << std::endl;
 	// 	pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
+		pileUpWeight = weights->reweightPileUp(currentEvent->Vertices().size());
 	// 	weight *= pileUpWeight;
 	// 	if (Globals::pdfWeightNumber != 0) {
 	// 		try {
