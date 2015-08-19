@@ -23,9 +23,13 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 
 	double centralLHEWeight = event->centralLHEWeight();
 	for ( unsigned int unc_i = 0; unc_i < event->generatorSystematicWeights().size(); ++unc_i ) {
-		double weight = event->generatorSystematicWeights().at( unc_i );
-		treeMan_->Fill("generatorSystematicWeight", weight/centralLHEWeight);
+		double weight = event->generatorSystematicWeights().at( unc_i ) / centralLHEWeight;
+		// cout << to_string(unc_i) << " " << weight/centralLHEWeight << endl;
+		// string uncString = to_string(unc_i);
+		treeMan_->Fill( "genWeight_" + to_string(unc_i), weight);
 	}
+
+	treeMan_->setCurrentFolder(histogramFolder_);
 
 	int selectionCriteria = -1;
 
@@ -120,7 +124,9 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("bPt", "F", "Unfolding", false);
 	treeMan_->addBranch("bEta", "F", "Unfolding", false);
 
-	treeMan_->addBranch("generatorSystematicWeight", "F", "Unfolding", false);
+	for ( unsigned int i = 0; i < 250; ++i ) {
+		treeMan_->addBranch("genWeight_" + to_string(i), "F", "GeneratorSystematicWeights");
+	}
 }
 
 void UnfoldingRecoAnalyser::createHistograms() {
