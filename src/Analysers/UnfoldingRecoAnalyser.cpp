@@ -48,14 +48,14 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	const JetCollection jets(event->CleanedJets());
 	const JetCollection bjets(event->CleanedBJets());
 	const LeptonPointer signalLepton = event->getSignalLepton( selectionCriteria );
-	METAlgorithm::value metType = (METAlgorithm::value) 0;
-	const METPointer met(event->MET(metType));
+	METAlgorithm::value metType = (METAlgorithm::value) 1;
+	const METPointer metNoHF(event->MET(metType));
 
-	treeMan_->Fill("MET",met->et());
+	treeMan_->Fill("MET",metNoHF->et());
 	treeMan_->Fill("HT",Event::HT(jets));
-	treeMan_->Fill("ST",Event::ST(jets,signalLepton,met));
-	treeMan_->Fill("WPT",Event::WPT(signalLepton,met));
-	treeMan_->Fill("MT",Event::MT(signalLepton,met));
+	treeMan_->Fill("ST",Event::ST(jets,signalLepton,metNoHF));
+	treeMan_->Fill("WPT",Event::WPT(signalLepton,metNoHF));
+	treeMan_->Fill("MT",Event::MT(signalLepton,metNoHF));
 
 	treeMan_->Fill("leptonPt", signalLepton->pt() );
 	treeMan_->Fill("leptonEta", signalLepton->eta() );
