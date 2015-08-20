@@ -40,19 +40,17 @@ nohup ./AnalysisSoftware python/test_cfg.py &> test.log &
 To setup the code using CMSSW:
 
 ```
-# on soolin (scientific linux 5 machines)
-export SCRAM_ARCH=slc5_amd64_gcc462
-cmsrel CMSSW_6_0_0
-cd CMSSW_6_0_0/src
-cmsenv
-# OR on DICE (scientific linux 6 machines)
-. $VO_CMS_SW_DIR/cmsset_default.sh # echo $SCRAM_ARCH should now return slc6_amd64_gcc472
+# on scientific linux 6 machines
 cmsrel CMSSW_6_2_12
+# or if you want to rename the CMSSW folder
+scram p -n CMSSW_6_2_12_BAT CMSSW_6_2_12
+
 cd CMSSW_6_2_12/src
 cmsenv
 
 # get the code from the repository
 git clone https://github.com/BristolTopGroup/AnalysisSoftware.git BristolAnalysis/Tools
+git checkout -b run1 origin/run1
 
 # get submodules:
 git submodule init && git submodule update
