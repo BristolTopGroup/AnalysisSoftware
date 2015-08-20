@@ -163,7 +163,8 @@ void METAnalyser::analyse_ST(const EventPtr event, const ParticlePointer particl
 		histMan_->H1D_BJetBinned("ST")->Fill(Event::ST(jets, particle, met), weight_);
 		histMan_->H1D_BJetBinned("WPT")->Fill(Event::WPT(particle, met), weight_);
 		histMan_->H1D_BJetBinned("MT")->Fill(Event::MT(particle, met), weight_);
-
+		if (index > METAlgorithm::patType1p2CorrectedPFMet)
+					continue;
 		histMan_->H2D("HT_vs_MET_plus_leptonPt")->Fill(particle->pt() + met->et(), Event::HT(jets), weight_);
 	}
 }
