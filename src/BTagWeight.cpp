@@ -31,21 +31,34 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 		// Info on this jet
 		const JetPointer jet(jets.at(index));
 
-		// For now, no scale factors are provided for jets with pt between 25 and 30, so return 1
-		// Fix with new ntuples
-		if ( jet->pt() < 25 ) continue;
+		double jetPt = jet->pt();
+		if ( jetPt < 25 ) continue;
+
+		// If the pt of the jet is outside the pt range of the SFs,
+		// use the pt at the upper/lower edge and double the uncertainty.
+		bool ptOutOfRange = false;
+		if ( jetPt <= 30 || jet->pt() >= 670 ) {
+			ptOutOfRange = true;
+		}
 
 		const unsigned int partonFlavour = abs( jet->partonFlavour() );
 		const bool isBTagged = jet->isBJet();
 
 		// Get scale factor for this jet
 		const double sf = jet->getBTagSF( 0 );
-		const double sf_up = jet->getBTagSF( 1 );
-		const double sf_down = jet->getBTagSF( -1 );
+		double sf_up = jet->getBTagSF( 1 );
+		double sf_down = jet->getBTagSF( -1 );
+
+		if ( ptOutOfRange ) {
+			sf_up = sf + 2 * ( sf_up - sf );
+			sf_down = sf - 2 * ( sf - sf_down );
+
+			if ( sf_up < 0 ) sf_up = 0;
+			if ( sf_down < 0 ) sf_down = 0;
+		}
 
 		// Get efficiency for this jet
 		const double eff = getEfficiency( partonFlavour, jet );
-
 		double sfToUse = sf;
 		if ( systematic == 1 ) {
 			sfToUse = sf_up;
@@ -54,18 +67,35 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 			sfToUse = sf_down;
 		}
 
-		// Jets with large pt (>670) don't have scale factors, set to 1
-		// Fix with new ntuples
-		if ( sfToUse == 0 ) sfToUse = 1;
-
 		if ( isBTagged ) {
 			bTaggedMCJet *= eff;
-			bTaggedDataJet *= eff*sfToUse;
+			if ( eff*sfToUse > 1 ) {
+				bTaggedDataJet *= 1;
+			}
+			else if ( eff*sfToUse < 0 ) {
+				bTaggedDataJet *= 0;
+			}
+			else {
+				bTaggedDataJet *= eff*sfToUse;
+			}
 		}
 		else {
 			nonBTaggedMCJet *= ( 1 - eff );
-			nonBTaggedDataJet *= ( 1 - eff*sfToUse );
+
+			if ( eff*sfToUse > 1 ) {
+				nonBTaggedDataJet *= 0;
+			}
+			else if ( eff*sfToUse < 0 ) {
+				nonBTaggedDataJet *= 1;
+			}
+			else {
+				bTaggedDataJet *= ( 1 - eff*sfToUse );
+			}
 		}
+		// if ( nonBTaggedMCJet < 0 || nonBTaggedDataJet < 0 ) {
+		// 	cout << nonBTaggedMCJet << " " << nonBTaggedDataJet << endl;
+		// 	cout << eff << " " << sfToUse << endl;
+		// }
 	}
 
 	double bTagWeight = (nonBTaggedDataJet * bTaggedDataJet) / (nonBTaggedMCJet * bTaggedMCJet);
