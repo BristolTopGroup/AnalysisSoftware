@@ -440,7 +440,8 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 		bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
 	}
 	else {
-		bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, maxPt );
+		double lastPtBinCentre = electronIDIsoScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronIDIsoScaleFactorsHistogram->GetNbinsY() );
+		bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, lastPtBinCentre );
 	}
 	idIsoSF = electronIDIsoScaleFactorsHistogram->GetBinContent( bin );
 	idIsoSFError = electronIDIsoScaleFactorsHistogram->GetBinError( bin );
