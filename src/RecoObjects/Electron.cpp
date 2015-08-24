@@ -433,7 +433,7 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	double idIsoSFError(0.);
 	boost::shared_ptr<TH2D> electronIDIsoScaleFactorsHistogram(Globals::electronIdIsoScaleFactorsHistogram);
 	double electronEta = fabs(eta());
-	maxPt = electronIDIsoScaleFactorsHistogram->GetXaxis()->GetXmax();
+	maxPt = electronIDIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
 
 	bin = 0;
 	if ( electronPt <= maxPt ) {
