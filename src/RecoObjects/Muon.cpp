@@ -168,7 +168,7 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
 	double muonPt = pt();
 	double muonAbsEta = fabs(eta());
-	double maxPt = muonTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
+	double maxPt = muonTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
 
 	unsigned int bin = 0;
 	if ( muonPt <= maxPt ) {
@@ -177,13 +177,13 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	else {
 		bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, maxPt );
 	}
-
 	triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
 	triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
 
 	double idIsoSF(1.);
 	double idIsoSFError(0.);
 	boost::shared_ptr<TH2F> muonIDIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram);
+	maxPt = muonIDIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
 	bin = 0;
 	if ( muonPt <= maxPt ) {
 		bin = muonIDIsoScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
@@ -191,7 +191,6 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	else {
 		bin = muonIDIsoScaleFactorsHistogram->FindBin( muonAbsEta, maxPt );
 	}
-
 	idIsoSF = muonIDIsoScaleFactorsHistogram->GetBinContent( bin );
 	idIsoSFError = muonIDIsoScaleFactorsHistogram->GetBinError( bin );
 
