@@ -43,6 +43,8 @@ NTupleEventReader::NTupleEventReader() :
 		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPLooseGsf.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1.Fired")),
 		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20eta2p1.Fired")),
+		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1MC.Fired")),
+		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20eta2p1MC.Fired")),
 		passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75GsfMC.Fired")),
 		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1MC.Fired")),
 
@@ -156,7 +158,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 	else {
 		currentEvent->setPassesElectronChannelTrigger( true );
-		currentEvent->setPassesMuonChannelTrigger( true );
+		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
+		currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );
 
 		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelQCDTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelQCDTriggerReader->getVariable() );
@@ -339,6 +342,8 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		passesElectronChannelTriggerReader->initialiseBlindly();
 		passesMuonChannelTriggerReader->initialiseBlindly();
 		passesTkMuonChannelTriggerReader->initialiseBlindly();
+		passesMuonChannelMCTriggerReader->initialiseBlindly();
+		passesTkMuonChannelMCTriggerReader->initialiseBlindly();
 		passesElectronChannelQCDTriggerReader->initialiseBlindly();
 		passesMuonChannelQCDTriggerReader->initialiseBlindly();
 
