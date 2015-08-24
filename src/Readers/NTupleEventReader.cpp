@@ -42,6 +42,7 @@ NTupleEventReader::NTupleEventReader() :
 		// metCorrReaders(), //
 		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPLooseGsf.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1.Fired")),
+		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20eta2p1.Fired")),
 		passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75GsfMC.Fired")),
 		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1MC.Fired")),
 
@@ -56,7 +57,7 @@ NTupleEventReader::NTupleEventReader() :
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
-		passesMetFilterReader(new VariableReader<bool>(input, "Event.passesAllMetFitlersOfInterest")), //
+		passesMetFilterReader_(new VariableReader<bool>(input, "Event.passesAllMetFitlersOfInterest")), //
 		generatorWeightReader_(new VariableReader<double>(input, "Event.generatorWeight")), //
 		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
 		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
@@ -148,6 +149,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	if (currentEvent->isRealData()) {
 		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelTriggerReader->getVariable() );
+		currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelTriggerReader->getVariable() );
 		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelTriggerReader->getVariable() );
 
@@ -222,9 +224,15 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 
 	// Set bjet weight
-	boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
-	double bweight = btagWeight->weight( currentEvent->CleanedJets() );
-	currentEvent->setBJetWeight( bweight );
+	if ( currentEvent->CleanedJets().size() > 0 && currentEvent->PassesElectronTriggerAndSelection() ) {
+		boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
+		double bweight = btagWeight->weight( currentEvent->CleanedJets(), 0 );
+		currentEvent->setBJetWeight( bweight );
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), 1 );
+		currentEvent->setBJetUpWeight( bweight );
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), -1 );
+		currentEvent->setBJetDownWeight( bweight );
+	}
 
 	double sysShiftMetCorrectionX = 0;
 	double sysShiftMetCorrectionY = 0;
@@ -289,7 +297,9 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setLocalEventNumber(currentEventEntry);
 	currentEvent->setLumiBlock(lumiBlockReader->getVariable());
 	currentEvent->setBeamScrapingVeto(false);
-	currentEvent->setPassesMETFilters(passesMetFilterReader->getVariable());
+	if (currentEvent->isRealData()) {
+		currentEvent->setPassesMETFilters(passesMetFilterReader_->getVariable());
+	}
 
 	return currentEvent;
 }
@@ -328,6 +338,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 
 		passesElectronChannelTriggerReader->initialiseBlindly();
 		passesMuonChannelTriggerReader->initialiseBlindly();
+		passesTkMuonChannelTriggerReader->initialiseBlindly();
 		passesElectronChannelQCDTriggerReader->initialiseBlindly();
 		passesMuonChannelQCDTriggerReader->initialiseBlindly();
 
@@ -344,7 +355,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		runNumberReader->initialise();
 		eventNumberReader->initialise();
 		lumiBlockReader->initialise();
-		passesMetFilterReader->initialiseBlindly();
+		passesMetFilterReader_->initialiseBlindly();
 
 		generatorWeightReader_->initialiseBlindly();
 		systematicWeightsReader_->initialiseBlindly();
