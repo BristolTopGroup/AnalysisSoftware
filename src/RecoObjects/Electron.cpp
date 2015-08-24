@@ -418,9 +418,6 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
 	double electronPt = pt();
 	double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
-	// cout << "Electron pt : " << electronPt << endl;
-	// cout << "Max pt in histogram" << endl;
-	// cout << maxPt << endl;
 	unsigned int bin = 0;
 	if ( electronPt <= maxPt ) {
 		bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
@@ -433,12 +430,22 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 
 	// ID & isolation scalefactor
 	double idIsoSF(1.);
+	double idIsoSFError(0.);
 	boost::shared_ptr<TH2D> electronIDIsoScaleFactorsHistogram(Globals::electronIdIsoScaleFactorsHistogram);
 	double electronEta = fabs(eta());
-	bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
-	idIsoSF = electronIDIsoScaleFactorsHistogram->GetBinContent( bin );
-	double idIsoSFError = electronIDIsoScaleFactorsHistogram->GetBinError( bin );
+	maxPt = electronIDIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
 
+	bin = 0;
+	if ( electronPt <= maxPt ) {
+		bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
+	}
+	else {
+		double lastPtBinCentre = electronIDIsoScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronIDIsoScaleFactorsHistogram->GetNbinsY() );
+		bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, lastPtBinCentre );
+	}
+	idIsoSF = electronIDIsoScaleFactorsHistogram->GetBinContent( bin );
+	idIsoSFError = electronIDIsoScaleFactorsHistogram->GetBinError( bin );
+	
 	if (electron_scale_factor_systematic == -1 ) {
 		idIsoSF -= idIsoSFError;
 		triggerEfficiency = triggerEfficiency * ( 1 - triggerEfficiencyRelativeError );
