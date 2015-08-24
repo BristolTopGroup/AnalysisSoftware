@@ -164,72 +164,44 @@ double Muon::relTrkIso() const {
 double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	
 	double triggerEfficiency(1.);
-	double triggerEfficiencyRelativeError(0.05);
+	double triggerEfficiencyError(0.);
+	boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
 	double muonPt = pt();
-	double muonEta = fabs(eta());
+	double muonAbsEta = fabs(eta());
+	double maxPt = muonTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
 
-	if ( muonPt >=20 && muonPt < 30 ) {
-		if ( muonEta >= 0 && muonEta < 1.2 ) {
-			triggerEfficiency = 0.895;
-		}
-		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
-			triggerEfficiency = 0.817;
-		}
+	unsigned int bin = 0;
+	if ( muonPt <= maxPt ) {
+		bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
 	}
-	else if ( muonPt >=30 && muonPt < 40 ) {
-		if ( muonEta >= 0 && muonEta < 1.2 ) {
-			triggerEfficiency = 0.926;
-		}
-		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
-			triggerEfficiency = 0.866;
-		}
+	else {
+		bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, maxPt );
 	}
-	else if ( muonPt >=40 && muonPt < 50 ) {
-		if ( muonEta >= 0 && muonEta < 1.2 ) {
-			triggerEfficiency = 0.933;
-		}
-		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
-			triggerEfficiency = 0.894;
-		}
-	}
-	else if ( muonPt >=50  ) {
-		if ( muonEta >= 0 && muonEta < 1.2 ) {
-			triggerEfficiency = 0.947;
-		}
-		else if ( muonEta >= 1.2 && muonEta < 2.4 ) {
-			triggerEfficiency = 0.893;
-		}
-	}
-	// boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
-	// double electronPt = pt();
-	// double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
-	// // cout << "Electron pt : " << electronPt << endl;
-	// // cout << "Max pt in histogram" << endl;
-	// // cout << maxPt << endl;
-	// unsigned int bin = 0;
-	// if ( electronPt <= maxPt ) {
-	// 	bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
-	// }
-	// else {
-	// 	bin = electronTriggerScaleFactorsHistogram->GetNbinsX();
-	// }
 
-	// triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
-
+	triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
+	triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
 
 	double idIsoSF(1.);
+	double idIsoSFError(0.);
 	boost::shared_ptr<TH2F> muonIDIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram);
-	double bin = muonIDIsoScaleFactorsHistogram->FindBin( muonEta, muonPt );
+	bin = 0;
+	if ( muonPt <= maxPt ) {
+		bin = muonIDIsoScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
+	}
+	else {
+		bin = muonIDIsoScaleFactorsHistogram->FindBin( muonAbsEta, maxPt );
+	}
+
 	idIsoSF = muonIDIsoScaleFactorsHistogram->GetBinContent( bin );
-	double idIsoSFError = muonIDIsoScaleFactorsHistogram->GetBinError( bin );
+	idIsoSFError = muonIDIsoScaleFactorsHistogram->GetBinError( bin );
 
 	if (muon_scale_factor_systematic == -1 ) {
 		idIsoSF -= idIsoSFError;
-		triggerEfficiency = triggerEfficiency * ( 1 - triggerEfficiencyRelativeError );
+		triggerEfficiency -= triggerEfficiencyError;
 	}
 	else if ( muon_scale_factor_systematic == 1 ) {
 		idIsoSF += idIsoSFError;
-		triggerEfficiency = triggerEfficiency * ( 1 + triggerEfficiencyRelativeError );
+		triggerEfficiency += triggerEfficiencyError;
 	}
 
 	return idIsoSF * triggerEfficiency;
