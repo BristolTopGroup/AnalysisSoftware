@@ -37,6 +37,7 @@ void METAnalyser::analyse(const EventPtr event) {
 
 		treeMan_->setCurrentFolder(histogramFolder_);
 		treeMan_->Fill("MET_" + prefix,met->et());
+		treeMan_->Fill("MET_phi_" + prefix,met->phi());
 
 		// histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
 		histMan_->H1D("MET_phi")->Fill(met->phi(), weight_);
@@ -130,6 +131,7 @@ void METAnalyser::createTrees() {
 	for (unsigned index = 0; index < METAlgorithm::NUMBER_OF_METALGORITHMS; ++index) {
 		std::string prefix = METAlgorithm::prefixes.at(index);
 		treeMan_->addBranch("MET_" + prefix, "F", "MET" + Globals::treePrefix_);
+		treeMan_->addBranch("MET_phi_" + prefix, "F", "MET" + Globals::treePrefix_);
 		treeMan_->addBranch("ST_" + prefix, "F", "MET" + Globals::treePrefix_);
 		treeMan_->addBranch("WPT_" + prefix, "F", "MET" + Globals::treePrefix_);
 		treeMan_->addBranch("MT_" + prefix, "F", "MET" + Globals::treePrefix_);
