@@ -14,7 +14,7 @@ class BTagWeight {
 public:
 	BTagWeight();
 
-	double weight(const JetCollection jets) const;
+	double weight(const JetCollection jets, const int systematic) const;
 
 	void setNumberOfBtags(unsigned int min, unsigned int max);
 
@@ -38,7 +38,7 @@ private:
 
 };
 
-double BjetWeights(const JetCollection jets);
+double BjetWeights(const JetCollection jets, const int systematic);
 }
 #endif
 
