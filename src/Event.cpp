@@ -64,6 +64,8 @@ Event::Event() : //
 		eventWeight(1.), //
 		pileUpWeight_(1.), //
 		bJetWeight_(1.), //
+		bJetUpWeight_(1.), //
+		bJetDownWeight_(1.), //
 		PUWeightInTimeOnly_(1.), //
 		PUWeight3BX_(1.), //
 //		PUWeight3D_(1.), //
@@ -220,6 +222,14 @@ const bool Event::PassesMuonChannelTrigger() const {
 	return false;
 }
 
+const bool Event::PassesTkMuonChannelTrigger() const {
+	if ( passesTkMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
 const bool Event::PassesElectronSelection() const {
 	if ( passesElectronSelection_ ) {
 		return true;
@@ -285,7 +295,7 @@ const bool Event::PassesElectronTriggerAndConversionSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelection() const {
-	if ( passesMuonSelection_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonSelection_ && ( passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_ ) ) {
 		return true;
 	}
 
@@ -365,7 +375,7 @@ const bool Event::PassesElectronTriggerAndConversionSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelectionNoB() const {
-	if ( passesMuonSelectionNoB_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonSelectionNoB_ && ( passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_ ) ) {
 		return true;
 	}
 
@@ -551,6 +561,10 @@ void Event::setPassesElectronChannelQCDTrigger( bool passesTrigger ) {
 
 void Event::setPassesMuonChannelTrigger( bool passesTrigger ) {
 	passesMuonChannelTrigger_ = passesTrigger;
+}
+
+void Event::setPassesTkMuonChannelTrigger( bool passesTrigger ) {
+	passesTkMuonChannelTrigger_ = passesTrigger;
 }
 
 void Event::setPassesMuonChannelQCDTrigger( bool passesTrigger ) {
@@ -785,6 +799,14 @@ void Event::setBJetWeight(double weight) {
 	bJetWeight_ = weight;
 }
 
+void Event::setBJetUpWeight(double weight) {
+	bJetUpWeight_ = weight;
+}
+
+void Event::setBJetDownWeight(double weight) {
+	bJetDownWeight_ = weight;
+}
+
 void Event::setBeamScrapingVeto(bool isScraping) {
 	isBeamScraping_ = isScraping;
 }
@@ -881,6 +903,14 @@ double Event::PileUpWeight() const {
 
 double Event::BJetWeight() const {
 	return bJetWeight_;
+}
+
+double Event::BJetUpWeight() const {
+	return bJetUpWeight_;
+}
+
+double Event::BJetDownWeight() const {
+	return bJetDownWeight_;
 }
 
 void Event::inspect() const {

@@ -37,6 +37,7 @@ namespace METAlgorithm {
 
 		// 2015 miniAOD
 		MET,
+		METNoHF,
 		NUMBER_OF_METALGORITHMS
 	};
 
@@ -44,13 +45,14 @@ namespace METAlgorithm {
 
 		// 2015 miniAOD
 		"MET",
+		"METNoHF"
 
 	} };
 
 	const boost::array<std::string, METAlgorithm::NUMBER_OF_METALGORITHMS> names = { {
 		// 2015 miniAOD
 		"MET",
-
+		"METNoHF"
 	} };
 }
 

@@ -115,7 +115,7 @@ datasets_8TeV = {
  #             'TTH_Inclusive_M-125' : [mc_path_8TeV + 'TTH_Inclusive_M-125_8TeV_pythia6'],
             }
 
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v25/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v27/'
 data_path_13TeV = ''
 datasets_13TeV = {
             'SingleMuon_PromptReco' : [ mc_path_13TeV + 'SingleMuon_PromptReco' ],

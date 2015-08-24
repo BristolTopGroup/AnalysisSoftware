@@ -87,6 +87,7 @@ private:
 
 	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelTriggerReader;
+	boost::scoped_ptr<VariableReader<bool> > passesTkMuonChannelTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelQCDTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelQCDTriggerReader;
 
@@ -103,7 +104,7 @@ private:
 	boost::scoped_ptr<VariableReader<unsigned int> > runNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > eventNumberReader;
 	boost::scoped_ptr<VariableReader<unsigned int> > lumiBlockReader;
-	boost::scoped_ptr<VariableReader<bool> > passesMetFilterReader;
+	boost::scoped_ptr<VariableReader<bool> > passesMetFilterReader_;
 
 	boost::scoped_ptr<VariableReader<double> > generatorWeightReader_;
 	boost::scoped_ptr<VariableReader<double> > centralLHEWeightReader_;

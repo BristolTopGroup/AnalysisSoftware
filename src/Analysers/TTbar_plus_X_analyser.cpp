@@ -46,23 +46,28 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		}
 
 		// MET
-		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
+		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 		treeMan_->Fill("EventWeight", event->weight());
 		treeMan_->Fill("PUWeight", event->PileUpWeight());
 		treeMan_->Fill("lepton_eta",signalElectron->eta());
 		treeMan_->Fill("lepton_pt",signalElectron->pt());
+		treeMan_->Fill("lepton_charge",signalElectron->charge());
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
 			treeMan_->Fill("M_bl",Event::M_bl(bJets, signalElectron));
 			treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalElectron));
 		}
 		treeMan_->Fill("HT",Event::HT(jets));
-		treeMan_->Fill("MET",MET_main->et());
-		treeMan_->Fill("ST",Event::ST(jets, signalElectron, MET_main));
-		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_main));
-		treeMan_->Fill("MT",Event::MT(signalElectron, MET_main));
+		treeMan_->Fill("MET",MET_original->et());
+		treeMan_->Fill("METNoHF",METNoHF->et());
+		treeMan_->Fill("ST",Event::ST(jets, signalElectron, MET_original));
+		treeMan_->Fill("STNoHF",Event::ST(jets, signalElectron, METNoHF));
+		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_original));
+		treeMan_->Fill("WPTNoHF",Event::WPT(signalElectron, METNoHF));
+		treeMan_->Fill("MT",Event::MT(signalElectron, MET_original));
 		treeMan_->Fill("NJets",Event::NJets(jets));
 		treeMan_->Fill("NBJets",Event::NJets(bJets));
 		treeMan_->Fill("NVertices",	event->Vertices().size());
@@ -74,6 +79,10 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonDown",1.0);
 
 		treeMan_->Fill("BJetWeight",event->BJetWeight());
+		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+
+		// cout << "Bjet weights and errors : " << event->BJetWeight() << " " << event->BJetUpWeight() << " " << event->BJetDownWeight() << endl;
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
@@ -91,8 +100,8 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		}
 
 		// MET Uncertainties
-		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			METPointer METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+		for ( unsigned int unc_i = 0; unc_i < METNoHF->getAllMETUncertainties().size(); ++unc_i ) {
+			METPointer METForUnc_i = METNoHF->getMETForUncertainty( unc_i );
 			treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
 			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalElectron, METForUnc_i));
 			treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalElectron, METForUnc_i));
@@ -119,7 +128,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 			wAnalyserEPlusJetsRefSelection_->analyseHadronicW_partons(event);			
 		}
 
-		likelihoodRecoAnalyserEPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
+		likelihoodRecoAnalyserEPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_original);
 
 		// ref_selection_binned_HT_analyser_electron_->setScale(bjetWeight * efficiencyCorrection);
 
@@ -215,19 +224,24 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		// MET
-		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
+		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
 		treeMan_->Fill("EventWeight", event->weight());
 		treeMan_->Fill("PUWeight", event->PileUpWeight());
 		treeMan_->Fill("lepton_eta",signalElectron->eta());
 		treeMan_->Fill("lepton_pt",signalElectron->pt());
+		treeMan_->Fill("lepton_charge",signalElectron->charge());
 		treeMan_->Fill("M3",Event::M3(jets));
 		treeMan_->Fill("HT",Event::HT(jets));
-		treeMan_->Fill("MET",MET_main->et());
-		treeMan_->Fill("ST",Event::ST(jets, signalElectron, MET_main));
-		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_main));
-		treeMan_->Fill("MT",Event::MT(signalElectron, MET_main));
+		treeMan_->Fill("MET",MET_original->et());
+		treeMan_->Fill("METNoHF",METNoHF->et());
+		treeMan_->Fill("ST",Event::ST(jets, signalElectron, MET_original));
+		treeMan_->Fill("STNoHF",Event::ST(jets, signalElectron, METNoHF));
+		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_original));
+		treeMan_->Fill("WPTNoHF",Event::WPT(signalElectron, METNoHF));
+		treeMan_->Fill("MT",Event::MT(signalElectron, MET_original));
 		treeMan_->Fill("NJets",Event::NJets(jets));
 		treeMan_->Fill("NBJets",Event::NJets(bJets));
 		treeMan_->Fill("NVertices",	event->Vertices().size());
@@ -243,6 +257,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 		treeMan_->Fill("BJetWeight",event->BJetWeight());
+		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
@@ -260,8 +276,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		}
 
 		// MET Uncertainties
-		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			METPointer METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+		for ( unsigned int unc_i = 0; unc_i < METNoHF->getAllMETUncertainties().size(); ++unc_i ) {
+			METPointer METForUnc_i = METNoHF->getMETForUncertainty( unc_i );
 			treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
 			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalElectron, METForUnc_i));
 			treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalElectron, METForUnc_i));
@@ -324,23 +340,28 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 
 		// MET
-		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
+		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
 		treeMan_->Fill("EventWeight", event->weight() );
 		treeMan_->Fill("PUWeight", event->PileUpWeight() );
 		treeMan_->Fill("lepton_eta",signalElectron->eta());
 		treeMan_->Fill("lepton_pt",signalElectron->pt());
+		treeMan_->Fill("lepton_charge",signalElectron->charge());
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
 		treeMan_->Fill("M_bl",Event::M_bl(bJets, signalElectron));
 		treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalElectron));
 		}
 		treeMan_->Fill("HT",Event::HT(jets));
-		treeMan_->Fill("MET",MET_main->et());
-		treeMan_->Fill("ST",Event::ST(jets, signalElectron, MET_main));
-		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_main));
-		treeMan_->Fill("MT",Event::MT(signalElectron, MET_main));
+		treeMan_->Fill("MET",MET_original->et());
+		treeMan_->Fill("METNoHF",METNoHF->et());
+		treeMan_->Fill("ST",Event::ST(jets, signalElectron, MET_original));
+		treeMan_->Fill("STNoHF",Event::ST(jets, signalElectron, METNoHF));
+		treeMan_->Fill("WPT",Event::WPT(signalElectron, MET_original));
+		treeMan_->Fill("WPTNoHF",Event::WPT(signalElectron, METNoHF));
+		treeMan_->Fill("MT",Event::MT(signalElectron, MET_original));
 		treeMan_->Fill("NJets",Event::NJets(jets));
 		treeMan_->Fill("NBJets",Event::NJets(bJets));
 		treeMan_->Fill("NVertices",	event->Vertices().size());
@@ -352,6 +373,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 		treeMan_->Fill("BJetWeight",event->BJetWeight());
+		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsConversionSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
@@ -369,8 +392,8 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		}
 
 		// MET Uncertainties
-		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			METPointer METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+		for ( unsigned int unc_i = 0; unc_i < METNoHF->getAllMETUncertainties().size(); ++unc_i ) {
+			METPointer METForUnc_i = METNoHF->getMETForUncertainty( unc_i );
 			treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
 			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalElectron, METForUnc_i));
 			treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalElectron, METForUnc_i));
@@ -452,23 +475,28 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		// histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * efficiencyCorrection);
 
 
-		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
+		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 		treeMan_->Fill("EventWeight", event->weight() );
 		treeMan_->Fill("PUWeight", event->PileUpWeight() );
 		treeMan_->Fill("lepton_eta",signalMuon->eta());
 		treeMan_->Fill("lepton_pt",signalMuon->pt());
+		treeMan_->Fill("lepton_charge",signalMuon->charge());
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
 			treeMan_->Fill("M_bl",Event::M_bl(bJets, signalMuon));
 			treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalMuon));
 		}
 		treeMan_->Fill("HT",Event::HT(jets));
-		treeMan_->Fill("MET",MET_main->et());
-		treeMan_->Fill("ST",Event::ST(jets, signalMuon, MET_main));
-		treeMan_->Fill("WPT",Event::WPT(signalMuon, MET_main));
-		treeMan_->Fill("MT",Event::MT(signalMuon, MET_main));
+		treeMan_->Fill("MET",MET_original->et());
+		treeMan_->Fill("METNoHF",METNoHF->et());
+		treeMan_->Fill("ST",Event::ST(jets, signalMuon, MET_original));
+		treeMan_->Fill("STNoHF",Event::ST(jets, signalMuon, METNoHF));
+		treeMan_->Fill("WPT",Event::WPT(signalMuon, MET_original));
+		treeMan_->Fill("WPTNoHF",Event::WPT(signalMuon, METNoHF));
+		treeMan_->Fill("MT",Event::MT(signalMuon, MET_original));
 		treeMan_->Fill("NJets",Event::NJets(jets));
 		treeMan_->Fill("NBJets",Event::NJets(bJets));
 		treeMan_->Fill("NVertices",	event->Vertices().size());
@@ -479,6 +507,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("ElectronUp",1.0);
 		treeMan_->Fill("ElectronDown",1.0);
 		treeMan_->Fill("BJetWeight",event->BJetWeight());
+		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
@@ -496,8 +526,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		}
 
 		// MET Uncertainties
-		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			METPointer METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+		for ( unsigned int unc_i = 0; unc_i < METNoHF->getAllMETUncertainties().size(); ++unc_i ) {
+			METPointer METForUnc_i = METNoHF->getMETForUncertainty( unc_i );
 			treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
 			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalMuon, METForUnc_i));
 			treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalMuon, METForUnc_i));
@@ -522,7 +552,7 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			wAnalyserMuPlusJetsRefSelection_->analyseHadronicW_partons(event);			
 		}
 
-		likelihoodRecoAnalyserMuPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_main);
+		likelihoodRecoAnalyserMuPlusJetsRefSelection_->analyse(event, jets, bJets, signalLepton, MET_original);
 
 		// ref_selection_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;
@@ -586,23 +616,28 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 
-		const METPointer MET_main(event->MET((METAlgorithm::value) 0));
+		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 		treeMan_->Fill("EventWeight", event->weight() );
 		treeMan_->Fill("PUWeight", event->PileUpWeight() );
 		treeMan_->Fill("lepton_eta",signalMuon->eta());
 		treeMan_->Fill("lepton_pt",signalMuon->pt());
+		treeMan_->Fill("lepton_charge",signalMuon->charge());
 		treeMan_->Fill("M3",Event::M3(jets));
 		if ( numberOfBjets > 0 ) {
 			treeMan_->Fill("M_bl",Event::M_bl(bJets, signalMuon));
 			treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalMuon));
 		}
 		treeMan_->Fill("HT",Event::HT(jets));
-		treeMan_->Fill("MET",MET_main->et());
-		treeMan_->Fill("ST",Event::ST(jets, signalMuon, MET_main));
-		treeMan_->Fill("WPT",Event::WPT(signalMuon, MET_main));
-		treeMan_->Fill("MT",Event::MT(signalMuon, MET_main));
+		treeMan_->Fill("MET",MET_original->et());
+		treeMan_->Fill("METNoHF",METNoHF->et());
+		treeMan_->Fill("ST",Event::ST(jets, signalMuon, MET_original));
+		treeMan_->Fill("STNoHF",Event::ST(jets, signalMuon, METNoHF));
+		treeMan_->Fill("WPT",Event::WPT(signalMuon, MET_original));
+		treeMan_->Fill("WPTNoHF",Event::WPT(signalMuon, METNoHF));
+		treeMan_->Fill("MT",Event::MT(signalMuon, MET_original));
 		treeMan_->Fill("NJets",Event::NJets(jets));
 		treeMan_->Fill("NBJets",Event::NJets(bJets));
 		treeMan_->Fill("NVertices",	event->Vertices().size());
@@ -614,6 +649,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("MuonUp",1.0);
 		treeMan_->Fill("MuonDown",1.0);
 		treeMan_->Fill("BJetWeight",event->BJetWeight());
+		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
@@ -631,8 +668,8 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		}
 
 		// MET Uncertainties
-		for ( unsigned int unc_i = 0; unc_i < MET_main->getAllMETUncertainties().size(); ++unc_i ) {
-			METPointer METForUnc_i = MET_main->getMETForUncertainty( unc_i );
+		for ( unsigned int unc_i = 0; unc_i < METNoHF->getAllMETUncertainties().size(); ++unc_i ) {
+			METPointer METForUnc_i = METNoHF->getMETForUncertainty( unc_i );
 			treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
 			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalMuon, METForUnc_i));
 			treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalMuon, METForUnc_i));
@@ -700,14 +737,18 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("STNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPTNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
@@ -727,18 +768,24 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("STNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPTNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
@@ -759,18 +806,24 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("STNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPTNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
@@ -791,18 +844,24 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("STNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPTNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
@@ -822,18 +881,24 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("STNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPTNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
@@ -854,6 +919,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();

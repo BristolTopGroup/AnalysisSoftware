@@ -21,17 +21,28 @@ METReader::METReader() :
 }
 
 METReader::METReader(TChainPointer input, METAlgorithm::value algo) :
-		exReader(input, "METNoHF.Ex"), //
-		eyReader(input, "METNoHF.Ey"), //
-		multiExReader(input, "METNoHF.Ex"), //
-		multiEyReader(input, "METNoHF.Ey"), //
-		significanceReader(input, "METNoHF.Significance"), //
-		shiftedMETReader(input, "METNoHF.METUncertaintiesPt"),
-		shiftedMET_Px_Reader(input, "METNoHF.METUncertaintiesPx"),
-		shiftedMET_Py_Reader(input, "METNoHF.METUncertaintiesPy"),
-
 		met(), //
 		usedAlgorithm(algo) {
+		if ( usedAlgorithm == METAlgorithm::METNoHF ) {
+			exReader = VariableReader<double>(input, "METNoHF.Ex");
+			eyReader = VariableReader<double>(input, "METNoHF.Ey");
+			multiExReader = VariableReader<MultiDoublePointer>(input, "METNoHF.Ex");
+			multiEyReader = VariableReader<MultiDoublePointer>(input, "METNoHF.Ey");
+			significanceReader = VariableReader<double>(input, "METNoHF.Significance");
+			shiftedMETReader = VariableReader<MultiDoublePointer>(input, "METNoHF.METUncertaintiesPt");
+			shiftedMET_Px_Reader = VariableReader<MultiDoublePointer>(input, "METNoHF.METUncertaintiesPx");
+			shiftedMET_Py_Reader = VariableReader<MultiDoublePointer>(input, "METNoHF.METUncertaintiesPy");
+		}
+		else {
+			exReader = VariableReader<double>(input, "MET.Ex");
+			eyReader = VariableReader<double>(input, "MET.Ey");
+			multiExReader = VariableReader<MultiDoublePointer>(input, "MET.Ex");
+			multiEyReader = VariableReader<MultiDoublePointer>(input, "MET.Ey");
+			significanceReader = VariableReader<double>(input, "MET.Significance");
+			shiftedMETReader = VariableReader<MultiDoublePointer>(input, "MET.METUncertaintiesPt");
+			shiftedMET_Px_Reader = VariableReader<MultiDoublePointer>(input, "MET.METUncertaintiesPx");
+			shiftedMET_Py_Reader = VariableReader<MultiDoublePointer>(input, "MET.METUncertaintiesPy");
+		}
 	// if (Globals::NTupleVersion < 8 && usedAlgorithm == METAlgorithm::GenMET) {
 	// 	multiExReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".ExTrue");
 	// 	multiEyReader = VariableReader<MultiDoublePointer>(input, METAlgorithm::prefixes.at(usedAlgorithm) + ".EyTrue");

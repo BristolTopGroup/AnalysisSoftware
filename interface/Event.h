@@ -62,6 +62,7 @@ protected:
 	bool passesElectronChannelTrigger_;
 	bool passesElectronChannelQCDTrigger_;
 	bool passesMuonChannelTrigger_;
+	bool passesTkMuonChannelTrigger_;
 	bool passesMuonChannelQCDTrigger_;
 
 	bool passesElectronSelection_;
@@ -103,7 +104,7 @@ protected:
 	unsigned long lumiBlock;
 	double eventWeight;
 	double pileUpWeight_;
-	double bJetWeight_;
+	double bJetWeight_, bJetUpWeight_, bJetDownWeight_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
 			PUWeightShiftUp_, PUWeightShiftDown_;
@@ -143,6 +144,7 @@ public:
 	void setPassesElectronChannelTrigger( bool passesTrigger );
 	void setPassesElectronChannelQCDTrigger( bool passesTrigger );
 	void setPassesMuonChannelTrigger( bool passesTrigger );
+	void setPassesTkMuonChannelTrigger( bool passesTrigger );
 	void setPassesMuonChannelQCDTrigger( bool passesTrigger );
 	void setPassesElectronSelection(bool passesElectronSelection);
 	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
@@ -182,6 +184,8 @@ public:
 	void setEventWeight(double weight);
 	void setPileUpWeight(double weight);
 	void setBJetWeight(double weight);
+	void setBJetUpWeight(double weight);
+	void setBJetDownWeight(double weight);
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
 	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
@@ -223,6 +227,7 @@ public:
 
 	const bool PassesElectronChannelTrigger() const;
 	const bool PassesMuonChannelTrigger() const;
+	const bool PassesTkMuonChannelTrigger() const;
 
 	const bool PassesElectronSelection() const;
 	const bool PassesElectronQCDSelection() const;
@@ -270,6 +275,8 @@ public:
 	double weight() const;
 	double PileUpWeight() const;
 	double BJetWeight() const;
+	double BJetUpWeight() const;
+	double BJetDownWeight() const;
 	void inspect() const;
 	bool HLT(HLTriggers::value trigger) const;
 	int HLTPrescale(HLTriggers::value trigger) const;
