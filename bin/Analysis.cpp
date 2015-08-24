@@ -39,7 +39,8 @@ void Analysis::analyse() {
 		inspectEvents();
 
 		// Check if MET fitlers are satisfied
-		if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
+		// cout << currentEvent->passesMETFilters() << endl;
+		// if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) && Globals::treePrefix_ == "" ) {
