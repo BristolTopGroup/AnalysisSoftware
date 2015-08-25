@@ -26,6 +26,7 @@
  --sample=<valid sample> (TTJet, etc) 
  --mode=<valid mode of operation> (central, JES_up, etc)
  --cmssw=53X|73X|74X|75X
+ --splitTTJet
  
  defining return values:
  return_<parameter>: script will return the specified parameter (e.g. return_mode returns the mode)
@@ -36,6 +37,7 @@ from optparse import OptionParser
 import sys
 import os
 from imp import load_source
+from copy import copy
 dirname, _ = os.path.split(os.path.abspath(__file__))
 analysis_info = load_source( 'analysis_info', dirname + '/../python/analysis_info.py' )
 
@@ -44,27 +46,69 @@ analysis_modes = analysis_info.analysisModes
 # don't need 'Test' here
 analysis_modes.remove('Test')
 
+#analysis_modes_13TeV = analysis_info.analysis_modes_13TeV
+
 samples_7TeV = analysis_info.datasets_7TeV.keys()
 samples_8TeV = analysis_info.datasets_8TeV.keys()
+samples_13TeV = analysis_info.datasets_13TeV.keys()
 
-def build_matrix(energy, chosen_sample = None):
+inputDir_7TeV = analysis_info.datasets_7TeV
+inputDir_8TeV = analysis_info.datasets_8TeV
+inputDir_13TeV = analysis_info.datasets_13TeV
+
+def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = False):
+    global analysis_modes
+    analysis_modes_ = copy(analysis_modes)
+
     samples = None
     if energy == 7:
         samples = samples_7TeV
     if energy == 8:
         samples = samples_8TeV
+    if energy == 13:
+        samples = samples_13TeV
+        analysis_modes_ = analysis_modes_13TeV
+
+    if chosen_mode != None:
+        analysis_modes_ = [ chosen_mode ]
+
     result = []
+
     if chosen_sample:
         if not chosen_sample in samples:
             sys.exit("ERROR Trying to run unknown sample '%s'" % options.sample)
-        for mode in analysis_modes:
-            result.append((chosen_sample, mode))
+        for mode in analysis_modes_:
+            if splitTTJet and 'TTJets' in chosen_sample:
+                for ntupleIndex in range(1,numberOfInputFiles(chosen_sample,energy)+1):
+                    result.append((chosen_sample, mode,ntupleIndex))
+            elif mode != 'central' and ( 'SingleMuon' in chosen_sample or 'SingleElectron' in chosen_sample ):
+                continue
+            else:
+                result.append((chosen_sample, mode, -1))
         return result, [chosen_sample]
     else:
         for sample in samples:
-            for mode in analysis_modes:
-                result.append((sample, mode))
+            for mode in analysis_modes_:
+                if splitTTJet and 'TTJets' in sample:
+                    for ntupleIndex in range(1,numberOfInputFiles(sample,energy)+1):
+                        result.append((sample, mode,ntupleIndex))
+                # elif mode != 'central' and ( 'SingleMuon' in chosen_sample or 'SingleElectron' in chosen_sample ):
+                #     continue
+                else:
+                    result.append((sample, mode, -1))
     return result, samples
+
+def numberOfInputFiles(sample, energy):
+    inputDir = ''
+    if energy == 7:
+        inputDir = inputDir_7TeV
+    if energy == 8:
+        inputDir = inputDir_8TeV
+    if energy == 13:
+        inputDir = inputDir_13TeV
+    inputDir = inputDir[sample][0]
+    inputFiles = os.listdir(inputDir)
+    return len(inputFiles)
 
 def main(options, args = []):
     if options.operation == 'test':
@@ -88,18 +132,28 @@ def main(options, args = []):
         return options.process
     if options.return_operation:
         return options.operation
+    if options.return_splitTTJet:
+        return options.splitTTJet
     # now the dynamic options
     matrix, samples = None, None
     if options.operation == 'single-sample-analysis':
-        matrix, samples = build_matrix(options.energy, options.sample)
+        matrix, samples = build_matrix(options.energy, chosen_sample = options.sample, splitTTJet = options.splitTTJet)
+    elif options.operation == 'single-mode-analysis':
+        matrix, samples = build_matrix(options.energy, chosen_mode = options.mode, splitTTJet = options.splitTTJet)
+    elif options.operation == 'single':
+        matrix, samples = build_matrix(options.energy, chosen_sample = options.sample, chosen_mode = options.mode, splitTTJet = options.splitTTJet)
     else:
-        matrix, samples = build_matrix(options.energy)
+        matrix, samples = build_matrix(options.energy, splitTTJet = options.splitTTJet)
+
     if options.return_n_jobs:
         if options.operation == 'test' or options.operation == 'single':
-            return 1
+            if options.operation == 'single' and options.splitTTJet:
+                return numberOfInputFiles(options.sample, options.energy)
+            else:
+                return 1
         else:
             return len(matrix)
-    
+
     if options.return_sample:
         if options.sample:
             if not options.sample in samples:
@@ -107,11 +161,26 @@ def main(options, args = []):
             return options.sample
         else:
             return matrix[options.process][0]
-    
+
+    if options.return_nInputNtuples:
+        if options.sample:
+            if not options.sample in samples:
+                sys.exit("ERROR Trying to run unknown sample '%s'" % options.sample)
+            return numberOfInputFiles(options.sample, options.energy)
+        else:
+            return -1
+
+    if options.return_ntupleToProcess:
+        return matrix[options.process][2]
+
     if options.return_mode:
         if options.mode:
-            if not options.mode in analysis_modes:
-                sys.exit("Trying to run unknown mode: %s" % options.mode)
+            if options.energy == 13:
+                if not options.mode in analysis_modes_13TeV:
+                    sys.exit("Trying to run unknown mode: %s" % options.mode)
+            else:
+                if not options.mode in analysis_modes:
+                    sys.exit("Trying to run unknown mode: %s" % options.mode)
             return options.mode
         else:
             return matrix[options.process][1]
@@ -131,16 +200,20 @@ def parse_args(parameters = []):
     parser.add_option( '--sample', dest = 'sample', help = 'sample' )
     parser.add_option( '--mode', dest = 'mode', help = 'mode' )
     parser.add_option( '--cmssw', dest = 'cmssw', 
-                       help = 'cmssw version (53X|73X|74X)', default = '53X' )
+                       help = 'cmssw version (53X|73X|74X|75X)', default = '53X' )
     parser.add_option( '--operation', dest = 'operation', 
                        help = 'mode of operation: analysis|single|test', default = 'test' )
     parser.add_option( '--energy', dest = 'energy', 
                        help = 'centre-of-mass energy (7|8|13|14 TeV)',
                        type = int )
+    parser.add_option("--splitTTJet", action = "store_true", dest = "splitTTJet", default = False,
+                          help = "Whether to split up TTJet sample, and assigne one process per ntuple" )
     parser.add_option("--noop", action = "store_true", dest = "noop",
                           help = "Returns the noop flag" )
     parser.add_option("--return_sample", action = "store_true", dest = "return_sample",
                           help = "Returns the sample from the map based on process" )
+    parser.add_option("--return_nInputNtuples", action = "store_true", dest = "return_nInputNtuples",
+                          help = "Returns the number of ntuples for a sample from the map based on process" )
     parser.add_option("--return_mode", action = "store_true", dest = "return_mode",
                           help = "Returns the analysis mode from the map based on process" )
     parser.add_option("--return_cmssw", action = "store_true", dest = "return_cmssw",
@@ -157,7 +230,11 @@ def parse_args(parameters = []):
                           help = "Returns the operation" )
     parser.add_option("--return_noop", action = "store_true", dest = "return_noop",
                           help = "Returns the noop flag" )
-    
+    parser.add_option("--return_splitTTJet", action = "store_true", dest = "return_splitTTJet",
+                          help = "Returns the return_splitTTJet flag" )
+    parser.add_option("--return_ntupleToProcess", action = "store_true", dest = "return_ntupleToProcess",
+                          help = "Returns the ntuple number to process if splitting job up" )
+
     options, args = None, None
     if len(parameters) > 0:
         ( options, args ) = parser.parse_args(parameters)
