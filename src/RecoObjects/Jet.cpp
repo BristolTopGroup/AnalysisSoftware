@@ -242,12 +242,12 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 		}
 	}
 	//use raw scaleFactors from above to calculate the final factors to apply
-	double matchedGeneratedJetpt = gen_jet->pt();
-	double jetPt = jet->pt();
+	double gen_pt = gen_jet->pt();
+	double reco_pt = jet->pt();
 
-	double deltaPt = ( scaleFactor - 1 ) * (jetPt - matchedGeneratedJetpt);
+	double new_pt = std::max(0.0, gen_pt + ( scaleFactor * (reco_pt - gen_pt)));
 
-	double ptScale = std::max(0.0, ( (jetPt + deltaPt)/jetPt ));
+	double ptScale = new_pt/reco_pt;
 	
 	//get the unsmeared reconstructed values
 	double energy_unsmeared = jet->energy();
@@ -259,7 +259,7 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 	double energy_smeared = ptScale * energy_unsmeared;
 	double px_smeared = ptScale * px_unsmeared;
 	double py_smeared = ptScale * py_unsmeared;
-	double pz_smeared = ptScale * pz_unsmeared;
+	double pz_smeared = pz_unsmeared;
 
 	//make new jet to be a new variable to store the final smeared jet
 	const ParticlePointer smearedJet(new Particle(energy_smeared, px_smeared, py_smeared, pz_smeared));
