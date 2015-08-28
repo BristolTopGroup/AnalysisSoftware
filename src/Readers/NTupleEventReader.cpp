@@ -227,15 +227,16 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 
 	// Set bjet weight
-	if ( currentEvent->CleanedJets().size() > 0 && currentEvent->PassesElectronTriggerAndSelection() ) {
+	if ( !currentEvent->isRealData() ) {
 		boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
 		double bweight = btagWeight->weight( currentEvent->CleanedJets(), 0 );
 		currentEvent->setBJetWeight( bweight );
 		bweight = btagWeight->weight( currentEvent->CleanedJets(), 1 );
 		currentEvent->setBJetUpWeight( bweight );
 		bweight = btagWeight->weight( currentEvent->CleanedJets(), -1 );
-		currentEvent->setBJetDownWeight( bweight );
+		currentEvent->setBJetDownWeight( bweight );		
 	}
+
 
 	double sysShiftMetCorrectionX = 0;
 	double sysShiftMetCorrectionY = 0;

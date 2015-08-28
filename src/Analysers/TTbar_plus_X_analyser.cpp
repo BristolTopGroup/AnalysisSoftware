@@ -10,8 +10,6 @@
 #include "../../interface/GlobalVariables.h"
 #include "../../interface/Event.h"
 
-
-
 namespace BAT {
 
 void TTbar_plus_X_analyser::analyse(const EventPtr event) {
@@ -82,7 +80,6 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
-		// cout << "Bjet weights and errors : " << event->BJetWeight() << " " << event->BJetUpWeight() << " " << event->BJetDownWeight() << endl;
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
