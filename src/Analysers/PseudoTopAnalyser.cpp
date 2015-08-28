@@ -112,6 +112,10 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("pseudoLepton_pT", allPseudoLeptons[0]->pt() );
 		treeMan_->Fill("pseudoLepton_eta", allPseudoLeptons[0]->eta() );		
 	}
+	else {
+		treeMan_->Fill("pseudoLepton_pT", 0 );
+		treeMan_->Fill("pseudoLepton_eta", -50 );
+	}
 
 	// Store pseudo MET
 	if ( pseudoMET != 0 ) {
@@ -122,6 +126,9 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		}
 		treeMan_->Fill("pseudoMET_mass", pseudoMET->mass() );
 	}
+	else {
+		treeMan_->Fill("pseudoMET", 0 );
+	}
 
 
 	// Store pseudo HT
@@ -131,12 +138,18 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	if ( allPseudoLeptons.size() > 0 ) {
 		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) ) );
 	}
+	else {
+		treeMan_->Fill("pseudoST", 0 );
+	}
 
 	// Store pseudo MT and WPT
 	// These are from the W reconstructed from the pseudo particles
 	// i.e. use the neutrino assocaited with the W rather than the more "global" MET
 	if ( pseudoLeptonicW != 0 ) {
 		treeMan_->Fill("pseudoWPT_reco", pseudoLeptonicW->pt() );
+	}
+	else {
+		treeMan_->Fill("pseudoWPT_reco", 0 );
 	}
 
 	if ( pseudoMET != 0 && allPseudoLeptons.size() > 0 ) {
@@ -145,6 +158,10 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 		double MT = event->MT( allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) );
 		treeMan_->Fill("pseudoMT", MT );
+	}
+	else {
+		treeMan_->Fill("pseudoWPT", 0 );
+		treeMan_->Fill("pseudoMT", 0 );
 	}
 
 	// NJets && NBJets
