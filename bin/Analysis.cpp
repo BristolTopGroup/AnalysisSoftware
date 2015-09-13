@@ -43,10 +43,12 @@ void Analysis::analyse() {
 		// if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-		if ( currentEvent->isTTJet(currentEvent->getDataType()) && Globals::treePrefix_ == "" ) {
+		if ( currentEvent->isTTJet(currentEvent->getDataType()) ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
-			partonAnalyser_->analyse(currentEvent);
+			if ( Globals::treePrefix_ == "" ) {
+				partonAnalyser_->analyse(currentEvent);
+			}
 			// likelihoodInputAnalyser_->analyse(currentEvent);
 		}
 		treeMan->FillTrees();
@@ -148,9 +150,9 @@ void Analysis::createHistograms() {
 			<< endl;
 	lastNumberOfHistograms = numberOfHistograms;
 
-	if ( Globals::treePrefix_ == "" ) {
 		pseudoTopAnalyser_->createTrees();
 		unfoldingRecoAnalyser_->createTrees();
+	if ( Globals::treePrefix_ == "" ) {
 		partonAnalyser_->createTrees();
 		likelihoodInputAnalyser_->createTrees();
 	}

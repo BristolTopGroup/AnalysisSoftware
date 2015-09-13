@@ -48,6 +48,9 @@ ElectronReader::ElectronReader() : //
 		mvaTrigV0_(), //
 		mvaNonTrigV0_(), //
 		passConversionVeto_(), //
+		passTightElectron_(), //
+		passTightConversionElectron_(), //
+		passTightNonIsoElectron_(), //
 		algorithm(ElectronAlgorithm::Calo), //
 		electrons() {
 
@@ -88,6 +91,9 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		mvaTrigV0_(input, "Electrons.mvaTrigV0"), //
 		mvaNonTrigV0_(input, "Electrons.mvaNonTrigV0"), //
 		passConversionVeto_(input, "Electrons.passConversionVeto"), //
+		passTightElectron_(input, "Electrons.isTightElectron"), //
+		passTightConversionElectron_(input, "Electrons.isTightConversionElectron"), //
+		passTightNonIsoElectron_(input, "Electrons.isTightNonIsoElectron"), //
 		algorithm(algo), //
 		electrons() {
 
@@ -144,6 +150,10 @@ void ElectronReader::readElectrons() {
 		electron->setHadOverEm(hadOverEmReader.getVariableAt(index));
 		electron->setDistToNextTrack(dist.getVariableAt(index));
 		electron->setDCotThetaToNextTrack(dCotTheta.getVariableAt(index));
+
+		electron->setIsTightElectron( passTightElectron_.getBoolVariableAt(index));
+		electron->setIsTightConversionElectron( passTightConversionElectron_.getBoolVariableAt(index));
+		electron->setIsTightNonIsoElectron( passTightNonIsoElectron_.getBoolVariableAt(index));
 
 		electrons.push_back(electron);
 	}
@@ -202,6 +212,9 @@ void ElectronReader::initialise() {
 				<< endl;
 	}
 
+	passTightElectron_.initialise();
+	passTightConversionElectron_.initialise();
+	passTightNonIsoElectron_.initialise();
 }
 
 }

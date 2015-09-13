@@ -68,22 +68,22 @@ void PartonAnalyser::createTrees() {
 
 	treeMan_->setCurrentFolder(histogramFolder_);
 
-	treeMan_->addBranch("lepTopPt_parton", "F", "Unfolding");
-	treeMan_->addBranch("hadTopPt_parton", "F", "Unfolding");
-	treeMan_->addBranch("lepTopRap_parton", "F", "Unfolding");
-	treeMan_->addBranch("hadTopRap_parton", "F", "Unfolding");
-	treeMan_->addBranch("ttbarPt_parton", "F", "Unfolding");
-	treeMan_->addBranch("ttbarM_parton", "F", "Unfolding");
-	treeMan_->addBranch("ttbarRap_parton", "F", "Unfolding");
+	treeMan_->addBranch("lepTopPt_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap_parton", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("leptonPt_parton", "F", "Unfolding");
-	treeMan_->addBranch("leptonEta_parton", "F", "Unfolding");
+	treeMan_->addBranch("leptonPt_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("leptonEta_parton", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("neutrinoPt_parton", "F", "Unfolding");
-	treeMan_->addBranch("neutrinoEta_parton", "F", "Unfolding");
+	treeMan_->addBranch("neutrinoPt_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("neutrinoEta_parton", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("lepWPt_parton", "F", "Unfolding");
-	treeMan_->addBranch("lepWEta_parton", "F", "Unfolding");
+	treeMan_->addBranch("lepWPt_parton", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("lepWEta_parton", "F", "Unfolding" + Globals::treePrefix_);
 }
 
 void PartonAnalyser::createHistograms() {
