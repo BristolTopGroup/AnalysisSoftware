@@ -10,8 +10,6 @@
 #include "../../interface/GlobalVariables.h"
 #include "../../interface/Event.h"
 
-
-
 namespace BAT {
 
 void TTbar_plus_X_analyser::analyse(const EventPtr event) {
@@ -82,7 +80,8 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
-		// cout << "Bjet weights and errors : " << event->BJetWeight() << " " << event->BJetUpWeight() << " " << event->BJetDownWeight() << endl;
+		treeMan_->Fill("isTightElectron",signalElectron->isTightConversionElectron());
+		treeMan_->Fill("sigmaIetaIeta",signalElectron->sigmaIEtaIEta());
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
@@ -260,6 +259,9 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
+		treeMan_->Fill("isTightElectron",signalElectron->isTightConversionElectron());
+		treeMan_->Fill("sigmaIetaIeta",signalElectron->sigmaIEtaIEta());
+
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
 			event->setTTbarHypothesis( topHypothesis );
@@ -375,6 +377,9 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("BJetWeight",event->BJetWeight());
 		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+
+		treeMan_->Fill("isTightElectron",signalElectron->isTightConversionElectron());
+		treeMan_->Fill("sigmaIetaIeta",signalElectron->sigmaIEtaIEta());
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsConversionSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
@@ -770,6 +775,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("isTightElectron", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("sigmaIetaIeta", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
@@ -808,6 +815,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("isTightElectron", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("sigmaIetaIeta", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/QCDConversions");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
@@ -846,6 +855,8 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("isTightElectron", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("sigmaIetaIeta", "F", "FitVariables" + Globals::treePrefix_);
 
 	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);

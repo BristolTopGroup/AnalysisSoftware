@@ -65,11 +65,28 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		double efficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
 		treeMan_->Fill("LeptonEfficiencyCorrection", efficiencyCorrection);
+		treeMan_->Fill("LeptonEfficiencyCorrectionUp", signalMuon->getEfficiencyCorrection( 1 ));
+		treeMan_->Fill("LeptonEfficiencyCorrectionDown", signalMuon->getEfficiencyCorrection( -1 ));
 	}
 	else if ( event->PassesElectronTriggerAndSelection() ) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
 		double efficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );	
 		treeMan_->Fill("LeptonEfficiencyCorrection", efficiencyCorrection);
+		treeMan_->Fill("LeptonEfficiencyCorrectionUp", signalElectron->getEfficiencyCorrection( 1 ));
+		treeMan_->Fill("LeptonEfficiencyCorrectionDown", signalElectron->getEfficiencyCorrection( -1 ));
+	}
+
+	treeMan_->Fill("PUWeight", event->PileUpWeight() );
+	treeMan_->Fill("BJetWeight",event->BJetWeight());
+	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+
+	// MET Uncertainties
+	for ( unsigned int unc_i = 0; unc_i < metNoHF->getAllMETUncertainties().size(); ++unc_i ) {
+		METPointer METForUnc_i = metNoHF->getMETForUncertainty( unc_i );
+		treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
+		treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalLepton, METForUnc_i));
+		treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalLepton, METForUnc_i));
 	}
 
 	treeMan_->Fill("bPt", bjets[0]->pt() );
@@ -98,34 +115,43 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->setCurrentFolder(histogramFolder_);
-	treeMan_->addBranch("passSelection", "F", "Unfolding");
+	treeMan_->addBranch("passSelection", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("MET", "F", "Unfolding");
-	treeMan_->addBranch("HT", "F", "Unfolding");
-	treeMan_->addBranch("ST", "F", "Unfolding");
-	treeMan_->addBranch("WPT", "F", "Unfolding");
-	treeMan_->addBranch("MT", "F", "Unfolding");
+	treeMan_->addBranch("MET", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("HT", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("ST", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("WPT", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("MT", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("NJets", "F", "Unfolding");
-	treeMan_->addBranch("NBJets", "F", "Unfolding");
+	treeMan_->addBranch("NJets", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("NBJets", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("lepTopPt", "F", "Unfolding");
-	treeMan_->addBranch("hadTopPt", "F", "Unfolding");
-	treeMan_->addBranch("lepTopRap", "F", "Unfolding");
-	treeMan_->addBranch("hadTopRap", "F", "Unfolding");
-	treeMan_->addBranch("ttbarPt", "F", "Unfolding");
-	treeMan_->addBranch("ttbarM", "F", "Unfolding");
-	treeMan_->addBranch("ttbarRap", "F", "Unfolding");
+	treeMan_->addBranch("lepTopPt", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("leptonPt", "F", "Unfolding");
-	treeMan_->addBranch("leptonEta", "F", "Unfolding");
-	treeMan_->addBranch("LeptonEfficiencyCorrection", "F", "Unfolding");
+	treeMan_->addBranch("leptonPt", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("leptonEta", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonEfficiencyCorrection", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonEfficiencyCorrectionUp", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("LeptonEfficiencyCorrectionDown", "F", "Unfolding" + Globals::treePrefix_);
 
-	treeMan_->addBranch("bPt", "F", "Unfolding", false);
-	treeMan_->addBranch("bEta", "F", "Unfolding", false);
+	treeMan_->addBranch("MET_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("ST_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("WPT_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("BJetWeight", "F", "Unfolding" + Globals::treePrefix_ );
+	treeMan_->addBranch("BJetUpWeight", "F", "Unfolding" + Globals::treePrefix_ );
+	treeMan_->addBranch("BJetDownWeight", "F", "Unfolding" + Globals::treePrefix_ );
+
+	treeMan_->addBranch("bPt", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("bEta", "F", "Unfolding" + Globals::treePrefix_, false);
 
 	for ( unsigned int i = 0; i < 250; ++i ) {
-		treeMan_->addBranch("genWeight_" + to_string(i), "F", "GeneratorSystematicWeights");
+		treeMan_->addBranch("genWeight_" + to_string(i), "F", "GeneratorSystematicWeights" + Globals::treePrefix_);
 	}
 }
 

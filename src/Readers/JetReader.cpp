@@ -242,8 +242,6 @@ void JetReader::readJets(bool isRealData) {
 	}
 }
 
-
-
 void JetReader::initialise() {
 	energyReader.initialise();
 	JECReader.initialise();

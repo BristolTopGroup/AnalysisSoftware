@@ -36,7 +36,10 @@ Electron::Electron() :
 		distToNextTrack_(0), //
 		mvaTrigV0_(-initialBigValue), //
 		mvaNonTrigV0_(-initialBigValue), //
-		passConversionVeto_(false) {
+		passConversionVeto_(false),
+		isTightElectron_(false),
+		isTightConversionElectron_(false),
+		isTightNonIsoElectron_(false) {
 }
 
 Electron::Electron(double energy, double px, double py, double pz) :
@@ -56,7 +59,10 @@ Electron::Electron(double energy, double px, double py, double pz) :
 		distToNextTrack_(0), //
 		mvaTrigV0_(-initialBigValue), //
 		mvaNonTrigV0_(-initialBigValue), //
-		passConversionVeto_(false) {
+		passConversionVeto_(false),
+		isTightElectron_(false),
+		isTightConversionElectron_(false),
+		isTightNonIsoElectron_(false)  {
 }
 
 Electron::~Electron() {
@@ -159,6 +165,18 @@ bool Electron::passesElectronID(short leptonID) const {
 	default:
 		return mvaTrigV0() > 0.5;
 	}
+}
+
+bool Electron::isTightElectron() const{
+	return isTightElectron_;
+}
+
+bool Electron::isTightConversionElectron() const{
+	return isTightConversionElectron_;
+}
+
+bool Electron::isTightNonIsoElectron() const{
+	return isTightNonIsoElectron_;
 }
 
 bool Electron::isInBarrelRegion() const {
@@ -388,6 +406,18 @@ void Electron::setPassConversionVeto(bool passes) {
 	passConversionVeto_ = passes;
 }
 
+void Electron::setIsTightElectron(bool passes) {
+	isTightElectron_ = passes;
+}
+
+void Electron::setIsTightConversionElectron(bool passes) {
+	isTightConversionElectron_ = passes;
+}
+
+void Electron::setIsTightNonIsoElectron(bool passes) {
+	isTightNonIsoElectron_ = passes;
+}
+
 double Electron::mvaTrigV0() const {
 	return mvaTrigV0_;
 }
@@ -418,9 +448,6 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
 	double electronPt = pt();
 	double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
-	// cout << "Electron pt : " << electronPt << endl;
-	// cout << "Max pt in histogram" << endl;
-	// cout << maxPt << endl;
 	unsigned int bin = 0;
 	if ( electronPt <= maxPt ) {
 		bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
@@ -433,12 +460,22 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 
 	// ID & isolation scalefactor
 	double idIsoSF(1.);
+	double idIsoSFError(0.);
 	boost::shared_ptr<TH2D> electronIDIsoScaleFactorsHistogram(Globals::electronIdIsoScaleFactorsHistogram);
 	double electronEta = fabs(eta());
-	bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
-	idIsoSF = electronIDIsoScaleFactorsHistogram->GetBinContent( bin );
-	double idIsoSFError = electronIDIsoScaleFactorsHistogram->GetBinError( bin );
+	maxPt = electronIDIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
 
+	bin = 0;
+	if ( electronPt <= maxPt ) {
+		bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
+	}
+	else {
+		double lastPtBinCentre = electronIDIsoScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronIDIsoScaleFactorsHistogram->GetNbinsY() );
+		bin = electronIDIsoScaleFactorsHistogram->FindBin( electronEta, lastPtBinCentre );
+	}
+	idIsoSF = electronIDIsoScaleFactorsHistogram->GetBinContent( bin );
+	idIsoSFError = electronIDIsoScaleFactorsHistogram->GetBinError( bin );
+	
 	if (electron_scale_factor_systematic == -1 ) {
 		idIsoSF -= idIsoSFError;
 		triggerEfficiency = triggerEfficiency * ( 1 - triggerEfficiencyRelativeError );

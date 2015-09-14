@@ -321,6 +321,7 @@ public:
 	static double WPT(const ParticlePointer, const METPointer);
 
 	static double const minJetPt_;
+	static double const maxJetAbsEta_;
 	static unsigned int const minNJets_;
 	static unsigned int const minNBJets_;
 

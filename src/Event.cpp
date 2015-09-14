@@ -19,6 +19,7 @@ bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = true;
 
 double const Event::minJetPt_ = 25;
+double const Event::maxJetAbsEta_ = 2.4;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
@@ -468,7 +469,9 @@ const JetCollection Event::getCleanedJets( unsigned int selectionCriteria ) cons
 	JetCollection cleanedJets;
 	for ( unsigned int cleanedJetIndex = 0; cleanedJetIndex < cleanedJetIndices.size(); ++cleanedJetIndex ) {
 		unsigned int jetIndex = cleanedJetIndices[ cleanedJetIndex ];
-		cleanedJets.push_back( allJets[jetIndex] );
+		if ( allJets[jetIndex]->pt() >= minJetPt_ && fabs(allJets[jetIndex]->eta()) <= maxJetAbsEta_ ) {
+			cleanedJets.push_back( allJets[jetIndex] );
+		}
 	}
 	return cleanedJets;
 }
@@ -506,7 +509,9 @@ const JetCollection Event::getCleanedBJets( unsigned int selectionCriteria ) con
 	JetCollection cleanedBJets;
 	for ( unsigned int cleanedBJetIndex = 0; cleanedBJetIndex < cleanedBJetIndices.size(); ++cleanedBJetIndex ) {
 		double jetIndex = cleanedJetIndices[ cleanedBJetIndices[cleanedBJetIndex] ];
-		cleanedBJets.push_back( allJets[jetIndex] );
+		if ( allJets[jetIndex]->pt() >= minJetPt_ && fabs(allJets[jetIndex]->eta()) <= maxJetAbsEta_ ) {
+			cleanedBJets.push_back( allJets[jetIndex] );
+		}
 	}
 	return cleanedBJets;
 }
@@ -1146,7 +1151,7 @@ double Event::HT(const JetCollection jets) {
 	double ht(0);
 	//Take ALL the jets!
 	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if(jets.at(index)->pt() > 25)
+		if(jets.at(index)->pt() > minJetPt_)
 			ht += jets.at(index)->pt();
 	}
 	return ht;
@@ -1187,9 +1192,9 @@ double Event::M3(const JetCollection jets) {
 					++index2) {
 				for (unsigned int index3 = index2 + 1; index3 < jets.size();
 						++index3) {
-					if ( jets.at(index1)->pt() <= 25 ||
-						 jets.at(index2)->pt() <= 25 ||
-						 jets.at(index3)->pt() <= 25 )
+					if ( jets.at(index1)->pt() <= minJetPt_ ||
+						 jets.at(index2)->pt() <= minJetPt_ ||
+						 jets.at(index3)->pt() <= minJetPt_ )
 						continue;
 					FourVector m3Vector(
 							jets.at(index1)->getFourVector()
@@ -1214,7 +1219,7 @@ double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton) {
 		// store the jets as particle pointers
 		ParticleCollection particles;
 		for (unsigned int i = 0; i < b_jets.size(); ++i) {
-			if ( b_jets.at(i)->pt() <= 25 ) continue;
+			if ( b_jets.at(i)->pt() <= minJetPt_ ) continue;
 			particles.push_back(b_jets.at(i));
 		}
 
@@ -1237,7 +1242,7 @@ double Event::angle_bl(const JetCollection b_jets,
 		// store the jets as particle pointers
 		ParticleCollection particles;
 		for (unsigned int i = 0; i < b_jets.size(); ++i) {
-			if ( b_jets.at(i)->pt() <= 25 ) continue;
+			if ( b_jets.at(i)->pt() <= minJetPt_ ) continue;
 			particles.push_back(b_jets.at(i));
 		}
 
@@ -1257,7 +1262,7 @@ unsigned int Event::NJets(const JetCollection jets) {
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
 
-		if ( jet->pt() < 25 ) continue;
+		if ( jet->pt() < minJetPt_ ) continue;
 
 		++nJets;
 	}
