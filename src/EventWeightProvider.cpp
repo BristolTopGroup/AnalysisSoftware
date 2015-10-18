@@ -118,14 +118,29 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		const boost::array<double, NWEIGHTSSIZE> inputMC) {
 	boost::array<double, NWEIGHTSSIZE> weights;
 
+
+	// Check that integral of estimatedPileUp is 1
+	if ( estimatedPileUp->Integral() != 1 && estimatedPileUp->Integral() != 0 ) {
+		estimatedPileUp->Scale( 1 / estimatedPileUp->Integral() );
+	}
+
 	double s = 0.0;
 
 	for (unsigned int npu = 0; npu < inputMC.size(); ++npu) {
 		if (npu >= (unsigned int) estimatedPileUp->GetNbinsX())
 			break;
-		DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));
-		if (inputMC[npu] > 0)
-			weights[npu] = DATAdistribution[npu] / inputMC[npu];
+		if ( npu == 0 ) {
+			DATAdistribution[npu] = 0;
+			weights[npu] = 0;
+			continue;
+		}
+		else {
+			DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));			
+		}
+
+		if (inputMC[npu-1] > 0) {
+			weights[npu] = DATAdistribution[npu] / inputMC[npu-1];
+		}
 		else
 			weights[npu] = 0;
 		s += DATAdistribution[npu];
