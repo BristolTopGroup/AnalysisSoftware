@@ -118,10 +118,14 @@ datasets_8TeV = {
 mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/v28/'
 data_path_13TeV = ''
 datasets_13TeV = {
-            'SingleMuon_PromptReco' : [ mc_path_13TeV + 'SingleMuon_PromptReco' ],
-            'SingleMuon_Rereco' : [ mc_path_13TeV + 'SingleMuon_Rereco' ],
-            'SingleElectron_PromptReco' : [ mc_path_13TeV + 'SingleElectron_PromptReco' ],
-            'SingleElectron_Rereco' : [ mc_path_13TeV + 'SingleElectron_Rereco' ],
+            # 'SingleMuon_PromptReco' : [ mc_path_13TeV + 'SingleMuon_PromptReco' ],
+            # 'SingleMuon_Rereco' : [ mc_path_13TeV + 'SingleMuon_Rereco' ],
+            # 'SingleElectron_PromptReco' : [ mc_path_13TeV + 'SingleElectron_PromptReco' ],
+            # 'SingleElectron_Rereco' : [ mc_path_13TeV + 'SingleElectron_Rereco' ],
+
+            'SingleMuon' : [ mc_path_13TeV + 'SingleMuon' ],
+            'SingleElectron' : [ mc_path_13TeV + 'SingleElectron' ],
+
 
             'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
             'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],
