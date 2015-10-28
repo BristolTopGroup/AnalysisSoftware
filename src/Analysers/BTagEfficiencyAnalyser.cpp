@@ -14,6 +14,7 @@ void BTagEff::analyse(const EventPtr event) {
 	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
 	int NJets = 0;
+	int NBJets = 0; // How many medium b jets
 	const JetCollection allJets = event->Jets();
 
 	int selectionCriteria = -1;
@@ -50,6 +51,7 @@ void BTagEff::analyse(const EventPtr event) {
 		}
 		if (jetCSV > 0.890) {
 			isMedium = true;
+			++NBJets;
 		}
 		if (jetCSV > 0.970) {
 			isTight = true;
@@ -58,19 +60,6 @@ void BTagEff::analyse(const EventPtr event) {
 		unsigned int partonFlavour = abs(jet->partonFlavour());
 		// const bool isBTagged = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 		// cout << jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM) << endl;
-
-		if ( partonFlavour == 5 ) {
-			++nGenuineBJets;
-			if ( isMedium ) {
-				++nBJets;
-			}
-			if ( isLoose ) {
-				++nBJetsLoose;
-			}
-			if ( isTight ) {
-				++nBJetsTight;
-			}
-		}
 
 		treeMan_->Fill("pt", jetPt);
 		treeMan_->Fill("eta", jetEta);
@@ -83,24 +72,15 @@ void BTagEff::analyse(const EventPtr event) {
 	}
 
 	treeMan_->Fill("NJets", NJets);
-	treeMan_->Fill("NBJets", nOfflineMedium);
+	treeMan_->Fill("NBJets", NBJets);
 }
 
 
 BTagEff::BTagEff(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-	BasicAnalyser(histMan, treeMan, histogramFolder),
-	nGenuineBJets(0),
-	nBJets(0),
-	nBJetsLoose(0),
-	nBJetsTight(0) {
+	BasicAnalyser(histMan, treeMan, histogramFolder){
 }
 
 BTagEff::~BTagEff() {
-	cout << "N genuine b jets : " << nGenuineBJets << endl;
-	cout << "N that are medium b tagged : " << nBJets << endl;
-	cout << "N that are loose b tagged : " << nBJetsLoose << endl;
-	cout << "N that are tight b tagged : " << nBJetsTight << endl;
-
 }
 
 void BTagEff::createHistograms() {
