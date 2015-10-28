@@ -23,6 +23,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 	if (event->PassesElectronTriggerAndSelectionNoB()){
 		BTagEffAnalyserEPlusJetsRefSelection_->analyse(event);
+		PileupAnalyserEPlusJetsRefSelection_->analyse(event);
 	}
 
 	// if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -455,6 +456,7 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 	if (event->PassesMuonTriggerAndSelectionNoB()){
 		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
+		PileupAnalyserMuPlusJetsRefSelection_->analyse(event);
 	}
 
 	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -997,6 +999,9 @@ void TTbar_plus_X_analyser::createHistograms() {
 
 	BTagEffAnalyserEPlusJetsRefSelection_->createTrees();
 	BTagEffAnalyserMuPlusJetsRefSelection_->createTrees();
+
+	PileupAnalyserEPlusJetsRefSelection_->createTrees();
+	PileupAnalyserMuPlusJetsRefSelection_->createTrees();
 }
 
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
@@ -1162,6 +1167,8 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		likelihoodRecoAnalyserMuPlusJetsRefSelection_(new LikelihoodRecoAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/Ref selection/LikelihoodReco")), //
 		BTagEffAnalyserEPlusJetsRefSelection_(new BTagEff(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/BTagEfficiencies")), //
 		BTagEffAnalyserMuPlusJetsRefSelection_(new BTagEff(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/BTagEfficiencies")), //
+		PileupAnalyserEPlusJetsRefSelection_(new PileupAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/Pileup")), //
+		PileupAnalyserMuPlusJetsRefSelection_(new PileupAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/Pileup")), //
 		electron_variables_(), //
 		muon_variables_(){
 

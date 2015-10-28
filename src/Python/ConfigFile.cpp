@@ -511,7 +511,7 @@ void ConfigFile::loadIntoMemory() {
 	getbQuarkJet( BTagEfficiencyFile() );
 	getcQuarkJet( BTagEfficiencyFile() );
 	getudsQuarkJet( BTagEfficiencyFile() );
-	getgluonJet( BTagEfficiencyFile() );
+	// getgluonJet( BTagEfficiencyFile() );
 
 
 	//JES systematic
@@ -801,21 +801,21 @@ void ConfigFile::getudsQuarkJet(std::string btagEfficiencyFile) {
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
-	Globals::udsQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("udsQuarkJets_BTags_Hist")->Clone();
+	Globals::udsQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("udsgQuarkJets_BTags_Hist")->Clone();
 	file->Close();
 }
-void ConfigFile::getgluonJet(std::string btagEfficiencyFile) {
-	using namespace std;
+// void ConfigFile::getgluonJet(std::string btagEfficiencyFile) {
+// 	using namespace std;
 
-	if (!boost::filesystem::exists(btagEfficiencyFile)) {
-		cerr << "ConfigFile::getgluonJet(" << btagEfficiencyFile << "): could not find file" << endl;
-		throw "Could not find file " + btagEfficiencyFile;
-	}
+// 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
+// 		cerr << "ConfigFile::getgluonJet(" << btagEfficiencyFile << "): could not find file" << endl;
+// 		throw "Could not find file " + btagEfficiencyFile;
+// 	}
 
-	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
-	Globals::gluonJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("gluonQuarkJets_BTags_Hist")->Clone();
-	file->Close();
-}
+// 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+// 	Globals::gluonJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("gluonQuarkJets_BTags_Hist")->Clone();
+// 	file->Close();
+// }
 
 
 

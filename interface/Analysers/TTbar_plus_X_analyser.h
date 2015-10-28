@@ -18,6 +18,7 @@
 #include "HitFitAnalyser.h"
 #include "LikelihoodRecoAnalyser.h"
 #include "BTagEfficiencyAnalyser.h"
+#include "PileupAnalyser.h"
 
 #include "Binned_variable_analyser.h"
 
@@ -153,6 +154,10 @@ private:
 	// BTag Efficiency
 	BTagEffAnalyserLocalPtr BTagEffAnalyserEPlusJetsRefSelection_;
 	BTagEffAnalyserLocalPtr BTagEffAnalyserMuPlusJetsRefSelection_;
+
+	// Pileup Analyser
+	PileupAnalyserLocalPtr PileupAnalyserEPlusJetsRefSelection_;
+	PileupAnalyserLocalPtr PileupAnalyserMuPlusJetsRefSelection_;
 
 	// variable definitions
 	std::vector<Variable> electron_variables_, muon_variables_;

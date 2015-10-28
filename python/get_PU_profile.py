@@ -10,30 +10,36 @@ from rootpy.io import File
 from rootpy.plotting import Hist
 import glob
 
-base = '/hdfs/TopQuarkGroup/run2/ntuples/v25/'
-mc_files = glob.glob(base + 'TTJets_PowhegPythia8/*001.root')
-data_files_el = glob.glob(base + 'SingleElectron_*/*.root')
-data_files_mu = glob.glob(base + 'SingleMuon_*/*.root')
+base = '/hdfs/TopQuarkGroup/run2/atOutput/13TeV/50ns/'
+mc_samples = ['SingleTop_tree.root', 'TTJets_PowhegPythia8_tree.root', 'VJets_tree.root', 'QCD_Muon_tree.root', 'QCD_Electron_tree.root']
+mc_files = glob.glob(base + 'TTJets_PowhegPythia8_tree.root')
+data_files_el = glob.glob(base + 'data_electron_tree.root')
+data_files_mu = glob.glob(base + 'data_muon_tree.root')
 
 
-pu_mc_true = Hist(60, 0.5, 60.5, name='pu_mc_true')
-pu_mc_reco = Hist(60, 0.5, 60.5, name='pu_mc_reco')
+pu_el_mc_reco = Hist(60, 0.5, 60.5, name='pu_el_mc_reco')
+pu_mu_mc_reco = Hist(60, 0.5, 60.5, name='pu_mu_mc_reco')
 pu_el_reco = Hist(60, 0.5, 60.5, name='pu_el_reco')
 pu_mu_reco = Hist(60, 0.5, 60.5, name='pu_mu_reco')
 
-mc_chain = TreeChain("nTupleTree/tree", mc_files)
-mc_chain.Draw('Event.PileUpInteractions', hist=pu_mc_true)
-mc_chain.Draw('Event.NRecoVertices', hist=pu_mc_reco)
 
-el_chain = TreeChain("nTupleTree/tree", data_files_el)
-el_chain.Draw('Event.NRecoVertices', hist=pu_el_reco)
-mu_chain = TreeChain("nTupleTree/tree", data_files_mu)
-mu_chain.Draw('Event.NRecoVertices', hist=pu_mu_reco)
+el_mc_chain = TreeChain("TTbar_plus_X_analysis/EPlusJets/Ref selection/Pileup/Pileup", mc_files)
+el_mc_chain.Draw('NVertices', 'EventWeight * LeptonEfficiencyCorrection', hist=pu_el_mc_reco)
+mu_mc_chain = TreeChain("TTbar_plus_X_analysis/MuPlusJets/Ref selection/Pileup/Pileup", mc_files)
+mu_mc_chain.Draw('NVertices', 'EventWeight * LeptonEfficiencyCorrection', hist=pu_mu_mc_reco)
+
+el_chain = TreeChain("TTbar_plus_X_analysis/EPlusJets/Ref selection/Pileup/Pileup", data_files_el)
+el_chain.Draw('NVertices', hist=pu_el_reco)
+mu_chain = TreeChain("TTbar_plus_X_analysis/MuPlusJets/Ref selection/Pileup/Pileup", data_files_mu)
+mu_chain.Draw('NVertices', hist=pu_mu_reco)
+
+pu_mc_reco = pu_el_mc_reco.Clone('pu_mc_reco')
+pu_mc_reco += pu_mu_mc_reco
 
 pu_data_reco = pu_el_reco.Clone('pu_data_reco')
 pu_data_reco += pu_mu_reco
 
-hists = [pu_mc_reco, pu_mc_true, pu_mu_reco, pu_el_reco, pu_data_reco]
+hists = [pu_mc_reco, pu_data_reco]
 norm_hists = {}
 
 for hist in hists:
@@ -46,10 +52,13 @@ pileup = pu_data_reco.Clone('pileup')
 hists.append(pileup)
 hists.extend(norm_hists.values())
 
+h_weight = norm_hists['pu_data_reco_norm'] / norm_hists['pu_mc_reco_norm']
+# print h_weight.GetMean()
+
 with File('data/PileUp_2015_truth.root', 'recreate') as f:
     for h in hists:
         h.write()
-
+    h_weight.write()
 # now for the code
 print('To be copied to interface/EventWeightProvider.h')
 header = 'const boost::array<double, 60> Spring2015_50ns = { {\n'

@@ -100,6 +100,19 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 
 	double bTagWeight = (nonBTaggedDataJet * bTaggedDataJet) / (nonBTaggedMCJet * bTaggedMCJet);
 
+	if ( nonBTaggedMCJet == 0 || bTaggedMCJet == 0 ) {
+		bTagWeight = 1;
+	}
+
+	if ( std::isnan( bTagWeight )) {
+		cout << "Btag weight is nan : " << bTagWeight << endl;
+		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << endl;
+	}
+	else if ( bTagWeight > 10 || bTagWeight < 0 ) {
+		cout << "Odd b tag weight : " << bTagWeight << endl;
+		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << endl;
+
+	}
 	return bTagWeight;
 }
 
@@ -111,12 +124,12 @@ double BTagWeight::getEfficiency( const unsigned int partonFlavour, const JetPoi
 	else if ( partonFlavour == 4) { //c-quark
 		return getCEfficiency( jet );
 	}
-	else if ( partonFlavour == 3 || partonFlavour == 2 || partonFlavour == 1 || partonFlavour == 0) { // u/d/s/unclassified-quark
+	else if ( partonFlavour == 3 || partonFlavour == 2 || partonFlavour == 1 || partonFlavour == 0 || partonFlavour == 21) { // u/d/s/unclassified-quark
 		return getUDSEfficiency ( jet );
 	}
-	else if ( partonFlavour == 21) { //gluon
-		return getGEfficiency( jet );
-	}
+	// else if ( partonFlavour == 21) { //gluon
+	// 	return getGEfficiency( jet );
+	// }
 	else return 0.;
 }
 
