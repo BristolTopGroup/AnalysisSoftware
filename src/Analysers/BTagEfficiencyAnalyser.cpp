@@ -16,6 +16,14 @@ void BTagEff::analyse(const EventPtr event) {
 	int NJets = 0;
 	const JetCollection allJets = event->Jets();
 
+	int selectionCriteria = -1;
+	if ( event->PassesElectronTriggerAndSelectionNoB() ) selectionCriteria = SelectionCriteria::ElectronPlusJetsReference;
+	else if ( event->PassesMuonTriggerAndSelectionNoB() ) selectionCriteria = SelectionCriteria::MuonPlusJetsReference;
+	const LeptonPointer signalLepton = event->getSignalLepton( selectionCriteria );
+
+	if ( event->PassesElectronTriggerAndSelectionNoB() ) return;
+
+	// unsigned int nParton = 0;
 	for (unsigned int jetIndex = 0; jetIndex < allJets.size(); ++jetIndex) {
 		const JetPointer jet(allJets.at(jetIndex));
 
@@ -26,19 +34,44 @@ void BTagEff::analyse(const EventPtr event) {
 		double jetPt = jet->pt();
 		double jetEta = jet->eta();
 
-		if (jetPt < 25 || abs(jetEta) > 2.4) continue;
+		if (jetPt < 25 || fabs(jetEta) > 2.4) continue;
+
+		// Perform cleaning of jets here
+		if ( jet->deltaR( signalLepton ) < 0.4 ) {
+			continue;
+		}
+
 		// double jetCSV = jet->getBTagDiscriminator(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 		double jetCSV = jet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
 
 		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X50ns
-		if (jetCSV > 0.605) isLoose = true;
-		if (jetCSV > 0.890) isMedium = true;
-		if (jetCSV > 0.970) isTight = true;
+		if (jetCSV > 0.605) {
+			isLoose = true;
+		}
+		if (jetCSV > 0.890) {
+			isMedium = true;
+		}
+		if (jetCSV > 0.970) {
+			isTight = true;
+		}
 
 		unsigned int partonFlavour = abs(jet->partonFlavour());
 		// const bool isBTagged = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 		// cout << jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM) << endl;
-		
+
+		if ( partonFlavour == 5 ) {
+			++nGenuineBJets;
+			if ( isMedium ) {
+				++nBJets;
+			}
+			if ( isLoose ) {
+				++nBJetsLoose;
+			}
+			if ( isTight ) {
+				++nBJetsTight;
+			}
+		}
+
 		treeMan_->Fill("pt", jetPt);
 		treeMan_->Fill("eta", jetEta);
 		treeMan_->Fill("CSV", jetCSV);
@@ -49,16 +82,25 @@ void BTagEff::analyse(const EventPtr event) {
 		++NJets;
 	}
 
-
 	treeMan_->Fill("NJets", NJets);
+	treeMan_->Fill("NBJets", nOfflineMedium);
 }
 
 
 BTagEff::BTagEff(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-	BasicAnalyser(histMan, treeMan, histogramFolder) {
+	BasicAnalyser(histMan, treeMan, histogramFolder),
+	nGenuineBJets(0),
+	nBJets(0),
+	nBJetsLoose(0),
+	nBJetsTight(0) {
 }
 
 BTagEff::~BTagEff() {
+	cout << "N genuine b jets : " << nGenuineBJets << endl;
+	cout << "N that are medium b tagged : " << nBJets << endl;
+	cout << "N that are loose b tagged : " << nBJetsLoose << endl;
+	cout << "N that are tight b tagged : " << nBJetsTight << endl;
+
 }
 
 void BTagEff::createHistograms() {
@@ -76,5 +118,6 @@ void BTagEff::createTrees() {
 	treeMan_->addBranch("isMedium", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("isTight", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("NJets", "F", "Jets" + Globals::treePrefix_);
+	treeMan_->addBranch("NBJets", "F", "Jets" + Globals::treePrefix_);
 }
 /* namespace BAT */
