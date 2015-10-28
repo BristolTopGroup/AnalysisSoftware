@@ -26,3 +26,4 @@ Root_IO_Performance.root
 AnalysisSoftware_test
 CTest*
 condor/job_mapperc
+python/mergeOutput/atMerge.*
