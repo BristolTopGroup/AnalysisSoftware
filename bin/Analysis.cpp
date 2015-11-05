@@ -74,26 +74,26 @@ void Analysis::initiateEvent() {
 
 	treeMan->setCurrentDataType(currentEvent->getDataType());
 
-	// Ignore PU and PDF weights for now
-	if (!currentEvent->isRealData()) {
-		weight = weights->getWeight(currentEvent->getDataType());
-	// 	//TODO: fix this dirty little thing
-	//	std::cout << "Getting PU weight" << std::endl;
-	// 	pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
-		pileUpWeight = weights->reweightPileUp(currentEvent->Vertices().size());
-	// 	weight *= pileUpWeight;
-	// 	if (Globals::pdfWeightNumber != 0) {
-	// 		try {
-	// 			double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
-	// 			weight *= pdf_weight;
+	// // Ignore PU and PDF weights for now
+	// if (!currentEvent->isRealData()) {
+	// 	weight = weights->getWeight(currentEvent->getDataType());
+	// // 	//TODO: fix this dirty little thing
+	// //	std::cout << "Getting PU weight" << std::endl;
+	// // 	pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
+	// 	pileUpWeight = weights->reweightPileUp(currentEvent->Vertices().size());
+	// // 	weight *= pileUpWeight;
+	// // 	if (Globals::pdfWeightNumber != 0) {
+	// // 		try {
+	// // 			double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
+	// // 			weight *= pdf_weight;
 
-	// 			histMan->setCurrentHistogramFolder("");
-	// 			histMan->H1D("PDFweights")->Fill(pdf_weight);
-	// 		} catch (exception& e) {
-	// 			cout << "PDF weight assigning exception: " << e.what() << endl;
-	// 		}
-	// 	}
-	}
+	// // 			histMan->setCurrentHistogramFolder("");
+	// // 			histMan->H1D("PDFweights")->Fill(pdf_weight);
+	// // 		} catch (exception& e) {
+	// // 			cout << "PDF weight assigning exception: " << e.what() << endl;
+	// // 		}
+	// // 	}
+	// }
 
 	//top pt weight
 	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
@@ -171,7 +171,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		interestingEvents(), //
 		brokenEvents(), //
 		eventCheck(), //
-		weights(new EventWeightProvider(datasetInfoFile)), //
+		// weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
 		metAnalyser(new METAnalyser(histMan, treeMan)), //

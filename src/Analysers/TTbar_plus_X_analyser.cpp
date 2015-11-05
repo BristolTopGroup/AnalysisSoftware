@@ -613,20 +613,20 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
 void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 	//selection with respect to reference selection
-	if ( event->PassesMuonTriggerAndQCDSelection() ) {
+	if ( event->PassesMuonTriggerAndQCDSelection1p5to3() ) {
 
 		const JetCollection jets(event->CleanedJets());
-		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated );
+		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 );
 		const JetCollection bJets(event->CleanedBJets());
 
-		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsQCDNonIsolated );
+		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 );
 
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 
 		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
 		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
-		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
+		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3");
 		treeMan_->Fill("EventWeight", event->weight() );
 		treeMan_->Fill("PUWeight", event->PileUpWeight() );
 		treeMan_->Fill("lepton_eta",signalMuon->eta());
@@ -660,9 +660,9 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
 		if ( Globals::useHitFit ) {
-			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection1p5to3_->analyseAndReturn(event, jets, bJets, signalLepton);
 			event->setTTbarHypothesis( topHypothesis );
-			treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
+			treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3");
 			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
 				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
 				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
@@ -685,11 +685,11 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		// qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
 		// metAnalyserqcdNonIsoMuonSelection_->setScale(bjetWeight * efficiencyCorrection);
 
-		qcdNonIsoMuonAnalyser_->analyse(event);
-		qcdNonIsoMuonAnalyser_->analyseMuon(signalMuon, event->weight());
-		metAnalyserqcdNonIsoMuonSelection_->analyse(event, signalLepton, jets);
+		qcdNonIsoMuonAnalyser1p5to3_->analyse(event);
+		qcdNonIsoMuonAnalyser1p5to3_->analyseMuon(signalMuon, event->weight());
+		metAnalyserqcdNonIsoMuonSelection1p5to3_->analyse(event, signalLepton, jets);
 
-		jetAnalyserMuPlusJetsQCDNonIsoSelection_->analyse(event);
+		jetAnalyserMuPlusJetsQCDNonIsoSelection1p5to3_->analyse(event);
 
 		// qcd_noniso_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
 		vector<double> fit_variable_values;
@@ -697,7 +697,7 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		fit_variable_values.push_back(Event::M3(jets));
 		fit_variable_values.push_back(Event::M_bl(bJets, signalMuon));
 		fit_variable_values.push_back(Event::angle_bl(bJets, signalMuon));
-		qcd_noniso_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
+		qcd_noniso_1p5to3_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
 
 		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
 			// if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
@@ -710,19 +710,137 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 			const METPointer met(event->MET((METAlgorithm::value) metIndex));
 			// qcd_noniso_binned_MET_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-			qcd_noniso_binned_MET_analyser_muon_.at(metIndex)->analyse(met->et(), fit_variable_values,
+			qcd_noniso_1p5to3_binned_MET_analyser_muon_.at(metIndex)->analyse(met->et(), fit_variable_values,
 					event->weight());
 
 			// qcd_noniso_binned_ST_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-			qcd_noniso_binned_ST_analyser_muon_.at(metIndex)->analyse(Event::ST(jets, signalMuon, met),
+			qcd_noniso_1p5to3_binned_ST_analyser_muon_.at(metIndex)->analyse(Event::ST(jets, signalMuon, met),
 					fit_variable_values, event->weight());
 
 			// qcd_noniso_binned_MT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-			qcd_noniso_binned_MT_analyser_muon_.at(metIndex)->analyse(Event::MT(signalMuon, met),
+			qcd_noniso_1p5to3_binned_MT_analyser_muon_.at(metIndex)->analyse(Event::MT(signalMuon, met),
 					fit_variable_values, event->weight());
 
 			// qcd_noniso_binned_WPT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
-			qcd_noniso_binned_WPT_analyser_muon_.at(metIndex)->analyse(Event::WPT(signalMuon, met),
+			qcd_noniso_1p5to3_binned_WPT_analyser_muon_.at(metIndex)->analyse(Event::WPT(signalMuon, met),
+					fit_variable_values, event->weight());
+
+		}
+
+	}
+
+
+
+if ( event->PassesMuonTriggerAndQCDSelection3toInf() ) {
+
+		const JetCollection jets(event->CleanedJets());
+		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf );
+		const JetCollection bJets(event->CleanedBJets());
+
+		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf );
+
+		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+
+		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
+
+		treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf");
+		treeMan_->Fill("EventWeight", event->weight() );
+		treeMan_->Fill("PUWeight", event->PileUpWeight() );
+		treeMan_->Fill("lepton_eta",signalMuon->eta());
+		treeMan_->Fill("lepton_pt",signalMuon->pt());
+		treeMan_->Fill("lepton_charge",signalMuon->charge());
+		treeMan_->Fill("M3",Event::M3(jets));
+		if ( numberOfBjets > 0 ) {
+			treeMan_->Fill("M_bl",Event::M_bl(bJets, signalMuon));
+			treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalMuon));
+		}
+		treeMan_->Fill("HT",Event::HT(jets));
+		treeMan_->Fill("MET",MET_original->et());
+		treeMan_->Fill("METNoHF",METNoHF->et());
+		treeMan_->Fill("ST",Event::ST(jets, signalMuon, MET_original));
+		treeMan_->Fill("STNoHF",Event::ST(jets, signalMuon, METNoHF));
+		treeMan_->Fill("WPT",Event::WPT(signalMuon, MET_original));
+		treeMan_->Fill("WPTNoHF",Event::WPT(signalMuon, METNoHF));
+		treeMan_->Fill("MT",Event::MT(signalMuon, MET_original));
+		treeMan_->Fill("NJets",Event::NJets(jets));
+		treeMan_->Fill("NBJets",Event::NJets(bJets));
+		treeMan_->Fill("NVertices",	event->Vertices().size());
+
+		treeMan_->Fill("ElectronEfficiencyCorrection",1.0);
+		treeMan_->Fill("ElectronUp",1.0);
+		treeMan_->Fill("ElectronDown",1.0);
+		treeMan_->Fill("MuonEfficiencyCorrection",1.0);
+		treeMan_->Fill("MuonUp",1.0);
+		treeMan_->Fill("MuonDown",1.0);
+		treeMan_->Fill("BJetWeight",event->BJetWeight());
+		treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+		treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+
+		if ( Globals::useHitFit ) {
+			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection3toInf_->analyseAndReturn(event, jets, bJets, signalLepton);
+			event->setTTbarHypothesis( topHypothesis );
+			treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf");
+			if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
+				treeMan_->Fill("lepTopPt",topHypothesis.leptonicTop->pt());
+				treeMan_->Fill("hadTopPt",topHypothesis.hadronicTop->pt());
+				treeMan_->Fill("lepTopRap",topHypothesis.leptonicTop->rapidity());
+				treeMan_->Fill("hadTopRap",topHypothesis.hadronicTop->rapidity());
+				treeMan_->Fill("ttbarPt",topHypothesis.resonance->pt());
+				treeMan_->Fill("ttbarM",topHypothesis.resonance->mass());
+				treeMan_->Fill("ttbarRap",topHypothesis.resonance->rapidity());
+			}
+		}
+
+		// MET Uncertainties
+		for ( unsigned int unc_i = 0; unc_i < METNoHF->getAllMETUncertainties().size(); ++unc_i ) {
+			METPointer METForUnc_i = METNoHF->getMETForUncertainty( unc_i );
+			treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
+			treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalMuon, METForUnc_i));
+			treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalMuon, METForUnc_i));
+		}
+
+		// qcdNonIsoMuonAnalyser_->setScale(bjetWeight * efficiencyCorrection);
+		// metAnalyserqcdNonIsoMuonSelection_->setScale(bjetWeight * efficiencyCorrection);
+
+		qcdNonIsoMuonAnalyser3toInf_->analyse(event);
+		qcdNonIsoMuonAnalyser3toInf_->analyseMuon(signalMuon, event->weight());
+		metAnalyserqcdNonIsoMuonSelection3toInf_->analyse(event, signalLepton, jets);
+
+		jetAnalyserMuPlusJetsQCDNonIsoSelection3toInf_->analyse(event);
+
+		// qcd_noniso_binned_HT_analyser_muon_->setScale(bjetWeight * efficiencyCorrection);
+		vector<double> fit_variable_values;
+		fit_variable_values.push_back(fabs(signalMuon->eta()));
+		fit_variable_values.push_back(Event::M3(jets));
+		fit_variable_values.push_back(Event::M_bl(bJets, signalMuon));
+		fit_variable_values.push_back(Event::angle_bl(bJets, signalMuon));
+		qcd_noniso_3toInf_binned_HT_analyser_muon_->analyse(Event::HT(jets), fit_variable_values, event->weight());
+
+		for (unsigned int metIndex = 0; metIndex < METAlgorithm::NUMBER_OF_METALGORITHMS; ++metIndex) {
+			// if (!MET::isAvailableInNTupleVersion(Globals::NTupleVersion, metIndex))
+			// 	continue;
+			// bool isMCOnlyMET = MET::isMCOnlyMETType(metIndex);
+			// //skip MC only MET entries
+			// if (isMCOnlyMET && event->isRealData())
+			// 	continue;
+			string metPrefix = METAlgorithm::names.at(metIndex);
+
+			const METPointer met(event->MET((METAlgorithm::value) metIndex));
+			// qcd_noniso_binned_MET_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			qcd_noniso_3toInf_binned_MET_analyser_muon_.at(metIndex)->analyse(met->et(), fit_variable_values,
+					event->weight());
+
+			// qcd_noniso_binned_ST_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			qcd_noniso_3toInf_binned_ST_analyser_muon_.at(metIndex)->analyse(Event::ST(jets, signalMuon, met),
+					fit_variable_values, event->weight());
+
+			// qcd_noniso_binned_MT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			qcd_noniso_3toInf_binned_MT_analyser_muon_.at(metIndex)->analyse(Event::MT(signalMuon, met),
+					fit_variable_values, event->weight());
+
+			// qcd_noniso_binned_WPT_analyser_muon_.at(metIndex)->setScale(bjetWeight * efficiencyCorrection);
+			qcd_noniso_3toInf_binned_WPT_analyser_muon_.at(metIndex)->analyse(Event::WPT(signalMuon, met),
 					fit_variable_values, event->weight());
 
 		}
@@ -897,7 +1015,45 @@ void TTbar_plus_X_analyser::createHistograms() {
 	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 
-	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
+	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3");
+	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("STNoHF", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPTNoHF", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("NVertices", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);	
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+
+	treeMan_->setCurrentFolder(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
@@ -948,31 +1104,39 @@ void TTbar_plus_X_analyser::createHistograms() {
 	vertexAnalyserEPlusJetsRefSelection_->createHistograms();
 	vertexAnalyserMuPlusJetsRefSelection_->createHistograms();
 	//QCD region
-	qcdNonIsoElectronAnalyser_->createHistograms();
-	qcdNonIsoElectronAnalyser_->createTrees();
-	metAnalyserqcdNonIsoElectronSelection_->createHistograms();
-	metAnalyserqcdNonIsoElectronSelection_->createTrees();
-	qcdNonIsoMuonAnalyser_->createHistograms();
-	qcdNonIsoMuonAnalyser_->createTrees();
-	metAnalyserqcdNonIsoMuonSelection_->createHistograms();
-	metAnalyserqcdNonIsoMuonSelection_->createTrees();
-	
 	qcdConversionsElectronAnalyser_->createHistograms();
 	qcdConversionsElectronAnalyser_->createTrees();
 	metAnalyserqcdConversionSelection_->createHistograms();
 	metAnalyserqcdConversionSelection_->createTrees();
 
+	qcdNonIsoElectronAnalyser_->createHistograms();
+	qcdNonIsoElectronAnalyser_->createTrees();
+	metAnalyserqcdNonIsoElectronSelection_->createHistograms();
+	metAnalyserqcdNonIsoElectronSelection_->createTrees();
+
+	qcdNonIsoMuonAnalyser1p5to3_->createHistograms();
+	qcdNonIsoMuonAnalyser1p5to3_->createTrees();
+	metAnalyserqcdNonIsoMuonSelection1p5to3_->createHistograms();
+	metAnalyserqcdNonIsoMuonSelection1p5to3_->createTrees();
+
+	qcdNonIsoMuonAnalyser3toInf_->createHistograms();
+	qcdNonIsoMuonAnalyser3toInf_->createTrees();
+	metAnalyserqcdNonIsoMuonSelection3toInf_->createHistograms();
+	metAnalyserqcdNonIsoMuonSelection3toInf_->createTrees();
+
 	jetAnalyserEPlusJetsRefSelection_->createHistograms();
 	jetAnalyserMuPlusJetsRefSelection_->createHistograms();
 	jetAnalyserEPlusJetsQCDNonIsoSelection_->createHistograms();
 	jetAnalyserEPlusJetsConversionSelection_->createHistograms();
-	jetAnalyserMuPlusJetsQCDNonIsoSelection_->createHistograms();
+	jetAnalyserMuPlusJetsQCDNonIsoSelection1p5to3_->createHistograms();
+	jetAnalyserMuPlusJetsQCDNonIsoSelection3toInf_->createHistograms();
 
 	jetAnalyserEPlusJetsRefSelection_->createTrees();
 	jetAnalyserMuPlusJetsRefSelection_->createTrees();
 	jetAnalyserEPlusJetsQCDNonIsoSelection_->createTrees();
 	jetAnalyserEPlusJetsConversionSelection_->createTrees();
-	jetAnalyserMuPlusJetsQCDNonIsoSelection_->createTrees();
+	jetAnalyserMuPlusJetsQCDNonIsoSelection1p5to3_->createTrees();
+	jetAnalyserMuPlusJetsQCDNonIsoSelection3toInf_->createTrees();
 
 	// W boson simple reconstruction
 	wAnalyserEPlusJetsRefSelection_->createHistograms();
@@ -984,13 +1148,15 @@ void TTbar_plus_X_analyser::createHistograms() {
 	hitFitAnalyserMuPlusJetsRefSelection_->createHistograms();
 	hitFitAnalyserEPlusJetsQCDSelection_->createHistograms();
 	hitFitAnalyserEPlusJetsConversionSelection_->createHistograms();
-	hitFitAnalyserMuPlusJetsQCDSelection_->createHistograms();
+	hitFitAnalyserMuPlusJetsQCDSelection1p5to3_->createHistograms();
+	hitFitAnalyserMuPlusJetsQCDSelection3toInf_->createHistograms();
 
 	hitFitAnalyserEPlusJetsRefSelection_->createTrees();
 	hitFitAnalyserMuPlusJetsRefSelection_->createTrees();
 	hitFitAnalyserEPlusJetsQCDSelection_->createTrees();
 	hitFitAnalyserEPlusJetsConversionSelection_->createTrees();
-	hitFitAnalyserMuPlusJetsQCDSelection_->createTrees();
+	hitFitAnalyserMuPlusJetsQCDSelection1p5to3_->createTrees();
+	hitFitAnalyserMuPlusJetsQCDSelection3toInf_->createTrees();
 
 	likelihoodRecoAnalyserEPlusJetsRefSelection_->createHistograms();
 	likelihoodRecoAnalyserMuPlusJetsRefSelection_->createHistograms();
@@ -1021,15 +1187,21 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		//QCD region
 		metAnalyserqcdNonIsoElectronSelection_(
 				new METAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/QCD non iso e+jets/MET")), //
-		metAnalyserqcdNonIsoMuonSelection_(
-				new METAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/MET")), //
+		metAnalyserqcdConversionSelection_(
+				new METAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/QCDConversions/MET")), //
+		metAnalyserqcdNonIsoMuonSelection1p5to3_(
+				new METAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 1p5to3/MET")), //
+		metAnalyserqcdNonIsoMuonSelection3toInf_(
+				new METAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 3toInf/MET")), //
 		qcdNonIsoElectronAnalyser_(
 				new ElectronAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/QCD non iso e+jets/Electron", true)), //
-		qcdNonIsoMuonAnalyser_(
-				new MuonAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Muon", true)), //
-		metAnalyserqcdConversionSelection_(new METAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/QCDConversions/MET")), //
 		qcdConversionsElectronAnalyser_(
 				new ElectronAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/QCDConversions/Electron", true)), //
+		qcdNonIsoMuonAnalyser1p5to3_(
+				new MuonAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Muon", true)), //
+		qcdNonIsoMuonAnalyser3toInf_(
+				new MuonAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Muon", true)), //
+
 		metBins_(), //
 		ht_bins_(), //
 		st_bins_(), //
@@ -1040,7 +1212,8 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		qcd_conversion_binned_MET_analyser_electron_(), //
 		qcd_noniso_binned_MET_analyser_electron_(), //
 		ref_selection_binned_MET_analyser_muon_(), //
-		qcd_noniso_binned_MET_analyser_muon_(), //
+		qcd_noniso_1p5to3_binned_MET_analyser_muon_(), //
+		qcd_noniso_3toInf_binned_MET_analyser_muon_(), //
 
 		//HT
 		ref_selection_binned_HT_analyser_electron_(
@@ -1056,30 +1229,36 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		ref_selection_binned_HT_analyser_muon_(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_HT_Analysis")), //
-		qcd_noniso_binned_HT_analyser_muon_(
+		qcd_noniso_1p5to3_binned_HT_analyser_muon_(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets/Binned_HT_Analysis")), //
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Binned_HT_Analysis")), //
+		qcd_noniso_3toInf_binned_HT_analyser_muon_(
+				new Binned_variable_analyser(histMan_,
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf/Binned_HT_Analysis")), //
 		//ST
 		ref_selection_binned_ST_analyser_electron_(), //
 		qcd_conversion_binned_ST_analyser_electron_(), //
 		qcd_noniso_binned_ST_analyser_electron_(), //
 		//ST
 		ref_selection_binned_ST_analyser_muon_(), //
-		qcd_noniso_binned_ST_analyser_muon_(), //
+		qcd_noniso_1p5to3_binned_ST_analyser_muon_(), //
+		qcd_noniso_3toInf_binned_ST_analyser_muon_(), //
 		//MT electrons
 		ref_selection_binned_MT_analyser_electron_(), //
 		qcd_conversion_binned_MT_analyser_electron_(), //
 		qcd_noniso_binned_MT_analyser_electron_(), //
 		//MT muons
 		ref_selection_binned_MT_analyser_muon_(), //
-		qcd_noniso_binned_MT_analyser_muon_(), //
+		qcd_noniso_1p5to3_binned_MT_analyser_muon_(), //
+		qcd_noniso_3toInf_binned_MT_analyser_muon_(), //
 		//WPT electrons
 		ref_selection_binned_WPT_analyser_electron_(), //
 		qcd_conversion_binned_WPT_analyser_electron_(), //
 		qcd_noniso_binned_WPT_analyser_electron_(), //
 		//WPT muons
 		ref_selection_binned_WPT_analyser_muon_(), //
-		qcd_noniso_binned_WPT_analyser_muon_(), //
+		qcd_noniso_1p5to3_binned_WPT_analyser_muon_(), //
+		qcd_noniso_3toInf_binned_WPT_analyser_muon_(), //
 
 		// mttbar
 		ref_selection_binned_mttbar_analyser_electron_(
@@ -1155,14 +1334,16 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		jetAnalyserMuPlusJetsRefSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsReference, histogramFolder + "/MuPlusJets/Ref selection/Jets")), //
 		jetAnalyserEPlusJetsQCDNonIsoSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsQCDNonIsolated, histogramFolder + "/EPlusJets/QCD non iso e+jets/Jets")), //
 		jetAnalyserEPlusJetsConversionSelection_(new JetAnalyser(histMan, treeMan, SelectionCriteria::ElectronPlusJetsQCDConversion, histogramFolder + "/EPlusJets/QCDConversions/Jets")), //
-		jetAnalyserMuPlusJetsQCDNonIsoSelection_( new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsQCDNonIsolated, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/Jets")), //
+		jetAnalyserMuPlusJetsQCDNonIsoSelection1p5to3_( new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Jets")), //
+		jetAnalyserMuPlusJetsQCDNonIsoSelection3toInf_( new JetAnalyser(histMan, treeMan, SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 3toInf/Jets")), //
 		wAnalyserEPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/W Bosons")), //
 		wAnalyserMuPlusJetsRefSelection_(new WAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/W Bosons")), //
 		hitFitAnalyserEPlusJetsRefSelection_(new HitFitAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/Ref selection/HitFit")), //
 		hitFitAnalyserMuPlusJetsRefSelection_(new HitFitAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/Ref selection/HitFit")), //
 		hitFitAnalyserEPlusJetsQCDSelection_(new HitFitAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/QCD non iso e+jets/HitFit")), //
 		hitFitAnalyserEPlusJetsConversionSelection_(new HitFitAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/QCDConversions/HitFit")), //
-		hitFitAnalyserMuPlusJetsQCDSelection_(new HitFitAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/QCD non iso mu+jets/HitFit")), //		
+		hitFitAnalyserMuPlusJetsQCDSelection1p5to3_(new HitFitAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 1p5to3/HitFit")), //		
+		hitFitAnalyserMuPlusJetsQCDSelection3toInf_(new HitFitAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 3toInf/HitFit")), //		
 		likelihoodRecoAnalyserEPlusJetsRefSelection_(new LikelihoodRecoAnalyser(histMan, treeMan, true, histogramFolder + "/EPlusJets/Ref selection/LikelihoodReco")), //
 		likelihoodRecoAnalyserMuPlusJetsRefSelection_(new LikelihoodRecoAnalyser(histMan, treeMan, false, histogramFolder + "/MuPlusJets/Ref selection/LikelihoodReco")), //
 		BTagEffAnalyserEPlusJetsRefSelection_(new BTagEff(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/BTagEfficiencies")), //
@@ -1347,15 +1528,20 @@ void TTbar_plus_X_analyser::make_binned_MET_analysers() {
 		Binned_Variable_analyser_ptr ref_selection_binned_met_muon_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_MET_Analysis"));
-		Binned_Variable_analyser_ptr qcd_noniso_binned_met_muon_analyser(
+		Binned_Variable_analyser_ptr qcd_noniso_1p5to3_binned_met_muon_analyser(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets/Binned_MET_Analysis"));
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Binned_MET_Analysis"));
+		Binned_Variable_analyser_ptr qcd_noniso_3toInf_binned_met_muon_analyser(
+				new Binned_variable_analyser(histMan_,
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf/Binned_MET_Analysis"));
 
 		ref_selection_binned_met_muon_analyser->set_variables(MET, muon_variables_);
-		qcd_noniso_binned_met_muon_analyser->set_variables(MET, muon_variables_);
+		qcd_noniso_1p5to3_binned_met_muon_analyser->set_variables(MET, muon_variables_);
+		qcd_noniso_3toInf_binned_met_muon_analyser->set_variables(MET, muon_variables_);
 
 		ref_selection_binned_MET_analyser_muon_.push_back(ref_selection_binned_met_muon_analyser);
-		qcd_noniso_binned_MET_analyser_muon_.push_back(qcd_noniso_binned_met_muon_analyser);
+		qcd_noniso_1p5to3_binned_MET_analyser_muon_.push_back(qcd_noniso_1p5to3_binned_met_muon_analyser);
+		qcd_noniso_3toInf_binned_MET_analyser_muon_.push_back(qcd_noniso_3toInf_binned_met_muon_analyser);
 
 	}
 }
@@ -1367,7 +1553,8 @@ void TTbar_plus_X_analyser::make_binned_HT_analysers() {
 	ref_selection_binned_HT_analyser_muon_->set_variables(HT, muon_variables_);
 
 	qcd_noniso_binned_HT_analyser_electron_->set_variables(HT, electron_variables_);
-	qcd_noniso_binned_HT_analyser_muon_->set_variables(HT, muon_variables_);
+	qcd_noniso_1p5to3_binned_HT_analyser_muon_->set_variables(HT, muon_variables_);
+	qcd_noniso_3toInf_binned_HT_analyser_muon_->set_variables(HT, muon_variables_);
 
 	qcd_conversion_binned_HT_analyser_electron_->set_variables(HT, electron_variables_);
 }
@@ -1400,15 +1587,20 @@ void TTbar_plus_X_analyser::make_binned_ST_analysers() {
 		Binned_Variable_analyser_ptr ref_selection_binned_ST_muon_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_ST_Analysis"));
-		Binned_Variable_analyser_ptr qcd_noniso_binned_ST_muon_analyser(
+		Binned_Variable_analyser_ptr qcd_noniso_1p5to3_binned_ST_muon_analyser(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets/Binned_ST_Analysis"));
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Binned_ST_Analysis"));
+		Binned_Variable_analyser_ptr qcd_noniso_3toInf_binned_ST_muon_analyser(
+				new Binned_variable_analyser(histMan_,
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf/Binned_ST_Analysis"));
 
 		ref_selection_binned_ST_muon_analyser->set_variables(ST, muon_variables_);
-		qcd_noniso_binned_ST_muon_analyser->set_variables(ST, muon_variables_);
+		qcd_noniso_1p5to3_binned_ST_muon_analyser->set_variables(ST, muon_variables_);
+		qcd_noniso_3toInf_binned_ST_muon_analyser->set_variables(ST, muon_variables_);
 
 		ref_selection_binned_ST_analyser_muon_.push_back(ref_selection_binned_ST_muon_analyser);
-		qcd_noniso_binned_ST_analyser_muon_.push_back(qcd_noniso_binned_ST_muon_analyser);
+		qcd_noniso_1p5to3_binned_ST_analyser_muon_.push_back(qcd_noniso_1p5to3_binned_ST_muon_analyser);
+		qcd_noniso_3toInf_binned_ST_analyser_muon_.push_back(qcd_noniso_3toInf_binned_ST_muon_analyser);
 
 	}
 }
@@ -1441,15 +1633,20 @@ void TTbar_plus_X_analyser::make_binned_MT_analysers() {
 		Binned_Variable_analyser_ptr ref_selection_binned_MT_muon_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_MT_Analysis"));
-		Binned_Variable_analyser_ptr qcd_noniso_binned_MT_muon_analyser(
+		Binned_Variable_analyser_ptr qcd_noniso_1p5to3_binned_MT_muon_analyser(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets/Binned_MT_Analysis"));
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Binned_MT_Analysis"));
+		Binned_Variable_analyser_ptr qcd_noniso_3toInf_binned_MT_muon_analyser(
+				new Binned_variable_analyser(histMan_,
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf/Binned_MT_Analysis"));
 
 		ref_selection_binned_MT_muon_analyser->set_variables(MT, muon_variables_);
-		qcd_noniso_binned_MT_muon_analyser->set_variables(MT, muon_variables_);
+		qcd_noniso_1p5to3_binned_MT_muon_analyser->set_variables(MT, muon_variables_);
+		qcd_noniso_3toInf_binned_MT_muon_analyser->set_variables(MT, muon_variables_);
 
 		ref_selection_binned_MT_analyser_muon_.push_back(ref_selection_binned_MT_muon_analyser);
-		qcd_noniso_binned_MT_analyser_muon_.push_back(qcd_noniso_binned_MT_muon_analyser);
+		qcd_noniso_1p5to3_binned_MT_analyser_muon_.push_back(qcd_noniso_1p5to3_binned_MT_muon_analyser);
+		qcd_noniso_3toInf_binned_MT_analyser_muon_.push_back(qcd_noniso_3toInf_binned_MT_muon_analyser);
 
 	}
 }
@@ -1484,16 +1681,21 @@ void TTbar_plus_X_analyser::make_binned_WPT_analysers() {
 		Binned_Variable_analyser_ptr ref_selection_binned_WPT_muon_analyser(
 				new Binned_variable_analyser(histMan_,
 						histogramFolder_ + "/MuPlusJets/Ref selection/Binned_WPT_Analysis"));
-		Binned_Variable_analyser_ptr qcd_noniso_binned_WPT_muon_analyser(
+		Binned_Variable_analyser_ptr qcd_noniso_1p5to3_binned_WPT_muon_analyser(
 				new Binned_variable_analyser(histMan_,
-						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets/Binned_WPT_Analysis"));
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Binned_WPT_Analysis"));
+		Binned_Variable_analyser_ptr qcd_noniso_3toInf_binned_WPT_muon_analyser(
+				new Binned_variable_analyser(histMan_,
+						histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf/Binned_WPT_Analysis"));
 
 		no_selection_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
 		ref_selection_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
-		qcd_noniso_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
+		qcd_noniso_1p5to3_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
+		qcd_noniso_3toInf_binned_WPT_muon_analyser->set_variables(WPT, muon_variables_);
 
 		ref_selection_binned_WPT_analyser_muon_.push_back(ref_selection_binned_WPT_muon_analyser);
-		qcd_noniso_binned_WPT_analyser_muon_.push_back(qcd_noniso_binned_WPT_muon_analyser);
+		qcd_noniso_1p5to3_binned_WPT_analyser_muon_.push_back(qcd_noniso_1p5to3_binned_WPT_muon_analyser);
+		qcd_noniso_3toInf_binned_WPT_analyser_muon_.push_back(qcd_noniso_3toInf_binned_WPT_muon_analyser);
 
 	}
 }

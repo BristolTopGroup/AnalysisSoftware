@@ -54,7 +54,8 @@ NTupleEventReader::NTupleEventReader() :
 		selectionOutputReader_muon(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsReference)), //
 		selectionOutputReader_electronQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDNonIsolated)), //
 		selectionOutputReader_electronQCDConversion(new SelectionOutputReader(input, SelectionCriteria::ElectronPlusJetsQCDConversion)), //
-		selectionOutputReader_muonQCDNonisolated(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsQCDNonIsolated)), //
+		selectionOutputReader_muonQCDNonisolated1p5to3(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3)), //
+		selectionOutputReader_muonQCDNonisolated3toInf(new SelectionOutputReader(input, SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf)), //
 		ttGenInfoReader( new TTGenReader(input)), //
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
@@ -171,7 +172,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setMuonSelectionOutputInfo( selectionOutputReader_muon->getSelectionOutputInfo() );
 	currentEvent->setElectronQCDNonisolatedSelectionOutputInfo( selectionOutputReader_electronQCDNonisolated->getSelectionOutputInfo() );
 	currentEvent->setElectronConversionSelectionOutputInfo( selectionOutputReader_electronQCDConversion->getSelectionOutputInfo() );
-	currentEvent->setMuonQCDNonisolatedSelectionOutputInfo( selectionOutputReader_muonQCDNonisolated->getSelectionOutputInfo() );
+	currentEvent->setMuonQCDNonisolatedSelection1p5to3OutputInfo( selectionOutputReader_muonQCDNonisolated1p5to3->getSelectionOutputInfo() );
+	currentEvent->setMuonQCDNonisolatedSelection3toInfOutputInfo( selectionOutputReader_muonQCDNonisolated3toInf->getSelectionOutputInfo() );
 
 	currentEvent->setPassOfflineSelectionInfo( *passesOfflineSelectionReader->getVariable() );
 	currentEvent->setPassGenSelectionInfo( *passesGenSelectionReader->getVariable() );
@@ -221,11 +223,14 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );		
 	}
-	else if ( currentEvent->PassesMuonQCDSelection() ) {
-		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
-		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated ) );
+	else if ( currentEvent->PassesMuonQCDSelection1p5to3() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) );
 	}
-
+	else if ( currentEvent->PassesMuonQCDSelection3toInf() ) {
+		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) );
+		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) );
+	}
 	// Set bjet weight
 	if ( !currentEvent->isRealData() ) {
 		boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
@@ -354,7 +359,8 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		selectionOutputReader_muon->initialise();
 		selectionOutputReader_electronQCDNonisolated->initialise();
 		selectionOutputReader_electronQCDConversion->initialise();
-		selectionOutputReader_muonQCDNonisolated->initialise();
+		selectionOutputReader_muonQCDNonisolated1p5to3->initialise();
+		selectionOutputReader_muonQCDNonisolated3toInf->initialise();
 
 		ttGenInfoReader->initialise();
 

@@ -48,13 +48,11 @@ private:
 	MuonAnalyserLocalPtr muonAnalyserRefSelection_;
 	BasicAnalyserLocalPtr vertexAnalyserEPlusJetsRefSelection_, vertexAnalyserMuPlusJetsRefSelection_;
 
-	//QCD region Non-isolated electrons
-	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdNonIsoMuonSelection_;
-	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyser_;
-	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser_;
-	//QCD region electrons from conversions
-	METAnalyserLocalPtr metAnalyserqcdConversionSelection_;
-	ElectronAnalyserLocalPtr qcdConversionsElectronAnalyser_;
+	//QCD region Non-isolated electrons, Non-isolated muons and conversion electrons
+	METAnalyserLocalPtr metAnalyserqcdNonIsoElectronSelection_, metAnalyserqcdConversionSelection_;
+	METAnalyserLocalPtr metAnalyserqcdNonIsoMuonSelection1p5to3_, metAnalyserqcdNonIsoMuonSelection3toInf_;
+	ElectronAnalyserLocalPtr qcdNonIsoElectronAnalyser_, qcdConversionsElectronAnalyser_;
+	MuonAnalyserLocalPtr qcdNonIsoMuonAnalyser1p5to3_, qcdNonIsoMuonAnalyser3toInf_;
 
 	std::vector<double> metBins_, ht_bins_, st_bins_, mt_bins_, wpt_bins_;
 	std::vector<double> mttbar_bins_, yttbar_bins_, pttbar_bins_, pttop_bins_, yt_bins_;
@@ -65,7 +63,8 @@ private:
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_electron_;
 	//MET analysers muon
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MET_analyser_muon_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MET_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_1p5to3_binned_MET_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_3toInf_binned_MET_analyser_muon_;
 
 	//HT analysers electron
 	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_electron_;
@@ -73,7 +72,8 @@ private:
 	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_electron_;
 	//HT analysers muon
 	Binned_Variable_analyser_ptr ref_selection_binned_HT_analyser_muon_;
-	Binned_Variable_analyser_ptr qcd_noniso_binned_HT_analyser_muon_;
+	Binned_Variable_analyser_ptr qcd_noniso_1p5to3_binned_HT_analyser_muon_;
+	Binned_Variable_analyser_ptr qcd_noniso_3toInf_binned_HT_analyser_muon_;
 
 	//ST analysers electron
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_electron_;
@@ -81,7 +81,8 @@ private:
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_electron_;
 	//ST analysers muon
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_ST_analyser_muon_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_ST_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_1p5to3_binned_ST_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_3toInf_binned_ST_analyser_muon_;
 
 	//MT analysers electron
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_electron_;
@@ -89,7 +90,8 @@ private:
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_electron_;
 	//MT analysers muon
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_MT_analyser_muon_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_MT_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_1p5to3_binned_MT_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_3toInf_binned_MT_analyser_muon_;
 
 	//WPT analysers electron
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_electron_;
@@ -97,7 +99,8 @@ private:
 	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_electron_;
 	//WPT analysers muon
 	std::vector<Binned_Variable_analyser_ptr> ref_selection_binned_WPT_analyser_muon_;
-	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_binned_WPT_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_1p5to3_binned_WPT_analyser_muon_;
+	std::vector<Binned_Variable_analyser_ptr> qcd_noniso_3toInf_binned_WPT_analyser_muon_;
 
 	// Mttbar analyser electron
 	Binned_Variable_analyser_ptr ref_selection_binned_mttbar_analyser_electron_;
@@ -135,7 +138,8 @@ private:
 	Binned_Variable_analyser_ptr ref_selection_binned_yt_analyser_muon_;
 
 	JetAnalyserLocalPtr jetAnalyserEPlusJetsRefSelection_, jetAnalyserMuPlusJetsRefSelection_;
-	JetAnalyserLocalPtr jetAnalyserEPlusJetsQCDNonIsoSelection_, jetAnalyserEPlusJetsConversionSelection_, jetAnalyserMuPlusJetsQCDNonIsoSelection_;
+	JetAnalyserLocalPtr jetAnalyserEPlusJetsQCDNonIsoSelection_, jetAnalyserEPlusJetsConversionSelection_;
+	JetAnalyserLocalPtr jetAnalyserMuPlusJetsQCDNonIsoSelection1p5to3_, jetAnalyserMuPlusJetsQCDNonIsoSelection3toInf_;
 
 	// W simple reco analyser
 	WAnalyserLocalPtr wAnalyserEPlusJetsRefSelection_, wAnalyserMuPlusJetsRefSelection_;
@@ -145,7 +149,8 @@ private:
 	HitFitAnalyserLocalPtr hitFitAnalyserMuPlusJetsRefSelection_;
 	HitFitAnalyserLocalPtr hitFitAnalyserEPlusJetsQCDSelection_;
 	HitFitAnalyserLocalPtr hitFitAnalyserEPlusJetsConversionSelection_;
-	HitFitAnalyserLocalPtr hitFitAnalyserMuPlusJetsQCDSelection_;
+	HitFitAnalyserLocalPtr hitFitAnalyserMuPlusJetsQCDSelection1p5to3_;
+	HitFitAnalyserLocalPtr hitFitAnalyserMuPlusJetsQCDSelection3toInf_;
 
 	// Likelihood ttbar reco analyser
 	LikelihoodRecoAnalyserLocalPtr likelihoodRecoAnalyserEPlusJetsRefSelection_;

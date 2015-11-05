@@ -22,12 +22,12 @@ EventWeightProvider::EventWeightProvider(string datasetInformationFile) :
 		datasetInfo_(datasetInformationFile), //
 		xsection(datasetInfo_.getCrossSections()), //
 		numberOfProcessedEvents(datasetInfo_.getArrayOfProcessedEvents()), //
-		estimatedPileUp(Globals::estimatedPileup), //
+		// estimatedPileUp(Globals::estimatedPileup), //
 		DATAdistribution(), //
 		pileUpWeights(), //
 		numberOfEventsWithTooHighPileUp(0) {
 
-	generate_weights();
+	// generate_weights();
 }
 
 EventWeightProvider::~EventWeightProvider() {

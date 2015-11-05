@@ -99,7 +99,8 @@ private:
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muon;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDNonisolated;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDConversion;
-	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated1p5to3;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated3toInf;
 
 	boost::scoped_ptr<TTGenReader> ttGenInfoReader;
 

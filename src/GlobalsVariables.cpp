@@ -19,7 +19,7 @@ unsigned long Globals::printEveryXEvents = 100000;
 std::string Globals::selectedEventsOutputfile = "selectedEvents.txt";
 std::string Globals::selectedEventsWithMetaDataOutputfile = "selectedEventsWithMetaData.txt";
 PileUpReweightingMethod::value Globals::pileUpReweightingMethod = PileUpReweightingMethod::averagePileUp;
-boost::shared_ptr<TH1D> Globals::estimatedPileup = boost::shared_ptr<TH1D>(new TH1D("tmp", "tmp", 25, 0, 25));
+// boost::shared_ptr<TH1D> Globals::estimatedPileup = boost::shared_ptr<TH1D>(new TH1D("tmp", "tmp", 25, 0, 25));
 unsigned int Globals::NTupleVersion = 0;
 bool Globals::verbose = true;
 

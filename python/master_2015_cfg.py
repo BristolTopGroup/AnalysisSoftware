@@ -100,7 +100,8 @@ if os.environ.has_key('ntupleToProcess'):
     ntupleToProcess = int(os.environ['ntupleToProcess'])
 
 #File for pile-up re-weighting
-PUFile = toolsFolder + "data/" + settings['PUFile']
+# PUFile = toolsFolder + "data/" + settings['PUFile']
+PUFile = ''
 getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
 ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
@@ -170,7 +171,7 @@ centerOfMassEnergy = 13
 #file with information (cross-section, number of processed events) for event weight calculation
 datasetInfoFile = ""
 if centerOfMassEnergy == 13:
-    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV_50ns.py"
+    datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV_25ns.py"
 
 
 nTuple_version = 0
