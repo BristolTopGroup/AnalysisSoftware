@@ -67,7 +67,6 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 
 void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
-	weight = 1.;
 	pileUpWeight=1.;
 	histMan->setCurrentDataType(currentEvent->getDataType());
 	histMan->setCurrentJetBin(currentEvent->Jets().size());

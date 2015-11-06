@@ -1,3 +1,5 @@
+
+
 /*
  * Event.cpp
  *
@@ -124,6 +126,7 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_powhegPythia6 ||
 		type == DataType::TTJets_PowhegHerwigpp ||
+		// type == DataType::TTJets_amcatnloHerwigpp ||
 		type == DataType::TTJets_synch
 		)
 		return true;

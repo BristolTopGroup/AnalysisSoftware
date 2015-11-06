@@ -135,14 +135,11 @@ void MuonReader::initialise() {
 	NumberOfValidHits.initialise();
 	NumberOfValidMuonHits.initialise();
 	PixelLayersWithMeasurement.initialise();
-	if (Globals::NTupleVersion >= 8) {
-		isPFMuon.initialise();
-		TrackerLayersWithMeasurement.initialise();
-		NumberOfValidPixelHits.initialise();
-	} else {
-		cout << "Using an old (<8) nTuple version. Following variables will not be available:" << endl;
-		cout << "Muon::isPFMuon(), Muon::trackerLayersWithMeasurement(), Muon::numberOfValidPixelHits()" << endl;
-	}
+	isPFMuon.initialise();
+	TrackerLayersWithMeasurement.initialise();
+	NumberOfValidPixelHits.initialise();
+
+
 	NumberOfMatchedStations.initialise();
 	NumberOfMatches.initialise();
 
@@ -201,11 +198,9 @@ void MuonReader::readMuons() {
 		muon->setNumberOfMatchedStations(NumberOfMatchedStations.getIntVariableAt(index));
 		muon->setNumberOfMatches(NumberOfMatches.getIntVariableAt(index));
 
-		if (Globals::NTupleVersion >= 8) {
-			muon->setPFMuon(isPFMuon.getBoolVariableAt(index));
-			muon->setTrackerLayersWithMeasurement(TrackerLayersWithMeasurement.getIntVariableAt(index));
-			muon->setNumberOfValidPixelHits(NumberOfValidPixelHits.getIntVariableAt(index));
-		}
+		muon->setPFMuon(isPFMuon.getBoolVariableAt(index));
+		muon->setTrackerLayersWithMeasurement(TrackerLayersWithMeasurement.getIntVariableAt(index));
+		muon->setNumberOfValidPixelHits(NumberOfValidPixelHits.getIntVariableAt(index));
 
 		muons.push_back(muon);
 	}

@@ -40,13 +40,25 @@ NTupleEventReader::NTupleEventReader() :
 //		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// metCorrReaders(), //
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPLooseGsf.Fired")),
-		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsf.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20er.Fired")),
 		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20eta2p1.Fired")),
+		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75GsfMC.Fired")),
 		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1MC.Fired")),
 		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20eta2p1MC.Fired")),
 		passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27WP75GsfMC.Fired")),
-		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20eta2p1MC.Fired")),
+		passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20erMC.Fired")),		
+
+
+		// passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27erWPLooseGsf.Fired")),
+		// passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20.Fired")),
+		// passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20.Fired")),
+		// passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle27erWP75GsfMC.Fired")),
+		// passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
+		// passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
+		// passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27erWP75GsfMC.Fired")),
+		// passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),		
+
 
 		passesOfflineSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesOfflineSelection")),
 		passesGenSelectionReader(new VariableReader<MultiUIntPointer>(input, "passesGenSelection")),
@@ -159,6 +171,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 	else {
 		currentEvent->setPassesElectronChannelTrigger( true );
+		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );
 
@@ -348,6 +361,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		passesElectronChannelTriggerReader->initialiseBlindly();
 		passesMuonChannelTriggerReader->initialiseBlindly();
 		passesTkMuonChannelTriggerReader->initialiseBlindly();
+		passesElectronChannelMCTriggerReader->initialiseBlindly();
 		passesMuonChannelMCTriggerReader->initialiseBlindly();
 		passesTkMuonChannelMCTriggerReader->initialiseBlindly();
 		passesElectronChannelQCDTriggerReader->initialiseBlindly();
@@ -373,29 +387,29 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		systematicWeightsReader_->initialiseBlindly();
 		centralLHEWeightReader_->initialiseBlindly();
 
-		if (Globals::NTupleVersion >= 6) { //MC only info!
-			PileupInfoReader->initialiseBlindly();
-			TruePileupInfoReader->initialiseBlindly();
-			PUWeightInTimeOnly_->initialiseBlindly();
-			PUWeight3BX_->initialiseBlindly();
-			PUWeightShiftUp_->initialiseBlindly();
-			PUWeightShiftDown_->initialiseBlindly();
-		}
-		if (Globals::NTupleVersion >= 7) {
-			sumETReader_->initialise();
-			HCALLaserFilter->initialise();
-			ECALDeadCellFilter->initialise();
-			TrackingFailureFilter->initialise();
-			CSCTightHaloId->initialise();
-		}
-		if (Globals::NTupleVersion >= 9) {
-			ECALDeadCellTPFilter->initialise();
-		}
-		if (Globals::NTupleVersion >= 10) {
-			EEBadSCFilter->initialise();
-			ECALLaserCorrFilter->initialise();
-			TrackingPOGFilters->initialise();
-		}
+		// if (Globals::NTupleVersion >= 6) { //MC only info!
+		// 	PileupInfoReader->initialiseBlindly();
+		// 	TruePileupInfoReader->initialiseBlindly();
+		// 	PUWeightInTimeOnly_->initialiseBlindly();
+		// 	PUWeight3BX_->initialiseBlindly();
+		// 	PUWeightShiftUp_->initialiseBlindly();
+		// 	PUWeightShiftDown_->initialiseBlindly();
+		// }
+		// if (Globals::NTupleVersion >= 7) {
+		// 	sumETReader_->initialise();
+		// 	HCALLaserFilter->initialise();
+		// 	ECALDeadCellFilter->initialise();
+		// 	TrackingFailureFilter->initialise();
+		// 	CSCTightHaloId->initialise();
+		// }
+		// if (Globals::NTupleVersion >= 9) {
+		// 	ECALDeadCellTPFilter->initialise();
+		// }
+		// if (Globals::NTupleVersion >= 10) {
+		// 	EEBadSCFilter->initialise();
+		// 	ECALLaserCorrFilter->initialise();
+		// 	TrackingPOGFilters->initialise();
+		// }
 
 		// if (Globals::NTupleVersion > 8) {
 		// 	for (unsigned int index = 0; index < METCorrections::NUMBER_OF_METCORRECTIONS; ++index) {

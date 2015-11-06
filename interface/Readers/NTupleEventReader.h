@@ -88,6 +88,7 @@ private:
 	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesTkMuonChannelTriggerReader;
+	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelMCTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelMCTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesTkMuonChannelMCTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelQCDTriggerReader;

@@ -455,13 +455,17 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 
+
 	if (event->PassesMuonTriggerAndSelectionNoB()){
 		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserMuPlusJetsRefSelection_->analyse(event);
 	}
 
+	if (event->PassesMuonTriggerAndSelection() ){
+	}
 	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesMuonTriggerAndSelection() ) {
+
 		const JetCollection jets(event->CleanedJets());
 		unsigned int numberOfBjets = event->getNBJets( SelectionCriteria::MuonPlusJetsReference );
 		const JetCollection bJets(event->CleanedBJets());
@@ -1202,7 +1206,7 @@ TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeMa
 		qcdNonIsoMuonAnalyser1p5to3_(
 				new MuonAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Muon", true)), //
 		qcdNonIsoMuonAnalyser3toInf_(
-				new MuonAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 1p5to3/Muon", true)), //
+				new MuonAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/QCD non iso mu+jets 3toInf/Muon", true)), //
 
 		metBins_(), //
 		ht_bins_(), //

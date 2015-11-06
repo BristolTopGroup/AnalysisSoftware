@@ -88,22 +88,7 @@ double EventWeightProvider::reweightTopPt(const EventPtr event) {
 
 void EventWeightProvider::generate_weights() {
 
-	/*
-	 * TODO:
-	 * Summer11 PU_S3 and PU_S4 in-time PU only: PoissonOneXDist
-	 * if Summer11 OOT average PU, use PoissonIntDist
-	 * If Spring11 or Summer11 3D reweighting, use probdistFlat10 (compare to true)
-	 * Fall11, use Fall2011
-	 */
-
-	//Needs a flag for 2011 MC tried energyInTeV?
-	if (Globals::energyInTeV == 8) {
-		pileUpWeights = generateWeights(Summer2012);
-	} else if (Globals::energyInTeV == 7 && Globals::NTupleVersion < 11) {
-		pileUpWeights = generateWeights(Fall2011);
-	} else if (Globals::energyInTeV == 7 && Globals::NTupleVersion == 11) {
-		pileUpWeights = generateWeights(Summer11Leg);
-	} else if (Globals::energyInTeV == 13) {
+	if (Globals::energyInTeV == 13) {
 		pileUpWeights = generateWeights(Spring2015_50ns);
 	}
 
