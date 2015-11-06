@@ -61,7 +61,7 @@ def getAnalysisSettings(analysisMode):
 
 #config start
 #number of events to be processed
-maxEvents = 0000# 0 == all
+maxEvents = 10000# 0 == all
 if os.environ.has_key('maxEvents'):
     maxEvents = int(os.environ['maxEvents'])
 
@@ -100,8 +100,7 @@ if os.environ.has_key('ntupleToProcess'):
     ntupleToProcess = int(os.environ['ntupleToProcess'])
 
 #File for pile-up re-weighting
-# PUFile = toolsFolder + "data/" + settings['PUFile']
-PUFile = ''
+PUFile = toolsFolder + "data/" + settings['PUFile']
 getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
 ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
@@ -163,7 +162,7 @@ TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
 # lumi = 41.62912#pb-1
-lumi = 100#pb-1
+lumi = 110#pb-1
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....

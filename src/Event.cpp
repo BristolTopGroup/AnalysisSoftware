@@ -101,8 +101,10 @@ Event::~Event() {
 
 bool Event::isRealData() const {
 	return dataType == DataType::ElectronHad || dataType == DataType::MuHad || 
-			dataType == DataType::SingleElectron_PromptReco || dataType == DataType::SingleElectron_Rereco ||
-			dataType == DataType::SingleMuon_PromptReco || dataType == DataType::SingleMuon_Rereco;
+			dataType == DataType::SingleElectron_PromptReco_RunD || dataType == DataType::SingleMuon_PromptReco_RunD ||
+			dataType == DataType::SingleElectron_ReReco_RunD || dataType == DataType::SingleMuon_ReReco_RunD ||
+			dataType == DataType::SingleElectron_ReReco_RunC || dataType == DataType::SingleMuon_ReReco_RunC;
+
 }
 
 const DataType::value Event::getDataType() const {
@@ -125,8 +127,8 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_amcatnloFXFX_mtop1755 ||
 		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_powhegPythia6 ||
-		type == DataType::TTJets_PowhegHerwigpp ||
-		// type == DataType::TTJets_amcatnloHerwigpp ||
+		// type == DataType::TTJets_PowhegHerwigpp ||
+		type == DataType::TTJets_amcatnloHerwigpp ||
 		type == DataType::TTJets_synch
 		)
 		return true;

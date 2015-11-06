@@ -22,12 +22,12 @@ EventWeightProvider::EventWeightProvider(string datasetInformationFile) :
 		datasetInfo_(datasetInformationFile), //
 		xsection(datasetInfo_.getCrossSections()), //
 		numberOfProcessedEvents(datasetInfo_.getArrayOfProcessedEvents()), //
-		// estimatedPileUp(Globals::estimatedPileup), //
+		estimatedPileUp(Globals::estimatedPileup), //
 		DATAdistribution(), //
 		pileUpWeights(), //
 		numberOfEventsWithTooHighPileUp(0) {
 
-	// generate_weights();
+	generate_weights();
 }
 
 EventWeightProvider::~EventWeightProvider() {
@@ -35,7 +35,7 @@ EventWeightProvider::~EventWeightProvider() {
 }
 
 double EventWeightProvider::getWeight(DataType::value type) {
-	if (type <= DataType::SingleMuon_Rereco)
+	if (type <= DataType::SingleMuon_ReReco_RunD)
 		return 1.;
 	else
 		return xsection[type] * Globals::luminosity / numberOfProcessedEvents[type];
