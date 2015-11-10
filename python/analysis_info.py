@@ -1,5 +1,5 @@
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v29/'
-data_path_13TeV = ''
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v1/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v1/'
 datasets_13TeV = {
 
             # 'SingleMuon' : [ mc_path_13TeV + 'SingleMuon' ],
