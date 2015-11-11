@@ -104,7 +104,7 @@ void EventWeightProvider::generate_weights() {
 	} else if (Globals::energyInTeV == 7 && Globals::NTupleVersion == 11) {
 		pileUpWeights = generateWeights(Summer11Leg);
 	} else if (Globals::energyInTeV == 13) {
-		pileUpWeights = generateWeights(Spring2015_50ns);
+		pileUpWeights = generateWeights(Startup2015_25ns);
 	}
 
 //	cout << "Pile up weights" << endl;
@@ -127,19 +127,11 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 	double s = 0.0;
 
 	for (unsigned int npu = 0; npu < inputMC.size(); ++npu) {
-		if (npu >= (unsigned int) estimatedPileUp->GetNbinsX())
-			break;
-		if ( npu == 0 ) {
-			DATAdistribution[npu] = 0;
-			weights[npu] = 0;
-			continue;
-		}
-		else {
-			DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));			
-		}
 
-		if (inputMC[npu-1] > 0) {
-			weights[npu] = DATAdistribution[npu] / inputMC[npu-1];
+		DATAdistribution[npu] = estimatedPileUp->GetBinContent(npu+1);
+
+		if (inputMC[npu] > 0) {
+			weights[npu] = DATAdistribution[npu] / inputMC[npu];
 		}
 		else
 			weights[npu] = 0;
