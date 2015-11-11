@@ -167,6 +167,10 @@ void TreeManager::addTreeToFolder(string treeName, string folder, unsigned int d
 	if (!collection_[folder].at(dataType)->contains("PUWeight")) {
 		collection_[folder].at(dataType)->addBranchToTree("PUWeight", "F",
 				collection_[folder].at(dataType)->treeMap_[treeName]);
+		collection_[folder].at(dataType)->addBranchToTree("PUWeight_up", "F",
+				collection_[folder].at(dataType)->treeMap_[treeName]);
+		collection_[folder].at(dataType)->addBranchToTree("PUWeight_down", "F",
+				collection_[folder].at(dataType)->treeMap_[treeName]);
 	}
 }
 

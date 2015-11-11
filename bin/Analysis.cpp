@@ -74,10 +74,13 @@ void Analysis::initiateEvent() {
 
 	treeMan->setCurrentDataType(currentEvent->getDataType());
 
-	// Ignore PU and PDF weights for now
+	double pileUpWeight_up = 1;
+	double pileUpWeight_down = 1;
 	if (!currentEvent->isRealData()) {
 		weight = weights->getWeight(currentEvent->getDataType());
 		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0));
+		pileUpWeight_up = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), 1);
+		pileUpWeight_down = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), -1);
 	}
 	//top pt weight
 	// if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
@@ -93,7 +96,8 @@ void Analysis::initiateEvent() {
 
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);
-
+	currentEvent->setPileUpWeight(pileUpWeight_up, 1);
+	currentEvent->setPileUpWeight(pileUpWeight_down, -1);
 }
 
 void Analysis::inspectEvents() {

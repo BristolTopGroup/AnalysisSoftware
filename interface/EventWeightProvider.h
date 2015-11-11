@@ -45,9 +45,9 @@ private:
 //	bool useSkimEff;
 	boost::array<double, DataType::NUMBER_OF_DATA_TYPES> xsection;
 	boost::array<unsigned long, DataType::NUMBER_OF_DATA_TYPES> numberOfProcessedEvents;
-	boost::shared_ptr<TH1D> estimatedPileUp;
+	boost::shared_ptr<TH1D> estimatedPileUp, estimatedPileUp_up, estimatedPileUp_down;
 	boost::array<double, NWEIGHTSSIZE> DATAdistribution;
-	boost::array<double, NWEIGHTSSIZE> pileUpWeights;
+	boost::array<double, NWEIGHTSSIZE> pileUpWeights, pileUpWeights_up, pileUpWeights_down;
 	unsigned long numberOfEventsWithTooHighPileUp;
 	void defineNumberOfProducedEvents();
 public:
@@ -63,10 +63,10 @@ public:
 	//@deprecated
 	double getWeight(DataType::value type);
 	//@deprecated
-	double reweightPileUp(unsigned int);
+	double reweightPileUp(unsigned int nVertices, int systematic = 0);
 //	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
 	void generate_weights();
-	boost::array<double, NWEIGHTSSIZE> generateWeights(const boost::array<double, NWEIGHTSSIZE>);
+	boost::array<double, NWEIGHTSSIZE> generateWeights(const boost::array<double, NWEIGHTSSIZE>, const boost::shared_ptr<TH1D>);
 	unsigned long getNumberOfEventsWithTooHighPileUp() const;
 
 };
