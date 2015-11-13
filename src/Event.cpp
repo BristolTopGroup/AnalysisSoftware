@@ -116,20 +116,20 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_amcatnloFXFX ||
 		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_PowhegPythia8 ||
-		type == DataType::TTJets_PowhegPythia8_scaledown ||
-		type == DataType::TTJets_PowhegPythia8_scaleup ||
+		// type == DataType::TTJets_PowhegPythia8_scaledown ||
+		// type == DataType::TTJets_PowhegPythia8_scaleup ||
 		type == DataType::TTJets_PowhegPythia8_mtop1695 ||
 		type == DataType::TTJets_PowhegPythia8_mtop1755 ||
 		type == DataType::TTJets_amcatnloFXFX ||
-		type == DataType::TTJets_amcatnloFXFX_scaledown ||
-		type == DataType::TTJets_amcatnloFXFX_scaleup ||
+		// type == DataType::TTJets_amcatnloFXFX_scaledown ||
+		// type == DataType::TTJets_amcatnloFXFX_scaleup ||
 		type == DataType::TTJets_amcatnloFXFX_mtop1695 ||
 		type == DataType::TTJets_amcatnloFXFX_mtop1755 ||
 		type == DataType::TTJets_madgraphMLM ||
-		type == DataType::TTJets_powhegPythia6 ||
+		// type == DataType::TTJets_powhegPythia6 ||
 		// type == DataType::TTJets_PowhegHerwigpp ||
-		type == DataType::TTJets_amcatnloHerwigpp ||
-		type == DataType::TTJets_synch
+		type == DataType::TTJets_amcatnloHerwigpp
+		// type == DataType::TTJets_synch
 		)
 		return true;
 	else

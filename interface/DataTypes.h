@@ -23,23 +23,25 @@ enum value {
 	SingleMuon_ReReco_RunC,
 
 	TTJets_PowhegPythia8,
-	TTJets_PowhegPythia8_scaledown,
-	TTJets_PowhegPythia8_scaleup,
+	// TTJets_PowhegPythia8_scaledown,
+	// TTJets_PowhegPythia8_scaleup,
 	TTJets_PowhegPythia8_mtop1695,
 	TTJets_PowhegPythia8_mtop1755,
 
 	TTJets_amcatnloFXFX,
-	TTJets_amcatnloFXFX_scaledown,
-	TTJets_amcatnloFXFX_scaleup,
+	// TTJets_amcatnloFXFX_scaledown,
+	// TTJets_amcatnloFXFX_scaleup,
 	TTJets_amcatnloFXFX_mtop1695,
 	TTJets_amcatnloFXFX_mtop1755,
 
 	TTJets_madgraphMLM,
-	TTJets_powhegPythia6,
-	TTJets_PowhegHerwigpp,
+
+	// TTJets_powhegPythia6,
+	// TTJets_PowhegHerwigpp,
+
 	TTJets_amcatnloHerwigpp,
 
-	TTJets_synch,
+	// TTJets_synch,
 	DYJetsToLL_M50,
 	WJetsToLNu,
 	// TToLeptons_s,
@@ -91,23 +93,23 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"SingleMuon_ReReco_RunC",
 
 		"TTJets_PowhegPythia8",
-		"TTJets_PowhegPythia8_scaledown",
-		"TTJets_PowhegPythia8_scaleup",
+		// "TTJets_PowhegPythia8_scaledown",
+		// "TTJets_PowhegPythia8_scaleup",
 		"TTJets_PowhegPythia8_mtop1695",
 		"TTJets_PowhegPythia8_mtop1755",
 
 		"TTJets_amcatnloFXFX",
-		"TTJets_amcatnloFXFX_scaledown",
-		"TTJets_amcatnloFXFX_scaleup",
+		// "TTJets_amcatnloFXFX_scaledown",
+		// "TTJets_amcatnloFXFX_scaleup",
 		"TTJets_amcatnloFXFX_mtop1695",
 		"TTJets_amcatnloFXFX_mtop1755",
 
 		"TTJets_madgraphMLM",
-		"TTJets_powhegPythia6",
-		"TTJets_PowhegHerwigpp",
+		// "TTJets_powhegPythia6",
+		// "TTJets_PowhegHerwigpp",
 		"TTJets_amcatnloHerwigpp",
 
-		"TTJets_synch",
+		// "TTJets_synch",
 
 		"DYJetsToLL_M50",
 		"WJetsToLNu",

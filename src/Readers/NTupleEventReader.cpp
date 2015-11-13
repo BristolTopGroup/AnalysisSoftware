@@ -51,11 +51,11 @@ NTupleEventReader::NTupleEventReader() :
 
 
 		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27erWPLooseGsf.Fired")),
-		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20.Fired")),
-		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20er.Fired")),
+		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20er.Fired")),
 		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle27erWP75GsfMC.Fired")),
-		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
-		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
+		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20erMC.Fired")),
+		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20erMC.Fired")),
 		// passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27erWP75GsfMC.Fired")),
 		// passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),		
 
@@ -170,11 +170,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 	else {
 		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
-		std::cout << "E-Channel : " << passesElectronChannelMCTriggerReader->getVariable() << std::endl;
 		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
-		std::cout << "Mu-Channel : " << passesMuonChannelMCTriggerReader->getVariable() << std::endl;
 		currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );
-		std::cout << "TkMu-Channel : " << passesTkMuonChannelMCTriggerReader->getVariable() << std::endl;
 		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
 	}

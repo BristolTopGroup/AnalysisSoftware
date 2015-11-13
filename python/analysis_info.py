@@ -1,16 +1,19 @@
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v1/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v1/'
+
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v2/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v2/'
+
 datasets_13TeV = {
 
             # 'SingleMuon' : [ mc_path_13TeV + 'SingleMuon' ],
             # 'SingleElectron' : [ mc_path_13TeV + 'SingleElectron' ],
 
-            'SingleMuon_PromptRecov4_RunD' : [ mc_path_13TeV + 'SingleMuon_PromptRecov4_RunD' ],
-            'SingleMuon_Rereco_RunD' : [ mc_path_13TeV + 'SingleMuon_Rereco_RunD' ],
-            'SingleMuon_Rereco_RunC' : [ mc_path_13TeV + 'SingleMuon_Rereco_RunC' ],
-            'SingleElectron_PromptRecov4_RunD' : [ mc_path_13TeV + 'SingleElectron_PromptRecov4_RunD' ],
-            'SingleElectron_Rereco_RunD' : [ mc_path_13TeV + 'SingleElectron_Rereco_RunD' ],
-            'SingleElectron_Rereco_RunC' : [ mc_path_13TeV + 'SingleElectron_Rereco_RunC' ],
+
+            'SingleMuon_PromptReco_RunD' : [ mc_path_13TeV + 'SingleMuon_PromptRecov4_RunD' ],
+            'SingleMuon_ReReco_RunD' : [ mc_path_13TeV + 'SingleMuon_ReReco_RunD' ],
+            'SingleMuon_ReReco_RunC' : [ mc_path_13TeV + 'SingleMuon_ReReco_RunC' ],
+            'SingleElectron_PromptReco_RunD' : [ mc_path_13TeV + 'SingleElectron_PromptRecov4_RunD' ],
+            'SingleElectron_ReReco_RunD' : [ mc_path_13TeV + 'SingleElectron_ReReco_RunD' ],
+            'SingleElectron_ReReco_RunC' : [ mc_path_13TeV + 'SingleElectron_ReReco_RunC' ],
 
             'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
             # 'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],

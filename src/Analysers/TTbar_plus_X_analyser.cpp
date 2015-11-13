@@ -26,8 +26,6 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		PileupAnalyserEPlusJetsRefSelection_->analyse(event);
 	}
 
-	if (event->PassesElectronChannelTrigger()) std::cout << "passes electron trigger" << std::endl;
-	if (event->PassesElectronSelection()) std::cout << "passes electron selection" << std::endl;
 
 	// if (topEplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesElectronTriggerAndSelection() ) {
@@ -463,6 +461,9 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserMuPlusJetsRefSelection_->analyse(event);
 	}
+
+
+
 	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesMuonTriggerAndSelection() ) {
 
