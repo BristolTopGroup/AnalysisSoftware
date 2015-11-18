@@ -183,13 +183,12 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 		// 	std::cout << "Gen Particles etc." << std::endl;
 		// 	currentEvent->setGenParticles(genParticleReader->getGenParticles());
-			currentEvent->setGenJets(genJetReader->getGenJets());
-			currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
+		currentEvent->setGenJets(genJetReader->getGenJets());
+		currentEvent->setPseudoTopParticles( pseudoTopReader->getPseudoTopParticles() );
 		// 	currentEvent->setGenNumberOfPileUpVertices(*PileupInfoReader->getVariable());
 		// 	currentEvent->setPDFWeights(*PDFWeightsReader->getVariable());
-
+		currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
 		// 	if (Globals::NTupleVersion >= 6) {
-		// 		currentEvent->setTrueNumberOfPileUpVertices(*TruePileupInfoReader->getVariable());
 		// 		currentEvent->setPUWeightInTimeOnly(PUWeightInTimeOnly_->getVariable());
 		// 		currentEvent->setPUWeight3BX(PUWeight3BX_->getVariable());
 		// 		currentEvent->setPUWeightShiftUp(PUWeightShiftUp_->getVariable());
@@ -367,9 +366,10 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		systematicWeightsReader_->initialiseBlindly();
 		centralLHEWeightReader_->initialiseBlindly();
 
+		TruePileupInfoReader->initialiseBlindly();
+
 		if (Globals::NTupleVersion >= 6) { //MC only info!
 			PileupInfoReader->initialiseBlindly();
-			TruePileupInfoReader->initialiseBlindly();
 			PUWeightInTimeOnly_->initialiseBlindly();
 			PUWeight3BX_->initialiseBlindly();
 			PUWeightShiftUp_->initialiseBlindly();

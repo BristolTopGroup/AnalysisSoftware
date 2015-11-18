@@ -23,6 +23,8 @@ EventWeightProvider::EventWeightProvider(string datasetInformationFile) :
 		xsection(datasetInfo_.getCrossSections()), //
 		numberOfProcessedEvents(datasetInfo_.getArrayOfProcessedEvents()), //
 		estimatedPileUp(Globals::estimatedPileup), //
+		estimatedPileUp_up(Globals::estimatedPileup_up), //
+		estimatedPileUp_down(Globals::estimatedPileup_down), //
 		DATAdistribution(), //
 		pileUpWeights(), //
 		numberOfEventsWithTooHighPileUp(0) {
@@ -41,13 +43,22 @@ double EventWeightProvider::getWeight(DataType::value type) {
 		return xsection[type] * Globals::luminosity / numberOfProcessedEvents[type];
 }
 
-double EventWeightProvider::reweightPileUp(unsigned int numberOfVertices) {
-	if (numberOfVertices >= pileUpWeights.size()) {
+double EventWeightProvider::reweightPileUp(unsigned int numberOfVertices, int systematic ) {
+
+	boost::array<double, NWEIGHTSSIZE>* weights = &pileUpWeights;
+	if ( systematic == -1 ) {
+		weights = &pileUpWeights_down;
+	}
+	else if ( systematic == 1 ) {
+		weights = &pileUpWeights_up;
+	}
+
+	if (numberOfVertices >= weights->size()) {
 		++numberOfEventsWithTooHighPileUp;
 		return 1.;
 	}
 
-	return pileUpWeights.at(numberOfVertices);
+	return weights->at(numberOfVertices);
 }
 
 double EventWeightProvider::reweightTopPt(const EventPtr event) {
@@ -97,15 +108,18 @@ void EventWeightProvider::generate_weights() {
 	 */
 
 	//Needs a flag for 2011 MC tried energyInTeV?
-	if (Globals::energyInTeV == 8) {
-		pileUpWeights = generateWeights(Summer2012);
-	} else if (Globals::energyInTeV == 7 && Globals::NTupleVersion < 11) {
-		pileUpWeights = generateWeights(Fall2011);
-	} else if (Globals::energyInTeV == 7 && Globals::NTupleVersion == 11) {
-		pileUpWeights = generateWeights(Summer11Leg);
-	} else if (Globals::energyInTeV == 13) {
-		pileUpWeights = generateWeights(Spring2015_50ns);
-	}
+	// if (Globals::energyInTeV == 8) {
+	// 	pileUpWeights = generateWeights(Summer2012);
+	// } else if (Globals::energyInTeV == 7 && Globals::NTupleVersion < 11) {
+	// 	pileUpWeights = generateWeights(Fall2011);
+	// } else if (Globals::energyInTeV == 7 && Globals::NTupleVersion == 11) {
+	// 	pileUpWeights = generateWeights(Summer11Leg);
+	// } else if (Globals::energyInTeV == 13) {
+	pileUpWeights = generateWeights(Startup2015_25ns, estimatedPileUp);
+	pileUpWeights_up = generateWeights(Startup2015_25ns, estimatedPileUp_up);
+	pileUpWeights_down = generateWeights(Startup2015_25ns, estimatedPileUp_down);
+
+	// }
 
 //	cout << "Pile up weights" << endl;
 //
@@ -115,31 +129,24 @@ void EventWeightProvider::generate_weights() {
 }
 
 boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
-		const boost::array<double, NWEIGHTSSIZE> inputMC) {
+		const boost::array<double, NWEIGHTSSIZE> inputMC,
+		const boost::shared_ptr<TH1D> dataEstimatedPileUp ) {
 	boost::array<double, NWEIGHTSSIZE> weights;
 
 
-	// Check that integral of estimatedPileUp is 1
-	if ( estimatedPileUp->Integral() != 1 && estimatedPileUp->Integral() != 0 ) {
-		estimatedPileUp->Scale( 1 / estimatedPileUp->Integral() );
+	// Check that integral of dataEstimatedPileUp is 1
+	if ( dataEstimatedPileUp->Integral() != 1 && dataEstimatedPileUp->Integral() != 0 ) {
+		dataEstimatedPileUp->Scale( 1 / dataEstimatedPileUp->Integral() );
 	}
 
 	double s = 0.0;
 
 	for (unsigned int npu = 0; npu < inputMC.size(); ++npu) {
-		if (npu >= (unsigned int) estimatedPileUp->GetNbinsX())
-			break;
-		if ( npu == 0 ) {
-			DATAdistribution[npu] = 0;
-			weights[npu] = 0;
-			continue;
-		}
-		else {
-			DATAdistribution[npu] = estimatedPileUp->GetBinContent(estimatedPileUp->GetXaxis()->FindBin(npu));			
-		}
 
-		if (inputMC[npu-1] > 0) {
-			weights[npu] = DATAdistribution[npu] / inputMC[npu-1];
+		DATAdistribution[npu] = dataEstimatedPileUp->GetBinContent(npu+1);
+
+		if (inputMC[npu] > 0) {
+			weights[npu] = DATAdistribution[npu] / inputMC[npu];
 		}
 		else
 			weights[npu] = 0;
@@ -149,7 +156,7 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 	 * normalize weights such that the total sum of weights over thw whole sample is 1.0,
 	 * i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
 	 */
-	for (unsigned int npu = 0; npu < pileUpWeights.size(); ++npu) {
+	for (unsigned int npu = 0; npu < weights.size(); ++npu) {
 		weights[npu] /= s;
 	}
 

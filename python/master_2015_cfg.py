@@ -17,7 +17,9 @@ default_settings = {
             'MuonScaleFactorSystematic':0,
             'JESsystematic':0,
             'JetSmearingSystematic':0,
-            'PUFile':'PileUp_2015_truth.root',
+            'PUFile':'PileUp_2015_truth_central.root',
+            'PUFile_up':'PileUp_2015_truth_up.root',
+            'PUFile_down':'PileUp_2015_truth_down.root',
             'MuonIdIsoScaleFactorsFile':'nofile.root',
             'TTbarLikelihoodFile' : 'LikelihoodInputAnalyserOutput.root',
             'BTagEfficiencyFile' : 'BTagEfficiency.root',
@@ -40,11 +42,11 @@ analysis_settings = {
                      'JetSmearing_down':{'JetSmearingSystematic':-1},
                      'LightJet_down':{'LightTagSystematic':-1},
                      'LightJet_up':{'LightTagSystematic':1},
-                     'PU_down':{'PUFile':'PileUp_2012_65835_truth_finebin.root',
-                                'custom_file_suffix':'PU_65835mb'
+                     'PU_down':{'PUFile':'PileUp_2015_truth_down.root',
+                                'custom_file_suffix':'PU_down'
                                 },
-                     'PU_up':{'PUFile':'PileUp_2012_72765_truth_finebin.root',
-                              'custom_file_suffix':'PU_72765mb'},
+                     'PU_up':{'PUFile':'PileUp_2015_truth_up.root',
+                              'custom_file_suffix':'PU_up'},
 
                      'Test': {'custom_file_suffix':'TESTING'}
                      }
@@ -101,6 +103,8 @@ if os.environ.has_key('ntupleToProcess'):
 
 #File for pile-up re-weighting
 PUFile = toolsFolder + "data/" + settings['PUFile']
+PUFile_up = toolsFolder + "data/" + settings['PUFile_up']
+PUFile_down = toolsFolder + "data/" + settings['PUFile_down']
 getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
 ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'

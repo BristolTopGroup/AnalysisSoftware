@@ -103,7 +103,7 @@ protected:
 	unsigned long localEventNumber;
 	unsigned long lumiBlock;
 	double eventWeight;
-	double pileUpWeight_;
+	double pileUpWeight_, pileUpWeight_up_, pileUpWeight_down_;
 	double bJetWeight_, bJetUpWeight_, bJetDownWeight_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
@@ -182,7 +182,7 @@ public:
 	void setPassesMETFilters( bool pass );
 	void setLumiBlock(unsigned long block);
 	void setEventWeight(double weight);
-	void setPileUpWeight(double weight);
+	void setPileUpWeight(double weight, int systematic=0);
 	void setBJetWeight(double weight);
 	void setBJetUpWeight(double weight);
 	void setBJetDownWeight(double weight);
@@ -273,7 +273,7 @@ public:
 	unsigned long localnumber() const;
 	unsigned long lumiblock() const;
 	double weight() const;
-	double PileUpWeight() const;
+	double PileUpWeight( int systematic = 0 ) const;
 	double BJetWeight() const;
 	double BJetUpWeight() const;
 	double BJetDownWeight() const;
