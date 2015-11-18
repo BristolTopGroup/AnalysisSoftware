@@ -19,14 +19,18 @@
 datasetInfo = {}
 
 #Data samples
-# datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 # datasetInfo['MuHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleElectron_PromptReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleElectron_ReReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleElectron_ReReco_RunC'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleMuon_PromptReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleMuon_ReReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleMuon_ReReco_RunC'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+
+datasetInfo['SingleElectron'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMuon'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+
+# datasetInfo['SingleElectron_PromptReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+# datasetInfo['SingleElectron_ReReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+# datasetInfo['SingleElectron_ReReco_RunC'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+# datasetInfo['SingleMuon_PromptReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+# datasetInfo['SingleMuon_ReReco_RunD'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+# datasetInfo['SingleMuon_ReReco_RunC'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/TtbarNNLO
 

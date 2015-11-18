@@ -13,14 +13,17 @@
 namespace BAT {
 namespace DataType {
 enum value {
-	// ElectronHad,
+	ElectronHad,
 	// MuHad,
-	SingleElectron_PromptReco_RunD,
-	SingleElectron_ReReco_RunD,
-	SingleElectron_ReReco_RunC,
-	SingleMuon_PromptReco_RunD,
-	SingleMuon_ReReco_RunD,
-	SingleMuon_ReReco_RunC,
+	SingleElectron,
+	SingleMuon,
+
+	// SingleElectron_PromptReco_RunD,
+	// SingleElectron_ReReco_RunD,
+	// SingleElectron_ReReco_RunC,
+	// SingleMuon_PromptReco_RunD,
+	// SingleMuon_ReReco_RunD,
+	// SingleMuon_ReReco_RunC,
 
 	TTJets_PowhegPythia8,
 	// TTJets_PowhegPythia8_scaledown,
@@ -83,14 +86,18 @@ enum value {
 
 const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 //
-		// "ElectronHad",//
+		"ElectronHad",//
 		// "MuHad", //
-		"SingleElectron_PromptReco_RunD",
-		"SingleElectron_ReReco_RunD",
-		"SingleElectron_ReReco_RunC",
-		"SingleMuon_PromptReco_RunD",
-		"SingleMuon_ReReco_RunD",
-		"SingleMuon_ReReco_RunC",
+
+		"SingleElectron",
+		"SingleMuon",
+
+		// "SingleElectron_PromptReco_RunD",
+		// "SingleElectron_ReReco_RunD",
+		// "SingleElectron_ReReco_RunC",
+		// "SingleMuon_PromptReco_RunD",
+		// "SingleMuon_ReReco_RunD",
+		// "SingleMuon_ReReco_RunC",
 
 		"TTJets_PowhegPythia8",
 		// "TTJets_PowhegPythia8_scaledown",

@@ -18,9 +18,9 @@ struct TestSetup {
 		boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
 		for (unsigned int i = 0; i < DataType::NUMBER_OF_DATA_TYPES; ++i)
 			seenDataTypes.at(i) = false;
-		seenDataTypes.at(DataType::SingleElectron_ReReco_RunC) = true;
+		seenDataTypes.at(DataType::ElectronHad) = true;
 		histMan->prepareForSeenDataTypes(seenDataTypes);
-		histMan->setCurrentDataType(DataType::SingleElectron_ReReco_RunC);
+		histMan->setCurrentDataType(DataType::ElectronHad);
 		zero_var_bins.push_back(0);
 		zero_var_bins.push_back(1);
 		zero_var_bins.push_back(5);

@@ -19,7 +19,7 @@ namespace BAT {
 TreeManager::TreeManager() : //
 		seenDataTypes_(), //
 		treeFiles_(), //
-		currentDataType_(DataType::SingleElectron_PromptReco_RunD), //
+		currentDataType_(DataType::ElectronHad), //
 		currentFolder_(""), //
 		collection_() {
 }
@@ -36,7 +36,7 @@ void TreeManager::addBranch(std::string branchLabel, std::string varType, std::s
 	}
 
 
-	for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes_.at(type)) {
 			if (  collection_[currentFolder_][type]->treeMap_.find(treeName) == collection_[currentFolder_][type]->treeMap_.end() ) {
 				addTreeToFolder(treeName, currentFolder_, type);
@@ -57,7 +57,7 @@ void TreeManager::Fill(std::string branchLabel, float fillValue) {
 void TreeManager::FillTrees() {
 	// Loop over all known trees, and call "Fill"
 	for ( boost::unordered_map<std::string, TBranchArray>::const_iterator dirIter = collection_.begin(); dirIter != collection_.end(); ++dirIter ) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes_.at(type)) {
 
 				for ( boost::unordered_map<std::string, boost::shared_ptr<TTree>>::const_iterator iter = dirIter->second[type]->treeMap_.begin(); iter != dirIter->second[type]->treeMap_.end(); ++iter) {
