@@ -13,8 +13,8 @@
 namespace BAT {
 namespace DataType {
 enum value {
-	ElectronHad,
-	MuHad,
+	// ElectronHad,
+	// MuHad,
 	SingleElectron_PromptReco_RunD,
 	SingleElectron_ReReco_RunD,
 	SingleElectron_ReReco_RunC,
@@ -83,8 +83,8 @@ enum value {
 
 const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 //
-		"ElectronHad",//
-		"MuHad", //
+		// "ElectronHad",//
+		// "MuHad", //
 		"SingleElectron_PromptReco_RunD",
 		"SingleElectron_ReReco_RunD",
 		"SingleElectron_ReReco_RunC",
