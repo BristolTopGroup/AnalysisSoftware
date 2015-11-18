@@ -7,13 +7,22 @@ datasets_13TeV = {
             # 'SingleMuon' : [ mc_path_13TeV + 'SingleMuon' ],
             # 'SingleElectron' : [ mc_path_13TeV + 'SingleElectron' ],
 
+            'SingleMuon' : [ mc_path_13TeV + 'SingleMuon_PromptRecov4_RunD',
+                            mc_path_13TeV + 'SingleMuon_ReReco_RunD',
+                            mc_path_13TeV + 'SingleMuon_ReReco_RunC'
+                            ],
 
-            'SingleMuon_PromptReco_RunD' : [ mc_path_13TeV + 'SingleMuon_PromptRecov4_RunD' ],
-            'SingleMuon_ReReco_RunD' : [ mc_path_13TeV + 'SingleMuon_ReReco_RunD' ],
-            'SingleMuon_ReReco_RunC' : [ mc_path_13TeV + 'SingleMuon_ReReco_RunC' ],
-            'SingleElectron_PromptReco_RunD' : [ mc_path_13TeV + 'SingleElectron_PromptRecov4_RunD' ],
-            'SingleElectron_ReReco_RunD' : [ mc_path_13TeV + 'SingleElectron_ReReco_RunD' ],
-            'SingleElectron_ReReco_RunC' : [ mc_path_13TeV + 'SingleElectron_ReReco_RunC' ],
+            'SingleElectron' : [ mc_path_13TeV + 'SingleElectron_PromptRecov4_RunD',
+                                mc_path_13TeV + 'SingleElectron_ReReco_RunD',
+                                mc_path_13TeV + 'SingleElectron_ReReco_RunC'
+                                ],
+
+            # 'SingleMuon_PromptReco_RunD' : [ mc_path_13TeV + 'SingleMuon_PromptRecov4_RunD' ],
+            # 'SingleMuon_ReReco_RunD' : [ mc_path_13TeV + 'SingleMuon_ReReco_RunD' ],
+            # 'SingleMuon_ReReco_RunC' : [ mc_path_13TeV + 'SingleMuon_ReReco_RunC' ],
+            # 'SingleElectron_PromptReco_RunD' : [ mc_path_13TeV + 'SingleElectron_PromptRecov4_RunD' ],
+            # 'SingleElectron_ReReco_RunD' : [ mc_path_13TeV + 'SingleElectron_ReReco_RunD' ],
+            # 'SingleElectron_ReReco_RunC' : [ mc_path_13TeV + 'SingleElectron_ReReco_RunC' ],
 
             'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
             # 'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],

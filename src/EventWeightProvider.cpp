@@ -37,7 +37,7 @@ EventWeightProvider::~EventWeightProvider() {
 }
 
 double EventWeightProvider::getWeight(DataType::value type) {
-	if (type <= DataType::SingleMuon_ReReco_RunD)
+	if (type <= DataType::SingleMuon)
 		return 1.;
 	else
 		return xsection[type] * Globals::luminosity / numberOfProcessedEvents[type];
