@@ -1,7 +1,11 @@
+'''
+Run this over new ntuples to get the number of processed events from crab. 
+This serves as an input into DataSetInfo_13TeV_25ns.py
+'''
+
 import ROOT 
 from ROOT import gROOT, TFile, TH1F
 import math
-
 
 import os
 import glob
