@@ -74,34 +74,21 @@ void Analysis::initiateEvent() {
 
 	treeMan->setCurrentDataType(currentEvent->getDataType());
 
-	// Ignore PU and PDF weights for now
+	double pileUpWeight_up = 1;
+	double pileUpWeight_down = 1;
 	if (!currentEvent->isRealData()) {
 		weight = weights->getWeight(currentEvent->getDataType());
-	// 	//TODO: fix this dirty little thing
-	//	std::cout << "Getting PU weight" << std::endl;
-	// 	pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(1));
-		pileUpWeight = weights->reweightPileUp(currentEvent->Vertices().size());
-	// 	weight *= pileUpWeight;
-	// 	if (Globals::pdfWeightNumber != 0) {
-	// 		try {
-	// 			double pdf_weight(currentEvent->PDFWeights().at(Globals::pdfWeightNumber) / currentEvent->PDFWeights().at(0));
-	// 			weight *= pdf_weight;
-
-	// 			histMan->setCurrentHistogramFolder("");
-	// 			histMan->H1D("PDFweights")->Fill(pdf_weight);
-	// 		} catch (exception& e) {
-	// 			cout << "PDF weight assigning exception: " << e.what() << endl;
-	// 		}
-	// 	}
+		pileUpWeight = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0));
+		pileUpWeight_up = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), 1);
+		pileUpWeight_down = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), -1);
 	}
-
 	//top pt weight
-	if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
-		double topPtweight = 1.;
-		topPtweight = weights->reweightTopPt(currentEvent);
+	// if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
+	// 	double topPtweight = 1.;
+	// 	topPtweight = weights->reweightTopPt(currentEvent);
 
-		weight *= topPtweight;
-	}
+	// 	weight *= topPtweight;
+	// }
 
 	// include generator weight
 	// 1, except for amcatnlo samples (so far?)
@@ -110,7 +97,8 @@ void Analysis::initiateEvent() {
 
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);
-
+	currentEvent->setPileUpWeight(pileUpWeight_up, 1);
+	currentEvent->setPileUpWeight(pileUpWeight_down, -1);
 }
 
 void Analysis::inspectEvents() {

@@ -68,6 +68,8 @@ Event::Event() : //
 		lumiBlock(0), //
 		eventWeight(1.), //
 		pileUpWeight_(1.), //
+		pileUpWeight_up_(1.), //
+		pileUpWeight_down_(1.), //
 		bJetWeight_(1.), //
 		bJetUpWeight_(1.), //
 		bJetDownWeight_(1.), //
@@ -863,8 +865,16 @@ void Event::setEventWeight(double weight) {
 	eventWeight = weight;
 }
 
-void Event::setPileUpWeight(double weight) {
-	pileUpWeight_ = weight;
+void Event::setPileUpWeight(double weight, int systematic ) {
+	if ( systematic == 0 ) {
+		pileUpWeight_ = weight;
+	}
+	else if ( systematic == -1 ) {
+		pileUpWeight_down_ = weight;
+	}
+	else if ( systematic == 1 ) {
+		pileUpWeight_up_ = weight;
+	}
 }
 
 void Event::setBJetWeight(double weight) {
@@ -969,8 +979,18 @@ double Event::weight() const {
 	return eventWeight;
 }
 
-double Event::PileUpWeight() const {
-	return pileUpWeight_;
+double Event::PileUpWeight( int systematic ) const {
+	if ( systematic == 0 ) {
+		return pileUpWeight_;
+	}
+	else if ( systematic == 1 ) {
+		return pileUpWeight_up_;
+	}
+	else if ( systematic == -1 ) {
+		return pileUpWeight_down_;
+	}
+
+	return 1.;
 }
 
 double Event::BJetWeight() const {

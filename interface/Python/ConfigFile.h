@@ -32,6 +32,8 @@ public:
 	long maxEvents() const;
 	std::string datasetInfoFile() const;
 	std::string PUFile() const;
+	std::string PUFile_up() const;
+	std::string PUFile_down() const;
 	std::string TTbarLikelihoodFile() const;
 	std::string BTagEfficiencyFile() const;
 	std::string MuonIdIsoScaleFactorsFile() const;
@@ -74,7 +76,7 @@ private:
 	boost::python::object config;
 	long maxEvents_;
 	std::string datasetInfoFile_;
-	std::string pileUpFile_;
+	std::string pileUpFile_, pileUpFile_up_, pileUpFile_down_;
 	std::string ttbarLikelihoodFile_;
 	std::string btagEfficiencyFile_;
 	bool getMuonScaleFactorsFromFile_;

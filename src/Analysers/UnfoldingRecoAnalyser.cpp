@@ -77,6 +77,8 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	}
 
 	treeMan_->Fill("PUWeight", event->PileUpWeight() );
+	treeMan_->Fill("PUWeight_up", event->PileUpWeight(1) );
+	treeMan_->Fill("PUWeight_down", event->PileUpWeight(-1) );
 	treeMan_->Fill("BJetWeight",event->BJetWeight());
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
