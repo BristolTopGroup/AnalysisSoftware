@@ -32,7 +32,8 @@ public:
 	TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis");
 	virtual ~TTbar_plus_X_analyser();
 	virtual void analyse(const EventPtr);
-	virtual void createHistograms();
+	virtual void createTrees();
+	virtual void createHistograms() {};
 	void ePlusJetsQcdAnalysis(const EventPtr);
 	void muPlusJetsQcdAnalysis(const EventPtr);
 	void ePlusJetsSignalAnalysis(const EventPtr);

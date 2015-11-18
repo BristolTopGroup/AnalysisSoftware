@@ -330,12 +330,6 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
 		}
 
-		// histMan_->setCurrentBJetBin(numberOfBjets);
-		// histMan_->H1D("BTagWeights")->Fill(bjetWeight);
-		// histMan_->H1D("N_BJets_reweighted")->Fill(numberOfBjets, event->weight() * bjetWeight * efficiencyCorrection);
-		// histMan_->H1D("N_BJets")->Fill(numberOfBjets, event->weight() * efficiencyCorrection);
-
-
 		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
 		const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
@@ -503,17 +497,7 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 	}
 }
 
-void TTbar_plus_X_analyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/EPlusJets/Ref selection");
-	histMan_->addH1D("N_BJets", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
-	histMan_->addH1D("N_BJets_reweighted", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
-	histMan_->addH1D("BTagWeights", "BTag weights; BTag weight; Events", 300, -1, 2);
-
-	histMan_->setCurrentHistogramFolder(histogramFolder_ + "/MuPlusJets/Ref selection");
-	histMan_->addH1D("N_BJets", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
-	histMan_->addH1D("N_BJets_reweighted", "# of b-Jets; # of b-Jet; Events", 11, -0.5, 10.5);
-	histMan_->addH1D("BTagWeights", "BTag weights; BTag weight; Events", 300, -1, 2);
-
+void TTbar_plus_X_analyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Ref selection");
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
