@@ -16,7 +16,7 @@ namespace BAT {
 HistogramManager::HistogramManager() : //
 		seenDataTypes(), //
 		histFiles(), //
-		currentDataType(DataType::SingleElectron_PromptReco_RunD), //
+		currentDataType(DataType::ElectronHad), //
 		currentJetbin(0), //
 		currentBJetbin(0), //
 		currentHistogramFolder(""), //
@@ -35,7 +35,7 @@ void HistogramManager::addH1D(std::string name, std::string title, unsigned int 
 	if (collection1D.find(currentHistogramFolder) == collection1D.end())
 		addHistogramFolder(currentHistogramFolder);
 
-	for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes.at(type)) {
 			collection1D[currentHistogramFolder][type]->add(name, title, numberOfBins, xmin, xmax);
 		}
@@ -48,7 +48,7 @@ void HistogramManager::addH1D(std::string name, std::string title, unsigned int 
 	if (collection1D.find(currentHistogramFolder) == collection1D.end())
 		addHistogramFolder(currentHistogramFolder);
 
-	for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes.at(type)) {
 			collection1D[currentHistogramFolder][type]->add(name, title, numberOfBins, xbins);
 		}
@@ -59,7 +59,7 @@ void HistogramManager::addH1D_JetBinned(std::string name, std::string title, uns
 		float xmax) {
 
 	for (unsigned short jetbin = 0; jetbin < JetBin::NUMBER_OF_JET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << JetBin::names[jetbin];
@@ -72,7 +72,7 @@ void HistogramManager::addH1D_JetBinned(std::string name, std::string title, uns
 
 void HistogramManager::addH1D_JetBinned(std::string name, std::string title, unsigned int numberOfBins, float *xbins) {
 	for (unsigned short jetbin = 0; jetbin < JetBin::NUMBER_OF_JET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << JetBin::names[jetbin];
@@ -86,7 +86,7 @@ void HistogramManager::addH1D_JetBinned(std::string name, std::string title, uns
 void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, unsigned int numberOfBins, float xmin,
 		float xmax) {
 	for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << BJetBin::names[jetbin];
@@ -99,7 +99,7 @@ void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, un
 
 void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, unsigned int numberOfBins, float *xbins) {
 	for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << BJetBin::names[jetbin];
@@ -113,7 +113,7 @@ void HistogramManager::addH1D_BJetBinned(std::string name, std::string title, un
 void HistogramManager::addH2D_BJetBinned(std::string name, std::string title, unsigned int nXBins, float xmin,
 		float xmax, unsigned int nYBins, float ymin, float ymax) {
 	for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << BJetBin::names[jetbin];
@@ -127,7 +127,7 @@ void HistogramManager::addH2D_BJetBinned(std::string name, std::string title, un
 void HistogramManager::addH2D_JetBinned(std::string name, std::string title, unsigned int nXBins, float xmin,
 		float xmax, unsigned int nYBins, float ymin, float ymax) {
 	for (unsigned short jetbin = 0; jetbin < JetBin::NUMBER_OF_JET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << JetBin::names[jetbin];
@@ -146,7 +146,7 @@ void HistogramManager::addH2D(std::string name, std::string title, unsigned int 
 	if (collection2D.find(currentHistogramFolder) == collection2D.end())
 		addHistogramFolder(currentHistogramFolder);
 
-	for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes.at(type)) {
 			collection2D[currentHistogramFolder][type]->add(name, title, nXBins, xmin, xmax, nYBins, ymin, ymax);
 		}
@@ -158,7 +158,7 @@ void HistogramManager::addH3D_BJetBinned(std::string name, std::string title, un
 		float xmax, unsigned int nYBins, float ymin, float ymax, unsigned int nZBins, float zmin, float zmax) {
 
 	for (unsigned short jetbin = 0; jetbin < BJetBin::NUMBER_OF_BJET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << BJetBin::names[jetbin];
@@ -172,7 +172,7 @@ void HistogramManager::addH3D_BJetBinned(std::string name, std::string title, un
 void HistogramManager::addH3D_JetBinned(std::string name, std::string title, unsigned int nXBins, float xmin,
 		float xmax, unsigned int nYBins, float ymin, float ymax, unsigned int nZBins, float zmin, float zmax) {
 	for (unsigned short jetbin = 0; jetbin < JetBin::NUMBER_OF_JET_BINS; ++jetbin) {
-		for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+		for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 			if (seenDataTypes.at(type)) {
 				std::stringstream tmp_name, tmp_title;
 				tmp_name << name << "_" << JetBin::names[jetbin];
@@ -191,7 +191,7 @@ void HistogramManager::addH3D(std::string name, std::string title, unsigned int 
 	if (collection3D.find(currentHistogramFolder) == collection3D.end())
 		addHistogramFolder(currentHistogramFolder);
 
-	for (unsigned short type = DataType::SingleElectron_PromptReco_RunD; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
+	for (unsigned short type = DataType::ElectronHad; type < DataType::NUMBER_OF_DATA_TYPES; ++type) {
 		if (seenDataTypes.at(type)) {
 			collection3D[currentHistogramFolder][type]->add(name, title, nXBins, xmin, xmax, nYBins, ymin, ymax, nZBins,
 					zmin, zmax);

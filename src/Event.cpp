@@ -61,7 +61,7 @@ Event::Event() : //
 		mets_(), //
 		genMet_(), //
 		ttbarHypothesis_(), //
-		dataType(DataType::SingleElectron_PromptReco_RunD), //
+		dataType(DataType::ElectronHad), //
 		runNumber(0), //
 		eventNumber(0), //
 		localEventNumber(0), //
@@ -100,10 +100,7 @@ Event::~Event() {
 }
 
 bool Event::isRealData() const {
-	return  dataType == DataType::SingleElectron_PromptReco_RunD || dataType == DataType::SingleMuon_PromptReco_RunD ||
-			dataType == DataType::SingleElectron_ReReco_RunD || dataType == DataType::SingleMuon_ReReco_RunD ||
-			dataType == DataType::SingleElectron_ReReco_RunC || dataType == DataType::SingleMuon_ReReco_RunC;
-			// dataType == DataType::ElectronHad || dataType == DataType::MuHad ||
+	return  dataType == DataType::SingleElectron || dataType == DataType::SingleMuon;
 }
 
 const DataType::value Event::getDataType() const {
