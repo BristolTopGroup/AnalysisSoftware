@@ -28,10 +28,7 @@
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
 //Analysers
-#include "../interface/Analysers/BJetAnalyser.h"
-#include "../interface/Analysers/METAnalyser.h"
 #include "../interface/Analysers/TTbar_plus_X_analyser.h"
-#include "../interface/Analysers/VertexAnalyser.h"
 #include "../interface/TopPairEventCandidate.h"
 
 #include "../interface/Analysers/PseudoTopAnalyser.h"
@@ -45,12 +42,11 @@ private:
     BAT::EventPtr currentEvent;
     boost::shared_ptr<BAT::HistogramManager> histMan;
     boost::shared_ptr<BAT::TreeManager> treeMan;
-    std::vector<BAT::InterestingEvent> interestingEvents, brokenEvents;
+    std::vector<BAT::InterestingEvent> interestingEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
     boost::shared_ptr<BAT::EventWeightProvider> weights;
     float weight, pileUpWeight;
 
-    boost::scoped_ptr<BAT::METAnalyser> metAnalyser;
     BAT::TTbar_plus_X_analyser_local_ptr ttbar_plus_X_analyser_;
     boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
 
@@ -79,7 +75,6 @@ private:
     void inspectEvents();
     void createHistograms();
     void checkForDuplicatedEvents();
-    void checkForBrokenEvents();
 };
 
 #endif /* ANALYSIS_H_ */
