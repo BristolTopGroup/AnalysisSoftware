@@ -484,8 +484,6 @@ void ConfigFile::loadIntoMemory() {
 	//Lepton Scale Factors
 	Globals::ElectronScaleFactorSystematic = electronScaleFactorSystematic();
 	Globals::MuonScaleFactorSystematic = muonScaleFactorSystematic();
-	std::cout << "ConfigFile.cpp: Globals::ElectronScaleFactorSystematic = " << Globals::ElectronScaleFactorSystematic << std::endl;
-	std::cout << "ConfigFile.cpp: Globals::MuonScaleFactorSystematic = " << Globals::MuonScaleFactorSystematic << std::endl;
 
 	if ( getMuonScaleFactorsFromFile_ && boost::filesystem::exists(MuonTriggerScaleFactorsFile()) && boost::filesystem::exists(MuonIdIsoScaleFactorsFile()) ) {
 		std::cout << "Getting muon scale factors from files " << MuonIdIsoScaleFactorsFile() << " and " << MuonTriggerScaleFactorsFile()  << "." << std::endl;
