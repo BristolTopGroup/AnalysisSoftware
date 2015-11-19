@@ -88,12 +88,10 @@ void setConfiguration(ConfigFile config) {
 	cout << "Using config-file '" << config.configPath() << endl;
 	cout << "Using Dataset info file:  '" << config.datasetInfoFile() << endl;
 	cout << "Using pileup-file '" << config.PUFile() << endl;
-	// cout << "Using L7 jet energy corrections: " << config.bJetResoFile() << ", ";
-	// cout << config.lightJetResoFile() << endl;
 	if (config.jesSystematic()!=0)
 		cout << "Varying all the jets by " << config.jesSystematic() << " sigma(s) (JEC uncertainty)\n";
 	long maxEvents(config.maxEvents());
-	cout << "Maximal number of events to be processed: ";
+	cout << "Maximum number of events to be processed: ";
 	if (maxEvents > 0)
 		cout << maxEvents << ".\n";
 	else

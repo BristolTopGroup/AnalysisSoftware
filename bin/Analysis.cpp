@@ -13,12 +13,8 @@
 #include "../interface/EventCounter.h"
 #include <cmath>
 #include <math.h>
-#include "../interface/ReconstructionModules/ChiSquaredBasedTopPairReconstruction.h"
-#include "../interface/LumiReWeighting.h"
 #include "../interface/GlobalVariables.h"
-#include "../interface/BTagWeight.h"
 
-using namespace reweight;
 using namespace BAT;
 using namespace std;
 
@@ -82,13 +78,6 @@ void Analysis::initiateEvent() {
 		pileUpWeight_up = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), 1);
 		pileUpWeight_down = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), -1);
 	}
-	//top pt weight
-	// if(Globals::applyTopPtReweighting == true && currentEvent->getDataType() == DataType::TTJets_amcatnloFXFX){
-	// 	double topPtweight = 1.;
-	// 	topPtweight = weights->reweightTopPt(currentEvent);
-
-	// 	weight *= topPtweight;
-	// }
 
 	// include generator weight
 	// 1, except for amcatnlo samples (so far?)
@@ -121,34 +110,22 @@ void Analysis::printInterestingEvents() {
 }
 
 void Analysis::printSummary() {
-	cout << "total number of processed events: " << eventReader->getNumberOfProccessedEvents() << endl;
-	cout << "number of events without electrons: " << brokenEvents.size() << endl;
-	cout << "number of events with too high pileup: " << weights->getNumberOfEventsWithTooHighPileUp() << endl;
+	cout << "Total number of processed events: " << eventReader->getNumberOfProccessedEvents() << endl;
 }
 
 void Analysis::createHistograms() {
 	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 	treeMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
-	unsigned int numberOfHistograms(0), lastNumberOfHistograms(0);
+	ttbar_plus_X_analyser_->createTrees();
 
-	ttbar_plus_X_analyser_->createHistograms();
-	numberOfHistograms = histMan->size();
-	cout << "Number of histograms added by ttbar_plus_X_analyser: " << numberOfHistograms - lastNumberOfHistograms
-			<< endl;
-	lastNumberOfHistograms = numberOfHistograms;
+	pseudoTopAnalyser_->createTrees();
+	unfoldingRecoAnalyser_->createTrees();
 
-		pseudoTopAnalyser_->createTrees();
-		unfoldingRecoAnalyser_->createTrees();
 	if ( Globals::treePrefix_ == "" ) {
 		partonAnalyser_->createTrees();
 		likelihoodInputAnalyser_->createTrees();
 	}
-
-	histMan->setCurrentHistogramFolder("");
-	histMan->addH1D("PDFweights", "PDF weights", 1000, 0.8, 1.2);
-
-	cout << "Total number of histograms: " << histMan->size() << endl;
 }
 
 Analysis::Analysis(std::string datasetInfoFile) : //
@@ -157,14 +134,11 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		histMan(new BAT::HistogramManager()), //
 		treeMan(new BAT::TreeManager()), //
 		interestingEvents(), //
-		brokenEvents(), //
 		eventCheck(), //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-		metAnalyser(new METAnalyser(histMan, treeMan)), //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
-		vertexAnalyser(new VertexAnalyser(histMan)),
 		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)),
 		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)),
 		partonAnalyser_(new PartonAnalyser(histMan, treeMan)),
