@@ -33,6 +33,8 @@ public:
 	virtual ~TTbar_plus_X_analyser();
 	virtual void analyse(const EventPtr);
 	virtual void createTrees();
+	void createCommonTrees( std::string folder );
+	void fillCommonTrees(const EventPtr event,  const unsigned int selection, std::string folder );
 	virtual void createHistograms() {};
 	void ePlusJetsQcdAnalysis(const EventPtr);
 	void muPlusJetsQcdAnalysis(const EventPtr);
