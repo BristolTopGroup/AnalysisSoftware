@@ -19,89 +19,13 @@ void TTbar_plus_X_analyser::analyse(const EventPtr event) {
 	muPlusJetsQcdAnalysis(event);
 }
 
-void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event,  const unsigned int selectionCriteria, std::string folder ) {
-	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
-
-	// Jets
-	const JetCollection jets(event->CleanedJets());
-	// B Jets
-	unsigned int numberOfBjets = event->getNBJets( selection );
-	const JetCollection bJets(event->CleanedBJets());
-	// Lepton
-	const LeptonPointer signalLepton = event->getSignalLepton( selection );
-
-	// MET
-	const METPointer MET_original(event->MET((METAlgorithm::value) 0));
-	const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
-
-	treeMan_->setCurrentFolder(folder);
-	treeMan_->Fill("EventWeight", event->weight());
-	treeMan_->Fill("PUWeight", event->PileUpWeight());
-	treeMan_->Fill("PUWeight_up", event->PileUpWeight(1));
-	treeMan_->Fill("PUWeight_down", event->PileUpWeight(-1));
-	treeMan_->Fill("lepton_eta",signalLepton->eta());
-	treeMan_->Fill("lepton_pt",signalLepton->pt());
-	treeMan_->Fill("lepton_charge",signalLepton->charge());
-	treeMan_->Fill("M3",Event::M3(jets));
-	if ( numberOfBjets > 0 ) {
-		treeMan_->Fill("M_bl",Event::M_bl(bJets, signalLepton));
-		treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalLepton));
-	}
-	treeMan_->Fill("HT",Event::HT(jets));
-	treeMan_->Fill("MET",MET_original->et());
-	treeMan_->Fill("METNoHF",METNoHF->et());
-	treeMan_->Fill("ST",Event::ST(jets, signalLepton, MET_original));
-	treeMan_->Fill("STNoHF",Event::ST(jets, signalLepton, METNoHF));
-	treeMan_->Fill("WPT",Event::WPT(signalLepton, MET_original));
-	treeMan_->Fill("WPTNoHF",Event::WPT(signalLepton, METNoHF));
-	treeMan_->Fill("MT",Event::MT(signalLepton, MET_original));
-	treeMan_->Fill("NJets",Event::NJets(jets));
-	treeMan_->Fill("NBJets",Event::NJets(bJets));
-	treeMan_->Fill("NVertices",	event->Vertices().size());
-
-	treeMan_->Fill("BJetWeight",event->BJetWeight());
-	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
-	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
-
-	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
-		double electronEfficiencyCorrection = 1, electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
-		if ( !event->isRealData() ) {
-			const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
-			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
-			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
-			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
-		}
-		treeMan_->Fill("ElectronEfficiencyCorrection",electronEfficiencyCorrection);
-		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
-		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
-	}
-	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
-		double muonEfficiencyCorrection = 1, muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
-		if ( !event->isRealData() ) {
-			const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
-			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
-			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
-		}
-		treeMan_->Fill("MuonEfficiencyCorrection",muonEfficiencyCorrection);
-		treeMan_->Fill("MuonUp",muonEfficiencyCorrection_up);
-		treeMan_->Fill("MuonDown",muonEfficiencyCorrection_down);
-	}
-
-	// MET Uncertainties
-	for ( unsigned int unc_i = 0; unc_i < METNoHF->getAllMETUncertainties().size(); ++unc_i ) {
-		METPointer METForUnc_i = METNoHF->getMETForUncertainty( unc_i );
-		treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());
-		treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalLepton, METForUnc_i));
-		treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalLepton, METForUnc_i));
-	}
-}
-
 void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 
 	if (event->PassesElectronTriggerAndSelectionNoB()){
 		BTagEffAnalyserEPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserEPlusJetsRefSelection_->analyse(event);
+
+		fillCommonTreesNoBSelection( event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Ref selection NoBSelection" );
 	}
 
 	if ( event->PassesElectronTriggerAndSelection() ) {
@@ -222,6 +146,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 	if (event->PassesMuonTriggerAndSelectionNoB()){
 		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserMuPlusJetsRefSelection_->analyse(event);
+	
+		fillCommonTreesNoBSelection( event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection" );
 	}
 
 	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
@@ -300,6 +226,108 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 	}
 }
 
+void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event,  const unsigned int selectionCriteria, std::string folder ) {
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+	// Jets
+	const JetCollection jets(event->CleanedJets());
+	// B Jets
+	unsigned int numberOfBjets = event->getNBJets( selection );
+	const JetCollection bJets(event->CleanedBJets());
+	// Lepton
+	const LeptonPointer signalLepton = event->getSignalLepton( selection );
+
+	// MET
+	const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+	const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
+
+	treeMan_->setCurrentFolder(folder);
+	treeMan_->Fill("EventWeight", event->weight());
+	treeMan_->Fill("PUWeight", event->PileUpWeight());
+	treeMan_->Fill("PUWeight_up", event->PileUpWeight(1));
+	treeMan_->Fill("PUWeight_down", event->PileUpWeight(-1));
+	treeMan_->Fill("lepton_eta",signalLepton->eta());
+	treeMan_->Fill("lepton_pt",signalLepton->pt());
+	treeMan_->Fill("lepton_charge",signalLepton->charge());
+	treeMan_->Fill("M3",Event::M3(jets));
+	if ( numberOfBjets > 0 ) {
+		treeMan_->Fill("M_bl",Event::M_bl(bJets, signalLepton));
+		treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalLepton));
+	}
+	treeMan_->Fill("HT",Event::HT(jets));
+	treeMan_->Fill("MET",MET_original->et());
+	treeMan_->Fill("METNoHF",METNoHF->et());
+	treeMan_->Fill("ST",Event::ST(jets, signalLepton, MET_original));
+	treeMan_->Fill("STNoHF",Event::ST(jets, signalLepton, METNoHF));
+	treeMan_->Fill("WPT",Event::WPT(signalLepton, MET_original));
+	treeMan_->Fill("WPTNoHF",Event::WPT(signalLepton, METNoHF));
+	treeMan_->Fill("MT",Event::MT(signalLepton, MET_original));
+	treeMan_->Fill("NJets",Event::NJets(jets));
+	treeMan_->Fill("NBJets",Event::NJets(bJets));
+	treeMan_->Fill("NVertices",	event->Vertices().size());
+
+	treeMan_->Fill("BJetWeight",event->BJetWeight());
+	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+
+	fillLeptonEfficiencyCorrectionBranches( event, selectionCriteria, signalLepton );	
+}
+
+void TTbar_plus_X_analyser::fillCommonTreesNoBSelection(const EventPtr event,  const unsigned int selectionCriteria, std::string folder ) {
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+
+	// Jets
+	const JetCollection jets(event->CleanedJets());
+	// B Jets
+	const JetCollection bJets(event->CleanedBJets());
+	// Lepton
+	const LeptonPointer signalLepton = event->getSignalLepton( selection );
+
+	treeMan_->setCurrentFolder(folder);
+	treeMan_->Fill("EventWeight", event->weight());
+	treeMan_->Fill("PUWeight", event->PileUpWeight());
+	treeMan_->Fill("PUWeight_up", event->PileUpWeight(1));
+	treeMan_->Fill("PUWeight_down", event->PileUpWeight(-1));
+
+	treeMan_->Fill("NJets",Event::NJets(jets));
+	treeMan_->Fill("NBJets",Event::NJets(bJets));
+	treeMan_->Fill("NVertices",	event->Vertices().size());
+
+	treeMan_->Fill("BJetWeight",event->BJetWeight());
+	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
+	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+
+	fillLeptonEfficiencyCorrectionBranches( event, selectionCriteria, signalLepton );	
+}
+
+void TTbar_plus_X_analyser::fillLeptonEfficiencyCorrectionBranches( const EventPtr event, const unsigned int selectionCriteria, const LeptonPointer signalLepton ) {
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
+		double electronEfficiencyCorrection = 1, electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
+		if ( !event->isRealData() ) {
+			const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
+			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
+			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
+		}
+		treeMan_->Fill("ElectronEfficiencyCorrection",electronEfficiencyCorrection);
+		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
+		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
+	}
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
+		double muonEfficiencyCorrection = 1, muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
+		if ( !event->isRealData() ) {
+			const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
+			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
+			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
+		}
+		treeMan_->Fill("MuonEfficiencyCorrection",muonEfficiencyCorrection);
+		treeMan_->Fill("MuonUp",muonEfficiencyCorrection_up);
+		treeMan_->Fill("MuonDown",muonEfficiencyCorrection_down);
+	}
+}
+
 void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->setCurrentFolder(folder);
 
@@ -341,6 +369,23 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 }
 
+void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
+	treeMan_->setCurrentFolder(folder);
+
+	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("NVertices", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+}
+
 void TTbar_plus_X_analyser::createTrees() {
 	createCommonTrees(histogramFolder_ + "/EPlusJets/Ref selection");
 	createCommonTrees(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
@@ -348,6 +393,9 @@ void TTbar_plus_X_analyser::createTrees() {
 
 	createCommonTrees(histogramFolder_ + "/MuPlusJets/Ref selection");
 	createCommonTrees(histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets");
+
+	createCommonNoBSelectionTrees(histogramFolder_ + "/EPlusJets/Ref selection NoBSelection");
+	createCommonNoBSelectionTrees(histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection");
 
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();
