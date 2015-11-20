@@ -37,12 +37,12 @@ void Analysis::analyse() {
 		// Check if MET fitlers are satisfied
 		// cout << currentEvent->passesMETFilters() << endl;
 		// if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
-
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 			if ( Globals::treePrefix_ == "" ) {
+
 				partonAnalyser_->analyse(currentEvent);
 			}
 			// likelihoodInputAnalyser_->analyse(currentEvent);
@@ -63,7 +63,8 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 
 void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
-	weight = 1.;
+	pileUpWeight=1.;
+	weight=1;
 	histMan->setCurrentDataType(currentEvent->getDataType());
 	histMan->setCurrentJetBin(currentEvent->Jets().size());
 	histMan->setCurrentBJetBin(0);
@@ -82,6 +83,7 @@ void Analysis::initiateEvent() {
 	// include generator weight
 	// 1, except for amcatnlo samples (so far?)
 	weight *= currentEvent->generatorWeight() / fabs( currentEvent->generatorWeight() );
+
 
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);

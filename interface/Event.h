@@ -36,9 +36,10 @@ namespace SelectionCriteria {
 enum selection {
 	MuonPlusJetsReference = 1,
 	ElectronPlusJetsReference = 2,
-	MuonPlusJetsQCDNonIsolated = 3,
-	ElectronPlusJetsQCDNonIsolated = 4,
-	ElectronPlusJetsQCDConversion = 5,
+	MuonPlusJetsQCDNonIsolated1p5to3 = 3,
+	MuonPlusJetsQCDNonIsolated3toInf = 4,
+	ElectronPlusJetsQCDNonIsolated = 5,
+	ElectronPlusJetsQCDConversion = 6,
 	NUMBER_OF_SELECTION_STEPS
 };
 }
@@ -69,13 +70,15 @@ protected:
 	bool passesElectronQCDSelection_;
 	bool passesElectronConversionSelection_;
 	bool passesMuonSelection_;
-	bool passesMuonQCDSelection_;
+	bool passesMuonQCDSelection1p5to3_;
+	bool passesMuonQCDSelection3toInf_;
 
 	bool passesElectronSelectionNoB_;
 	bool passesElectronQCDSelectionNoB_;
 	bool passesElectronConversionSelectionNoB_;
 	bool passesMuonSelectionNoB_;
-	bool passesMuonQCDSelectionNoB_;
+	bool passesMuonQCDSelection1p5to3NoB_;
+	bool passesMuonQCDSelection3toInfNoB_;
 
 	bool passesMETFilters_;
 
@@ -85,7 +88,8 @@ protected:
 	SelectionOutputInfo selectionOutputInfo_muon;
 	SelectionOutputInfo selectionOutputInfo_electronQCDNonisolated;
 	SelectionOutputInfo selectionOutputInfo_electronQCDConversion;
-	SelectionOutputInfo selectionOutputInfo_muonQCDNonisolated;
+	SelectionOutputInfo selectionOutputInfo_muonQCDNonisolated1p5to3;
+	SelectionOutputInfo selectionOutputInfo_muonQCDNonisolated3toInf;
 
 	TTGenInfoPointer ttGenInfo_;
 
@@ -150,12 +154,14 @@ public:
 	void setPassesElectronQCDSelection(bool passesElectronQCDSelection);
 	void setPassesElectronConversionSelection(bool passesElectronConversionSelection);
 	void setPassesMuonSelection(bool passesMuonSelection);
-	void setPassesMuonQCDSelection(bool passesMuonQCDSelection);
+	void setPassesMuonQCDSelection1p5to3(bool passesMuonQCDSelection1p5to3);
+	void setPassesMuonQCDSelection3toInf(bool passesMuonQCDSelection3toInf);
 	void setPassesElectronSelectionNoB(bool passesElectronSelectionNoB);
 	void setPassesElectronQCDSelectionNoB(bool passesElectronQCDSelectionNoB);
 	void setPassesElectronConversionSelectionNoB(bool passesElectronConversionSelectionNoB);
 	void setPassesMuonSelectionNoB(bool passesMuonSelectionNoB);
-	void setPassesMuonQCDSelectionNoB(bool passesMuonQCDSelectionNoB);
+	void setPassesMuonQCDSelection1p5to3NoB(bool passesMuonQCDSelection1p5to3NoB);
+	void setPassesMuonQCDSelection3toInfNoB(bool passesMuonQCDSelection3toInfNoB);
 	void setPassOfflineSelectionInfo( std::vector<unsigned int> );
 	const bool passesJetSelection( const unsigned int selectionCriteria );
 	const bool passesBJetSelection( const unsigned int selectionCriteria );
@@ -167,7 +173,8 @@ public:
 	void setMuonSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setElectronQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setElectronConversionSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
-	void setMuonQCDNonisolatedSelectionOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setMuonQCDNonisolatedSelection1p5to3OutputInfo(SelectionOutputInfo newSelectionOutputInfo);
+	void setMuonQCDNonisolatedSelection3toInfOutputInfo(SelectionOutputInfo newSelectionOutputInfo);
 	void setTTGenInfo(TTGenInfoPointer ttGenInfo );
 	void setPseudoTopParticles(PseudoTopParticlesPointer newPseudoParticles );
 	void setMETs(const std::vector<METPointer> mets);
@@ -233,25 +240,29 @@ public:
 	const bool PassesElectronQCDSelection() const;
 	const bool PassesElectronConversionSelection() const;
 	const bool PassesMuonSelection() const;
-	const bool PassesMuonQCDSelection() const;
+	const bool PassesMuonQCDSelection1p5to3() const;
+	const bool PassesMuonQCDSelection3toInf() const;
 
 	const bool PassesElectronTriggerAndSelection() const;
 	const bool PassesMuonTriggerAndSelection() const;
 	const bool PassesElectronTriggerAndQCDSelection() const;
 	const bool PassesElectronTriggerAndConversionSelection() const;
-	const bool PassesMuonTriggerAndQCDSelection() const;
-	
+	const bool PassesMuonTriggerAndQCDSelection1p5to3() const;
+	const bool PassesMuonTriggerAndQCDSelection3toInf() const;
+		
 	const bool PassesElectronSelectionNoB() const;
 	const bool PassesElectronQCDSelectionNoB() const;
 	const bool PassesElectronConversionSelectionNoB() const;
 	const bool PassesMuonSelectionNoB() const;
-	const bool PassesMuonQCDSelectionNoB() const;
+	const bool PassesMuonQCDSelection1p5to3NoB() const;
+	const bool PassesMuonQCDSelection3toInfNoB() const;
 
 	const bool PassesElectronTriggerAndSelectionNoB() const;
 	const bool PassesMuonTriggerAndSelectionNoB() const;
 	const bool PassesElectronTriggerAndQCDSelectionNoB() const;
 	const bool PassesElectronTriggerAndConversionSelectionNoB() const;
-	const bool PassesMuonTriggerAndQCDSelectionNoB() const;
+	const bool PassesMuonTriggerAndQCDSelection1p5to3NoB() const;
+	const bool PassesMuonTriggerAndQCDSelection3toInfNoB() const;
 
 	const bool isSemiLeptonicElectron() const;
 	const bool isSemiLeptonicMuon() const;

@@ -88,6 +88,7 @@ private:
 	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesTkMuonChannelTriggerReader;
+	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelMCTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesMuonChannelMCTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesTkMuonChannelMCTriggerReader;
 	boost::scoped_ptr<VariableReader<bool> > passesElectronChannelQCDTriggerReader;
@@ -99,7 +100,8 @@ private:
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muon;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDNonisolated;
 	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_electronQCDConversion;
-	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated1p5to3;
+	boost::scoped_ptr<SelectionOutputReader> selectionOutputReader_muonQCDNonisolated3toInf;
 
 	boost::scoped_ptr<TTGenReader> ttGenInfoReader;
 
