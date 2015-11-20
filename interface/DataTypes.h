@@ -126,7 +126,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TToLeptons_t",
 		"T_tw",
 		"Tbar_tw",
-		"GJets_15to6000",
+		"GJets_15toInf",
 		"QCD_EMEnriched_15to20",
 		"QCD_EMEnriched_20to30",
 		"QCD_EMEnriched_30to50",

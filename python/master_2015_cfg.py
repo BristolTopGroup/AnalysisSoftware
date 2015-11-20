@@ -166,7 +166,7 @@ TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
 # lumi =  2110#pb-1
-lumi = 1280.231
+lumi = 2136.36
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....

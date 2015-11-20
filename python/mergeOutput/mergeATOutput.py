@@ -7,8 +7,8 @@ import glob
 
 jobTemplates = [
 			[ 'TTJets_PowhegPythia8_tree.root', ['tree_TTJets_PowhegPythia8_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'] ],
-			# [ 'TTJets_PowhegPythia8_scaleup_tree.root', ['tree_TTJets_PowhegPythia8_scaleup_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
-			# [ 'TTJets_PowhegPythia8_scaledown_tree.root', ['tree_TTJets_PowhegPythia8_scaledown_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
+			[ 'TTJets_PowhegPythia8_scaleup_tree.root', ['tree_TTJets_PowhegPythia8_scaleup_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
+			[ 'TTJets_PowhegPythia8_scaledown_tree.root', ['tree_TTJets_PowhegPythia8_scaledown_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
 			[ 'TTJets_PowhegPythia8_mtop1695_tree.root', ['tree_TTJets_PowhegPythia8_mtop1695_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
 			[ 'TTJets_PowhegPythia8_mtop1755_tree.root', ['tree_TTJets_PowhegPythia8_mtop1755_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
 			['TTJets_amc_tree.root', ['tree_TTJets_amcatnloFXFX_1280.23pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
