@@ -25,8 +25,8 @@ double const Event::maxJetAbsEta_ = 2.4;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
-double const Event::minSignalMuonPt_ = 23;
-double const Event::minSignalElectronPt_ = 30;
+double const Event::minSignalMuonPt_ = 20;
+double const Event::minSignalElectronPt_ = 25;
 
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
@@ -114,8 +114,8 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_amcatnloFXFX ||
 		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_PowhegPythia8 ||
-		// type == DataType::TTJets_PowhegPythia8_scaledown ||
-		// type == DataType::TTJets_PowhegPythia8_scaleup ||
+		type == DataType::TTJets_PowhegPythia8_scaledown ||
+		type == DataType::TTJets_PowhegPythia8_scaleup ||
 		type == DataType::TTJets_PowhegPythia8_mtop1695 ||
 		type == DataType::TTJets_PowhegPythia8_mtop1755 ||
 		type == DataType::TTJets_amcatnloFXFX ||
@@ -228,14 +228,6 @@ const bool Event::PassesMuonChannelTrigger() const {
 	return false;
 }
 
-const bool Event::PassesTkMuonChannelTrigger() const {
-	if ( passesTkMuonChannelTrigger_ ) {
-		return true;
-	}
-
-	return false;
-}
-
 const bool Event::PassesElectronSelection() const {
 	if ( passesElectronSelection_ ) {
 		return true;
@@ -309,7 +301,7 @@ const bool Event::PassesElectronTriggerAndConversionSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelection() const {
-	if ( passesMuonSelection_ && ( passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_ ) ) {
+	if ( passesMuonSelection_ && passesMuonChannelTrigger_ ) {
 		return true;
 	}
 
@@ -405,7 +397,7 @@ const bool Event::PassesElectronTriggerAndConversionSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelectionNoB() const {
-	if ( passesMuonSelectionNoB_ && ( passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_ ) ) {
+	if ( passesMuonSelectionNoB_ && passesMuonChannelTrigger_ ) {
 		return true;
 	}
 
@@ -614,10 +606,6 @@ void Event::setPassesElectronChannelQCDTrigger( bool passesTrigger ) {
 
 void Event::setPassesMuonChannelTrigger( bool passesTrigger ) {
 	passesMuonChannelTrigger_ = passesTrigger;
-}
-
-void Event::setPassesTkMuonChannelTrigger( bool passesTrigger ) {
-	passesTkMuonChannelTrigger_ = passesTrigger;
 }
 
 void Event::setPassesMuonChannelQCDTrigger( bool passesTrigger ) {

@@ -26,8 +26,8 @@ enum value {
 	// SingleMuon_ReReco_RunC,
 
 	TTJets_PowhegPythia8,
-	// TTJets_PowhegPythia8_scaledown,
-	// TTJets_PowhegPythia8_scaleup,
+	TTJets_PowhegPythia8_scaledown,
+	TTJets_PowhegPythia8_scaleup,
 	TTJets_PowhegPythia8_mtop1695,
 	TTJets_PowhegPythia8_mtop1755,
 
@@ -100,8 +100,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		// "SingleMuon_ReReco_RunC",
 
 		"TTJets_PowhegPythia8",
-		// "TTJets_PowhegPythia8_scaledown",
-		// "TTJets_PowhegPythia8_scaleup",
+		"TTJets_PowhegPythia8_scaledown",
+		"TTJets_PowhegPythia8_scaleup",
 		"TTJets_PowhegPythia8_mtop1695",
 		"TTJets_PowhegPythia8_mtop1755",
 

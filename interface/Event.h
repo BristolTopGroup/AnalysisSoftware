@@ -63,7 +63,6 @@ protected:
 	bool passesElectronChannelTrigger_;
 	bool passesElectronChannelQCDTrigger_;
 	bool passesMuonChannelTrigger_;
-	bool passesTkMuonChannelTrigger_;
 	bool passesMuonChannelQCDTrigger_;
 
 	bool passesElectronSelection_;
