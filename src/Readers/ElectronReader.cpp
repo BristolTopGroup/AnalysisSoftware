@@ -201,16 +201,9 @@ void ElectronReader::initialise() {
 	dist.initialise();
 	dCotTheta.initialise();
 
-	if (Globals::NTupleVersion >= 7) {
-		mvaTrigV0_.initialise();
-		mvaNonTrigV0_.initialise();
-		passConversionVeto_.initialise();
-	} else {
-		cout << "Using an old nTuple version. Following variables will not be available:" << endl;
-		cout
-				<< "Electron::PfPUChargedHadronIso(), Electron::mvaTrigV0(), Electron::mvaNonTrigV0(), Electron::passConversionVeto()"
-				<< endl;
-	}
+	mvaTrigV0_.initialise();
+	mvaNonTrigV0_.initialise();
+	passConversionVeto_.initialise();
 
 	passTightElectron_.initialise();
 	passTightConversionElectron_.initialise();

@@ -14,11 +14,16 @@ namespace BAT {
 namespace DataType {
 enum value {
 	ElectronHad,
-	MuHad,
-	SingleElectron_PromptReco,
-	SingleElectron_Rereco,
-	SingleMuon_PromptReco,
-	SingleMuon_Rereco,
+	// MuHad,
+	SingleElectron,
+	SingleMuon,
+
+	// SingleElectron_PromptReco_RunD,
+	// SingleElectron_ReReco_RunD,
+	// SingleElectron_ReReco_RunC,
+	// SingleMuon_PromptReco_RunD,
+	// SingleMuon_ReReco_RunD,
+	// SingleMuon_ReReco_RunC,
 
 	TTJets_PowhegPythia8,
 	TTJets_PowhegPythia8_scaledown,
@@ -27,16 +32,19 @@ enum value {
 	TTJets_PowhegPythia8_mtop1755,
 
 	TTJets_amcatnloFXFX,
-	TTJets_amcatnloFXFX_scaledown,
-	TTJets_amcatnloFXFX_scaleup,
+	// TTJets_amcatnloFXFX_scaledown,
+	// TTJets_amcatnloFXFX_scaleup,
 	TTJets_amcatnloFXFX_mtop1695,
 	TTJets_amcatnloFXFX_mtop1755,
 
 	TTJets_madgraphMLM,
-	TTJets_powhegPythia6,
-	TTJets_PowhegHerwigpp,
 
-	TTJets_synch,
+	// TTJets_powhegPythia6,
+	// TTJets_PowhegHerwigpp,
+
+	TTJets_amcatnloHerwigpp,
+
+	// TTJets_synch,
 	DYJetsToLL_M50,
 	WJetsToLNu,
 	// TToLeptons_s,
@@ -79,11 +87,17 @@ enum value {
 const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 //
 		"ElectronHad",//
-		"MuHad", //
-		"SingleElectron_PromptReco",
-		"SingleElectron_Rereco",
-		"SingleMuon_PromptReco",
-		"SingleMuon_Rereco",
+		// "MuHad", //
+
+		"SingleElectron",
+		"SingleMuon",
+
+		// "SingleElectron_PromptReco_RunD",
+		// "SingleElectron_ReReco_RunD",
+		// "SingleElectron_ReReco_RunC",
+		// "SingleMuon_PromptReco_RunD",
+		// "SingleMuon_ReReco_RunD",
+		// "SingleMuon_ReReco_RunC",
 
 		"TTJets_PowhegPythia8",
 		"TTJets_PowhegPythia8_scaledown",
@@ -92,16 +106,17 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TTJets_PowhegPythia8_mtop1755",
 
 		"TTJets_amcatnloFXFX",
-		"TTJets_amcatnloFXFX_scaledown",
-		"TTJets_amcatnloFXFX_scaleup",
+		// "TTJets_amcatnloFXFX_scaledown",
+		// "TTJets_amcatnloFXFX_scaleup",
 		"TTJets_amcatnloFXFX_mtop1695",
 		"TTJets_amcatnloFXFX_mtop1755",
 
 		"TTJets_madgraphMLM",
-		"TTJets_powhegPythia6",
-		"TTJets_PowhegHerwigpp",
+		// "TTJets_powhegPythia6",
+		// "TTJets_PowhegHerwigpp",
+		"TTJets_amcatnloHerwigpp",
 
-		"TTJets_synch",
+		// "TTJets_synch",
 
 		"DYJetsToLL_M50",
 		"WJetsToLNu",
@@ -111,7 +126,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"TToLeptons_t",
 		"T_tw",
 		"Tbar_tw",
-		"GJets_15to6000",
+		"GJets_15toInf",
 		"QCD_EMEnriched_15to20",
 		"QCD_EMEnriched_20to30",
 		"QCD_EMEnriched_30to50",

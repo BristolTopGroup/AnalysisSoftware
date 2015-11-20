@@ -48,12 +48,8 @@ analysis_modes.remove('Test')
 
 analysis_modes_13TeV = analysis_info.analysis_modes_13TeV
 
-samples_7TeV = analysis_info.datasets_7TeV.keys()
-samples_8TeV = analysis_info.datasets_8TeV.keys()
 samples_13TeV = analysis_info.datasets_13TeV.keys()
 
-inputDir_7TeV = analysis_info.datasets_7TeV
-inputDir_8TeV = analysis_info.datasets_8TeV
 inputDir_13TeV = analysis_info.datasets_13TeV
 
 def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = False):
@@ -61,10 +57,6 @@ def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = 
     analysis_modes_ = copy(analysis_modes)
 
     samples = None
-    if energy == 7:
-        samples = samples_7TeV
-    if energy == 8:
-        samples = samples_8TeV
     if energy == 13:
         samples = samples_13TeV
         analysis_modes_ = analysis_modes_13TeV
@@ -100,10 +92,6 @@ def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = 
 
 def numberOfInputFiles(sample, energy):
     inputDir = ''
-    if energy == 7:
-        inputDir = inputDir_7TeV
-    if energy == 8:
-        inputDir = inputDir_8TeV
     if energy == 13:
         inputDir = inputDir_13TeV
     inputDir = inputDir[sample][0]
@@ -114,7 +102,7 @@ def main(options, args = []):
     if options.operation == 'test':
         # set test defaults
         if not options.energy:
-            options.energy = 7
+            options.energy = 13
         if not options.cores:
             options.cores = 1
         if not options.mode:

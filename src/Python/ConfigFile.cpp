@@ -477,9 +477,10 @@ void ConfigFile::loadIntoMemory() {
 	Globals::useHitFit = useHitFit();
 	Globals::produceFitterASCIIoutput = fitterOutputFlag();
 
-	 Globals::estimatedPileup = getPileUpHistogram(PUFile());
-	 Globals::estimatedPileup_up = getPileUpHistogram(PUFile_up());
-	 Globals::estimatedPileup_down = getPileUpHistogram(PUFile_down());
+
+	Globals::estimatedPileup = getPileUpHistogram(PUFile());
+	Globals::estimatedPileup_up = getPileUpHistogram(PUFile_up());
+	Globals::estimatedPileup_down = getPileUpHistogram(PUFile_down());
 
 	//Lepton Scale Factors
 	Globals::ElectronScaleFactorSystematic = electronScaleFactorSystematic();

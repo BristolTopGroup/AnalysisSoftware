@@ -50,6 +50,7 @@ void MuonAnalyser::analyseMuon(const MuonPointer muon, double weight) {
 	treeMan_->Fill("EventWeight", weight_ );
 	treeMan_->Fill("pt", muon->pt() );
 	treeMan_->Fill("eta", muon->eta() );	
+	treeMan_->Fill("phi", muon->phi() );	
 	treeMan_->Fill("relIso_04_deltaBeta", muon->PFRelIso04DeltaBeta() );
 
 	treeMan_->Fill("relTrkIso", muon->relTrkIso() );
@@ -109,6 +110,7 @@ void MuonAnalyser::createTrees() {
 
 	treeMan_->addBranch("pt", "F", "Muons" + Globals::treePrefix_);
 	treeMan_->addBranch("eta", "F", "Muons" + Globals::treePrefix_);	
+	treeMan_->addBranch("phi", "F", "Muons" + Globals::treePrefix_);	
 	treeMan_->addBranch("relIso_04_deltaBeta", "F", "Muons" + Globals::treePrefix_);
 	treeMan_->addBranch("relTrkIso", "F", "Muons" + Globals::treePrefix_);
 	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "Muons" + Globals::treePrefix_);
