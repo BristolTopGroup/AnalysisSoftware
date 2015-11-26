@@ -8,6 +8,7 @@
 #include "Analysis.h"
 #include "TROOT.h"
 #include <iostream>
+#include <sstream>
 #include <boost/scoped_ptr.hpp>
 #include <boost/array.hpp>
 #include "../interface/EventCounter.h"
@@ -21,12 +22,13 @@ using namespace std;
 void Analysis::analyse() {
 	cout << "detected samples:" << endl;
 	for (unsigned int sample = 0; sample < DataType::NUMBER_OF_DATA_TYPES; ++sample) {
-		if (eventReader->getSeenDatatypes()[sample])
+		if (eventReader->getSeenDatatypes()[sample]){
+			sampleName = DataType::names[sample];
 			cout << DataType::names[sample] << endl;
+		}
 	}
 
 	createHistograms();
-
 
 	while (eventReader->hasNextEvent()) {
 
@@ -34,9 +36,13 @@ void Analysis::analyse() {
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
 
+		if (!passesMETFilters(sampleName)) continue;
+
 		// Check if MET fitlers are satisfied
 		// cout << currentEvent->passesMETFilters() << endl;
 		// if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
+
+
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
@@ -83,7 +89,6 @@ void Analysis::initiateEvent() {
 	// include generator weight
 	// 1, except for amcatnlo samples (so far?)
 	weight *= currentEvent->generatorWeight() / fabs( currentEvent->generatorWeight() );
-
 
 	currentEvent->setEventWeight(weight);
 	currentEvent->setPileUpWeight(pileUpWeight);
@@ -194,3 +199,36 @@ unsigned long Analysis::getNumberOfProccessedEvents() const {
 	return eventReader->getNumberOfProccessedEvents();
 }
 
+bool Analysis::passesMETFilters(string datatype) {
+	passMETFilter = true;
+
+	if (datatype == "SingleElectron" || datatype == "SingleMuon"){
+		std::vector<std::string>  filenames;
+		filenames.clear();
+		filenames.push_back( "/hdfs/TopQuarkGroup/run2/metFilters/" + datatype + "_Nov14/" + datatype + "_csc2015.txt" );
+		filenames.push_back( "/hdfs/TopQuarkGroup/run2/metFilters/" + datatype + "_Nov14/" + datatype + "_ecalscn1043093.txt" );
+
+        for (auto const& filename : filenames){
+
+			metfiles.open(filename);
+			std::string str;
+	        while(getline(metfiles,str)){
+
+				std::istringstream ss( str );
+				std::string line;
+
+	        	eventInfo.clear();
+				while(getline(ss,line, ':')) eventInfo.push_back( std::stoul(line) );		
+				if (eventInfo[0] != currentEvent->runnumber()) continue; 
+				if (eventInfo[1] != currentEvent->lumiblock()) continue; 
+				if (eventInfo[2] != currentEvent->eventnumber()) continue;
+				passMETFilter=false;
+	        	break;
+	        }
+			metfiles.close();
+	        if (!passMETFilter) break;
+		}
+		return passMETFilter;
+	}
+	else return passMETFilter;
+}

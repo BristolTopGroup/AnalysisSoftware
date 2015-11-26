@@ -55,7 +55,10 @@ private:
     BAT::PartonAnalyserLocalPtr partonAnalyser_;
 
     BAT::LikelihoodInputAnalyserLocalPtr likelihoodInputAnalyser_;
-
+    string sampleName;
+    bool passMETFilter;
+    ifstream metfiles;
+    std::vector<unsigned long> eventInfo;
 public:
     Analysis(std::string fileForPileUpReweighting);
     virtual ~Analysis();
@@ -66,6 +69,7 @@ public:
     unsigned long getNumberOfProccessedEvents() const;
 
     void finishAnalysis();
+    bool passesMETFilters(string datatype);
 
 private:
     void printNumberOfProccessedEventsEvery(unsigned long printEvery);
