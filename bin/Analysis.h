@@ -55,7 +55,7 @@ private:
     BAT::PartonAnalyserLocalPtr partonAnalyser_;
 
     BAT::LikelihoodInputAnalyserLocalPtr likelihoodInputAnalyser_;
-    string sampleName;
+    std::string sampleName;
     bool passMETFilter;
     ifstream metfiles;
     std::vector<unsigned long> eventInfo;
@@ -69,7 +69,7 @@ public:
     unsigned long getNumberOfProccessedEvents() const;
 
     void finishAnalysis();
-    bool passesMETFilters(string datatype);
+    bool passMETFilters(string datatype);
 
 private:
     void printNumberOfProccessedEventsEvery(unsigned long printEvery);

@@ -36,7 +36,7 @@ void Analysis::analyse() {
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
 
-		if (!passesMETFilters(sampleName)) continue;
+		// if ( currentEvent->isRealData() && !passMETFilters(sampleName)) continue;
 
 		// Check if MET fitlers are satisfied
 		// cout << currentEvent->passesMETFilters() << endl;
@@ -199,7 +199,7 @@ unsigned long Analysis::getNumberOfProccessedEvents() const {
 	return eventReader->getNumberOfProccessedEvents();
 }
 
-bool Analysis::passesMETFilters(string datatype) {
+bool Analysis::passMETFilters(string datatype) {
 	passMETFilter = true;
 
 	if (datatype == "SingleElectron" || datatype == "SingleMuon"){
