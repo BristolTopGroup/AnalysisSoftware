@@ -1,6 +1,6 @@
 
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v4/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v4/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v5/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v5/'
 
 datasets_13TeV = {
 
