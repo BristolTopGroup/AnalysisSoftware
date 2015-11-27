@@ -212,27 +212,27 @@ const EventPtr NTupleEventReader::getNextEvent() {
 
 	// Get and set the cleaned jets for this event
 	// After knowing which selection criteria are satisfied
-	if( currentEvent->PassesElectronSelection() ) {
+	if( currentEvent->PassesElectronSelectionNoB() ) {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsReference ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsReference ) );
 	}
-	else if ( currentEvent->PassesMuonSelection() ) {
+	else if ( currentEvent->PassesMuonSelectionNoB() ) {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsReference ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsReference ) );
 	}
-	else if ( currentEvent->PassesElectronQCDSelection() ) {
+	else if ( currentEvent->PassesElectronQCDSelectionNoB() ) {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) );
 	}
-	else if ( currentEvent->PassesElectronConversionSelection() ) {
+	else if ( currentEvent->PassesElectronConversionSelectionNoB() ) {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::ElectronPlusJetsQCDConversion ) );		
 	}
-	else if ( currentEvent->PassesMuonQCDSelection1p5to3() ) {
+	else if ( currentEvent->PassesMuonQCDSelection1p5to3NoB() ) {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) );
 	}
-	else if ( currentEvent->PassesMuonQCDSelection3toInf() ) {
+	else if ( currentEvent->PassesMuonQCDSelection3toInfNoB() ) {
 		currentEvent->setCleanedJets( currentEvent->getCleanedJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) );
 		currentEvent->setCleanedBJets( currentEvent->getCleanedBJets( SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) );
 	}
