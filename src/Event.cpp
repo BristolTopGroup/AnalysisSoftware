@@ -707,12 +707,7 @@ const bool Event::passesJetSelection( const unsigned int selection ) {
 		if ( jet->pt() >= minJetPt_ ) ++nJetPass;
 	}
 
-//	if ( selectionCriteria == SelectionCriteria::MuonPlusJetsQCDNonIsolated ) {
-//		if ( nJetPass < 3 ) return false;
-//	}
-//	else {
 		if ( nJetPass < minNJets_ ) return false;
-//	}
 
 	return true;
 }
