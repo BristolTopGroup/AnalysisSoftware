@@ -63,7 +63,7 @@ def getAnalysisSettings(analysisMode):
 
 #config start
 #number of events to be processed
-maxEvents = 100000# 0 == all
+maxEvents = 000000# 0 == all
 if os.environ.has_key('maxEvents'):
     maxEvents = int(os.environ['maxEvents'])
 

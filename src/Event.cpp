@@ -777,7 +777,7 @@ const bool Event::passesSignalLeptonSelection( const unsigned int selectionCrite
 		etaThreshold = minSignalMuonEta_;
 	}
 
-	if ( (signalLepton->pt() > ptThreshold) && (abs(signalLepton->eta() < etaThreshold)) ) return true;
+	if ( (signalLepton->pt() > ptThreshold) && ( abs(signalLepton->eta()) < etaThreshold) ) return true;
 	else return false;
 }
 
