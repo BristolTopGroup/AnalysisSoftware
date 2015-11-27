@@ -65,7 +65,8 @@ struct Globals {
 	//muons
 	static MuonAlgorithm::value muonAlgorithm;
 	static int MuonScaleFactorSystematic;
-	static boost::shared_ptr<TH2F> muonIdIsoScaleFactorsHistogram;
+	static boost::shared_ptr<TH2F> muonIdScaleFactorsHistogram;
+	static boost::shared_ptr<TH2F> muonIsoScaleFactorsHistogram;
 	static boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram;
 
 	//jets

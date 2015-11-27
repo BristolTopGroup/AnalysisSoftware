@@ -63,7 +63,7 @@ def getAnalysisSettings(analysisMode):
 
 #config start
 #number of events to be processed
-maxEvents = 00000# 0 == all
+maxEvents = 000000# 0 == all
 if os.environ.has_key('maxEvents'):
     maxEvents = int(os.environ['maxEvents'])
 
@@ -109,8 +109,9 @@ getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
 ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
 ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEfficiencies.root'
-MuonIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Muon_IDIso_SF.root'
-MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/Muon_HLT_SF.root'
+MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunD_Reco74X_Nov20.root'
+MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunD_Reco74X_Nov20.root'
+MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Z_RunD_Reco74X_Nov20.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
@@ -165,7 +166,6 @@ applyMetType0Corr = False
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-# lumi =  2110#pb-1
 lumi = 2136.36
 
 #center of mass energy: 7TeV for 2010/2011 data/MC, 8TeV for 2012 data

@@ -181,30 +181,52 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
 	triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
 
-	double idIsoSF(1.);
-	double idIsoSFError(0.);
-	boost::shared_ptr<TH2F> muonIDIsoScaleFactorsHistogram(Globals::muonIdIsoScaleFactorsHistogram);
-	maxPt = muonIDIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
+
+	double idSF(1.);
+	double idSFError(0.);
+	boost::shared_ptr<TH2F> muonIdScaleFactorsHistogram(Globals::muonIdScaleFactorsHistogram);
+
+	maxPt = muonIdScaleFactorsHistogram->GetYaxis()->GetXmax();
 	bin = 0;
 	if ( muonPt <= maxPt ) {
-		bin = muonIDIsoScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
+		bin = muonIdScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
 	}
 	else {
-		double lastPtBinCentre = muonIDIsoScaleFactorsHistogram->GetYaxis()->GetBinCenter( muonIDIsoScaleFactorsHistogram->GetNbinsY() );
-		bin = muonIDIsoScaleFactorsHistogram->FindBin( muonAbsEta, lastPtBinCentre );
+		double lastPtBinCentre = muonIdScaleFactorsHistogram->GetYaxis()->GetBinCenter( muonIdScaleFactorsHistogram->GetNbinsY() );
+		bin = muonIdScaleFactorsHistogram->FindBin( muonAbsEta, lastPtBinCentre );
 	}
-	idIsoSF = muonIDIsoScaleFactorsHistogram->GetBinContent( bin );
-	idIsoSFError = muonIDIsoScaleFactorsHistogram->GetBinError( bin );
+	idSF = muonIdScaleFactorsHistogram->GetBinContent( bin );
+	idSFError = muonIdScaleFactorsHistogram->GetBinError( bin );
+
+
+	double isoSF(1.);
+	double isoSFError(0.);
+	boost::shared_ptr<TH2F> muonIsoScaleFactorsHistogram(Globals::muonIsoScaleFactorsHistogram);
+
+	maxPt = muonIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
+	bin = 0;
+	if ( muonPt <= maxPt ) {
+		bin = muonIsoScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
+	}
+	else {
+		double lastPtBinCentre = muonIsoScaleFactorsHistogram->GetYaxis()->GetBinCenter( muonIsoScaleFactorsHistogram->GetNbinsY() );
+		bin = muonIsoScaleFactorsHistogram->FindBin( muonAbsEta, lastPtBinCentre );
+	}
+	isoSF = muonIsoScaleFactorsHistogram->GetBinContent( bin );
+	isoSFError = muonIsoScaleFactorsHistogram->GetBinError( bin );
+
 
 	if (muon_scale_factor_systematic == -1 ) {
-		idIsoSF -= idIsoSFError;
+		idSF -= idSFError;
+		isoSF -= isoSFError;
 		triggerEfficiency -= triggerEfficiencyError;
 	}
-	else if ( muon_scale_factor_systematic == 1 ) {
-		idIsoSF += idIsoSFError;
+	else if (muon_scale_factor_systematic == +1 ) {
+		idSF += idSFError;
+		isoSF += isoSFError;
 		triggerEfficiency += triggerEfficiencyError;
 	}
 
-	return idIsoSF * triggerEfficiency;
+	return idSF * isoSF * triggerEfficiency;
 }
 }

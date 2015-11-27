@@ -36,7 +36,8 @@ public:
 	std::string PUFile_down() const;
 	std::string TTbarLikelihoodFile() const;
 	std::string BTagEfficiencyFile() const;
-	std::string MuonIdIsoScaleFactorsFile() const;
+	std::string MuonIdScaleFactorsFile() const;
+	std::string MuonIsoScaleFactorsFile() const;
 	std::string MuonTriggerScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
 	std::string ElectronIdIsoScaleFactorsFile() const;
@@ -80,7 +81,8 @@ private:
 	std::string ttbarLikelihoodFile_;
 	std::string btagEfficiencyFile_;
 	bool getMuonScaleFactorsFromFile_;
-	std::string muonIdIsoScaleFactorsFile_;
+	std::string muonIdScaleFactorsFile_;
+	std::string muonIsoScaleFactorsFile_;
 	std::string muonTriggerScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
 	std::string electronIdIsoScaleFactorsFile_;
@@ -115,7 +117,8 @@ private:
 
 	boost::program_options::variables_map getParameters(int argc, char **argv);
 	boost::shared_ptr<TH1D> getPileUpHistogram(std::string pileUpEstimationFile);
-	boost::shared_ptr<TH2F> getMuonIdIsoScaleFactorsHistogram(std::string muonScaleFactorsFile);
+	boost::shared_ptr<TH2F> getMuonIdScaleFactorsHistogram(std::string muonIdScaleFactorsFile);
+	boost::shared_ptr<TH2F> getMuonIsoScaleFactorsHistogram(std::string muonIsoScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH1F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
 	boost::shared_ptr<TH2D> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
