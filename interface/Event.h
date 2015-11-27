@@ -63,6 +63,7 @@ protected:
 	bool passesElectronChannelTrigger_;
 	bool passesElectronChannelQCDTrigger_;
 	bool passesMuonChannelTrigger_;
+	bool passesTkMuonChannelTrigger_;
 	bool passesMuonChannelQCDTrigger_;
 
 	bool passesElectronSelection_;
@@ -336,7 +337,9 @@ public:
 	static unsigned int const minNBJets_;
 
 	static double const minSignalMuonPt_;
+	static double const minSignalMuonEta_;
 	static double const minSignalElectronPt_;
+	static double const minSignalElectronEta_;
 
 };
 

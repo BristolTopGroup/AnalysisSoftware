@@ -25,8 +25,10 @@ double const Event::maxJetAbsEta_ = 2.4;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
-double const Event::minSignalMuonPt_ = 20;
+double const Event::minSignalMuonPt_ = 22;
+double const Event::minSignalMuonEta_ = 2.4;// no er in trig therfore needs to be added in selection
 double const Event::minSignalElectronPt_ = 25;
+double const Event::minSignalElectronEta_ = 2.4; //er in trig <2p1 means this will have no effect
 
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
@@ -228,6 +230,14 @@ const bool Event::PassesMuonChannelTrigger() const {
 	return false;
 }
 
+const bool Event::PassesTkMuonChannelTrigger() const {
+	if ( passesTkMuonChannelTrigger_ ) {
+		return true;
+	}
+
+	return false;
+}
+
 const bool Event::PassesElectronSelection() const {
 	if ( passesElectronSelection_ ) {
 		return true;
@@ -301,7 +311,7 @@ const bool Event::PassesElectronTriggerAndConversionSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelection() const {
-	if ( passesMuonSelection_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonSelection_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
@@ -397,7 +407,7 @@ const bool Event::PassesElectronTriggerAndConversionSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelectionNoB() const {
-	if ( passesMuonSelectionNoB_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonSelectionNoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
@@ -405,7 +415,7 @@ const bool Event::PassesMuonTriggerAndSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndQCDSelection1p5to3NoB() const {
-	if ( passesMuonQCDSelection1p5to3NoB_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonQCDSelection1p5to3NoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
@@ -413,7 +423,7 @@ const bool Event::PassesMuonTriggerAndQCDSelection1p5to3NoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndQCDSelection3toInfNoB() const {
-	if ( passesMuonQCDSelection3toInfNoB_ && passesMuonChannelTrigger_ ) {
+	if ( passesMuonQCDSelection3toInfNoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
@@ -608,6 +618,10 @@ void Event::setPassesMuonChannelTrigger( bool passesTrigger ) {
 	passesMuonChannelTrigger_ = passesTrigger;
 }
 
+void Event::setPassesTkMuonChannelTrigger( bool passesTrigger ) {
+	passesTkMuonChannelTrigger_ = passesTrigger;
+}
+
 void Event::setPassesMuonChannelQCDTrigger( bool passesTrigger ) {
 	passesMuonChannelQCDTrigger_ = passesTrigger;
 }
@@ -746,21 +760,24 @@ const bool Event::passesSignalLeptonSelection( const unsigned int selectionCrite
 	LeptonPointer signalLepton = getSignalLepton( selectionCriteria );
 	if ( signalLepton == 0 ) return false;
 	double ptThreshold = 99999999;
+	double etaThreshold = 99999999;
 
 	if ( selection == SelectionCriteria::ElectronPlusJetsReference ||
 			selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ||
 			selection == SelectionCriteria::ElectronPlusJetsQCDConversion
 	 ) {
 		ptThreshold = minSignalElectronPt_;
+		etaThreshold = minSignalElectronEta_;
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ||
 		 		selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ||
 		 		selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf		 		
 	) {
 		ptThreshold = minSignalMuonPt_;
+		etaThreshold = minSignalMuonEta_;
 	}
 
-	if ( signalLepton->pt() > ptThreshold ) return true;
+	if ( (signalLepton->pt() > ptThreshold) && (abs(signalLepton->eta() < etaThreshold)) ) return true;
 	else return false;
 }
 
@@ -1176,7 +1193,7 @@ void Event::setTrackingPOGFilters(bool result) {
 }
 
 bool Event::passesMETFilters() const {
-	return passesMETFilters_;
+	return passesMETFilters_;	
 }
 
 void Event::setPassesMETFilters(bool pass) {
