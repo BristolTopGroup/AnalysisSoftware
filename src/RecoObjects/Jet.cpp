@@ -174,85 +174,88 @@ const ParticlePointer Jet::raw_jet() {
 
 const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic) {
 	// Get the jet energy resolution scale factors, depending on the jet eta, from 
-	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetResolution#Recommendations_for_7_and_8_TeV
-	double scaleFactor(0.);
-	switch (jet_smearing_systematic) {
-		case -1:
-			scaleFactor = 0.9;
-			break;
-		case 1:
-			scaleFactor = 1.1;
-			break;
-		default:
-			scaleFactor = 1.;
-			break;
-	}
+	// https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
+
 	// double scaleFactor(0.);
-	// if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.5) {
-	// 	switch (jet_smearing_systematic) {
-	// 		case -1:
-	// 			scaleFactor = 1.053;
-	// 			break;
-	// 		case 1:
-	// 			scaleFactor = 1.105;
-	// 			break;
-	// 		default:
-	// 			scaleFactor = 1.079;
-	// 			break;
-	// 	}
+	// switch (jet_smearing_systematic) {
+	// 	case -1:
+	// 		scaleFactor = 0.9;
+	// 		break;
+	// 	case 1:
+	// 		scaleFactor = 1.1;
+	// 		break;
+	// 	default:
+	// 		scaleFactor = 1.;
+	// 		break;
 	// }
-	// if (fabs(jet->eta()) >= 0.5 && fabs(jet->eta()) < 1.1) {
-	// 	switch (jet_smearing_systematic) {
-	// 		case -1:
-	// 			scaleFactor = 1.071;
-	// 			break;
-	// 		case 1:
-	// 			scaleFactor = 1.127;
-	// 			break;
-	// 		default:
-	// 			scaleFactor = 1.099;
-	// 			break;
-	// 	}
-	// }
-	// if (fabs(jet->eta()) >= 1.1 && fabs(jet->eta()) < 1.7) {
-	// 	switch (jet_smearing_systematic) {
-	// 		case -1:
-	// 			scaleFactor = 1.092;
-	// 			break;
-	// 		case 1:
-	// 			scaleFactor = 1.150;
-	// 			break;
-	// 		default:
-	// 			scaleFactor = 1.121;
-	// 			break;
-	// 	}
-	// }
-	// if (fabs(jet->eta()) >= 1.7 && fabs(jet->eta()) < 2.3) {
-	// 	switch (jet_smearing_systematic) {
-	// 		case -1:
-	// 			scaleFactor = 1.162;
-	// 			break;
-	// 		case 1:
-	// 			scaleFactor = 1.254;
-	// 			break;
-	// 		default:
-	// 			scaleFactor = 1.208;
-	// 			break;
-	// 	}
-	// }
-	// if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 2.8) {
-	// 	switch (jet_smearing_systematic) {
-	// 		case -1:
-	// 			scaleFactor = 1.192;
-	// 			break;
-	// 		case 1:
-	// 			scaleFactor = 1.316;
-	// 			break;
-	// 		default:
-	// 			scaleFactor = 1.254;
-	// 			break;
-	// 	}
-	// }
+	
+	double scaleFactor(0.);
+	if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.8) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.038;
+				break;
+			case 1:
+				scaleFactor = 1.084;
+				break;
+			default:
+				scaleFactor = 1.061;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 0.8 && fabs(jet->eta()) < 1.3) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.059;
+				break;
+			case 1:
+				scaleFactor = 1.118;
+				break;
+			default:
+				scaleFactor = 1.088;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 1.3 && fabs(jet->eta()) < 1.9) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.076;
+				break;
+			case 1:
+				scaleFactor = 1.136;
+				break;
+			default:
+				scaleFactor = 1.106;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 1.9 && fabs(jet->eta()) < 2.5) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.132;
+				break;
+			case 1:
+				scaleFactor = 1.220;
+				break;
+			default:
+				scaleFactor = 1.126;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 2.5 && fabs(jet->eta()) < 3.0) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.220;
+				break;
+			case 1:
+				scaleFactor = 1.466;
+				break;
+			default:
+				scaleFactor = 1.343;
+				break;
+		}
+	}
+
 	//use raw scaleFactors from above to calculate the final factors to apply
 	double gen_pt = gen_jet->pt();
 	double reco_pt = jet->pt();
