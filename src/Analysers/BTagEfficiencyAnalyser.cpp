@@ -15,18 +15,16 @@ void BTagEff::analyse(const EventPtr event) {
 	treeMan_->setCurrentFolder(histogramFolder_);
 	int NJets = 0;
 	int NBJets = 0; // How many medium b jets
-	const JetCollection allJets = event->Jets();
+	const JetCollection cleanedJets = event->CleanedJets();
 
 	int selectionCriteria = -1;
 	if ( event->PassesElectronTriggerAndSelectionNoB() ) selectionCriteria = SelectionCriteria::ElectronPlusJetsReference;
 	else if ( event->PassesMuonTriggerAndSelectionNoB() ) selectionCriteria = SelectionCriteria::MuonPlusJetsReference;
 	const LeptonPointer signalLepton = event->getSignalLepton( selectionCriteria );
 
-	if ( event->PassesElectronTriggerAndSelectionNoB() ) return;
-
 	// unsigned int nParton = 0;
-	for (unsigned int jetIndex = 0; jetIndex < allJets.size(); ++jetIndex) {
-		const JetPointer jet(allJets.at(jetIndex));
+	for (unsigned int jetIndex = 0; jetIndex < cleanedJets.size(); ++jetIndex) {
+		const JetPointer jet(cleanedJets.at(jetIndex));
 
 		bool isLoose = false;
 		bool isMedium = false;
@@ -37,15 +35,9 @@ void BTagEff::analyse(const EventPtr event) {
 
 		if (jetPt < 25 || fabs(jetEta) > 2.4) continue;
 
-		// Perform cleaning of jets here
-		if ( jet->deltaR( signalLepton ) < 0.4 ) {
-			continue;
-		}
-
-		// double jetCSV = jet->getBTagDiscriminator(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
 		double jetCSV = jet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
 
-		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X50ns
+		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X
 		if (jetCSV > 0.605) {
 			isLoose = true;
 		}
@@ -58,8 +50,6 @@ void BTagEff::analyse(const EventPtr event) {
 		}
 
 		unsigned int partonFlavour = abs(jet->partonFlavour());
-		// const bool isBTagged = jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM);
-		// cout << jet->isBJet(BtagAlgorithm::CombinedSecondaryVertexV2, BtagAlgorithm::MEDIUM) << endl;
 
 		treeMan_->Fill("pt", jetPt);
 		treeMan_->Fill("eta", jetEta);
@@ -73,6 +63,8 @@ void BTagEff::analyse(const EventPtr event) {
 
 	treeMan_->Fill("NJets", NJets);
 	treeMan_->Fill("NBJets", NBJets);
+	treeMan_->Fill("EventWeight", event->weight());
+	treeMan_->Fill("PUWeight", event->PileUpWeight());
 }
 
 
