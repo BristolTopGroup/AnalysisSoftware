@@ -65,6 +65,23 @@ void BTagEff::analyse(const EventPtr event) {
 	treeMan_->Fill("NBJets", NBJets);
 	treeMan_->Fill("EventWeight", event->weight());
 	treeMan_->Fill("PUWeight", event->PileUpWeight());
+
+	if ( selectionCriteria == SelectionCriteria::ElectronPlusJetsReference ) {
+		double electronEfficiencyCorrection = 1;
+		if ( !event->isRealData() ) {
+			const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
+		}
+		treeMan_->Fill("ElectronEfficiencyCorrection",electronEfficiencyCorrection);
+	}
+	else if ( selectionCriteria == SelectionCriteria::MuonPlusJetsReference ) {
+		double muonEfficiencyCorrection = 1;
+		if ( !event->isRealData() ) {
+			const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
+			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
+		}
+		treeMan_->Fill("MuonEfficiencyCorrection",muonEfficiencyCorrection);
+	}
 }
 
 
@@ -91,5 +108,7 @@ void BTagEff::createTrees() {
 	treeMan_->addBranch("isTight", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("NJets", "F", "Jets" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "Jets" + Globals::treePrefix_);
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
 }
 /* namespace BAT */
