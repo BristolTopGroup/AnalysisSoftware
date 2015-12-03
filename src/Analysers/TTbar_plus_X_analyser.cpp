@@ -307,6 +307,14 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
+	// MET Uncertainties		
+	for ( unsigned int unc_i = 0; unc_i < MET_original->getAllMETUncertainties().size(); ++unc_i ) {		
+		METPointer METForUnc_i = MET_original->getMETForUncertainty( unc_i );		
+		treeMan_->Fill("MET_METUncertainties",METForUnc_i->et());		
+		treeMan_->Fill("ST_METUncertainties",Event::ST(jets, signalLepton, METForUnc_i));		
+		treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalLepton, METForUnc_i));		
+	}
+
 	fillLeptonEfficiencyCorrectionBranches( event, selectionCriteria, signalLepton );	
 }
 
