@@ -241,9 +241,13 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		double bweight = btagWeight->weight( currentEvent->CleanedJets(), 0 );
 		currentEvent->setBJetWeight( bweight );
 		bweight = btagWeight->weight( currentEvent->CleanedJets(), 1 );
-		currentEvent->setBJetUpWeight( bweight );
+		currentEvent->setLightJetUpWeight( bweight );
 		bweight = btagWeight->weight( currentEvent->CleanedJets(), -1 );
-		currentEvent->setBJetDownWeight( bweight );		
+		currentEvent->setLightJetDownWeight( bweight );		
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), 2 );
+		currentEvent->setBJetDownWeight( bweight );			
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), -2 );
+		currentEvent->setBJetDownWeight( bweight );	
 	}
 
 

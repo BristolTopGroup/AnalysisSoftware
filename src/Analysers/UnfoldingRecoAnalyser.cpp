@@ -80,6 +80,8 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("PUWeight_up", event->PileUpWeight(1) );
 	treeMan_->Fill("PUWeight_down", event->PileUpWeight(-1) );
 	treeMan_->Fill("BJetWeight",event->BJetWeight());
+	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
+	treeMan_->Fill("LightJetDownWeight",event->LightJetDownWeight());
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 
@@ -146,6 +148,8 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("ST_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
 	treeMan_->addBranch("BJetWeight", "F", "Unfolding" + Globals::treePrefix_ );
+	treeMan_->addBranch("LightJetUpWeight", "F", "Unfolding" + Globals::treePrefix_ );
+	treeMan_->addBranch("LightJetDownWeight", "F", "Unfolding" + Globals::treePrefix_ );
 	treeMan_->addBranch("BJetUpWeight", "F", "Unfolding" + Globals::treePrefix_ );
 	treeMan_->addBranch("BJetDownWeight", "F", "Unfolding" + Globals::treePrefix_ );
 

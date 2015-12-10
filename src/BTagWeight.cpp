@@ -43,6 +43,10 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 
 		const unsigned int partonFlavour = abs( jet->partonFlavour() );
 		const bool isBTagged = jet->isBJet();
+		bool isLight = false;
+		bool isBC = false;
+		(partonFlavour==5 || partonFlavour==4) ? isBC = true : isBC = false;
+		(partonFlavour==3 || partonFlavour==2 || partonFlavour==1 || partonFlavour==21) ? isLight = true : isLight = false;
 
 		// Get scale factor for this jet
 		const double sf = jet->getBTagSF( 0 );
@@ -59,39 +63,66 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 
 		// Get efficiency for this jet
 		const double eff = getEfficiency( partonFlavour, jet );
-		double sfToUse = sf;
+
+		// Systematic Option
+		// 2 = b/c jet up
+		// 1 = light jet up
+		// 0 = central
+		// -1 = light jet down
+		// -2 = b/c jet down
+
+		double sfToUse_l = sf;
+		double sfToUse_bc = sf;
 		if ( systematic == 1 ) {
-			sfToUse = sf_up;
+			sfToUse_l = sf_up;
+			sfToUse_bc = sf;
 		}
 		else if ( systematic == -1 ) {
-			sfToUse = sf_down;
+			sfToUse_l = sf_down;
+			sfToUse_bc = sf;
+		}
+		else if ( systematic == 2 ) {
+			sfToUse_l = sf;
+			sfToUse_bc = sf_up;
+		}
+		else if ( systematic == -2 ) {
+			sfToUse_l = sf;
+			sfToUse_bc = sf_down;
 		}
 
-		if ( isBTagged ) {
+
+		if (isBTagged) {
+			if (isLight) {
+				bTaggedMCJet *= eff;
+				if ( eff*sfToUse_l > 1 ) bTaggedDataJet *= 1;
+				else if ( eff*sfToUse_l < 0 ) bTaggedDataJet *= 0;
+				else bTaggedDataJet *= eff*sfToUse_l;
+			}
+
+			else {
 			bTaggedMCJet *= eff;
-			if ( eff*sfToUse > 1 ) {
-				bTaggedDataJet *= 1;
-			}
-			else if ( eff*sfToUse < 0 ) {
-				bTaggedDataJet *= 0;
-			}
-			else {
-				bTaggedDataJet *= eff*sfToUse;
+				if ( eff*sfToUse_bc > 1 ) bTaggedDataJet *= 1;
+				else if ( eff*sfToUse_bc < 0 ) bTaggedDataJet *= 0;
+				else bTaggedDataJet *= eff*sfToUse_bc;
 			}
 		}
-		else {
-			nonBTaggedMCJet *= ( 1 - eff );
 
-			if ( eff*sfToUse > 1 ) {
-				nonBTaggedDataJet *= 0;
+		else {
+			if (isLight) {
+				nonBTaggedMCJet *= ( 1 - eff );
+				if ( eff*sfToUse_l > 1 ) nonBTaggedDataJet *= 0;
+				else if ( eff*sfToUse_l < 0 ) nonBTaggedDataJet *= 1;
+				else nonBTaggedDataJet *= ( 1 - eff*sfToUse_l );			
 			}
-			else if ( eff*sfToUse < 0 ) {
-				nonBTaggedDataJet *= 1;
-			}
+
 			else {
-				bTaggedDataJet *= ( 1 - eff*sfToUse );
-			}
+				nonBTaggedMCJet *= ( 1 - eff );
+				if ( eff*sfToUse_bc > 1 ) nonBTaggedDataJet *= 0;
+				else if ( eff*sfToUse_bc < 0 ) nonBTaggedDataJet *= 1;
+				else nonBTaggedDataJet *= ( 1 - eff*sfToUse_bc );
+			}			
 		}
+
 		// if ( nonBTaggedMCJet < 0 || nonBTaggedDataJet < 0 ) {
 		// 	cout << nonBTaggedMCJet << " " << nonBTaggedDataJet << endl;
 		// 	cout << eff << " " << sfToUse << endl;
