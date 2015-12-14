@@ -26,9 +26,9 @@ unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
 double const Event::minSignalMuonPt_ = 22;
-double const Event::minSignalMuonEta_ = 2.4;// no er in trig therfore needs to be added in selection
+double const Event::minSignalMuonEta_ = 2.4;
 double const Event::minSignalElectronPt_ = 25;
-double const Event::minSignalElectronEta_ = 2.4; //er in trig <2p1 means this will have no effect
+double const Event::minSignalElectronEta_ = 2.1; 
 
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
@@ -73,6 +73,8 @@ Event::Event() : //
 		pileUpWeight_up_(1.), //
 		pileUpWeight_down_(1.), //
 		bJetWeight_(1.), //
+		lightJetUpWeight_(1.), //
+		lightJetDownWeight_(1.), //
 		bJetUpWeight_(1.), //
 		bJetDownWeight_(1.), //
 		PUWeightInTimeOnly_(1.), //
@@ -878,6 +880,14 @@ void Event::setBJetWeight(double weight) {
 	bJetWeight_ = weight;
 }
 
+void Event::setLightJetUpWeight(double weight) {
+	lightJetUpWeight_ = weight;
+}
+
+void Event::setLightJetDownWeight(double weight) {
+	lightJetDownWeight_ = weight;
+}
+
 void Event::setBJetUpWeight(double weight) {
 	bJetUpWeight_ = weight;
 }
@@ -992,6 +1002,14 @@ double Event::PileUpWeight( int systematic ) const {
 
 double Event::BJetWeight() const {
 	return bJetWeight_;
+}
+
+double Event::LightJetUpWeight() const {
+	return lightJetUpWeight_;
+}
+
+double Event::LightJetDownWeight() const {
+	return lightJetDownWeight_;
 }
 
 double Event::BJetUpWeight() const {

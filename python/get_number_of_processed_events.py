@@ -13,13 +13,13 @@ import glob
 if __name__ == '__main__':
 	filename = 'DataSetInfo_13TeV_25ns.py' #Dataset file name
 	basepath = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/'
-	version = 'v4/'
+	version = 'v6/'
 	basepath = basepath + version
 
 	DatasetFile = open(filename,'r')
 	content = DatasetFile.read().splitlines()
 	DatasetFile.close()
-	for line in range (0,len(content)): print content[line]
+	# for line in range (0,len(content)): print content[line]
 
 	datasets = []
 	for dirs in os.listdir(basepath):

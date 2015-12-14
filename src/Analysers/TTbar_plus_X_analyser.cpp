@@ -85,7 +85,6 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		// MET
 		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
-		// const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsQCDSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
@@ -119,7 +118,6 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 
 		// MET
 		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
-		// const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserEPlusJetsConversionSelection_->analyseAndReturn(event, jets, bJets, signalLepton );
@@ -154,8 +152,6 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 	}
 
 
-
-	// if (topMuplusJetsRefSelection_->passesFullSelectionExceptLastTwoSteps(event)) {
 	if ( event->PassesMuonTriggerAndSelection() ) {
 
 		fillCommonTrees( event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Ref selection" );
@@ -165,7 +161,6 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsReference );
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
-		// const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsRefSelection_->analyseAndReturn(event, jets, bJets, signalLepton);
@@ -207,7 +202,6 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 );
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
-		// const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection1p5to3_->analyseAndReturn(event, jets, bJets, signalLepton);
@@ -239,7 +233,6 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		const LeptonPointer signalLepton = event->getSignalLepton( SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf );
 		const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
 		const METPointer MET_original(event->MET((METAlgorithm::value) 0));
-		// const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 		if ( Globals::useHitFit ) {
 			BAT::TtbarHypothesis topHypothesis = hitFitAnalyserMuPlusJetsQCDSelection3toInf_->analyseAndReturn(event, jets, bJets, signalLepton);
@@ -270,13 +263,13 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	const JetCollection jets(event->CleanedJets());
 	// B Jets
 	unsigned int numberOfBjets = event->getNBJets( selection );
+
 	const JetCollection bJets(event->CleanedBJets());
 	// Lepton
 	const LeptonPointer signalLepton = event->getSignalLepton( selection );
 
 	// MET
 	const METPointer MET_original(event->MET((METAlgorithm::value) 0));
-	// const METPointer METNoHF(event->MET((METAlgorithm::value) 1));
 
 	treeMan_->setCurrentFolder(folder);
 	treeMan_->Fill("EventWeight", event->weight());
@@ -291,14 +284,15 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 		treeMan_->Fill("M_bl",Event::M_bl(bJets, signalLepton));
 		treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalLepton));
 	}
+	for (unsigned int index = 0; index < jets.size(); ++index) {
+		treeMan_->Fill("jet_pt", jets.at(index)->pt() );
+	}	
 	treeMan_->Fill("HT",Event::HT(jets));
 	treeMan_->Fill("MET",MET_original->et());
-	// treeMan_->Fill("METNoHF",METNoHF->et());
 	treeMan_->Fill("ST",Event::ST(jets, signalLepton, MET_original));
-	// treeMan_->Fill("STNoHF",Event::ST(jets, signalLepton, METNoHF));
 	treeMan_->Fill("WPT",Event::WPT(signalLepton, MET_original));
-	// treeMan_->Fill("WPTNoHF",Event::WPT(signalLepton, METNoHF));
 	treeMan_->Fill("MT",Event::MT(signalLepton, MET_original));
+
 	treeMan_->Fill("NJets",Event::NJets(jets));
 	treeMan_->Fill("NBJets",Event::NJets(bJets));
 	treeMan_->Fill("NVertices",	event->Vertices().size());
@@ -306,6 +300,8 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("BJetWeight",event->BJetWeight());
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
+	treeMan_->Fill("LightJetDownWeight",event->LightJetDownWeight());
 
 	// MET Uncertainties		
 	for ( unsigned int unc_i = 0; unc_i < MET_original->getAllMETUncertainties().size(); ++unc_i ) {		
@@ -341,6 +337,8 @@ void TTbar_plus_X_analyser::fillCommonTreesNoBSelection(const EventPtr event,  c
 	treeMan_->Fill("BJetWeight",event->BJetWeight());
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
+	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
+	treeMan_->Fill("LightJetDownWeight",event->LightJetDownWeight());
 
 	fillLeptonEfficiencyCorrectionBranches( event, selectionCriteria, signalLepton );	
 }
@@ -377,13 +375,10 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->setCurrentFolder(folder);
 	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	// treeMan_->addBranch("METNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
-	// treeMan_->addBranch("STNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
-	// treeMan_->addBranch("WPTNoHF", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
@@ -394,6 +389,7 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NVertices", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("jet_pt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
@@ -411,11 +407,12 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("LightJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("LightJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 }
 
 void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->setCurrentFolder(folder);
-
 
 	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
@@ -429,6 +426,8 @@ void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("LightJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("LightJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 }
 
 void TTbar_plus_X_analyser::createTrees() {

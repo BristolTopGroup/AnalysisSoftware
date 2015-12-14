@@ -108,7 +108,7 @@ protected:
 	unsigned long lumiBlock;
 	double eventWeight;
 	double pileUpWeight_, pileUpWeight_up_, pileUpWeight_down_;
-	double bJetWeight_, bJetUpWeight_, bJetDownWeight_;
+	double bJetWeight_, lightJetUpWeight_, lightJetDownWeight_, bJetUpWeight_, bJetDownWeight_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
 			PUWeightShiftUp_, PUWeightShiftDown_;
@@ -191,6 +191,8 @@ public:
 	void setEventWeight(double weight);
 	void setPileUpWeight(double weight, int systematic=0);
 	void setBJetWeight(double weight);
+	void setLightJetUpWeight(double weight);
+	void setLightJetDownWeight(double weight);
 	void setBJetUpWeight(double weight);
 	void setBJetDownWeight(double weight);
 	void setBeamScrapingVeto(bool isScraping);
@@ -286,6 +288,8 @@ public:
 	double weight() const;
 	double PileUpWeight( int systematic = 0 ) const;
 	double BJetWeight() const;
+	double LightJetUpWeight() const;
+	double LightJetDownWeight() const;
 	double BJetUpWeight() const;
 	double BJetDownWeight() const;
 	void inspect() const;
