@@ -157,7 +157,7 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("bEta", "F", "Unfolding" + Globals::treePrefix_, false);
 
 	for ( unsigned int i = 0; i < 250; ++i ) {
-		treeMan_->addBranch("genWeight_" + to_string(i), "F", "GeneratorSystematicWeights" + Globals::treePrefix_);
+		treeMan_->addBranch("genWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
 	}
 }
 
