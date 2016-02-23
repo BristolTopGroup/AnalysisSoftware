@@ -1,6 +1,6 @@
 '''
 Run this over new ntuples to get the number of processed events from crab. 
-This serves as an input into DataSetInfo_13TeV_25ns.py
+This recreates DataSetInfo_13TeV_25ns.py using new numbers.
 '''
 
 import ROOT 
@@ -13,7 +13,7 @@ import glob
 if __name__ == '__main__':
 	filename = 'DataSetInfo_13TeV_25ns.py' #Dataset file name
 	basepath = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/'
-	version = 'v6/'
+	version = 'v9/'
 	basepath = basepath + version
 
 	DatasetFile = open(filename,'r')
@@ -33,14 +33,20 @@ if __name__ == '__main__':
 		for files in os.listdir(datasetpath):
 			rootfiles.append(files)
 
-		total_processed_event = 0
-		for f in range( 0, len(rootfiles) ):
-			ntuple_processed_events = 0
-			rootfile = datasetpath+rootfiles[f]
-			if not os.path.exists(rootfile): print 'File Does Not exist'
 
-			rootfile = TFile(rootfile)
+		total_processed_event = 0
+		for f in rootfiles :
+			ntuple_processed_events = 0
+			if not os.path.exists(datasetpath+f): print 'File Does Not exist'
+
+			rootfile = TFile(datasetpath+f)
+
 			hist = rootfile.Get("topPairEPlusJetsSelectionAnalyser/individualCuts")
+
+			if not hist : 
+				print "Waaargh help. Can't find histogram for : ", datasetpath+f
+				continue
+
 			ntuple_processed_events = hist.GetBinContent(1)
 			rootfile.Close()
 			total_processed_event = total_processed_event + ntuple_processed_events
