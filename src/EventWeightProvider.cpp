@@ -108,25 +108,17 @@ void EventWeightProvider::generate_weights() {
 	 * Fall11, use Fall2011
 	 */
 
-	//Needs a flag for 2011 MC tried energyInTeV?
-	// if (Globals::energyInTeV == 8) {
-	// 	pileUpWeights = generateWeights(Summer2012);
-	// } else if (Globals::energyInTeV == 7 && Globals::NTupleVersion < 11) {
-	// 	pileUpWeights = generateWeights(Fall2011);
-	// } else if (Globals::energyInTeV == 7 && Globals::NTupleVersion == 11) {
-	// 	pileUpWeights = generateWeights(Summer11Leg);
-	// } else if (Globals::energyInTeV == 13) {
+
 	pileUpWeights = generateWeights(Startup2015_25ns, estimatedPileUp);
 	pileUpWeights_up = generateWeights(Startup2015_25ns, estimatedPileUp_up);
 	pileUpWeights_down = generateWeights(Startup2015_25ns, estimatedPileUp_down);
 
-	// }
 
-//	cout << "Pile up weights" << endl;
-//
-//	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
-//		cout << index << ": " << pileUpWeights.at(index) << endl;
-//	}
+	cout << "Pile up weights" << endl;
+
+	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
+		cout << index << ": " << pileUpWeights.at(index) << endl;
+	}
 }
 
 boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
@@ -136,14 +128,22 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 
 
 	// Check that integral of dataEstimatedPileUp is 1
+
+	std::cout << "Data Estimated PU Integral : " << dataEstimatedPileUp->Integral() << std::endl;
+
 	if ( dataEstimatedPileUp->Integral() != 1 && dataEstimatedPileUp->Integral() != 0 ) {
 		dataEstimatedPileUp->Scale( 1 / dataEstimatedPileUp->Integral() );
 	}
 
 	double s = 0.0;
+	double s2 = 0.0;
+	double s3 = 0.0;
+	double s4 = 0.0;
+	double s5 = 0.0;
 
 	for (unsigned int npu = 0; npu < inputMC.size(); ++npu) {
 
+		// +1-1 problem
 		DATAdistribution[npu] = dataEstimatedPileUp->GetBinContent(npu+1);
 
 		if (inputMC[npu] > 0) {
@@ -151,15 +151,28 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		}
 		else
 			weights[npu] = 0;
-		s += DATAdistribution[npu];
+		// s += DATAdistribution[npu];
+		s += weights[npu]*inputMC[npu];
+		s2 += DATAdistribution[npu];
+		s4 += weights[npu];
+		s5 += inputMC[npu];
 	}
+
+
 	/**
-	 * normalize weights such that the total sum of weights over thw whole sample is 1.0,
+	 * normalize weights such that the total sum of weights over the whole sample is 1.0,
 	 * i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
 	 */
 	for (unsigned int npu = 0; npu < weights.size(); ++npu) {
 		weights[npu] /= s;
+		// std::cout << "Bin Weight : " << npu << " is : " << weights[npu] << std::endl;
+		s3 += weights[npu]*inputMC[npu];
 	}
+	std::cout << "PU MC :" << s5 << std::endl;
+	std::cout << "PU Data :" << s2 << std::endl;
+	std::cout << "PU Weight :" << s4 << std::endl;
+	std::cout << "PU MC*Weight SF :" << s << std::endl;
+	std::cout << "PU MC*ReWeight SF, s3 :" << s3 << std::endl;
 
 	return weights;
 }
