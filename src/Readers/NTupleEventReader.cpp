@@ -41,12 +41,12 @@ NTupleEventReader::NTupleEventReader() :
 		metReaders(), //
 		// // metCorrReaders(), //
 
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle23erWPLooseGsf.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle22erWPLooseGsf.Fired")),
 		// passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18er.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20.Fired")),
 		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20.Fired")),
 
-		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle23erWP75GsfMC.Fired")),
+		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle22erWPLooseGsfMC.Fired")),
 		// passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18erMC.Fired")),
 		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
 		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
@@ -67,7 +67,7 @@ NTupleEventReader::NTupleEventReader() :
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
-		passesMetFilterReader_(new VariableReader<bool>(input, "Event.passesAllMetFitlersOfInterest")), //
+		passesMetFilterReader_(new VariableReader<bool>(input, "Event.passesAllMetFiltersOfInterest")), //
 		generatorWeightReader_(new VariableReader<double>(input, "Event.generatorWeight")), //
 		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
 		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
