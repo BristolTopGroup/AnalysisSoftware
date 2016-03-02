@@ -38,14 +38,14 @@ void BTagEff::analyse(const EventPtr event) {
 		double jetCSV = jet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
 
 		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X
-		if (jetCSV > 0.605) {
+		if (jetCSV > 0.460) {
 			isLoose = true;
 		}
-		if (jetCSV > 0.890) {
+		if (jetCSV > 0.800) {
 			isMedium = true;
 			++NBJets;
 		}
-		if (jetCSV > 0.970) {
+		if (jetCSV > 0.935) {
 			isTight = true;
 		}
 
