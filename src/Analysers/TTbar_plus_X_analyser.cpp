@@ -28,6 +28,30 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		fillCommonTreesNoBSelection( event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Ref selection NoBSelection" );
 	}
 
+	std::vector <bool> SelectionPass;
+	bool PassAll = true;
+	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Cutflow");
+
+	SelectionPass.push_back(true);
+	event->PassesElectronChannelTrigger() ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
+	event->passesMETFilters() ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
+	event->PassesElectronSelection() ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
+	event->passesJetSelection(2) ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
+
+	for (uint i = 0; i < SelectionPass.size(); i++){
+		if (SelectionPass[i] == false) {
+			PassAll = false;
+			break;
+		}
+	}
+
+	PassAll ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
+
+	for (uint i = 0; i < SelectionPass.size(); i++){
+		treeMan_->Fill("Cutflow", SelectionPass[i]);
+	}
+
+
 
 	if ( event->PassesElectronTriggerAndSelection() ) {
 
@@ -432,6 +456,11 @@ void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->addBranch("LightJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 }
 
+void TTbar_plus_X_analyser::createCommonCutflowTrees( std::string folder){
+	treeMan_->setCurrentFolder(folder);
+	treeMan_->addBranch("Cutflow", "F", "Cutflow" + Globals::treePrefix_, false);
+}
+
 void TTbar_plus_X_analyser::createTrees() {
 	createCommonTrees(histogramFolder_ + "/EPlusJets/Ref selection");
 	createCommonTrees(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
@@ -443,6 +472,8 @@ void TTbar_plus_X_analyser::createTrees() {
 
 	createCommonNoBSelectionTrees(histogramFolder_ + "/EPlusJets/Ref selection NoBSelection");
 	createCommonNoBSelectionTrees(histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection");
+
+	createCommonCutflowTrees(histogramFolder_ + "/EPlusJets/Cutflow");
 
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();

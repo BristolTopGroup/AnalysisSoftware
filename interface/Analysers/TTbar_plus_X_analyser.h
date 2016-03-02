@@ -35,6 +35,7 @@ public:
 	virtual void createTrees();
 	void createCommonTrees( std::string folder );
 	void createCommonNoBSelectionTrees( std::string folder );
+	void createCommonCutflowTrees( std::string folder );
 	void fillCommonTrees(const EventPtr event,  const unsigned int selection, std::string folder );
 	void fillCommonTreesNoBSelection(const EventPtr event,  const unsigned int selectionCriteria, std::string folder );
 	void fillLeptonEfficiencyCorrectionBranches( const EventPtr event, const unsigned int selectionCriteria, const LeptonPointer signalLepton );	
