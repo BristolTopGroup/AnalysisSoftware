@@ -99,26 +99,14 @@ double EventWeightProvider::reweightTopPt(const EventPtr event) {
 
 void EventWeightProvider::generate_weights() {
 
+	pileUpWeights = generateWeights(Fall2015_25ns, estimatedPileUp);
+	pileUpWeights_up = generateWeights(Fall2015_25ns, estimatedPileUp_up);
+	pileUpWeights_down = generateWeights(Fall2015_25ns, estimatedPileUp_down);
 
-	/*
-	 * TODO:
-	 * Summer11 PU_S3 and PU_S4 in-time PU only: PoissonOneXDist
-	 * if Summer11 OOT average PU, use PoissonIntDist
-	 * If Spring11 or Summer11 3D reweighting, use probdistFlat10 (compare to true)
-	 * Fall11, use Fall2011
-	 */
-
-
-	pileUpWeights = generateWeights(Startup2015_25ns, estimatedPileUp);
-	pileUpWeights_up = generateWeights(Startup2015_25ns, estimatedPileUp_up);
-	pileUpWeights_down = generateWeights(Startup2015_25ns, estimatedPileUp_down);
-
-
-	cout << "Pile up weights" << endl;
-
-	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
-		cout << index << ": " << pileUpWeights.at(index) << endl;
-	}
+// 	cout << "Pile up weights" << endl;
+// 	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
+// 		cout << index << ": " << pileUpWeights.at(index) << endl;
+// 	}
 }
 
 boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
@@ -126,20 +114,12 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		const boost::shared_ptr<TH1D> dataEstimatedPileUp ) {
 	boost::array<double, NWEIGHTSSIZE> weights;
 
-
 	// Check that integral of dataEstimatedPileUp is 1
-
-	std::cout << "Data Estimated PU Integral : " << dataEstimatedPileUp->Integral() << std::endl;
-
 	if ( dataEstimatedPileUp->Integral() != 1 && dataEstimatedPileUp->Integral() != 0 ) {
 		dataEstimatedPileUp->Scale( 1 / dataEstimatedPileUp->Integral() );
 	}
 
 	double s = 0.0;
-	double s2 = 0.0;
-	double s3 = 0.0;
-	double s4 = 0.0;
-	double s5 = 0.0;
 
 	for (unsigned int npu = 0; npu < inputMC.size(); ++npu) {
 
@@ -151,13 +131,9 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		}
 		else
 			weights[npu] = 0;
-		// s += DATAdistribution[npu];
-		s += weights[npu]*inputMC[npu];
-		s2 += DATAdistribution[npu];
-		s4 += weights[npu];
-		s5 += inputMC[npu];
-	}
 
+		s += DATAdistribution[npu];
+	}
 
 	/**
 	 * normalize weights such that the total sum of weights over the whole sample is 1.0,
@@ -165,14 +141,7 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 	 */
 	for (unsigned int npu = 0; npu < weights.size(); ++npu) {
 		weights[npu] /= s;
-		// std::cout << "Bin Weight : " << npu << " is : " << weights[npu] << std::endl;
-		s3 += weights[npu]*inputMC[npu];
 	}
-	std::cout << "PU MC :" << s5 << std::endl;
-	std::cout << "PU Data :" << s2 << std::endl;
-	std::cout << "PU Weight :" << s4 << std::endl;
-	std::cout << "PU MC*Weight SF :" << s << std::endl;
-	std::cout << "PU MC*ReWeight SF, s3 :" << s3 << std::endl;
 
 	return weights;
 }
