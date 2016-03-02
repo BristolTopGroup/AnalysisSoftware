@@ -609,7 +609,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonIdScaleFactorsHistogram(std::string m
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonIdScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> idHistogram((TH2F*) file->Get("NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio")->Clone());
+	boost::shared_ptr<TH2F> idHistogram((TH2F*) file->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio")->Clone());
 	file->Close();
 
 	return idHistogram;
@@ -624,7 +624,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonIsoScaleFactorsHistogram(std::string 
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonIsoScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")->Clone());
+	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")->Clone());
 	file->Close();
 
 	return isoHistogram;
@@ -639,7 +639,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonTriggerScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins/abseta_pt_ratio")->Clone());
+	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins/abseta_pt_ratio")->Clone());
 	file->Close();
 
 	return triggerHistogram;

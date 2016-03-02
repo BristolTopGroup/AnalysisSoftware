@@ -109,9 +109,9 @@ getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
 ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
 ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEfficiencies.root'
-MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunD_Reco74X_Nov20.root'
-MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunD_Reco74X_Nov20.root'
-MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Z_RunD_Reco74X_Nov20.root'
+MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunCD_Reco76X_Feb15.root'
+MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunCD_Reco76X_Feb15.root'
+MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
@@ -166,8 +166,8 @@ applyMetType0Corr = False
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 2215.182
-
+# lumi = 2215.182
+lumi = 2263.552 
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 13
 
