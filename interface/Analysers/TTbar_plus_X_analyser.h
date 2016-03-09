@@ -39,6 +39,7 @@ public:
 	void fillCommonTrees(const EventPtr event,  const unsigned int selection, std::string folder );
 	void fillCommonTreesNoBSelection(const EventPtr event,  const unsigned int selectionCriteria, std::string folder );
 	void fillLeptonEfficiencyCorrectionBranches( const EventPtr event, const unsigned int selectionCriteria, const LeptonPointer signalLepton );	
+	void createCutflow(const EventPtr event, const unsigned int selectionCriteria, std::string folder );
 	virtual void createHistograms() {};
 	void ePlusJetsQcdAnalysis(const EventPtr);
 	void muPlusJetsQcdAnalysis(const EventPtr);

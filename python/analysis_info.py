@@ -16,6 +16,7 @@ datasets_13TeV = {
                                 ],
 
             'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
+            # 'TTJets_PowhegPythia8' : [ '/storage/db0268/TopCrossSections/NTupleProduction/CMSSW_7_6_3_patch2/src' ],
             'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],
             'TTJets_PowhegPythia8_scaleup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaleup' ],
             'TTJets_PowhegPythia8_mtop1695' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695' ],

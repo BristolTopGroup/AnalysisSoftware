@@ -28,30 +28,7 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 		fillCommonTreesNoBSelection( event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Ref selection NoBSelection" );
 	}
 
-	std::vector <bool> SelectionPass;
-	bool PassAll = true;
-	treeMan_->setCurrentFolder(histogramFolder_ + "/EPlusJets/Cutflow");
-
-	SelectionPass.push_back(true);
-	event->PassesElectronChannelTrigger() ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
-	event->passesMETFilters() ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
-	event->PassesElectronSelection() ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
-	event->passesJetSelection(2) ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
-
-	for (uint i = 0; i < SelectionPass.size(); i++){
-		if (SelectionPass[i] == false) {
-			PassAll = false;
-			break;
-		}
-	}
-
-	PassAll ? SelectionPass.push_back(true) : SelectionPass.push_back(false);
-
-	for (uint i = 0; i < SelectionPass.size(); i++){
-		treeMan_->Fill("Cutflow", SelectionPass[i]);
-	}
-
-
+	// createCutflow(event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Cutflow" );
 
 	if ( event->PassesElectronTriggerAndSelection() ) {
 
@@ -175,6 +152,8 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 		fillCommonTreesNoBSelection( event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection" );
 	}
 
+	// createCutflow(event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Cutflow" );
+
 
 	if ( event->PassesMuonTriggerAndSelection() ) {
 
@@ -279,6 +258,47 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 		jetAnalyserMuPlusJetsQCDNonIsoSelection3toInf_->analyse(event);
 	}
 }
+
+
+
+
+
+
+void TTbar_plus_X_analyser::createCutflow(const EventPtr event, const unsigned int selectionCriteria, std::string folder ) {
+	std::vector<bool> cuts(event->getCuts(selectionCriteria));
+	std::vector <bool> SelectionPass;
+	bool PassAll(true);
+	treeMan_->setCurrentFolder(folder);
+
+	cuts[0] ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //All Events
+	event->PassesElectronChannelTrigger() ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Electron Trigger
+	event->passesMETFilters() ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //MET Filter
+	event->PassesElectronSelection() ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Electron Selection
+	cuts[1] ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Loose E Veto
+	cuts[2] ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Loose Mu Veto
+	if (selectionCriteria==2) (cuts[3] ? SelectionPass.push_back(true) : SelectionPass.push_back(false)); //E Conversion Veto (only for E channel)
+	event->passesJetSelection(selectionCriteria) ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //4Jet Selection
+	event->passesBJetSelection(selectionCriteria) ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //2BJetSelection
+
+	for (uint i = 0; i < SelectionPass.size(); i++){
+		if (SelectionPass[i] == false) {
+			PassAll = false;
+			break;
+		}
+	}
+
+	PassAll ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Pass All
+
+	for (uint i = 0; i < SelectionPass.size(); i++){
+		treeMan_->Fill("Cutflow", SelectionPass[i]);
+	}
+}
+
+
+
+
+
+
 
 void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned int selectionCriteria, std::string folder ) {
 	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
@@ -474,6 +494,7 @@ void TTbar_plus_X_analyser::createTrees() {
 	createCommonNoBSelectionTrees(histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection");
 
 	createCommonCutflowTrees(histogramFolder_ + "/EPlusJets/Cutflow");
+	createCommonCutflowTrees(histogramFolder_ + "/MuPlusJets/Cutflow");
 
 	//signal
 	metAnalyserEPlusJetsRefSelection_->createHistograms();

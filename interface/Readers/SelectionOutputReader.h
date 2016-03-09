@@ -26,7 +26,16 @@ private:
 	VariableReader<unsigned int> signalLeptonIndexReader;
 	VariableReader<MultiUIntPointer> cleanedJetsIndexReader;
 	VariableReader<MultiUIntPointer> cleanedBJetsIndexReader;
-
+	VariableReader<bool> AllEventsReader;
+	VariableReader<bool> AtLeastFourGoodJetsReader;
+	VariableReader<bool> AtLeastThreeGoodJetsReader;
+	VariableReader<bool> AtLeastTwoGoodJetsReader;
+	VariableReader<bool> AtLeastOneGoodJetReader;
+	VariableReader<bool> AtLeastOneBTagReader;
+	VariableReader<bool> AtLeastTwoBTagsReader;
+	VariableReader<bool> ConversionVetoReader;
+	VariableReader<bool> LooseElectronVetoReader;
+	VariableReader<bool> LooseMuonVetoReader;
 	void readSelectionOutputInfo();
 
 	SelectionOutputInfo selectionOutputInfo;

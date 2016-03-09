@@ -28,7 +28,7 @@ unsigned int const Event::minNBJets_ = 2;
 double const Event::minSignalMuonPt_ = 22;
 double const Event::minSignalMuonEta_ = 2.4;
 double const Event::minSignalElectronPt_ = 25;
-double const Event::minSignalElectronEta_ = 2.1; 
+double const Event::minSignalElectronEta_ = 2.4; 
 
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
@@ -589,6 +589,40 @@ const unsigned int Event::getNBJets( unsigned int selectionCriteria ) const {
 		return selectionOutputInfo_muonQCDNonisolated3toInf.getNumberOfBJets();
 	}
 	return 0;
+}
+
+
+const std::vector<bool> Event::getCuts( unsigned int selectionCriteria ) const {
+
+	std::vector<bool> CutSequence;
+	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
+		CutSequence.push_back(selectionOutputInfo_electron.getAllEvents());
+		CutSequence.push_back(selectionOutputInfo_electron.getLooseElectronVeto());
+		CutSequence.push_back(selectionOutputInfo_electron.getLooseMuonVeto());
+		CutSequence.push_back(selectionOutputInfo_electron.getConversionVeto());
+		CutSequence.push_back(selectionOutputInfo_electron.getAtLeastOneGoodJet());
+		CutSequence.push_back(selectionOutputInfo_electron.getAtLeastTwoGoodJets());
+		CutSequence.push_back(selectionOutputInfo_electron.getAtLeastThreeGoodJets());
+		CutSequence.push_back(selectionOutputInfo_electron.getAtLeastFourGoodJets());
+		CutSequence.push_back(selectionOutputInfo_electron.getAtLeastOneBTag());
+		CutSequence.push_back(selectionOutputInfo_electron.getAtLeastTwoBTags());
+
+	}
+
+	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
+		CutSequence.push_back(selectionOutputInfo_muon.getAllEvents());
+		CutSequence.push_back(selectionOutputInfo_muon.getLooseElectronVeto());
+		CutSequence.push_back(selectionOutputInfo_muon.getLooseMuonVeto());
+		CutSequence.push_back(0);
+		CutSequence.push_back(selectionOutputInfo_muon.getAtLeastOneGoodJet());
+		CutSequence.push_back(selectionOutputInfo_muon.getAtLeastTwoGoodJets());
+		CutSequence.push_back(selectionOutputInfo_muon.getAtLeastThreeGoodJets());
+		CutSequence.push_back(selectionOutputInfo_muon.getAtLeastFourGoodJets());
+		CutSequence.push_back(selectionOutputInfo_muon.getAtLeastOneBTag());
+		CutSequence.push_back(selectionOutputInfo_muon.getAtLeastTwoBTags());
+	}
+	return CutSequence;
 }
 
 JetCollection Event::GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
