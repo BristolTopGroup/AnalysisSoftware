@@ -38,7 +38,8 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		muonIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonIsoScaleFactorsFile")), //
 		muonTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonTriggerScaleFactorsFile")), //
 		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
-		electronIdIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdIsoScaleFactorsFile")), //
+		electronIdScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdScaleFactorsFile")), //
+		electronIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIsoScaleFactorsFile")), //
 		electronTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronTriggerScaleFactorsFile")), //
 		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
 		lightJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "lightJetResoFile")), //
@@ -268,11 +269,18 @@ string ConfigFile::MuonTriggerScaleFactorsFile() const {
 		return muonTriggerScaleFactorsFile_;
 }
 
-string ConfigFile::ElectronIdIsoScaleFactorsFile() const {
-	if (programOptions.count("ElectronIdIsoScaleFactorsFile"))
-		return programOptions["ElectronIdIsoScaleFactorsFile"].as<std::string>();
+string ConfigFile::ElectronIdScaleFactorsFile() const {
+	if (programOptions.count("ElectronIdScaleFactorsFile"))
+		return programOptions["ElectronIdScaleFactorsFile"].as<std::string>();
 	else
-		return electronIdIsoScaleFactorsFile_;
+		return electronIdScaleFactorsFile_;
+}
+
+string ConfigFile::ElectronIsoScaleFactorsFile() const {
+	if (programOptions.count("ElectronIsoScaleFactorsFile"))
+		return programOptions["ElectronIsoScaleFactorsFile"].as<std::string>();
+	else
+		return electronIsoScaleFactorsFile_;
 }
 
 string ConfigFile::ElectronTriggerScaleFactorsFile() const {
@@ -497,20 +505,22 @@ void ConfigFile::loadIntoMemory() {
 
 	if ( getMuonScaleFactorsFromFile_ && boost::filesystem::exists(MuonTriggerScaleFactorsFile()) && boost::filesystem::exists(MuonIdScaleFactorsFile()) && boost::filesystem::exists(MuonIsoScaleFactorsFile())) {
 		std::cout << "Getting muon scale factors from files :" << std::endl 
-			<< MuonIdScaleFactorsFile() << std::endl 
-			<< MuonIsoScaleFactorsFile() << std::endl 
+			<< MuonIdScaleFactorsFile() << std::endl
+			<< MuonIsoScaleFactorsFile() << std::endl
 			<< MuonTriggerScaleFactorsFile() << std::endl;
 		Globals::muonIdScaleFactorsHistogram = getMuonIdScaleFactorsHistogram(MuonIdScaleFactorsFile());
 		Globals::muonIsoScaleFactorsHistogram = getMuonIsoScaleFactorsHistogram(MuonIsoScaleFactorsFile());
 		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
 	}
 
-	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) ) {
+	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) && boost::filesystem::exists(ElectronIdScaleFactorsFile()) && boost::filesystem::exists(ElectronIsoScaleFactorsFile())) {
 		std::cout << "Getting electron scale factors from file :"  << std::endl
-		<< ElectronTriggerScaleFactorsFile()  << std::endl 
-		<< ElectronIdIsoScaleFactorsFile() << std::endl;
+			<< ElectronTriggerScaleFactorsFile()  << std::endl
+			<< ElectronIdScaleFactorsFile() << std::endl
+			<< ElectronIsoScaleFactorsFile() << std::endl;
 		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
-		Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
+		Globals::electronIdScaleFactorsHistogram = getElectronIdScaleFactorsHistogram(ElectronIdScaleFactorsFile());
+		Globals::electronIsoScaleFactorsHistogram = getElectronIsoScaleFactorsHistogram(ElectronIsoScaleFactorsFile());
 
 	}
 
@@ -645,21 +655,36 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	return triggerHistogram;
 }
 
-boost::shared_ptr<TH2D> ConfigFile::getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile) {
+boost::shared_ptr<TH2F> ConfigFile::getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile) {
 	using namespace std;
 
-	if (!boost::filesystem::exists(electronIdIsoScaleFactorsFile)) {
-		cerr << "ConfigFile::getElectronIdIsoScaleFactorsHistogram(" << electronIdIsoScaleFactorsFile << "): could not find file" << endl;
-		throw "Could not find electron ID & ISO scale factors histogram file in " + electronIdIsoScaleFactorsFile;
+	if (!boost::filesystem::exists(electronIdScaleFactorsFile)) {
+		cerr << "ConfigFile::getElectronIdScaleFactorsHistogram(" << electronIdScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find electron ID scale factors histogram file in " + electronIdScaleFactorsFile;
 	}
 
-	boost::scoped_ptr<TFile> file(TFile::Open(electronIdIsoScaleFactorsFile.c_str()));
-	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
-	// boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
-	boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) file->Get("GlobalSF")->Clone());
+	boost::scoped_ptr<TFile> file(TFile::Open(electronIdScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH2F> idHistogram((TH2F*) file->Get("EGamma_SF2D")->Clone());
 	file->Close();
 
-	return idIsoHistogram;
+	return idHistogram;
+}
+
+boost::shared_ptr<TH2F> ConfigFile::getElectronIsoScaleFactorsHistogram(std::string electronIsoScaleFactorsFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(electronIsoScaleFactorsFile)) {
+		cerr << "ConfigFile::getElectronIsoScaleFactorsHistogram(" << electronIsoScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find electron ISO scale factors histogram file in " + electronIsoScaleFactorsFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(electronIsoScaleFactorsFile.c_str()));
+	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
+	// boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
+	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("GlobalSF")->Clone());
+	file->Close();
+
+	return isoHistogram;
 }
 
 boost::shared_ptr<TH1F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {

@@ -52,7 +52,8 @@ boost::shared_ptr<TH2F> Globals::gluonJet = boost::shared_ptr<TH2F>(new TH2F());
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;
 int Globals::ElectronScaleFactorSystematic = 0;
-boost::shared_ptr<TH2D> Globals::electronIdIsoScaleFactorsHistogram = boost::shared_ptr<TH2D>(new TH2D());
+boost::shared_ptr<TH2F> Globals::electronIdScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::electronIsoScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH1F> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TH1F>(new TH1F());
 
 //muons

@@ -40,7 +40,8 @@ public:
 	std::string MuonIsoScaleFactorsFile() const;
 	std::string MuonTriggerScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
-	std::string ElectronIdIsoScaleFactorsFile() const;
+	std::string ElectronIdScaleFactorsFile() const;
+	std::string ElectronIsoScaleFactorsFile() const;
 	std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
     std::string hadronTriggerFile() const;
@@ -85,7 +86,8 @@ private:
 	std::string muonIsoScaleFactorsFile_;
 	std::string muonTriggerScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
-	std::string electronIdIsoScaleFactorsFile_;
+	std::string electronIdScaleFactorsFile_;
+	std::string electronIsoScaleFactorsFile_;
 	std::string electronTriggerScaleFactorsFile_;
 	std::string bJetResoFile_;
     std::string lightJetResoFile_;
@@ -121,7 +123,8 @@ private:
 	boost::shared_ptr<TH2F> getMuonIsoScaleFactorsHistogram(std::string muonIsoScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH1F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
-	boost::shared_ptr<TH2D> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
+	boost::shared_ptr<TH2F> getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile);
+	boost::shared_ptr<TH2F> getElectronIsoScaleFactorsHistogram(std::string electronIsoScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
 	
