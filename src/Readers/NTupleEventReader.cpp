@@ -41,12 +41,12 @@ NTupleEventReader::NTupleEventReader() :
 		metReaders(), //
 		// // metCorrReaders(), //
 
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle22erWPLooseGsf.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsf.Fired")),
 		// passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18er.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20.Fired")),
 		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20.Fired")),
 
-		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle22erWPLooseGsfMC.Fired")),
+		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsfMC.Fired")),
 		// passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18erMC.Fired")),
 		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
 		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
