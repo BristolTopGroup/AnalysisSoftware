@@ -59,6 +59,7 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 
 	treeMan_->Fill("leptonPt", signalLepton->pt() );
 	treeMan_->Fill("leptonEta", signalLepton->eta() );
+	treeMan_->Fill("leptonCharge", signalLepton->charge() );
 
 	// Get lepton scale factor
 	if ( event->PassesMuonTriggerAndSelection() ) {
@@ -146,6 +147,7 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->addBranch("leptonPt", "F", "Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("leptonEta", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("leptonCharge", "F", "Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("LeptonEfficiencyCorrection", "F", "Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("LeptonEfficiencyCorrectionUp", "F", "Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("LeptonEfficiencyCorrectionDown", "F", "Unfolding" + Globals::treePrefix_);
