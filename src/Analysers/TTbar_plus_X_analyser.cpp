@@ -286,6 +286,7 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	}
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		treeMan_->Fill("jet_pt", jets.at(index)->pt() );
+		treeMan_->Fill("jet_eta", jets.at(index)->eta() );
 	}	
 	treeMan_->Fill("HT",Event::HT(jets));
 	treeMan_->Fill("MET",MET_original->et());
@@ -389,7 +390,8 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NVertices", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("jet_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("jet_pt", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("jet_eta", "F", "FitVariables" + Globals::treePrefix_, false);
 	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
