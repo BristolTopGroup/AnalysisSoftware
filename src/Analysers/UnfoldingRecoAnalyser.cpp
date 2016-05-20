@@ -93,10 +93,16 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalLepton, METForUnc_i));
 	}
 
-	treeMan_->Fill("bPt", bjets[0]->pt() );
-	treeMan_->Fill("bEta", bjets[0]->eta() );
-	treeMan_->Fill("bPt", bjets[1]->pt() );
-	treeMan_->Fill("bEta", bjets[1]->eta() );
+	for (unsigned int index = 0; index < bjets.size(); ++index) {
+		treeMan_->Fill("bPt", bjets.at(index)->pt() );
+		treeMan_->Fill("bEta", bjets.at(index)->eta() );
+	}
+
+	for (unsigned int index = 0; index < jets.size(); ++index) {
+		treeMan_->Fill("jetPt", jets.at(index)->pt() );
+		treeMan_->Fill("jetEta", jets.at(index)->eta() );
+		treeMan_->Fill("jetParton", jets.at(index)->ttbar_decay_parton() );
+	}
 
 	BAT::TtbarHypothesis topHypothesis = event->ttbarHypothesis();
 	if ( topHypothesis.isValid() && topHypothesis.isPhysical() ) {
@@ -155,6 +161,10 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->addBranch("bPt", "F", "Unfolding" + Globals::treePrefix_, false);
 	treeMan_->addBranch("bEta", "F", "Unfolding" + Globals::treePrefix_, false);
+
+	treeMan_->addBranch("jetPt", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("jetEta", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("jetParton", "F", "Unfolding" + Globals::treePrefix_, false);
 
 	for ( unsigned int i = 0; i < 250; ++i ) {
 		treeMan_->addBranch("genWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
