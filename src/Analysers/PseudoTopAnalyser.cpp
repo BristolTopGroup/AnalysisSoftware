@@ -134,6 +134,11 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	// Store pseudo HT
 	treeMan_->Fill("pseudoHT", event->HT( pseudoJets ) );
 
+	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
+		treeMan_->Fill("pseudoJet_pT", pseudoJets.at(index)->pt() );
+		treeMan_->Fill("pseudoJet_eta", pseudoJets.at(index)->eta() );
+	}
+
 	// Store pseudo ST
 	if ( allPseudoLeptons.size() > 0 ) {
 		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) ) );
@@ -204,6 +209,9 @@ void PseudoTopAnalyser::createTrees() {
 	// Branches for b jets
 	treeMan_->addBranch("pseudoB_pT", "F", "Unfolding" + Globals::treePrefix_, false);
 	treeMan_->addBranch("pseudoB_eta", "F", "Unfolding" + Globals::treePrefix_, false);
+	// Branches for jets
+	treeMan_->addBranch("pseudoJet_pT", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("pseudoJet_eta", "F", "Unfolding" + Globals::treePrefix_, false);
 	// Branch for pseudo MET
 	treeMan_->addBranch("pseudoMET", "F","Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("pseudoMET_mass", "F","Unfolding" + Globals::treePrefix_);
