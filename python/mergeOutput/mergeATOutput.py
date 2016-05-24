@@ -6,22 +6,23 @@ import subprocess
 import glob
 
 jobTemplates = [
-			['TTJets_PowhegPythia8_tree.root', ['tree_TTJets_PowhegPythia8_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'] ],
-			['TTJets_PowhegPythia8_scaleup_tree.root', ['tree_TTJets_PowhegPythia8_scaleup_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
-			['TTJets_PowhegPythia8_scaledown_tree.root', ['tree_TTJets_PowhegPythia8_scaledown_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
-			['TTJets_PowhegPythia8_mtop1695_tree.root', ['tree_TTJets_PowhegPythia8_mtop1695_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
-			['TTJets_PowhegPythia8_mtop1755_tree.root', ['tree_TTJets_PowhegPythia8_mtop1755_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
-			['TTJets_amc_tree.root', ['tree_TTJets_amcatnloFXFX_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
-			['TTJets_madgraph_tree.root', ['tree_TTJets_madgraphMLM_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
-			['TTJets_amcatnloHerwigpp_tree.root', ['tree_TTJets_amcatnloHerwigpp_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
+			['TTJets_PowhegPythia8_tree.root', ['tree_TTJets_PowhegPythia8_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'] ],
+			['TTJets_PowhegPythia8_scaleup_tree.root', ['tree_TTJets_PowhegPythia8_scaleup_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
+			['TTJets_PowhegPythia8_scaledown_tree.root', ['tree_TTJets_PowhegPythia8_scaledown_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
+			['TTJets_PowhegPythia8_mtop1695_tree.root', ['tree_TTJets_PowhegPythia8_mtop1695_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
+			['TTJets_PowhegPythia8_mtop1755_tree.root', ['tree_TTJets_PowhegPythia8_mtop1755_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C' ],
+			['TTJets_amc_tree.root', ['tree_TTJets_amcatnloFXFX_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
+			['TTJets_madgraph_tree.root', ['tree_TTJets_madgraphMLM_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
+			['TTJets_powhegHerwigpp_tree.root', ['tree_TTJets_PowhegHerwigpp_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
+			['TTJets_amcatnloHerwigpp_tree.root', ['tree_TTJets_amcatnloHerwigpp_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'], 'C'],
 
-			['data_muon_tree.root', ['tree_SingleMuon*_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET.root'], 'C' ],
-			['data_electron_tree.root', ['tree_SingleElectron*_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET.root'], 'C' ],
+			['data_muon_tree.root', ['tree_SingleMuon*_2172pb_PFElectron_PFMuon_PF2PATJets_MET.root'], 'C' ],
+			['data_electron_tree.root', ['tree_SingleElectron*_2172pb_PFElectron_PFMuon_PF2PATJets_MET.root'], 'C' ],
 
-			['SingleTop_tree.root', ['tree_T_tw_2215.18pb_PFElectron_PFMuon_PF2PATJets*.root', 'tree_Tbar_tw_2215.18pb_PFElectron_PFMuon_PF2PATJets*.root', 'tree_TToLeptons_t_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'] ],
-			['VJets_tree.root', ['tree_DYJetsToLL_M50_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*', 'tree_WJetsToLNu_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*'] ],
-			['QCD_Electron_tree.root', ['tree_QCD_bcToE_*_2215.18pb_PFElectron_PFMuon_PF2PATJets*', 'tree_QCD_EMEnriched_*_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*'] ],
-			['QCD_Muon_tree.root', ['tree_QCD_MuEnriched_*_2215.18pb_PFElectron_PFMuon_PF2PATJets_MET*.root'] ],
+			['SingleTop_tree.root', ['tree_T_tw_2172pb_PFElectron_PFMuon_PF2PATJets*.root', 'tree_Tbar_tw_2172pb_PFElectron_PFMuon_PF2PATJets*.root', 'tree_TToLeptons_t_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'] ],
+			['VJets_tree.root', ['tree_DYJetsToLL_M50_2172pb_PFElectron_PFMuon_PF2PATJets_MET*', 'tree_WJetsToLNu_2172pb_PFElectron_PFMuon_PF2PATJets_MET*'] ],
+			['QCD_Electron_tree.root', ['tree_QCD_bcToE_*_2172pb_PFElectron_PFMuon_PF2PATJets*', 'tree_QCD_EMEnriched_*_2172pb_PFElectron_PFMuon_PF2PATJets_MET*'] ],
+			['QCD_Muon_tree.root', ['tree_QCD_MuEnriched_*_2172pb_PFElectron_PFMuon_PF2PATJets_MET*.root'] ],
 
 		]
 jobs = []

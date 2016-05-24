@@ -32,15 +32,10 @@ datasetInfo['TTJets_PowhegPythia8_scaleup'] = { "cross-section" : 831.76, "Numbe
 datasetInfo['TTJets_PowhegPythia8_mtop1695'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 29345175 } 
 datasetInfo['TTJets_PowhegPythia8_mtop1755'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 9659200 } 
 
-datasetInfo['TTJets_amcatnloFXFX'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 12647555 } 
-datasetInfo['TTJets_amcatnloFXFX_scaledown'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 0 }#not available
-datasetInfo['TTJets_amcatnloFXFX_scaleup'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 0 }#not available
-datasetInfo['TTJets_amcatnloFXFX_mtop1695'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 14150600 } 
-datasetInfo['TTJets_amcatnloFXFX_mtop1755'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 12798823 } 
-
+datasetInfo['TTJets_amcatnloFXFX'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 12771412 } 
 datasetInfo['TTJets_madgraphMLM'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 10215131 } 
-# datasetInfo['TTJets_PowhegHerwigpp'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 4999975 }
-datasetInfo['TTJets_amcatnloHerwigpp'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 0 } 
+datasetInfo['TTJets_PowhegHerwigpp'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 19383463 }
+datasetInfo['TTJets_amcatnloHerwigpp'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 11184578 } 
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/CMS/StandardModelCrossSectionsat13TeV
 datasetInfo['DYJetsToLL_M50'] = { "cross-section" : 6025.2, "NumberOfProcessedEvents" : 19259725 } 
@@ -55,17 +50,17 @@ datasetInfo['TToLeptons_t'] = { "cross-section" : 136.02, "NumberOfProcessedEven
 datasetInfo['T_tw'] = { "cross-section" : 35.6, "NumberOfProcessedEvents" : 1000000 } 
 datasetInfo['Tbar_tw'] = { "cross-section" : 35.6, "NumberOfProcessedEvents" : 999400 } 
 
-# # GJet
-datasetInfo['GJets_100to200_PU20bx25'] = { "cross-section" : 9226, "NumberOfProcessedEvents" : 5116711 } 
-datasetInfo['GJets_200to400_PU20bx25'] = { "cross-section" : 2300, "NumberOfProcessedEvents" : 10467654 } 
-datasetInfo['GJets_400to600_PU20bx25'] = { "cross-section" : 277.4, "NumberOfProcessedEvents" : 2406285 } 
-datasetInfo['GJets_600toInf_PU20bx25'] = { "cross-section" : 93.38, "NumberOfProcessedEvents" : 2013529 } 
+# # # GJet
+# datasetInfo['GJets_100to200'] = { "cross-section" : 9226, "NumberOfProcessedEvents" : 5116711 } 
+# datasetInfo['GJets_200to400'] = { "cross-section" : 2300, "NumberOfProcessedEvents" : 10467654 } 
+# datasetInfo['GJets_400to600'] = { "cross-section" : 277.4, "NumberOfProcessedEvents" : 2406285 } 
+# datasetInfo['GJets_600toInf'] = { "cross-section" : 93.38, "NumberOfProcessedEvents" : 2013529 } 
 
 # # QCD EM-enriched
 # # Cross sections from https://cms-pdmv.cern.ch/mcm/requests?dataset_name=QCD_*EMEnriched*TuneCUETP8M1*13*&page=0&shown=262173&limit=100
-datasetInfo['QCD_EMEnriched_15to20'] = { "cross-section" : 1273000000 * 0.0002, "NumberOfProcessedEvents" : 5058876 } 
+datasetInfo['QCD_EMEnriched_15to20'] = { "cross-section" : 1273000000 * 0.0002, "NumberOfProcessedEvents" : 5471097 } 
 datasetInfo['QCD_EMEnriched_20to30'] = { "cross-section" : 557600000 * 0.0096, "NumberOfProcessedEvents" : 9260322 } 
-datasetInfo['QCD_EMEnriched_30to50'] = { "cross-section" : 136000000 * 0.073, "NumberOfProcessedEvents" : 4736965 } 
+datasetInfo['QCD_EMEnriched_30to50'] = { "cross-section" : 136000000 * 0.073, "NumberOfProcessedEvents" : 4693592 } 
 datasetInfo['QCD_EMEnriched_50to80'] = { "cross-section" : 19800000 * 0.146, "NumberOfProcessedEvents" : 22463817 } 
 datasetInfo['QCD_EMEnriched_80to120'] = { "cross-section" : 2800000 * 0.125, "NumberOfProcessedEvents" : 36029628 } 
 datasetInfo['QCD_EMEnriched_120to170'] = { "cross-section" : 477000 * 0.132, "NumberOfProcessedEvents" : 8092887 } 
