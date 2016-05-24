@@ -25,7 +25,7 @@ double const Event::maxJetAbsEta_ = 2.4;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
-double const Event::minSignalMuonPt_ = 22;
+double const Event::minSignalMuonPt_ = 23;
 double const Event::minSignalMuonEta_ = 2.4;
 double const Event::minSignalElectronPt_ = 25;
 double const Event::minSignalElectronEta_ = 2.4; 
@@ -123,13 +123,8 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_PowhegPythia8_mtop1695 ||
 		type == DataType::TTJets_PowhegPythia8_mtop1755 ||
 		type == DataType::TTJets_amcatnloFXFX ||
-		// type == DataType::TTJets_amcatnloFXFX_scaledown ||
-		// type == DataType::TTJets_amcatnloFXFX_scaleup ||
-		type == DataType::TTJets_amcatnloFXFX_mtop1695 ||
-		type == DataType::TTJets_amcatnloFXFX_mtop1755 ||
 		type == DataType::TTJets_madgraphMLM ||
-		// type == DataType::TTJets_powhegPythia6 ||
-		// type == DataType::TTJets_PowhegHerwigpp ||
+		type == DataType::TTJets_PowhegHerwigpp ||
 		type == DataType::TTJets_amcatnloHerwigpp
 		// type == DataType::TTJets_synch
 		)
