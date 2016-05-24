@@ -23,6 +23,7 @@ boost::shared_ptr<TH1D> Globals::estimatedPileup = boost::shared_ptr<TH1D>(new T
 boost::shared_ptr<TH1D> Globals::estimatedPileup_up = boost::shared_ptr<TH1D>(new TH1D("tmp_up", "tmp_up", 25, 0, 25));
 boost::shared_ptr<TH1D> Globals::estimatedPileup_down = boost::shared_ptr<TH1D>(new TH1D("tmp_down", "tmp_down", 25, 0, 25));
 unsigned int Globals::NTupleVersion = 0;
+std::string Globals::sample = "";
 bool Globals::verbose = true;
 
 //kinematic fit
@@ -44,10 +45,7 @@ boost::shared_ptr<TH2F> Globals::LeptonicRecoIncorrectPermHistogram = boost::sha
 // BTagging efficiencies
 boost::shared_ptr<TH2F> Globals::bQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH2F> Globals::cQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
-boost::shared_ptr<TH2F> Globals::udsQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
-boost::shared_ptr<TH2F> Globals::gluonJet = boost::shared_ptr<TH2F>(new TH2F());
-
-
+boost::shared_ptr<TH2F> Globals::udsgQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
 
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;

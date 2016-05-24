@@ -52,12 +52,13 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		lumi_(PythonParser::getAttributeFromPyObject<double>(config, "lumi")), //
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
 		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
+		sample_(PythonParser::getAttributeFromPyObject<string>(config, "sample")), //
 		electronScaleFactorSystematic_(0), //
 		muonScaleFactorSystematic_(0), //
 		jesSystematic_(0), //
 		jetSmearingSystematic_(0), //
 		btagSystematic_(0), //
-		lightTagSystematic_(0), //
+		lighttagSystematic_(0), //
 		custom_file_suffix_(""), //
 		pdfWeightNumber_(0), //
 		applyMetSysShiftCorr_(0), //
@@ -77,7 +78,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 	if (PythonParser::hasAttribute(config, "BTagSystematic"))
 		btagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "BTagSystematic");
 	if (PythonParser::hasAttribute(config, "LightTagSystematic"))
-		lightTagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "LightTagSystematic");
+		lighttagSystematic_ = PythonParser::getAttributeFromPyObject<int>(config, "LightTagSystematic");
 	if (PythonParser::hasAttribute(config, "custom_file_suffix"))
 		custom_file_suffix_ = PythonParser::getAttributeFromPyObject<string>(config, "custom_file_suffix");
 	if (PythonParser::hasAttribute(config, "pdfWeightNumber"))
@@ -381,7 +382,7 @@ int ConfigFile::LightTagSystematic() const {
 	if (programOptions.count("LightTagSystematic"))
 		return programOptions["LightTagSystematic"].as<int>();
 	else
-		return lightTagSystematic_;
+		return lighttagSystematic_;
 }
 
 string ConfigFile::custom_file_suffix() const {
@@ -488,6 +489,7 @@ void ConfigFile::loadIntoMemory() {
 	Globals::maxEvents = maxEvents();
 	Globals::NTupleVersion = nTupleVersion();
 	Globals::energyInTeV = centerOfMassEnergy();
+	Globals::sample = sample();
 
 	//kinematic fit
 	Globals::TQAFPath = TQAFPath();
@@ -554,8 +556,7 @@ void ConfigFile::loadIntoMemory() {
 
 	getbQuarkJet( BTagEfficiencyFile() );
 	getcQuarkJet( BTagEfficiencyFile() );
-	getudsQuarkJet( BTagEfficiencyFile() );
-	// getgluonJet( BTagEfficiencyFile() );
+	getudsgQuarkJet( BTagEfficiencyFile() );
 
 
 	//JES systematic
@@ -835,27 +836,28 @@ void ConfigFile::getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikeliho
 }
 
 
-
-
-
-
 void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("bQuarkJets_BTags_Hist");
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getbQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
 		throw "Could not find file " + btagEfficiencyFile;
 	}
-	std::cout << btagEfficiencyFile.c_str();
+	std::cout << "BTagEfficiencyFile in use : " << btagEfficiencyFile.c_str() << endl;
+	std::cout << "MC BTag Efficiency in use : " << pathToBTagEff.c_str() << endl;
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
 
-	Globals::bQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("bQuarkJets_BTags_Hist")->Clone();
+	Globals::bQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
 	
 	file->Close();
 }
 
+
 void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
+
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("cQuarkJets_BTags_Hist");
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getcQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -863,39 +865,41 @@ void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
-	Globals::cQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("cQuarkJets_BTags_Hist")->Clone();
+	Globals::cQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
 	file->Close();
 }
-void ConfigFile::getudsQuarkJet(std::string btagEfficiencyFile) {
+
+
+void ConfigFile::getudsgQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("udsgQuarkJets_BTags_Hist");
+
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
-		cerr << "ConfigFile::getudsQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
+		cerr << "ConfigFile::getudsgQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
 		throw "Could not find file " + btagEfficiencyFile;
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
-	Globals::udsQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("udsgQuarkJets_BTags_Hist")->Clone();
+	Globals::udsgQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
 	file->Close();
 }
-// void ConfigFile::getgluonJet(std::string btagEfficiencyFile) {
-// 	using namespace std;
 
-// 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
-// 		cerr << "ConfigFile::getgluonJet(" << btagEfficiencyFile << "): could not find file" << endl;
-// 		throw "Could not find file " + btagEfficiencyFile;
-// 	}
-
-// 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
-// 	Globals::gluonJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get("gluonQuarkJets_BTags_Hist")->Clone();
-// 	file->Close();
-// }
-
-
-
+std::string ConfigFile::getSampleBTagEffTag(std::string sample) {
+	if (sample == "TTJets_PowhegPythia8") return "PowhegPythia8/";
+	else if (sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
+	// else if (sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
+	// else if (sample == "TTJets_amcatnloHerwigpp") return "aMCatNLOHerwigpp/";
+	// else if (sample == "TTJets_madgraphMLM") return "Madgraph/";
+	else return "PowhegPythia8/";
+}
 
 unsigned int ConfigFile::nTupleVersion() const {
 	return nTupleVersion_;
+}
+
+std::string ConfigFile::sample() const {
+	return sample_;
 }
 
 } /* namespace BAT */

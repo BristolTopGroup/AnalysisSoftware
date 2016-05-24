@@ -57,6 +57,7 @@ public:
 	bool isOptionSetInConfig(std::string option) const;
 	unsigned int centerOfMassEnergy() const;
 	unsigned int nTupleVersion() const;
+	std::string sample() const;
 	int electronScaleFactorSystematic() const;
 	int muonScaleFactorSystematic() const;
 	int jesSystematic() const;
@@ -100,12 +101,13 @@ private:
 	double lumi_;
 	unsigned int centerOfMassEnergy_;
 	unsigned int nTupleVersion_;
+	std::string sample_;
 	int electronScaleFactorSystematic_;
 	int muonScaleFactorSystematic_;
 	int jesSystematic_;
 	int jetSmearingSystematic_;
 	int btagSystematic_;
-	int lightTagSystematic_;
+	int lighttagSystematic_;
 	std::string custom_file_suffix_;
 	unsigned int pdfWeightNumber_;
 //	PileUpReweightingMethod::value pileUpReweightingMethod_;
@@ -140,9 +142,8 @@ private:
 
 	void getbQuarkJet(std::string btagEfficiencyFile);
 	void getcQuarkJet(std::string btagEfficiencyFile);
-	void getudsQuarkJet(std::string btagEfficiencyFile);
-	void getgluonJet(std::string btagEfficiencyFile);
-
+	void getudsgQuarkJet(std::string btagEfficiencyFile);
+	std::string getSampleBTagEffTag(std::string sample);
 
 };
 
