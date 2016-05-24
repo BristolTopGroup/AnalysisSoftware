@@ -1,6 +1,6 @@
 '''
 Run this over new ntuples to get the number of processed events from crab. 
-This serves as an input into DataSetInfo_13TeV_25ns.py
+This recreates DataSetInfo_13TeV_25ns.py using new numbers.
 '''
 
 import ROOT 
@@ -13,7 +13,7 @@ import glob
 if __name__ == '__main__':
 	filename = 'DataSetInfo_13TeV_25ns.py' #Dataset file name
 	basepath = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/'
-	version = 'v6/'
+	version = 'v12/'
 	basepath = basepath + version
 
 	DatasetFile = open(filename,'r')
@@ -25,50 +25,43 @@ if __name__ == '__main__':
 	for dirs in os.listdir(basepath):
 		datasets.append(dirs)
 
-	for dataset in range( 0, len(datasets) ):
-		if datasets[dataset].startswith("Single"): continue
-		datasetpath = basepath+datasets[dataset]+'/'
+	for dataset in datasets:
+		if dataset.startswith("Single"): continue
+		path = basepath+dataset+'/'
 
 		rootfiles = []
-		for files in os.listdir(datasetpath):
+		for files in os.listdir(path):
 			rootfiles.append(files)
 
 		total_processed_event = 0
-		for f in range( 0, len(rootfiles) ):
+		for f in rootfiles :
 			ntuple_processed_events = 0
-			rootfile = datasetpath+rootfiles[f]
-			if not os.path.exists(rootfile): print 'File Does Not exist'
+			if not os.path.exists(path+f): print 'File Does Not exist'
 
-			rootfile = TFile(rootfile)
+			rootfile = TFile(path+f)
+
 			hist = rootfile.Get("topPairEPlusJetsSelectionAnalyser/individualCuts")
+
+			if not hist : 
+				print "Waaargh help. Can't find histogram for : ", path+f
+				continue
+
 			ntuple_processed_events = hist.GetBinContent(1)
 			rootfile.Close()
 			total_processed_event = total_processed_event + ntuple_processed_events
 
-		print "Total number of processed events for ", datasets[dataset], " dataset is ", total_processed_event
+		print "Total number of processed events for ", dataset, " dataset is ", total_processed_event
 
 		exists = False
-		for line in range (0,len(content)):
-			if not ( content[line].startswith("datasetInfo['"+datasets[dataset]+"']") ): continue
+		for line in content:
+			if not ( line.startswith("datasetInfo['"+dataset+"']") ): continue
 			exists = True
-			oldline=content[line]
-			newline=''
-			linecontents = oldline.split()
-			i=0
-			for x in linecontents:
-				i = i-1
-				if (i==0) : 
-					newline += (str(int(total_processed_event))+' ')
-				else: newline += (x+' ')
-				if x == '"NumberOfProcessedEvents"': 
-					i=2
-			content[line] = newline
-
+			n_oldEvents = line.split()[-2]
+			line.replace(n_oldEvents, (str(int(total_processed_event))))
 		if not exists: print "This dataset does not have an entry in DatasetInfo file. For now, Go make one."
 
 	DatasetFile = open(filename,'w')
-	for line in range (0,len(content)):
-	  	print>>DatasetFile, content[line]
+	for line in content: print >> DatasetFile, line
   	DatasetFile.close()
 
 

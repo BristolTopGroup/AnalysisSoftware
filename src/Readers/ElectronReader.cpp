@@ -30,6 +30,7 @@ ElectronReader::ElectronReader() : //
 		PFRelIso04Reader_(), //
 		PFRelIso03DeltaBetaReader_(), //
 		PFRelIso04DeltaBetaReader_(), //
+		PFRelIsoWithEAReader_(), //
 		sumChargedHadronPt03Reader_(),//
 		sumNeutralHadronPt03Reader_(),//
 		sumPhotonPt03Reader_(),//
@@ -48,9 +49,9 @@ ElectronReader::ElectronReader() : //
 		mvaTrigV0_(), //
 		mvaNonTrigV0_(), //
 		passConversionVeto_(), //
-		passTightElectron_(), //
-		passTightConversionElectron_(), //
-		passTightNonIsoElectron_(), //
+		passMediumElectron_(), //
+		passMediumConversionElectron_(), //
+		passMediumNonIsoElectron_(), //
 		algorithm(ElectronAlgorithm::Calo), //
 		electrons() {
 
@@ -73,6 +74,7 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		PFRelIso04Reader_(input, "Electrons.PFRelIso04"), //
 		PFRelIso03DeltaBetaReader_(input, "Electrons.PFRelIso03DeltaBeta"), //
 		PFRelIso04DeltaBetaReader_(input, "Electrons.PFRelIso04DeltaBeta"), //
+		PFRelIsoWithEAReader_(input, "Electrons.PFRelIsoWithEA"), //
 		sumChargedHadronPt03Reader_(input, "Electrons.sumChargedHadronPt03"), //
 		sumNeutralHadronPt03Reader_(input, "Electrons.sumNeutralHadronPt03"), //
 		sumPhotonPt03Reader_(input, "Electrons.sumPhotonPt03"), //
@@ -91,9 +93,9 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		mvaTrigV0_(input, "Electrons.mvaTrigV0"), //
 		mvaNonTrigV0_(input, "Electrons.mvaNonTrigV0"), //
 		passConversionVeto_(input, "Electrons.passConversionVeto"), //
-		passTightElectron_(input, "Electrons.isTightElectron"), //
-		passTightConversionElectron_(input, "Electrons.isTightConversionElectron"), //
-		passTightNonIsoElectron_(input, "Electrons.isTightNonIsoElectron"), //
+		passMediumElectron_(input, "Electrons.isMediumElectron"), //
+		passMediumConversionElectron_(input, "Electrons.isMediumConversionElectron"), //
+		passMediumNonIsoElectron_(input, "Electrons.isMediumNonIsoElectron"), //
 		algorithm(algo), //
 		electrons() {
 
@@ -133,6 +135,8 @@ void ElectronReader::readElectrons() {
 		electron->setPFRelIso04(PFRelIso04Reader_.getVariableAt(index));
 		electron->setPFRelIso03DeltaBeta(PFRelIso03DeltaBetaReader_.getVariableAt(index));
 		electron->setPFRelIso04DeltaBeta(PFRelIso04DeltaBetaReader_.getVariableAt(index));
+		electron->setPFRelIsoWithEA( PFRelIsoWithEAReader_.getVariableAt(index)); //
+
 		electron->setsumChargedHadronPt03(sumChargedHadronPt03Reader_.getVariableAt(index));
 		electron->setsumNeutralHadronPt03(sumNeutralHadronPt03Reader_.getVariableAt(index));
 		electron->setsumPhotonPt03(sumPhotonPt03Reader_.getVariableAt(index));
@@ -151,9 +155,9 @@ void ElectronReader::readElectrons() {
 		electron->setDistToNextTrack(dist.getVariableAt(index));
 		electron->setDCotThetaToNextTrack(dCotTheta.getVariableAt(index));
 
-		electron->setIsTightElectron( passTightElectron_.getBoolVariableAt(index));
-		electron->setIsTightConversionElectron( passTightConversionElectron_.getBoolVariableAt(index));
-		electron->setIsTightNonIsoElectron( passTightNonIsoElectron_.getBoolVariableAt(index));
+		electron->setIsMediumElectron( passMediumElectron_.getBoolVariableAt(index));
+		electron->setIsMediumConversionElectron( passMediumConversionElectron_.getBoolVariableAt(index));
+		electron->setIsMediumNonIsoElectron( passMediumNonIsoElectron_.getBoolVariableAt(index));
 
 		electrons.push_back(electron);
 	}
@@ -181,6 +185,7 @@ void ElectronReader::initialise() {
 	PFRelIso04Reader_.initialise();
 	PFRelIso03DeltaBetaReader_.initialise();
 	PFRelIso04DeltaBetaReader_.initialise();
+	PFRelIsoWithEAReader_.initialise();
 
 	sumChargedHadronPt03Reader_.initialise();
 	sumNeutralHadronPt03Reader_.initialise();
@@ -205,9 +210,9 @@ void ElectronReader::initialise() {
 	mvaNonTrigV0_.initialise();
 	passConversionVeto_.initialise();
 
-	passTightElectron_.initialise();
-	passTightConversionElectron_.initialise();
-	passTightNonIsoElectron_.initialise();
+	passMediumElectron_.initialise();
+	passMediumConversionElectron_.initialise();
+	passMediumNonIsoElectron_.initialise();
 }
 
 }

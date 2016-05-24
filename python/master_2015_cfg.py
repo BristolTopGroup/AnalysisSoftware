@@ -11,45 +11,51 @@ datasets = analysis_info.datasets_13TeV
 
 analysisModes = analysis_info.analysis_modes_13TeV
 
-available_settings = ['ElectronScaleFactorSystematic', 'MuonScaleFactorSystematic', 'JESsystematic', 'JetSmearingSystematic', 'PUsystematic', 'BTagSystematic', 'LightTagSystematic', 'custom_file_suffix']
+available_settings = [
+    'ElectronScaleFactorSystematic', 
+    'MuonScaleFactorSystematic', 
+    'JESsystematic', 
+    'JetSmearingSystematic', 
+    'PUsystematic', 
+    'BTagSystematic', 
+    'LightTagSystematic', 
+    'custom_file_suffix'
+]
+
 default_settings = {
-            'ElectronScaleFactorSystematic':0,
-            'MuonScaleFactorSystematic':0,
-            'JESsystematic':0,
-            'JetSmearingSystematic':0,
-            'PUFile':'PileUp_2015_truth_central.root',
-            'PUFile_up':'PileUp_2015_truth_up.root',
-            'PUFile_down':'PileUp_2015_truth_down.root',
-            'MuonIdIsoScaleFactorsFile':'nofile.root',
-            'TTbarLikelihoodFile' : 'LikelihoodInputAnalyserOutput.root',
-            'BTagEfficiencyFile' : 'BTagEfficiency.root',
-            'BTagSystematic':0,
-            'LightTagSystematic':0,
-            'custom_file_suffix':'',
-            'pdfWeightNumber' : 0,
-            }
+    'ElectronScaleFactorSystematic':0,
+    'MuonScaleFactorSystematic':0,
+    'JESsystematic':0,
+    'JetSmearingSystematic':0,
+    'PUFile':'PileUp_2015_truth_central.root',
+    'PUFile_up':'PileUp_2015_truth_up.root',
+    'PUFile_down':'PileUp_2015_truth_down.root',
+    'MuonIdIsoScaleFactorsFile':'nofile.root',
+    'TTbarLikelihoodFile' : 'LikelihoodInputAnalyserOutput.root',
+    'BTagEfficiencyFile' : 'BTagEfficiency.root',
+    'BTagSystematic':0,
+    'LightTagSystematic':0,
+    'custom_file_suffix':'',
+    'pdfWeightNumber' : 0,
+}
 
 analysis_settings = {
-                     'Electron_down':{'ElectronScaleFactorSystematic':-1},
-                     'Electron_up':{'ElectronScaleFactorSystematic':1},
-                     'Muon_down':{'MuonScaleFactorSystematic':-1},
-                     'Muon_up':{'MuonScaleFactorSystematic':1},
-                     'BJet_down':{'BTagSystematic':-1},
-                     'BJet_up':{'BTagSystematic':1},
-                     'JES_down':{'JESsystematic':-1},
-                     'JES_up':{'JESsystematic':1},
-                     'JetSmearing_up':{'JetSmearingSystematic':1},
-                     'JetSmearing_down':{'JetSmearingSystematic':-1},
-                     'LightJet_down':{'LightTagSystematic':-1},
-                     'LightJet_up':{'LightTagSystematic':1},
-                     'PU_down':{'PUFile':'PileUp_2015_truth_down.root',
-                                'custom_file_suffix':'PU_down'
-                                },
-                     'PU_up':{'PUFile':'PileUp_2015_truth_up.root',
-                              'custom_file_suffix':'PU_up'},
-
-                     'Test': {'custom_file_suffix':'TESTING'}
-                     }
+    'Electron_down':{'ElectronScaleFactorSystematic':-1},
+    'Electron_up':{'ElectronScaleFactorSystematic':1},
+    'Muon_down':{'MuonScaleFactorSystematic':-1},
+    'Muon_up':{'MuonScaleFactorSystematic':1},
+    'BJet_down':{'BTagSystematic':-1},
+    'BJet_up':{'BTagSystematic':1},
+    'JES_down':{'JESsystematic':-1},
+    'JES_up':{'JESsystematic':1},
+    'JetSmearing_up':{'JetSmearingSystematic':1},
+    'JetSmearing_down':{'JetSmearingSystematic':-1},
+    'LightJet_down':{'LightTagSystematic':-1},
+    'LightJet_up':{'LightTagSystematic':1},
+    'PU_down':{ 'PUFile':'PileUp_2015_truth_down.root', 'custom_file_suffix':'PU_down' },
+    'PU_up':{'PUFile':'PileUp_2015_truth_up.root', 'custom_file_suffix':'PU_up' },
+    'Test': {'custom_file_suffix':'TESTING'}
+}
 
 #helper functions
 def getAnalysisSettings(analysisMode):
@@ -107,11 +113,12 @@ PUFile_up = toolsFolder + "data/" + settings['PUFile_up']
 PUFile_down = toolsFolder + "data/" + settings['PUFile_down']
 getMuonScaleFactorsFromFile = True
 getElectronScaleFactorsFromFile = True
-ElectronIdIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
+ElectronIdScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronCutBasedID_MediumWP_76X_SF2D.root'
+ElectronIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
 ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEfficiencies.root'
-MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunD_Reco74X_Nov20.root'
-MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunD_Reco74X_Nov20.root'
-MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Z_RunD_Reco74X_Nov20.root'
+MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunCD_Reco76X_Feb15.root'
+MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunCD_Reco76X_Feb15.root'
+MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
@@ -166,8 +173,7 @@ applyMetType0Corr = False
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 2215.182
-
+lumi = 2172 
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 13
 

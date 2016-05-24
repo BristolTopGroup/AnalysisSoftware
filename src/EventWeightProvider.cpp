@@ -99,41 +99,20 @@ double EventWeightProvider::reweightTopPt(const EventPtr event) {
 
 void EventWeightProvider::generate_weights() {
 
+	pileUpWeights = generateWeights(Fall2015_25ns, estimatedPileUp);
+	pileUpWeights_up = generateWeights(Fall2015_25ns, estimatedPileUp_up);
+	pileUpWeights_down = generateWeights(Fall2015_25ns, estimatedPileUp_down);
 
-	/*
-	 * TODO:
-	 * Summer11 PU_S3 and PU_S4 in-time PU only: PoissonOneXDist
-	 * if Summer11 OOT average PU, use PoissonIntDist
-	 * If Spring11 or Summer11 3D reweighting, use probdistFlat10 (compare to true)
-	 * Fall11, use Fall2011
-	 */
-
-	//Needs a flag for 2011 MC tried energyInTeV?
-	// if (Globals::energyInTeV == 8) {
-	// 	pileUpWeights = generateWeights(Summer2012);
-	// } else if (Globals::energyInTeV == 7 && Globals::NTupleVersion < 11) {
-	// 	pileUpWeights = generateWeights(Fall2011);
-	// } else if (Globals::energyInTeV == 7 && Globals::NTupleVersion == 11) {
-	// 	pileUpWeights = generateWeights(Summer11Leg);
-	// } else if (Globals::energyInTeV == 13) {
-	pileUpWeights = generateWeights(Startup2015_25ns, estimatedPileUp);
-	pileUpWeights_up = generateWeights(Startup2015_25ns, estimatedPileUp_up);
-	pileUpWeights_down = generateWeights(Startup2015_25ns, estimatedPileUp_down);
-
-	// }
-
-//	cout << "Pile up weights" << endl;
-//
-//	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
-//		cout << index << ": " << pileUpWeights.at(index) << endl;
-//	}
+// 	cout << "Pile up weights" << endl;
+// 	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
+// 		cout << index << ": " << pileUpWeights.at(index) << endl;
+// 	}
 }
 
 boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		const boost::array<double, NWEIGHTSSIZE> inputMC,
 		const boost::shared_ptr<TH1D> dataEstimatedPileUp ) {
 	boost::array<double, NWEIGHTSSIZE> weights;
-
 
 	// Check that integral of dataEstimatedPileUp is 1
 	if ( dataEstimatedPileUp->Integral() != 1 && dataEstimatedPileUp->Integral() != 0 ) {
@@ -144,6 +123,7 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 
 	for (unsigned int npu = 0; npu < inputMC.size(); ++npu) {
 
+		// +1-1 problem
 		DATAdistribution[npu] = dataEstimatedPileUp->GetBinContent(npu+1);
 
 		if (inputMC[npu] > 0) {
@@ -151,10 +131,12 @@ boost::array<double, NWEIGHTSSIZE> EventWeightProvider::generateWeights(
 		}
 		else
 			weights[npu] = 0;
+
 		s += DATAdistribution[npu];
 	}
+
 	/**
-	 * normalize weights such that the total sum of weights over thw whole sample is 1.0,
+	 * normalize weights such that the total sum of weights over the whole sample is 1.0,
 	 * i.e., sum_i  result[i] * npu_probs[i] should be 1.0 (!)
 	 */
 	for (unsigned int npu = 0; npu < weights.size(); ++npu) {

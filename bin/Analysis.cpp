@@ -36,12 +36,9 @@ void Analysis::analyse() {
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
 
-		// if ( currentEvent->isRealData() && !passMETFilters(sampleName)) continue;
-
 		// Check if MET fitlers are satisfied
-		// cout << currentEvent->passesMETFilters() << endl;
-		// if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
-
+		// cout << "Pass event filter? " << currentEvent->passesMETFilters() << endl;
+		if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) ) {
@@ -199,36 +196,4 @@ unsigned long Analysis::getNumberOfProccessedEvents() const {
 	return eventReader->getNumberOfProccessedEvents();
 }
 
-bool Analysis::passMETFilters(string datatype) {
-	passMETFilter = true;
 
-	if (datatype == "SingleElectron" || datatype == "SingleMuon"){
-		std::vector<std::string>  filenames;
-		filenames.clear();
-		filenames.push_back( "/hdfs/TopQuarkGroup/run2/metFilters/" + datatype + "_Nov14/" + datatype + "_csc2015.txt" );
-		filenames.push_back( "/hdfs/TopQuarkGroup/run2/metFilters/" + datatype + "_Nov14/" + datatype + "_ecalscn1043093.txt" );
-
-        for (auto const& filename : filenames){
-
-			metfiles.open(filename);
-			std::string str;
-	        while(getline(metfiles,str)){
-
-				std::istringstream ss( str );
-				std::string line;
-
-	        	eventInfo.clear();
-				while(getline(ss,line, ':')) eventInfo.push_back( std::stoul(line) );		
-				if (eventInfo[0] != currentEvent->runnumber()) continue; 
-				if (eventInfo[1] != currentEvent->lumiblock()) continue; 
-				if (eventInfo[2] != currentEvent->eventnumber()) continue;
-				passMETFilter=false;
-	        	break;
-	        }
-			metfiles.close();
-	        if (!passMETFilter) break;
-		}
-		return passMETFilter;
-	}
-	else return passMETFilter;
-}

@@ -24,6 +24,7 @@ Lepton::Lepton() : //
 		PFRelIso04_(initialBigValue), //
 		PFRelIso03DeltaBeta_(initialBigValue), //
 		PFRelIso04DeltaBeta_(initialBigValue), //
+		PFRelIsoWithEA_(initialBigValue), //
 		sumChargedHadronPt03_(initialBigValue), //
 		sumNeutralHadronPt03_(initialBigValue), //
 		sumPhotonPt03_(initialBigValue), //
@@ -44,6 +45,7 @@ Lepton::Lepton(double energy, double px, double py, double pz) : //
 		PFRelIso04_(initialBigValue), //
 		PFRelIso03DeltaBeta_(initialBigValue), //
 		PFRelIso04DeltaBeta_(initialBigValue), //
+		PFRelIsoWithEA_(initialBigValue), //
 		sumChargedHadronPt03_(initialBigValue), //
 		sumNeutralHadronPt03_(initialBigValue), //
 		sumPhotonPt03_(initialBigValue), //
@@ -54,6 +56,10 @@ Lepton::Lepton(double energy, double px, double py, double pz) : //
 		sumPUPt04_(initialBigValue), //
 		zDistanceToPrimaryVertex_(initialBigValue) {
 
+}
+
+void Lepton::setPFRelIsoWithEA( double isolation ) {
+	PFRelIsoWithEA_ = isolation;
 }
 
 void Lepton::setEcalIsolation(double isolation, double coneSize) {
@@ -157,6 +163,10 @@ void Lepton::setsumPhotonPt04(double isolation) {
 
 void Lepton::setsumPUPt04(double isolation) {
 	sumPUPt04_ = isolation;
+}
+
+double Lepton::PFRelIsoWithEA() const {
+	return PFRelIsoWithEA_;
 }
 
 double Lepton::PFRelIso03() const {

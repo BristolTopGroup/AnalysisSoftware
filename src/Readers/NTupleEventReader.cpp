@@ -41,12 +41,12 @@ NTupleEventReader::NTupleEventReader() :
 		metReaders(), //
 		// // metCorrReaders(), //
 
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle23erWPLooseGsf.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsf.Fired")),
 		// passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18er.Fired")),
 		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20.Fired")),
 		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20.Fired")),
 
-		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle23erWP75GsfMC.Fired")),
+		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsfMC.Fired")),
 		// passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18erMC.Fired")),
 		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
 		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
@@ -67,7 +67,7 @@ NTupleEventReader::NTupleEventReader() :
 		runNumberReader(new VariableReader<unsigned int>(input, "Event.Run")), //
 		eventNumberReader(new VariableReader<unsigned int>(input, "Event.Number")), //
 		lumiBlockReader(new VariableReader<unsigned int>(input, "Event.LumiSection")), //
-		passesMetFilterReader_(new VariableReader<bool>(input, "Event.passesAllMetFitlersOfInterest")), //
+		passesMetFilterReader_(new VariableReader<bool>(input, "Event.passesAllMetFiltersOfInterest")), //
 		generatorWeightReader_(new VariableReader<double>(input, "Event.generatorWeight")), //
 		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
 		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
@@ -257,24 +257,6 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	double type0MetCorrectionY = 0;
 	double type1MetCorrectionX = 0;
 	double type1MetCorrectionY = 0;
-
-	// if (Globals::NTupleVersion > 8) {
-	// 	if (Globals::applySysShiftMetCorrection) {
-	// 		metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->readMETCorrections();
-	// 		sysShiftMetCorrectionX = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getXcorrection();
-	// 		sysShiftMetCorrectionY = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getYcorrection();
-	// 	}
-	// 	if (Globals::applyType0MetCorrection) {
-	// 		metCorrReaders.at(METCorrections::pfMetType0Corrections)->readMETCorrections();
-	// 		type0MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getXcorrection();
-	// 		type0MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getYcorrection();
-	// 	}
-	// 	if (Globals::applyType1MetCorrection) {
-	// 		metCorrReaders.at(METCorrections::pfMetType1Corrections)->readMETCorrections();
-	// 		type1MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getXcorrection();
-	// 		type1MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getYcorrection();
-	// 	}
-	// }
 
 	double totalMetCorrectionX = sysShiftMetCorrectionX + type0MetCorrectionX + type1MetCorrectionX;
 	double totalMetCorrectionY = sysShiftMetCorrectionY + type0MetCorrectionY + type1MetCorrectionY;

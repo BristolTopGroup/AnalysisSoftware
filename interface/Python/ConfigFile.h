@@ -40,7 +40,8 @@ public:
 	std::string MuonIsoScaleFactorsFile() const;
 	std::string MuonTriggerScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
-	std::string ElectronIdIsoScaleFactorsFile() const;
+	std::string ElectronIdScaleFactorsFile() const;
+	std::string ElectronIsoScaleFactorsFile() const;
 	std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
     std::string hadronTriggerFile() const;
@@ -56,6 +57,7 @@ public:
 	bool isOptionSetInConfig(std::string option) const;
 	unsigned int centerOfMassEnergy() const;
 	unsigned int nTupleVersion() const;
+	std::string sample() const;
 	int electronScaleFactorSystematic() const;
 	int muonScaleFactorSystematic() const;
 	int jesSystematic() const;
@@ -85,7 +87,8 @@ private:
 	std::string muonIsoScaleFactorsFile_;
 	std::string muonTriggerScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
-	std::string electronIdIsoScaleFactorsFile_;
+	std::string electronIdScaleFactorsFile_;
+	std::string electronIsoScaleFactorsFile_;
 	std::string electronTriggerScaleFactorsFile_;
 	std::string bJetResoFile_;
     std::string lightJetResoFile_;
@@ -98,12 +101,13 @@ private:
 	double lumi_;
 	unsigned int centerOfMassEnergy_;
 	unsigned int nTupleVersion_;
+	std::string sample_;
 	int electronScaleFactorSystematic_;
 	int muonScaleFactorSystematic_;
 	int jesSystematic_;
 	int jetSmearingSystematic_;
 	int btagSystematic_;
-	int lightTagSystematic_;
+	int lighttagSystematic_;
 	std::string custom_file_suffix_;
 	unsigned int pdfWeightNumber_;
 //	PileUpReweightingMethod::value pileUpReweightingMethod_;
@@ -121,7 +125,8 @@ private:
 	boost::shared_ptr<TH2F> getMuonIsoScaleFactorsHistogram(std::string muonIsoScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH1F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
-	boost::shared_ptr<TH2D> getElectronIdIsoScaleFactorsHistogram(std::string electronIdIsoScaleFactorsFile);
+	boost::shared_ptr<TH2F> getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile);
+	boost::shared_ptr<TH2F> getElectronIsoScaleFactorsHistogram(std::string electronIsoScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 	void getHadronTriggerLegHistogram(std::string hadronTriggerFile);
 	
@@ -137,9 +142,8 @@ private:
 
 	void getbQuarkJet(std::string btagEfficiencyFile);
 	void getcQuarkJet(std::string btagEfficiencyFile);
-	void getudsQuarkJet(std::string btagEfficiencyFile);
-	void getgluonJet(std::string btagEfficiencyFile);
-
+	void getudsgQuarkJet(std::string btagEfficiencyFile);
+	std::string getSampleBTagEffTag(std::string sample);
 
 };
 

@@ -22,6 +22,7 @@ NOW=$(date +"%d-%m-%Y")
 if [ -f "Analysis.tar" ]; then
 	rm -f Analysis.tar
 fi
+
 tar -cf Analysis.tar BristolAnalysis/Tools TopQuarkAnalysis/TopHitFit/ --exclude="Debug*" --exclude="Release*" --exclude="Test*" --exclude="build*" --exclude="CMakeFiles" --exclude=".git*"
 memory_per_job=800
 total_memory=$memory_per_job

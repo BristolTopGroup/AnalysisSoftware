@@ -23,7 +23,8 @@
 
 #include <boost/shared_ptr.hpp>
 #include <string>
-
+#include <bitset>
+ 
 //forward definition of event needed before BasicSelection inclusion.
 namespace BAT {
 class Event;
@@ -277,6 +278,7 @@ public:
 	const JetCollection getCleanedJets( unsigned int selectionCriteria ) const;
 	const JetCollection getCleanedBJets( unsigned int selectionCriteria ) const;
 	const unsigned int getNBJets( unsigned int selectionCriteria ) const;
+	const std::vector<bool> getCuts( unsigned int selectionCriteria ) const;
 
 	JetCollection GetBJetCollection(const JetCollection& jets, BtagAlgorithm::value btagAlgorithm,
 			BtagAlgorithm::workingPoint WP = BtagAlgorithm::MEDIUM) const;

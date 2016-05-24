@@ -34,6 +34,7 @@ struct Globals {
 	static boost::shared_ptr<TH1D> estimatedPileup, estimatedPileup_up, estimatedPileup_down;
 	static unsigned int NTupleVersion;
 	static bool verbose;
+	static std::string sample;
 
 	//Kinematic fit
 	static std::string TQAFPath;
@@ -53,14 +54,14 @@ struct Globals {
 	// BTagging efficiencies
 	static boost::shared_ptr<TH2F> bQuarkJet;
 	static boost::shared_ptr<TH2F> cQuarkJet;
-	static boost::shared_ptr<TH2F> udsQuarkJet;
-	static boost::shared_ptr<TH2F> gluonJet;
+	static boost::shared_ptr<TH2F> udsgQuarkJet;
 
 	//electrons
 	static ElectronAlgorithm::value electronAlgorithm;
 	static int ElectronScaleFactorSystematic;
 	static boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram;
-	static boost::shared_ptr<TH2D> electronIdIsoScaleFactorsHistogram;
+	static boost::shared_ptr<TH2F> electronIdScaleFactorsHistogram;
+	static boost::shared_ptr<TH2F> electronIsoScaleFactorsHistogram;
 
 	//muons
 	static MuonAlgorithm::value muonAlgorithm;

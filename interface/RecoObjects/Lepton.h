@@ -32,6 +32,7 @@ public:
 	virtual void setPFRelIso04( double isolation );
 	virtual void setPFRelIso03DeltaBeta( double isolation );
 	virtual void setPFRelIso04DeltaBeta( double isolation );
+    virtual void setPFRelIsoWithEA( double isolation );
 	virtual void setsumChargedHadronPt03(double isolation);
 	virtual void setsumNeutralHadronPt03(double isolation);
 	virtual void setsumPhotonPt03(double isolation);
@@ -55,6 +56,7 @@ public:
 	virtual double PFRelIso04() const;
 	virtual double PFRelIso03DeltaBeta() const;
 	virtual double PFRelIso04DeltaBeta() const;	
+    virtual double PFRelIsoWithEA() const;
 
 	virtual double sumChargedHadronPt03() const;
 	virtual double sumNeutralHadronPt03() const;
@@ -72,7 +74,7 @@ protected:
 	double ecal_Isolation_DR03_, hcal_Isolation_DR03_, tracker_Isolation_DR03_;
 
 	double PFRelIso03_, PFRelIso04_;
-	double PFRelIso03DeltaBeta_, PFRelIso04DeltaBeta_;
+	double PFRelIso03DeltaBeta_, PFRelIso04DeltaBeta_, PFRelIsoWithEA_;
 	double sumChargedHadronPt03_, sumNeutralHadronPt03_, sumPhotonPt03_, sumPUPt03_;
 	double sumChargedHadronPt04_, sumNeutralHadronPt04_, sumPhotonPt04_, sumPUPt04_;
 

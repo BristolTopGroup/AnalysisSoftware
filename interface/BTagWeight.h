@@ -29,8 +29,7 @@ public:
 
 	float getBEfficiency(const JetPointer) const;
 	double getCEfficiency(const JetPointer) const;
-	double getUDSEfficiency(const JetPointer) const;
-	double getGEfficiency(const JetPointer) const;
+	double getUDSGEfficiency(const JetPointer) const;
 
 private:
 	unsigned int minNumberOfTags_;

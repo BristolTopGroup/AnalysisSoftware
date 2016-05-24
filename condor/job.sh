@@ -44,12 +44,6 @@ while [ $local_process -lt $range_for_loop ] ; do
 	echo "Analysing ntuple number "$ntupleToProcess
 
 	python_config=master_2015_cfg.py
-	if [ $energy -eq 7 ]; then
-		python_config=master_2011_53X_cfg.py
-	fi
-	if [ $energy -eq 8 ]; then
-		python_config=master_2012_cfg.py
-	fi
 	if [ $operation == "test" ]; then
 		python_config=test_cfg.py
 	fi

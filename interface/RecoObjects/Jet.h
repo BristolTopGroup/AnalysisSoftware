@@ -95,6 +95,7 @@ public:
 	//Quarks: d=1, u=2, s=3, c=4, b=5 (antimatter with flipped sign)
 	// gluons = 21
 	int partonFlavour() const;
+	int hadronFlavour() const;
 	double EnergyRaw() const;
 	double PxRaw() const;
 	double PyRaw() const;
@@ -134,6 +135,7 @@ public:
 	void setNCH(double nch);
 //    void setRho(double rho);
 	void setPartonFlavour(int);
+	void setHadronFlavour(int);
 
 	bool FirstDataLoosePFJetID() const;
 	bool FirstDataLooseCaloJetID() const;
@@ -158,7 +160,7 @@ private:
 	double chargedHadronEnergyFraction, chargedMultiplicity;
 	double energyRaw_, pxRaw_, pyRaw_, pzRaw_, JEC_, JECUncertainty_;
 	double l1OffJEC, l2l3ResJEC, l2RelJEC, l3AbsJEC;
-	int partonFlavour_;
+	int partonFlavour_, hadronFlavour_;
 
 	double energy_unsmeared;
 	double pt_unsmeared;

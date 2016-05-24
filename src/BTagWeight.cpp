@@ -41,12 +41,10 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 			ptOutOfRange = true;
 		}
 
-		const unsigned int partonFlavour = abs( jet->partonFlavour() );
+		const unsigned int hadronFlavour = abs( jet->hadronFlavour() );
 		const bool isBTagged = jet->isBJet();
 		bool isLight = false;
-		bool isBC = false;
-		(partonFlavour==5 || partonFlavour==4) ? isBC = true : isBC = false;
-		(partonFlavour==3 || partonFlavour==2 || partonFlavour==1 || partonFlavour==21) ? isLight = true : isLight = false;
+		(hadronFlavour==0) ? isLight = true : isLight = false;
 
 		// Get scale factor for this jet
 		const double sf = jet->getBTagSF( 0 );
@@ -62,7 +60,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 		}
 
 		// Get efficiency for this jet
-		const double eff = getEfficiency( partonFlavour, jet );
+		const double eff = getEfficiency( hadronFlavour, jet );
 
 		// Systematic Option
 		// 2 = b/c jet up
@@ -148,15 +146,15 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 }
 
 
-double BTagWeight::getEfficiency( const unsigned int partonFlavour, const JetPointer jet ) const {
-	if ( partonFlavour == 5) { //b-quark
+double BTagWeight::getEfficiency( const unsigned int hadronFlavour, const JetPointer jet ) const {
+	if ( hadronFlavour == 5) { //b-quark
 		return getBEfficiency( jet );
 	}
-	else if ( partonFlavour == 4) { //c-quark
+	else if ( hadronFlavour == 4) { //c-quark
 		return getCEfficiency( jet );
 	}
-	else if ( partonFlavour == 3 || partonFlavour == 2 || partonFlavour == 1 || partonFlavour == 0 || partonFlavour == 21) { // u/d/s/unclassified-quark
-		return getUDSEfficiency ( jet );
+	else if ( hadronFlavour == 0) { // u/d/s/g/unclassified-quark
+		return getUDSGEfficiency ( jet );
 	}
 	// else if ( partonFlavour == 21) { //gluon
 	// 	return getGEfficiency( jet );
@@ -186,25 +184,14 @@ double BTagWeight::getCEfficiency(const JetPointer jet) const {
 	return BTagEff;
 }
 
-double BTagWeight::getUDSEfficiency(const JetPointer jet) const {
+double BTagWeight::getUDSGEfficiency(const JetPointer jet) const {
 
 	const double jetPt = jet->pt();
 	const double jetEta = jet->eta();
 	// std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
-	int binNumber = Globals::udsQuarkJet->FindBin( jetPt , jetEta );
-	float BTagEff = Globals::udsQuarkJet->GetBinContent( binNumber );
+	int binNumber = Globals::udsgQuarkJet->FindBin( jetPt , jetEta );
+	float BTagEff = Globals::udsgQuarkJet->GetBinContent( binNumber );
 	// std::cout << "UDS-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
-	return BTagEff;
-}
-
-double BTagWeight::getGEfficiency(const JetPointer jet) const {
-
-	const double jetPt = jet->pt();
-	const double jetEta = jet->eta();
-	// std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
-	int binNumber = Globals::gluonJet->FindBin( jetPt , jetEta );
-	float BTagEff = Globals::gluonJet->GetBinContent( binNumber );	
-	// std::cout << "Gluon Jet, B Tag Efficiency : " << BTagEff << std::endl;
 	return BTagEff;
 }
 
