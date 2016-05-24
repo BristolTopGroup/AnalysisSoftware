@@ -37,7 +37,7 @@ void BTagEff::analyse(const EventPtr event) {
 
 		double jetCSV = jet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
 
-		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation74X
+		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation76X
 		if (jetCSV > 0.460) {
 			isLoose = true;
 		}
@@ -50,11 +50,13 @@ void BTagEff::analyse(const EventPtr event) {
 		}
 
 		unsigned int partonFlavour = abs(jet->partonFlavour());
+		unsigned int hadronFlavour = abs(jet->hadronFlavour());
 
 		treeMan_->Fill("pt", jetPt);
 		treeMan_->Fill("eta", jetEta);
 		treeMan_->Fill("CSV", jetCSV);
 		treeMan_->Fill("partonFlavour", partonFlavour);
+		treeMan_->Fill("hadronFlavour", hadronFlavour);
 		treeMan_->Fill("isLoose", isLoose);
 		treeMan_->Fill("isMedium", isMedium);
 		treeMan_->Fill("isTight", isTight);
@@ -103,6 +105,7 @@ void BTagEff::createTrees() {
 	treeMan_->addBranch("eta", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("CSV", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("partonFlavour", "F", "Jets" + Globals::treePrefix_, false);
+	treeMan_->addBranch("hadronFlavour", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("isLoose", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("isMedium", "F", "Jets" + Globals::treePrefix_, false);
 	treeMan_->addBranch("isTight", "F", "Jets" + Globals::treePrefix_, false);
