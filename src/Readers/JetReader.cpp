@@ -54,6 +54,7 @@ JetReader::JetReader() : //
 		btagSFUpReader(), //
 		btagSFDownReader(), //
 		PartonFlavour(),
+		HadronFlavour(),
 		jets(), //
 		usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05), //
 		isRealData() {
@@ -100,6 +101,7 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		btagSFUpReader(input, "Jets.btagSFUp"), //
 		btagSFDownReader(input, "Jets.btagSFDown"), //
 		PartonFlavour(input, "Jets.PartonFlavour"),//
+		HadronFlavour(input, "Jets.HadronFlavour"),//
 		jets(), //
 		usedAlgorithm(algo), //
 		isRealData(false) {
@@ -228,6 +230,7 @@ void JetReader::readJets(bool isRealData) {
 
 		//parton flavour
 		jet->setPartonFlavour(PartonFlavour.getIntVariableAt(jetIndex));
+		jet->setHadronFlavour(HadronFlavour.getIntVariableAt(jetIndex));
 
 		if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
 			jet->setNOD(NODReader.getIntVariableAt(jetIndex));
@@ -284,6 +287,7 @@ void JetReader::initialise() {
 	btagSFDownReader.initialise();
 
 	PartonFlavour.initialise();
+	HadronFlavour.initialise();
 	if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
 		NODReader.initialise();
 		CEFReader.initialise();

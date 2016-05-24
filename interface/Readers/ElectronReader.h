@@ -39,6 +39,7 @@ private:
 	VariableReader<MultiDoublePointer> PFRelIso04Reader_;
 	VariableReader<MultiDoublePointer> PFRelIso03DeltaBetaReader_;
 	VariableReader<MultiDoublePointer> PFRelIso04DeltaBetaReader_;
+	VariableReader<MultiDoublePointer> PFRelIsoWithEAReader_;
 
 	VariableReader<MultiDoublePointer> sumChargedHadronPt03Reader_;
 	VariableReader<MultiDoublePointer> sumNeutralHadronPt03Reader_;
@@ -61,9 +62,9 @@ private:
 	VariableReader<MultiDoublePointer> mvaTrigV0_, mvaNonTrigV0_;
 	VariableReader<MultiBoolPointer> passConversionVeto_;
 
-	VariableReader<MultiBoolPointer> passTightElectron_;
-	VariableReader<MultiBoolPointer> passTightConversionElectron_;
-	VariableReader<MultiBoolPointer> passTightNonIsoElectron_;
+	VariableReader<MultiBoolPointer> passMediumElectron_;
+	VariableReader<MultiBoolPointer> passMediumConversionElectron_;
+	VariableReader<MultiBoolPointer> passMediumNonIsoElectron_;
 
 	ElectronAlgorithm::value algorithm;
 	ElectronCollection electrons;

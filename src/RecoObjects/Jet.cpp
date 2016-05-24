@@ -39,6 +39,7 @@ Jet::Jet() :
 		l2RelJEC(0), //
 		l3AbsJEC(0), //
 		partonFlavour_(0), //
+		hadronFlavour_(0), //
 		//
 		energy_unsmeared(0.), //
 		pt_unsmeared(0.), //
@@ -95,6 +96,7 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		l2RelJEC(0), //
 		l3AbsJEC(0), //
 		partonFlavour_(0), //
+		hadronFlavour_(0), //
 		//
 		energy_unsmeared(0.), //
 		pt_unsmeared(0.), //
@@ -188,70 +190,135 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 	// 		scaleFactor = 1.;
 	// 		break;
 	// }
-	
+
 	double scaleFactor(0.);
-	if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.8) {
+	if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.5) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.038;
+				scaleFactor = 1.077;
 				break;
 			case 1:
-				scaleFactor = 1.084;
+				scaleFactor = 1.113;
 				break;
 			default:
-				scaleFactor = 1.061;
+				scaleFactor = 1.095;
 				break;
 		}
 	}
-	if (fabs(jet->eta()) >= 0.8 && fabs(jet->eta()) < 1.3) {
+	if (fabs(jet->eta()) >= 0.5 && fabs(jet->eta()) < 0.8) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.059;
+				scaleFactor = 1.092;
 				break;
 			case 1:
-				scaleFactor = 1.118;
+				scaleFactor = 1.148;
 				break;
 			default:
-				scaleFactor = 1.088;
+				scaleFactor = 1.120;
 				break;
 		}
 	}
-	if (fabs(jet->eta()) >= 1.3 && fabs(jet->eta()) < 1.9) {
+	if (fabs(jet->eta()) >= 0.8 && fabs(jet->eta()) < 1.1) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.076;
+				scaleFactor = 1.080;
+				break;
+			case 1:
+				scaleFactor = 1.114;
+				break;
+			default:
+				scaleFactor = 1.097;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 1.1 && fabs(jet->eta()) < 1.3) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.070;
 				break;
 			case 1:
 				scaleFactor = 1.136;
 				break;
 			default:
-				scaleFactor = 1.106;
+				scaleFactor = 1.103;
 				break;
 		}
 	}
-	if (fabs(jet->eta()) >= 1.9 && fabs(jet->eta()) < 2.5) {
+	if (fabs(jet->eta()) >= 1.3 && fabs(jet->eta()) < 1.7) {
 		switch (jet_smearing_systematic) {
 			case -1:
+				scaleFactor = 1.104;
+				break;
+			case 1:
 				scaleFactor = 1.132;
 				break;
-			case 1:
-				scaleFactor = 1.220;
-				break;
 			default:
-				scaleFactor = 1.126;
+				scaleFactor = 1.118;
 				break;
 		}
 	}
-	if (fabs(jet->eta()) >= 2.5 && fabs(jet->eta()) < 3.0) {
+	if (fabs(jet->eta()) >= 1.7 && fabs(jet->eta()) < 1.9) {
 		switch (jet_smearing_systematic) {
 			case -1:
-				scaleFactor = 1.220;
+				scaleFactor = 1.067;
 				break;
 			case 1:
-				scaleFactor = 1.466;
+				scaleFactor = 1.133;
 				break;
 			default:
-				scaleFactor = 1.343;
+				scaleFactor = 1.100;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 1.9 && fabs(jet->eta()) < 2.1) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.118;
+				break;
+			case 1:
+				scaleFactor = 1.206;
+				break;
+			default:
+				scaleFactor = 1.162;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 2.1 && fabs(jet->eta()) < 2.3) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.112;
+				break;
+			case 1:
+				scaleFactor = 1.208;
+				break;
+			default:
+				scaleFactor = 1.160;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 2.5) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.113;
+				break;
+			case 1:
+				scaleFactor = 1.209;
+				break;
+			default:
+				scaleFactor = 1.161;
+				break;
+		}
+	}
+	if (fabs(jet->eta()) >= 2.5 && fabs(jet->eta()) < 2.8) {
+		switch (jet_smearing_systematic) {
+			case -1:
+				scaleFactor = 1.150;
+				break;
+			case 1:
+				scaleFactor = 1.268;
+				break;
+			default:
+				scaleFactor = 1.209;
 				break;
 		}
 	}
@@ -456,6 +523,10 @@ void Jet::setPartonFlavour(int flavour) {
 	partonFlavour_ = flavour;
 }
 
+void Jet::setHadronFlavour(int flavour) {
+	hadronFlavour_ = flavour;
+}
+
 bool Jet::isGood() const {
 	bool passesPt = pt() > 30;
 	bool passesEta = fabs(eta()) < 2.4;
@@ -561,6 +632,10 @@ double Jet::getLightJetL7EtCorrection() const {
 
 int Jet::partonFlavour() const {
 	return partonFlavour_;
+}
+
+int Jet::hadronFlavour() const {
+	return hadronFlavour_;
 }
 
 double Jet::getBTagDiscriminator(BtagAlgorithm::value type) const {

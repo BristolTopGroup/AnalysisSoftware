@@ -71,6 +71,7 @@ protected:
 	VariableReader<MultiDoublePointer> btagSFDownReader;
 
 	VariableReader<MultiIntPointer> PartonFlavour;
+	VariableReader<MultiIntPointer> HadronFlavour;
 
 
 
