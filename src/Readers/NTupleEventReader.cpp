@@ -258,24 +258,6 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	double type1MetCorrectionX = 0;
 	double type1MetCorrectionY = 0;
 
-	// if (Globals::NTupleVersion > 8) {
-	// 	if (Globals::applySysShiftMetCorrection) {
-	// 		metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->readMETCorrections();
-	// 		sysShiftMetCorrectionX = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getXcorrection();
-	// 		sysShiftMetCorrectionY = metCorrReaders.at(METCorrections::pfMetSysShiftCorrections)->getYcorrection();
-	// 	}
-	// 	if (Globals::applyType0MetCorrection) {
-	// 		metCorrReaders.at(METCorrections::pfMetType0Corrections)->readMETCorrections();
-	// 		type0MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getXcorrection();
-	// 		type0MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType0Corrections)->getYcorrection();
-	// 	}
-	// 	if (Globals::applyType1MetCorrection) {
-	// 		metCorrReaders.at(METCorrections::pfMetType1Corrections)->readMETCorrections();
-	// 		type1MetCorrectionX = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getXcorrection();
-	// 		type1MetCorrectionY = metCorrReaders.at(METCorrections::pfMetType1Corrections)->getYcorrection();
-	// 	}
-	// }
-
 	double totalMetCorrectionX = sysShiftMetCorrectionX + type0MetCorrectionX + type1MetCorrectionX;
 	double totalMetCorrectionY = sysShiftMetCorrectionY + type0MetCorrectionY + type1MetCorrectionY;
 
