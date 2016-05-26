@@ -888,9 +888,9 @@ void ConfigFile::getudsgQuarkJet(std::string btagEfficiencyFile) {
 std::string ConfigFile::getSampleBTagEffTag(std::string sample) {
 	if (sample == "TTJets_PowhegPythia8") return "PowhegPythia8/";
 	else if (sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
-	// else if (sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
-	// else if (sample == "TTJets_amcatnloHerwigpp") return "aMCatNLOHerwigpp/";
-	// else if (sample == "TTJets_madgraphMLM") return "Madgraph/";
+	else if (sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
+	else if (sample == "TTJets_amcatnloHerwigpp") return "aMCatNLOHerwigpp/";
+	else if (sample == "TTJets_madgraphMLM") return "Madgraph/";
 	else return "PowhegPythia8/";
 }
 
