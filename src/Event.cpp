@@ -925,6 +925,26 @@ void Event::setBJetDownWeight(double weight) {
 	bJetDownWeight_ = weight;
 }
 
+void Event::setTightBJetWeight(double weight) {
+	tightbJetWeight_ = weight;
+}
+
+void Event::setTightLightJetUpWeight(double weight) {
+	tightlightJetUpWeight_ = weight;
+}
+
+void Event::setTightLightJetDownWeight(double weight) {
+	tightlightJetDownWeight_ = weight;
+}
+
+void Event::setTightBJetUpWeight(double weight) {
+	tightbJetUpWeight_ = weight;
+}
+
+void Event::setTightBJetDownWeight(double weight) {
+	tightbJetDownWeight_ = weight;
+}
+
 void Event::setBeamScrapingVeto(bool isScraping) {
 	isBeamScraping_ = isScraping;
 }
@@ -1049,6 +1069,25 @@ double Event::BJetDownWeight() const {
 	return bJetDownWeight_;
 }
 
+double Event::TightBJetWeight() const {
+	return tightbJetWeight_;
+}
+
+double Event::TightLightJetUpWeight() const {
+	return tightlightJetUpWeight_;
+}
+
+double Event::TightLightJetDownWeight() const {
+	return tightlightJetDownWeight_;
+}
+
+double Event::TightBJetUpWeight() const {
+	return tightbJetUpWeight_;
+}
+
+double Event::TightBJetDownWeight() const {
+	return tightbJetDownWeight_;
+}
 void Event::inspect() const {
 	cout << "run " << runNumber << ", event number " << eventNumber << ", lumi section " << lumiBlock << endl;
 

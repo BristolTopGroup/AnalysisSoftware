@@ -22,6 +22,9 @@ Jet::Jet() :
 		btagSF_(0), //
 		btagSF_up_(0), //
 		btagSF_down_(0), //
+		tight_btagSF_(0), //
+		tight_btagSF_up_(0), //
+		tight_btagSF_down_(0), //
 		numberOfDaughters(0), //
 		chargedEmEnergyFraction(1), //
 		neutralHadronEnergyFraction(1), //
@@ -79,6 +82,9 @@ Jet::Jet(double energy, double px, double py, double pz) :
 		btagSF_(0), //
 		btagSF_up_(0), //
 		btagSF_down_(0), //
+		tight_btagSF_(0), //
+		tight_btagSF_up_(0), //
+		tight_btagSF_down_(0), //
 		numberOfDaughters(0), //
 		chargedEmEnergyFraction(1), //
 		neutralHadronEnergyFraction(1), //
@@ -500,6 +506,18 @@ void Jet::setBTagSFDown( double sf ) {
 	btagSF_down_ = sf;
 }
 
+void Jet::setTightBTagSF( double sf ) {
+	tight_btagSF_ = sf;
+}
+
+void Jet::setTightBTagSFUp( double sf ) {
+	tight_btagSF_up_ = sf;
+}
+
+void Jet::setTightBTagSFDown( double sf ) {
+	tight_btagSF_down_ = sf;
+}
+
 void Jet::setNOD(int nod) {
 	numberOfDaughters = nod;
 }
@@ -604,6 +622,19 @@ double Jet::getBTagSF( int systematic ) const {
 	return -1;
 }
 
+double Jet::getTightBTagSF( int systematic ) const {
+	if ( systematic == 0 ) {
+		return tight_btagSF_;
+	}
+	else if ( systematic == 1 ) {
+		return tight_btagSF_up_;
+	}
+	else if ( systematic == -1 ) {
+		return tight_btagSF_down_;
+	}
+
+	return -1;
+}
 
 double Jet::btagSSVHE() const {
 	return -1;

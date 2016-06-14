@@ -9,10 +9,10 @@
 using namespace std;
 namespace BAT {
 
-double BjetWeight(const JetCollection jets, const int systematic) {
+double BjetWeight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs) {
 	boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
 
-	double weight = btagWeight->weight( jets, systematic );
+	double weight = btagWeight->weight( jets, systematic, bJetWPs );
 	return weight;
 }
 
@@ -21,7 +21,7 @@ BTagWeight::BTagWeight() :
 				maxNumberOfTags_(0) {
 }
 
-double BTagWeight::weight(const JetCollection jets, const int systematic) const {
+double BTagWeight::weight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs) const {
 	float bTaggedMCJet = 1.0;
 	float nonBTaggedMCJet = 1.0;
 	float bTaggedDataJet = 1.0;
@@ -46,10 +46,24 @@ double BTagWeight::weight(const JetCollection jets, const int systematic) const 
 		bool isLight = false;
 		(hadronFlavour==0) ? isLight = true : isLight = false;
 
-		// Get scale factor for this jet
-		const double sf = jet->getBTagSF( 0 );
-		double sf_up = jet->getBTagSF( 1 );
-		double sf_down = jet->getBTagSF( -1 );
+		double sf = 0;
+		double sf_up = 0;
+		double sf_down = 0;
+
+		std::cout << "BJets WP : " << bJetWPs.at(0) << ", " << bJetWPs.at(0) << "\n";
+
+		if (bJetWPs.at(0) == "M" && bJetWPs.at(1) == "M"){
+			// Get scale factor for this jet given 2 medium btags
+			sf = jet->getBTagSF( 0 );
+			sf_up = jet->getBTagSF( 1 );
+			sf_down = jet->getBTagSF( -1 );
+		}
+		else if (bJetWPs.at(0) == "T" && bJetWPs.at(1) == "T"){
+			// Get scale factor for this jet given 2 tight btags
+			sf = jet->getTightBTagSF( 0 );
+			sf_up = jet->getTightBTagSF( 1 );
+			sf_down = jet->getTightBTagSF( -1 );
+		}
 
 		if ( ptOutOfRange ) {
 			sf_up = sf + 2 * ( sf_up - sf );
