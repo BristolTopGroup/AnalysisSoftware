@@ -59,7 +59,7 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.signalElectronIndex");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsSelection.signalElectronIndices");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedJetIndex");
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsSelection.cleanedBJetIndex");
 		AllEventsReader = VariableReader<bool>(input, "TopPairElectronPlusJetsSelection.AllEvents");
@@ -77,7 +77,7 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsSelection.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsSelection.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsSelection.signalMuonIndex");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsSelection.signalMuonIndices");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsSelection.cleanedJetIndex");		
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsSelection.cleanedBJetIndex");
 		AllEventsReader = VariableReader<bool>(input, "TopPairMuonPlusJetsSelection.AllEvents");
@@ -94,7 +94,7 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsQCDSelection.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsQCDSelection.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsQCDSelection.signalElectronIndex");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsQCDSelection.signalElectronIndices");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsQCDSelection.cleanedJetIndex");
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsQCDSelection.cleanedBJetIndex");
 		AllEventsReader = VariableReader<bool>(input, "TopPairElectronPlusJetsQCDSelection.AllEvents");
@@ -111,7 +111,7 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsConversionSelection.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsConversionSelection.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsConversionSelection.signalElectronIndex");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairElectronPlusJetsConversionSelection.signalElectronIndices");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsConversionSelection.cleanedJetIndex");
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairElectronPlusJetsConversionSelection.cleanedBJetIndex");
 		AllEventsReader = VariableReader<bool>(input, "TopPairElectronPlusJetsConversionSelection.AllEvents");
@@ -128,7 +128,7 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.signalMuonIndex");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.signalMuonIndices");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedJetIndex");		
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedBJetIndex");
 		AllEventsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection1p5to3.AllEvents");
@@ -145,7 +145,7 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.signalMuonIndex");
+		signalLeptonIndexReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.signalMuonIndices");
 		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedJetIndex");		
 		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedBJetIndex");
 		AllEventsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection3toInf.AllEvents");
