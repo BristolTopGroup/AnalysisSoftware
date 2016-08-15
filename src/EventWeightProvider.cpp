@@ -99,9 +99,9 @@ double EventWeightProvider::reweightTopPt(const EventPtr event) {
 
 void EventWeightProvider::generate_weights() {
 
-	pileUpWeights = generateWeights(Fall2015_25ns, estimatedPileUp);
-	pileUpWeights_up = generateWeights(Fall2015_25ns, estimatedPileUp_up);
-	pileUpWeights_down = generateWeights(Fall2015_25ns, estimatedPileUp_down);
+	pileUpWeights = generateWeights(Spring2016, estimatedPileUp);
+	pileUpWeights_up = generateWeights(Spring2016, estimatedPileUp_up);
+	pileUpWeights_down = generateWeights(Spring2016, estimatedPileUp_down);
 
 // 	cout << "Pile up weights" << endl;
 // 	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
