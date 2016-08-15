@@ -650,7 +650,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonTriggerScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins/abseta_pt_ratio")->Clone());
+	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("abseta_pt_DATA")->Clone());
 	file->Close();
 
 	return triggerHistogram;

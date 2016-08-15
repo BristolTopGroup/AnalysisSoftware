@@ -167,10 +167,13 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 	else {
 		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
-		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
-		currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );
+		// currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
+		// currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelTrigger( false );
+		currentEvent->setPassesTkMuonChannelTrigger( false );		
 		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelMCTriggerReader->getVariable() );
-		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
+		// currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelQCDTrigger( false );
 	}
 
 	// Set info that depends on selection criteria e.g. cleaned jets
