@@ -238,16 +238,33 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	// Set bjet weight
 	if ( !currentEvent->isRealData() ) {
 		boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
-		double bweight = btagWeight->weight( currentEvent->CleanedJets(), 0 );
+		// Normal 2 medium BTags selection
+		// Which combination of b tags do you want? 
+		// L = Loose, Not implemented yet
+		// M = Medium, 
+		// T = Tight, 
+		// Currently only same WP jets are supported
+		double bweight = btagWeight->weight( currentEvent->CleanedJets(), 0, {"M", "M"} );
 		currentEvent->setBJetWeight( bweight );
-		bweight = btagWeight->weight( currentEvent->CleanedJets(), 1 );
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), 1, {"M", "M"}  );
 		currentEvent->setLightJetUpWeight( bweight );
-		bweight = btagWeight->weight( currentEvent->CleanedJets(), -1 );
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), -1, {"M", "M"}  );
 		currentEvent->setLightJetDownWeight( bweight );		
-		bweight = btagWeight->weight( currentEvent->CleanedJets(), 2 );
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), 2, {"M", "M"}  );
 		currentEvent->setBJetUpWeight( bweight );			
-		bweight = btagWeight->weight( currentEvent->CleanedJets(), -2 );
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), -2, {"M", "M"}  );
 		currentEvent->setBJetDownWeight( bweight );	
+		// 2 tight BTags selection
+		bweight = btagWeight->weight( currentEvent->CleanedJets(), 0, {"T", "T"} );
+		currentEvent->setTightBJetWeight( bweight );
+		// bweight = btagWeight->weight( currentEvent->CleanedJets(), 1, {"T", "T"}  );
+		// currentEvent->setTightLightJetUpWeight( bweight );
+		// bweight = btagWeight->weight( currentEvent->CleanedJets(), -1, {"T", "T"}  );
+		// currentEvent->setTightLightJetDownWeight( bweight );		
+		// bweight = btagWeight->weight( currentEvent->CleanedJets(), 2, {"T", "T"}  );
+		// currentEvent->setTightBJetUpWeight( bweight );			
+		// bweight = btagWeight->weight( currentEvent->CleanedJets(), -2, {"T", "T"}  );
+		// currentEvent->setTightBJetDownWeight( bweight );	
 	}
 
 

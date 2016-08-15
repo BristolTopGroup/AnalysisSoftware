@@ -53,6 +53,9 @@ JetReader::JetReader() : //
 		btagSFReader(), //
 		btagSFUpReader(), //
 		btagSFDownReader(), //
+		tightbtagSFReader(), //
+		tightbtagSFUpReader(), //
+		tightbtagSFDownReader(), //
 		PartonFlavour(),
 		HadronFlavour(),
 		jets(), //
@@ -97,9 +100,12 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		NCHReader(input, "Jets.ChargedMultiplicity"), //
 		btagCSVv2Reader(input, "Jets.combinedInclusiveSecondaryVertexV2BJetTags"), //
 		isBtagReader(input, "Jets.passesMediumCSV"), //
-		btagSFReader(input, "Jets.btagSF"), //
-		btagSFUpReader(input, "Jets.btagSFUp"), //
-		btagSFDownReader(input, "Jets.btagSFDown"), //
+		btagSFReader(input, "Jets.mediumBTagSF"), //
+		btagSFUpReader(input, "Jets.mediumBTagSFUp"), //
+		btagSFDownReader(input, "Jets.mediumBTagSFDown"), //
+		tightbtagSFReader(input, "Jets.tightBTagSF"), //
+		tightbtagSFUpReader(input, "Jets.tightBTagSFUp"), //
+		tightbtagSFDownReader(input, "Jets.tightBTagSFDown"), //
 		PartonFlavour(input, "Jets.PartonFlavour"),//
 		HadronFlavour(input, "Jets.HadronFlavour"),//
 		jets(), //
@@ -226,6 +232,9 @@ void JetReader::readJets(bool isRealData) {
 			jet->setBTagSF( btagSFReader.getVariableAt( jetIndex ) );
 			jet->setBTagSFUp( btagSFUpReader.getVariableAt( jetIndex ) );
 			jet->setBTagSFDown( btagSFDownReader.getVariableAt( jetIndex ) );
+			jet->setTightBTagSF( tightbtagSFReader.getVariableAt( jetIndex ) );
+			jet->setTightBTagSFUp( tightbtagSFUpReader.getVariableAt( jetIndex ) );
+			jet->setTightBTagSFDown( tightbtagSFDownReader.getVariableAt( jetIndex ) );
 		}
 
 		//parton flavour

@@ -62,6 +62,7 @@ public:
 	bool isBJet() const;
 	JetAlgorithm::value getUsedAlgorithm() const;
 	double getBTagSF( int systematic = 0 ) const;
+	double getTightBTagSF( int systematic = 0 ) const;
 
 	void set_matched_generated_jet(const ParticlePointer matchedgeneratedjet);
 	const ParticlePointer matched_generated_jet();
@@ -127,6 +128,9 @@ public:
 	void setBTagSF( double sf );
 	void setBTagSFUp( double sf );
 	void setBTagSFDown( double sf );
+	void setTightBTagSF( double sf );
+	void setTightBTagSFUp( double sf );
+	void setTightBTagSFDown( double sf );
 	void setNOD(int nod);
 	void setCEF(double cef);
 	void setNHF(double nhf);
@@ -153,6 +157,9 @@ private:
 	double btagSF_;
 	double btagSF_up_;
 	double btagSF_down_;
+	double tight_btagSF_;
+	double tight_btagSF_up_;
+	double tight_btagSF_down_;
 
 	//	double btagInData;
 	int numberOfDaughters;

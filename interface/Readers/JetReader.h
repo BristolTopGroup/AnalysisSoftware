@@ -70,6 +70,10 @@ protected:
 	VariableReader<MultiDoublePointer> btagSFUpReader;
 	VariableReader<MultiDoublePointer> btagSFDownReader;
 
+	VariableReader<MultiDoublePointer> tightbtagSFReader;
+	VariableReader<MultiDoublePointer> tightbtagSFUpReader;
+	VariableReader<MultiDoublePointer> tightbtagSFDownReader;
+
 	VariableReader<MultiIntPointer> PartonFlavour;
 	VariableReader<MultiIntPointer> HadronFlavour;
 

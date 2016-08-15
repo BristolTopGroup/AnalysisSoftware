@@ -110,6 +110,7 @@ protected:
 	double eventWeight;
 	double pileUpWeight_, pileUpWeight_up_, pileUpWeight_down_;
 	double bJetWeight_, lightJetUpWeight_, lightJetDownWeight_, bJetUpWeight_, bJetDownWeight_;
+	double tightbJetWeight_, tightlightJetUpWeight_, tightlightJetDownWeight_, tightbJetUpWeight_, tightbJetDownWeight_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
 			PUWeightShiftUp_, PUWeightShiftDown_;
@@ -196,6 +197,11 @@ public:
 	void setLightJetDownWeight(double weight);
 	void setBJetUpWeight(double weight);
 	void setBJetDownWeight(double weight);
+	void setTightBJetWeight(double weight);
+	void setTightLightJetUpWeight(double weight);
+	void setTightLightJetDownWeight(double weight);
+	void setTightBJetUpWeight(double weight);
+	void setTightBJetDownWeight(double weight);
 	void setBeamScrapingVeto(bool isScraping);
 	void setGenNumberOfPileUpVertices(std::vector<int> pileup);
 	void setTrueNumberOfPileUpVertices(std::vector<int> pileup);
@@ -289,11 +295,19 @@ public:
 	unsigned long lumiblock() const;
 	double weight() const;
 	double PileUpWeight( int systematic = 0 ) const;
+
 	double BJetWeight() const;
 	double LightJetUpWeight() const;
 	double LightJetDownWeight() const;
 	double BJetUpWeight() const;
 	double BJetDownWeight() const;
+
+	double TightBJetWeight() const;
+	double TightLightJetUpWeight() const;
+	double TightLightJetDownWeight() const;
+	double TightBJetUpWeight() const;
+	double TightBJetDownWeight() const;
+
 	void inspect() const;
 	bool HLT(HLTriggers::value trigger) const;
 	int HLTPrescale(HLTriggers::value trigger) const;
