@@ -46,8 +46,6 @@ ElectronReader::ElectronReader() : //
 		vertex_dist_z(), //
 		dist(), //
 		dCotTheta(), //
-		mvaTrigV0_(), //
-		mvaNonTrigV0_(), //
 		passConversionVeto_(), //
 		passMediumElectron_(), //
 		passMediumConversionElectron_(), //
@@ -90,8 +88,6 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		vertex_dist_z(input, "Electrons.VtxDistZ"), //
 		dist(input, "Electrons.Dist"), //
 		dCotTheta(input, "Electrons.DCotTheta"), //
-		mvaTrigV0_(input, "Electrons.mvaTrigV0"), //
-		mvaNonTrigV0_(input, "Electrons.mvaNonTrigV0"), //
 		passConversionVeto_(input, "Electrons.passConversionVeto"), //
 		passMediumElectron_(input, "Electrons.isMediumElectron"), //
 		passMediumConversionElectron_(input, "Electrons.isMediumConversionElectron"), //
@@ -206,8 +202,6 @@ void ElectronReader::initialise() {
 	dist.initialise();
 	dCotTheta.initialise();
 
-	mvaTrigV0_.initialise();
-	mvaNonTrigV0_.initialise();
 	passConversionVeto_.initialise();
 
 	passMediumElectron_.initialise();
