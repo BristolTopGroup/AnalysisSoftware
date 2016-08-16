@@ -307,7 +307,7 @@ const bool Event::PassesElectronTriggerAndConversionSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelection() const {
-	if ( passesMuonSelection_ && (passesMuonChannelTrigger_ )) {
+	if ( passesMuonSelection_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
@@ -403,7 +403,7 @@ const bool Event::PassesElectronTriggerAndConversionSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelectionNoB() const {
-	if ( passesMuonSelectionNoB_ && (passesMuonChannelTrigger_ )) {
+	if ( passesMuonSelectionNoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
@@ -411,7 +411,7 @@ const bool Event::PassesMuonTriggerAndSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndQCDSelection1p5to3NoB() const {
-	if ( passesMuonQCDSelection1p5to3NoB_ && (passesMuonChannelTrigger_ )) {
+	if ( passesMuonQCDSelection1p5to3NoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
@@ -419,7 +419,7 @@ const bool Event::PassesMuonTriggerAndQCDSelection1p5to3NoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndQCDSelection3toInfNoB() const {
-	if ( passesMuonQCDSelection3toInfNoB_ && (passesMuonChannelTrigger_ )) {
+	if ( passesMuonQCDSelection3toInfNoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
 		return true;
 	}
 
