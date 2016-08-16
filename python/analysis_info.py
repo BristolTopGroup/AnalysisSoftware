@@ -1,7 +1,6 @@
-
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v0.0.1/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v0.0.1/'
-
+mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/2016/v0.0.4/ntuples/'
+# data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v0.0.3/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/run2/2016/v0.0.4/ntuples/'
 datasets_13TeV = {
 
     'SingleMuon' : [ mc_path_13TeV + 'SingleElectron_Run2016B_PromptReco_v1',

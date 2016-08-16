@@ -28,8 +28,8 @@ void ElectronAnalyser::analyse(const EventPtr event) {
 		histMan_->H1D("All_Electron_dPhi_in")->Fill(electron->dPhiIn(), weight_);
 		histMan_->H1D("All_Electron_dEta_in")->Fill(electron->dEtaIn(), weight_);
 		histMan_->H1D("All_Electron_HadOverEM")->Fill(electron->HadOverEm(), weight_);
-		histMan_->H1D("All_Electron_mvaTrigV0")->Fill(electron->mvaTrigV0(), weight_);
-		histMan_->H1D("All_Electron_mvaNonTrigV0")->Fill(electron->mvaNonTrigV0(), weight_);
+		// histMan_->H1D("All_Electron_mvaTrigV0")->Fill(electron->mvaTrigV0(), weight_);
+		// histMan_->H1D("All_Electron_mvaNonTrigV0")->Fill(electron->mvaNonTrigV0(), weight_);
 		histMan_->H1D("All_Electron_dB")->Fill(electron->d0(), weight_);
 	}
 }
@@ -53,8 +53,8 @@ void ElectronAnalyser::analyseElectron(const ElectronPointer electron, double we
 		histMan_->H1D("electron_dPhi_in")->Fill(electron->dPhiIn(), weight_);
 		histMan_->H1D("electron_dEta_in")->Fill(electron->dEtaIn(), weight_);
 		histMan_->H1D("electron_HadOverEM")->Fill(electron->HadOverEm(), weight_);
-		histMan_->H1D("electron_mvaTrigV0")->Fill(electron->mvaTrigV0(), weight_);
-		histMan_->H1D("electron_mvaNonTrigV0")->Fill(electron->mvaNonTrigV0(), weight_);
+		// histMan_->H1D("electron_mvaTrigV0")->Fill(electron->mvaTrigV0(), weight_);
+		// histMan_->H1D("electron_mvaNonTrigV0")->Fill(electron->mvaNonTrigV0(), weight_);
 		histMan_->H1D("electron_dB")->Fill(electron->d0(), weight_);
 	}
 
@@ -103,9 +103,9 @@ void ElectronAnalyser::createHistograms() {
 			histMan_->addH1D("All_Electron_dEta_in", "Electron #Delta#eta_{in}; #Delta#eta_{in}; Events/(0.001)", 1000,
 					-0.5, 0.5);
 			histMan_->addH1D("All_Electron_HadOverEM", "Electron HadronicOverEM; HadOverEM; Events/(0.01)", 500, 0, 5);
-			histMan_->addH1D("All_Electron_mvaTrigV0", "Electron mvaTrigV0; mvaTrigV0; Events/(0.01)", 240, -1.2, 1.2);
-			histMan_->addH1D("All_Electron_mvaNonTrigV0", "Electron mvaNonTrigV0; mvaNonTrigV0; Events/(0.01)", 240,
-					-1.2, 1.2);
+			// histMan_->addH1D("All_Electron_mvaTrigV0", "Electron mvaTrigV0; mvaTrigV0; Events/(0.01)", 240, -1.2, 1.2);
+			// histMan_->addH1D("All_Electron_mvaNonTrigV0", "Electron mvaNonTrigV0; mvaNonTrigV0; Events/(0.01)", 240,
+			// 		-1.2, 1.2);
 			histMan_->addH1D("All_Electron_dB", "Electron dB(PV); dB/cm; Events/(0.001)", 200, 0, 0.2);
 		} else {
 			//single electron histograms for analyseElectron
@@ -120,10 +120,10 @@ void ElectronAnalyser::createHistograms() {
 			histMan_->addH1D("electron_dEta_in", "Electron #Delta#eta_{in}; #Delta#eta_{in}; Events/(0.001)", 1000,
 					-0.5, 0.5);
 			histMan_->addH1D("electron_HadOverEM", "Electron HadronicOverEM; HadOverEM; Events/(0.01)", 500, 0, 5);
-			histMan_->addH1D("electron_mvaTrigV0", "Electron mvaTrigV0; mvaTrigV0; Events/(0.01)", 240, -1.2,
-					1.2);
-			histMan_->addH1D("electron_mvaNonTrigV0", "Electron mvaNonTrigV0; mvaNonTrigV0; Events/(0.01)", 240, -1.2,
-					1.2);
+			// histMan_->addH1D("electron_mvaTrigV0", "Electron mvaTrigV0; mvaTrigV0; Events/(0.01)", 240, -1.2,
+			// 		1.2);
+			// histMan_->addH1D("electron_mvaNonTrigV0", "Electron mvaNonTrigV0; mvaNonTrigV0; Events/(0.01)", 240, -1.2,
+			// 		1.2);
 			histMan_->addH1D("electron_dB", "Electron dB(PV); dB/cm; Events/(0.001 cm)", 200, 0, 0.2);
 		}
 	}

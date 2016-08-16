@@ -41,16 +41,19 @@ NTupleEventReader::NTupleEventReader() :
 		metReaders(), //
 		// // metCorrReaders(), //
 
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsf.Fired")),
-		// passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18er.Fired")),
-		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20.Fired")),
-		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20.Fired")),
+		// passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsf.Fired")),
+		// passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20.Fired")),
+		// passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20.Fired")),
+		// passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsfMC.Fired")),
+		// passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
+		// passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
 
-		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle23WPLooseGsfMC.Fired")),
-		// passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu18erMC.Fired")),
-		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
-		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
-
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPTightGsf.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu22.Fired")),
+		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu22.Fired")),
+		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle27WPTightGsfMC.Fired")),
+		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu22MC.Fired")),
+		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu22MC.Fired")),
 		// passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27erWP75GsfMC.Fired")),
 		// passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),		
 
@@ -125,8 +128,11 @@ void NTupleEventReader::addInputFileWithoutCheck(const char * fileName) {
 }
 
 const EventPtr NTupleEventReader::getNextEvent() {
+	cout << "0.0.1" << endl;
+
 	currentEvent = EventPtr(new Event());
 	selectNextNtupleEvent();
+	cout << "0.0.2" << endl;
 
 	// boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
 	// boost::shared_ptr<std::vector<int> > triggerPrescales(new std::vector<int>());
@@ -321,9 +327,14 @@ const EventPtr NTupleEventReader::getNextEvent() {
 }
 
 void NTupleEventReader::selectNextNtupleEvent() {
+	cout << "Has Next Event? " << hasNextEvent() << endl;
 	if (hasNextEvent()) {
 		initiateReadersIfNotSet();
+		cout << "initiated Readers that havent been set " << endl;
+		cout << "CurrentEventEntry " << currentEventEntry << endl;
+		// input is a TChain using nTupleTree/tree ...
 		input->GetEntry(currentEventEntry);
+		cout << "got entry " << endl;
 		currentEventEntry++;
 		processedEvents++;
 	}

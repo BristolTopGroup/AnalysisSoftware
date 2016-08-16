@@ -122,7 +122,6 @@ bool Event::isTTJet( DataType::value type) const {
 		type == DataType::TTJets_PowhegPythia8_scaleup ||
 		type == DataType::TTJets_PowhegPythia8_mtop1695 ||
 		type == DataType::TTJets_PowhegPythia8_mtop1755 ||
-		type == DataType::TTJets_amcatnloFXFX ||
 		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_PowhegHerwigpp ||
 		type == DataType::TTJets_amcatnloHerwigpp
@@ -308,7 +307,7 @@ const bool Event::PassesElectronTriggerAndConversionSelection() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelection() const {
-	if ( passesMuonSelection_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
+	if ( passesMuonSelection_ && (passesMuonChannelTrigger_ )) {
 		return true;
 	}
 
@@ -404,7 +403,7 @@ const bool Event::PassesElectronTriggerAndConversionSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndSelectionNoB() const {
-	if ( passesMuonSelectionNoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
+	if ( passesMuonSelectionNoB_ && (passesMuonChannelTrigger_ )) {
 		return true;
 	}
 
@@ -412,7 +411,7 @@ const bool Event::PassesMuonTriggerAndSelectionNoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndQCDSelection1p5to3NoB() const {
-	if ( passesMuonQCDSelection1p5to3NoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
+	if ( passesMuonQCDSelection1p5to3NoB_ && (passesMuonChannelTrigger_ )) {
 		return true;
 	}
 
@@ -420,7 +419,7 @@ const bool Event::PassesMuonTriggerAndQCDSelection1p5to3NoB() const {
 }
 
 const bool Event::PassesMuonTriggerAndQCDSelection3toInfNoB() const {
-	if ( passesMuonQCDSelection3toInfNoB_ && (passesMuonChannelTrigger_ || passesTkMuonChannelTrigger_) ) {
+	if ( passesMuonQCDSelection3toInfNoB_ && (passesMuonChannelTrigger_ )) {
 		return true;
 	}
 
@@ -452,9 +451,7 @@ const PseudoTopParticlesPointer Event::PseudoTopParticles() const {
 }
 
 const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) const {
-
 	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
-
 	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_electron.getSignalLeptonIndex();
 		return allElectrons[signalLeptonIndex];
@@ -817,8 +814,8 @@ void Event::setIsSemiLeptonicMuon( bool isSemiLeptonicMuon ) {
 
 void Event::setPassGenSelectionInfo( std::vector<unsigned int> passSelections ) {
 	for ( unsigned int selection = 0; selection < passSelections.size(); ++selection ) {
-		if ( passSelections[selection] == 1 ) setIsSemiLeptonicElectron( true );
-		if ( passSelections[selection] == 2 ) setIsSemiLeptonicMuon( true );
+		if ( passSelections[selection] == 1 ) setIsSemiLeptonicMuon( true );
+		if ( passSelections[selection] == 2 ) setIsSemiLeptonicElectron( true );
 	}
 }
 

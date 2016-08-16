@@ -3,13 +3,13 @@ import sys
 from copy import deepcopy
 from imp import load_source
 dirname, _ = os.path.split(os.path.abspath(__file__))
-analysis_info = load_source( 'analysis_info', dirname + '/analysis_info.py' )
+analysis_info = load_source( 'analysis_info', dirname + '/analysis_info_2016.py' )
 
 mc_path = analysis_info.mc_path_13TeV
 data_path = analysis_info.data_path_13TeV
 datasets = analysis_info.datasets_13TeV
-
 analysisModes = analysis_info.analysis_modes_13TeV
+
 
 available_settings = [
     'ElectronScaleFactorSystematic', 
@@ -134,22 +134,32 @@ BTagSystematic = settings['BTagSystematic']
 LightTagSystematic = settings['LightTagSystematic']
 custom_file_suffix = settings['custom_file_suffix']
 
-input_folders = datasets[sample]
-filetype = '*.root'
 
-if ntupleToProcess > 0 :
-    filetype = '*%03d.root' % ntupleToProcess
-    print 'Will only consider ntuple : ',filetype
-    settings['custom_file_suffix'] += str(ntupleToProcess)
-    custom_file_suffix = settings['custom_file_suffix']
+# input_folders = datasets[sample]
+# filetype = '*.root'
 
-inputFiles = [path + '/' + filetype for path in input_folders]
+# if ntupleToProcess > 0 :
+#     filetype = '*%03d.root' % ntupleToProcess
+#     print 'Will only consider ntuple : ',filetype
+#     settings['custom_file_suffix'] += str(ntupleToProcess)
+#     custom_file_suffix = settings['custom_file_suffix']
+
+# inputFiles = [path + '/' + filetype for path in input_folders]
 # inputFiles = datasets[sample]
 
+
+
+
+# More than one file for SingleElectron/Muon
+inputFolders = datasets[sample]
+# inputFiles = mc_path+'ntuple_001.root'
+
+inputFiles = [path + 'TTJets_amcatnloFXFX.root' for path in inputFolders]
+print( 'Current Input File : ', inputFiles)
+print( 'Current Sample : ', sample)
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
     print setting, '=', value
-
 
 #Jet Energy Resolutions files (L7 corrections)
 bJetResoFile = toolsFolder + "data/bJetReso.root"
@@ -182,5 +192,5 @@ datasetInfoFile = ""
 if centerOfMassEnergy == 13:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV_25ns.py"
 
-
 nTuple_version = 0
+
