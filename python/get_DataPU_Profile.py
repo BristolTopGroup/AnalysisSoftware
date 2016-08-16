@@ -1,10 +1,12 @@
 import glob
 import subprocess
 
-jsonFile = '/hdfs/TopQuarkGroup/run2/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt'
-pileupJson = '/hdfs/TopQuarkGroup/run2/json/pileup_JSON_11-19-2015.txt'
-minBiasXsec = 69000
-uncertainty = 0.05#%
+# https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt
+jsonFile = 'Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
+# https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/PileUp/pileup_latest.txt
+pileupJson = 'pileup_latest.txt'
+minBiasXsec = 69200
+uncertainty = 0.046#%
 
 variations = {
 'central' : minBiasXsec,
