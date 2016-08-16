@@ -23,7 +23,7 @@ public:
 private:
 	VariableReader<unsigned int> numberJetsReader;
 	VariableReader<unsigned int> numberBJetsReader;
-	VariableReader<unsigned int> signalLeptonIndexReader;
+	VariableReader<MultiUIntPointer> signalLeptonIndexReader;
 	VariableReader<MultiUIntPointer> cleanedJetsIndexReader;
 	VariableReader<MultiUIntPointer> cleanedBJetsIndexReader;
 	VariableReader<bool> AllEventsReader;
