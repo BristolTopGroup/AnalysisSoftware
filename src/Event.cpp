@@ -474,6 +474,10 @@ const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) con
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muonQCDNonisolated3toInf.getSignalLeptonIndex();
+
+		// FIXME
+		if ( signalLeptonIndex >= allMuons.size() ) return allMuons[allMuons.size()-1];
+
 		return allMuons[signalLeptonIndex];
 	}
 
@@ -525,32 +529,26 @@ const JetCollection Event::getCleanedBJets( unsigned int selectionCriteria ) con
 
 	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		cleanedBJetIndices = selectionOutputInfo_electron.getCleanedBJetIndex();
-		cleanedJetIndices = selectionOutputInfo_electron.getCleanedJetIndex();
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		cleanedBJetIndices = selectionOutputInfo_muon.getCleanedBJetIndex();
-		cleanedJetIndices = selectionOutputInfo_muon.getCleanedJetIndex();
 	}
 	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
 		cleanedBJetIndices = selectionOutputInfo_electronQCDNonisolated.getCleanedBJetIndex();
-		cleanedJetIndices = selectionOutputInfo_electronQCDNonisolated.getCleanedJetIndex();
 	}
 	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
 		cleanedBJetIndices = selectionOutputInfo_electronQCDConversion.getCleanedBJetIndex();
-		cleanedJetIndices = selectionOutputInfo_electronQCDConversion.getCleanedJetIndex();
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) {
 		cleanedBJetIndices = selectionOutputInfo_muonQCDNonisolated1p5to3.getCleanedBJetIndex();
-		cleanedJetIndices = selectionOutputInfo_muonQCDNonisolated1p5to3.getCleanedJetIndex();
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) {
 		cleanedBJetIndices = selectionOutputInfo_muonQCDNonisolated3toInf.getCleanedBJetIndex();
-		cleanedJetIndices = selectionOutputInfo_muonQCDNonisolated3toInf.getCleanedJetIndex();
 	}
 
 	JetCollection cleanedBJets;
 	for ( unsigned int cleanedBJetIndex = 0; cleanedBJetIndex < cleanedBJetIndices.size(); ++cleanedBJetIndex ) {
-		double jetIndex = cleanedJetIndices[ cleanedBJetIndices[cleanedBJetIndex] ];
+		double jetIndex = cleanedBJetIndices[cleanedBJetIndex];
 		if ( allJets[jetIndex]->pt() >= minJetPt_ && fabs(allJets[jetIndex]->eta()) <= maxJetAbsEta_ ) {
 			cleanedBJets.push_back( allJets[jetIndex] );
 		}
