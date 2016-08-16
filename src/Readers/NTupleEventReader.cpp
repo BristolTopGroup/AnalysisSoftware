@@ -166,12 +166,14 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelTriggerReader->getVariable() );
 	}
 	else {
-		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
+		currentEvent->setPassesElectronChannelTrigger( true );
+		// currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
 		// currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
 		// currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelTrigger( true );
 		currentEvent->setPassesTkMuonChannelTrigger( true );		
-		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelMCTriggerReader->getVariable() );
+		// currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelMCTriggerReader->getVariable() );
+		currentEvent->setPassesElectronChannelQCDTrigger( true );
 		// currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( true );
 	}
