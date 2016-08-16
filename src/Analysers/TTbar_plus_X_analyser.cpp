@@ -20,94 +20,47 @@ void TTbar_plus_X_analyser::analyse(const EventPtr event) {
 }
 
 void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
-	bool passSelection;
-	bool passSelectionNoB;
-	if (event->isRealData()){
-		passSelection= event->PassesElectronTriggerAndSelection();
-		passSelectionNoB= event->PassesElectronTriggerAndSelectionNoB();
-	}
-	else{
-		passSelection= event->PassesElectronSelection();
-		passSelectionNoB= event->PassesElectronSelectionNoB();
-	}
-
-	// createCutflow(event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Cutflow" );
-	if (passSelectionNoB){
+	if ( event->PassesElectronTriggerAndSelectionNoB() ){
 		BTagEffAnalyserEPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserEPlusJetsRefSelection_->analyse(event);
 		fillCommonTreesNoBSelection( event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Ref selection NoBSelection" );
 	}
 
-	if (passSelection) {
+	if ( event->PassesElectronTriggerAndSelection() ) {
 		// Fill branches that are common amongst all regions
 		fillCommonTrees( event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Ref selection" );
 	}
 }
 
 void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
-	bool passSelection1;
-	bool passSelection2;
-	if (event->isRealData()){
-		passSelection1 = event->PassesElectronTriggerAndQCDSelection();
-		passSelection2 = event->PassesElectronTriggerAndConversionSelection();
-	}
-	else{
-		passSelection1 = event->PassesElectronQCDSelection();
-		passSelection2 = event->PassesElectronConversionSelection();
-	}
-
-	if ( passSelection1 ) {
+	if ( event->PassesElectronTriggerAndQCDSelection() ) {
 		fillCommonTrees( event, SelectionCriteria::ElectronPlusJetsQCDNonIsolated, histogramFolder_ + "/EPlusJets/QCD non iso e+jets" );
 	}
 
-	if ( passSelection2 ) {
+	if ( event->PassesElectronTriggerAndConversionSelection() ) {
 		fillCommonTrees( event, SelectionCriteria::ElectronPlusJetsQCDConversion, histogramFolder_ + "/EPlusJets/QCDConversions" );
 	}
 }
 
 void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
-	bool passSelection;
-	bool passSelectionNoB;
-	if (event->isRealData()){
-		passSelection= event->PassesMuonTriggerAndSelection();
-		passSelectionNoB= event->PassesMuonTriggerAndSelectionNoB();
-	}
-	else{
-		passSelection= event->PassesMuonSelection();
-		passSelectionNoB= event->PassesMuonSelectionNoB();
-	}
-
-	// createCutflow(event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Cutflow" );
-	if (passSelectionNoB){
+	if ( event->PassesMuonTriggerAndSelectionNoB() ){
 		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserMuPlusJetsRefSelection_->analyse(event);
 		fillCommonTreesNoBSelection( event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection" );
 	}
 
-	if ( passSelection ) {
+	if ( event->PassesMuonTriggerAndSelection() ) {
 		fillCommonTrees( event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Ref selection" );
 	}
 }
 
 void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
-
-	bool passSelection1;
-	bool passSelection2;
-	if (event->isRealData()){
-		passSelection1 = event->PassesMuonTriggerAndQCDSelection1p5to3();
-		passSelection2 = event->PassesMuonTriggerAndQCDSelection3toInf();
-	}
-	else{
-		passSelection1 = event->PassesMuonQCDSelection1p5to3();
-		passSelection2 = event->PassesMuonQCDSelection3toInf();
-	}
-
 	//selection with respect to reference selection
-	if ( passSelection1 ) {
+	if ( event->PassesMuonTriggerAndQCDSelection1p5to3() ) {
 		fillCommonTrees( event, SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3, histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3" );
 	}
 
-	if ( passSelection2 ) {
+	if ( event->PassesMuonTriggerAndQCDSelection3toInf() ) {
 		fillCommonTrees( event, SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf, histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf" );
 	}
 }
