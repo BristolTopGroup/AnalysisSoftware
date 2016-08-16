@@ -474,10 +474,6 @@ const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) con
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muonQCDNonisolated3toInf.getSignalLeptonIndex();
-
-		// FIXME
-		if ( signalLeptonIndex >= allMuons.size() ) return allMuons[allMuons.size()-1];
-
 		return allMuons[signalLeptonIndex];
 	}
 
