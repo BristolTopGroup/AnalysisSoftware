@@ -116,7 +116,6 @@ NTupleEventReader::~NTupleEventReader() {
 }
 
 void NTupleEventReader::addInputFile(const TString fileName) {
-	cout << fileName << endl;
 	unsigned long filesAdded = input->Add(fileName, -1); //-1 == number of events is not read!
 	if (filesAdded <= 0)
 		throw NoFileFoundException("No file found in '" + TString(fileName) + "'");
@@ -128,11 +127,8 @@ void NTupleEventReader::addInputFileWithoutCheck(const char * fileName) {
 }
 
 const EventPtr NTupleEventReader::getNextEvent() {
-	cout << "0.0.1" << endl;
-
 	currentEvent = EventPtr(new Event());
 	selectNextNtupleEvent();
-	cout << "0.0.2" << endl;
 
 	// boost::shared_ptr<std::vector<int> > triggers(new std::vector<int>());
 	// boost::shared_ptr<std::vector<int> > triggerPrescales(new std::vector<int>());
@@ -327,14 +323,10 @@ const EventPtr NTupleEventReader::getNextEvent() {
 }
 
 void NTupleEventReader::selectNextNtupleEvent() {
-	cout << "Has Next Event? " << hasNextEvent() << endl;
 	if (hasNextEvent()) {
 		initiateReadersIfNotSet();
-		cout << "initiated Readers that havent been set " << endl;
-		cout << "CurrentEventEntry " << currentEventEntry << endl;
 		// input is a TChain using nTupleTree/tree ...
 		input->GetEntry(currentEventEntry);
-		cout << "got entry " << endl;
 		currentEventEntry++;
 		processedEvents++;
 	}
