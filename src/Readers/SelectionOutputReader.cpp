@@ -128,9 +128,11 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.signalMuonIndices");
-		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedJetIndex");		
-		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedBJetIndex");
+
+		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.signalMuonIndices");
+		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedJetIndex");		
+		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedBJetIndex");
+
 		AllEventsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection1p5to3.AllEvents");
 		AtLeastFourGoodJetsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection1p5to3.AtLeastFourGoodJets");
 		AtLeastThreeGoodJetsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection1p5to3.AtLeastThreeGoodJets");
@@ -145,9 +147,11 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) {
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.NumberOfBtags");
-		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.signalMuonIndices");
-		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedJetIndex");		
-		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedBJetIndex");
+
+		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.signalMuonIndices");
+		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedJetIndex");		
+		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedBJetIndex");
+		
 		AllEventsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection3toInf.AllEvents");
 		AtLeastFourGoodJetsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection3toInf.AtLeastFourGoodJets");
 		AtLeastThreeGoodJetsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection3toInf.AtLeastThreeGoodJets");
@@ -187,21 +191,19 @@ const SelectionOutputInfo& SelectionOutputReader::getSelectionOutputInfo() {
 void SelectionOutputReader::readSelectionOutputInfo() {
 	selectionOutputInfo.setNumberOfJets( numberJetsReader.getVariable() );
 	selectionOutputInfo.setNumberOfBJets( numberBJetsReader.getVariable() );
-
 	std::vector<unsigned int> cleanedJetIndices;
 	for (unsigned int index = 0; index < cleanedJetsIndexReader.size(); index++) {
 		cleanedJetIndices.push_back( cleanedJetsIndexReader.getUIntVariableAt(index) );
 	}
 	selectionOutputInfo.setCleanedJetIndex( cleanedJetIndices );
-
 	std::vector<unsigned int> cleanedBJetIndices;
 	for (unsigned int index = 0; index < cleanedBJetsIndexReader.size(); index++) {
 		cleanedBJetIndices.push_back( cleanedBJetsIndexReader.getUIntVariableAt(index) );
 	}
 	selectionOutputInfo.setCleanedBJetIndex( cleanedBJetIndices );
 
-	selectionOutputInfo.setSignalLeptonIndex( signalLeptonIndexReader.getUIntVariableAt(0) );
-
+	if ( signalLeptonIndexReader.size() == 0 ) selectionOutputInfo.setSignalLeptonIndex( 999999999 );
+	else selectionOutputInfo.setSignalLeptonIndex( signalLeptonIndexReader.getUIntVariableAt(0) );
 	selectionOutputInfo.setAllEvents( AllEventsReader.getVariable() );
 	selectionOutputInfo.setAtLeastFourGoodJets( AtLeastFourGoodJetsReader.getVariable() );
 	selectionOutputInfo.setAtLeastThreeGoodJets( AtLeastThreeGoodJetsReader.getVariable() );
