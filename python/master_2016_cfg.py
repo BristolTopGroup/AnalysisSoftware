@@ -3,13 +3,13 @@ import sys
 from copy import deepcopy
 from imp import load_source
 dirname, _ = os.path.split(os.path.abspath(__file__))
-analysis_info = load_source( 'analysis_info', dirname + '/analysis_info.py' )
+analysis_info = load_source( 'analysis_info', dirname + '/analysis_info_2016.py' )
 
 mc_path = analysis_info.mc_path_13TeV
 data_path = analysis_info.data_path_13TeV
 datasets = analysis_info.datasets_13TeV
-
 analysisModes = analysis_info.analysis_modes_13TeV
+
 
 available_settings = [
     'ElectronScaleFactorSystematic', 
@@ -116,9 +116,9 @@ getElectronScaleFactorsFromFile = True
 ElectronIdScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronCutBasedID_MediumWP_76X_SF2D.root'
 ElectronIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/Elec_SF_Fit_Syst.root'
 ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEfficiencies.root'
-MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunBCD_prompt80X_7p65.root'
-MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunBCD_prompt80X_7p65.root'
-MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Combined.root'
+MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunCD_Reco76X_Feb15.root'
+MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunCD_Reco76X_Feb15.root'
+MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
@@ -134,22 +134,32 @@ BTagSystematic = settings['BTagSystematic']
 LightTagSystematic = settings['LightTagSystematic']
 custom_file_suffix = settings['custom_file_suffix']
 
-input_folders = datasets[sample]
-filetype = '*.root'
 
-if ntupleToProcess > 0 :
-    filetype = '*%03d.root' % ntupleToProcess
-    print 'Will only consider ntuple : ',filetype
-    settings['custom_file_suffix'] += str(ntupleToProcess)
-    custom_file_suffix = settings['custom_file_suffix']
+# input_folders = datasets[sample]
+# filetype = '*.root'
 
-inputFiles = [path + '/' + filetype for path in input_folders]
+# if ntupleToProcess > 0 :
+#     filetype = '*%03d.root' % ntupleToProcess
+#     print 'Will only consider ntuple : ',filetype
+#     settings['custom_file_suffix'] += str(ntupleToProcess)
+#     custom_file_suffix = settings['custom_file_suffix']
+
+# inputFiles = [path + '/' + filetype for path in input_folders]
 # inputFiles = datasets[sample]
 
+
+
+
+# More than one file for SingleElectron/Muon
+inputFolders = datasets[sample]
+# inputFiles = mc_path+'ntuple_001.root'
+
+inputFiles = [path + 'TTJets_amcatnloFXFX.root' for path in inputFolders]
+print( 'Current Input File : ', inputFiles)
+print( 'Current Sample : ', sample)
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
     print setting, '=', value
-
 
 #Jet Energy Resolutions files (L7 corrections)
 bJetResoFile = toolsFolder + "data/bJetReso.root"
@@ -173,8 +183,7 @@ applyMetType0Corr = False
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 15930
-
+lumi = 3990
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 13
 
@@ -183,5 +192,5 @@ datasetInfoFile = ""
 if centerOfMassEnergy == 13:
     datasetInfoFile = toolsFolder + "python/DataSetInfo_13TeV_25ns.py"
 
-
 nTuple_version = 0
+
