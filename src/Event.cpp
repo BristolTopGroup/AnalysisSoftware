@@ -25,9 +25,9 @@ double const Event::maxJetAbsEta_ = 2.4;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
-double const Event::minSignalMuonPt_ = 23;
+double const Event::minSignalMuonPt_ = 24;
 double const Event::minSignalMuonEta_ = 2.4;
-double const Event::minSignalElectronPt_ = 25;
+double const Event::minSignalElectronPt_ = 29;
 double const Event::minSignalElectronEta_ = 2.4; 
 
 Event::Event() : //
