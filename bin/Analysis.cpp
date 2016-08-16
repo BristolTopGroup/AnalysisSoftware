@@ -31,33 +31,23 @@ void Analysis::analyse() {
 	createHistograms();
 
 	while (eventReader->hasNextEvent()) {
-		cout << "******************" << std::endl;
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
-		cout << "1" << endl;
+
 		// Check if MET fitlers are satisfied
 		// cout << "Pass event filter? " << currentEvent->passesMETFilters() << endl;
 		if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
-
-		cout << "2" << endl;
-
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) ) {
-
-			cout << "3" << endl;
-
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 			if ( Globals::treePrefix_ == "" ) {
-
 				partonAnalyser_->analyse(currentEvent);
 			}
 			// likelihoodInputAnalyser_->analyse(currentEvent);
 		}
-		cout << "4" << endl;
-
 		treeMan->FillTrees();
 	}
 }
@@ -73,21 +63,14 @@ void Analysis::printNumberOfProccessedEventsEvery(unsigned long printEvery) {
 }
 
 void Analysis::initiateEvent() {
-	cout << "0" << endl;
-
 	currentEvent = eventReader->getNextEvent();
-	cout << "0.0.1" << endl;
 	pileUpWeight=1.;
 	weight=1;
 	histMan->setCurrentDataType(currentEvent->getDataType());
-	cout << "0.0.2" << endl;
 	histMan->setCurrentJetBin(currentEvent->Jets().size());
-	cout << "0.0.1" << endl;
 	histMan->setCurrentBJetBin(0);
-	cout << "0.1" << endl;
 
 	treeMan->setCurrentDataType(currentEvent->getDataType());
-	cout << "0.2" << endl;
 
 	double pileUpWeight_up = 1;
 	double pileUpWeight_down = 1;
@@ -97,7 +80,6 @@ void Analysis::initiateEvent() {
 		pileUpWeight_up = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), 1);
 		pileUpWeight_down = weights->reweightPileUp(currentEvent->getTrueNumberOfVertices().at(0), -1);
 	}
-	cout << "0.3" << endl;
 
 	// include generator weight
 	// 1, except for amcatnlo samples (so far?)
@@ -107,13 +89,11 @@ void Analysis::initiateEvent() {
 	currentEvent->setPileUpWeight(pileUpWeight);
 	currentEvent->setPileUpWeight(pileUpWeight_up, 1);
 	currentEvent->setPileUpWeight(pileUpWeight_down, -1);
-	cout << "0.4" << endl;
 
 }
 
 void Analysis::inspectEvents() {
 	std::vector<InterestingEvent> eventsToInspect;
-
 	for (unsigned int index = 0; index < eventsToInspect.size(); ++index) {
 		if ((currentEvent->runnumber() == eventsToInspect.at(index).candidate->runnumber()
 				&& currentEvent->eventnumber() == eventsToInspect.at(index).candidate->eventnumber())) {
@@ -121,7 +101,6 @@ void Analysis::inspectEvents() {
 			currentEvent->inspect();
 		}
 	}
-
 }
 
 void Analysis::printInterestingEvents() {
