@@ -20,9 +20,7 @@ void TTbar_plus_X_analyser::analyse(const EventPtr event) {
 }
 
 void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
-
-	createCutflow(event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Cutflow" );
-	if (event->PassesElectronTriggerAndSelectionNoB()){
+	if ( event->PassesElectronTriggerAndSelectionNoB() ){
 		BTagEffAnalyserEPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserEPlusJetsRefSelection_->analyse(event);
 		fillCommonTreesNoBSelection( event, SelectionCriteria::ElectronPlusJetsReference, histogramFolder_ + "/EPlusJets/Ref selection NoBSelection" );
@@ -35,7 +33,6 @@ void TTbar_plus_X_analyser::ePlusJetsSignalAnalysis(const EventPtr event) {
 }
 
 void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
-
 	if ( event->PassesElectronTriggerAndQCDSelection() ) {
 		fillCommonTrees( event, SelectionCriteria::ElectronPlusJetsQCDNonIsolated, histogramFolder_ + "/EPlusJets/QCD non iso e+jets" );
 	}
@@ -46,9 +43,7 @@ void TTbar_plus_X_analyser::ePlusJetsQcdAnalysis(const EventPtr event) {
 }
 
 void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
-
-	createCutflow(event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Cutflow" );
-	if (event->PassesMuonTriggerAndSelectionNoB()){
+	if ( event->PassesMuonTriggerAndSelectionNoB() ){
 		BTagEffAnalyserMuPlusJetsRefSelection_->analyse(event);
 		PileupAnalyserMuPlusJetsRefSelection_->analyse(event);
 		fillCommonTreesNoBSelection( event, SelectionCriteria::MuonPlusJetsReference, histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection" );
@@ -60,7 +55,6 @@ void TTbar_plus_X_analyser::muPlusJetsSignalAnalysis(const EventPtr event) {
 }
 
 void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
-	
 	//selection with respect to reference selection
 	if ( event->PassesMuonTriggerAndQCDSelection1p5to3() ) {
 		fillCommonTrees( event, SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3, histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 1p5to3" );
@@ -68,37 +62,6 @@ void TTbar_plus_X_analyser::muPlusJetsQcdAnalysis(const EventPtr event) {
 
 	if ( event->PassesMuonTriggerAndQCDSelection3toInf() ) {
 		fillCommonTrees( event, SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf, histogramFolder_ + "/MuPlusJets/QCD non iso mu+jets 3toInf" );
-	}
-}
-
-void TTbar_plus_X_analyser::createCutflow(const EventPtr event, const unsigned int selectionCriteria, std::string folder ) {
-	std::vector <bool> cuts(event->getCuts(selectionCriteria));
-	std::vector <bool> SelectionPass;
-	bool PassAll(true);
-	treeMan_->setCurrentFolder(folder);
-	cuts[0] ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //All Events
-	if (selectionCriteria==2) event->PassesElectronChannelTrigger() ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Electron Trigger
-	else if(selectionCriteria==1) (event->PassesMuonChannelTrigger() || event->PassesTkMuonChannelTrigger()) ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Muon Trigger
-	event->passesMETFilters() ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //MET Filter
-	if (selectionCriteria==2) event->PassesElectronSelection() ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Electron Selection
-	else if(selectionCriteria==1) event->PassesMuonSelection() ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Electron Selection
-	cuts[1] ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Loose E Veto
-	cuts[2] ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Loose Mu Veto
-	if (selectionCriteria==2) (cuts[3] ? SelectionPass.push_back(true) : SelectionPass.push_back(false)); //E Conversion Veto (only for E channel)
-	event->passesJetSelection(selectionCriteria) ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //4Jet Selection
-	event->passesBJetSelection(selectionCriteria) ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //2BJetSelection
-
-	for (uint i = 0; i < SelectionPass.size(); i++){
-		if (SelectionPass[i] == false) {
-			PassAll = false;
-			break;
-		}
-	}
-
-	PassAll ? SelectionPass.push_back(true) : SelectionPass.push_back(false); //Pass All
-
-	for (uint i = 0; i < SelectionPass.size(); i++){
-		treeMan_->Fill("Cutflow", SelectionPass[i]);
 	}
 }
 
@@ -297,11 +260,6 @@ void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->addBranch("lepton_isolation", "F", "FitVariables" + Globals::treePrefix_);
 }
 
-void TTbar_plus_X_analyser::createCommonCutflowTrees( std::string folder){
-	treeMan_->setCurrentFolder(folder);
-	treeMan_->addBranch("Cutflow", "F", "Cutflow" + Globals::treePrefix_, false);
-}
-
 void TTbar_plus_X_analyser::createTrees() {
 	createCommonTrees(histogramFolder_ + "/EPlusJets/Ref selection");
 	createCommonTrees(histogramFolder_ + "/EPlusJets/QCD non iso e+jets");
@@ -313,9 +271,6 @@ void TTbar_plus_X_analyser::createTrees() {
 
 	createCommonNoBSelectionTrees(histogramFolder_ + "/EPlusJets/Ref selection NoBSelection");
 	createCommonNoBSelectionTrees(histogramFolder_ + "/MuPlusJets/Ref selection NoBSelection");
-
-	createCommonCutflowTrees(histogramFolder_ + "/EPlusJets/Cutflow");
-	createCommonCutflowTrees(histogramFolder_ + "/MuPlusJets/Cutflow");
 
 	BTagEffAnalyserEPlusJetsRefSelection_->createTrees();
 	BTagEffAnalyserMuPlusJetsRefSelection_->createTrees();

@@ -31,7 +31,6 @@ void Analysis::analyse() {
 	createHistograms();
 
 	while (eventReader->hasNextEvent()) {
-
 		initiateEvent();
 		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
 		inspectEvents();
@@ -45,7 +44,6 @@ void Analysis::analyse() {
 			pseudoTopAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 			if ( Globals::treePrefix_ == "" ) {
-
 				partonAnalyser_->analyse(currentEvent);
 			}
 			// likelihoodInputAnalyser_->analyse(currentEvent);
@@ -91,11 +89,11 @@ void Analysis::initiateEvent() {
 	currentEvent->setPileUpWeight(pileUpWeight);
 	currentEvent->setPileUpWeight(pileUpWeight_up, 1);
 	currentEvent->setPileUpWeight(pileUpWeight_down, -1);
+
 }
 
 void Analysis::inspectEvents() {
 	std::vector<InterestingEvent> eventsToInspect;
-
 	for (unsigned int index = 0; index < eventsToInspect.size(); ++index) {
 		if ((currentEvent->runnumber() == eventsToInspect.at(index).candidate->runnumber()
 				&& currentEvent->eventnumber() == eventsToInspect.at(index).candidate->eventnumber())) {
@@ -103,7 +101,6 @@ void Analysis::inspectEvents() {
 			currentEvent->inspect();
 		}
 	}
-
 }
 
 void Analysis::printInterestingEvents() {

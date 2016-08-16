@@ -50,7 +50,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		double sf_up = 0;
 		double sf_down = 0;
 
-		std::cout << "BJets WP : " << bJetWPs.at(0) << ", " << bJetWPs.at(0) << "\n";
+		// std::cout << "BJets WP : " << bJetWPs.at(0) << ", " << bJetWPs.at(0) << "\n";
 
 		if (bJetWPs.at(0) == "M" && bJetWPs.at(1) == "M"){
 			// Get scale factor for this jet given 2 medium btags

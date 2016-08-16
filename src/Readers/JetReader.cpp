@@ -294,6 +294,9 @@ void JetReader::initialise() {
 	btagSFReader.initialise();
 	btagSFUpReader.initialise();
 	btagSFDownReader.initialise();
+	tightbtagSFReader.initialise();
+	tightbtagSFUpReader.initialise();
+	tightbtagSFDownReader.initialise();
 
 	PartonFlavour.initialise();
 	HadronFlavour.initialise();
