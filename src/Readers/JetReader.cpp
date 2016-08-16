@@ -15,7 +15,7 @@ namespace BAT {
 
 JetReader::JetReader() : //
 		energyReader(), ////
-		// JECReader(), //
+		JECReader(), //
 		JECUncReader(),
 		L1OffJECReader(),
 		L2L3ResJECReader(),
@@ -65,7 +65,7 @@ JetReader::JetReader() : //
 }
 JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		energyReader(input, "Jets.Energy"), //
-		// JECReader(input, "Jets.JEC"), //
+		JECReader(input, "Jets.JEC"), //
 		JECUncReader(input, "Jets.JECUnc"), //
 		L1OffJECReader(input, "Jets.L1OffJEC"),
 		L2L3ResJECReader(input, "Jets.L2L3ResJEC"),
@@ -136,9 +136,9 @@ void JetReader::readJets(bool isRealData) {
 		double pzRaw = pzRawReader.getVariableAt(jetIndex);
 
 		double JEC = 1.0;
-		// if ( JECReader.size() > jetIndex ) {
-		// 	JEC = JECReader.getVariableAt(jetIndex);
-		// }
+		if ( JECReader.size() > jetIndex ) {
+			JEC = JECReader.getVariableAt(jetIndex);
+		}
 
 		double JECUnc = JECUncReader.getVariableAt(jetIndex);
 		// JECUnc = 0.03;
@@ -256,7 +256,7 @@ void JetReader::readJets(bool isRealData) {
 
 void JetReader::initialise() {
 	energyReader.initialise();
-	// JECReader.initialise();
+	JECReader.initialise();
 	JECUncReader.initialise();
 	L1OffJECReader.initialise();
 	L2L3ResJECReader.initialise();
