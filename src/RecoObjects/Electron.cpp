@@ -454,28 +454,28 @@ double Electron::mvaNonTrigV0() const {
 double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) const {
 
 	double triggerEfficiency(1.);
-	double triggerEfficiencyRelativeError(0.05);
-	boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
+	double triggerEfficiencyRelativeError(0.1);
+	// boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
 	double electronPt = pt();
 	double electronEta = fabs(eta());
-	double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
-	unsigned int bin = 0;
-	if ( electronPt <= maxPt ) {
-		bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
-	}
-	else {
-		bin = electronTriggerScaleFactorsHistogram->GetNbinsX();
-	}
+	// double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
+	// unsigned int bin = 0;
+	// if ( electronPt <= maxPt ) {
+	// 	bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
+	// }
+	// else {
+	// 	bin = electronTriggerScaleFactorsHistogram->GetNbinsX();
+	// }
 
-	triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
+	// triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
 
 	// ID scalefactor
 	double idSF(1.);
 	double idSFError(0.);
 	boost::shared_ptr<TH2F> electronIDScaleFactorsHistogram(Globals::electronIdScaleFactorsHistogram);
-	maxPt = electronIDScaleFactorsHistogram->GetYaxis()->GetXmax();
+	double maxPt = electronIDScaleFactorsHistogram->GetYaxis()->GetXmax();
 
-	bin = 0;
+	unsigned int bin = 0;
 	if ( electronPt <= maxPt ) {
 		bin = electronIDScaleFactorsHistogram->FindBin( electronEta, electronPt );
 	}
@@ -516,6 +516,7 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	}
 	// return triggerEfficiency * idSF * isoSF;
 	// return triggerEfficiency * isoSF;
+
 	return idSF;
 }
 
