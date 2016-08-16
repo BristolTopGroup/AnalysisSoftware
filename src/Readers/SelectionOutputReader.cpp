@@ -129,9 +129,9 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.NumberOfBtags");
 
-		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.signalMuonIndices");
-		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedJetIndex");		
-		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedBJetIndex");
+		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.signalMuonIndices");
+		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedJetIndex");		
+		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedBJetIndex");
 
 		AllEventsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection1p5to3.AllEvents");
 		AtLeastFourGoodJetsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection1p5to3.AtLeastFourGoodJets");
@@ -148,9 +148,9 @@ SelectionOutputReader::SelectionOutputReader(TChainPointer input, unsigned int s
 		numberJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.NumberOfJets");
 		numberBJetsReader = VariableReader<unsigned int>(input, "TopPairMuonPlusJetsQCDSelection3toInf.NumberOfBtags");
 
-		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.signalMuonIndices");
-		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedJetIndex");		
-		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection1p5to3.cleanedBJetIndex");
+		signalLeptonIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.signalMuonIndices");
+		cleanedJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedJetIndex");		
+		cleanedBJetsIndexReader = VariableReader<MultiUIntPointer>(input, "TopPairMuonPlusJetsQCDSelection3toInf.cleanedBJetIndex");
 		
 		AllEventsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection3toInf.AllEvents");
 		AtLeastFourGoodJetsReader = VariableReader<bool>(input,  "TopPairMuonPlusJetsQCDSelection3toInf.AtLeastFourGoodJets");
