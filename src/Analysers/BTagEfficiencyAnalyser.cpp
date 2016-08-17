@@ -11,7 +11,6 @@ using namespace BAT;
 
 void BTagEff::analyse(const EventPtr event) {
 
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
 	int NJets = 0;
 	int NBJets = 0; // How many medium b jets
@@ -87,15 +86,11 @@ void BTagEff::analyse(const EventPtr event) {
 }
 
 
-BTagEff::BTagEff(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-	BasicAnalyser(histMan, treeMan, histogramFolder){
+BTagEff::BTagEff(TreeManagerPtr treeMan, std::string histogramFolder) :
+	BasicAnalyser(treeMan, histogramFolder){
 }
 
 BTagEff::~BTagEff() {
-}
-
-void BTagEff::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 }
 
 void BTagEff::createTrees() {

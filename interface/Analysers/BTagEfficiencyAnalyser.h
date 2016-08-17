@@ -15,11 +15,10 @@ namespace BAT {
 	class BTagEff: public BasicAnalyser {
 
 		public:
-			BTagEff(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "BTagEfficiencies");
+			BTagEff(TreeManagerPtr treeMan, std::string histogramFolder = "BTagEfficiencies");
 			virtual ~BTagEff();
 
 			void analyse(const EventPtr);
-			void createHistograms();
 			void createTrees();
 
 		};

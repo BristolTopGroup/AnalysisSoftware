@@ -10,7 +10,6 @@
 #include <assert.h>
 #include <string>
 #include <boost/scoped_ptr.hpp>
-#include "../HistHelpers/HistogramManager.h"
 #include "../TreeHelpers/TreeManager.h"
 #include "../Event.h"
 
@@ -24,7 +23,6 @@ namespace BAT {
  */
 class BasicAnalyser {
 protected:
-	HistogramManagerPtr histMan_;
 	TreeManagerPtr treeMan_;
 	std::string histogramFolder_;
 	double weight_;
@@ -40,8 +38,7 @@ public:
 	 *
 	 * Analysers are created at the beginning of the analysis.
 	 */
-	BasicAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "BasicAnalyser");
-	BasicAnalyser(HistogramManagerPtr histMan, TreeManagerPtr TreeMan, std::string histogramFolder = "BasicAnalyser");
+	BasicAnalyser(TreeManagerPtr TreeMan, std::string histogramFolder = "BasicAnalyser");
 	virtual ~BasicAnalyser();
 	/**
 	 * The main functionality of an analyser is available in the analyse function.
@@ -54,8 +51,6 @@ public:
 	 * The histogram folder as well as all histograms used by this analyser should be defined by this function
 	 * The function is executed on the creation of the analysis.
 	 */
-	virtual void createHistograms() = 0;
-
 	virtual void setPrescale(unsigned int prescale);
 	virtual void setScale(double scale);
 };

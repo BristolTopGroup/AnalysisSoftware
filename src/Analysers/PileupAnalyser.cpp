@@ -13,7 +13,6 @@ using namespace std;
 
 void PileupAnalyser::analyse(const EventPtr event) {
 
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
 
 	treeMan_->Fill("EventWeight", event->weight());
@@ -37,16 +36,11 @@ void PileupAnalyser::analyse(const EventPtr event) {
 	}
 }
 
-
-PileupAnalyser::PileupAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-	BasicAnalyser(histMan, treeMan, histogramFolder) {
+PileupAnalyser::PileupAnalyser(TreeManagerPtr treeMan, std::string histogramFolder) :
+	BasicAnalyser(treeMan, histogramFolder) {
 }
 
 PileupAnalyser::~PileupAnalyser() {
-}
-
-void PileupAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 }
 
 void PileupAnalyser::createTrees() {

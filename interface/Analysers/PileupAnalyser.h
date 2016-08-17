@@ -15,11 +15,10 @@ namespace BAT {
 	class PileupAnalyser: public BasicAnalyser {
 
 		public:
-			PileupAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "PileupAnalysericiencies");
+			PileupAnalyser(TreeManagerPtr treeMan, std::string histogramFolder = "PileupAnalysericiencies");
 			virtual ~PileupAnalyser();
 
 			void analyse(const EventPtr);
-			void createHistograms();
 			void createTrees();
 
 		};
