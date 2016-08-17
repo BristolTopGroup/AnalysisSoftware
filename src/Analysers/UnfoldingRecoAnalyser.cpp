@@ -173,14 +173,9 @@ void UnfoldingRecoAnalyser::createTrees() {
 	}
 }
 
-void UnfoldingRecoAnalyser::createHistograms() {
 
-cout << "I shouldn't be here" << endl;
-
-}
-
-UnfoldingRecoAnalyser::UnfoldingRecoAnalyser(boost::shared_ptr<HistogramManager> histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, treeMan, histogramFolder) {
+UnfoldingRecoAnalyser::UnfoldingRecoAnalyser(TreeManagerPtr treeMan, std::string histogramFolder) :
+		BasicAnalyser(treeMan, histogramFolder) {
 }
 
 UnfoldingRecoAnalyser::~UnfoldingRecoAnalyser() {

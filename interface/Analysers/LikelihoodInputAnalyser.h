@@ -19,11 +19,10 @@ namespace BAT {
 class LikelihoodInputAnalyser: public BasicAnalyser {
 
 public:
-	LikelihoodInputAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "likelihood" );
+	LikelihoodInputAnalyser(TreeManagerPtr treeMan, std::string histogramFolder = "likelihood" );
 	virtual ~LikelihoodInputAnalyser();
 
 	void analyse(const EventPtr);
-	void createHistograms();
 	void createTrees();
 };
 typedef boost::scoped_ptr<LikelihoodInputAnalyser> LikelihoodInputAnalyserLocalPtr;

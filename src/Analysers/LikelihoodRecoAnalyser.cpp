@@ -21,7 +21,6 @@ void LikelihoodRecoAnalyser::analyse(const EventPtr event, const JetCollection j
 
 	weight_ = event->weight();
 	treeMan_->setCurrentFolder(histogramFolder_);
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	int ttbarpartonsfound = 0;
 	const JetCollection AllJets(event->Jets());
 	int TypeofSolution = 0;//1 = correct, 2=wrong cobination, 3 = not reconstructible, 4 = not semileptonic
@@ -132,8 +131,8 @@ void LikelihoodRecoAnalyser::analyse(const EventPtr event, const JetCollection j
 	}
 }
 
-LikelihoodRecoAnalyser::LikelihoodRecoAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder ) :
-		BasicAnalyser(histMan, treeMan, histogramFolder) //
+LikelihoodRecoAnalyser::LikelihoodRecoAnalyser(TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder ) :
+		BasicAnalyser(treeMan, histogramFolder) //
 {
 
 }
@@ -141,10 +140,6 @@ LikelihoodRecoAnalyser::LikelihoodRecoAnalyser(HistogramManagerPtr histMan, Tree
 LikelihoodRecoAnalyser::~LikelihoodRecoAnalyser() {
 }
 
-void LikelihoodRecoAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
-
-}
 
 void LikelihoodRecoAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);

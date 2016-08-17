@@ -39,7 +39,6 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 
 	// Need these for some gen level studies
 	const JetCollection genJets( event->GenJets() );
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
 	treeMan_->Fill("EventWeight", event->weight());
 
@@ -54,26 +53,14 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 			ParticlePointer jet1Raw = jet1->raw_jet();
 			ParticlePointer jet2Raw = jet2->raw_jet();
 
-			if ( jet1Raw->pt() > 30 && jet2Raw->pt() > 30 ) {
-				Particle hadronicWRaw(*jet1Raw + *jet2Raw);
-
-				histMan_->H1D("hadronicWMass_RAW")->Fill(hadronicWRaw.mass() , weight_);
-				histMan_->H1D("jetPt_RAW")->Fill(jet1Raw->pt() , weight_);
-				histMan_->H1D("jetPt_RAW")->Fill(jet2Raw->pt() , weight_);
-				histMan_->H1D("jetEta_RAW")->Fill(jet1Raw->eta() , weight_);
-				histMan_->H1D("jetEta_RAW")->Fill(jet2Raw->eta() , weight_);
-			}
+			// if ( jet1Raw->pt() > 30 && jet2Raw->pt() > 30 ) {
+			// 	Particle hadronicWRaw(*jet1Raw + *jet2Raw);
+			// }
 
 
 			if (jet1->pt()<=30 || jet2->pt()<=30 ) continue;
 
 			Particle hadronicW(*jet1 + *jet2);
-			histMan_->setCurrentHistogramFolder(histogramFolder_);
-			histMan_->H1D("hadronicWMass")->Fill(hadronicW.mass() , weight_);
-			histMan_->H1D("jetPt")->Fill(jet1->pt() , weight_);
-			histMan_->H1D("jetPt")->Fill(jet2->pt() , weight_);
-			histMan_->H1D("jetEta")->Fill(jet1->eta() , weight_);
-			histMan_->H1D("jetEta")->Fill(jet2->eta() , weight_);
 
 			treeMan_->setCurrentFolder(histogramFolder_);
 			treeMan_->Fill("mjj",hadronicW.mass());
@@ -89,11 +76,6 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 
 			if ( genJet1 != 0 && genJet2 != 0 ) {
 				Particle hadronicW_fromGenJets(*genJet1 + *genJet2);
-				histMan_->H1D("hadronicWMass_genJets")->Fill(hadronicW_fromGenJets.mass() , weight_);
-				histMan_->H1D("jetPt_genJet")->Fill(genJet1->pt() , weight_);
-				histMan_->H1D("jetPt_genJet")->Fill(genJet2->pt() , weight_);
-				histMan_->H1D("jetEta_genJet")->Fill(genJet1->eta() , weight_);
-				histMan_->H1D("jetEta_genJet")->Fill(genJet2->eta() , weight_);
 
 				treeMan_->Fill("mjj_genJet",hadronicW.mass());
 				treeMan_->Fill("genJetPt",genJet1->pt());
@@ -109,17 +91,9 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 					JetPointer quarkGenJet( genJets[quarkGenJetIndex] );
 					JetPointer quarkBarGenJet( genJets[quarkBarGenJetIndex] );
 
-					if ( ( genJet1->getFourVector() == quarkGenJet->getFourVector() && genJet2->getFourVector() == quarkBarGenJet->getFourVector() ) ||
-						( genJet2->getFourVector() == quarkGenJet->getFourVector() && genJet1->getFourVector() == quarkBarGenJet->getFourVector() ) ) {
-
-						// These reco jets actually correspond to thos from a W
-						histMan_->H1D("hadronicWMass_recoMatchedToPartons")->Fill(hadronicW.mass() , weight_);
-						histMan_->H1D("jetPt_recoMatchedToPartons")->Fill(jet1->pt() , weight_);
-						histMan_->H1D("jetPt_recoMatchedToPartons")->Fill(jet2->pt() , weight_);
-						histMan_->H1D("jetEta_recoMatchedToPartons")->Fill(jet1->eta() , weight_);
-						histMan_->H1D("jetEta_recoMatchedToPartons")->Fill(jet2->eta() , weight_);
-
-					}
+					// if ( ( genJet1->getFourVector() == quarkGenJet->getFourVector() && genJet2->getFourVector() == quarkBarGenJet->getFourVector() ) ||
+					// 	( genJet2->getFourVector() == quarkGenJet->getFourVector() && genJet1->getFourVector() == quarkBarGenJet->getFourVector() ) ) {
+					// }
 				}
 			}
 		}
@@ -141,7 +115,6 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 				minDeltaR = deltaRToOtherJet;
 		}
 		if ( minDeltaR > 1 ) {
-			histMan_->H1D("minDeltaR_cleanedReco")->Fill( minDeltaR, weight_ );
 			cleanedJets.push_back( jet1 );
 		}
 	}
@@ -155,15 +128,7 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 			JetPointer jet2 = cleanedJets[jet2Index];
 
 			if (jet1->pt()<=30 || jet2->pt()<=30 ) continue;
-
 			Particle hadronicW(*jet1 + *jet2);
-
-			histMan_->setCurrentHistogramFolder(histogramFolder_);
-			histMan_->H1D("hadronicWMass_cleanedReco")->Fill(hadronicW.mass() , weight_);
-			histMan_->H1D("jetPt_cleanedReco")->Fill(jet1->pt() , weight_);
-			histMan_->H1D("jetPt_cleanedReco")->Fill(jet2->pt() , weight_);
-			histMan_->H1D("jetEta_cleanedReco")->Fill(jet1->eta() , weight_);
-			histMan_->H1D("jetEta_cleanedReco")->Fill(jet2->eta() , weight_);
 		}
 	}
 
@@ -180,13 +145,6 @@ void WAnalyser::analyseHadronicW_partons(const EventPtr event) {
 
 	if ( quarkParton->pt() > 30 && quarkBarParton->pt() > 30 &&
 			fabs(quarkParton->eta()) < 2.5 && fabs(quarkBarParton->eta()) < 2.5 ) {
-
-		histMan_->setCurrentHistogramFolder(histogramFolder_);
-		histMan_->H1D("hadronicWMass_partons")->Fill(hadronicW_fromPartons.mass() , weight_);
-		histMan_->H1D("jetPt_partons")->Fill(quarkParton->pt() , weight_);
-		histMan_->H1D("jetPt_partons")->Fill(quarkBarParton->pt() , weight_);
-		histMan_->H1D("jetEta_partons")->Fill(quarkParton->eta() , weight_);
-		histMan_->H1D("jetEta_partons")->Fill(quarkBarParton->eta() , weight_);
 
 		treeMan_->setCurrentFolder(histogramFolder_);
 		treeMan_->Fill("mjj_parton",hadronicW_fromPartons.mass());
@@ -207,70 +165,10 @@ void WAnalyser::analyseHadronicW_partons(const EventPtr event) {
 
 			if ( quarkGenJet->pt() > 30 && quarkBarGenJet->pt() > 30 &&
 				fabs(quarkGenJet->eta()) < 2.5 && fabs(quarkBarGenJet->eta()) < 2.5 ) {
-
 				const Particle hadronicW_fromGenJetsMatchedToPartons(*quarkGenJet + *quarkBarGenJet);
-
-				histMan_->H1D("hadronicWMass_partonsGenJets")->Fill(hadronicW_fromGenJetsMatchedToPartons.mass() , weight_);
-				histMan_->H1D("jetPt_partonsGenJets")->Fill(quarkGenJet->pt() , weight_);
-				histMan_->H1D("jetPt_partonsGenJets")->Fill(quarkBarGenJet->pt() , weight_);
-				histMan_->H1D("jetEta_partonsGenJets")->Fill(quarkGenJet->eta() , weight_);
-				histMan_->H1D("jetEta_partonsGenJets")->Fill(quarkBarGenJet->eta() , weight_);
 			}
 		}
 	}
-}
-
-void WAnalyser::fillHistograms(std::string subcollection, std::string suffix) {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
-
-	// unsigned short numberOfSolutions = allSolutions.size();
-	// for (unsigned short index = 0; index < numberOfSolutions; ++index) {
-	// 	TtbarHypothesisPointer currentSolution = allSolutions.at(index);
-	// 	const ParticlePointer resonance = currentSolution->resonance;
-
-	// 	double hadronicWMass = currentSolution->hadronicW->mass();
-
-	// 	if (index == 0) {
-	// 		histMan_->H1D_BJetBinned("hadronicWMass" + suffix)->Fill(hadronicWMass, weight_ * scale_);
-	// 	}
-
-	// 	double normalisedWeight = weight_ * scale_ / numberOfSolutions;
-	// 	histMan_->H1D_BJetBinned("hadronicWMass_allSolutions" + suffix)->Fill(hadronicWMass, normalisedWeight);
-	// }
-}
-
-void WAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
-
-	histMan_->addH1D("hadronicWMass", "hadronic W mass; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetPt", "jet pt; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta", "jet eta; #eta; events/0.06", 100, -3, 3);
-
-	histMan_->addH1D("hadronicWMass_RAW", "hadronic W mass with RAW jets; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetPt_RAW", "jet pt with RAW jets; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta_RAW", "jet eta with RAW jets; #eta; events/0.06", 100, -3, 3);
-
-	histMan_->addH1D("hadronicWMass_genJets", "hadronic W mass from gen jets; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetPt_genJet", "gen jet pt; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta_genJet", "gen jet eta; #eta; events/0.06", 100, -3, 3);
-
-	histMan_->addH1D("hadronicWMass_partons", "hadronic W mass from partons; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetPt_partons", "parton pt; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta_partons", "parton eta; #eta; events/0.06", 100, -3, 3);
-
-	histMan_->addH1D("hadronicWMass_partonsGenJets", "hadronic W mass from gen jets matched to partons; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetPt_partonsGenJets", "gen jet matched to parton pt; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta_partonsGenJets", "gen jet matched to parton eta; #eta; events/0.06", 100, -3, 3);
-
-	histMan_->addH1D("hadronicWMass_recoMatchedToPartons", "hadronic W mass from reco jets matched to partons; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetPt_recoMatchedToPartons", "reco jet matched to parton pt; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta_recoMatchedToPartons", "reco jet matched to parton eta; #eta; events/0.06", 100, -3, 3);
-
-	histMan_->addH1D("hadronicWMass_cleanedReco", "hadronic W mass; m(W_{had}) [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetPt_cleanedReco", "jet pt; p_{t} [GeV]; events/1 GeV", 500, 0, 500);
-	histMan_->addH1D("jetEta_cleanedReco", "jet eta; #eta; events/0.06", 100, -3, 3);
-	histMan_->addH1D("minDeltaR_cleanedReco", "deltaR to nearest jet; #Delta R; events/0.013", 100, 0, 1.3);
-
 }
 
 void WAnalyser::createTrees() {
@@ -289,8 +187,8 @@ void WAnalyser::createTrees() {
 	treeMan_->addBranch("NPU", "F", "W Bosons" + Globals::treePrefix_);
 }
 
-WAnalyser::WAnalyser(boost::shared_ptr<HistogramManager> histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, treeMan, histogramFolder) {
+WAnalyser::WAnalyser(boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder) :
+		BasicAnalyser(treeMan, histogramFolder) {
 }
 
 WAnalyser::~WAnalyser() {

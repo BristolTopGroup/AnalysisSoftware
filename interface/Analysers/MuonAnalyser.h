@@ -14,7 +14,7 @@ namespace BAT {
 
 class MuonAnalyser: public BasicAnalyser {
 public:
-	MuonAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "MuonAnalysis",
+	MuonAnalyser(TreeManagerPtr treeMan, std::string histogramFolder = "MuonAnalysis",
 			bool singleMuonOnly = false);
 	virtual ~MuonAnalyser();
 
@@ -26,7 +26,6 @@ public:
 	 * Analyses a single muon
 	 */
 	void analyseMuon(const MuonPointer muon, double weight);
-	void createHistograms();
 	void createTrees();
 
 	void useTTbarPlusMETSetup(bool use);

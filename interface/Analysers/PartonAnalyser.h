@@ -14,11 +14,10 @@ namespace BAT {
 
 class PartonAnalyser: public BAT::BasicAnalyser {
 public:
-	PartonAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis/Unfolding");
+	PartonAnalyser(TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis/Unfolding");
 	virtual ~PartonAnalyser();
 	void analyse(const EventPtr);
 
-	void createHistograms();
 	void createTrees();
 
 protected:

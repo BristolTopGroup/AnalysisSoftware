@@ -20,7 +20,6 @@ void HitFitAnalyser::analyse(const EventPtr event) {
 
 BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, const JetCollection jets, const JetCollection bjets, const LeptonPointer selectedLepton ) {
 	weight_ = event->weight() * prescale_ * scale_;
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
 	treeMan_->Fill("EventWeight", weight_ );
 
@@ -48,8 +47,6 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 		if ( !isBJet ) leadingLightJets.push_back( thisJet );
 		else leadingBJets.push_back( thisJet );
 	}
-
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 
 	//set MC matching flag
 	if (event->getDataType() == DataType::TTJets_amcatnloFXFX)
@@ -183,23 +180,7 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 		hitfit::Fit_Result fitResult = hitfitResult[fit];
 
 		if (hitfitResult[fit].chisq() > 0.0) {
-
 			treeMan_->Fill("FitChiSquaredAllSolutions",fitResult.chisq());
-		// 	histMan_->H1D("FittedTopMassAllSolutions")->Fill(fitResult.mt(), weight_);
-			// histMan_->H1D("FitChiSquaredAllSolutions")->Fill(fitResult.chisq(), weight_);
-		// 	histMan_->H1D("FitLogChiSqdAllSolutions")->Fill(log(fitResult.chisq()), weight_);
-		// 	const hitfit::Column_Vector &px = fitResult.pullx();
-		// 	const hitfit::Column_Vector &py = fitResult.pully();
-		// 	double sumPx = 0.0;
-		// 	for (int i = 0; i < px.num_row(); ++i) {
-		// 		histMan_->H1D("PullDistAllVarsAllSolutions")->Fill(px[i]);
-		// 		histMan_->H2D("PullDistPerVarAllSolutions")->Fill(px[i], i);
-		// 		sumPx += px[i] * px[i];
-		// 	}
-		// 	histMan_->H1D("PullSumSquaredAllSolutions")->Fill(sumPx);
-		// 	for (int i = 0; i < py.num_row(); ++i) {
-		// 		histMan_->H1D("PullDistYVarsAllSolutions")->Fill(py[i]);
-		// 	}
 		}
 		// Is this the permutation with smallest chi2?
 		if (fitResult.chisq() > 0.0 && fitResult.chisq() < bestChi2) {
@@ -214,10 +195,6 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 	//
 
 	if (bestX2pos < nHitFit + 1) {
-		// histMan_->H1D("FittedTopMassBestSolution")->Fill(hitfitResult[bestX2pos].mt(), weight_);
-		// histMan_->H1D("FitChiSquaredBestSolution")->Fill(hitfitResult[bestX2pos].chisq(), weight_);
-		// histMan_->H1D("FitLogChiSqdBestSolution")->Fill(log(hitfitResult[bestX2pos].chisq()), weight_);
-
 		treeMan_->Fill("FitChiSquaredBestSolutions",hitfitResult[bestX2pos].chisq());
 		treeMan_->Fill("FitChiSquaredProbabilityBestSolutions",TMath::Prob(hitfitResult[bestX2pos].chisq(),1));
 
@@ -263,8 +240,8 @@ BAT::TtbarHypothesis HitFitAnalyser::analyseAndReturn(const EventPtr event, cons
 
 }
 
-HitFitAnalyser::HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder ) :
-		BasicAnalyser(histMan, treeMan, histogramFolder), //
+HitFitAnalyser::HitFitAnalyser(TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder ) :
+		BasicAnalyser(treeMan, histogramFolder), //
 		// The following five initializers read the config parameters for the
 		// ASCII text files which contains the physics object resolutions.
 		FitterPath_(Globals::TQAFPath), //
@@ -492,73 +469,6 @@ void HitFitAnalyser::setMCTTbarHypothesis(const TtbarHypothesis& mcEvent) {
 }
 
 HitFitAnalyser::~HitFitAnalyser() {
-}
-
-void HitFitAnalyser::createHistograms() {
-	// histMan_->setCurrentHistogramFolder(histogramFolder_);
-	// histMan_->addH1D("AllJetsPt", "All jets Pt", 100, 0., 600.);
-	// histMan_->addH1D("FittedTopMassAllSolutions", "Fitted top mass all solutions", 100, 0., 400.);
-	// histMan_->addH1D("FittedTopPtAllSolutions", "Fitted top pt all solutions", 100, 0., 400.);
-
-	// histMan_->addH1D("FittedTTbarMassAllSolutions", "Fitted ttbar mass all solutions", 100, 0., 1600.);
-	// histMan_->addH1D("FittedTTbarPtAllSolutions", "Fitted ttbar pt all solutions", 100, 0., 1600.);
-
-
-	// histMan_->addH1D("FitChiSquaredAllSolutions", "Fit chi-squared all solutions", 100, 0., 20.);
-	// histMan_->addH1D("FitLogChiSqdAllSolutions", "Fit log(chi-sqd) all solutions", 100, -5., 5.);
-	// histMan_->addH1D("FittedTopMassBestSolution", "Fitted top mass best solution", 100, 0., 400.);
-	// histMan_->addH1D("FittedTopPtBestSolution", "Fitted top pt best solution", 20, 0., 400.);
-	// histMan_->addH1D("FittedTopRapidityBestSolution", "Fitted top pt best solution", 50, -2.5, 2.5);
-
-	// histMan_->addH1D("FittedTTbarMassBestSolution", "Fitted ttbar mass best solution", 80, 0., 1600.);
-	// histMan_->addH1D("FittedTTbarPtBestSolution", "Fitted ttbar pt best solution", 15, 0., 300.);
-	// histMan_->addH1D("FittedTTbarRapidityBestSolution", "Fitted ttbar pt best solution", 50, -2.5, 2.5);
-
-	// histMan_->addH1D("FitChiSquaredBestSolution", "Fit chi-squared best solution", 100, 0., 20.);
-	// histMan_->addH1D("FitLogChiSqdBestSolution", "Fit log(chi-sqd) best solutions", 100, -5., 5.);
-
-	// histMan_->addH1D("PullDistAllVarsAllSolutions", "Pulls well measured all solutions", 100, -10., 10.);
-	// histMan_->addH1D("PullSumSquaredAllSolutions", "Sum-squared pulls all solutions", 100, 0, 500.);
-	// histMan_->addH2D("PullDistPerVarAllSolutions", "Pulls well measured vs varno all", 100, -10., 10., 25, 0., 25.);
-	// histMan_->addH1D("PullDistYVarsAllSolutions", "Pulls poorly measured all", 100, -10., 10.);
-	// histMan_->addH1D("PullDistAllVarsBestSolution", "Pulls well measured best solution", 100, -10., 10.);
-	// histMan_->addH1D("PullSumSquaredBestSolution", "Sum-squared pulls best solution", 100, 0, 500.);
-	// histMan_->addH2D("PullDistPerVarBestSolution", "Pulls well measured vs varno best", 100, -10., 10., 25, 0., 25.);
-	// histMan_->addH1D("PullDistYVarsBestSolution", "Pulls poorly measured best", 100, -10., 10.);
-
-	// // MC matching study histograms
-	// histMan_->addH1D("deltaPtElectron", "Pt difference between truth and fitted electrons", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaRelectron", "DeltaR between truth and fitted electrons", 100, 0., 2.);
-	// histMan_->addH1D("deltaPtHadronicBjet", "Pt difference between truth and fitted b-jets from hadronic top", 100,
-	// 		-1.5, 1.5);
-	// histMan_->addH1D("deltaRhadronicBjet", "DeltaR between truth and fitted b-jets from hadronic top", 100, 0., 5.);
-	// histMan_->addH1D("deltaPtLeptonicBjet", "Pt difference between truth and fitted b-jets from leptonic top", 100,
-	// 		-1.5, 1.5);
-	// histMan_->addH1D("deltaRleptonicBjet", "DeltaR between truth and fitted b-jets from leptonic top", 100, 0., 5.);
-	// histMan_->addH1D("deltaPtWjet1", "Pt difference between truth and fitted W jets 1", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaRWjet1", "DeltaR between truth and fitted W jets 1", 100, 0., 5.);
-	// histMan_->addH1D("deltaPtWjet2", "Pt difference between truth and fitted W jets 2", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaRWjet2", "DeltaR between truth and fitted W jets 2", 100, 0., 5.);
-	// histMan_->addH1D("SumDeltaR", "Summarised deltaR of all e+jets", 100, 0., 25.);
-	// histMan_->addH1D("deltaPtElectronBest", "Pt difference between truth and fitted electrons for matched solutions",
-	// 		100, -1.5, 1.5);
-	// histMan_->addH1D("deltaPtHadronicBjetBest",
-	// 		"Pt difference between truth and fitted b-jets from hadronic top for matched solutions", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaPtLeptonicBjetBest",
-	// 		"Pt difference between truth and fitted b-jets from leptonic top for matched solutions", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaPtWjet1Best", "Pt difference between truth and fitted W jets 1 for matched solutions", 100,
-	// 		-1.5, 1.5);
-	// histMan_->addH1D("deltaPtWjet2Best", "Pt difference between truth and fitted W jets 2 for matched solutions", 100,
-	// 		-1.5, 1.5);
-	// histMan_->addH1D("deltaMET", "Delta MET between truth and fitted solutions", 100, -50., 50.);
-	// histMan_->addH1D("deltaMETbest", "Delta MET between truth and fitted matched solutions", 100, -50., 50.);
-	// histMan_->addH1D("deltaLeptonicTopMass", "Difference between truth and fitted leptonic top masses", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaHadronicTopMass", "Difference between truth and fitted hadronic top masses", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaLeptonicTopMassBest",
-	// 		"Difference between truth and fitted leptonic top masses for matched solutions", 100, -1.5, 1.5);
-	// histMan_->addH1D("deltaHadronicTopMassBest",
-	// 		"Difference between truth and fitted hadronic top masses for matched solutions", 100, -1.5, 1.5);
-
 }
 
 void HitFitAnalyser::createTrees() {
