@@ -278,12 +278,12 @@ void TTbar_plus_X_analyser::createTrees() {
 	PileupAnalyserMuPlusJetsRefSelection_->createTrees();
 }
 
-TTbar_plus_X_analyser::TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, treeMan, histogramFolder),
-		BTagEffAnalyserEPlusJetsRefSelection_(new BTagEff(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection NoBSelection/BTagEfficiencies")),
-		BTagEffAnalyserMuPlusJetsRefSelection_(new BTagEff(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection NoBSelection/BTagEfficiencies")),
-		PileupAnalyserEPlusJetsRefSelection_(new PileupAnalyser(histMan, treeMan, histogramFolder + "/EPlusJets/Ref selection/Pileup")), 
-		PileupAnalyserMuPlusJetsRefSelection_(new PileupAnalyser(histMan, treeMan, histogramFolder + "/MuPlusJets/Ref selection/Pileup")){
+TTbar_plus_X_analyser::TTbar_plus_X_analyser(TreeManagerPtr treeMan, std::string histogramFolder) :
+		BasicAnalyser(treeMan, histogramFolder),
+		BTagEffAnalyserEPlusJetsRefSelection_(new BTagEff(treeMan, histogramFolder + "/EPlusJets/Ref selection NoBSelection/BTagEfficiencies")),
+		BTagEffAnalyserMuPlusJetsRefSelection_(new BTagEff(treeMan, histogramFolder + "/MuPlusJets/Ref selection NoBSelection/BTagEfficiencies")),
+		PileupAnalyserEPlusJetsRefSelection_(new PileupAnalyser(treeMan, histogramFolder + "/EPlusJets/Ref selection/Pileup")), 
+		PileupAnalyserMuPlusJetsRefSelection_(new PileupAnalyser(treeMan, histogramFolder + "/MuPlusJets/Ref selection/Pileup")){
 }
 
 TTbar_plus_X_analyser::~TTbar_plus_X_analyser() {
