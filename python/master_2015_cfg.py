@@ -3,7 +3,7 @@ import sys
 from copy import deepcopy
 from imp import load_source
 dirname, _ = os.path.split(os.path.abspath(__file__))
-analysis_info = load_source( 'analysis_info', dirname + '/analysis_info.py' )
+analysis_info = load_source( 'analysis_info', dirname + '/analysis_info_2016.py' )
 
 mc_path = analysis_info.mc_path_13TeV
 data_path = analysis_info.data_path_13TeV
@@ -135,16 +135,27 @@ LightTagSystematic = settings['LightTagSystematic']
 custom_file_suffix = settings['custom_file_suffix']
 
 input_folders = datasets[sample]
-filetype = '*.root'
+inputFiles = []
 
-if ntupleToProcess > 0 :
-    filetype = '*%03d.root' % ntupleToProcess
-    print 'Will only consider ntuple : ',filetype
-    settings['custom_file_suffix'] += str(ntupleToProcess)
-    custom_file_suffix = settings['custom_file_suffix']
+for f in input_folders:
+    datasamplename = sample
+    if 'Single' in f:
+        tmp_datasamplename = f.split('/')
+        datasamplename = tmp_datasamplename[-3]
 
-inputFiles = [path + '/' + filetype for path in input_folders]
-# inputFiles = datasets[sample]
+    for ntuplejob in os.listdir(f):
+        if not os.path.isdir(f+ntuplejob): continue
+
+        tmp = ntuplejob.split('_')
+        jobnumber = 'ntuple_job_'+tmp[2]+'/'
+        filename = datasamplename+'_ntuple_'+tmp[2]+'.root'
+        inputFiles.append(f+jobnumber+filename)
+
+# if ntupleToProcess > 0 :
+#     filetype = '*%03d.root' % ntupleToProcess
+#     print 'Will only consider ntuple : ',filetype
+#     settings['custom_file_suffix'] += str(ntupleToProcess)
+#     custom_file_suffix = settings['custom_file_suffix']
 
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
