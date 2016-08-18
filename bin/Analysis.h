@@ -23,7 +23,6 @@
 #include "../interface/EventWeightProvider.h"
 #include <iostream>
 #include <string>
-#include "../interface/HistHelpers/HistogramManager.h"
 #include "../interface/TreeHelpers/TreeManager.h"
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
@@ -41,7 +40,6 @@ class Analysis {
 private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
     BAT::EventPtr currentEvent;
-    boost::shared_ptr<BAT::HistogramManager> histMan;
     boost::shared_ptr<BAT::TreeManager> treeMan;
     std::vector<BAT::InterestingEvent> interestingEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;

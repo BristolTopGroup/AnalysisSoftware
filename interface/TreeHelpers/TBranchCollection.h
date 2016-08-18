@@ -17,7 +17,7 @@
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/foreach.hpp>
-#include "../HistHelpers/StringOperations.h"
+#include "../TreeHelpers/StringOperations.h"
 
 namespace BAT {
 

@@ -18,7 +18,7 @@ namespace BAT {
  * @brief Interface/abstract class for Analysers.
  *
  * Interface class for Analysers providing basic functionality for other analysers.
- * Stores a pointer to a HistogramManager for Histogram creation and manipulation.
+ * Stores a pointer to a TreeManager for Tree creation and manipulation.
  *
  */
 class BasicAnalyser {
@@ -32,8 +32,8 @@ protected:
 
 public:
 	/**
-	 * Default constructor for an analyser. Has to take a pointer to a HistogramManager to have access to the histogram pool.
-	 * @param histMan Pointer to the histogram manager which organises the histogram-creation and -access.
+	 * Default constructor for an analyser. Has to take a pointer to a TreeManager to have access to the tree pool.
+	 * @param treeMan Pointer to the tree manager which organises the tree-creation and -access.
 	 * @param histogramFolder Optional parameter to set the folder in the ROOT file. By default this should be the analyser name.
 	 *
 	 * Analysers are created at the beginning of the analysis.
