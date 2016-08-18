@@ -86,14 +86,8 @@ void PartonAnalyser::createTrees() {
 	treeMan_->addBranch("lepWEta_parton", "F", "Unfolding" + Globals::treePrefix_);
 }
 
-void PartonAnalyser::createHistograms() {
-
-cout << "I shouldn't be here" << endl;
-
-}
-
-PartonAnalyser::PartonAnalyser(boost::shared_ptr<HistogramManager> histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, treeMan, histogramFolder) {
+PartonAnalyser::PartonAnalyser(TreeManagerPtr treeMan, std::string histogramFolder) :
+		BasicAnalyser(treeMan, histogramFolder) {
 }
 
 PartonAnalyser::~PartonAnalyser() {

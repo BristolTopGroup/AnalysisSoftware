@@ -66,9 +66,6 @@ void Analysis::initiateEvent() {
 	currentEvent = eventReader->getNextEvent();
 	pileUpWeight=1.;
 	weight=1;
-	histMan->setCurrentDataType(currentEvent->getDataType());
-	histMan->setCurrentJetBin(currentEvent->Jets().size());
-	histMan->setCurrentBJetBin(0);
 
 	treeMan->setCurrentDataType(currentEvent->getDataType());
 
@@ -115,7 +112,6 @@ void Analysis::printSummary() {
 }
 
 void Analysis::createHistograms() {
-	histMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 	treeMan->prepareForSeenDataTypes(eventReader->getSeenDatatypes());
 
 	ttbar_plus_X_analyser_->createTrees();
@@ -132,19 +128,17 @@ void Analysis::createHistograms() {
 Analysis::Analysis(std::string datasetInfoFile) : //
 		eventReader(new NTupleEventReader()), //
 		currentEvent(), //
-		histMan(new BAT::HistogramManager()), //
 		treeMan(new BAT::TreeManager()), //
 		interestingEvents(), //
 		eventCheck(), //
 		weights(new EventWeightProvider(datasetInfoFile)), //
 		weight(0), //
 		pileUpWeight(1), //
-		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(histMan, treeMan)), //
-		pseudoTopAnalyser_(new PseudoTopAnalyser(histMan, treeMan)),
-		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(histMan, treeMan)),
-		partonAnalyser_(new PartonAnalyser(histMan, treeMan)),
-		likelihoodInputAnalyser_(new LikelihoodInputAnalyser(histMan, treeMan)) {
-	histMan->enableDebugMode(true);
+		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(treeMan)), //
+		pseudoTopAnalyser_(new PseudoTopAnalyser(treeMan)),
+		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(treeMan)),
+		partonAnalyser_(new PartonAnalyser(treeMan)),
+		likelihoodInputAnalyser_(new LikelihoodInputAnalyser(treeMan)) {
 }
 
 Analysis::~Analysis() {
@@ -153,7 +147,6 @@ Analysis::~Analysis() {
 
 void Analysis::finishAnalysis() {
 	printSummary();
-	histMan->writeToDisk();
 	treeMan->writeToDisk();
 }
 

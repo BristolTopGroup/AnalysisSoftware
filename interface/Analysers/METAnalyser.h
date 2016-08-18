@@ -17,14 +17,12 @@ namespace BAT {
 
 class METAnalyser: public BAT::BasicAnalyser {
 public:
-	METAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "METAnalysis");
-	METAnalyser(HistogramManagerPtr histMan, std::string histogramFolder = "METAnalysis");
+	METAnalyser(TreeManagerPtr treeMan, std::string histogramFolder = "METAnalysis");
 	virtual ~METAnalyser();
 	void analyse(const EventPtr);
 	void analyse(const EventPtr, const ParticlePointer);
 	void analyse(const EventPtr, const ParticlePointer, const JetCollection);
 
-	void createHistograms();
 	void createTrees();
 protected:
 	void analyseTransverseMass(const EventPtr, const ParticlePointer);

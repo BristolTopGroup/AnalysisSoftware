@@ -14,11 +14,10 @@ namespace BAT {
 
 class PseudoTopAnalyser: public BAT::BasicAnalyser {
 public:
-	PseudoTopAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis/Unfolding");
+	PseudoTopAnalyser(TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis/Unfolding");
 	virtual ~PseudoTopAnalyser();
 	void analyse(const EventPtr);
 
-	void createHistograms();
 	void createTrees();
 
 	static double const minLeptonPt_;
@@ -33,8 +32,6 @@ public:
 	static double const maxJetAbsEta_;
 
 protected:
-	void fillHistograms(std::string subcollection, std::string suffix = "");
-
 	bool passesEventSelection(const MCParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET);
 };
 typedef boost::scoped_ptr<PseudoTopAnalyser> PseudoTopAnalyserLocalPtr;

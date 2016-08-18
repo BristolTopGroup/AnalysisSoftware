@@ -14,11 +14,10 @@ namespace BAT {
 
 class UnfoldingRecoAnalyser: public BAT::BasicAnalyser {
 public:
-	UnfoldingRecoAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis/Unfolding");
+	UnfoldingRecoAnalyser(TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis/Unfolding");
 	virtual ~UnfoldingRecoAnalyser();
 	void analyse(const EventPtr);
 
-	void createHistograms();
 	void createTrees();
 
 protected:

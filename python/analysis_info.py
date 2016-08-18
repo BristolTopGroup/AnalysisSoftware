@@ -1,6 +1,6 @@
-mc_path_13TeV = '/hdfs/TopQuarkGroup/run2/2016/v0.0.4/ntuples/'
+mc_path_13TeV = '/phxlk/ntuple/v0.0.8/Spring16/'
 # data_path_13TeV = '/hdfs/TopQuarkGroup/run2/ntuples/25ns/v0.0.3/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/run2/2016/v0.0.4/ntuples/'
+data_path_13TeV = '/phxlk/ntuple/v0.0.8/Spring16/'
 datasets_13TeV = {
 
     'SingleMuon' : [ mc_path_13TeV + 'SingleElectron_Run2016B_PromptReco_v1',
@@ -14,17 +14,17 @@ datasets_13TeV = {
     'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8' ],
     'TTJets_PowhegPythia8_scaledown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaledown' ],
     'TTJets_PowhegPythia8_scaleup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_scaleup' ],
-    # 'TTJets_PowhegPythia8_mtop1695' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695' ],
-    # 'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755' ],
+    'TTJets_PowhegPythia8_mtop1695' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695' ],
+    'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755' ],
     
     'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX' ],
-    # 'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM'],
-    # 'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp'],
-    # 'TTJets_amcatnloHerwigpp' : [ mc_path_13TeV + 'TTJets_amcatnloHerwigpp'],
+    'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM'],
+    'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp'],
+    'TTJets_amcatnloHerwigpp' : [ mc_path_13TeV + 'TTJets_amcatnloHerwigpp'],
 
     # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch'],
 
-    # 'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50' ],
+    'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50' ],
     'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu' ],
 
     'STbar_t' : [mc_path_13TeV + 'STbar_t'],
@@ -37,24 +37,24 @@ datasets_13TeV = {
     # 'GJets_400to600' : [mc_path_13TeV + 'GJets_400to600'],
     # 'GJets_600toInf' : [mc_path_13TeV + 'GJets_600toInf'],
 
-    # 'QCD_EMEnriched_15to20' : [mc_path_13TeV + 'QCD_EMEnriched_15to20'],
-    # 'QCD_EMEnriched_20to30' : [mc_path_13TeV + 'QCD_EMEnriched_20to30'],
-    # 'QCD_EMEnriched_30to50' : [mc_path_13TeV + 'QCD_EMEnriched_30to50'],
-    # 'QCD_EMEnriched_50to80' : [mc_path_13TeV + 'QCD_EMEnriched_50to80'],
-    # 'QCD_EMEnriched_80to120' : [mc_path_13TeV + 'QCD_EMEnriched_80to120'],
+    'QCD_EMEnriched_15to20' : [mc_path_13TeV + 'QCD_EMEnriched_15to20'],
+    'QCD_EMEnriched_20to30' : [mc_path_13TeV + 'QCD_EMEnriched_20to30'],
+    'QCD_EMEnriched_30to50' : [mc_path_13TeV + 'QCD_EMEnriched_30to50'],
+    'QCD_EMEnriched_50to80' : [mc_path_13TeV + 'QCD_EMEnriched_50to80'],
+    'QCD_EMEnriched_80to120' : [mc_path_13TeV + 'QCD_EMEnriched_80to120'],
     'QCD_EMEnriched_120to170' : [mc_path_13TeV + 'QCD_EMEnriched_120to170'],
     'QCD_EMEnriched_170to300' : [mc_path_13TeV + 'QCD_EMEnriched_170to300'],
     'QCD_EMEnriched_300toInf' : [mc_path_13TeV + 'QCD_EMEnriched_300toInf'],
 
-    # 'QCD_bcToE_15to20' : [mc_path_13TeV + 'QCD_bcToE_15to20'],
-    # 'QCD_bcToE_20to30' : [mc_path_13TeV + 'QCD_bcToE_20to30'],
+    'QCD_bcToE_15to20' : [mc_path_13TeV + 'QCD_bcToE_15to20'],
+    'QCD_bcToE_20to30' : [mc_path_13TeV + 'QCD_bcToE_20to30'],
     'QCD_bcToE_30to80' : [mc_path_13TeV + 'QCD_bcToE_30to80'],
-    # 'QCD_bcToE_80to170' : [mc_path_13TeV + 'QCD_bcToE_80to170'],
-    # 'QCD_bcToE_170to250' : [mc_path_13TeV + 'QCD_bcToE_170to250'],
+    'QCD_bcToE_80to170' : [mc_path_13TeV + 'QCD_bcToE_80to170'],
+    'QCD_bcToE_170to250' : [mc_path_13TeV + 'QCD_bcToE_170to250'],
     'QCD_bcToE_250toInf' : [mc_path_13TeV + 'QCD_bcToE_250toInf'],
 
-    # 'QCD_MuEnriched_15to20': [mc_path_13TeV + 'QCD_MuEnriched_15to20'],
-    # 'QCD_MuEnriched_20to30': [mc_path_13TeV + 'QCD_MuEnriched_20to30'],
+    'QCD_MuEnriched_15to20': [mc_path_13TeV + 'QCD_MuEnriched_15to20'],
+    'QCD_MuEnriched_20to30': [mc_path_13TeV + 'QCD_MuEnriched_20to30'],
     'QCD_MuEnriched_30to50': [mc_path_13TeV + 'QCD_MuEnriched_30to50'],
     'QCD_MuEnriched_50to80': [mc_path_13TeV + 'QCD_MuEnriched_50to80'],
     'QCD_MuEnriched_80to120': [mc_path_13TeV + 'QCD_MuEnriched_80to120'],

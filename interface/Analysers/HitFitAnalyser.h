@@ -11,7 +11,6 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 #include "../../interface/TtbarHypothesis.h"
-#include "../../interface/HistHelpers/HistogramManager.h"
 #include "BasicAnalyser.h"
 
 #include "TopQuarkAnalysis/TopHitFit/interface/RunHitFit.h"
@@ -69,7 +68,7 @@ private:
 	hitfit::Fit_Result performSecondKinematicFit(const hitfit::Lepjets_Event& unfittedEvent, const EventPtr event);
 
 public:
-	HitFitAnalyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder = "hitfitStudy" );
+	HitFitAnalyser(TreeManagerPtr treeMan, const bool isElectronChannel, std::string histogramFolder = "hitfitStudy" );
 	virtual ~HitFitAnalyser();
 
 	void analyse(const EventPtr);

@@ -186,17 +186,14 @@ void LikelihoodInputAnalyser::analyse(const EventPtr event) {
 	}
 }
 
-LikelihoodInputAnalyser::LikelihoodInputAnalyser(HistogramManagerPtr histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder ) :
-		BasicAnalyser(histMan, treeMan, histogramFolder){
+LikelihoodInputAnalyser::LikelihoodInputAnalyser(boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder ) :
+		BasicAnalyser(treeMan, histogramFolder){
 
 }
 
 LikelihoodInputAnalyser::~LikelihoodInputAnalyser() {
 }
 
-void LikelihoodInputAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
-}
 
 void LikelihoodInputAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);

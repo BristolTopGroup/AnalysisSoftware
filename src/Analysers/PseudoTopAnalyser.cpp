@@ -288,14 +288,8 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 
 }
 
-void PseudoTopAnalyser::createHistograms() {
-
-cout << "I shouldn't be here" << endl;
-
-}
-
-PseudoTopAnalyser::PseudoTopAnalyser(boost::shared_ptr<HistogramManager> histMan, TreeManagerPtr treeMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, treeMan, histogramFolder) {
+PseudoTopAnalyser::PseudoTopAnalyser(TreeManagerPtr treeMan, std::string histogramFolder) :
+		BasicAnalyser(treeMan, histogramFolder) {
 }
 
 PseudoTopAnalyser::~PseudoTopAnalyser() {

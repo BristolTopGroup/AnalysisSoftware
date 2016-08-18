@@ -5,7 +5,7 @@
  *      Author: kreczko
  */
 
-#include "../../interface/HistHelpers/StringOperations.h"
+#include "../../interface/TreeHelpers/StringOperations.h"
 namespace BAT{
 extern vector<string> getDirectoriesFromPath(string path) {
 

@@ -11,7 +11,6 @@ namespace BAT {
 
 void JetAnalyser::analyse(const EventPtr event) {
 
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
 	treeMan_->setCurrentFolder(histogramFolder_);
 	
 	weight_ = event->weight() * prescale_ * scale_;
@@ -77,19 +76,6 @@ void JetAnalyser::analyse(const EventPtr event) {
 	}
 }
 
-void JetAnalyser::createHistograms() {
-	histMan_->setCurrentHistogramFolder(histogramFolder_);
-
-	// for (unsigned int index = 0; index < 5; ++index) {
-	// 	stringstream temp;
-	// 	temp << "jet" << (index + 1);
-	// 	string nthJet = temp.str();
-	// 	histMan_->addH1D(nthJet + "_pT", nthJet + " p_{T}; p_{T} (GeV); Events/(1 GeV)", 1000, 0, 1000);
-	// 	histMan_->addH1D(nthJet + "_phi", nthJet + " #phi; #phi(jet); Events/(0.05)", 400, -4, 4);
-	// 	histMan_->addH1D(nthJet + "_eta", nthJet + " #eta; #eta(jet); Events/(0.05)", 300, -3, 3);
-	// }
-}
-
 void JetAnalyser::createTrees() {
 	treeMan_->setCurrentFolder(histogramFolder_);
 	treeMan_->addBranch("pt", "F", "Jets" + Globals::treePrefix_, false);
@@ -114,13 +100,13 @@ void JetAnalyser::createTrees() {
 	}
 }
 
-JetAnalyser::JetAnalyser(boost::shared_ptr<HistogramManager> histMan, boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder) :
-		BasicAnalyser(histMan, treeMan, histogramFolder) {
+JetAnalyser::JetAnalyser(boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder) :
+		BasicAnalyser(treeMan, histogramFolder) {
 
 }
 
-JetAnalyser::JetAnalyser(boost::shared_ptr<HistogramManager> histMan, boost::shared_ptr<TreeManager> treeMan, unsigned int selectionCriteria, std::string histogramFolder) :
-		BasicAnalyser(histMan, treeMan, histogramFolder),
+JetAnalyser::JetAnalyser(boost::shared_ptr<TreeManager> treeMan, unsigned int selectionCriteria, std::string histogramFolder) :
+		BasicAnalyser(treeMan, histogramFolder),
 		selection(SelectionCriteria::selection(selectionCriteria)) {
 
 }

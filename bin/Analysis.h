@@ -23,15 +23,15 @@
 #include "../interface/EventWeightProvider.h"
 #include <iostream>
 #include <string>
-#include "../interface/HistHelpers/HistogramManager.h"
 #include "../interface/TreeHelpers/TreeManager.h"
 #include "../interface/EventCounter.h"
 #include "../interface/RecoObjects/Particle.h"
 //Analysers
 #include "../interface/Analysers/TTbar_plus_X_analyser.h"
 #include "../interface/TopPairEventCandidate.h"
-
 #include "../interface/Analysers/PseudoTopAnalyser.h"
+
+// #include "../interface/Analysers/VertexAnalyser.h"
 #include "../interface/Analysers/UnfoldingRecoAnalyser.h"
 #include "../interface/Analysers/PartonAnalyser.h"
 #include "../interface/Analysers/LikelihoodInputAnalyser.h"
@@ -40,7 +40,6 @@ class Analysis {
 private:
     boost::scoped_ptr<BAT::NTupleEventReader> eventReader;
     BAT::EventPtr currentEvent;
-    boost::shared_ptr<BAT::HistogramManager> histMan;
     boost::shared_ptr<BAT::TreeManager> treeMan;
     std::vector<BAT::InterestingEvent> interestingEvents;
     std::map<unsigned long, std::vector<unsigned long> > eventCheck;
@@ -48,7 +47,7 @@ private:
     float weight, pileUpWeight;
 
     BAT::TTbar_plus_X_analyser_local_ptr ttbar_plus_X_analyser_;
-    boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
+    // boost::scoped_ptr<BAT::VertexAnalyser> vertexAnalyser;
 
     BAT::PseudoTopAnalyserLocalPtr pseudoTopAnalyser_;
     BAT::UnfoldingRecoAnalyserLocalPtr unfoldingRecoAnalyser_;

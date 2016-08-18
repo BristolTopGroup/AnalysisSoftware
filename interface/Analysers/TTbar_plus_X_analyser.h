@@ -12,7 +12,6 @@
 #include "METAnalyser.h"
 #include "ElectronAnalyser.h"
 #include "MuonAnalyser.h"
-#include "VertexAnalyser.h"
 #include "JetAnalyser.h"
 #include "WAnalyser.h"
 #include "HitFitAnalyser.h"
@@ -20,7 +19,6 @@
 #include "BTagEfficiencyAnalyser.h"
 #include "PileupAnalyser.h"
 
-#include "Binned_variable_analyser.h"
 
 #include <string>
 
@@ -28,8 +26,7 @@ namespace BAT {
 
 class TTbar_plus_X_analyser: public BAT::BasicAnalyser {
 public:
-	TTbar_plus_X_analyser(HistogramManagerPtr histMan, std::string histogramFolder = "TTbar_plus_X_analysis");
-	TTbar_plus_X_analyser(HistogramManagerPtr histMan, TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis");
+	TTbar_plus_X_analyser(TreeManagerPtr treeMan, std::string histogramFolder = "TTbar_plus_X_analysis");
 	virtual ~TTbar_plus_X_analyser();
 	virtual void analyse(const EventPtr);
 	virtual void createTrees();
@@ -48,7 +45,7 @@ private:
 	/**
 	 * Analysers
 	 */
-	BasicAnalyserLocalPtr vertexAnalyserEPlusJetsRefSelection_, vertexAnalyserMuPlusJetsRefSelection_;
+	// BasicAnalyserLocalPtr vertexAnalyserEPlusJetsRefSelection_, vertexAnalyserMuPlusJetsRefSelection_;
 	
 	// BTag Efficiency
 	BTagEffAnalyserLocalPtr BTagEffAnalyserEPlusJetsRefSelection_;
