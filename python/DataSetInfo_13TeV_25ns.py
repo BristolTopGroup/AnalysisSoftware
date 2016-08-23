@@ -24,7 +24,10 @@ datasetInfo['ElectronHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 # datasetInfo['MuHad'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
 datasetInfo['SingleElectron'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
-datasetInfo['SingleMuon'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMuon_Run2016B'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMuon_Run2016C'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMuon_Run2016D'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
+datasetInfo['SingleMuon_Run2016E'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/TtbarNNLO
 datasetInfo['TTJets_PowhegPythia8'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" : 23011722 } 

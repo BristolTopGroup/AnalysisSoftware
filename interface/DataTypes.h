@@ -16,7 +16,10 @@ enum value {
 	ElectronHad,
 	// MuHad,
 	SingleElectron,
-	SingleMuon,
+	SingleMuon_Run2016B,
+	SingleMuon_Run2016C,
+	SingleMuon_Run2016D,
+	SingleMuon_Run2016E,
 
 	TTJets_PowhegPythia8,
 	TTJets_PowhegPythia8_scaledown,
@@ -79,7 +82,10 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		// "MuHad", //
 
 		"SingleElectron",
-		"SingleMuon",
+		"SingleMuon_Run2016B",
+		"SingleMuon_Run2016C",
+		"SingleMuon_Run2016D",
+		"SingleMuon_Run2016E",
 
 		"TTJets_PowhegPythia8",
 		"TTJets_PowhegPythia8_scaledown",
