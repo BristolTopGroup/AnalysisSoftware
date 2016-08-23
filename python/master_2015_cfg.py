@@ -151,11 +151,11 @@ for f in input_folders:
         filename = datasamplename+'_ntuple_'+tmp[2]+'.root'
         inputFiles.append(f+jobnumber+filename)
 
-# if ntupleToProcess > 0 :
-#     filetype = '*%03d.root' % ntupleToProcess
-#     print 'Will only consider ntuple : ',filetype
-#     settings['custom_file_suffix'] += str(ntupleToProcess)
-#     custom_file_suffix = settings['custom_file_suffix']
+if ntupleToProcess > 0 :
+    filetype = '*%03d.root' % ntupleToProcess
+    print 'Will only consider ntuple : ',filetype
+    settings['custom_file_suffix'] += str(ntupleToProcess)
+    custom_file_suffix = settings['custom_file_suffix']
 
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
