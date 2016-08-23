@@ -10,8 +10,9 @@ import math
 import os
 import glob
 
-from analysis_info import datasets_13TeV
+from analysis_info_2016 import datasets_13TeV
 from shutil import move
+
 
 if __name__ == '__main__':
 	filename = 'DataSetInfo_13TeV_25ns.py' #Dataset file name
@@ -34,9 +35,22 @@ if __name__ == '__main__':
 	DatasetFile = open(filename,'r')
 	content = DatasetFile.read().splitlines()
 	DatasetFile.close()
+	
+	# out = open('data_ntuples_in_use.txt', 'wt')
 
 	for dataset in datasets_13TeV.keys():
-		if dataset.startswith("Single"): continue	
+		
+		# # What data ntuples are being used?
+		# if dataset.startswith("Single"): 
+		# 	for f in datasets_13TeV[dataset]:
+		# 		tmp_datasamplename = f.split('/')
+		# 		datasamplename = tmp_datasamplename[-3]
+		# 		for ntuplejob in os.listdir(f):
+		# 			if not os.path.isdir(f+ntuplejob): continue
+		# 			tmp = ntuplejob.split('_')
+		# 			filename = datasamplename+'_ntuple_'+tmp[2]+'.root'
+		# 			print >> out, filename
+	
 		files = []
 		ntuplepath = temp_ntuplepath.format(
 			sample=dataset,
@@ -52,7 +66,6 @@ if __name__ == '__main__':
 			)
 			full_path = path+rootfile
 			files.append(full_path)
-		print files
 		total_processed_event = 0
 		for file_path in files:
 			rootfile = TFile(file_path)
@@ -61,6 +74,8 @@ if __name__ == '__main__':
 				print "Waaargh help. Can't find histogram for : ", f
 				continue
 			ntuple_processed_events = hist.GetBinContent(1)
+			print file_path
+			print ntuple_processed_events
 			rootfile.Close()
 			total_processed_event = total_processed_event + ntuple_processed_events
 
@@ -81,8 +96,9 @@ if __name__ == '__main__':
 		print line
 		print >> datasetFile, line
   	datasetFile.close()
+  	out.close()
 
-  	# move(filename_tmp,filename)
+  	move(filename_tmp,filename)
 
 
 
