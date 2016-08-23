@@ -29,7 +29,6 @@ datasets_13TeV = {
 
     'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM/tmp/'],
     'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp/tmp/'],
-    # 'TTJets_amcatnloHerwigpp' : [ mc_path_13TeV + 'TTJets_amcatnloHerwigpp/tmp/'],
 
     # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch/tmp/'],
 
