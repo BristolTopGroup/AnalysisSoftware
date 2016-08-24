@@ -165,16 +165,21 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelTriggerReader->getVariable() );
 	}
-	else {
-		currentEvent->setPassesElectronChannelTrigger( true );
+	else if ( currentEvent->isReHLTMC() ) {
 		// currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
 		// currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
-		// currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );
+		// currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );		
+		currentEvent->setPassesElectronChannelTrigger( true );
+		currentEvent->setPassesMuonChannelTrigger( true );
+		currentEvent->setPassesTkMuonChannelTrigger( true );
+		currentEvent->setPassesElectronChannelQCDTrigger( true );
+		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
+	}
+	else {
+		currentEvent->setPassesElectronChannelTrigger( true );
 		currentEvent->setPassesMuonChannelTrigger( true );
 		currentEvent->setPassesTkMuonChannelTrigger( true );		
-		// currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesElectronChannelQCDTrigger( true );
-		// currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( true );
 	}
 

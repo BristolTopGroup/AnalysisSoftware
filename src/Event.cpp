@@ -136,6 +136,14 @@ bool Event::isTTJet( DataType::value type) const {
 		return false;
 }
 
+bool Event::isReHLTMC() const {
+	return  dataType == DataType::DYJetsToLL_M50 
+	|| dataType == DataType::TTJets_PowhegPythia8
+	|| dataType == DataType::TTJets_amcatnloFXFX
+	|| dataType == DataType::WJetsToLNu
+	|| ( dataType >= DataType::QCD_MuEnriched_15to20 && dataType <= DataType::QCD_MuEnriched_1000toInf);
+}
+
 void Event::setDataType(DataType::value type) {
 	dataType = type;
 }
