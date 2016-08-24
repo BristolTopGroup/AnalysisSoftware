@@ -96,7 +96,7 @@ if __name__ == '__main__':
 		print line
 		print >> datasetFile, line
   	datasetFile.close()
-  	out.close()
+  	# out.close()
 
   	move(filename_tmp,filename)
 
