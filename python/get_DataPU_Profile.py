@@ -1,8 +1,8 @@
 import glob
 import subprocess
 
-# https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt
-jsonFile = 'Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt'
+# https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt
+jsonFile = 'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt'
 # https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/PileUp/pileup_latest.txt
 pileupJson = 'pileup_latest.txt'
 minBiasXsec = 69200
