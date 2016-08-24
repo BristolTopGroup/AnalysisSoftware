@@ -143,19 +143,28 @@ for f in input_folders:
         tmp_datasamplename = f.split('/')
         datasamplename = tmp_datasamplename[-3]
 
+    print f
     for ntuplejob in os.listdir(f):
         if not os.path.isdir(f+ntuplejob): continue
 
         tmp = ntuplejob.split('_')
+        if ntupleToProcess > 0 and int(tmp[2]) != ntupleToProcess: continue
         jobnumber = 'ntuple_job_'+tmp[2]+'/'
         filename = datasamplename+'_ntuple_'+tmp[2]+'.root'
+
+        # if not str(ntupleToProcess) in filename:
+        #     continue
         inputFiles.append(f+jobnumber+filename)
 
 if ntupleToProcess > 0 :
-    filetype = '*%03d.root' % ntupleToProcess
+    filetype = '*_%d.root' % ntupleToProcess
     print 'Will only consider ntuple : ',filetype
     settings['custom_file_suffix'] += str(ntupleToProcess)
     custom_file_suffix = settings['custom_file_suffix']
+
+print 'Input files :'
+for f in inputFiles:
+    print f
 
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
@@ -184,7 +193,7 @@ applyMetType0Corr = False
 TQAFPath = ""
 
 #integrated luminosity the MC simulation will be scaled to
-lumi = 15930
+lumi = 12892
 
 #this value will be part of the output file name: DataType_CenterOfMassEnergyTeV_lumipb-1_....
 centerOfMassEnergy = 13

@@ -4,13 +4,11 @@ data_path_13TeV = '/hdfs/TopQuarkGroup/phxlk/ntuple/v0.0.8/Spring16/'
 
 datasets_13TeV = {
 
-    'SingleMuon' : [ 
-                     mc_path_13TeV + 'SingleMuon_Run2016B_PromptReco_v2/tmp/',
-                     mc_path_13TeV + 'SingleMuon_Run2016C_PromptReco_v2/tmp/',
-                     mc_path_13TeV + 'SingleMuon_Run2016D_PromptReco_v2/tmp/',
-                     mc_path_13TeV + 'SingleMuon_Run2016E_PromptReco_v2/tmp/',
-                     # mc_path_13TeV + 'SingleMuon_Run2016F_PromptReco_v1/tmp/',
-                    ],
+    'SingleMuon_Run2016B' : [ mc_path_13TeV + 'SingleMuon_Run2016B_PromptReco_v2/tmp/'],
+    'SingleMuon_Run2016C' : [ mc_path_13TeV + 'SingleMuon_Run2016C_PromptReco_v2/tmp/'],
+    'SingleMuon_Run2016D' : [ mc_path_13TeV + 'SingleMuon_Run2016D_PromptReco_v2/tmp/'],
+    'SingleMuon_Run2016E' : [ mc_path_13TeV + 'SingleMuon_Run2016E_PromptReco_v2/tmp/'],
+
 
     'SingleElectron' : [ 
                          mc_path_13TeV + 'SingleElectron_Run2016B_PromptReco_v2/tmp/',
@@ -37,8 +35,8 @@ datasets_13TeV = {
 
     'STbar_t' : [mc_path_13TeV + 'STbar_t/tmp/'],
     'ST_s' : [mc_path_13TeV + 'ST_s/tmp/'],
-    'ST_tW' : [mc_path_13TeV + 'ST_tw/tmp/'],
-    'STbar_tW' : [mc_path_13TeV + 'STbar_tw/tmp/'],
+    'ST_tW' : [mc_path_13TeV + 'ST_tW/tmp/'],
+    'STbar_tW' : [mc_path_13TeV + 'STbar_tW/tmp/'],
 
     'QCD_EMEnriched_15to20' : [mc_path_13TeV + 'QCD_EMEnriched_15to20/tmp/'],
     'QCD_EMEnriched_20to30' : [mc_path_13TeV + 'QCD_EMEnriched_20to30/tmp/'],

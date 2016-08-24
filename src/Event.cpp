@@ -106,7 +106,11 @@ Event::~Event() {
 }
 
 bool Event::isRealData() const {
-	return  dataType == DataType::SingleElectron || dataType == DataType::SingleMuon;
+	return  dataType == DataType::SingleElectron 
+	|| dataType == DataType::SingleMuon_Run2016B
+	|| dataType == DataType::SingleMuon_Run2016C
+	|| dataType == DataType::SingleMuon_Run2016D
+	|| dataType == DataType::SingleMuon_Run2016E;
 }
 
 const DataType::value Event::getDataType() const {
