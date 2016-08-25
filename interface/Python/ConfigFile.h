@@ -39,6 +39,7 @@ public:
 	std::string MuonIdScaleFactorsFile() const;
 	std::string MuonIsoScaleFactorsFile() const;
 	std::string MuonTriggerScaleFactorsFile() const;
+	std::string MuonTrackingHIPScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
 	std::string ElectronIdScaleFactorsFile() const;
 	std::string ElectronIsoScaleFactorsFile() const;
@@ -86,6 +87,7 @@ private:
 	std::string muonIdScaleFactorsFile_;
 	std::string muonIsoScaleFactorsFile_;
 	std::string muonTriggerScaleFactorsFile_;
+	std::string muonTrackingHIPScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
 	std::string electronIdScaleFactorsFile_;
 	std::string electronIsoScaleFactorsFile_;
@@ -124,6 +126,7 @@ private:
 	boost::shared_ptr<TH2F> getMuonIdScaleFactorsHistogram(std::string muonIdScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonIsoScaleFactorsHistogram(std::string muonIsoScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
+	boost::shared_ptr<TH1F> getMuonTrackingHIPScaleFactorsHistogram(std::string muonTrackingHIPScaleFactorsFile);
 	boost::shared_ptr<TH1F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronIsoScaleFactorsHistogram(std::string electronIsoScaleFactorsFile);

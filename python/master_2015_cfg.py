@@ -119,6 +119,7 @@ ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEff
 MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunBCD_prompt80X_7p65.root'
 MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunBCD_prompt80X_7p65.root'
 MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Combined.root'
+MuonTrackingHIPScaleFactorsFile = 'BristolAnalysis/Tools/data/ratios_hist.root'
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']
@@ -143,7 +144,6 @@ for f in input_folders:
         tmp_datasamplename = f.split('/')
         datasamplename = tmp_datasamplename[-3]
 
-    print f
     for ntuplejob in os.listdir(f):
         if not os.path.isdir(f+ntuplejob): continue
 
@@ -162,9 +162,6 @@ if ntupleToProcess > 0 :
     settings['custom_file_suffix'] += str(ntupleToProcess)
     custom_file_suffix = settings['custom_file_suffix']
 
-print 'Input files :'
-for f in inputFiles:
-    print f
 
 print 'Parsed config settings:'
 for setting,value in settings.iteritems():
