@@ -119,11 +119,7 @@ ElectronTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/ElectronTriggerEff
 MuonIdScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonID_Z_RunBCD_prompt80X_7p65.root'
 MuonIsoScaleFactorsFile = 'BristolAnalysis/Tools/data/MuonIso_Z_RunBCD_prompt80X_7p65.root'
 MuonTriggerScaleFactorsFile = 'BristolAnalysis/Tools/data/SingleMuonTrigger_Combined.root'
-<<<<<<< HEAD
 MuonTrackingHIPScaleFactorsFile = 'BristolAnalysis/Tools/data/ratios_hist.root'
-=======
-MuonTrackingHIPScaleFactorsFile = 'BristolAnalysis/Tools/data/ratios.root'
->>>>>>> c3348e0... Read in muon tracking HIP SF file.
 getHadronTriggerFromFile = True
 hadronTriggerFile = ''
 ElectronScaleFactorSystematic = settings['ElectronScaleFactorSystematic']

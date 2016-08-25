@@ -167,7 +167,8 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	double triggerEfficiencyError(0.);
 	boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
 	double muonPt = pt();
-	double muonAbsEta = fabs(eta());
+	double muonEta = eta();
+	double muonAbsEta = fabs(muonEta);
 	double maxPt = muonTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
 
 	unsigned int bin = 0;
@@ -181,7 +182,9 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
 	triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
 
-
+	//
+	// ID SF
+	//
 	double idSF(1.);
 	double idSFError(0.);
 	boost::shared_ptr<TH2F> muonIdScaleFactorsHistogram(Globals::muonIdScaleFactorsHistogram);
@@ -199,6 +202,9 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	idSFError = muonIdScaleFactorsHistogram->GetBinError( bin );
 
 
+	//
+	// ISO scale factor
+	//
 	double isoSF(1.);
 	double isoSFError(0.);
 	boost::shared_ptr<TH2F> muonIsoScaleFactorsHistogram(Globals::muonIsoScaleFactorsHistogram);
@@ -215,6 +221,14 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	isoSF = muonIsoScaleFactorsHistogram->GetBinContent( bin );
 	isoSFError = muonIsoScaleFactorsHistogram->GetBinError( bin );
 
+	//
+	// Tracking HIP SF
+	//
+	double hipSF(1.);
+	boost::shared_ptr<TH1F> muonTrackingHIPScaleFactorsHistogram(Globals::muonTrackingHIPScaleFactorsHistogram);
+	std::cout << muonTrackingHIPScaleFactorsHistogram << std::endl;
+	bin = muonTrackingHIPScaleFactorsHistogram->FindBin( muonEta );
+	hipSF = muonTrackingHIPScaleFactorsHistogram->GetBinContent( bin );
 
 	if (muon_scale_factor_systematic == -1 ) {
 		idSF -= idSFError;
@@ -227,6 +241,6 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 		triggerEfficiency += triggerEfficiencyError;
 	}
 
-	return idSF * isoSF * triggerEfficiency;
+	return idSF * isoSF * triggerEfficiency * hipSF;
 }
 }
