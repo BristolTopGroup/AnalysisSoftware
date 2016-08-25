@@ -33,6 +33,7 @@ datasets_13TeV = {
     'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50/tmp/' ],
     'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu/tmp/' ],
 
+    'ST_t' : ['/hdfs/TopQuarkGroup/ec6821/ntuple/v0.0.8/Spring16/ST_t/tmp/'],
     'STbar_t' : [mc_path_13TeV + 'STbar_t/tmp/'],
     'ST_s' : [mc_path_13TeV + 'ST_s/tmp/'],
     'ST_tW' : [mc_path_13TeV + 'ST_tW/tmp/'],

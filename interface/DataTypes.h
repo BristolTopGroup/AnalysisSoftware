@@ -38,6 +38,7 @@ enum value {
 	// TToLeptons_s,
 	// TBarToLeptons_s,
 	// TBarToLeptons_t,
+	ST_t,
 	STbar_t,
 	ST_s,
 	ST_tW,
@@ -107,6 +108,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 
 		"DYJetsToLL_M50",
 		"WJetsToLNu",
+		"ST_t",
 		"STbar_t",
 		"ST_s",
 		"ST_tW",
