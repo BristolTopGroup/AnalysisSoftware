@@ -226,7 +226,6 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	//
 	double hipSF(1.);
 	boost::shared_ptr<TH1F> muonTrackingHIPScaleFactorsHistogram(Globals::muonTrackingHIPScaleFactorsHistogram);
-	std::cout << muonTrackingHIPScaleFactorsHistogram << std::endl;
 	bin = muonTrackingHIPScaleFactorsHistogram->FindBin( muonEta );
 	hipSF = muonTrackingHIPScaleFactorsHistogram->GetBinContent( bin );
 
