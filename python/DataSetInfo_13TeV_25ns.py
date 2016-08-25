@@ -50,7 +50,7 @@ datasetInfo['WJetsToLNu'] = { "cross-section" : 61526.7, "NumberOfProcessedEvent
 # datasetInfo['TBarToLeptons_s'] = { "cross-section" : 1, "NumberOfProcessedEvents" : 1 }
 # datasetInfo['TBarToLeptons_t'] = { "cross-section" : 1, "NumberOfProcessedEvents" : 1 }
 
-# ST_t = 136.02
+datasetInfo['ST_t'] = { "cross-section" : 136.02, "NumberOfProcessedEvents" : 3279200 } 
 datasetInfo['STbar_t'] = { "cross-section" : 80.95, "NumberOfProcessedEvents" : 1272600 } 
 datasetInfo['ST_s'] = { "cross-section" : 6.35, "NumberOfProcessedEvents" : 622990 } 
 datasetInfo['ST_tW'] = { "cross-section" : 35.6, "NumberOfProcessedEvents" : 985000 } 
