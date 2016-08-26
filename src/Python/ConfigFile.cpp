@@ -11,6 +11,9 @@
 
 #include "TF1.h"
 #include "TFile.h"
+#include "TList.h"
+// #include "TCollection.h"
+// #include "TDirectory.h"
 
 #include <iostream>
 #include <iomanip>
@@ -875,6 +878,7 @@ void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 		cerr << "ConfigFile::getbQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
 		throw "Could not find file " + btagEfficiencyFile;
 	}
+	pathToBTagEff = checkEffFileExists(btagEfficiencyFile, pathToBTagEff);
 	std::cout << "BTagEfficiencyFile in use : " << btagEfficiencyFile.c_str() << endl;
 	std::cout << "MC BTag Efficiency in use : " << pathToBTagEff.c_str() << endl;
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
@@ -883,7 +887,6 @@ void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 	
 	file->Close();
 }
-
 
 void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
@@ -894,7 +897,7 @@ void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 		cerr << "ConfigFile::getcQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
 		throw "Could not find file " + btagEfficiencyFile;
 	}
-
+	pathToBTagEff = checkEffFileExists(btagEfficiencyFile, pathToBTagEff);
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
 	Globals::cQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
 	file->Close();
@@ -910,10 +913,33 @@ void ConfigFile::getudsgQuarkJet(std::string btagEfficiencyFile) {
 		cerr << "ConfigFile::getudsgQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
 		throw "Could not find file " + btagEfficiencyFile;
 	}
-
+	pathToBTagEff = checkEffFileExists(btagEfficiencyFile, pathToBTagEff);
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
 	Globals::udsgQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
 	file->Close();
+}
+
+std::string ConfigFile::checkEffFileExists(std::string btagEfficiencyFile, std::string histpath) {
+	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
+	std::vector<std::string> newpath;
+  	std::stringstream ss(histpath);
+  	std::string chunk, key;
+  
+	while(std::getline(ss, chunk, '/')) {
+	    newpath.push_back(chunk);
+	}
+	if (file->GetListOfKeys()->Contains(newpath[0].c_str())){
+		file->Close();
+		return histpath;
+	}
+	else{
+		std::cout << "Current TTJet sample " << sample_ << " is not available in BTagEfficiencyFile, switching to default PowhegPythia8/" << std::endl;
+		newpath[0] = "PowhegPythia8/";
+		histpath = newpath[0]+newpath[1];
+		std::cout << "New Histogram Path : " << histpath << std::endl;
+		file->Close();
+		return histpath;
+	}
 }
 
 std::string ConfigFile::getSampleBTagEffTag(std::string sample) {

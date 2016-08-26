@@ -146,6 +146,7 @@ private:
 	void getbQuarkJet(std::string btagEfficiencyFile);
 	void getcQuarkJet(std::string btagEfficiencyFile);
 	void getudsgQuarkJet(std::string btagEfficiencyFile);
+	std::string checkEffFileExists(std::string btagEfficiencyFile, std::string histpath);
 	std::string getSampleBTagEffTag(std::string sample);
 
 };
