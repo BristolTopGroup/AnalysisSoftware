@@ -24,9 +24,20 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	double centralLHEWeight = event->centralLHEWeight();
 	for ( unsigned int unc_i = 0; unc_i < event->generatorSystematicWeights().size(); ++unc_i ) {
 		double weight = event->generatorSystematicWeights().at( unc_i ) / centralLHEWeight;
-		// cout << to_string(unc_i) << " " << weight/centralLHEWeight << endl;
+		int weightID = event->generatorSystematicWeightsID().at( unc_i );
+
+		// cout << to_string(unc_i) << " " << weightID << " " << weight/centralLHEWeight << endl;
 		// string uncString = to_string(unc_i);
-		treeMan_->Fill( "genWeight_" + to_string(unc_i), weight);
+		if ( weightID >= 1001 && weightID <= 1009 ) {
+			treeMan_->Fill( "muFmuRWeight_" + to_string(weightID-1001), weight);
+		}
+		else if ( weightID >= 2001 && weightID <= 2100 ) {
+			treeMan_->Fill( "pdfWeight_" + to_string(weightID-2001), weight);
+		}
+		else if ( weightID == 2101 || weightID == 2102 ) {
+			treeMan_->Fill( "alphaSWeight_" + to_string(weightID-2101), weight);
+		}
+
 	}
 
 	treeMan_->setCurrentFolder(histogramFolder_);
@@ -168,9 +179,18 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("jetEta", "F", "Unfolding" + Globals::treePrefix_, false);
 	treeMan_->addBranch("jetParton", "F", "Unfolding" + Globals::treePrefix_, false);
 
-	for ( unsigned int i = 0; i < 250; ++i ) {
-		treeMan_->addBranch("genWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+	for ( unsigned int i = 0; i < 9; ++i ) {
+		treeMan_->addBranch("muFmuRWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
 	}
+
+	for ( unsigned int i = 0; i < 100; ++i ) {
+		treeMan_->addBranch("pdfWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+	}
+
+		for ( unsigned int i = 0; i < 2; ++i ) {
+		treeMan_->addBranch("alphaSWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+	}
+
 }
 
 
