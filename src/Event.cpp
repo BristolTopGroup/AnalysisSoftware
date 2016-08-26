@@ -88,6 +88,7 @@ Event::Event() : //
 		trueNumberOfPileUpVertices_(0), //
 		generatorWeight_(1), //
 		generatorSystematicWeights_(), //
+		generatorSystematicWeightsID_(), //
 		ptdensityRho(0.), //
 		file_(""), //
 		passesCSCTightBeamHaloFilter_(false), //
@@ -1140,6 +1141,14 @@ void Event::setGeneratorSystematicWeights(std::vector<double> generatorSystemati
 
 const std::vector<double> Event::generatorSystematicWeights() const {
 	return generatorSystematicWeights_;
+}
+
+void Event::setGeneratorSystematicWeightsID(std::vector<int> generatorSystematicWeightsID) {
+	generatorSystematicWeightsID_ = generatorSystematicWeightsID;
+}
+
+const std::vector<int> Event::generatorSystematicWeightsID() const {
+	return generatorSystematicWeightsID_;
 }
 
 const std::vector<int> Event::GeneratedPileUpVertices() const {
