@@ -2,5 +2,5 @@
 
 echo 'hostname:'
 hostname
-source /software/root/v6.02.04/bin/thisroot.sh
+source /software/root/v5.34.25/bin/thisroot.sh 
 python mergeATOutput.py -n $1
