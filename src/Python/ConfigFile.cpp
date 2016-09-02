@@ -716,7 +716,7 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronIsoScaleFactorsHistogram(std::str
 	boost::scoped_ptr<TFile> file(TFile::Open(electronIsoScaleFactorsFile.c_str()));
 	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
 	// boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
-	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("GlobalSF")->Clone());
+	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("EGamma_SF2D")->Clone());
 	file->Close();
 
 	return isoHistogram;
