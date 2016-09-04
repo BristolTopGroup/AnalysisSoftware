@@ -85,7 +85,7 @@ def build_matrix(energy, chosen_sample = None, chosen_mode = None, splitTTJet = 
     else:
         for sample in samples:
             for mode in analysis_modes_:
-                if 'TTJets' in chosen_sample or 'SingleMuon' in chosen_sample or 'SingleElectron' in chosen_sample:
+                if 'TTJets' in sample or 'SingleMuon' in sample or 'SingleElectron' in sample:
                     if sample != 'TTJets_PowhegPythia8' and mode != 'central':
                         continue
                     if splitTTJet:

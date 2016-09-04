@@ -123,6 +123,7 @@ protected:
 	double generatorWeight_;
 	double centralLHEWeight_;
 	std::vector<double> generatorSystematicWeights_;
+	std::vector<int> generatorSystematicWeightsID_;
 
 	double ptdensityRho;
 	std::string file_;
@@ -209,6 +210,7 @@ public:
 	void setGeneratorWeight( double generatorWeight );
 	void setCentralLHEWeight( double centralLHEWeight );
 	void setGeneratorSystematicWeights( std::vector<double> generatorSystematicWeights );
+	void setGeneratorSystematicWeightsID( std::vector<int> generatorSystematicWeightsID );
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
 	void setPUWeight3BX(double puweight);
@@ -319,6 +321,7 @@ public:
 	const double generatorWeight() const;
 	const double centralLHEWeight() const;
 	const std::vector<double> generatorSystematicWeights() const;
+	const std::vector<int> generatorSystematicWeightsID() const;
 	double averageNumberOfVertices() const;
 	double inTimeOnlyNumberOfVertices() const;
 	double rho() const;

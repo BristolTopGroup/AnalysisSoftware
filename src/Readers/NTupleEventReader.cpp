@@ -74,6 +74,7 @@ NTupleEventReader::NTupleEventReader() :
 		generatorWeightReader_(new VariableReader<double>(input, "Event.generatorWeight")), //
 		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
 		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
+		systematicWeightsReaderID_(new VariableReader<MultiIntPointer>(input, "Event.systematicWeightIDs")), //
 		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
 		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
@@ -217,7 +218,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 			currentEvent->setGeneratorWeight( generatorWeightReader_->getVariable() );
 
 			currentEvent->setGeneratorSystematicWeights( *systematicWeightsReader_->getVariable() );
-
+			currentEvent->setGeneratorSystematicWeightsID( *systematicWeightsReaderID_->getVariable() );
 			currentEvent->setCentralLHEWeight( centralLHEWeightReader_->getVariable() );
 	}
 
@@ -392,6 +393,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 
 		generatorWeightReader_->initialiseBlindly();
 		systematicWeightsReader_->initialiseBlindly();
+		systematicWeightsReaderID_->initialiseBlindly();
 		centralLHEWeightReader_->initialiseBlindly();
 
 		TruePileupInfoReader->initialiseBlindly();
