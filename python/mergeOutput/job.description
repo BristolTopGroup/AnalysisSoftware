@@ -4,14 +4,14 @@ Output = atMerge.$(cluster).$(process).out
 Error = atMerge.$(cluster).$(process).err
 Log = atMerge.$(cluster).$(process).log
 arguments = $(process)
-requirements = Name != "slot1@hd-37-08.dice.priv"
+#requirements = Name != "slot1@hd-37-08.dice.priv"
 
 transfer_input_files = mergeATOutput.py
-
+transfer_output_files = atMerge.*
 request_cpus = 1
 request_memory=250
 
 # use the ENV that is provided
-getenv = true
+#getenv = true
 
-queue 34
+queue 6

@@ -172,7 +172,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setPassesElectronChannelTrigger( true );
 		currentEvent->setPassesMuonChannelTrigger( true );
 		currentEvent->setPassesTkMuonChannelTrigger( true );
-		currentEvent->setPassesElectronChannelQCDTrigger( true );
+		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
 	}
 	else {

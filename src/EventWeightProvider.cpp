@@ -37,7 +37,10 @@ EventWeightProvider::~EventWeightProvider() {
 }
 
 double EventWeightProvider::getWeight(DataType::value type) {
-	if (type == DataType::SingleElectron 
+	if (type == DataType::SingleElectron_Run2016B
+	    || type == DataType::SingleElectron_Run2016C
+	    || type == DataType::SingleElectron_Run2016D
+	    || type == DataType::SingleElectron_Run2016E
 	    || type == DataType::SingleMuon_Run2016B
 	    || type == DataType::SingleMuon_Run2016C
 	    || type == DataType::SingleMuon_Run2016D
