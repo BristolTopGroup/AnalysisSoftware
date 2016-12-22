@@ -37,14 +37,23 @@ EventWeightProvider::~EventWeightProvider() {
 }
 
 double EventWeightProvider::getWeight(DataType::value type) {
-	if (type == DataType::SingleElectron_Run2016B
-	    || type == DataType::SingleElectron_Run2016C
-	    || type == DataType::SingleElectron_Run2016D
-	    || type == DataType::SingleElectron_Run2016E
-	    || type == DataType::SingleMuon_Run2016B
-	    || type == DataType::SingleMuon_Run2016C
-	    || type == DataType::SingleMuon_Run2016D
-	    || type == DataType::SingleMuon_Run2016E
+	if (
+	type == DataType::SingleElectron_RunB
+	|| type == DataType::SingleElectron_RunC
+	|| type == DataType::SingleElectron_RunD
+	|| type == DataType::SingleElectron_RunE
+	|| type == DataType::SingleElectron_RunF
+	|| type == DataType::SingleElectron_RunG
+	|| type == DataType::SingleElectron_RunH_Prompt_v2
+	|| type == DataType::SingleElectron_RunH_Prompt_v3
+	|| type == DataType::SingleMuon_RunB
+	|| type == DataType::SingleMuon_RunC
+	|| type == DataType::SingleMuon_RunD
+	|| type == DataType::SingleMuon_RunE
+	|| type == DataType::SingleMuon_RunF
+	|| type == DataType::SingleMuon_RunG
+	|| type == DataType::SingleMuon_RunH_Prompt_v2
+	|| type == DataType::SingleMuon_RunH_Prompt_v3
 	)
 		return 1.;
 	else
@@ -107,9 +116,9 @@ double EventWeightProvider::reweightTopPt(const EventPtr event) {
 
 void EventWeightProvider::generate_weights() {
 
-	pileUpWeights = generateWeights(Spring2016, estimatedPileUp);
-	pileUpWeights_up = generateWeights(Spring2016, estimatedPileUp_up);
-	pileUpWeights_down = generateWeights(Spring2016, estimatedPileUp_down);
+	pileUpWeights = generateWeights(Moriond2017, estimatedPileUp);
+	pileUpWeights_up = generateWeights(Moriond2017, estimatedPileUp_up);
+	pileUpWeights_down = generateWeights(Moriond2017, estimatedPileUp_down);
 
 // 	cout << "Pile up weights" << endl;
 // 	for (unsigned int index = 0; index < pileUpWeights.size(); ++index){
