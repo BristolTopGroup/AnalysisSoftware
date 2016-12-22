@@ -91,9 +91,9 @@ public:
     bool RobustLooseID() const;
     bool RobustTightID() const;
     bool passesElectronID(short leptonID) const;
-    bool isMediumElectron() const;
-    bool isMediumConversionElectron() const;
-    bool isMediumNonIsoElectron() const;
+    bool isTightElectron() const;
+    bool isTightConversionElectron() const;
+    bool isTightNonIsoElectron() const;
 
     unsigned short getClosestJetIndex(const JetCollection& jets) const;
     ElectronAlgorithm::value getUsedAlgorithm() const;
@@ -122,9 +122,9 @@ public:
     void setMVANonTrigV0(double mva);
     void setPassConversionVeto(bool passes);
 
-    void setIsMediumElectron(bool passes);
-    void setIsMediumConversionElectron(bool passes);
-    void setIsMediumNonIsoElectron(bool passes);
+    void setIsTightElectron(bool passes);
+    void setIsTightConversionElectron(bool passes);
+    void setIsTightNonIsoElectron(bool passes);
 
     double getEfficiencyCorrection(int electron_scale_factor_systematic) const;
     virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
@@ -151,7 +151,7 @@ private:
     double mvaTrigV0_, mvaNonTrigV0_;
     bool passConversionVeto_;
 
-    bool isMediumElectron_, isMediumConversionElectron_, isMediumNonIsoElectron_;
+    bool isTightElectron_, isTightConversionElectron_, isTightNonIsoElectron_;
 
     bool getVBTF_WP70_ElectronID_Barrel() const;
     bool getVBTF_WP70_ElectronID_Endcap() const;

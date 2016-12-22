@@ -47,9 +47,9 @@ ElectronReader::ElectronReader() : //
 		dist(), //
 		dCotTheta(), //
 		passConversionVeto_(), //
-		passMediumElectron_(), //
-		passMediumConversionElectron_(), //
-		passMediumNonIsoElectron_(), //
+		passTightElectron_(), //
+		passTightConversionElectron_(), //
+		passTightNonIsoElectron_(), //
 		algorithm(ElectronAlgorithm::Calo), //
 		electrons() {
 
@@ -89,9 +89,9 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		dist(input, "Electrons.Dist"), //
 		dCotTheta(input, "Electrons.DCotTheta"), //
 		passConversionVeto_(input, "Electrons.passConversionVeto"), //
-		passMediumElectron_(input, "Electrons.isMediumElectron"), //
-		passMediumConversionElectron_(input, "Electrons.isMediumConversionElectron"), //
-		passMediumNonIsoElectron_(input, "Electrons.isMediumNonIsoElectron"), //
+		passTightElectron_(input, "Electrons.isTightElectron"), //
+		passTightConversionElectron_(input, "Electrons.isTightConversionElectron"), //
+		passTightNonIsoElectron_(input, "Electrons.isTightNonIsoElectron"), //
 		algorithm(algo), //
 		electrons() {
 
@@ -151,9 +151,9 @@ void ElectronReader::readElectrons() {
 		electron->setDistToNextTrack(dist.getVariableAt(index));
 		electron->setDCotThetaToNextTrack(dCotTheta.getVariableAt(index));
 
-		electron->setIsMediumElectron( passMediumElectron_.getBoolVariableAt(index));
-		electron->setIsMediumConversionElectron( passMediumConversionElectron_.getBoolVariableAt(index));
-		electron->setIsMediumNonIsoElectron( passMediumNonIsoElectron_.getBoolVariableAt(index));
+		electron->setIsTightElectron( passTightElectron_.getBoolVariableAt(index));
+		electron->setIsTightConversionElectron( passTightConversionElectron_.getBoolVariableAt(index));
+		electron->setIsTightNonIsoElectron( passTightNonIsoElectron_.getBoolVariableAt(index));
 
 		electrons.push_back(electron);
 	}
@@ -204,9 +204,9 @@ void ElectronReader::initialise() {
 
 	passConversionVeto_.initialise();
 
-	passMediumElectron_.initialise();
-	passMediumConversionElectron_.initialise();
-	passMediumNonIsoElectron_.initialise();
+	passTightElectron_.initialise();
+	passTightConversionElectron_.initialise();
+	passTightNonIsoElectron_.initialise();
 }
 
 }

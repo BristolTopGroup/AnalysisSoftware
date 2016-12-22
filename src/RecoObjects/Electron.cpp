@@ -38,9 +38,9 @@ Electron::Electron() :
 		mvaTrigV0_(-initialBigValue), //
 		mvaNonTrigV0_(-initialBigValue), //
 		passConversionVeto_(false),
-		isMediumElectron_(false),
-		isMediumConversionElectron_(false),
-		isMediumNonIsoElectron_(false) {
+		isTightElectron_(false),
+		isTightConversionElectron_(false),
+		isTightNonIsoElectron_(false) {
 }
 
 Electron::Electron(double energy, double px, double py, double pz) :
@@ -62,9 +62,9 @@ Electron::Electron(double energy, double px, double py, double pz) :
 		mvaTrigV0_(-initialBigValue), //
 		mvaNonTrigV0_(-initialBigValue), //
 		passConversionVeto_(false),
-		isMediumElectron_(false),
-		isMediumConversionElectron_(false),
-		isMediumNonIsoElectron_(false)  {
+		isTightElectron_(false),
+		isTightConversionElectron_(false),
+		isTightNonIsoElectron_(false)  {
 }
 
 Electron::~Electron() {
@@ -177,16 +177,16 @@ bool Electron::passesElectronID(short leptonID) const {
 	}
 }
 
-bool Electron::isMediumElectron() const{
-	return isMediumElectron_;
+bool Electron::isTightElectron() const{
+	return isTightElectron_;
 }
 
-bool Electron::isMediumConversionElectron() const{
-	return isMediumConversionElectron_;
+bool Electron::isTightConversionElectron() const{
+	return isTightConversionElectron_;
 }
 
-bool Electron::isMediumNonIsoElectron() const{
-	return isMediumNonIsoElectron_;
+bool Electron::isTightNonIsoElectron() const{
+	return isTightNonIsoElectron_;
 }
 
 bool Electron::isInBarrelRegion() const {
@@ -416,16 +416,16 @@ void Electron::setPassConversionVeto(bool passes) {
 	passConversionVeto_ = passes;
 }
 
-void Electron::setIsMediumElectron(bool passes) {
-	isMediumElectron_ = passes;
+void Electron::setIsTightElectron(bool passes) {
+	isTightElectron_ = passes;
 }
 
-void Electron::setIsMediumConversionElectron(bool passes) {
-	isMediumConversionElectron_ = passes;
+void Electron::setIsTightConversionElectron(bool passes) {
+	isTightConversionElectron_ = passes;
 }
 
-void Electron::setIsMediumNonIsoElectron(bool passes) {
-	isMediumNonIsoElectron_ = passes;
+void Electron::setIsTightNonIsoElectron(bool passes) {
+	isTightNonIsoElectron_ = passes;
 }
 
 double Electron::mvaTrigV0() const {

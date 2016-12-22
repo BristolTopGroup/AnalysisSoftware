@@ -62,9 +62,9 @@ private:
 	VariableReader<MultiDoublePointer> mvaTrigV0_, mvaNonTrigV0_;
 	VariableReader<MultiBoolPointer> passConversionVeto_;
 
-	VariableReader<MultiBoolPointer> passMediumElectron_;
-	VariableReader<MultiBoolPointer> passMediumConversionElectron_;
-	VariableReader<MultiBoolPointer> passMediumNonIsoElectron_;
+	VariableReader<MultiBoolPointer> passTightElectron_;
+	VariableReader<MultiBoolPointer> passTightConversionElectron_;
+	VariableReader<MultiBoolPointer> passTightNonIsoElectron_;
 
 	ElectronAlgorithm::value algorithm;
 	ElectronCollection electrons;
