@@ -20,15 +20,15 @@ namespace BAT {
 bool Event::useCustomConversionTagger = false;
 bool Event::usePFIsolation = true;
 
-double const Event::minJetPt_ = 25;
+double const Event::minJetPt_ = 30;
 double const Event::maxJetAbsEta_ = 2.4;
 unsigned int const Event::minNJets_ = 4;
 unsigned int const Event::minNBJets_ = 2;
 
-double const Event::minSignalMuonPt_ = 24;
+double const Event::minSignalMuonPt_ = 26;
 double const Event::minSignalMuonEta_ = 2.4;
-double const Event::minSignalElectronPt_ = 29;
-double const Event::minSignalElectronEta_ = 2.4; 
+double const Event::minSignalElectronPt_ = 34;
+double const Event::minSignalElectronEta_ = 2.1; 
 
 Event::Event() : //
 		HLTs(new std::vector<int>()), //
@@ -107,14 +107,22 @@ Event::~Event() {
 }
 
 bool Event::isRealData() const {
-	return  dataType == DataType::SingleElectron_Run2016B
-	|| dataType == DataType::SingleElectron_Run2016C
-	|| dataType == DataType::SingleElectron_Run2016D
-	|| dataType == DataType::SingleElectron_Run2016E
-	|| dataType == DataType::SingleMuon_Run2016B
-	|| dataType == DataType::SingleMuon_Run2016C
-	|| dataType == DataType::SingleMuon_Run2016D
-	|| dataType == DataType::SingleMuon_Run2016E;
+	return  dataType == DataType::SingleElectron_RunB
+	|| dataType == DataType::SingleElectron_RunC
+	|| dataType == DataType::SingleElectron_RunD
+	|| dataType == DataType::SingleElectron_RunE
+	|| dataType == DataType::SingleElectron_RunF
+	|| dataType == DataType::SingleElectron_RunG
+	|| dataType == DataType::SingleElectron_RunH_Prompt_v2
+	|| dataType == DataType::SingleElectron_RunH_Prompt_v3
+	|| dataType == DataType::SingleMuon_RunB
+	|| dataType == DataType::SingleMuon_RunC
+	|| dataType == DataType::SingleMuon_RunD
+	|| dataType == DataType::SingleMuon_RunE
+	|| dataType == DataType::SingleMuon_RunF
+	|| dataType == DataType::SingleMuon_RunG
+	|| dataType == DataType::SingleMuon_RunH_Prompt_v2
+	|| dataType == DataType::SingleMuon_RunH_Prompt_v3;
 }
 
 const DataType::value Event::getDataType() const {
@@ -125,12 +133,16 @@ bool Event::isTTJet( DataType::value type) const {
 	if (
 		type == DataType::TTJets_amcatnloFXFX ||
 		type == DataType::TTJets_madgraphMLM ||
-		type == DataType::TTJets_PowhegPythia8 ||
-		type == DataType::TTJets_PowhegPythia8_scaledown ||
-		type == DataType::TTJets_PowhegPythia8_scaleup ||
-		type == DataType::TTJets_PowhegPythia8_mtop1695 ||
-		type == DataType::TTJets_PowhegPythia8_mtop1755 ||
-		type == DataType::TTJets_madgraphMLM ||
+    	type == DataType::TTJets_PowhegPythia8 ||
+    	type == DataType::TTJets_PowhegPythia8_fsrdown ||
+    	type == DataType::TTJets_PowhegPythia8_fsrup ||
+    	type == DataType::TTJets_PowhegPythia8_isrdown ||
+    	type == DataType::TTJets_PowhegPythia8_isrup ||
+    	type == DataType::TTJets_PowhegPythia8_down ||
+    	type == DataType::TTJets_PowhegPythia8_up ||
+    	type == DataType::TTJets_PowhegPythia8_mtop1695 ||
+    	type == DataType::TTJets_PowhegPythia8_mtop1755 ||
+    	type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_PowhegHerwigpp ||
 		type == DataType::TTJets_amcatnloHerwigpp
 		// type == DataType::TTJets_synch
@@ -138,14 +150,6 @@ bool Event::isTTJet( DataType::value type) const {
 		return true;
 	else
 		return false;
-}
-
-bool Event::isReHLTMC() const {
-	return  dataType == DataType::DYJetsToLL_M50 
-	|| dataType == DataType::TTJets_PowhegPythia8
-	|| dataType == DataType::TTJets_amcatnloFXFX
-	|| dataType == DataType::WJetsToLNu
-	|| ( dataType >= DataType::QCD_MuEnriched_15to20 && dataType <= DataType::QCD_MuEnriched_1000toInf);
 }
 
 void Event::setDataType(DataType::value type) {
@@ -801,6 +805,14 @@ const bool Event::passesSignalLeptonSelection( const unsigned int selectionCrite
 	 ) {
 		ptThreshold = minSignalElectronPt_;
 		etaThreshold = minSignalElectronEta_;
+
+		// Selection on electron d0 and dz not in VID selection, so apply here.
+		if ( signalLepton->isInBarrelRegion() ) {
+			if ( signalLepton->d0() > 0.05 ) return false;
+		}
+		else {
+			if ( signalLepton->d0() > 0.1 ) return false;
+		}
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ||
 		 		selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ||
