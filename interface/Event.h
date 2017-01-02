@@ -137,7 +137,6 @@ public:
 	bool isRealData() const;
 	const DataType::value getDataType() const;
 	bool isTTJet(DataType::value type) const;
-	bool isReHLTMC() const;
 	void setDataType(DataType::value type);
 	void setVertices(VertexCollection vertices);
 	void setTracks(TrackCollection tracks);

@@ -32,7 +32,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		const JetPointer jet(jets.at(index));
 
 		double jetPt = jet->pt();
-		if ( jetPt < 25 ) continue;
+		if ( jetPt < 30 ) continue;
 
 		// If the pt of the jet is outside the pt range of the SFs,
 		// use the pt at the upper/lower edge and double the uncertainty.

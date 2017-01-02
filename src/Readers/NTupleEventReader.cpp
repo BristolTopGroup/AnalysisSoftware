@@ -48,11 +48,11 @@ NTupleEventReader::NTupleEventReader() :
 		// passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),
 		// passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu20MC.Fired")),
 
-		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle27WPTightGsf.Fired")),
-		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu22.Fired")),
-		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu22.Fired")),
-		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle27WPTightGsfMC.Fired")),
-		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu22MC.Fired")),
+		passesElectronChannelTriggerReader(new VariableReader<bool>(input, "HLTEle32erWPTightGsf.Fired")),
+		passesMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24.Fired")),
+		passesTkMuonChannelTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu24.Fired")),
+		passesElectronChannelMCTriggerReader(new VariableReader<bool>(input, "HLTEle32erWPTightGsfMC.Fired")),
+		passesMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoMu24MC.Fired")),
 		passesTkMuonChannelMCTriggerReader(new VariableReader<bool>(input, "HLTIsoTkMu22MC.Fired")),
 		// passesElectronChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTEle27erWP75GsfMC.Fired")),
 		// passesMuonChannelQCDTriggerReader(new VariableReader<bool>(input, "HLTIsoMu20MC.Fired")),		
@@ -166,22 +166,12 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelTriggerReader->getVariable() );
 	}
-	else if ( currentEvent->isReHLTMC() ) {
-		// currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
-		// currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
-		// currentEvent->setPassesTkMuonChannelTrigger( passesTkMuonChannelMCTriggerReader->getVariable() );		
-		currentEvent->setPassesElectronChannelTrigger( true );
-		currentEvent->setPassesMuonChannelTrigger( true );
-		currentEvent->setPassesTkMuonChannelTrigger( true );
+	else {
+		currentEvent->setPassesElectronChannelTrigger( passesElectronChannelMCTriggerReader->getVariable() );
+		currentEvent->setPassesMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );
+		currentEvent->setPassesTkMuonChannelTrigger( passesMuonChannelMCTriggerReader->getVariable() );		
 		currentEvent->setPassesElectronChannelQCDTrigger( passesElectronChannelMCTriggerReader->getVariable() );
 		currentEvent->setPassesMuonChannelQCDTrigger( passesMuonChannelMCTriggerReader->getVariable() );
-	}
-	else {
-		currentEvent->setPassesElectronChannelTrigger( true );
-		currentEvent->setPassesMuonChannelTrigger( true );
-		currentEvent->setPassesTkMuonChannelTrigger( true );		
-		currentEvent->setPassesElectronChannelQCDTrigger( true );
-		currentEvent->setPassesMuonChannelQCDTrigger( true );
 	}
 
 	// Set info that depends on selection criteria e.g. cleaned jets
