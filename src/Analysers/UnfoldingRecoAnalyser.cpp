@@ -37,7 +37,9 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		else if ( weightID == 2101 || weightID == 2102 ) {
 			treeMan_->Fill( "alphaSWeight_" + to_string(weightID-2101), weight);
 		}
-
+		else if ( weightID >= 5001 && weightID <= 5027 ) {
+			treeMan_->Fill( "matchingWeight_" + to_string(weightID-5001), weight);
+		}
 	}
 
 	treeMan_->setCurrentFolder(histogramFolder_);
@@ -110,6 +112,21 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("bEta", bjets.at(index)->eta() );
 	}
 
+
+	if ( bjets.size() >= 1 ) {
+		treeMan_->Fill("angle_bl",Event::angle_bl( bjets, signalLepton));
+		if ( bjets.size() >= 2 ) {
+			unsigned int highestCSVJetIndex = 0;
+			unsigned int secondHighestCSVJetIndex = 0;
+			Event::getTopTwoCSVJets( bjets, highestCSVJetIndex, secondHighestCSVJetIndex );
+			JetPointer highestCSVJet(bjets.at(highestCSVJetIndex));
+			JetPointer secondHighestCSVJet(bjets.at(secondHighestCSVJetIndex));
+			treeMan_->Fill("deltaPhi_bb", fabs( Event::deltaPhi_bb(highestCSVJet, secondHighestCSVJet) ) ) ;
+			treeMan_->Fill("deltaEta_bb", fabs( Event::deltaEta_bb(highestCSVJet, secondHighestCSVJet) ) ) ;
+			treeMan_->Fill("angle_bb", Event::angle_bb(highestCSVJet, secondHighestCSVJet));
+		}
+	}
+
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		treeMan_->Fill("jetPt", jets.at(index)->pt() );
 		treeMan_->Fill("jetEta", jets.at(index)->eta() );
@@ -147,6 +164,11 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->addBranch("NJets", "F", "Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "Unfolding" + Globals::treePrefix_);
+
+	treeMan_->addBranch("angle_bl", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("deltaPhi_bb", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("deltaEta_bb", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("angle_bb", "F", "Unfolding" + Globals::treePrefix_);
 
 	treeMan_->addBranch("lepTopPt", "F", "Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("hadTopPt", "F", "Unfolding" + Globals::treePrefix_);
@@ -187,10 +209,13 @@ void UnfoldingRecoAnalyser::createTrees() {
 		treeMan_->addBranch("pdfWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
 	}
 
-		for ( unsigned int i = 0; i < 2; ++i ) {
+	for ( unsigned int i = 0; i < 2; ++i ) {
 		treeMan_->addBranch("alphaSWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
 	}
 
+	for ( unsigned int i = 0; i < 27; ++i ) {
+		treeMan_->addBranch("matchingWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+	}
 }
 
 
