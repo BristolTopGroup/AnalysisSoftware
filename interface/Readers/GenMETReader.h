@@ -22,8 +22,8 @@ public:
     void initialise();
 //    void initialiseBlindly();
 private:
-    VariableReader<MultiDoublePointer> exReader;
-    VariableReader<MultiDoublePointer> eyReader;
+    VariableReader<double> exReader;
+    VariableReader<double> eyReader;
     METPointer genMET_;
     void readGenMET();
 };

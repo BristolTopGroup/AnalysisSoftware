@@ -349,6 +349,11 @@ public:
 	static double M3(const JetCollection jets);
 	static double M_bl(const JetCollection, const ParticlePointer);
 	static double angle_bl(const JetCollection, const ParticlePointer);
+	static double pseudo_angle_bl( const MCParticleCollection pseudoBs, const ParticlePointer pseudoLepton );
+	static void getTopTwoCSVJets(const JetCollection, unsigned int& highestCSVJetIndex, unsigned int& secondHighestCSVJetIndex);
+	static double deltaPhi_bb(const ParticlePointer, const ParticlePointer);
+	static double deltaEta_bb(const ParticlePointer, const ParticlePointer);
+	static double angle_bb(const ParticlePointer, const ParticlePointer);
 	static unsigned int NJets(const JetCollection);
 	static double ST(const JetCollection, const ParticlePointer, const METPointer);
 	static double MT(const ParticlePointer, const METPointer);

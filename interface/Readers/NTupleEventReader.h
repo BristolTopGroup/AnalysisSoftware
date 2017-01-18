@@ -80,7 +80,7 @@ private:
 	boost::scoped_ptr<JetReader> jetReader;
 	boost::scoped_ptr<GenJetReader> genJetReader;
 	boost::scoped_ptr<MuonReader> muonReader;
-//	boost::scoped_ptr<GenMETReader> genMetReader;
+	boost::scoped_ptr<GenMETReader> genMetReader;
 	std::vector<boost::shared_ptr<METReader> > metReaders;
 	// std::vector<boost::shared_ptr<METCorrReader> > metCorrReaders;
 

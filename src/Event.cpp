@@ -1013,8 +1013,7 @@ const METPointer Event::MET() const {
 }
 
 const METPointer Event::GenMET() const {
-	return MET(METAlgorithm::MET);  // FIXME when genMet is available from miniAOD ntuples
-//	return genMet_;
+	return genMet_;
 }
 
 const TtbarHypothesis Event::ttbarHypothesis() const {
@@ -1432,6 +1431,16 @@ double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton) {
 	return m_bl;
 }
 
+double Event::pseudo_angle_bl( const MCParticleCollection pseudoBs, const ParticlePointer pseudoLepton ) {
+	JetCollection pseudoBJets;
+	for ( unsigned int i = 0; i < pseudoBs.size(); ++i ) {
+		MCParticlePointer p(pseudoBs.at(i));
+		JetPointer jet(new Jet(p->energy(), p->px(), p->py(), p->pz() ) );
+		pseudoBJets.push_back( jet );
+	}
+	return Event::angle_bl( pseudoBJets, pseudoLepton );
+}
+
 double Event::angle_bl(const JetCollection b_jets,
 		const ParticlePointer lepton) {
 	double angle(-1);
@@ -1447,11 +1456,47 @@ double Event::angle_bl(const JetCollection b_jets,
 
 			// find closest b_jet
 			unsigned short closest_b_jet_index = lepton->getClosest(particles);
-			JetPointer closest_b_jet = b_jets.at(closest_b_jet_index);
+			const ParticlePointer closest_b_jet = b_jets.at(closest_b_jet_index);
 			angle = lepton->angle(closest_b_jet);
 		}
 	}
 	return angle;
+}
+
+void Event::getTopTwoCSVJets(const JetCollection b_jets, unsigned int& highestCSVJetIndex, unsigned int& secondHighestCSVJetIndex) {
+	
+	if ( b_jets.size() < 2 ) return;
+	
+	double highestCSV = -999;
+	double secondHighestCSV = -999;
+
+	for (unsigned int index = 0; index < b_jets.size(); ++index) {
+		Jet* jet(b_jets.at(index).get());
+		if ( jet->getBTagDiscriminator(BtagAlgorithm::CombinedSecondaryVertexV2) > secondHighestCSV ) {
+			if ( jet->getBTagDiscriminator(BtagAlgorithm::CombinedSecondaryVertexV2) > highestCSV ) {
+				secondHighestCSV = highestCSV;
+				secondHighestCSVJetIndex = highestCSVJetIndex;
+				highestCSV = jet->getBTagDiscriminator(BtagAlgorithm::CombinedSecondaryVertexV2);
+				highestCSVJetIndex = index;	
+			}
+			else{
+				secondHighestCSV = jet->getBTagDiscriminator(BtagAlgorithm::CombinedSecondaryVertexV2);
+				secondHighestCSVJetIndex = index;	
+			}
+		}
+	}
+}
+
+double Event::deltaPhi_bb(const ParticlePointer b_jet1, const ParticlePointer b_jet2 ) {
+	return b_jet1->deltaPhi( b_jet2 );
+}
+
+double Event::deltaEta_bb(const ParticlePointer b_jet1, const ParticlePointer b_jet2 ) {
+	return b_jet1->deltaEta( b_jet2 );
+}
+
+double Event::angle_bb(const ParticlePointer b_jet1, const ParticlePointer b_jet2 ) {
+	return b_jet1->angle( b_jet2 );
 }
 
 unsigned int Event::NJets(const JetCollection jets) {

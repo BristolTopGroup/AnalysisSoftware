@@ -42,8 +42,10 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	const ParticleCollection allPseudoLeptons = pseudoTopParticles->getAllPseudoLeptons();
 	const MCParticleCollection pseudoBs = pseudoTopParticles->getPseudoBs();
 	const ParticlePointer pseudoMET = pseudoTopParticles->getPseudoMET();
-	const ParticlePointer pseudoNeutrino = pseudoTopParticles->getPseudoNeutrino();
 	const JetCollection pseudoJets = pseudoTopParticles->getPseudoJets();
+
+	const ParticlePointer genMET = event->GenMET();
+
 
 	ParticleCollection pseudoTopsForTTbar;
 
@@ -54,7 +56,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	// if ( !pseudoTopParticles->isSemiLeptonic() ) return;
 
 	// Check if event passes event selection (at pseudo top level)
-	if ( passesEventSelection( pseudoLepton, pseudoNeutrino, pseudoJets, pseudoBs, allPseudoLeptons, pseudoMET ) ) {
+	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons ) ) {
 		treeMan_->Fill("passesGenEventSelection",1);
 	}
 	else {
@@ -101,7 +103,16 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		// }
 	}
 
+	// std::cout << pseudoBs.size() << " " << allPseudoLeptons.size() << std::endl;
+	if ( pseudoBs.size() >= 1 && allPseudoLeptons.size() > 0 ) {
+		treeMan_->Fill("angle_bl",Event::pseudo_angle_bl( pseudoBs, allPseudoLeptons[0]));
+	}
 
+	if ( pseudoBs.size() >= 2 ) {
+		treeMan_->Fill("pseudo_angle_bb",Event::angle_bb( pseudoBs[0], pseudoBs[1]));
+		treeMan_->Fill("pseudo_deltaPhi_bb",fabs( Event::deltaPhi_bb( pseudoBs[0], pseudoBs[1]) ) );
+		treeMan_->Fill("pseudo_deltaEta_bb",fabs( Event::deltaEta_bb( pseudoBs[0], pseudoBs[1]) ) );
+	}
 	//
 	// GLOBAL VARIABLES
 	// No top reco at particle level
@@ -120,14 +131,18 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	// Store pseudo MET
 	if ( pseudoMET != 0 ) {
 		treeMan_->Fill("pseudoMET", pseudoMET->et() );
-		METAlgorithm::value metType = (METAlgorithm::value) 0;
-		const METPointer met(event->MET(metType));
-		if ( pseudoMET->et() <= 0 && met->et() > 0 ) {
-		}
 		treeMan_->Fill("pseudoMET_mass", pseudoMET->mass() );
 	}
 	else {
 		treeMan_->Fill("pseudoMET", 0 );
+	}
+
+	// Store gen MET
+	if ( genMET != 0 ) {
+		treeMan_->Fill("genMET", genMET->et() );
+	}
+	else {
+		treeMan_->Fill("genMET", 0 );
 	}
 
 
@@ -141,7 +156,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// Store pseudo ST
 	if ( allPseudoLeptons.size() > 0 ) {
-		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) ) );
+		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( genMET->px(), genMET->py() )) ) );
 	}
 	else {
 		treeMan_->Fill("pseudoST", 0 );
@@ -157,11 +172,11 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("pseudoWPT_reco", 0 );
 	}
 
-	if ( pseudoMET != 0 && allPseudoLeptons.size() > 0 ) {
-		double WPT = event->WPT( allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() ))  );
+	if ( genMET != 0 && allPseudoLeptons.size() > 0 ) {
+		double WPT = event->WPT( allPseudoLeptons[0], METPointer( new MET( genMET->px(), genMET->py() ))  );
 		treeMan_->Fill("pseudoWPT", WPT );
 
-		double MT = event->MT( allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) );
+		double MT = event->MT( allPseudoLeptons[0], METPointer( new MET( genMET->px(), genMET->py() )) );
 		treeMan_->Fill("pseudoMT", MT );
 	}
 	else {
@@ -185,6 +200,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	treeMan_->Fill("NPseudoJets", numberOfJets );
 	treeMan_->Fill("NPseudoBJets", numberOfBJets );
+
 }
 
 void PseudoTopAnalyser::createTrees() {
@@ -209,12 +225,18 @@ void PseudoTopAnalyser::createTrees() {
 	// Branches for b jets
 	treeMan_->addBranch("pseudoB_pT", "F", "Unfolding" + Globals::treePrefix_, false);
 	treeMan_->addBranch("pseudoB_eta", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("pseudo_angle_bl", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudo_deltaPhi_bb", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudo_deltaEta_bb", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudo_angle_bb", "F", "Unfolding" + Globals::treePrefix_);
 	// Branches for jets
 	treeMan_->addBranch("pseudoJet_pT", "F", "Unfolding" + Globals::treePrefix_, false);
 	treeMan_->addBranch("pseudoJet_eta", "F", "Unfolding" + Globals::treePrefix_, false);
 	// Branch for pseudo MET
 	treeMan_->addBranch("pseudoMET", "F","Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("pseudoMET_mass", "F","Unfolding" + Globals::treePrefix_);
+	// Branch for gen MET
+	treeMan_->addBranch("genMET", "F","Unfolding" + Globals::treePrefix_);
 	// Branches for other pseudo global variables
 	treeMan_->addBranch("pseudoHT", "F","Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("pseudoST", "F","Unfolding" + Globals::treePrefix_);
@@ -228,12 +250,14 @@ void PseudoTopAnalyser::createTrees() {
 
 }
 
-bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const ParticlePointer pseudoNeutrino, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, const ParticlePointer pseudoMET ) {
+bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons ) {
 
 	// Event selection taken from here : https://twiki.cern.ch/twiki/bin/view/LHCPhysics/ParticleLevelTopDefinitions
 	unsigned int numberGoodLeptons = 0;
 	unsigned int numberVetoLeptons = 0;
 	ParticlePointer leadingLepton;
+
+	// Lepton selection
 	for ( unsigned int leptonIndex = 0; leptonIndex < allPseudoLeptons.size(); ++ leptonIndex ) {
 		const ParticlePointer lepton = allPseudoLeptons.at(leptonIndex);
 
@@ -248,20 +272,6 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 			++numberVetoLeptons;
 		}
 	}
-
-	// Neutrino pt sum
-	bool passesNeutrinoSumPt = false;
-	if ( pseudoMET != 0 ) {
-		if ( pseudoMET->pt() > minNeutrinoSumPt_ ) passesNeutrinoSumPt = true;
-	}
-
-	// W MT
-	bool passesWMT = false;
-	if ( leadingLepton != 0 && pseudoMET != 0 ) {
-		double genMT = sqrt( 2 * leadingLepton->pt() * pseudoMET->pt() * ( 1 - cos(leadingLepton->phi() - pseudoMET->phi() ) ) );
-		if (genMT > minWMt_) passesWMT = true;
-	}
-
 
 	// Jets
 	unsigned int numberGoodJets = 0;
@@ -281,7 +291,7 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		}
 	}
 	
-	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && passesNeutrinoSumPt && passesWMT && numberGoodJets >= minNJets_ && numberGoodBJets >= minNBJets_ ) {
+	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets_ && numberGoodBJets >= minNBJets_ ) {
 		return true;
 	}
 	else return false;
