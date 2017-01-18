@@ -6,7 +6,7 @@ class scaleFactorsForPeriod:
 		self.scaleFactorName = scaleFactorName
 		self.lumi = lumi
 
-doIsolationSF = False
+doIsolationSF = True
 
 if __name__ == '__main__':
 
@@ -48,5 +48,5 @@ if __name__ == '__main__':
 	averagedScalefactors.Scale(1/sumLumi)
 
 	outputFile = TFile(outputFileName, 'RECREATE')
-	averagedScalefactors.Write('abseta_pt_DATA')
+	averagedScalefactors.Write('abseta_pt_ratio')
 	outputFile.Close()
