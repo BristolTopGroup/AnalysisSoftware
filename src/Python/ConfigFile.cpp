@@ -518,20 +518,20 @@ void ConfigFile::loadIntoMemory() {
 	Globals::MuonScaleFactorSystematic = muonScaleFactorSystematic();
 
 	if ( getMuonScaleFactorsFromFile_ 
-		&& boost::filesystem::exists(MuonTriggerScaleFactorsFile()) 
+		// && boost::filesystem::exists(MuonTriggerScaleFactorsFile()) 
 		&& boost::filesystem::exists(MuonIdScaleFactorsFile()) 
 		&& boost::filesystem::exists(MuonIsoScaleFactorsFile())
-		&& boost::filesystem::exists(MuonTrackingHIPScaleFactorsFile())
+		// && boost::filesystem::exists(MuonTrackingHIPScaleFactorsFile())
 		) {
 		std::cout << "Getting muon scale factors from files :" << std::endl 
 			<< MuonIdScaleFactorsFile() << std::endl
-			<< MuonIsoScaleFactorsFile() << std::endl
-			<< MuonTriggerScaleFactorsFile() << std::endl
-			<< MuonTrackingHIPScaleFactorsFile() <<std::endl;
+			<< MuonIsoScaleFactorsFile() << std::endl;
+			// << MuonTriggerScaleFactorsFile() << std::endl
+			// << MuonTrackingHIPScaleFactorsFile() <<std::endl;
 		Globals::muonIdScaleFactorsHistogram = getMuonIdScaleFactorsHistogram(MuonIdScaleFactorsFile());
 		Globals::muonIsoScaleFactorsHistogram = getMuonIsoScaleFactorsHistogram(MuonIsoScaleFactorsFile());
-		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
-		Globals::muonTrackingHIPScaleFactorsHistogram = getMuonTrackingHIPScaleFactorsHistogram(MuonTrackingHIPScaleFactorsFile());
+		// Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
+		// Globals::muonTrackingHIPScaleFactorsHistogram = getMuonTrackingHIPScaleFactorsHistogram(MuonTrackingHIPScaleFactorsFile());
 	}
 
 	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) && boost::filesystem::exists(ElectronIdScaleFactorsFile()) && boost::filesystem::exists(ElectronIsoScaleFactorsFile())) {
@@ -639,7 +639,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonIdScaleFactorsHistogram(std::string m
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonIdScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> idHistogram((TH2F*) file->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio")->Clone());
+	boost::shared_ptr<TH2F> idHistogram((TH2F*) file->Get("abseta_pt_ratio")->Clone());
 	file->Close();
 
 	return idHistogram;
@@ -654,7 +654,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonIsoScaleFactorsHistogram(std::string 
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonIsoScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")->Clone());
+	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("abseta_pt_ratio")->Clone());
 	file->Close();
 
 	return isoHistogram;

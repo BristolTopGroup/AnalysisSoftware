@@ -180,6 +180,21 @@ const ParticlePointer Jet::raw_jet() {
 	return rawJet_;
 }
 
+double Jet::getJERScaleFactor( double scaleFactor, double uncertainty, int jet_smearing_systematic ) {
+	switch (jet_smearing_systematic) {
+		case -1:
+			scaleFactor = scaleFactor - uncertainty;
+			break;
+		case 1:
+			scaleFactor = scaleFactor + uncertainty;
+			break;
+		default:
+			scaleFactor = scaleFactor;
+			break;
+	}
+	return scaleFactor;
+}
+
 const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic) {
 	// Get the jet energy resolution scale factors, depending on the jet eta, from 
 	// https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
@@ -199,134 +214,54 @@ const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePo
 
 	double scaleFactor(0.);
 	if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.5) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.077;
-				break;
-			case 1:
-				scaleFactor = 1.113;
-				break;
-			default:
-				scaleFactor = 1.095;
-				break;
-		}
+		double scaleFactorForgion = 1.109;
+		double uncertainty = 0.008;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 0.5 && fabs(jet->eta()) < 0.8) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.092;
-				break;
-			case 1:
-				scaleFactor = 1.148;
-				break;
-			default:
-				scaleFactor = 1.120;
-				break;
-		}
+		double scaleFactorForgion = 1.138;
+		double uncertainty = 0.013;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 0.8 && fabs(jet->eta()) < 1.1) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.080;
-				break;
-			case 1:
-				scaleFactor = 1.114;
-				break;
-			default:
-				scaleFactor = 1.097;
-				break;
-		}
+		double scaleFactorForgion = 1.114;
+		double uncertainty = 0.013;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 1.1 && fabs(jet->eta()) < 1.3) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.070;
-				break;
-			case 1:
-				scaleFactor = 1.136;
-				break;
-			default:
-				scaleFactor = 1.103;
-				break;
-		}
+		double scaleFactorForgion = 1.123;
+		double uncertainty = 0.024;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 1.3 && fabs(jet->eta()) < 1.7) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.104;
-				break;
-			case 1:
-				scaleFactor = 1.132;
-				break;
-			default:
-				scaleFactor = 1.118;
-				break;
-		}
+		double scaleFactorForgion = 1.084;
+		double uncertainty = 0.011;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 1.7 && fabs(jet->eta()) < 1.9) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.067;
-				break;
-			case 1:
-				scaleFactor = 1.133;
-				break;
-			default:
-				scaleFactor = 1.100;
-				break;
-		}
+		double scaleFactorForgion = 1.082;
+		double uncertainty = 0.035;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 1.9 && fabs(jet->eta()) < 2.1) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.118;
-				break;
-			case 1:
-				scaleFactor = 1.206;
-				break;
-			default:
-				scaleFactor = 1.162;
-				break;
-		}
+		double scaleFactorForgion = 1.140;
+		double uncertainty = 0.047;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 2.1 && fabs(jet->eta()) < 2.3) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.112;
-				break;
-			case 1:
-				scaleFactor = 1.208;
-				break;
-			default:
-				scaleFactor = 1.160;
-				break;
-		}
+		double scaleFactorForgion = 1.067;
+		double uncertainty = 0.053;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 2.5) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.113;
-				break;
-			case 1:
-				scaleFactor = 1.209;
-				break;
-			default:
-				scaleFactor = 1.161;
-				break;
-		}
+		double scaleFactorForgion = 1.177;
+		double uncertainty = 0.041;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 	if (fabs(jet->eta()) >= 2.5 && fabs(jet->eta()) < 2.8) {
-		switch (jet_smearing_systematic) {
-			case -1:
-				scaleFactor = 1.150;
-				break;
-			case 1:
-				scaleFactor = 1.268;
-				break;
-			default:
-				scaleFactor = 1.209;
-				break;
-		}
+		double scaleFactorForgion = 1.364;
+		double uncertainty = 0.039;
+		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
 	}
 
 	//use raw scaleFactors from above to calculate the final factors to apply

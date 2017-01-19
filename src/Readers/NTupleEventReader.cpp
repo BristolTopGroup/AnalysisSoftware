@@ -37,7 +37,7 @@ NTupleEventReader::NTupleEventReader() :
 		jetReader(new JetReader(input, Globals::jetAlgorithm)), //
 		genJetReader(new GenJetReader(input)), //
 		muonReader(new MuonReader(input, Globals::muonAlgorithm)), //
-//		genMetReader(new GenMETReader(input)), //
+		genMetReader(new GenMETReader(input)), //
 		metReaders(), //
 		// // metCorrReaders(), //
 
@@ -311,6 +311,7 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	}
 
 	currentEvent->setMETs(mets);
+	currentEvent->setGenMET(genMetReader->getGenMET());
 	currentEvent->setRunNumber(runNumberReader->getVariable());
 	currentEvent->setEventNumber(eventNumberReader->getVariable());
 	currentEvent->setLocalEventNumber(currentEventEntry);
@@ -427,7 +428,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 				metReaders.at(index)->initialise();
 
 		}
-
+		genMetReader->initialise();
 		areReadersSet = true;
 	}
 

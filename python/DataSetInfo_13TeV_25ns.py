@@ -59,7 +59,11 @@ datasetInfo['TTJets_amcatnloHerwigpp'] = { "cross-section" : 831.76, "NumberOfPr
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/CMS/StandardModelCrossSectionsat13TeV
 datasetInfo['DYJetsToLL_M50'] = { "cross-section" : 6025.2, "NumberOfProcessedEvents" : 29813625 }
-datasetInfo['WJetsToLNu'] = { "cross-section" : 61526.7, "NumberOfProcessedEvents" : 29705748 }
+datasetInfo['WJetsToLNu'] = { "cross-section" : 61526.7,       "NumberOfProcessedEvents" :29705748}
+datasetInfo['W1JetsToLNu'] = { "cross-section" : 9493,      "NumberOfProcessedEvents" :42773698}
+datasetInfo['W2JetsToLNu'] = { "cross-section" : 3120,      "NumberOfProcessedEvents" :29878415}
+datasetInfo['W3JetsToLNu'] = { "cross-section" : 942.3,       "NumberOfProcessedEvents" :8586884}
+datasetInfo['W4JetsToLNu'] = { "cross-section" : 524.2,        "NumberOfProcessedEvents" :18751462}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SingleTopSigma
 # datasetInfo['TToLeptons_s'] = { "cross-section" : 1, "NumberOfProcessedEvents" :0 }
@@ -69,8 +73,8 @@ datasetInfo['WJetsToLNu'] = { "cross-section" : 61526.7, "NumberOfProcessedEvent
 datasetInfo['ST_t'] = { "cross-section" : 136.02, "NumberOfProcessedEvents" : 67240808 }
 datasetInfo['STbar_t'] = { "cross-section" : 80.95, "NumberOfProcessedEvents" : 38811017 }
 datasetInfo['ST_s'] = { "cross-section" : 6.35, "NumberOfProcessedEvents" : 622990 }
-datasetInfo['ST_tW'] = { "cross-section" : 35.6, "NumberOfProcessedEvents" : 6952830 }
-datasetInfo['STbar_tW'] = { "cross-section" : 35.6, "NumberOfProcessedEvents" : 6933094 }
+datasetInfo['ST_tW'] = { "cross-section" : 35.6,    "NumberOfProcessedEvents" :6952830}
+datasetInfo['STbar_tW'] = { "cross-section" : 35.6,    "NumberOfProcessedEvents" :6933094}
 
 # # # GJet
 # datasetInfo['GJets_100to200'] = { "cross-section" : 9226, "NumberOfProcessedEvents" :0} 
@@ -81,21 +85,21 @@ datasetInfo['STbar_tW'] = { "cross-section" : 35.6, "NumberOfProcessedEvents" : 
 # # QCD EM-enriched
 # # Cross sections from https://cms-pdmv.cern.ch/mcm/requests?dataset_name=QCD_*EMEnriched*TuneCUETP8M1*13*&page=0&shown=262173&limit=100
 datasetInfo['QCD_EMEnriched_15to20'] = { "cross-section" : 1273000000 * 0.0002, "NumberOfProcessedEvents" :0 }
-datasetInfo['QCD_EMEnriched_20to30'] = { "cross-section" : 557600000 * 0.0096, "NumberOfProcessedEvents" : 9218954 }
-datasetInfo['QCD_EMEnriched_30to50'] = { "cross-section" : 136000000 * 0.073, "NumberOfProcessedEvents" : 6768384 }
-datasetInfo['QCD_EMEnriched_50to80'] = { "cross-section" : 19800000 * 0.146, "NumberOfProcessedEvents" :0 }
-datasetInfo['QCD_EMEnriched_80to120'] = { "cross-section" : 2800000 * 0.125, "NumberOfProcessedEvents" :0 }
-datasetInfo['QCD_EMEnriched_120to170'] = { "cross-section" : 477000 * 0.132, "NumberOfProcessedEvents" :0 }
-datasetInfo['QCD_EMEnriched_170to300'] = { "cross-section" : 114000 * 0.165, "NumberOfProcessedEvents" : 11540163 }
-datasetInfo['QCD_EMEnriched_300toInf'] = { "cross-section" : 9000 * 0.15, "NumberOfProcessedEvents" : 7373633 }
+datasetInfo['QCD_EMEnriched_20to30'] = { "cross-section" : 557600000 * 0.0096,       "NumberOfProcessedEvents" :9218954}
+datasetInfo['QCD_EMEnriched_30to50'] = { "cross-section" : 136000000 * 0.073,       "NumberOfProcessedEvents" :6768384}
+datasetInfo['QCD_EMEnriched_50to80'] = { "cross-section" : 19800000 * 0.146,      "NumberOfProcessedEvents" :23474171}
+datasetInfo['QCD_EMEnriched_80to120'] = { "cross-section" : 2800000 * 0.125,    "NumberOfProcessedEvents" :41853504}
+datasetInfo['QCD_EMEnriched_120to170'] = { "cross-section" : 477000 * 0.132,    "NumberOfProcessedEvents" :8700458}
+datasetInfo['QCD_EMEnriched_170to300'] = { "cross-section" : 114000 * 0.165,       "NumberOfProcessedEvents" :11540163}
+datasetInfo['QCD_EMEnriched_300toInf'] = { "cross-section" : 9000 * 0.15,       "NumberOfProcessedEvents" :7373633}
 # # QCD BCToE
 # # Cross sections from https://cms-pdmv.cern.ch/mcm/requests?dataset_name=QCD_Pt_*_bcToE_TuneCUETP8M1_*13*&page=0&shown=262173&limit=100
 datasetInfo['QCD_bcToE_15to20'] = { "cross-section" : 1272980000 * 0.0002, "NumberOfProcessedEvents" :0} 
 datasetInfo['QCD_bcToE_20to30'] = { "cross-section" : 557627000 * 0.00059, "NumberOfProcessedEvents" :0} 
-datasetInfo['QCD_bcToE_30to80'] = { "cross-section" : 159068000 * 0.00255, "NumberOfProcessedEvents" :0} 
-datasetInfo['QCD_bcToE_80to170'] = { "cross-section" : 3221000 * 0.01183, "NumberOfProcessedEvents" :0} 
+datasetInfo['QCD_bcToE_30to80'] = { "cross-section" : 159068000 * 0.00255,    "NumberOfProcessedEvents" :15328096}
+datasetInfo['QCD_bcToE_80to170'] = { "cross-section" : 3221000 * 0.01183,     "NumberOfProcessedEvents" :14976689}
 datasetInfo['QCD_bcToE_170to250'] = { "cross-section" : 105771 * 0.02492, "NumberOfProcessedEvents" :0} 
-datasetInfo['QCD_bcToE_250toInf'] = { "cross-section" : 21094.1 * 0.03375, "NumberOfProcessedEvents" :0} 
+datasetInfo['QCD_bcToE_250toInf'] = { "cross-section" : 21094.1 * 0.03375,    "NumberOfProcessedEvents" :9773617}
 # # QCD Mu-enriched
 # # Cross sections from https://cms-pdmv.cern.ch/mcm/requests?dataset_name=QCD_Pt*_MuEnrichedPt5_TuneCUETP8M1_*13*&page=0&shown=262173&limit=100
 datasetInfo['QCD_MuEnriched_15to20'] = { "cross-section" : 1273190000 * 0.003, "NumberOfProcessedEvents" : 4141251 }

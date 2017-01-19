@@ -17,8 +17,8 @@ GenMETReader::GenMETReader() :
 }
 
 GenMETReader::GenMETReader(TChainPointer input) :
-		exReader(input, "GenMET.ExTrue"), //
-		eyReader(input, "GenMET.EyTrue"), //
+		exReader(input, "GenMET.Ex"), //
+		eyReader(input, "GenMET.Ey"), //
 		genMET_() {
 
 }
@@ -38,6 +38,6 @@ const METPointer GenMETReader::getGenMET() {
 }
 
 void GenMETReader::readGenMET() {
-	genMET_ = METPointer(new MET(exReader.getVariableAt(0), eyReader.getVariableAt(0)));
+	genMET_ = METPointer(new MET(exReader.getVariable(), eyReader.getVariable() ) );
 }
 }
