@@ -21,10 +21,6 @@ JetReader::JetReader() : //
 		L2L3ResJECReader(),
 		L2RelJECReader(),
 		L3AbsJECReader(),
-		JERReader(), //
-		JERSFReader(),
-		JERSFUpReader(),
-		JERSFDownReader(),
 		pxReader(), ////
 		pyReader(), ////
 		pzReader(), ////
@@ -75,12 +71,6 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		L2L3ResJECReader(input, "Jets.L2L3ResJEC"),
 		L2RelJECReader(input, "Jets.L2RelJEC"),
 		L3AbsJECReader(input, "Jets.L3AbsJEC"),
-
-		JERReader(input, "Jets.jer"), //
-		JERSFReader(input, "Jets.jerSF"),
-		JERSFUpReader(input, "Jets.jerSFUp"),
-		JERSFDownReader(input, "Jets.jerSFDown"),
-
 		pxReader(input, "Jets.Px"), //
 		pyReader(input, "Jets.Py"), //
 		pzReader(input, "Jets.Pz"), //
@@ -145,8 +135,6 @@ void JetReader::readJets(bool isRealData) {
 		double pyRaw = pyRawReader.getVariableAt(jetIndex);
 		double pzRaw = pzRawReader.getVariableAt(jetIndex);
 
-
-
 		double JEC = 1.0;
 		if ( JECReader.size() > jetIndex ) {
 			JEC = JECReader.getVariableAt(jetIndex);
@@ -168,44 +156,26 @@ void JetReader::readJets(bool isRealData) {
 		//get matched gen jet variables if MC, applyJetSmearing is True and there is a matchedGeneratedJet:
 		if (!isRealData) {
 			double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
-			double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
-			double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
-			double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
-			JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz)); //
-			
-			//store matched generated jet variables in a matchedGeneratedJet pointer
 			if (matchedGeneratedJetEnergy !=0) {
+				double matchedGeneratedJetEnergy = matchedGeneratedJetEnergyReader.getVariableAt(jetIndex); //
+				double matchedGeneratedJetPx = matchedGeneratedJetPxReader.getVariableAt(jetIndex); //
+				double matchedGeneratedJetPy = matchedGeneratedJetPyReader.getVariableAt(jetIndex); //
+				double matchedGeneratedJetPz = matchedGeneratedJetPzReader.getVariableAt(jetIndex); //
+
+				//store matched generated jet variables in a matchedGeneratedJet pointer
+				JetPointer matchedGeneratedJet(new Jet(matchedGeneratedJetEnergy, matchedGeneratedJetPx, matchedGeneratedJetPy, matchedGeneratedJetPz));
 				jet->set_matched_generated_jet(matchedGeneratedJet);
+				if ( Globals::applyJetSmearing ) {
+					//smear the unsmeared jet
+					const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, Globals::JetSmearingSystematic));
+
+					FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
+					jet->setFourVector(smearedJetFourVector);
+
+					//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
+					jet->set_unsmeared_jet(unsmearedJet);
+				}
 			}
-
-			double jer = JERReader.getVariableAt(jetIndex);
-			double jerSF = JERSFReader.getVariableAt(jetIndex);
-			if (Globals::JetSmearingSystematic == 1){
-				jerSF = JERSFUpReader.getVariableAt(jetIndex);
-			}
-			else if (Globals::JetSmearingSystematic == -1){
-				jerSF = JERSFDownReader.getVariableAt(jetIndex);
-			}
-
-			if ( Globals::applyJetSmearing ) {
-				//smear the unsmeared jet
-				const ParticlePointer smearedJet(Jet::smear_jet(unsmearedJet, matchedGeneratedJet, jer, jerSF));
-
-				FourVector smearedJetFourVector(smearedJet->px(), smearedJet->py(), smearedJet->pz(), smearedJet->energy());
-				jet->setFourVector(smearedJetFourVector);
-
-				//store the unsmeared jet and the matched generated jet in the jet (i.e.smeared jet) object
-				jet->set_unsmeared_jet(unsmearedJet);
-			}
-
-
-
-
-
-
-
-
-
 
 			double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
 			if (matchedPartonEnergy !=0) {
@@ -292,10 +262,6 @@ void JetReader::initialise() {
 	L2L3ResJECReader.initialise();
 	L2RelJECReader.initialise();
 	L3AbsJECReader.initialise();
-	JERReader.initialise();
-	JERSFReader.initialise();
-	JERSFUpReader.initialise();
-	JERSFDownReader.initialise();
 	pxReader.initialise();
 	pyReader.initialise();
 	pzReader.initialise();

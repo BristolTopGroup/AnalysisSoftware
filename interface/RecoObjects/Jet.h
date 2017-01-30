@@ -15,7 +15,6 @@
 #include <vector>
 #include <string>
 #include <boost/array.hpp>
-#include "TRandom3.h"
 
 namespace BAT {
 
@@ -76,9 +75,8 @@ public:
 
 	void set_unsmeared_jet(const ParticlePointer unsmearedjet);
 	const ParticlePointer unsmeared_jet();
-
-	static bool jet_matching(const ParticlePointer jet, const ParticlePointer gen_jet, double resolution);
-	static const ParticlePointer smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, double resolution, double scale_factor);
+	static double getJERScaleFactor( double scaleFactor, double uncertainty, int jet_smearing_systematic );
+	static const ParticlePointer smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic);
 //	const ParticlePointer smeared_Jet();
 
 	void set_raw_jet( const ParticlePointer rawJet );
