@@ -30,6 +30,10 @@ protected:
 	VariableReader<MultiDoublePointer> L2L3ResJECReader;
 	VariableReader<MultiDoublePointer> L2RelJECReader;
 	VariableReader<MultiDoublePointer> L3AbsJECReader;
+	VariableReader<MultiDoublePointer> JERReader;
+	VariableReader<MultiDoublePointer> JERSFReader;
+	VariableReader<MultiDoublePointer> JERSFUpReader;
+	VariableReader<MultiDoublePointer> JERSFDownReader;
 	VariableReader<MultiDoublePointer> pxReader;
 	VariableReader<MultiDoublePointer> pyReader;
 	VariableReader<MultiDoublePointer> pzReader;
