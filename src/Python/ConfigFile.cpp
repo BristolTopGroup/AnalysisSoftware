@@ -43,7 +43,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		muonTrackingHIPScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonTrackingHIPScaleFactorsFile")), //
 		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
 		electronIdScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdScaleFactorsFile")), //
-		electronIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIsoScaleFactorsFile")), //
+		electronRecoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronRecoScaleFactorsFile")), //
 		electronTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronTriggerScaleFactorsFile")), //
 		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
 		lightJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "lightJetResoFile")), //
@@ -123,7 +123,6 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("MuonTriggerScaleFactorsFile", value<std::string>(), "set input file for trigger muon scale factors");
 	desc.add_options()("MuonTrackingHIPScaleFactorsFile", value<std::string>(), "set input file for tracking HIP muon scale factors");
 	desc.add_options()("getElectronScaleFactorsFromFile", value<bool>(), "state whether we are getting the electron scale factors from a file or not");
-	desc.add_options()("ElectronIdIsoScaleFactorsFile", value<std::string>(), "set input file for electron ID & ISO scale factors");
 	desc.add_options()("ElectronTriggerScaleFactorsFile", value<std::string>(), "set input file for electron trigger scale factors");
 	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
 	desc.add_options()("lightJetResoFile", value<std::string>(), "set input root file for light jet L7 resolutions");
@@ -289,11 +288,11 @@ string ConfigFile::ElectronIdScaleFactorsFile() const {
 		return electronIdScaleFactorsFile_;
 }
 
-string ConfigFile::ElectronIsoScaleFactorsFile() const {
-	if (programOptions.count("ElectronIsoScaleFactorsFile"))
-		return programOptions["ElectronIsoScaleFactorsFile"].as<std::string>();
+string ConfigFile::ElectronRecoScaleFactorsFile() const {
+	if (programOptions.count("ElectronRecoScaleFactorsFile"))
+		return programOptions["ElectronRecoScaleFactorsFile"].as<std::string>();
 	else
-		return electronIsoScaleFactorsFile_;
+		return electronRecoScaleFactorsFile_;
 }
 
 string ConfigFile::ElectronTriggerScaleFactorsFile() const {
@@ -534,33 +533,20 @@ void ConfigFile::loadIntoMemory() {
 		// Globals::muonTrackingHIPScaleFactorsHistogram = getMuonTrackingHIPScaleFactorsHistogram(MuonTrackingHIPScaleFactorsFile());
 	}
 
-	if ( getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) && boost::filesystem::exists(ElectronIdScaleFactorsFile()) && boost::filesystem::exists(ElectronIsoScaleFactorsFile())) {
+	if ( getElectronScaleFactorsFromFile_ 
+		// && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) 
+		&& boost::filesystem::exists(ElectronIdScaleFactorsFile()) 
+		&& boost::filesystem::exists(ElectronRecoScaleFactorsFile())
+		) {
 		std::cout << "Getting electron scale factors from file :"  << std::endl
-			<< ElectronTriggerScaleFactorsFile()  << std::endl
+			// << ElectronTriggerScaleFactorsFile()  << std::endl
 			<< ElectronIdScaleFactorsFile() << std::endl
-			<< ElectronIsoScaleFactorsFile() << std::endl;
-		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
+			<< ElectronRecoScaleFactorsFile() << std::endl;
+		// Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
 		Globals::electronIdScaleFactorsHistogram = getElectronIdScaleFactorsHistogram(ElectronIdScaleFactorsFile());
-		Globals::electronIsoScaleFactorsHistogram = getElectronIsoScaleFactorsHistogram(ElectronIsoScaleFactorsFile());
+		Globals::electronRecoScaleFactorsHistogram = getElectronRecoScaleFactorsHistogram(ElectronRecoScaleFactorsFile());
 
 	}
-
-	// if (Globals::energyInTeV == 7 && getElectronScaleFactorsFromFile_ && boost::filesystem::exists(ElectronIdIsoScaleFactorsFile()) && boost::filesystem::exists(ElectronTriggerScaleFactorsFile())) {
-	// 	std::cout << "Getting electron scale factors from file " << ElectronIdIsoScaleFactorsFile() << " and " << ElectronTriggerScaleFactorsFile() << "." << std::endl;
-	// 	Globals::electronIdIsoScaleFactorsHistogram = getElectronIdIsoScaleFactorsHistogram(ElectronIdIsoScaleFactorsFile());
-	// 	Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
-	// } else {
-	// 	std::cout << "No electron scale factors file, corrections will be set to 1." << std::endl;
-	// }
-
-	if ( Globals::energyInTeV == 7 && getHadronTriggerFromFile_ ) {
-		std::cout << "Getting electron trigger hadron leg efficiencies from file " << hadronTriggerFile() << "." << std::endl;
-		getHadronTriggerLegHistogram(hadronTriggerFile());
-	} else {
-		std::cout << "No electron trigger hadron leg efficiencies file, corrections will be set to 1." << std::endl;
-	}
-
-
 
 	getCSVCorrectPermHistogram( TTbarLikelihoodFile() );
 	getCSVIncorrectPermHistogram( TTbarLikelihoodFile() );
@@ -705,21 +691,19 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronIdScaleFactorsHistogram(std::stri
 	return idHistogram;
 }
 
-boost::shared_ptr<TH2F> ConfigFile::getElectronIsoScaleFactorsHistogram(std::string electronIsoScaleFactorsFile) {
+boost::shared_ptr<TH2F> ConfigFile::getElectronRecoScaleFactorsHistogram(std::string electronRecoScaleFactorsFile) {
 	using namespace std;
 
-	if (!boost::filesystem::exists(electronIsoScaleFactorsFile)) {
-		cerr << "ConfigFile::getElectronIsoScaleFactorsHistogram(" << electronIsoScaleFactorsFile << "): could not find file" << endl;
-		throw "Could not find electron ISO scale factors histogram file in " + electronIsoScaleFactorsFile;
+	if (!boost::filesystem::exists(electronRecoScaleFactorsFile)) {
+		cerr << "ConfigFile::getElectronRecoScaleFactorsHistogram(" << electronRecoScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find electron Reco scale factors histogram file in " + electronRecoScaleFactorsFile;
 	}
 
-	boost::scoped_ptr<TFile> file(TFile::Open(electronIsoScaleFactorsFile.c_str()));
-	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("c0"));
-	// boost::shared_ptr<TH2D> idIsoHistogram((TH2D*) canvas->GetPrimitive("GlobalSF")->Clone());
-	boost::shared_ptr<TH2F> isoHistogram((TH2F*) file->Get("EGamma_SF2D")->Clone());
+	boost::scoped_ptr<TFile> file(TFile::Open(electronRecoScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH2F> recoHistogram((TH2F*) file->Get("EGamma_SF2D")->Clone());
 	file->Close();
 
-	return isoHistogram;
+	return recoHistogram;
 }
 
 boost::shared_ptr<TH1F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
@@ -740,26 +724,6 @@ boost::shared_ptr<TH1F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std:
 
 	return triggerHistogram;
 }
-
-void ConfigFile::getHadronTriggerLegHistogram(std::string hadronTriggerFile) {
-	using namespace std;
-
-	if (!boost::filesystem::exists(hadronTriggerFile)) {
-		cerr << "ConfigFile::getHadronTriggerLegHistogram(" << hadronTriggerFile << "): could not find file" << endl;
-		throw "Could not find hadron leg efficiency histogram file in " + hadronTriggerFile;
-	}
-
-	boost::scoped_ptr<TFile> file(TFile::Open(hadronTriggerFile.c_str()));
-
-	Globals::hadronTriggerLegEfficiencyHistogram_nonIsoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_1")->Clone("data_1"));
-	Globals::hadronTriggerLegEfficiencyHistogram_isoJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_2")->Clone("data_2"));
-	Globals::hadronTriggerLegEfficiencyHistogram_isoPFJets = (boost::shared_ptr<TEfficiency>) ((TEfficiency*) file->Get("data_3")->Clone("data_3"));
-
-	file->Close();
-}
-
-
-
 
 void ConfigFile::getCSVCorrectPermHistogram(std::string ttbarLikelihoodFile) {
 	using namespace std;
