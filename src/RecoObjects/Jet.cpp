@@ -180,109 +180,54 @@ const ParticlePointer Jet::raw_jet() {
 	return rawJet_;
 }
 
-double Jet::getJERScaleFactor( double scaleFactor, double uncertainty, int jet_smearing_systematic ) {
-	switch (jet_smearing_systematic) {
-		case -1:
-			scaleFactor = scaleFactor - uncertainty;
-			break;
-		case 1:
-			scaleFactor = scaleFactor + uncertainty;
-			break;
-		default:
-			scaleFactor = scaleFactor;
-			break;
+bool Jet::jet_matching(const ParticlePointer jet, const ParticlePointer gen_jet, double resolution) {
+
+	bool is_matched = false;
+	float dEta = jet->eta() - gen_jet->eta();
+	float dPhi = jet->phi() - gen_jet->phi();
+	float dR = sqrt(pow(dEta, 2)+pow(dPhi, 2));
+
+	float pt = jet->pt();
+	float dPt = jet->pt() - gen_jet->pt();
+
+	// Matching in dR (0.4 = AK4)
+	if ( dR <= 0.4/2 ){
+		// Matching in pT (vs resolution)
+		if ( dPt <= 3*resolution*pt){
+			is_matched = true;
+		}
 	}
-	return scaleFactor;
+	return is_matched;
 }
 
-const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, int jet_smearing_systematic) {
+const ParticlePointer Jet::smear_jet(const ParticlePointer jet, const ParticlePointer gen_jet, double resolution, double scale_factor) {
 	// Get the jet energy resolution scale factors, depending on the jet eta, from 
 	// https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
+	bool well_matched_jet = jet_matching(jet, gen_jet, resolution);
+	float smearing_factor;
 
-	// double scaleFactor(0.);
-	// switch (jet_smearing_systematic) {
-	// 	case -1:
-	// 		scaleFactor = 0.9;
-	// 		break;
-	// 	case 1:
-	// 		scaleFactor = 1.1;
-	// 		break;
-	// 	default:
-	// 		scaleFactor = 1.;
-	// 		break;
-	// }
-
-	double scaleFactor(0.);
-	if (fabs(jet->eta()) >= 0.0 && fabs(jet->eta()) < 0.5) {
-		double scaleFactorForgion = 1.109;
-		double uncertainty = 0.008;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
+	// Truncated at zero so can only get worse.
+	if ( well_matched_jet ){
+		// scaling method
+		smearing_factor = std::max(0., 1 + (scale_factor - 1)*(jet->pt() - gen_jet->pt())/jet->pt() );
 	}
-	if (fabs(jet->eta()) >= 0.5 && fabs(jet->eta()) < 0.8) {
-		double scaleFactorForgion = 1.138;
-		double uncertainty = 0.013;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
+	else{
+		// stochastic method
+		float RGN = gRandom->Gaus(0,resolution);
+		smearing_factor = std::max(0., 1 + RGN*sqrt(std::max(0., pow(scale_factor,2)-1) ) );
 	}
-	if (fabs(jet->eta()) >= 0.8 && fabs(jet->eta()) < 1.1) {
-		double scaleFactorForgion = 1.114;
-		double uncertainty = 0.013;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-	if (fabs(jet->eta()) >= 1.1 && fabs(jet->eta()) < 1.3) {
-		double scaleFactorForgion = 1.123;
-		double uncertainty = 0.024;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-	if (fabs(jet->eta()) >= 1.3 && fabs(jet->eta()) < 1.7) {
-		double scaleFactorForgion = 1.084;
-		double uncertainty = 0.011;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-	if (fabs(jet->eta()) >= 1.7 && fabs(jet->eta()) < 1.9) {
-		double scaleFactorForgion = 1.082;
-		double uncertainty = 0.035;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-	if (fabs(jet->eta()) >= 1.9 && fabs(jet->eta()) < 2.1) {
-		double scaleFactorForgion = 1.140;
-		double uncertainty = 0.047;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-	if (fabs(jet->eta()) >= 2.1 && fabs(jet->eta()) < 2.3) {
-		double scaleFactorForgion = 1.067;
-		double uncertainty = 0.053;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-	if (fabs(jet->eta()) >= 2.3 && fabs(jet->eta()) < 2.5) {
-		double scaleFactorForgion = 1.177;
-		double uncertainty = 0.041;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-	if (fabs(jet->eta()) >= 2.5 && fabs(jet->eta()) < 2.8) {
-		double scaleFactorForgion = 1.364;
-		double uncertainty = 0.039;
-		scaleFactor = getJERScaleFactor( scaleFactorForgion, uncertainty, jet_smearing_systematic );
-	}
-
-	//use raw scaleFactors from above to calculate the final factors to apply
-	double gen_pt = gen_jet->pt();
-	double reco_pt = jet->pt();
-
-	double new_pt = std::max(0.0, gen_pt + ( scaleFactor * (reco_pt - gen_pt)));
-
-	double ptScale = new_pt/reco_pt;
 	
 	//get the unsmeared reconstructed values
 	double energy_unsmeared = jet->energy();
-	double px_unsmeared = jet->px();
-	double py_unsmeared = jet->py();
-	double pz_unsmeared = jet->pz();
+	double px_unsmeared 	= jet->px();
+	double py_unsmeared 	= jet->py();
+	double pz_unsmeared 	= jet->pz();
 
 	//correct the reconstructed jet values
-	double energy_smeared = ptScale * energy_unsmeared;
-	double px_smeared = ptScale * px_unsmeared;
-	double py_smeared = ptScale * py_unsmeared;
-	double pz_smeared = pz_unsmeared;
+	double energy_smeared 	= smearing_factor * energy_unsmeared;
+	double px_smeared 		= smearing_factor * px_unsmeared;
+	double py_smeared 		= smearing_factor * py_unsmeared;
+	double pz_smeared 		= pz_unsmeared;
 
 	//make new jet to be a new variable to store the final smeared jet
 	const ParticlePointer smearedJet(new Particle(energy_smeared, px_smeared, py_smeared, pz_smeared));
