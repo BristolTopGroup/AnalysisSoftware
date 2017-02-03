@@ -487,38 +487,38 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	idSFError = electronIDScaleFactorsHistogram->GetBinError( bin );
 
 
-	// // Iso scalefactor
-	// double isoSF(1.);
-	// double isoSFError(0.);
-	// boost::shared_ptr<TH2F> electronIsoScaleFactorsHistogram(Globals::electronIsoScaleFactorsHistogram);
-	// maxPt = electronIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
+	// Reco scalefactor
+	double recoSF(1.);
+	double recoSFError(0.);
+	boost::shared_ptr<TH2F> electronRecoScaleFactorsHistogram(Globals::electronRecoScaleFactorsHistogram);
+	maxPt = electronRecoScaleFactorsHistogram->GetYaxis()->GetXmax();
 
-	// bin = 0;
-	// if ( electronPt <= maxPt ) {
-	// 	bin = electronIsoScaleFactorsHistogram->FindBin( electronEta, electronPt );
-	// }
-	// else {
-	// 	double lastPtBinCentre = electronIsoScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronIsoScaleFactorsHistogram->GetNbinsY() );
-	// 	bin = electronIsoScaleFactorsHistogram->FindBin( electronEta, lastPtBinCentre );
-	// }
-	// isoSF = electronIsoScaleFactorsHistogram->GetBinContent( bin );
-	// isoSFError = electronIsoScaleFactorsHistogram->GetBinError( bin );
+	bin = 0;
+	if ( electronPt <= maxPt ) {
+		bin = electronRecoScaleFactorsHistogram->FindBin( electronEta, electronPt );
+	}
+	else {
+		double lastPtBinCentre = electronRecoScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronRecoScaleFactorsHistogram->GetNbinsY() );
+		bin = electronRecoScaleFactorsHistogram->FindBin( electronEta, lastPtBinCentre );
+	}
+	recoSF = electronRecoScaleFactorsHistogram->GetBinContent( bin );
+	recoSFError = electronRecoScaleFactorsHistogram->GetBinError( bin );
 
 	if (electron_scale_factor_systematic == -1 ) {
 		idSF -= idSFError;
-		// isoSF -= isoSFError;
+		recoSF -= recoSFError;
 		triggerEfficiency = triggerEfficiency * ( 1 - triggerEfficiencyRelativeError );
 
 	}
 	else if ( electron_scale_factor_systematic == 1 ) {
 		idSF += idSFError;
-		// isoSF += isoSFError;
+		recoSF += recoSFError;
 		triggerEfficiency = triggerEfficiency * ( 1 + triggerEfficiencyRelativeError );
 	}
-	// return triggerEfficiency * idSF * isoSF;
-	// return triggerEfficiency * isoSF;
 
-	return idSF;
+	return idSF * recoSF;
+	// return triggerEfficiency * idSF * recoSF;
+
 }
 
 
