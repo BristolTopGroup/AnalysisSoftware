@@ -1,6 +1,6 @@
 import os
-mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.0/ntuple/v1.0.0/Moriond17/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.0/ntuple/v1.0.0/Moriond17/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.1/ntuple/v1.0.1/Moriond17/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.1/ntuple/v1.0.1/Moriond17/'
 
 datasets_13TeV = {
 
@@ -25,7 +25,7 @@ datasets_13TeV = {
 
     'TTJets_PowhegPythia8' : [ mc_path_13TeV + 'TTJets_PowhegPythia8/tmp/' ],
     'TTJets_PowhegPythia8_fsrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrdown/tmp/' ],
-    # 'TTJets_PowhegPythia8_fsrup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrup/tmp/' ],
+    'TTJets_PowhegPythia8_fsrup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrup/tmp/' ],
     'TTJets_PowhegPythia8_isrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_isrdown/tmp/' ],
     'TTJets_PowhegPythia8_isrup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_isrup/tmp/' ],
     'TTJets_PowhegPythia8_down' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_down/tmp/' ],
@@ -33,7 +33,7 @@ datasets_13TeV = {
     'TTJets_PowhegPythia8_mtop1695' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695/tmp/' ],
     'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755/tmp/' ],
 
-    # 'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX/tmp/' ],
+    'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX/tmp/' ],
 
     # 'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM/tmp/'],
     'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp/tmp/'],
@@ -41,6 +41,11 @@ datasets_13TeV = {
     # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch/tmp/'],
 
     'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50/tmp/' ],
+    'DY1JetsToLL_M50' : [ mc_path_13TeV + 'DY1JetsToLL_M50/tmp/' ],
+    'DY2JetsToLL_M50' : [ mc_path_13TeV + 'DY2JetsToLL_M50/tmp/' ],
+    'DY3JetsToLL_M50' : [ mc_path_13TeV + 'DY3JetsToLL_M50/tmp/' ],
+    'DY4JetsToLL_M50' : [ mc_path_13TeV + 'DY4JetsToLL_M50/tmp/' ],
+
     'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu/tmp/' ],
     'W1JetsToLNu' : [ mc_path_13TeV + 'W1JetsToLNu/tmp/' ],
     'W2JetsToLNu' : [ mc_path_13TeV + 'W2JetsToLNu/tmp/' ],
