@@ -51,6 +51,8 @@ if __name__ == '__main__':
 		# 			filename = datasamplename+'_ntuple_'+tmp[2]+'.root'
 		# 			print >> out, filename
 	
+		if dataset.startswith("Single"): continue
+
 		files = []
 		path = basepath[0]
 		# ntuplepath = temp_ntuplepath.format(
