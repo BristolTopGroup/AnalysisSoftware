@@ -143,8 +143,7 @@ bool Event::isTTJet( DataType::value type) const {
     	type == DataType::TTJets_PowhegPythia8_mtop1695 ||
     	type == DataType::TTJets_PowhegPythia8_mtop1755 ||
     	type == DataType::TTJets_madgraphMLM ||
-		type == DataType::TTJets_PowhegHerwigpp ||
-		type == DataType::TTJets_amcatnloHerwigpp
+		type == DataType::TTJets_PowhegHerwigpp
 		// type == DataType::TTJets_synch
 		)
 		return true;
@@ -805,14 +804,6 @@ const bool Event::passesSignalLeptonSelection( const unsigned int selectionCrite
 	 ) {
 		ptThreshold = minSignalElectronPt_;
 		etaThreshold = minSignalElectronEta_;
-
-		// Selection on electron d0 and dz not in VID selection, so apply here.
-		if ( signalLepton->isInBarrelRegion() ) {
-			if ( signalLepton->d0() > 0.05 ) return false;
-		}
-		else {
-			if ( signalLepton->d0() > 0.1 ) return false;
-		}
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ||
 		 		selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ||
