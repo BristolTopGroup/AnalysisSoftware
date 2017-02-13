@@ -837,7 +837,7 @@ void ConfigFile::getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikeliho
 void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
-	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("bQuarkJets_BTags_Hist");
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("bQuarkJets_Ratio_Hist");
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getbQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
 		throw "Could not find file " + btagEfficiencyFile;
@@ -855,7 +855,7 @@ void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
-	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("cQuarkJets_BTags_Hist");
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("cQuarkJets_Ratio_Hist");
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getcQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -871,7 +871,7 @@ void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 void ConfigFile::getudsgQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
-	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("udsgQuarkJets_BTags_Hist");
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("udsgQuarkJets_Ratio_Hist");
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getudsgQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -908,8 +908,8 @@ std::string ConfigFile::checkEffFileExists(std::string btagEfficiencyFile, std::
 
 std::string ConfigFile::getSampleBTagEffTag(std::string sample) {
 	if (sample == "TTJets_PowhegPythia8") return "PowhegPythia8/";
-	// else if (sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
-	// else if (sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
+	else if (sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
+	else if (sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
 	// else if (sample == "TTJets_amcatnloHerwigpp") return "aMCatNLOHerwigpp/";
 	// else if (sample == "TTJets_madgraphMLM") return "Madgraph/";
 	else return "PowhegPythia8/";
