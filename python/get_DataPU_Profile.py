@@ -9,7 +9,7 @@ import subprocess
 jsonFile = 'Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
 pileupJson = 'pileup_latest.txt'
 
-minBiasXsec = 69200
+minBiasXsec = 69000
 uncertainty = 0.049#%
 
 variations = {
