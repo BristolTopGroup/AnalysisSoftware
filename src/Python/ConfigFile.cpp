@@ -529,7 +529,7 @@ void ConfigFile::loadIntoMemory() {
 			// << MuonTrackingHIPScaleFactorsFile() <<std::endl;
 		Globals::muonIdScaleFactorsHistogram = getMuonIdScaleFactorsHistogram(MuonIdScaleFactorsFile());
 		Globals::muonIsoScaleFactorsHistogram = getMuonIsoScaleFactorsHistogram(MuonIsoScaleFactorsFile());
-		// Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
+		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
 		// Globals::muonTrackingHIPScaleFactorsHistogram = getMuonTrackingHIPScaleFactorsHistogram(MuonTrackingHIPScaleFactorsFile());
 	}
 
@@ -655,7 +655,7 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonTriggerScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("abseta_pt_DATA")->Clone());
+	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("abseta_pt_ratio")->Clone());
 	file->Close();
 
 	return triggerHistogram;
