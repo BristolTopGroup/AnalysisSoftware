@@ -6,7 +6,8 @@ class scaleFactorsForPeriod:
 		self.scaleFactorName = scaleFactorName
 		self.lumi = lumi
 
-doIsolationSF = True
+doIsolationSF = False
+doTriggerSF = True
 
 if __name__ == '__main__':
 
@@ -18,6 +19,12 @@ if __name__ == '__main__':
 			scaleFactorsForPeriod( '../data/EfficienciesAndSF_Isolation_GH.root', 'TightISO_TightID_pt_eta/abseta_pt_ratio', 16.3 )
 		]
 		outputFileName = '../data/EfficienciesAndSF_Isolation_COMBINED.root'
+	elif doTriggerSF:
+		scaleFactorsToAverage = [
+			scaleFactorsForPeriod( '../data/EfficienciesAndSF_RunBtoF.root', 'IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio', 20.1 ),
+			scaleFactorsForPeriod( '../data/EfficienciesAndSF_Period4.root', 'IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio', 16.3 )
+		]
+		outputFileName = '../data/EfficienciesAndSF_Trigger_COMBINED.root'
 	else:
 		scaleFactorsToAverage = [
 			scaleFactorsForPeriod( '../data/EfficienciesAndSF_BCDEF.root', 'MC_NUM_TightID_DEN_genTracks_PAR_pt_eta/abseta_pt_ratio', 20.1 ),
