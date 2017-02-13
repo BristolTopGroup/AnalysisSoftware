@@ -163,8 +163,8 @@ double Muon::relTrkIso() const {
 
 double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	
-	// double triggerEfficiency(1.);
-	// double triggerEfficiencyError(0.);
+	double triggerEfficiency(1.);
+	double triggerEfficiencyError(0.);
 	boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
 	double muonPt = pt();
 	double muonEta = eta();
@@ -172,14 +172,14 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	double maxPt = muonTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
 
 	unsigned int bin = 0;
-	// if ( muonPt <= maxPt ) {
-	// 	bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
-	// }
-	// else {
-	// 	double lastPtBinCentre = muonTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( muonTriggerScaleFactorsHistogram->GetNbinsY() );
-	// 	bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, lastPtBinCentre );
-	// }
-	// triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
+	if ( muonPt <= maxPt ) {
+		bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
+	}
+	else {
+		double lastPtBinCentre = muonTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( muonTriggerScaleFactorsHistogram->GetNbinsY() );
+		bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, lastPtBinCentre );
+	}
+	triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
 	// triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
 
 	//
@@ -232,16 +232,16 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	if (muon_scale_factor_systematic == -1 ) {
 		idSF -= idSFError;
 		isoSF -= isoSFError;
-		// triggerEfficiency -= triggerEfficiencyError;
+		triggerEfficiency -= triggerEfficiencyError;
 	}
 	else if (muon_scale_factor_systematic == +1 ) {
 		idSF += idSFError;
 		isoSF += isoSFError;
-		// triggerEfficiency += triggerEfficiencyError;
+		triggerEfficiency += triggerEfficiencyError;
 	}
 
 	// return idSF * isoSF * triggerEfficiency * hipSF;
-	return idSF * isoSF;
+	return idSF * isoSF * triggerEfficiency;
 
 }
 }
