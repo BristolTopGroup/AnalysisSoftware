@@ -452,36 +452,40 @@ double Electron::mvaNonTrigV0() const {
 
 
 double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) const {
-
-	double triggerEfficiency(1.);
-	double triggerEfficiencyRelativeError(0.1);
-	// boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
 	double electronPt = pt();
-	double electronEta = fabs(eta());
-	// double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
-	// unsigned int bin = 0;
-	// if ( electronPt <= maxPt ) {
-	// 	bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt );
-	// }
-	// else {
-	// 	bin = electronTriggerScaleFactorsHistogram->GetNbinsX();
-	// }
+	// double electronEta = fabs(eta());
+	double electronSCEta = superClusterEta();
+	unsigned int bin = 0;
 
-	// triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
+	// Trigger scalefactor
+	double triggerEfficiency(1.);
+	double triggerEfficiencyError(0.);
+	boost::shared_ptr<TH2F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
+	double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
+
+	if ( electronPt <= maxPt ) {
+		bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt, electronSCEta );
+	}
+	else {
+		double lastPtBinCentre = electronTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronTriggerScaleFactorsHistogram->GetNbinsY() );
+		bin = electronTriggerScaleFactorsHistogram->FindBin( lastPtBinCentre, electronSCEta );
+	}
+	triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
+	triggerEfficiencyError = electronTriggerScaleFactorsHistogram->GetBinError( bin );
 
 	// ID scalefactor
 	double idSF(1.);
 	double idSFError(0.);
 	boost::shared_ptr<TH2F> electronIDScaleFactorsHistogram(Globals::electronIdScaleFactorsHistogram);
-	double maxPt = electronIDScaleFactorsHistogram->GetYaxis()->GetXmax();
+	maxPt = electronIDScaleFactorsHistogram->GetYaxis()->GetXmax();
 
-	unsigned int bin = 0;
+	bin = 0;
 	if ( electronPt <= maxPt ) {
-		bin = electronIDScaleFactorsHistogram->FindBin( electronEta, electronPt );
+		bin = electronIDScaleFactorsHistogram->FindBin( electronSCEta, electronPt );
 	}
 	else {
 		double lastPtBinCentre = electronIDScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronIDScaleFactorsHistogram->GetNbinsY() );
-		bin = electronIDScaleFactorsHistogram->FindBin( electronEta, lastPtBinCentre );
+		bin = electronIDScaleFactorsHistogram->FindBin( electronSCEta, lastPtBinCentre );
 	}
 	idSF = electronIDScaleFactorsHistogram->GetBinContent( bin );
 	idSFError = electronIDScaleFactorsHistogram->GetBinError( bin );
@@ -495,11 +499,11 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 
 	bin = 0;
 	if ( electronPt <= maxPt ) {
-		bin = electronRecoScaleFactorsHistogram->FindBin( electronEta, electronPt );
+		bin = electronRecoScaleFactorsHistogram->FindBin( electronSCEta, electronPt );
 	}
 	else {
 		double lastPtBinCentre = electronRecoScaleFactorsHistogram->GetYaxis()->GetBinCenter( electronRecoScaleFactorsHistogram->GetNbinsY() );
-		bin = electronRecoScaleFactorsHistogram->FindBin( electronEta, lastPtBinCentre );
+		bin = electronRecoScaleFactorsHistogram->FindBin( electronSCEta, lastPtBinCentre );
 	}
 	recoSF = electronRecoScaleFactorsHistogram->GetBinContent( bin );
 	recoSFError = electronRecoScaleFactorsHistogram->GetBinError( bin );
@@ -507,17 +511,17 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	if (electron_scale_factor_systematic == -1 ) {
 		idSF -= idSFError;
 		recoSF -= recoSFError;
-		triggerEfficiency = triggerEfficiency * ( 1 - triggerEfficiencyRelativeError );
+		triggerEfficiency -= triggerEfficiencyError;
 
 	}
 	else if ( electron_scale_factor_systematic == 1 ) {
 		idSF += idSFError;
 		recoSF += recoSFError;
-		triggerEfficiency = triggerEfficiency * ( 1 + triggerEfficiencyRelativeError );
+		triggerEfficiency += triggerEfficiencyError;
 	}
 
-	return idSF * recoSF;
-	// return triggerEfficiency * idSF * recoSF;
+	// return idSF * recoSF;
+	return triggerEfficiency * idSF * recoSF;
 
 }
 

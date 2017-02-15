@@ -59,7 +59,7 @@ struct Globals {
 	//electrons
 	static ElectronAlgorithm::value electronAlgorithm;
 	static int ElectronScaleFactorSystematic;
-	static boost::shared_ptr<TH1F> electronTriggerScaleFactorsHistogram;
+	static boost::shared_ptr<TH2F> electronTriggerScaleFactorsHistogram;
 	static boost::shared_ptr<TH2F> electronIdScaleFactorsHistogram;
 	static boost::shared_ptr<TH2F> electronRecoScaleFactorsHistogram;
 

@@ -534,12 +534,12 @@ void ConfigFile::loadIntoMemory() {
 	}
 
 	if ( getElectronScaleFactorsFromFile_ 
-		// && boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) 
+		&& boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) 
 		&& boost::filesystem::exists(ElectronIdScaleFactorsFile()) 
 		&& boost::filesystem::exists(ElectronRecoScaleFactorsFile())
 		) {
 		std::cout << "Getting electron scale factors from file :"  << std::endl
-			// << ElectronTriggerScaleFactorsFile()  << std::endl
+			<< ElectronTriggerScaleFactorsFile()  << std::endl
 			<< ElectronIdScaleFactorsFile() << std::endl
 			<< ElectronRecoScaleFactorsFile() << std::endl;
 		// Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
@@ -706,7 +706,7 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronRecoScaleFactorsHistogram(std::st
 	return recoHistogram;
 }
 
-boost::shared_ptr<TH1F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
+boost::shared_ptr<TH2F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
 	using namespace std;
 
 	if (!boost::filesystem::exists(electronTriggerScaleFactorsFile)) {
@@ -715,11 +715,8 @@ boost::shared_ptr<TH1F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std:
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronTriggerScaleFactorsFile.c_str()));
-	// boost::scoped_ptr<TCanvas> canvas( (TCanvas*) file->Get("GsfElectronHLTMedium/HLT/fit_eff_plots/probe_pt_PLOT") );
-	boost::shared_ptr<TH1F> triggerHistogram((TH1F*) file->Get("eff"));
+	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("Ele32_eta2p1_WPTight_Gsf"));
 	
-
-	// boost::shared_ptr<TEfficiency> triggerHistogram((TEfficiency*) file->Get("data")->Clone());
 	file->Close();
 
 	return triggerHistogram;
