@@ -517,20 +517,23 @@ void ConfigFile::loadIntoMemory() {
 	Globals::MuonScaleFactorSystematic = muonScaleFactorSystematic();
 
 	if ( getMuonScaleFactorsFromFile_ 
-		// && boost::filesystem::exists(MuonTriggerScaleFactorsFile()) 
+		&& boost::filesystem::exists(MuonTriggerScaleFactorsFile()) 
 		&& boost::filesystem::exists(MuonIdScaleFactorsFile()) 
 		&& boost::filesystem::exists(MuonIsoScaleFactorsFile())
 		// && boost::filesystem::exists(MuonTrackingHIPScaleFactorsFile())
 		) {
 		std::cout << "Getting muon scale factors from files :" << std::endl 
 			<< MuonIdScaleFactorsFile() << std::endl
-			<< MuonIsoScaleFactorsFile() << std::endl;
-			// << MuonTriggerScaleFactorsFile() << std::endl
+			<< MuonIsoScaleFactorsFile() << std::endl
+			<< MuonTriggerScaleFactorsFile() << std::endl;
 			// << MuonTrackingHIPScaleFactorsFile() <<std::endl;
 		Globals::muonIdScaleFactorsHistogram = getMuonIdScaleFactorsHistogram(MuonIdScaleFactorsFile());
 		Globals::muonIsoScaleFactorsHistogram = getMuonIsoScaleFactorsHistogram(MuonIsoScaleFactorsFile());
 		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
 		// Globals::muonTrackingHIPScaleFactorsHistogram = getMuonTrackingHIPScaleFactorsHistogram(MuonTrackingHIPScaleFactorsFile());
+	}
+	else{
+		std::cout << "Unable to get muon scale factors from file - Check input file names"  << std::endl;
 	}
 
 	if ( getElectronScaleFactorsFromFile_ 
@@ -542,10 +545,13 @@ void ConfigFile::loadIntoMemory() {
 			<< ElectronTriggerScaleFactorsFile()  << std::endl
 			<< ElectronIdScaleFactorsFile() << std::endl
 			<< ElectronRecoScaleFactorsFile() << std::endl;
-		// Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
+		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
 		Globals::electronIdScaleFactorsHistogram = getElectronIdScaleFactorsHistogram(ElectronIdScaleFactorsFile());
 		Globals::electronRecoScaleFactorsHistogram = getElectronRecoScaleFactorsHistogram(ElectronRecoScaleFactorsFile());
 
+	}
+	else{
+		std::cout << "Unable to get electron scale factors from file - Check input file names"  << std::endl;
 	}
 
 	getCSVCorrectPermHistogram( TTbarLikelihoodFile() );
@@ -708,6 +714,7 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronRecoScaleFactorsHistogram(std::st
 
 boost::shared_ptr<TH2F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile) {
 	using namespace std;
+	// although labelled abseta_pt_ratio due to formation from combineLeptonSF, it should be pt_abseta_ratio
 
 	if (!boost::filesystem::exists(electronTriggerScaleFactorsFile)) {
 		cerr << "ConfigFile::getElectronTriggerScaleFactorsHistogram(" << electronTriggerScaleFactorsFile << "): could not find file" << endl;
@@ -715,7 +722,7 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std:
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronTriggerScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("Ele32_eta2p1_WPTight_Gsf"));
+	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("abseta_pt_ratio"));
 	
 	file->Close();
 
