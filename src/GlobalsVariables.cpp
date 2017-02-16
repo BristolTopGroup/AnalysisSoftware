@@ -52,7 +52,7 @@ ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::Particl
 int Globals::ElectronScaleFactorSystematic = 0;
 boost::shared_ptr<TH2F> Globals::electronIdScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH2F> Globals::electronRecoScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
-boost::shared_ptr<TH1F> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TH1F>(new TH1F());
+boost::shared_ptr<TH2F> Globals::electronTriggerScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
 
 //muons
 MuonAlgorithm::value Globals::muonAlgorithm = MuonAlgorithm::ParticleFlow;
