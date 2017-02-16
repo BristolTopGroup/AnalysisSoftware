@@ -98,6 +98,16 @@ enum value {
 	QCD_MuEnriched_800to1000,
 	QCD_MuEnriched_1000toInf,
 
+	QCD_50to80,
+	QCD_80to120,
+	QCD_120to170,
+	QCD_170to300,
+	QCD_300to470,
+	QCD_470to600,
+	QCD_600to800,
+	QCD_800to1000,
+	// QCD_1000toInf,
+
 	NUMBER_OF_DATA_TYPES
 };
 
@@ -189,7 +199,17 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_MuEnriched_470to600",
 		"QCD_MuEnriched_600to800",
 		"QCD_MuEnriched_800to1000",
-		"QCD_MuEnriched_1000toInf"
+		"QCD_MuEnriched_1000toInf",
+
+		"QCD_50to80",
+		"QCD_80to120",
+		"QCD_120to170",
+		"QCD_170to300",
+		"QCD_300to470",
+		"QCD_470to600",
+		"QCD_600to800",
+		"QCD_800to1000",
+		// "QCD_1000toInf",
 		} };
 
 DataType::value getDataType(const std::string filename);
