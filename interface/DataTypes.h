@@ -106,8 +106,11 @@ enum value {
 	QCD_470to600,
 	QCD_600to800,
 	QCD_800to1000,
-	// QCD_1000toInf,
-
+	QCD_1000to1400,
+	QCD_1400to1800,
+	QCD_1800to2400,
+	QCD_2400to3200,
+	QCD_3200toInf,
 	NUMBER_OF_DATA_TYPES
 };
 
@@ -209,8 +212,12 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"QCD_470to600",
 		"QCD_600to800",
 		"QCD_800to1000",
-		// "QCD_1000toInf",
-		} };
+		"QCD_1000to1400",
+		"QCD_1400to1800",
+		"QCD_1800to2400",
+		"QCD_2400to3200",
+	    "QCD_3200toInf",
+} };
 
 DataType::value getDataType(const std::string filename);
 }
