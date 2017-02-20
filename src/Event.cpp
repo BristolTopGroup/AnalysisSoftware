@@ -132,7 +132,8 @@ const DataType::value Event::getDataType() const {
 bool Event::isTTJet( DataType::value type) const {
 	if (
 		type == DataType::TTJets_amcatnloFXFX ||
-		type == DataType::TTJets_madgraphMLM ||
+		type == DataType::TTJets_madgraph ||
+		type == DataType::TTJets_PowhegHerwigpp ||
     	type == DataType::TTJets_PowhegPythia8 ||
     	type == DataType::TTJets_PowhegPythia8_fsrdown ||
     	type == DataType::TTJets_PowhegPythia8_fsrup ||
@@ -141,9 +142,7 @@ bool Event::isTTJet( DataType::value type) const {
     	type == DataType::TTJets_PowhegPythia8_down ||
     	type == DataType::TTJets_PowhegPythia8_up ||
     	type == DataType::TTJets_PowhegPythia8_mtop1695 ||
-    	type == DataType::TTJets_PowhegPythia8_mtop1755 ||
-    	type == DataType::TTJets_madgraphMLM ||
-		type == DataType::TTJets_PowhegHerwigpp
+    	type == DataType::TTJets_PowhegPythia8_mtop1755
 		// type == DataType::TTJets_synch
 		)
 		return true;
