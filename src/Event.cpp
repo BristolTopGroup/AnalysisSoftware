@@ -132,7 +132,7 @@ const DataType::value Event::getDataType() const {
 bool Event::isTTJet( DataType::value type) const {
 	if (
 		type == DataType::TTJets_amcatnloFXFX ||
-		type == DataType::TTJets_madgraph ||
+		type == DataType::TTJets_madgraphMLM ||
 		type == DataType::TTJets_PowhegHerwigpp ||
     	type == DataType::TTJets_PowhegPythia8 ||
     	type == DataType::TTJets_PowhegPythia8_fsrdown ||

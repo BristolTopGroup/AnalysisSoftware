@@ -915,7 +915,7 @@ std::string ConfigFile::getSampleBTagEffTag(std::string sample){
 	if (sample == "TTJets_PowhegPythia8") return "PowhegPythia8/";
 	else if( sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
 	else if( sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
-	else if( sample == "TTJets_madgraph") return "Madgraph/";
+	else if( sample == "TTJets_madgraphMLM") return "Madgraph/";
 	else if( sample == "TTJets_PowhegPythia8_fsrdown") return "PowhegPythia8_fsrup/";
 	else if( sample == "TTJets_PowhegPythia8_fsrup") return "PowhegPythia8_fsrdown/";
 	else if( sample == "TTJets_PowhegPythia8_isrdown") return "PowhegPythia8_isrup/";

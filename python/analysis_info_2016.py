@@ -34,7 +34,7 @@ datasets_13TeV = {
     'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755/tmp/' ],
 
     'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX/tmp/' ],
-    'TTJets_madgraph' : [ mc_path_13TeV + 'TTJets_madgraph/tmp/'],
+    'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM/tmp/'],
     'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp/tmp/'],
 
     # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch/tmp/'],
