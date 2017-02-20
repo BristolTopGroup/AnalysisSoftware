@@ -910,12 +910,20 @@ std::string ConfigFile::checkEffFileExists(std::string btagEfficiencyFile, std::
 	}
 }
 
-std::string ConfigFile::getSampleBTagEffTag(std::string sample) {
+std::string ConfigFile::getSampleBTagEffTag(std::string sample){
+	// Use std::map here?
 	if (sample == "TTJets_PowhegPythia8") return "PowhegPythia8/";
-	else if (sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
-	else if (sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
-	// else if (sample == "TTJets_amcatnloHerwigpp") return "aMCatNLOHerwigpp/";
-	// else if (sample == "TTJets_madgraphMLM") return "Madgraph/";
+	else if( sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
+	else if( sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
+	else if( sample == "TTJets_madgraph") return "Madgraph/";
+	else if( sample == "TTJets_PowhegPythia8_fsrdown") return "PowhegPythia8_fsrup/";
+	else if( sample == "TTJets_PowhegPythia8_fsrup") return "PowhegPythia8_fsrdown/";
+	else if( sample == "TTJets_PowhegPythia8_isrdown") return "PowhegPythia8_isrup/";
+	else if( sample == "TTJets_PowhegPythia8_isrup") return "PowhegPythia8_isrdown/";
+	else if( sample == "TTJets_PowhegPythia8_down") return "PowhegPythia8_up/";
+	else if( sample == "TTJets_PowhegPythia8_up") return "PowhegPythia8_down/";
+	else if( sample == "TTJets_PowhegPythia8_mtop1695") return "PowhegPythia8_mtop1755/";
+	else if( sample == "TTJets_PowhegPythia8_mtop1755") return "PowhegPythia8_mtop1695/";
 	else return "PowhegPythia8/";
 }
 

@@ -53,7 +53,7 @@ datasetInfo['TTJets_PowhegPythia8_mtop1695'] = { "cross-section" : 831.76,    "N
 datasetInfo['TTJets_PowhegPythia8_mtop1755'] = { "cross-section" : 831.76,    "NumberOfProcessedEvents" :9930052}
 
 datasetInfo['TTJets_amcatnloFXFX'] = { "cross-section" : 831.76,    "NumberOfProcessedEvents" :15065716}
-datasetInfo['TTJets_madgraphMLM'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :0} 
+datasetInfo['TTJets_madgraph'] = { "cross-section" : 831.76,  "NumberOfProcessedEvents" :10139950}
 datasetInfo['TTJets_PowhegHerwigpp'] = { "cross-section" : 831.76,    "NumberOfProcessedEvents" :29190938}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/CMS/StandardModelCrossSectionsat13TeV

@@ -45,7 +45,7 @@ enum value {
     TTJets_PowhegPythia8_mtop1755,
 
 	TTJets_amcatnloFXFX,
-	TTJets_madgraphMLM,
+	TTJets_madgraph,
 	TTJets_PowhegHerwigpp,
 
 	// TTJets_synch,
@@ -140,7 +140,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		// "TTJets_amcatnloFXFX_mtop1695",
 		// "TTJets_amcatnloFXFX_mtop1755",
 
-		"TTJets_madgraphMLM",
+		"TTJets_madgraph",
 		"TTJets_PowhegHerwigpp",
 
 		// "TTJets_synch",

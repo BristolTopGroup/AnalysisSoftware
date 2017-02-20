@@ -1,6 +1,6 @@
 import os
-mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.1/ntuple/v1.0.1/Moriond17/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.1/ntuple/v1.0.1/Moriond17/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.3/ntuple/v1.0.3/Moriond17/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.3/ntuple/v1.0.3/Moriond17/'
 
 datasets_13TeV = {
 
@@ -34,8 +34,7 @@ datasets_13TeV = {
     'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755/tmp/' ],
 
     'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX/tmp/' ],
-
-    # 'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM/tmp/'],
+    'TTJets_madgraph' : [ mc_path_13TeV + 'TTJets_madgraph/tmp/'],
     'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp/tmp/'],
 
     # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch/tmp/'],
