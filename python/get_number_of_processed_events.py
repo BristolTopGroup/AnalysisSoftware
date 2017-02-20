@@ -39,7 +39,7 @@ if __name__ == '__main__':
 	# out = open('data_ntuples_in_use.txt', 'wt')
 
 	for dataset, basepath in datasets_13TeV.iteritems():
-		
+
 		# # What data ntuples are being used?
 		# if dataset.startswith("Single"): 
 		# 	for f in datasets_13TeV[dataset]:
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 			rootfile = TFile(file_path)
 			hist = rootfile.Get("topPairEPlusJetsSelectionAnalyser/individualCuts")
 			if not hist : 
-				print "Waaargh help. Can't find histogram for : ", f
+				print "Waaargh help. Can't find histogram for : ", file_path
 				continue
 			ntuple_processed_events = hist.GetBinContent(1)
 			# print file_path
