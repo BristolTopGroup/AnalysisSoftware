@@ -59,6 +59,7 @@ public:
 	unsigned int centerOfMassEnergy() const;
 	unsigned int nTupleVersion() const;
 	std::string sample() const;
+	std::string mode() const;
 	int electronScaleFactorSystematic() const;
 	int muonScaleFactorSystematic() const;
 	int jesSystematic() const;
@@ -103,7 +104,7 @@ private:
 	double lumi_;
 	unsigned int centerOfMassEnergy_;
 	unsigned int nTupleVersion_;
-	std::string sample_;
+	std::string sample_, mode_;
 	int electronScaleFactorSystematic_;
 	int muonScaleFactorSystematic_;
 	int jesSystematic_;
@@ -146,7 +147,7 @@ private:
 	void getcQuarkJet(std::string btagEfficiencyFile);
 	void getudsgQuarkJet(std::string btagEfficiencyFile);
 	std::string checkEffFileExists(std::string btagEfficiencyFile, std::string histpath);
-	std::string getSampleBTagEffTag(std::string sample);
+	std::string getSampleBTagEffTag(std::string sample, std::string mode);
 
 };
 

@@ -57,6 +57,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		centerOfMassEnergy_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "centerOfMassEnergy")), //
 		nTupleVersion_(PythonParser::getAttributeFromPyObject<unsigned int>(config, "nTuple_version")), //
 		sample_(PythonParser::getAttributeFromPyObject<string>(config, "sample")), //
+		mode_(PythonParser::getAttributeFromPyObject<string>(config, "analysisMode")), //
 		electronScaleFactorSystematic_(0), //
 		muonScaleFactorSystematic_(0), //
 		jesSystematic_(0), //
@@ -841,7 +842,8 @@ void ConfigFile::getLeptonicRecoIncorrectPermHistogram(std::string ttbarLikeliho
 void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
-	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("bQuarkJets_Ratio_Hist");
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_, mode_).append("bQuarkJets_Ratio_Hist");
+
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getbQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
 		throw "Could not find file " + btagEfficiencyFile;
@@ -859,7 +861,7 @@ void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
-	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("cQuarkJets_Ratio_Hist");
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_, mode_).append("cQuarkJets_Ratio_Hist");
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getcQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -875,7 +877,7 @@ void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 void ConfigFile::getudsgQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
-	std::string pathToBTagEff = getSampleBTagEffTag(sample_).append("udsgQuarkJets_Ratio_Hist");
+	std::string pathToBTagEff = getSampleBTagEffTag(sample_, mode_).append("udsgQuarkJets_Ratio_Hist");
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getudsgQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -910,9 +912,13 @@ std::string ConfigFile::checkEffFileExists(std::string btagEfficiencyFile, std::
 	}
 }
 
-std::string ConfigFile::getSampleBTagEffTag(std::string sample){
-	// Use std::map here?
-	if (sample == "TTJets_PowhegPythia8") return "PowhegPythia8/";
+std::string ConfigFile::getSampleBTagEffTag(std::string sample, std::string mode){
+	if (sample == "TTJets_PowhegPythia8"){
+		if 		(mode == "JES_up") return "PowhegPythia8_plusJES/";
+		else if (mode == "JES_down") return "PowhegPythia8_minusJES/";
+		else if (mode == "JetSmearing_up") return "PowhegPythia8_plusJER/";
+		else if (mode == "JetSmearing_down") return "PowhegPythia8_minusJER/";
+		else return "PowhegPythia8/";}
 	else if( sample == "TTJets_PowhegHerwigpp") return "PowhegHerwigpp/";
 	else if( sample == "TTJets_amcatnloFXFX") return "aMCatNLOPythia8/";
 	else if( sample == "TTJets_madgraphMLM") return "Madgraph/";
@@ -935,4 +941,7 @@ std::string ConfigFile::sample() const {
 	return sample_;
 }
 
+std::string ConfigFile::mode() const {
+	return mode_;
+}
 } /* namespace BAT */
