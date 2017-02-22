@@ -34,13 +34,6 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		double jetPt = jet->pt();
 		if ( jetPt < 30 ) continue;
 
-		// If the pt of the jet is outside the pt range of the SFs,
-		// use the pt at the upper/lower edge and double the uncertainty.
-		bool ptOutOfRange = false;
-		if ( jetPt <= 30 || jet->pt() >= 670 ) {
-			ptOutOfRange = true;
-		}
-
 		const unsigned int hadronFlavour = abs( jet->hadronFlavour() );
 		const bool isBTagged = jet->isBJet();
 		bool isLight = false;
@@ -63,14 +56,6 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 			sf = jet->getTightBTagSF( 0 );
 			sf_up = jet->getTightBTagSF( 1 );
 			sf_down = jet->getTightBTagSF( -1 );
-		}
-
-		if ( ptOutOfRange ) {
-			sf_up = sf + 2 * ( sf_up - sf );
-			sf_down = sf - 2 * ( sf - sf_down );
-
-			if ( sf_up < 0 ) sf_up = 0;
-			if ( sf_down < 0 ) sf_down = 0;
 		}
 
 		// Get efficiency for this jet
@@ -170,28 +155,39 @@ double BTagWeight::getEfficiency( const unsigned int hadronFlavour, const JetPoi
 	else if ( hadronFlavour == 0) { // u/d/s/g/unclassified-quark
 		return getUDSGEfficiency ( jet );
 	}
-	// else if ( partonFlavour == 21) { //gluon
-	// 	return getGEfficiency( jet );
-	// }
 	else return 0.;
 }
 
 float BTagWeight::getBEfficiency(const JetPointer jet) const {
-
-	const double jetPt = jet->pt();
+	double jetPt = jet->pt();
 	const double jetEta = jet->eta();
-	// std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
+	const double maxPt = Globals::bQuarkJet->GetXaxis()->GetXmax();
+
+	// If pt out of range set to last bin. eta not a consideration as analysis cut is last bin
+	if ( jetPt >= maxPt ) {
+		jetPt = Globals::bQuarkJet->GetXaxis()->GetBinCenter( Globals::bQuarkJet->GetNbinsX() );
+	}
+
 	int binNumber = Globals::bQuarkJet->FindBin( jetPt , jetEta );
 	float BTagEff = Globals::bQuarkJet->GetBinContent( binNumber );
-	// std::cout << "B-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
+
+	// if ( jetPt >= maxPt ) {
+	// 	std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
+	// 	std::cout << "B-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
+	// }
 	return BTagEff;
 }
 
 double BTagWeight::getCEfficiency(const JetPointer jet) const {
-
-	const double jetPt = jet->pt();
+	double jetPt = jet->pt();
 	const double jetEta = jet->eta();
-	// std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
+	const double maxPt = Globals::cQuarkJet->GetXaxis()->GetXmax();
+
+	// If pt out of range set to last bin. eta not a consideration as analysis cut is last bin
+	if ( jetPt >= maxPt ) {
+		jetPt = Globals::cQuarkJet->GetXaxis()->GetBinCenter( Globals::cQuarkJet->GetNbinsX() );
+	}
+
 	int binNumber = Globals::cQuarkJet->FindBin( jetPt , jetEta );
 	float BTagEff = Globals::cQuarkJet->GetBinContent( binNumber );	
 	// std::cout << "C-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
@@ -199,10 +195,15 @@ double BTagWeight::getCEfficiency(const JetPointer jet) const {
 }
 
 double BTagWeight::getUDSGEfficiency(const JetPointer jet) const {
-
-	const double jetPt = jet->pt();
+	double jetPt = jet->pt();
 	const double jetEta = jet->eta();
-	// std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
+	const double maxPt = Globals::udsgQuarkJet->GetXaxis()->GetXmax();
+
+	// If pt out of range set to last bin. eta not a consideration as analysis cut is last bin
+	if ( jetPt >= maxPt ) {
+		jetPt = Globals::udsgQuarkJet->GetXaxis()->GetBinCenter( Globals::udsgQuarkJet->GetNbinsX() );
+	}
+
 	int binNumber = Globals::udsgQuarkJet->FindBin( jetPt , jetEta );
 	float BTagEff = Globals::udsgQuarkJet->GetBinContent( binNumber );
 	// std::cout << "UDS-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
