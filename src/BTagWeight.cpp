@@ -171,8 +171,10 @@ float BTagWeight::getBEfficiency(const JetPointer jet) const {
 	int binNumber = Globals::bQuarkJet->FindBin( jetPt , jetEta );
 	float BTagEff = Globals::bQuarkJet->GetBinContent( binNumber );
 
-	// std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
-	// std::cout << "B-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
+	// if ( jetPt >= maxPt ) {
+	// 	std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
+	// 	std::cout << "B-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
+	// }
 	return BTagEff;
 }
 
