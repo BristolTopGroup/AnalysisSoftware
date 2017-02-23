@@ -162,15 +162,18 @@ double Muon::relTrkIso() const {
 
 
 double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
-	
-	double triggerEfficiency(1.);
-	double triggerEfficiencyError(0.);
-	boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
 	double muonPt = pt();
 	double muonEta = eta();
 	double muonAbsEta = fabs(muonEta);
-	double maxPt = muonTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
 
+	//
+	// Trigger SF
+	//	
+	double triggerEfficiency(1.);
+	double triggerEfficiencyError(0.);
+	boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
+
+	double maxPt = muonTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
 	unsigned int bin = 0;
 	if ( muonPt <= maxPt ) {
 		bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, muonPt );
@@ -180,7 +183,7 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 		bin = muonTriggerScaleFactorsHistogram->FindBin( muonAbsEta, lastPtBinCentre );
 	}
 	triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
-	// triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
+	triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
 
 	//
 	// ID SF
@@ -221,27 +224,31 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	isoSF = muonIsoScaleFactorsHistogram->GetBinContent( bin );
 	isoSFError = muonIsoScaleFactorsHistogram->GetBinError( bin );
 
+	
 	//
-	// Tracking HIP SF
+	// Tracking SF	
 	//
-	// double hipSF(1.);
-	// boost::shared_ptr<TH1F> muonTrackingHIPScaleFactorsHistogram(Globals::muonTrackingHIPScaleFactorsHistogram);
-	// bin = muonTrackingHIPScaleFactorsHistogram->FindBin( muonEta );
-	// hipSF = muonTrackingHIPScaleFactorsHistogram->GetBinContent( bin );
+	double trackingSF(1.);
+	double trackingSFError(0.);
+	boost::shared_ptr<TH1F> muonTrackingScaleFactorsHistogram(Globals::muonTrackingScaleFactorsHistogram);
+	bin = muonTrackingScaleFactorsHistogram->FindBin( muonEta );
 
+	trackingSF = muonTrackingScaleFactorsHistogram->GetBinContent( bin );
+	trackingSFError = muonTrackingScaleFactorsHistogram->GetBinError( bin );
 	if (muon_scale_factor_systematic == -1 ) {
 		idSF -= idSFError;
 		isoSF -= isoSFError;
 		triggerEfficiency -= triggerEfficiencyError;
+		trackingSF -= trackingSFError;
 	}
 	else if (muon_scale_factor_systematic == +1 ) {
 		idSF += idSFError;
 		isoSF += isoSFError;
 		triggerEfficiency += triggerEfficiencyError;
+		trackingSF += trackingSFError;
 	}
 
-	// return idSF * isoSF * triggerEfficiency * hipSF;
-	return idSF * isoSF * triggerEfficiency;
+	return idSF * isoSF * triggerEfficiency * trackingSF;
 
 }
 }

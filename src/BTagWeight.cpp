@@ -70,6 +70,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 
 		double sfToUse_l = sf;
 		double sfToUse_bc = sf;
+		double sfToUse = 0;
 		if ( systematic == 1 ) {
 			sfToUse_l = sf_up;
 			sfToUse_bc = sf;
@@ -87,43 +88,17 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 			sfToUse_bc = sf_down;
 		}
 
+		(isLight==true) ? sfToUse = sfToUse_l : sfToUse = sfToUse_bc;
 
 		if (isBTagged) {
-			if (isLight) {
-				bTaggedMCJet *= eff;
-				if ( eff*sfToUse_l > 1 ) bTaggedDataJet *= 1;
-				else if ( eff*sfToUse_l < 0 ) bTaggedDataJet *= 0;
-				else bTaggedDataJet *= eff*sfToUse_l;
-			}
-
-			else {
+			// std::cout << "BTagged eff*sf : " << eff*sfToUse << std::endl;
 			bTaggedMCJet *= eff;
-				if ( eff*sfToUse_bc > 1 ) bTaggedDataJet *= 1;
-				else if ( eff*sfToUse_bc < 0 ) bTaggedDataJet *= 0;
-				else bTaggedDataJet *= eff*sfToUse_bc;
-			}
+			bTaggedDataJet *= eff*sfToUse;
+		}else{
+			// std::cout << "Not BTagged eff*sf : " << ( 1 - eff*sfToUse ) << std::endl;
+			nonBTaggedMCJet *= ( 1 - eff );
+			nonBTaggedDataJet *= ( 1 - eff*sfToUse );
 		}
-
-		else {
-			if (isLight) {
-				nonBTaggedMCJet *= ( 1 - eff );
-				if ( eff*sfToUse_l > 1 ) nonBTaggedDataJet *= 0;
-				else if ( eff*sfToUse_l < 0 ) nonBTaggedDataJet *= 1;
-				else nonBTaggedDataJet *= ( 1 - eff*sfToUse_l );			
-			}
-
-			else {
-				nonBTaggedMCJet *= ( 1 - eff );
-				if ( eff*sfToUse_bc > 1 ) nonBTaggedDataJet *= 0;
-				else if ( eff*sfToUse_bc < 0 ) nonBTaggedDataJet *= 1;
-				else nonBTaggedDataJet *= ( 1 - eff*sfToUse_bc );
-			}			
-		}
-
-		// if ( nonBTaggedMCJet < 0 || nonBTaggedDataJet < 0 ) {
-		// 	cout << nonBTaggedMCJet << " " << nonBTaggedDataJet << endl;
-		// 	cout << eff << " " << sfToUse << endl;
-		// }
 	}
 
 	double bTagWeight = (nonBTaggedDataJet * bTaggedDataJet) / (nonBTaggedMCJet * bTaggedMCJet);
