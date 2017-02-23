@@ -40,7 +40,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		muonIdScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonIdScaleFactorsFile")), //
 		muonIsoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonIsoScaleFactorsFile")), //
 		muonTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonTriggerScaleFactorsFile")), //
-		muonTrackingHIPScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonTrackingHIPScaleFactorsFile")), //
+		muonTrackingScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonTrackingScaleFactorsFile")), //
 		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
 		electronIdScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdScaleFactorsFile")), //
 		electronRecoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronRecoScaleFactorsFile")), //
@@ -122,7 +122,7 @@ boost::program_options::variables_map ConfigFile::getParameters(int argc, char**
 	desc.add_options()("MuonIdScaleFactorsFile", value<std::string>(), "set input file for id muon scale factors");
 	desc.add_options()("MuonIsoScaleFactorsFile", value<std::string>(), "set input file for iso muon scale factors");
 	desc.add_options()("MuonTriggerScaleFactorsFile", value<std::string>(), "set input file for trigger muon scale factors");
-	desc.add_options()("MuonTrackingHIPScaleFactorsFile", value<std::string>(), "set input file for tracking HIP muon scale factors");
+	desc.add_options()("MuonTrackingScaleFactorsFile", value<std::string>(), "set input file for tracking muon scale factors");
 	desc.add_options()("getElectronScaleFactorsFromFile", value<bool>(), "state whether we are getting the electron scale factors from a file or not");
 	desc.add_options()("ElectronTriggerScaleFactorsFile", value<std::string>(), "set input file for electron trigger scale factors");
 	desc.add_options()("bJetResoFile", value<std::string>(), "set input root file for b-jet L7 resolutions");
@@ -275,11 +275,11 @@ string ConfigFile::MuonTriggerScaleFactorsFile() const {
 		return muonTriggerScaleFactorsFile_;
 }
 
-string ConfigFile::MuonTrackingHIPScaleFactorsFile() const {
-	if (programOptions.count("MuonTrackingHIPScaleFactorsFile"))
-		return programOptions["MuonTrackingHIPScaleFactorsFile"].as<std::string>();
+string ConfigFile::MuonTrackingScaleFactorsFile() const {
+	if (programOptions.count("MuonTrackingScaleFactorsFile"))
+		return programOptions["MuonTrackingScaleFactorsFile"].as<std::string>();
 	else
-		return muonTrackingHIPScaleFactorsFile_;
+		return muonTrackingScaleFactorsFile_;
 }
 
 string ConfigFile::ElectronIdScaleFactorsFile() const {
@@ -521,17 +521,17 @@ void ConfigFile::loadIntoMemory() {
 		&& boost::filesystem::exists(MuonTriggerScaleFactorsFile()) 
 		&& boost::filesystem::exists(MuonIdScaleFactorsFile()) 
 		&& boost::filesystem::exists(MuonIsoScaleFactorsFile())
-		// && boost::filesystem::exists(MuonTrackingHIPScaleFactorsFile())
+		&& boost::filesystem::exists(MuonTrackingScaleFactorsFile())
 		) {
 		std::cout << "Getting muon scale factors from files :" << std::endl 
 			<< MuonIdScaleFactorsFile() << std::endl
 			<< MuonIsoScaleFactorsFile() << std::endl
-			<< MuonTriggerScaleFactorsFile() << std::endl;
-			// << MuonTrackingHIPScaleFactorsFile() <<std::endl;
+			<< MuonTriggerScaleFactorsFile() << std::endl
+			<< MuonTrackingScaleFactorsFile() << std::endl;
 		Globals::muonIdScaleFactorsHistogram = getMuonIdScaleFactorsHistogram(MuonIdScaleFactorsFile());
 		Globals::muonIsoScaleFactorsHistogram = getMuonIsoScaleFactorsHistogram(MuonIsoScaleFactorsFile());
 		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
-		// Globals::muonTrackingHIPScaleFactorsHistogram = getMuonTrackingHIPScaleFactorsHistogram(MuonTrackingHIPScaleFactorsFile());
+		Globals::muonTrackingScaleFactorsHistogram = getMuonTrackingScaleFactorsHistogram(MuonTrackingScaleFactorsFile());
 	}
 	else{
 		std::cout << "Unable to get muon scale factors from file - Check input file names"  << std::endl;
@@ -668,19 +668,19 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 	return triggerHistogram;
 }
 
-boost::shared_ptr<TH1F> ConfigFile::getMuonTrackingHIPScaleFactorsHistogram(std::string muonTrackingHIPScaleFactorsFile) {
+boost::shared_ptr<TH1F> ConfigFile::getMuonTrackingScaleFactorsHistogram(std::string muonTrackingScaleFactorsFile) {
 	using namespace std;
 
-	if (!boost::filesystem::exists(muonTrackingHIPScaleFactorsFile)) {
-		cerr << "ConfigFile::getMuonTrackingHIPScaleFactorsHistogram(" << muonTrackingHIPScaleFactorsFile << "): could not find file" << endl;
-		throw "Could not find muon tracking HIP scale factors histogram file in " + muonTrackingHIPScaleFactorsFile;
+	if (!boost::filesystem::exists(muonTrackingScaleFactorsFile)) {
+		cerr << "ConfigFile::getMuonTrackingScaleFactorsHistogram(" << muonTrackingScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find muon tracking scale factors histogram file in " + muonTrackingScaleFactorsFile;
 	}
 
-	boost::scoped_ptr<TFile> file(TFile::Open(muonTrackingHIPScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH1F> idHistogram((TH1F*) file->Get("ratio_eta")->Clone());
+	boost::scoped_ptr<TFile> file(TFile::Open(muonTrackingScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH1F> trackingHistogram((TH1F*) file->Get("eta_ratio")->Clone());
 	file->Close();
 
-	return idHistogram;
+	return trackingHistogram;
 }
 
 boost::shared_ptr<TH2F> ConfigFile::getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile) {

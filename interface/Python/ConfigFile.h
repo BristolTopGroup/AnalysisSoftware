@@ -20,6 +20,7 @@
 #include "TEfficiency.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/array.hpp>
+#include "TGraphAsymmErrors.h"
 
 namespace BAT {
 
@@ -39,7 +40,7 @@ public:
 	std::string MuonIdScaleFactorsFile() const;
 	std::string MuonIsoScaleFactorsFile() const;
 	std::string MuonTriggerScaleFactorsFile() const;
-	std::string MuonTrackingHIPScaleFactorsFile() const;
+	std::string MuonTrackingScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
 	std::string ElectronIdScaleFactorsFile() const;
 	std::string ElectronRecoScaleFactorsFile() const;
@@ -88,7 +89,7 @@ private:
 	std::string muonIdScaleFactorsFile_;
 	std::string muonIsoScaleFactorsFile_;
 	std::string muonTriggerScaleFactorsFile_;
-	std::string muonTrackingHIPScaleFactorsFile_;
+	std::string muonTrackingScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
 	std::string electronIdScaleFactorsFile_;
 	std::string electronRecoScaleFactorsFile_;
@@ -127,7 +128,7 @@ private:
 	boost::shared_ptr<TH2F> getMuonIdScaleFactorsHistogram(std::string muonIdScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonIsoScaleFactorsHistogram(std::string muonIsoScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
-	boost::shared_ptr<TH1F> getMuonTrackingHIPScaleFactorsHistogram(std::string muonTrackingHIPScaleFactorsFile);
+	boost::shared_ptr<TH1F> getMuonTrackingScaleFactorsHistogram(std::string muonTrackingScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronRecoScaleFactorsHistogram(std::string electronRecoScaleFactorsFile);
