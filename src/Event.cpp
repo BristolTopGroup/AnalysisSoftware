@@ -470,28 +470,37 @@ const PseudoTopParticlesPointer Event::PseudoTopParticles() const {
 
 const LeptonPointer Event::getSignalLepton( unsigned int selectionCriteria ) const {
 	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
+	unsigned int n_electrons = allElectrons.size();
+	unsigned int n_muons = allMuons.size();
+
 	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_electron.getSignalLeptonIndex();
+		if (signalLeptonIndex >= n_electrons) return LeptonPointer();
 		return allElectrons[signalLeptonIndex];
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muon.getSignalLeptonIndex();
+		if (signalLeptonIndex >= n_muons) return LeptonPointer();
 		return allMuons[signalLeptonIndex];
 	}
 	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_electronQCDNonisolated.getSignalLeptonIndex();
+		if (signalLeptonIndex >= n_electrons) return LeptonPointer();
 		return allElectrons[signalLeptonIndex];
 	}
 	else if ( selection == SelectionCriteria::ElectronPlusJetsQCDConversion ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_electronQCDConversion.getSignalLeptonIndex();
+		if (signalLeptonIndex >= n_electrons) return LeptonPointer();
 		return allElectrons[signalLeptonIndex];
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muonQCDNonisolated1p5to3.getSignalLeptonIndex();
+		if (signalLeptonIndex >= n_muons) return LeptonPointer();
 		return allMuons[signalLeptonIndex];
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated3toInf ) {
 		unsigned int signalLeptonIndex = selectionOutputInfo_muonQCDNonisolated3toInf.getSignalLeptonIndex();
+		if (signalLeptonIndex >= n_muons) return LeptonPointer();
 		return allMuons[signalLeptonIndex];
 	}
 
