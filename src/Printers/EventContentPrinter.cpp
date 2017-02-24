@@ -69,37 +69,21 @@ extern void printMuons(const MuonCollection muons) {
 extern void printElectron(const ElectronPointer electron) {
 	printParticle(electron);
 	cout << "Electron Information" << endl;
-	cout << setw(30) << "VBTF70" << setw(30) << "VBTF95" << setw(30) << "robust loose" << setw(30) << "robust tight"
-			<< endl;
-	cout << setw(30) << electron->VBTF_WP70_ElectronID() << setw(30) << electron->VBTF_WP95_ElectronID() << setw(30)
-			<< electron->RobustLooseID() << setw(30) << electron->RobustTightID() << endl;
+	cout << setw(30) << "isTight" 					<< setw(30) << "isNonIso" 							<< setw(30) << "isConv" 								<< endl;
+	cout << setw(30) << electron->isTightElectron() << setw(30) << electron->isTightNonIsoElectron() << setw(30) << electron->isTightConversionElectron() << endl;
 
-	cout << setw(30) << "sigma_{ieta ieta}" << setw(30) << "|Delta phi_{in}|" << setw(30) << "|Delta eta_{in}|"
-			<< setw(30) << "HadOverEm" << endl;
-	cout << setw(30) << electron->sigmaIEtaIEta() << setw(30) << fabs(electron->dPhiIn()) << setw(30)
-			<< fabs(electron->dEtaIn()) << setw(30) << electron->HadOverEm() << endl;
+	cout << setw(30) << "sigma_{ieta ieta}" 		<< setw(30) << "|Delta phi_{in}|" 		<< setw(30) << "|Delta eta_{in}|" 		<< setw(30) << "HadOverEm" 				<< endl;
+	cout << setw(30) << electron->sigmaIEtaIEta() 	<< setw(30) << fabs(electron->dPhiIn()) << setw(30) << fabs(electron->dEtaIn()) << setw(30) << electron->HadOverEm() 	<< endl;
 
-	cout << setw(30) << "" << setw(30) << "rel. iso." << setw(30) << "" << setw(30)
-			<< "superClusterEta" << endl;
-
-	// cout << setw(30) << "" << setw(30) << electron->relativeIsolation() << setw(30)
-	// 		<< "" << setw(30) << electron->superClusterEta() << endl;
-
-	cout << setw(30) << "dCotTheta" << setw(30) << "pf rel. iso." << setw(30) << "dist" << setw(30)
-				<< " " << endl;
-
-		// cout << setw(30) << electron->dCotThetaToClosestTrack()<< setw(30) << electron->pfRelativeIsolation(0.3) << setw(30)
-		// 		<< electron->distToClosestTrack() << setw(30) << "" << endl;
-
-	//    cout << setw(30) << "isTrackerDriven" << setw(30) << "swiss_cross" << setw(30) << "isLoose" << setw(30)
-	//            << "isEcalDriven" << endl;
+	cout << setw(30) << "Isolation" 					<< setw(30) << "superClusterEta" 			<< endl;
+	cout << setw(30) << electron->PFRelIso03DeltaBeta() << setw(30) << electron->superClusterEta() 	<< endl;
 }
 
 extern void printMuon(const MuonPointer muon) {
 	printParticle(muon);
 	cout << "Muon Information" << endl;
-	cout << setw(30) << "is global" << setw(30) << "is tracker" << setw(30) << "PF RelIso DR=0.3" << setw(30) << "----" << endl;
-	// cout << setw(30) << muon->isGlobal() << setw(30) << "" << setw(30) << muon->pfRelativeIsolation(0.3) << setw(30) << "" << endl;
+	cout << setw(30) << "is global" 		<< setw(30) << "PF RelIso DR=0.4" << setw(30) << "----" << endl;
+	cout << setw(30) << muon->isGlobal() 	<< setw(30) << muon->PFRelIso04() << setw(30) << "" << endl;
 
 }
 
