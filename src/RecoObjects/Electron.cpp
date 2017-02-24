@@ -465,7 +465,7 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	double maxEta = electronTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
 
 	unsigned int bin = 0;
-	if ( electronPt <= maxPt && electronSCEta <= maxEta) {
+	if ( electronPt <= maxPt && fabs( electronSCEta ) < maxEta ) {
 		bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt, electronSCEta );
 	}
 	else {
@@ -475,9 +475,14 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 			lastPtBinCentre = electronTriggerScaleFactorsHistogram->GetXaxis()->GetBinCenter( 
 				electronTriggerScaleFactorsHistogram->GetNbinsX() );
 		}
-		if ( electronSCEta > maxEta ){
-			lastEtaBinCentre = electronTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
-				electronTriggerScaleFactorsHistogram->GetNbinsY() );
+		if ( fabs( electronSCEta ) > maxEta ){
+			if ( electronSCEta > 0 ) {
+				lastEtaBinCentre = electronTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
+					electronTriggerScaleFactorsHistogram->GetNbinsY() );			
+			}
+			else {
+				lastEtaBinCentre = electronTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( 1 );							
+			}
 		}
 		bin = electronTriggerScaleFactorsHistogram->FindBin( lastPtBinCentre, lastEtaBinCentre );
 	}
@@ -493,8 +498,8 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	maxEta = electronIDScaleFactorsHistogram->GetXaxis()->GetXmax();
 
 	bin = 0;
-	if ( electronPt <= maxPt and electronSCEta <= maxEta) {
-		bin = electronIDScaleFactorsHistogram->FindBin( electronPt, electronSCEta );
+	if ( electronPt <= maxPt && fabs( electronSCEta ) < maxEta ) {
+		bin = electronIDScaleFactorsHistogram->FindBin( electronSCEta, electronPt );
 	}
 	else {
 		double lastPtBinCentre = electronPt;
@@ -503,9 +508,14 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 			lastPtBinCentre = electronIDScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
 				electronIDScaleFactorsHistogram->GetNbinsY() );
 		}
-		if ( electronSCEta > maxEta ){
-			lastEtaBinCentre = electronIDScaleFactorsHistogram->GetXaxis()->GetBinCenter( 
-				electronIDScaleFactorsHistogram->GetNbinsX() );
+		if ( fabs( electronSCEta ) > maxEta ){
+			if ( electronSCEta > 0 ) {
+				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
+					electronIDScaleFactorsHistogram->GetNbinsY() );			
+			}
+			else {
+				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetYaxis()->GetBinCenter( 1 );							
+			}
 		}
 		bin = electronIDScaleFactorsHistogram->FindBin( lastPtBinCentre, lastEtaBinCentre );
 	}
@@ -521,8 +531,8 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	maxEta = electronIDScaleFactorsHistogram->GetXaxis()->GetXmax();
 
 	bin = 0;
-	if ( electronPt <= maxPt and electronSCEta <= maxEta) {
-		bin = electronRecoScaleFactorsHistogram->FindBin( electronPt, electronSCEta );
+	if ( electronPt <= maxPt && fabs( electronSCEta ) < maxEta  ) {
+		bin = electronRecoScaleFactorsHistogram->FindBin( electronSCEta, electronPt );
 	}
 	else {
 		double lastPtBinCentre = electronPt;
@@ -531,9 +541,14 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 			lastPtBinCentre = electronRecoScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
 				electronRecoScaleFactorsHistogram->GetNbinsY() );
 		}
-		if ( electronSCEta > maxEta ){
-			lastEtaBinCentre = electronRecoScaleFactorsHistogram->GetXaxis()->GetBinCenter( 
-				electronRecoScaleFactorsHistogram->GetNbinsX() );
+		if ( fabs( electronSCEta ) > maxEta ){
+			if ( electronSCEta > 0 ) {
+				lastEtaBinCentre = electronRecoScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
+					electronRecoScaleFactorsHistogram->GetNbinsY() );			
+			}
+			else {
+				lastEtaBinCentre = electronRecoScaleFactorsHistogram->GetYaxis()->GetBinCenter( 1 );							
+			}
 		}
 		bin = electronRecoScaleFactorsHistogram->FindBin( lastPtBinCentre, lastEtaBinCentre );
 	}

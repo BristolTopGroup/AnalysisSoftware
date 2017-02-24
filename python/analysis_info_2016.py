@@ -70,7 +70,7 @@ datasets_13TeV = {
     # 'QCD_bcToE_20to30' : [mc_path_13TeV + 'QCD_bcToE_20to30/tmp/'],
     'QCD_bcToE_30to80' : [mc_path_13TeV + 'QCD_bcToE_30to80/tmp/'],
     'QCD_bcToE_80to170' : [mc_path_13TeV + 'QCD_bcToE_80to170/tmp/'],
-    # 'QCD_bcToE_170to250' : [mc_path_13TeV + 'QCD_bcToE_170to250/tmp/'],
+    'QCD_bcToE_170to250' : [mc_path_13TeV + 'QCD_bcToE_170to250/tmp/'],
     'QCD_bcToE_250toInf' : [mc_path_13TeV + 'QCD_bcToE_250toInf/tmp/'],
 
     'QCD_MuEnriched_15to20': [mc_path_13TeV + 'QCD_MuEnriched_15to20/tmp/'],
@@ -85,6 +85,22 @@ datasets_13TeV = {
     'QCD_MuEnriched_600to800': [mc_path_13TeV + 'QCD_MuEnriched_600to800/tmp/'],
     'QCD_MuEnriched_800to1000': [mc_path_13TeV + 'QCD_MuEnriched_800to1000/tmp/'],
     'QCD_MuEnriched_1000toInf': [mc_path_13TeV + 'QCD_MuEnriched_1000toInf/tmp/'],
+
+    'QCD_50to80': [mc_path_13TeV + 'QCD_50to80/tmp/'],
+    'QCD_80to120': [mc_path_13TeV + 'QCD_80to120/tmp/'],
+    'QCD_120to170': [mc_path_13TeV + 'QCD_120to170/tmp/'],
+    'QCD_170to300': [mc_path_13TeV + 'QCD_170to300/tmp/'],
+    'QCD_300to470': [mc_path_13TeV + 'QCD_300to470/tmp/'],
+    'QCD_470to600': [mc_path_13TeV + 'QCD_470to600/tmp/'],
+    'QCD_600to800': [mc_path_13TeV + 'QCD_600to800/tmp/'],
+    'QCD_800to1000': [mc_path_13TeV + 'QCD_800to1000/tmp/'],
+
+    'QCD_1000to1400' : [ mc_path_13TeV + 'QCD_1000to1400/tmp/' ],
+    'QCD_1400to1800' : [ mc_path_13TeV + 'QCD_1400to1800/tmp/' ],
+    'QCD_1800to2400' : [ mc_path_13TeV + 'QCD_1800to2400/tmp/' ],
+    'QCD_2400to3200' : [ mc_path_13TeV + 'QCD_2400to3200/tmp/' ],
+    'QCD_3200toInf' : [ mc_path_13TeV + 'QCD_3200toInf/tmp/' ],
+
 }
 
 analysis_modes_13TeV = [
