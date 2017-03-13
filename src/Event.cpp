@@ -812,6 +812,28 @@ const bool Event::passesSignalLeptonSelection( const unsigned int selectionCrite
 	 ) {
 		ptThreshold = minSignalElectronPt_;
 		etaThreshold = minSignalElectronEta_;
+
+		// Additional selection on non isolated electrons
+		// The trigger isolation cuts varied throughout 2016
+		// in data, but is the same in MC (only one trigger is emulated in simulation) 
+		// So when we invert the offline (tighter) isolation cut
+		// we should make sure that the same (HLT) isolation cut is applied in simulation
+		// and in all data taking periods
+		// Values to cut on taken from here https://twiki.cern.ch/twiki/bin/view/CMS/ChangesEGMHLTAlgo2014
+		if ( selection == SelectionCriteria::ElectronPlusJetsQCDNonIsolated ) {
+			const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+			double hltECALIso = signalElectron->hltECALIso();
+			double hltHCALIso = signalElectron->hltHCALIso();
+			double hltTrackerIso = signalElectron->hltTrackerIso() / signalLepton->pt();
+
+			if ( signalElectron->superClusterEta() <= 1.479 ) {
+				if ( hltECALIso > 0.032 || hltHCALIso > 0.055 || hltTrackerIso > 0.06 ) return false;
+			}
+			else {
+				if ( hltECALIso > 0.040 || hltHCALIso > 0.05 || hltTrackerIso > 0.05 ) return false;			
+			}
+
+		}
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ||
 		 		selection == SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3 ||
