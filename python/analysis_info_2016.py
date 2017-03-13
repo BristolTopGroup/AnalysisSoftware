@@ -1,6 +1,6 @@
 import os
-mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.3/ntuple/v1.0.3/Moriond17/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.3/ntuple/v1.0.3/Moriond17/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.4/ntuple/v1.0.4/Moriond17/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.4/ntuple/v1.0.4/Moriond17/'
 
 datasets_13TeV = {
 
@@ -34,18 +34,18 @@ datasets_13TeV = {
     'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755/tmp/' ],
 
     'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX/tmp/' ],
-    'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM/tmp/'],
+    'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraph/tmp/'],
     'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp/tmp/'],
 
     # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch/tmp/'],
 
-    'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50/tmp/' ],
+    # 'DYJetsToLL_M50' : [ mc_path_13TeV + 'DYJetsToLL_M50/tmp/' ],
     'DY1JetsToLL_M50' : [ mc_path_13TeV + 'DY1JetsToLL_M50/tmp/' ],
     'DY2JetsToLL_M50' : [ mc_path_13TeV + 'DY2JetsToLL_M50/tmp/' ],
     'DY3JetsToLL_M50' : [ mc_path_13TeV + 'DY3JetsToLL_M50/tmp/' ],
     'DY4JetsToLL_M50' : [ mc_path_13TeV + 'DY4JetsToLL_M50/tmp/' ],
 
-    'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu/tmp/' ],
+    # 'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu/tmp/' ],
     'W1JetsToLNu' : [ mc_path_13TeV + 'W1JetsToLNu/tmp/' ],
     'W2JetsToLNu' : [ mc_path_13TeV + 'W2JetsToLNu/tmp/' ],
     'W3JetsToLNu' : [ mc_path_13TeV + 'W3JetsToLNu/tmp/' ],
@@ -57,7 +57,6 @@ datasets_13TeV = {
     'ST_tW' : [mc_path_13TeV + 'ST_tW/tmp/'],
     'STbar_tW' : [mc_path_13TeV + 'STbar_tW/tmp/'],
 
-    # 'QCD_EMEnriched_15to20' : [mc_path_13TeV + 'QCD_EMEnriched_15to20/tmp/'],
     'QCD_EMEnriched_20to30' : [mc_path_13TeV + 'QCD_EMEnriched_20to30/tmp/'],
     'QCD_EMEnriched_30to50' : [mc_path_13TeV + 'QCD_EMEnriched_30to50/tmp/'],
     'QCD_EMEnriched_50to80' : [mc_path_13TeV + 'QCD_EMEnriched_50to80/tmp/'],
@@ -66,8 +65,6 @@ datasets_13TeV = {
     'QCD_EMEnriched_170to300' : [mc_path_13TeV + 'QCD_EMEnriched_170to300/tmp/'],
     'QCD_EMEnriched_300toInf' : [mc_path_13TeV + 'QCD_EMEnriched_300toInf/tmp/'],
 
-    # 'QCD_bcToE_15to20' : [mc_path_13TeV + 'QCD_bcToE_15to20/tmp/'],
-    # 'QCD_bcToE_20to30' : [mc_path_13TeV + 'QCD_bcToE_20to30/tmp/'],
     'QCD_bcToE_30to80' : [mc_path_13TeV + 'QCD_bcToE_30to80/tmp/'],
     'QCD_bcToE_80to170' : [mc_path_13TeV + 'QCD_bcToE_80to170/tmp/'],
     'QCD_bcToE_170to250' : [mc_path_13TeV + 'QCD_bcToE_170to250/tmp/'],
