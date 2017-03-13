@@ -133,6 +133,18 @@ void Lepton::setPFRelIso04DeltaBeta( double isolation ) {
 	PFRelIso04DeltaBeta_ = isolation;
 }
 
+void Lepton::setHltECALIso( double isolation ) {
+	hltECALIso_ = isolation;
+}
+
+void Lepton::setHltHCALIso( double isolation ) {
+	hltHCALIso_ = isolation;
+}
+
+void Lepton::setHltTrackerIso( double isolation ) {
+	hltTrackerIso_ = isolation;
+}
+
 void Lepton::setsumChargedHadronPt03(double isolation) {
 	sumChargedHadronPt03_ = isolation;
 }
@@ -183,6 +195,18 @@ double Lepton::PFRelIso03DeltaBeta() const {
 
 double Lepton::PFRelIso04DeltaBeta() const {
 	return PFRelIso04DeltaBeta_;
+}
+
+double Lepton::hltECALIso() const {
+	return hltECALIso_;
+}
+
+double Lepton::hltHCALIso() const {
+	return hltHCALIso_;
+}
+
+double Lepton::hltTrackerIso() const {
+	return hltTrackerIso_;
 }
 
 double Lepton::sumChargedHadronPt03() const{

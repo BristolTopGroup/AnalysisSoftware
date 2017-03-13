@@ -41,6 +41,10 @@ private:
 	VariableReader<MultiDoublePointer> PFRelIso04DeltaBetaReader_;
 	VariableReader<MultiDoublePointer> PFRelIsoWithEAReader_;
 
+	VariableReader<MultiDoublePointer> hltECALIsoReader_;
+	VariableReader<MultiDoublePointer> hltHCALIsoReader_;
+	VariableReader<MultiDoublePointer> hltTrackerIsoReader_;
+
 	VariableReader<MultiDoublePointer> sumChargedHadronPt03Reader_;
 	VariableReader<MultiDoublePointer> sumNeutralHadronPt03Reader_;
 	VariableReader<MultiDoublePointer> sumPhotonPt03Reader_;
