@@ -103,16 +103,16 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 		treeMan_->Fill("M_bl",Event::M_bl(bJets, signalLepton));
 		treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalLepton));
 
-		if ( numberOfBjets >= 2 ) {
-			unsigned int highestCSVJetIndex = 0;
-			unsigned int secondHighestCSVJetIndex = 0;
-			Event::getTopTwoCSVJets( bJets, highestCSVJetIndex, secondHighestCSVJetIndex );
-			JetPointer highestCSVJet(bJets.at(highestCSVJetIndex));
-			JetPointer secondHighestCSVJet(bJets.at(secondHighestCSVJetIndex));
-			treeMan_->Fill("deltaPhi_bb", fabs( Event::deltaPhi_bb(highestCSVJet, secondHighestCSVJet) ) ) ;
-			treeMan_->Fill("deltaEta_bb", fabs( Event::deltaEta_bb(highestCSVJet, secondHighestCSVJet) ) ) ;
-			treeMan_->Fill("angle_bb", Event::angle_bb(highestCSVJet, secondHighestCSVJet));
-		}
+// 		if ( numberOfBjets >= 2 ) {
+// 			unsigned int highestCSVJetIndex = 0;
+// 			unsigned int secondHighestCSVJetIndex = 0;
+// 			Event::getTopTwoCSVJets( bJets, highestCSVJetIndex, secondHighestCSVJetIndex );
+// 			JetPointer highestCSVJet(bJets.at(highestCSVJetIndex));
+// 			JetPointer secondHighestCSVJet(bJets.at(secondHighestCSVJetIndex));
+// 			treeMan_->Fill("deltaPhi_bb", fabs( Event::deltaPhi_bb(highestCSVJet, secondHighestCSVJet) ) ) ;
+// 			treeMan_->Fill("deltaEta_bb", fabs( Event::deltaEta_bb(highestCSVJet, secondHighestCSVJet) ) ) ;
+// 			treeMan_->Fill("angle_bb", Event::angle_bb(highestCSVJet, secondHighestCSVJet));
+// 		}
 	}
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		treeMan_->Fill("jet_pt", jets.at(index)->pt() );
