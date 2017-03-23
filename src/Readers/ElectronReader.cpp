@@ -31,6 +31,9 @@ ElectronReader::ElectronReader() : //
 		PFRelIso03DeltaBetaReader_(), //
 		PFRelIso04DeltaBetaReader_(), //
 		PFRelIsoWithEAReader_(), //
+		hltECALIsoReader_(), //
+		hltHCALIsoReader_(), //
+		hltTrackerIsoReader_(), //
 		sumChargedHadronPt03Reader_(),//
 		sumNeutralHadronPt03Reader_(),//
 		sumPhotonPt03Reader_(),//
@@ -73,6 +76,9 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		PFRelIso03DeltaBetaReader_(input, "Electrons.PFRelIso03DeltaBeta"), //
 		PFRelIso04DeltaBetaReader_(input, "Electrons.PFRelIso04DeltaBeta"), //
 		PFRelIsoWithEAReader_(input, "Electrons.PFRelIsoWithEA"), //
+		hltECALIsoReader_(input, "Electrons.hltECALIso"), //
+		hltHCALIsoReader_(input, "Electrons.hltHCALIso"), //
+		hltTrackerIsoReader_(input, "Electrons.hltTrackerIso"), //
 		sumChargedHadronPt03Reader_(input, "Electrons.sumChargedHadronPt03"), //
 		sumNeutralHadronPt03Reader_(input, "Electrons.sumNeutralHadronPt03"), //
 		sumPhotonPt03Reader_(input, "Electrons.sumPhotonPt03"), //
@@ -133,6 +139,10 @@ void ElectronReader::readElectrons() {
 		electron->setPFRelIso04DeltaBeta(PFRelIso04DeltaBetaReader_.getVariableAt(index));
 		electron->setPFRelIsoWithEA( PFRelIsoWithEAReader_.getVariableAt(index)); //
 
+		electron->setHltECALIso(hltECALIsoReader_.getVariableAt(index));
+		electron->setHltHCALIso(hltHCALIsoReader_.getVariableAt(index));
+		electron->setHltTrackerIso(hltTrackerIsoReader_.getVariableAt(index));
+
 		electron->setsumChargedHadronPt03(sumChargedHadronPt03Reader_.getVariableAt(index));
 		electron->setsumNeutralHadronPt03(sumNeutralHadronPt03Reader_.getVariableAt(index));
 		electron->setsumPhotonPt03(sumPhotonPt03Reader_.getVariableAt(index));
@@ -182,6 +192,10 @@ void ElectronReader::initialise() {
 	PFRelIso03DeltaBetaReader_.initialise();
 	PFRelIso04DeltaBetaReader_.initialise();
 	PFRelIsoWithEAReader_.initialise();
+
+	hltECALIsoReader_.initialise();
+	hltHCALIsoReader_.initialise();
+	hltTrackerIsoReader_.initialise();
 
 	sumChargedHadronPt03Reader_.initialise();
 	sumNeutralHadronPt03Reader_.initialise();

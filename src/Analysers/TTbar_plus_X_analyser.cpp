@@ -92,6 +92,13 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 		selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsQCDNonIsolated) ||
 		selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsQCDConversion)){
 		treeMan_->Fill("lepton_isolation", signalLepton->PFRelIsoWithEA());
+
+		treeMan_->Fill("lepton_hltECALisolation", signalLepton->hltECALIso());
+		treeMan_->Fill("lepton_hltHCALisolation", signalLepton->hltHCALIso());
+		treeMan_->Fill("lepton_hltTrackerisolation", signalLepton->hltTrackerIso());
+		if ( signalLepton->pt() > 0 ) {
+			treeMan_->Fill("lepton_hltTrackerisolation_overPt", signalLepton->hltTrackerIso() / signalLepton->pt() );
+		}
 	}
 	else if (selection == SelectionCriteria::selection(SelectionCriteria::MuonPlusJetsReference) ||
 			 selection == SelectionCriteria::selection(SelectionCriteria::MuonPlusJetsQCDNonIsolated1p5to3) ||
@@ -229,6 +236,10 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_isolation", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_hltECALisolation", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_hltHCALisolation", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_hltTrackerisolation", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_hltTrackerisolation_overPt", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
