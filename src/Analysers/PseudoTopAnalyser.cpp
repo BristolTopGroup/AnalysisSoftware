@@ -156,7 +156,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// Store pseudo ST
 	if ( allPseudoLeptons.size() > 0 ) {
-		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( genMET->px(), genMET->py() )) ) );
+		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) ) );
 	}
 	else {
 		treeMan_->Fill("pseudoST", 0 );
@@ -172,11 +172,11 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("pseudoWPT_reco", 0 );
 	}
 
-	if ( genMET != 0 && allPseudoLeptons.size() > 0 ) {
-		double WPT = event->WPT( allPseudoLeptons[0], METPointer( new MET( genMET->px(), genMET->py() ))  );
+	if ( pseudoMET != 0 && allPseudoLeptons.size() > 0 ) {
+		double WPT = event->WPT( allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() ))  );
 		treeMan_->Fill("pseudoWPT", WPT );
 
-		double MT = event->MT( allPseudoLeptons[0], METPointer( new MET( genMET->px(), genMET->py() )) );
+		double MT = event->MT( allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) );
 		treeMan_->Fill("pseudoMT", MT );
 	}
 	else {
