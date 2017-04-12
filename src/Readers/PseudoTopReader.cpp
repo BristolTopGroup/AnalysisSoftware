@@ -31,10 +31,8 @@ PseudoTopReader::PseudoTopReader() :
     pseudoTop_lepton_pxReader_(),
     pseudoTop_lepton_pyReader_(),
     pseudoTop_lepton_pzReader_(),
-    pseudoTop_met_energyReader_(),
-    pseudoTop_met_pxReader_(),
-    pseudoTop_met_pyReader_(),
-    pseudoTop_met_pzReader_(),
+    pseudoTop_met_exReader_(),
+    pseudoTop_met_eyReader_(),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new MCParticle() ),
@@ -42,7 +40,7 @@ PseudoTopReader::PseudoTopReader() :
     newJets_(),
     newPseudoBs_(),
     newNeutrino_( new Particle() ),
-    newPseudoMET_( new Particle() ),
+    newPseudoMET_( new MET() ),
     isSemiLeptonic_(true){
 }
 
@@ -66,10 +64,8 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     pseudoTop_lepton_pxReader_(input, "PseudoTopLeptons.Px"),
     pseudoTop_lepton_pyReader_(input, "PseudoTopLeptons.Py"),
     pseudoTop_lepton_pzReader_(input, "PseudoTopLeptons.Pz"),
-    pseudoTop_met_energyReader_(input, "PseudoTopMETs.Energy"),
-    pseudoTop_met_pxReader_(input, "PseudoTopMETs.Px"),
-    pseudoTop_met_pyReader_(input, "PseudoTopMETs.Py"),
-    pseudoTop_met_pzReader_(input, "PseudoTopMETs.Pz"),
+    pseudoTop_met_exReader_(input, "PseudoTopMETs.Ex"),
+    pseudoTop_met_eyReader_(input, "PseudoTopMETs.Ey"),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new MCParticle() ),
@@ -78,7 +74,7 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     newJets_(),
     newPseudoBs_(),
     newNeutrino_( new Particle() ),
-    newPseudoMET_( new Particle() ),
+    newPseudoMET_( new MET() ),
     isSemiLeptonic_(true){
 }
 
@@ -196,12 +192,11 @@ void PseudoTopReader::readPseudoTopParticles() {
     pseudoTopParticles_->setIsSemiLeptonic( isSemiLeptonic_ );
 
     // Get Pseudo MET
-    double energy = pseudoTop_met_energyReader_.getVariable();
-    double px = pseudoTop_met_pxReader_.getVariable();
-    double py = pseudoTop_met_pyReader_.getVariable();
-    double pz = pseudoTop_met_pzReader_.getVariable();
-    newPseudoMET_ = ParticlePointer( new Particle( energy, px, py, pz  ) );
-    pseudoTopParticles_->setPseudoMET( ParticlePointer( newPseudoMET_ ) );
+    double ex = pseudoTop_met_exReader_.getVariable();
+    double ey = pseudoTop_met_eyReader_.getVariable();
+    newPseudoMET_ = METPointer(new MET( ex, ey ) );
+
+    pseudoTopParticles_->setPseudoMET( METPointer( newPseudoMET_ ) );
 
 
     // Get Jets for HT calculation
@@ -255,10 +250,12 @@ void PseudoTopReader::initialise() {
     pseudoTop_lepton_pyReader_.initialiseBlindly();
     pseudoTop_lepton_pzReader_.initialiseBlindly();
 
-    pseudoTop_met_energyReader_.initialiseBlindly();
-    pseudoTop_met_pxReader_.initialiseBlindly();
-    pseudoTop_met_pyReader_.initialiseBlindly();
-    pseudoTop_met_pzReader_.initialiseBlindly();
+    // pseudoTop_met_energyReader_.initialiseBlindly();
+    // pseudoTop_met_pxReader_.initialiseBlindly();
+    // pseudoTop_met_pyReader_.initialiseBlindly();
+    // pseudoTop_met_pzReader_.initialiseBlindly();
+    pseudoTop_met_exReader_.initialiseBlindly();
+    pseudoTop_met_eyReader_.initialiseBlindly();
 }
 
 }
