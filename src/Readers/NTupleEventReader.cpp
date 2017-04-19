@@ -75,6 +75,12 @@ NTupleEventReader::NTupleEventReader() :
 		centralLHEWeightReader_(new VariableReader<double>(input, "Event.centralLHEWeight")), //
 		systematicWeightsReader_(new VariableReader<MultiDoublePointer>(input, "Event.systematicWeights")), //
 		systematicWeightsReaderID_(new VariableReader<MultiIntPointer>(input, "Event.systematicWeightIDs")), //
+		semilepbrUpWeightReader_( new VariableReader<double>(input, "Event.semilepbrUp")), //
+		semilepbrDownWeightReader_( new VariableReader<double>(input, "Event.semilepbrDown")), //
+		petersonFragReader_( new VariableReader<double>(input, "Event.petersonFrag")), //
+		centralFragReader_( new VariableReader<double>(input, "Event.centralFrag")), //
+		upFragReader_( new VariableReader<double>(input, "Event.upFrag")), //
+		downFragReader_( new VariableReader<double>(input, "Event.downFrag")), //
 		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
 		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
@@ -210,6 +216,13 @@ const EventPtr NTupleEventReader::getNextEvent() {
 			currentEvent->setGeneratorSystematicWeights( *systematicWeightsReader_->getVariable() );
 			currentEvent->setGeneratorSystematicWeightsID( *systematicWeightsReaderID_->getVariable() );
 			currentEvent->setCentralLHEWeight( centralLHEWeightReader_->getVariable() );
+
+			currentEvent->setSemiLepBrUpWeight( semilepbrUpWeightReader_->getVariable() );
+			currentEvent->setSemiLepBrDownWeight( semilepbrDownWeightReader_->getVariable() );
+			currentEvent->setPetersonFragWeight( petersonFragReader_->getVariable() );
+			currentEvent->setCentralFragWeight( centralFragReader_->getVariable() );
+			currentEvent->setUpFragWeight( upFragReader_->getVariable() );
+			currentEvent->setDownFragWeight( downFragReader_->getVariable() );
 	}
 
 	// Get and set the cleaned jets for this event
@@ -386,6 +399,13 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		systematicWeightsReader_->initialiseBlindly();
 		systematicWeightsReaderID_->initialiseBlindly();
 		centralLHEWeightReader_->initialiseBlindly();
+
+		semilepbrUpWeightReader_->initialiseBlindly();
+		semilepbrDownWeightReader_->initialiseBlindly();
+		petersonFragReader_->initialiseBlindly();
+		centralFragReader_->initialiseBlindly();
+		upFragReader_->initialiseBlindly();
+		downFragReader_->initialiseBlindly();
 
 		TruePileupInfoReader->initialiseBlindly();
 

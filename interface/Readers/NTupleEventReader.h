@@ -114,6 +114,13 @@ private:
 	boost::scoped_ptr<VariableReader<double> > centralLHEWeightReader_;
 	boost::scoped_ptr<VariableReader<MultiDoublePointer> > systematicWeightsReader_;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > systematicWeightsReaderID_;
+	boost::scoped_ptr<VariableReader<double> > semilepbrUpWeightReader_;
+	boost::scoped_ptr<VariableReader<double> > semilepbrDownWeightReader_;
+	boost::scoped_ptr<VariableReader<double> > petersonFragReader_;
+	boost::scoped_ptr<VariableReader<double> > centralFragReader_;
+	boost::scoped_ptr<VariableReader<double> > upFragReader_;
+	boost::scoped_ptr<VariableReader<double> > downFragReader_;
+
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;
 	boost::scoped_ptr<VariableReader<double> > PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
