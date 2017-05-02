@@ -148,7 +148,10 @@ bool Event::isTTJet( DataType::value type) const {
     	type == DataType::TTJets_PowhegPythia8_down ||
     	type == DataType::TTJets_PowhegPythia8_up ||
     	type == DataType::TTJets_PowhegPythia8_mtop1695 ||
-    	type == DataType::TTJets_PowhegPythia8_mtop1755
+    	type == DataType::TTJets_PowhegPythia8_mtop1755 ||
+    	type == DataType::TTJets_PowhegPythia8_hdampdown ||
+    	type == DataType::TTJets_PowhegPythia8_hdampup ||
+    	type == DataType::TTJets_PowhegPythia8_erdOn
 		// type == DataType::TTJets_synch
 		)
 		return true;
