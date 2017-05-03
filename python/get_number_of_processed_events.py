@@ -54,7 +54,10 @@ if __name__ == '__main__':
 		if dataset.startswith("Single"): continue
 
 		files = []
-		paths = glob.glob( basepath[0] )
+		paths = []
+		for p in basepath:
+			paths.extend( glob.glob( p ) )
+
 		total_processed_event = 0
 		for path in paths:
 			files.extend(glob.glob(path+'/*/*.root'))
