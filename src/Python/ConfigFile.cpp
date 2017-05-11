@@ -723,7 +723,7 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronTriggerScaleFactorsHistogram(std:
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronTriggerScaleFactorsFile.c_str()));
-	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("abseta_pt_ratio"));
+	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("SF"));
 	
 	file->Close();
 

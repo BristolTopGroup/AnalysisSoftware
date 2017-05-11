@@ -456,35 +456,34 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	// double electronEta = fabs(eta());
 	double electronSCEta = superClusterEta();
 
-
 	// Trigger scalefactor
 	double triggerEfficiency(1.);
 	double triggerEfficiencyError(0.);
 	boost::shared_ptr<TH2F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
-	double maxPt = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
-	double maxEta = electronTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
+	double maxPt = electronTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
+	double maxEta = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
 
 	unsigned int bin = 0;
 	if ( electronPt <= maxPt && fabs( electronSCEta ) < maxEta ) {
-		bin = electronTriggerScaleFactorsHistogram->FindBin( electronPt, electronSCEta );
+		bin = electronTriggerScaleFactorsHistogram->FindBin( electronSCEta, electronPt );
 	}
 	else {
 		double lastPtBinCentre = electronPt;
 		double lastEtaBinCentre = electronSCEta;
 		if ( electronPt > maxPt ){
-			lastPtBinCentre = electronTriggerScaleFactorsHistogram->GetXaxis()->GetBinCenter( 
-				electronTriggerScaleFactorsHistogram->GetNbinsX() );
+			lastPtBinCentre = electronTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
+				electronTriggerScaleFactorsHistogram->GetNbinsY() );
 		}
 		if ( fabs( electronSCEta ) > maxEta ){
 			if ( electronSCEta > 0 ) {
-				lastEtaBinCentre = electronTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
-					electronTriggerScaleFactorsHistogram->GetNbinsY() );			
+				lastEtaBinCentre = electronTriggerScaleFactorsHistogram->GetXaxis()->GetBinCenter( 
+					electronTriggerScaleFactorsHistogram->GetNbinsX() );			
 			}
 			else {
 				lastEtaBinCentre = electronTriggerScaleFactorsHistogram->GetYaxis()->GetBinCenter( 1 );							
 			}
 		}
-		bin = electronTriggerScaleFactorsHistogram->FindBin( lastPtBinCentre, lastEtaBinCentre );
+		bin = electronTriggerScaleFactorsHistogram->FindBin( lastEtaBinCentre, lastPtBinCentre );
 	}
 	triggerEfficiency = electronTriggerScaleFactorsHistogram->GetBinContent( bin );
 	triggerEfficiencyError = electronTriggerScaleFactorsHistogram->GetBinError( bin );
