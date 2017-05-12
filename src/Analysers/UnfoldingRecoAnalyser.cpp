@@ -42,6 +42,14 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		}
 	}
 
+	treeMan_->Fill("semilepbrUp", event->semiLepBrUpWeight());
+	treeMan_->Fill("semilepbrDown", event->semiLepBrDownWeight());
+	treeMan_->Fill("petersonFrag", event->petersonFragWeight());
+	treeMan_->Fill("centralFrag", event->centralFragWeight());
+	treeMan_->Fill("upFrag", event->upFragWeight());
+	treeMan_->Fill("downFrag", event->downFragWeight());
+
+
 	treeMan_->setCurrentFolder(histogramFolder_);
 
 	int selectionCriteria = -1;
@@ -216,6 +224,15 @@ void UnfoldingRecoAnalyser::createTrees() {
 	for ( unsigned int i = 0; i < 27; ++i ) {
 		treeMan_->addBranch("matchingWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
 	}
+
+	treeMan_->addBranch("semilepbrUp", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("semilepbrDown", "F", "Unfolding" + Globals::treePrefix_);
+
+	treeMan_->addBranch("petersonFrag", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("centralFrag", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("upFrag", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("downFrag", "F", "Unfolding" + Globals::treePrefix_);
+
 }
 
 

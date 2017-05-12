@@ -89,6 +89,12 @@ Event::Event() : //
 		generatorWeight_(1), //
 		generatorSystematicWeights_(), //
 		generatorSystematicWeightsID_(), //
+		semiLepBrUpWeight_(0), //
+		semiLepBrDownWeight_(0), //
+		petersonFragWeight_(0), //
+		centralFragWeight_(0), //
+		upFragWeight_(0), //
+		downFragWeight_(0), //
 		ptdensityRho(0.), //
 		file_(""), //
 		passesCSCTightBeamHaloFilter_(false), //
@@ -142,7 +148,10 @@ bool Event::isTTJet( DataType::value type) const {
     	type == DataType::TTJets_PowhegPythia8_down ||
     	type == DataType::TTJets_PowhegPythia8_up ||
     	type == DataType::TTJets_PowhegPythia8_mtop1695 ||
-    	type == DataType::TTJets_PowhegPythia8_mtop1755
+    	type == DataType::TTJets_PowhegPythia8_mtop1755 ||
+    	type == DataType::TTJets_PowhegPythia8_hdampdown ||
+    	type == DataType::TTJets_PowhegPythia8_hdampup ||
+    	type == DataType::TTJets_PowhegPythia8_erdOn
 		// type == DataType::TTJets_synch
 		)
 		return true;
@@ -1181,6 +1190,57 @@ const std::vector<double> Event::generatorSystematicWeights() const {
 void Event::setGeneratorSystematicWeightsID(std::vector<int> generatorSystematicWeightsID) {
 	generatorSystematicWeightsID_ = generatorSystematicWeightsID;
 }
+
+
+const double Event::semiLepBrUpWeight() const {
+	return semiLepBrUpWeight_;
+}
+
+const double Event::semiLepBrDownWeight() const {
+	return semiLepBrDownWeight_;
+}
+
+const double Event::petersonFragWeight() const {
+	return petersonFragWeight_;
+}
+
+const double Event::centralFragWeight() const {
+	return centralFragWeight_;
+}
+
+const double Event::upFragWeight() const {
+	return upFragWeight_;
+}
+
+const double Event::downFragWeight() const {
+	return downFragWeight_;
+}
+
+
+void Event::setSemiLepBrUpWeight( double weight ) {
+	semiLepBrUpWeight_ = weight;
+}
+
+void Event::setSemiLepBrDownWeight( double weight ) {
+	semiLepBrDownWeight_ = weight;
+}
+
+void Event::setPetersonFragWeight( double weight ) {
+	petersonFragWeight_ = weight;
+}
+
+void Event::setCentralFragWeight( double weight ) {
+	centralFragWeight_ = weight;
+}
+
+void Event::setUpFragWeight( double weight ) {
+	upFragWeight_ = weight;
+}
+
+void Event::setDownFragWeight( double weight ) {
+	downFragWeight_ = weight;
+}
+
 
 const std::vector<int> Event::generatorSystematicWeightsID() const {
 	return generatorSystematicWeightsID_;

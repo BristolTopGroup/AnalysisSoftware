@@ -54,23 +54,15 @@ if __name__ == '__main__':
 		if dataset.startswith("Single"): continue
 
 		files = []
-		path = basepath[0]
-		# ntuplepath = temp_ntuplepath.format(
-		# 	sample=dataset,
-		# )
-		# path = basepath+ntuplepath
-		# print path
-		if not os.path.exists(path): continue
-		for ntuplejob in os.listdir(path):
-			if not os.path.isdir(path+ntuplejob): continue
-			tmp = ntuplejob.split('_')
-			rootfile = temp_rootfile.format(
-				job_number = tmp[2],
-				sample = dataset
-			)
-			full_path = path+rootfile
-			files.append(full_path)
+		paths = []
+		for p in basepath:
+			paths.extend( glob.glob( p ) )
+
 		total_processed_event = 0
+		for path in paths:
+			files.extend(glob.glob(path+'/*/*.root'))
+
+
 		for file_path in files:
 			rootfile = TFile(file_path)
 			hist = rootfile.Get("topPairEPlusJetsSelectionAnalyser/individualCuts")

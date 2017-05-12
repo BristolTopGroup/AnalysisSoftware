@@ -124,6 +124,12 @@ protected:
 	double centralLHEWeight_;
 	std::vector<double> generatorSystematicWeights_;
 	std::vector<int> generatorSystematicWeightsID_;
+	double semiLepBrUpWeight_;
+	double semiLepBrDownWeight_;
+	double petersonFragWeight_;
+	double centralFragWeight_;
+	double upFragWeight_;
+	double downFragWeight_;
 
 	double ptdensityRho;
 	std::string file_;
@@ -210,6 +216,12 @@ public:
 	void setCentralLHEWeight( double centralLHEWeight );
 	void setGeneratorSystematicWeights( std::vector<double> generatorSystematicWeights );
 	void setGeneratorSystematicWeightsID( std::vector<int> generatorSystematicWeightsID );
+	void setSemiLepBrUpWeight( double weight );
+	void setSemiLepBrDownWeight( double weight );
+	void setPetersonFragWeight( double weight );
+	void setCentralFragWeight( double weight );
+	void setUpFragWeight( double weight );
+	void setDownFragWeight( double weight );
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
 	void setPUWeight3BX(double puweight);
@@ -321,6 +333,13 @@ public:
 	const double centralLHEWeight() const;
 	const std::vector<double> generatorSystematicWeights() const;
 	const std::vector<int> generatorSystematicWeightsID() const;
+	const double semiLepBrUpWeight() const;
+	const double semiLepBrDownWeight() const;
+	const double petersonFragWeight() const;
+	const double centralFragWeight() const;
+	const double upFragWeight() const;
+	const double downFragWeight() const;
+
 	double averageNumberOfVertices() const;
 	double inTimeOnlyNumberOfVertices() const;
 	double rho() const;
