@@ -62,6 +62,9 @@ JetReader::JetReader() : //
 		tightbtagSFDownReader(), //
 		PartonFlavour(),
 		HadronFlavour(),
+		isLooseReader(),
+		isMediumReader(),
+		isTightReader(),
 		jets(), //
 		usedAlgorithm(JetAlgorithm::Calo_AntiKT_Cone05), //
 		isRealData() {
@@ -118,6 +121,9 @@ JetReader::JetReader(TChainPointer input, JetAlgorithm::value algo) :
 		tightbtagSFDownReader(input, "Jets.tightBTagSFDown"), //
 		PartonFlavour(input, "Jets.PartonFlavour"),//
 		HadronFlavour(input, "Jets.HadronFlavour"),//
+		isLooseReader(input, "Jets.passesLooseCSV"),
+		isMediumReader(input, "Jets.passesMediumCSV"),
+		isTightReader(input, "Jets.passesTightCSV"),
 		jets(), //
 		usedAlgorithm(algo), //
 		isRealData(false) {
@@ -144,8 +150,6 @@ void JetReader::readJets(bool isRealData) {
 		double pxRaw = pxRawReader.getVariableAt(jetIndex);
 		double pyRaw = pyRawReader.getVariableAt(jetIndex);
 		double pzRaw = pzRawReader.getVariableAt(jetIndex);
-
-
 
 		double JEC = 1.0;
 		if ( JECReader.size() > jetIndex ) {
@@ -198,15 +202,6 @@ void JetReader::readJets(bool isRealData) {
 				jet->set_unsmeared_jet(unsmearedJet);
 			}
 
-
-
-
-
-
-
-
-
-
 			double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
 			if (matchedPartonEnergy !=0) {
 				double matchedPartonEnergy = matchedPartonEnergyReader.getVariableAt(jetIndex); //
@@ -226,7 +221,6 @@ void JetReader::readJets(bool isRealData) {
 		jet->setMass(massReader.getVariableAt(jetIndex));
 		jet->setCharge(chargeReader.getVariableAt(jetIndex));
 
-
 		jet->setEnergyRaw(energyRaw);
 		jet->setPxRaw(pxRaw);
 		jet->setPyRaw(pyRaw);
@@ -234,7 +228,6 @@ void JetReader::readJets(bool isRealData) {
 
 		JetPointer rawJet(new Jet(energyRaw, pxRaw, pyRaw, pzRaw));
 		jet->set_raw_jet(rawJet);
-
 
 		jet->setJEC(JEC);
 		jet->setJECUnc(JECUncReader.getVariableAt(jetIndex));
@@ -258,6 +251,11 @@ void JetReader::readJets(bool isRealData) {
 				BtagAlgorithm::CombinedSecondaryVertexV2);
 		jet->setIsBJet(isBtagReader.getBoolVariableAt(jetIndex));
 
+		//csv
+		jet->setIsLoose(isLooseReader.getBoolVariableAt(jetIndex));
+		jet->setIsMedium(isMediumReader.getBoolVariableAt(jetIndex));
+		jet->setIsTight(isTightReader.getBoolVariableAt(jetIndex));
+
 		if ( !isRealData ) {
 			jet->setBTagSF( btagSFReader.getVariableAt( jetIndex ) );
 			jet->setBTagSFUp( btagSFUpReader.getVariableAt( jetIndex ) );
@@ -270,6 +268,7 @@ void JetReader::readJets(bool isRealData) {
 		//parton flavour
 		jet->setPartonFlavour(PartonFlavour.getIntVariableAt(jetIndex));
 		jet->setHadronFlavour(HadronFlavour.getIntVariableAt(jetIndex));
+
 
 		if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
 			jet->setNOD(NODReader.getIntVariableAt(jetIndex));
@@ -334,6 +333,10 @@ void JetReader::initialise() {
 
 	PartonFlavour.initialise();
 	HadronFlavour.initialise();
+	isLooseReader.initialise();
+	isMediumReader.initialise();
+	isTightReader.initialise();
+
 	if (usedAlgorithm == JetAlgorithm::CA08PF || usedAlgorithm == JetAlgorithm::PF2PAT) {
 		NODReader.initialise();
 		CEFReader.initialise();

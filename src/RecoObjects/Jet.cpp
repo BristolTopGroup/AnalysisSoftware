@@ -374,6 +374,18 @@ void Jet::setIsBJet( bool isItAB ) {
 	isBJet_ = isItAB;
 }
 
+void Jet::setIsLoose( bool isLoose ) {
+	isLoose_ = isLoose;
+}
+
+void Jet::setIsMedium( bool isMedium ) {
+	isMedium_ = isMedium;
+}
+
+void Jet::setIsTight( bool isTight ) {
+	isTight_ = isTight;
+}
+
 void Jet::setBTagSF( double sf ) {
 	btagSF_ = sf;
 }
@@ -486,6 +498,18 @@ bool Jet::isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) cons
 
 bool Jet::isBJet() const {
 	return isBJet_;
+}
+
+bool Jet::isLoose() const {
+	return isLoose_;
+}
+
+bool Jet::isMedium() const {
+	return isMedium_;
+}
+
+bool Jet::isTight() const {
+	return isTight_;
 }
 
 double Jet::getBTagSF( int systematic ) const {

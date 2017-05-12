@@ -35,18 +35,9 @@ void BTagEff::analyse(const EventPtr event) {
 		if (jetPt < 25 || fabs(jetEta) > 2.4) continue;
 
 		double jetCSV = jet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
-
-		// https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation76X
-		if (jetCSV > 0.460) {
-			isLoose = true;
-		}
-		if (jetCSV > 0.800) {
-			isMedium = true;
-			++NBJets;
-		}
-		if (jetCSV > 0.935) {
-			isTight = true;
-		}
+		if jet->isLoose() isLoose = true;
+		if jet->isMedium() isMedium = true;
+		if jet->isTight() isTight = true;
 
 		unsigned int partonFlavour = abs(jet->partonFlavour());
 		unsigned int hadronFlavour = abs(jet->hadronFlavour());
