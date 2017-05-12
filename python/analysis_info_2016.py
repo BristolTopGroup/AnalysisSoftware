@@ -1,6 +1,6 @@
 import os
-mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.4/ntuple/v1.0.4/Moriond17/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.4/ntuple/v1.0.4/Moriond17/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.5/ntuple/v1.0.5/Moriond17/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.5/ntuple/v1.0.5/Moriond17/'
 
 datasets_13TeV = {
 
@@ -34,7 +34,7 @@ datasets_13TeV = {
     'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755/tmp/' ],
 
     'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX/tmp/' ],
-    'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraph/tmp/'],
+    'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM/tmp/'],
     'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp/tmp/'],
 
     # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch/tmp/'],
@@ -83,20 +83,20 @@ datasets_13TeV = {
     'QCD_MuEnriched_800to1000': [mc_path_13TeV + 'QCD_MuEnriched_800to1000/tmp/'],
     'QCD_MuEnriched_1000toInf': [mc_path_13TeV + 'QCD_MuEnriched_1000toInf/tmp/'],
 
-    'QCD_50to80': [mc_path_13TeV + 'QCD_50to80/tmp/'],
-    'QCD_80to120': [mc_path_13TeV + 'QCD_80to120/tmp/'],
-    'QCD_120to170': [mc_path_13TeV + 'QCD_120to170/tmp/'],
-    'QCD_170to300': [mc_path_13TeV + 'QCD_170to300/tmp/'],
-    'QCD_300to470': [mc_path_13TeV + 'QCD_300to470/tmp/'],
-    'QCD_470to600': [mc_path_13TeV + 'QCD_470to600/tmp/'],
-    'QCD_600to800': [mc_path_13TeV + 'QCD_600to800/tmp/'],
-    'QCD_800to1000': [mc_path_13TeV + 'QCD_800to1000/tmp/'],
+    # 'QCD_50to80': [mc_path_13TeV + 'QCD_50to80/tmp/'],
+    # 'QCD_80to120': [mc_path_13TeV + 'QCD_80to120/tmp/'],
+    # 'QCD_120to170': [mc_path_13TeV + 'QCD_120to170/tmp/'],
+    # 'QCD_170to300': [mc_path_13TeV + 'QCD_170to300/tmp/'],
+    # 'QCD_300to470': [mc_path_13TeV + 'QCD_300to470/tmp/'],
+    # 'QCD_470to600': [mc_path_13TeV + 'QCD_470to600/tmp/'],
+    # 'QCD_600to800': [mc_path_13TeV + 'QCD_600to800/tmp/'],
+    # 'QCD_800to1000': [mc_path_13TeV + 'QCD_800to1000/tmp/'],
 
-    'QCD_1000to1400' : [ mc_path_13TeV + 'QCD_1000to1400/tmp/' ],
-    'QCD_1400to1800' : [ mc_path_13TeV + 'QCD_1400to1800/tmp/' ],
-    'QCD_1800to2400' : [ mc_path_13TeV + 'QCD_1800to2400/tmp/' ],
-    'QCD_2400to3200' : [ mc_path_13TeV + 'QCD_2400to3200/tmp/' ],
-    'QCD_3200toInf' : [ mc_path_13TeV + 'QCD_3200toInf/tmp/' ],
+    # 'QCD_1000to1400' : [ mc_path_13TeV + 'QCD_1000to1400/tmp/' ],
+    # 'QCD_1400to1800' : [ mc_path_13TeV + 'QCD_1400to1800/tmp/' ],
+    # 'QCD_1800to2400' : [ mc_path_13TeV + 'QCD_1800to2400/tmp/' ],
+    # 'QCD_2400to3200' : [ mc_path_13TeV + 'QCD_2400to3200/tmp/' ],
+    # 'QCD_3200toInf' : [ mc_path_13TeV + 'QCD_3200toInf/tmp/' ],
 
 }
 

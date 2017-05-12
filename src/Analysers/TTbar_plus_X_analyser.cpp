@@ -163,12 +163,29 @@ void TTbar_plus_X_analyser::fillCommonTreesNoBSelection(const EventPtr event,  c
 	const JetCollection bJets(event->CleanedBJets());
 	// Lepton
 	const LeptonPointer signalLepton = event->getSignalLepton( selection );
+	// MET
+	const METPointer MET_original(event->MET((METAlgorithm::value) 0));
+
 
 	treeMan_->setCurrentFolder(folder);
 	treeMan_->Fill("EventWeight", event->weight());
 	treeMan_->Fill("PUWeight", event->PileUpWeight());
 	treeMan_->Fill("PUWeight_up", event->PileUpWeight(1));
 	treeMan_->Fill("PUWeight_down", event->PileUpWeight(-1));
+
+	treeMan_->Fill("M3",Event::M3(jets));
+
+	if ( Event::NJets(bJets) > 0 ) {
+		treeMan_->Fill("M_bl",Event::M_bl(bJets, signalLepton));
+		treeMan_->Fill("angle_bl",Event::angle_bl(bJets, signalLepton));
+	}
+
+	treeMan_->Fill("HT",Event::HT(jets));
+	treeMan_->Fill("MET",MET_original->et());
+	treeMan_->Fill("MET_phi",MET_original->phi());
+	treeMan_->Fill("ST",Event::ST(jets, signalLepton, MET_original));
+	treeMan_->Fill("WPT",Event::WPT(signalLepton, MET_original));
+	treeMan_->Fill("MT",Event::MT(signalLepton, MET_original));
 
 	treeMan_->Fill("NJets",Event::NJets(jets));
 	treeMan_->Fill("NBJets",Event::NJets(bJets));
@@ -291,6 +308,20 @@ void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->addBranch("LightJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("lepton_isolation", "F", "FitVariables" + Globals::treePrefix_);
 	treeMan_->addBranch("jet_csv", "F", "FitVariables" + Globals::treePrefix_, false);
+
+	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MET_phi", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+
+	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+
 }
 
 void TTbar_plus_X_analyser::createTrees() {

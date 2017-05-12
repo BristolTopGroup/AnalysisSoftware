@@ -8,6 +8,7 @@
 #ifndef PSEUDOTOPREADER_H_
 #define PSEUDOTOPREADER_H_
 #include "../RecoObjects/PseudoTopParticles.h"
+#include "../RecoObjects/MET.h"
 #include "VariableReader.h"
 
 #include <iostream>
@@ -39,10 +40,12 @@ private:
     VariableReader<MultiDoublePointer> pseudoTop_lepton_pyReader_;
     VariableReader<MultiDoublePointer> pseudoTop_lepton_pzReader_;
 
-    VariableReader< double > pseudoTop_met_energyReader_;
-    VariableReader< double > pseudoTop_met_pxReader_;
-    VariableReader< double > pseudoTop_met_pyReader_;
-    VariableReader< double > pseudoTop_met_pzReader_;
+    // VariableReader< double > pseudoTop_met_energyReader_;
+    // VariableReader< double > pseudoTop_met_pxReader_;
+    // VariableReader< double > pseudoTop_met_pyReader_;
+    // VariableReader< double > pseudoTop_met_pzReader_;
+    VariableReader< double > pseudoTop_met_exReader_;
+    VariableReader< double > pseudoTop_met_eyReader_;
 
     PseudoTopParticlesPointer pseudoTopParticles_;
     MCParticleCollection newPseudoTops_;
@@ -52,7 +55,7 @@ private:
     JetCollection newJets_;
     MCParticleCollection newPseudoBs_;
     ParticlePointer newNeutrino_;
-    ParticlePointer newPseudoMET_;
+    METPointer newPseudoMET_;
 
     bool isSemiLeptonic_;
 
