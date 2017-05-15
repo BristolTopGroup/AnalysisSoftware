@@ -140,7 +140,9 @@ const JetCollection& JetReader::getJets(bool isRealData) {
 }
 
 void JetReader::readJets(bool isRealData) {
+
 	for (unsigned int jetIndex = 0; jetIndex < energyReader.size(); jetIndex++) {
+
 		double energy = energyReader.getVariableAt(jetIndex);
 		double px = pxReader.getVariableAt(jetIndex);
 		double py = pyReader.getVariableAt(jetIndex);
@@ -154,7 +156,7 @@ void JetReader::readJets(bool isRealData) {
 		double JEC = 1.0;
 		if ( JECReader.size() > jetIndex ) {
 			JEC = JECReader.getVariableAt(jetIndex);
-		}
+		}	
 
 		double JECUnc = JECUncReader.getVariableAt(jetIndex);
 		// JECUnc = 0.03;
@@ -247,9 +249,10 @@ void JetReader::readJets(bool isRealData) {
 		}
 
 		//set b-tagging
-		jet->setDiscriminatorForBtagType(btagCSVv2Reader.getVariableAt(jetIndex),
-				BtagAlgorithm::CombinedSecondaryVertexV2);
-		jet->setIsBJet(isBtagReader.getBoolVariableAt(jetIndex));
+		jet->setDiscriminatorForBtagType(btagCSVv2Reader.getVariableAt(jetIndex), BtagAlgorithm::CombinedSecondaryVertexV2);
+
+		// isBtagReader is size 0. (I dont know why, but have changed it to isMediumReader which does the same job)
+		jet->setIsBJet(isMediumReader.getBoolVariableAt(jetIndex));
 
 		//csv
 		jet->setIsLoose(isLooseReader.getBoolVariableAt(jetIndex));
