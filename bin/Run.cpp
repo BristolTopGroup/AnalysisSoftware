@@ -43,6 +43,8 @@ int main(int argc, char **argv) {
 
 	vector<string> inputFiles = config.inputFiles();
 
+	std::cout << "Sample file in use : " << inputFiles.at(0).c_str() << std::endl;
+
 	for (unsigned int index = 0; index < inputFiles.size(); ++index) {
 		myAnalysis->addInputFile(inputFiles.at(index).c_str());
 	}

@@ -455,15 +455,17 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	double electronPt = pt();
 	// double electronEta = fabs(eta());
 	double electronSCEta = superClusterEta();
+	double maxPt, maxEta;
+	unsigned int bin;
 
 	// Trigger scalefactor
 	double triggerEfficiency(1.);
 	double triggerEfficiencyError(0.);
 	boost::shared_ptr<TH2F> electronTriggerScaleFactorsHistogram(Globals::electronTriggerScaleFactorsHistogram);
-	double maxPt = electronTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
-	double maxEta = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
+	maxPt = electronTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
+	maxEta = electronTriggerScaleFactorsHistogram->GetXaxis()->GetXmax();
 
-	unsigned int bin = 0;
+	bin = 0;
 	if ( electronPt <= maxPt && fabs( electronSCEta ) < maxEta ) {
 		bin = electronTriggerScaleFactorsHistogram->FindBin( electronSCEta, electronPt );
 	}
