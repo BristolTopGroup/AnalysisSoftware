@@ -119,16 +119,16 @@ bool Event::isRealData() const {
 	|| dataType == DataType::SingleElectron_RunE
 	|| dataType == DataType::SingleElectron_RunF
 	|| dataType == DataType::SingleElectron_RunG
-	|| dataType == DataType::SingleElectron_RunH_Prompt_v2
-	|| dataType == DataType::SingleElectron_RunH_Prompt_v3
+	|| dataType == DataType::SingleElectron_RunH_v2
+	|| dataType == DataType::SingleElectron_RunH_v3
 	|| dataType == DataType::SingleMuon_RunB
 	|| dataType == DataType::SingleMuon_RunC
 	|| dataType == DataType::SingleMuon_RunD
 	|| dataType == DataType::SingleMuon_RunE
 	|| dataType == DataType::SingleMuon_RunF
 	|| dataType == DataType::SingleMuon_RunG
-	|| dataType == DataType::SingleMuon_RunH_Prompt_v2
-	|| dataType == DataType::SingleMuon_RunH_Prompt_v3;
+	|| dataType == DataType::SingleMuon_RunH_v2
+	|| dataType == DataType::SingleMuon_RunH_v3;
 }
 
 const DataType::value Event::getDataType() const {
@@ -465,7 +465,6 @@ const bool Event::isSemiLeptonicMuon() const {
 	if ( isSemiLeptonicMuon_ ) {
 		return true;
 	}
-
 	return false;
 }
 

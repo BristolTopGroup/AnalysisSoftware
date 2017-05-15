@@ -21,8 +21,8 @@ enum value {
 	SingleElectron_RunE,
 	SingleElectron_RunF,
 	SingleElectron_RunG,
-	SingleElectron_RunH_Prompt_v2,
-	SingleElectron_RunH_Prompt_v3,
+	SingleElectron_RunH_v2,
+	SingleElectron_RunH_v3,
 
 	SingleMuon_RunB,
 	SingleMuon_RunC,
@@ -30,8 +30,8 @@ enum value {
 	SingleMuon_RunE,
 	SingleMuon_RunF,
 	SingleMuon_RunG,
-	SingleMuon_RunH_Prompt_v2,
-	SingleMuon_RunH_Prompt_v3,
+	SingleMuon_RunH_v2,
+	SingleMuon_RunH_v3,
 
 
     TTJets_PowhegPythia8,
@@ -128,8 +128,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"SingleElectron_RunE",
 		"SingleElectron_RunF",
 		"SingleElectron_RunG",
-		"SingleElectron_RunH_Prompt_v2",
-		"SingleElectron_RunH_Prompt_v3",
+		"SingleElectron_RunH_v2",
+		"SingleElectron_RunH_v3",
 
 		"SingleMuon_RunB",
 		"SingleMuon_RunC",
@@ -137,8 +137,8 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 		"SingleMuon_RunE",
 		"SingleMuon_RunF",
 		"SingleMuon_RunG",
-		"SingleMuon_RunH_Prompt_v2",
-		"SingleMuon_RunH_Prompt_v3",
+		"SingleMuon_RunH_v2",
+		"SingleMuon_RunH_v3",
 
 	    "TTJets_PowhegPythia8",
 	    "TTJets_PowhegPythia8_fsrdown",

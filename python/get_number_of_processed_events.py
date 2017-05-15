@@ -84,7 +84,7 @@ if __name__ == '__main__':
 			exists = True
 			lineSplit = line.split('"NumberOfProcessedEvents"')
 			lineSplit[-1] = '"NumberOfProcessedEvents" :' + str(int(total_processed_event)) + '}'
-			content[i] = ' '.join( lineSplit )
+			content[i] = ''.join( lineSplit )
 		if not (exists): print "This dataset does not have an entry in DatasetInfo file. For now, Go make one."
 
 	datasetFile = open(filename_tmp,'w')

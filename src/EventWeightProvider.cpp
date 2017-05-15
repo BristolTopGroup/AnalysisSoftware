@@ -44,16 +44,16 @@ double EventWeightProvider::getWeight(DataType::value type) {
 	|| type == DataType::SingleElectron_RunE
 	|| type == DataType::SingleElectron_RunF
 	|| type == DataType::SingleElectron_RunG
-	|| type == DataType::SingleElectron_RunH_Prompt_v2
-	|| type == DataType::SingleElectron_RunH_Prompt_v3
+	|| type == DataType::SingleElectron_RunH_v2
+	|| type == DataType::SingleElectron_RunH_v3
 	|| type == DataType::SingleMuon_RunB
 	|| type == DataType::SingleMuon_RunC
 	|| type == DataType::SingleMuon_RunD
 	|| type == DataType::SingleMuon_RunE
 	|| type == DataType::SingleMuon_RunF
 	|| type == DataType::SingleMuon_RunG
-	|| type == DataType::SingleMuon_RunH_Prompt_v2
-	|| type == DataType::SingleMuon_RunH_Prompt_v3
+	|| type == DataType::SingleMuon_RunH_v2
+	|| type == DataType::SingleMuon_RunH_v3
 	)
 		return 1.;
 	else
