@@ -32,7 +32,7 @@ void BTagEff::analyse(const EventPtr event) {
 		double jetPt = jet->pt();
 		double jetEta = jet->eta();
 
-		if (jetPt < 25 || fabs(jetEta) > 2.4) continue;
+		if (jetPt < 30 || fabs(jetEta) > 2.4) continue;
 
 		double jetCSV = jet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
 		if (jet->isLoose()) isLoose = true;
