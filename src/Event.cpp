@@ -151,7 +151,8 @@ bool Event::isTTJet( DataType::value type) const {
     	type == DataType::TTJets_PowhegPythia8_mtop1755 ||
     	type == DataType::TTJets_PowhegPythia8_hdampdown ||
     	type == DataType::TTJets_PowhegPythia8_hdampup ||
-    	type == DataType::TTJets_PowhegPythia8_erdOn
+    	type == DataType::TTJets_PowhegPythia8_erdOn ||
+    	type == DataType::TTJets_PowhegPythia8_QCDbased_erdOn
 		// type == DataType::TTJets_synch
 		)
 		return true;
@@ -217,6 +218,7 @@ void Event::setJetTTBarPartons() {
 		else if ( partonFV == quarkBar->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::QuarkBar );
 		else if ( partonFV == hadronicB->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::HadB );
 		else if ( partonFV == leptonicB->getFourVector() ) jet->set_ttbar_decay_parton( TTPartons::partonType::LepB );
+		else jet->set_ttbar_decay_parton( TTPartons::Undefined);
 	}
 }
 
