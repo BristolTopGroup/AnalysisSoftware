@@ -155,6 +155,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 	    "TTJets_PowhegPythia8_mtop1755",
 	    "TTJets_PowhegPythia8_erdOn",
 		"TTJets_PowhegPythia8_QCDbased_erdOn",
+
 		"TTJets_PowhegPythia8_GluonMove",
 		"TTJets_amcatnloFXFX",
 		// "TTJets_amcatnloFXFX_scaledown",
