@@ -843,6 +843,7 @@ void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
 	std::string pathToBTagEff = getSampleBTagEffTag(sample_, mode_).append("bQuarkJets_Ratio_Hist");
+	std::string pathToBTagEff_PowhegPythia8 = "PowhegPythia8/bQuarkJets_Ratio_Hist";
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getbQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -854,6 +855,8 @@ void ConfigFile::getbQuarkJet(std::string btagEfficiencyFile) {
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
 
 	Globals::bQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
+	Globals::bQuarkJet_PowhegPythia8 = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff_PowhegPythia8.c_str())->Clone();
+
 	
 	file->Close();
 }
@@ -862,6 +865,7 @@ void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
 	std::string pathToBTagEff = getSampleBTagEffTag(sample_, mode_).append("cQuarkJets_Ratio_Hist");
+	std::string pathToBTagEff_PowhegPythia8 = "PowhegPythia8/cQuarkJets_Ratio_Hist";
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getcQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -870,6 +874,8 @@ void ConfigFile::getcQuarkJet(std::string btagEfficiencyFile) {
 	pathToBTagEff = checkEffFileExists(btagEfficiencyFile, pathToBTagEff);
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
 	Globals::cQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
+	Globals::cQuarkJet_PowhegPythia8 = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff_PowhegPythia8.c_str())->Clone();
+
 	file->Close();
 }
 
@@ -878,6 +884,7 @@ void ConfigFile::getudsgQuarkJet(std::string btagEfficiencyFile) {
 	using namespace std;
 
 	std::string pathToBTagEff = getSampleBTagEffTag(sample_, mode_).append("udsgQuarkJets_Ratio_Hist");
+	std::string pathToBTagEff_PowhegPythia8 = "PowhegPythia8/udsgQuarkJets_Ratio_Hist";
 
 	if (!boost::filesystem::exists(btagEfficiencyFile)) {
 		cerr << "ConfigFile::getudsgQuarkJet(" << btagEfficiencyFile << "): could not find file" << endl;
@@ -886,6 +893,7 @@ void ConfigFile::getudsgQuarkJet(std::string btagEfficiencyFile) {
 	pathToBTagEff = checkEffFileExists(btagEfficiencyFile, pathToBTagEff);
 	boost::scoped_ptr<TFile> file(TFile::Open(btagEfficiencyFile.c_str()));
 	Globals::udsgQuarkJet = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff.c_str())->Clone();
+	Globals::udsgQuarkJet_PowhegPythia8 = (boost::shared_ptr<TH2F>) (TH2F*) file->Get(pathToBTagEff_PowhegPythia8.c_str())->Clone();
 	file->Close();
 }
 
@@ -933,6 +941,7 @@ std::string ConfigFile::getSampleBTagEffTag(std::string sample, std::string mode
 	else if( sample == "TTJets_PowhegPythia8_hdampdown") return "PowhegPythia8_hdampup/";
 	else if( sample == "TTJets_PowhegPythia8_hdampup") return "PowhegPythia8_hdampdown/";
 	else if( sample == "TTJets_PowhegPythia8_erdOn") return "PowhegPythia8_erdOn/";
+	// else if( sample == "TTJets_PowhegPythia8_QCDbased_erdOn") return "PowhegPythia8_QCDbased_erdOn/";
 	else return "PowhegPythia8/";
 }
 
