@@ -56,11 +56,54 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	// if ( !pseudoTopParticles->isSemiLeptonic() ) return;
 
 	// Check if event passes event selection (at pseudo top level)
-	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons ) ) {
+	bool passesGenSelection = passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, minNJets_, minNBJets_ );
+	if ( passesGenSelection ) {
+		++nEventsInPS_;
 		treeMan_->Fill("passesGenEventSelection",1);
 	}
 	else {
 		treeMan_->Fill("passesGenEventSelection",0);
+	}
+
+	bool passesOfflineSelection = event->PassesElectronTriggerAndSelection() || event->PassesMuonTriggerAndSelection();
+	if ( passesOfflineSelection ) ++nEventsOffline_;
+	if ( passesOfflineSelection && !passesGenSelection ){
+		++nEventsOfflineButNotInPS_;
+	}
+
+	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 4, 1 ) ) {
+		++nEventsInPS_4j1b_;
+	}
+	else if ( passesOfflineSelection ){
+		++nEventsOfflineButNotInPS_4j1b_;
+	}
+
+	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 4, 0 ) ) {
+		++nEventsInPS_4j0b_;
+	}
+	else if ( passesOfflineSelection ){
+		++nEventsOfflineButNotInPS_4j0b_;
+	}
+
+	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 3, 2 ) ) {
+		++nEventsInPS_3j2b_;
+	}
+	else if ( passesOfflineSelection ){
+		++nEventsOfflineButNotInPS_3j2b_;
+	}
+
+	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 3, 1 ) ) {
+		++nEventsInPS_3j1b_;
+	}
+	else if ( passesOfflineSelection ){
+		++nEventsOfflineButNotInPS_3j1b_;
+	}
+
+	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 3, 0 ) ) {
+		++nEventsInPS_3j0b_;
+	}
+	else if ( passesOfflineSelection ){
+		++nEventsOfflineButNotInPS_3j0b_;
 	}
 
 	//
@@ -250,7 +293,6 @@ void PseudoTopAnalyser::createTrees() {
 	// Number of pseudo jets
 	treeMan_->addBranch("NPseudoJets", "F", "Unfolding" + Globals::treePrefix_);
 	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding" + Globals::treePrefix_);
-
 }
 
 bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons ) {
@@ -294,7 +336,7 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		}
 	}
 	
-	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets_ && numberGoodBJets >= minNBJets_ ) {
+	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets && numberGoodBJets >= minNBJets ) {
 		return true;
 	}
 	else return false;
@@ -302,10 +344,74 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 }
 
 PseudoTopAnalyser::PseudoTopAnalyser(TreeManagerPtr treeMan, std::string histogramFolder) :
-		BasicAnalyser(treeMan, histogramFolder) {
+		BasicAnalyser(treeMan, histogramFolder),
+		nEventsInPS_(0),
+		nEventsOfflineButNotInPS_(0),
+		nEventsInPS_4j0b_(0),
+		nEventsOfflineButNotInPS_4j0b_(0),
+		nEventsInPS_4j1b_(0),
+		nEventsOfflineButNotInPS_4j1b_(0),
+		nEventsInPS_3j2b_(0),
+		nEventsOfflineButNotInPS_3j2b_(0),
+		nEventsInPS_3j0b_(0),
+		nEventsOfflineButNotInPS_3j0b_(0),
+		nEventsInPS_3j1b_(0),
+		nEventsOfflineButNotInPS_3j1b_(0),
+		nEventsOffline_(0)
+		 {
 }
 
 PseudoTopAnalyser::~PseudoTopAnalyser() {
+	std::cout << "PseudoTopAnalyser : Phase Space Info" << std::endl;
+	std::cout << "N event offline : " << nEventsOffline_ << std::endl;
+
+	std::cout << "N jets : " << minNJets_ << std::endl;
+	std::cout << "N b jets : " << minNBJets_ << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_ ) / float( nEventsOffline_ ) * 100 << std::endl;
+
+	std::cout << "N jets : 4" << std::endl;
+	std::cout << "N b jets : 1" << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_4j1b_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_4j1b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_4j1b_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_4j1b_) / float( nEventsOffline_ ) * 100 << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "N jets : 4" << std::endl;
+	std::cout << "N b jets : 0" << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_4j0b_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_4j0b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_4j0b_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_4j0b_) / float( nEventsOffline_ ) * 100 << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "N jets : 3" << std::endl;
+	std::cout << "N b jets : 2" << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_3j2b_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_3j2b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_3j2b_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_3j2b_) / float( nEventsOffline_ ) * 100 << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "N jets : 3" << std::endl;
+	std::cout << "N b jets : 1" << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_3j1b_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_3j1b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_3j1b_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_3j1b_) / float( nEventsOffline_ ) * 100 << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "N jets : 3" << std::endl;
+	std::cout << "N b jets : 0" << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_3j0b_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_3j0b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_3j0b_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_3j0b_) / float( nEventsOffline_ ) * 100 << std::endl;
+	std::cout << std::endl;
+
 }
 
 } /* namespace BAT */

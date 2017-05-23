@@ -32,7 +32,28 @@ public:
 	static double const maxJetAbsEta_;
 
 protected:
-	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons );
+	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets );
+
+private:
+	unsigned int nEventsInPS_;
+	unsigned int nEventsOfflineButNotInPS_;
+
+	unsigned int nEventsInPS_4j0b_;
+	unsigned int nEventsOfflineButNotInPS_4j0b_;
+
+	unsigned int nEventsInPS_4j1b_;
+	unsigned int nEventsOfflineButNotInPS_4j1b_;
+
+	unsigned int nEventsInPS_3j2b_;
+	unsigned int nEventsOfflineButNotInPS_3j2b_;
+
+	unsigned int nEventsInPS_3j0b_;
+	unsigned int nEventsOfflineButNotInPS_3j0b_;
+
+	unsigned int nEventsInPS_3j1b_;
+	unsigned int nEventsOfflineButNotInPS_3j1b_;
+
+	unsigned int nEventsOffline_;
 };
 typedef boost::scoped_ptr<PseudoTopAnalyser> PseudoTopAnalyserLocalPtr;
 typedef boost::shared_ptr<PseudoTopAnalyser> PseudoTopAnalyserPtr;
