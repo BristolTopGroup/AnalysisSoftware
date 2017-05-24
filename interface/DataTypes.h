@@ -46,6 +46,7 @@ enum value {
     TTJets_PowhegPythia8_hdampdown,
     TTJets_PowhegPythia8_hdampup,
     TTJets_PowhegPythia8_erdOn,
+	TTJets_PowhegPythia8_QCDbased_erdOn,
 
 	TTJets_amcatnloFXFX,
 	TTJets_madgraphMLM,
@@ -152,7 +153,7 @@ const boost::array<std::string, DataType::NUMBER_OF_DATA_TYPES> names = { {
 	    "TTJets_PowhegPythia8_mtop1695",
 	    "TTJets_PowhegPythia8_mtop1755",
 	    "TTJets_PowhegPythia8_erdOn",
-
+		"TTJets_PowhegPythia8_QCDbased_erdOn",
 		"TTJets_amcatnloFXFX",
 		// "TTJets_amcatnloFXFX_scaledown",
 		// "TTJets_amcatnloFXFX_scaleup",
