@@ -336,8 +336,6 @@ void TTbar_plus_X_analyser::createTrees() {
 
 	BTagEffAnalyserEPlusJetsRefSelection_->createTrees();
 	BTagEffAnalyserMuPlusJetsRefSelection_->createTrees();
-	PileupAnalyserEPlusJetsRefSelection_->createTrees();
-	PileupAnalyserMuPlusJetsRefSelection_->createTrees();
 }
 
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(TreeManagerPtr treeMan, std::string histogramFolder) :

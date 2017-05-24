@@ -50,11 +50,6 @@ private:
 	// BTag Efficiency
 	BTagEffAnalyserLocalPtr BTagEffAnalyserEPlusJetsRefSelection_;
 	BTagEffAnalyserLocalPtr BTagEffAnalyserMuPlusJetsRefSelection_;
-
-	// Pileup Analyser
-	PileupAnalyserLocalPtr PileupAnalyserEPlusJetsRefSelection_;
-	PileupAnalyserLocalPtr PileupAnalyserMuPlusJetsRefSelection_;
-
 };
 
 typedef boost::scoped_ptr<BAT::TTbar_plus_X_analyser> TTbar_plus_X_analyser_local_ptr;
