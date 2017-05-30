@@ -42,7 +42,7 @@ datasetInfo['SingleMuon_RunH_v2'] = {"cross-section": 0, "NumberOfProcessedEvent
 datasetInfo['SingleMuon_RunH_v3'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/TtbarNNLO
-datasetInfo['TTJets_PowhegPythia8'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :77229341}
+datasetInfo['TTJets_PowhegPythia8'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :155097079}
 datasetInfo['TTJets_PowhegPythia8_fsrdown'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59306906}
 datasetInfo['TTJets_PowhegPythia8_fsrup'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59230899}
 datasetInfo['TTJets_PowhegPythia8_isrdown'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58999580}
