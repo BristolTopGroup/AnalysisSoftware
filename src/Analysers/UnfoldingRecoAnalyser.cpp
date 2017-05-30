@@ -37,6 +37,12 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		else if ( weightID == 2101 || weightID == 2102 ) {
 			treeMan_->Fill( "alphaSWeight_" + to_string(weightID-2101), weight);
 		}
+		else if ( weightID >= 3001 && weightID <= 3055 ) {
+			treeMan_->Fill( "CT14Weight_" + to_string(weightID-3001), weight);
+		}
+		else if ( weightID >= 4001 && weightID <= 4056 ) {
+			treeMan_->Fill( "MMHT14Weight_" + to_string(weightID-4001), weight);
+		}
 		else if ( weightID >= 5001 && weightID <= 5027 ) {
 			treeMan_->Fill( "matchingWeight_" + to_string(weightID-5001), weight);
 		}
@@ -223,6 +229,13 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	for ( unsigned int i = 0; i < 27; ++i ) {
 		treeMan_->addBranch("matchingWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+	}
+
+	for ( unsigned int i = 0; i < 55; ++i ) {
+		treeMan_->addBranch("CT14Weight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+	}
+	for ( unsigned int i = 0; i < 56; ++i ) {
+		treeMan_->addBranch("MMHT14Weight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
 	}
 
 	treeMan_->addBranch("semilepbrUp", "F", "Unfolding" + Globals::treePrefix_);
