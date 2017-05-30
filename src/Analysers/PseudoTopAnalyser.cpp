@@ -322,10 +322,20 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 	unsigned int numberGoodJets = 0;
 	unsigned int numberGoodBJets = 0;
 
+	unsigned int numberGoodJets_lowerPt = 0;
+	unsigned int numberGoodBJets_lowerPt = 0;
+
 	for ( unsigned int jetIndex = 0; jetIndex < pseudoJets.size(); ++ jetIndex ) {
 		const JetPointer jet = pseudoJets.at(jetIndex);
 
 		// Check if this is a good jet
+		if ( jet->pt() > 20 && fabs(jet->eta()) < maxJetAbsEta_ ) {
+			++numberGoodJets_lowerPt;
+			if ( fabs( jet->partonFlavour() ) == 5 ) {
+				++numberGoodBJets_lowerPt;
+			}
+		}
+
 		if ( jet->pt() > minJetPt_ && fabs(jet->eta()) < maxJetAbsEta_ ) {
 			++numberGoodJets;
 
@@ -336,7 +346,8 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		}
 	}
 	
-	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets && numberGoodBJets >= minNBJets ) {
+	// if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets && numberGoodBJets >= minNBJets ) {
+	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= 3 && numberGoodBJets >= 1 && numberGoodJets_lowerPt >= 4 && numberGoodBJets_lowerPt >= 2 ) {
 		return true;
 	}
 	else return false;

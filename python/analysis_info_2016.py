@@ -23,7 +23,9 @@ datasets_13TeV = {
     'SingleElectron_RunH_v2' : [ mc_path_13TeV + 'SingleElectron_RunH_v2/tmp/'],
     'SingleElectron_RunH_v3' : [ mc_path_13TeV + 'SingleElectron_RunH_v3/tmp/'],
 
-    'TTJets_PowhegPythia8' : [ mc_path_13TeV  + 'TTJets_PowhegPythia8/tmp/', mc_path_13TeV  + 'TTJets_PowhegPythia8_ext*/tmp/' ],
+    # 'TTJets_PowhegPythia8' : [ mc_path_13TeV  + 'TTJets_PowhegPythia8/tmp/', mc_path_13TeV  + 'TTJets_PowhegPythia8_ext*/tmp/' ],
+    'TTJets_PowhegPythia8' : [ '/storage/ec6821/NTupleProd/new/NTupleProduction/workspace/' ],
+
     'TTJets_PowhegPythia8_fsrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrdown*/tmp/' ],
     'TTJets_PowhegPythia8_fsrup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrup*/tmp/' ],
     'TTJets_PowhegPythia8_isrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_isrdown*/tmp/' ],
