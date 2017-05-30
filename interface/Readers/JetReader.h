@@ -81,7 +81,9 @@ protected:
 	VariableReader<MultiIntPointer> PartonFlavour;
 	VariableReader<MultiIntPointer> HadronFlavour;
 
-
+	VariableReader<MultiBoolPointer> isLooseReader;
+	VariableReader<MultiBoolPointer> isMediumReader;
+	VariableReader<MultiBoolPointer> isTightReader;
 
 	JetCollection jets;
 	JetAlgorithm::value usedAlgorithm;

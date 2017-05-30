@@ -1,29 +1,29 @@
 import os
-mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.7/ntuple/v1.0.7/Moriond17/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.7/ntuple/v1.0.7/Moriond17/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.8/ntuple/v1.0.8/Moriond17/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.8/ntuple/v1.0.8/Moriond17/'
 
 datasets_13TeV = {
 
-    'SingleMuon_RunB' : [ mc_path_13TeV + 'SingleMuon_RunB_Rereco_v3/tmp/'],
-    'SingleMuon_RunC' : [ mc_path_13TeV + 'SingleMuon_RunC_Rereco_v1/tmp/'],
-    'SingleMuon_RunD' : [ mc_path_13TeV + 'SingleMuon_RunD_Rereco_v1/tmp/'],
-    'SingleMuon_RunE' : [ mc_path_13TeV + 'SingleMuon_RunE_Rereco_v1/tmp/'],
-    'SingleMuon_RunF' : [ mc_path_13TeV + 'SingleMuon_RunF_Rereco_v1/tmp/'],
-    'SingleMuon_RunG' : [ mc_path_13TeV + 'SingleMuon_RunG_Rereco_v1/tmp/'],
-    'SingleMuon_RunH_Prompt_v2' : [ mc_path_13TeV + 'SingleMuon_RunH_Prompt_v2/tmp/'],
-    'SingleMuon_RunH_Prompt_v3' : [ mc_path_13TeV + 'SingleMuon_RunH_Prompt_v3/tmp/'],
+    'SingleMuon_RunB' : [ mc_path_13TeV + 'SingleMuon_RunB/tmp/'],
+    'SingleMuon_RunC' : [ mc_path_13TeV + 'SingleMuon_RunC/tmp/'],
+    'SingleMuon_RunD' : [ mc_path_13TeV + 'SingleMuon_RunD/tmp/'],
+    'SingleMuon_RunE' : [ mc_path_13TeV + 'SingleMuon_RunE/tmp/'],
+    'SingleMuon_RunF' : [ mc_path_13TeV + 'SingleMuon_RunF/tmp/'],
+    'SingleMuon_RunG' : [ mc_path_13TeV + 'SingleMuon_RunG/tmp/'],
+    'SingleMuon_RunH_v2' : [ mc_path_13TeV + 'SingleMuon_RunH_v2/tmp/'],
+    'SingleMuon_RunH_v3' : [ mc_path_13TeV + 'SingleMuon_RunH_v3/tmp/'],
 
 
-    'SingleElectron_RunB' : [ mc_path_13TeV + 'SingleElectron_RunB_Rereco_v3/tmp/'],
-    'SingleElectron_RunC' : [ mc_path_13TeV + 'SingleElectron_RunC_Rereco_v1/tmp/'],
-    'SingleElectron_RunD' : [ mc_path_13TeV + 'SingleElectron_RunD_Rereco_v1/tmp/'],
-    'SingleElectron_RunE' : [ mc_path_13TeV + 'SingleElectron_RunE_Rereco_v1/tmp/'],
-    'SingleElectron_RunF' : [ mc_path_13TeV + 'SingleElectron_RunF_Rereco_v1/tmp/'],
-    'SingleElectron_RunG' : [ mc_path_13TeV + 'SingleElectron_RunG_Rereco_v1/tmp/'],
-    'SingleElectron_RunH_Prompt_v2' : [ mc_path_13TeV + 'SingleElectron_RunH_Prompt_v2/tmp/'],
-    'SingleElectron_RunH_Prompt_v3' : [ mc_path_13TeV + 'SingleElectron_RunH_Prompt_v3/tmp/'],
+    'SingleElectron_RunB' : [ mc_path_13TeV + 'SingleElectron_RunB/tmp/'],
+    'SingleElectron_RunC' : [ mc_path_13TeV + 'SingleElectron_RunC/tmp/'],
+    'SingleElectron_RunD' : [ mc_path_13TeV + 'SingleElectron_RunD/tmp/'],
+    'SingleElectron_RunE' : [ mc_path_13TeV + 'SingleElectron_RunE/tmp/'],
+    'SingleElectron_RunF' : [ mc_path_13TeV + 'SingleElectron_RunF/tmp/'],
+    'SingleElectron_RunG' : [ mc_path_13TeV + 'SingleElectron_RunG/tmp/'],
+    'SingleElectron_RunH_v2' : [ mc_path_13TeV + 'SingleElectron_RunH_v2/tmp/'],
+    'SingleElectron_RunH_v3' : [ mc_path_13TeV + 'SingleElectron_RunH_v3/tmp/'],
 
-    'TTJets_PowhegPythia8' : [ mc_path_13TeV  + 'TTJets_PowhegPythia8/tmp/' ],
+    'TTJets_PowhegPythia8' : [ mc_path_13TeV  + 'TTJets_PowhegPythia8/tmp/', mc_path_13TeV  + 'TTJets_PowhegPythia8_ext*/tmp/' ],
     'TTJets_PowhegPythia8_fsrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrdown*/tmp/' ],
     'TTJets_PowhegPythia8_fsrup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrup*/tmp/' ],
     'TTJets_PowhegPythia8_isrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_isrdown*/tmp/' ],
@@ -35,7 +35,8 @@ datasets_13TeV = {
     'TTJets_PowhegPythia8_hdampdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_hdampdown*/tmp/' ],
     'TTJets_PowhegPythia8_hdampup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_hdampup*/tmp/' ],
     'TTJets_PowhegPythia8_erdOn' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_erdOn*/tmp/' ],
-
+    'TTJets_PowhegPythia8_QCDbased_erdOn' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_QCDbased_erdOn*/tmp/' ],
+    
     'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX/tmp/' ],
     'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM/tmp/'],
     'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp*/tmp/'],

@@ -58,9 +58,12 @@ public:
 	Jet(double energy, double px, double py, double pz);
 	virtual ~Jet();
 	bool isGood() const;
-	bool isBJet(BtagAlgorithm::value type,
-			BtagAlgorithm::workingPoint wp) const;
+	bool isBJet(BtagAlgorithm::value type, BtagAlgorithm::workingPoint wp) const;
 	bool isBJet() const;
+	bool isLoose() const;
+	bool isMedium() const;
+	bool isTight() const;
+
 	JetAlgorithm::value getUsedAlgorithm() const;
 	double getBTagSF( int systematic = 0 ) const;
 	double getTightBTagSF( int systematic = 0 ) const;
@@ -128,6 +131,9 @@ public:
 	void setFHPD(double fHPD);
 	void setDiscriminatorForBtagType(double discriminator, BtagAlgorithm::value type);
 	void setIsBJet( bool isBJet );
+	void setIsLoose( bool isLoose );
+	void setIsMedium( bool isMedium );
+	void setIsTight( bool isTight );
 	void setBTagSF( double sf );
 	void setBTagSFUp( double sf );
 	void setBTagSFDown( double sf );
@@ -156,7 +162,7 @@ private:
 	double fractionOfEnergyIntheHottestHPDReadout;
 
 	std::vector<double> btag_discriminators;
-	bool isBJet_;
+	bool isBJet_, isLoose_, isMedium_, isTight_;
 	double btagSF_;
 	double btagSF_up_;
 	double btagSF_down_;
