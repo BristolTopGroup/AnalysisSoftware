@@ -35,9 +35,16 @@ void BTagEff::analyse(const EventPtr event) {
 		if (jetPt < 30 || fabs(jetEta) > 2.4) continue;
 
 		double jetCSV = jet->getBTagDiscriminator(BAT::BtagAlgorithm::value::CombinedSecondaryVertexV2);
-		if (jet->isLoose()) isLoose = true;
-		if (jet->isMedium()) isMedium = true;
-		if (jet->isTight()) isTight = true;
+		if (jet->isLoose()){ 
+			isLoose = true;
+		}
+		if (jet->isMedium()){
+			isMedium = true;
+			++NBJets;
+		} 
+		if (jet->isTight()){
+			isTight = true;
+		}
 
 		unsigned int partonFlavour = abs(jet->partonFlavour());
 		unsigned int hadronFlavour = abs(jet->hadronFlavour());
