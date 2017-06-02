@@ -56,6 +56,10 @@ struct Globals {
 	static boost::shared_ptr<TH2F> cQuarkJet;
 	static boost::shared_ptr<TH2F> udsgQuarkJet;
 
+	static boost::shared_ptr<TH2F> bQuarkJet_PowhegPythia8;
+	static boost::shared_ptr<TH2F> cQuarkJet_PowhegPythia8;
+	static boost::shared_ptr<TH2F> udsgQuarkJet_PowhegPythia8;
+
 	//electrons
 	static ElectronAlgorithm::value electronAlgorithm;
 	static int ElectronScaleFactorSystematic;
