@@ -62,7 +62,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		const double eff = getEfficiency( hadronFlavour, jet );
 		const double eff_PowhegPythia8 = getEfficiency( hadronFlavour, jet, true );
 		// double scaleFactorCorrection = 1;
-		// if ( eff > 0 ) {
+		// if ( eff > 0 && hadronFlavour == 5 ) {
 		// 	scaleFactorCorrection = eff_PowhegPythia8 / eff;
 		// }
 
@@ -100,15 +100,26 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		// }
 		// sfToUse *= scaleFactorCorrection;
 
+		// if (isBTagged) {
+		// 	// std::cout << "BTagged eff*sf : " << eff*sfToUse << std::endl;
+		// 	bTaggedMCJet *= eff;
+		// 	bTaggedDataJet *= eff*sfToUse;
+		// }else{
+		// 	// std::cout << "Not BTagged eff*sf : " << ( 1 - eff*sfToUse ) << std::endl;
+		// 	nonBTaggedMCJet *= ( 1 - eff );
+		// 	nonBTaggedDataJet *= ( 1 - eff*sfToUse );
+		// }
+
 		if (isBTagged) {
 			// std::cout << "BTagged eff*sf : " << eff*sfToUse << std::endl;
-			bTaggedMCJet *= eff;
+			bTaggedMCJet *= eff_PowhegPythia8;
 			bTaggedDataJet *= eff*sfToUse;
 		}else{
 			// std::cout << "Not BTagged eff*sf : " << ( 1 - eff*sfToUse ) << std::endl;
-			nonBTaggedMCJet *= ( 1 - eff );
+			nonBTaggedMCJet *= ( 1 - eff_PowhegPythia8 );
 			nonBTaggedDataJet *= ( 1 - eff*sfToUse );
 		}
+
 
 		// if ( std::isnan( nonBTaggedDataJet ) ) {
 		// 	std::cout << nonBTaggedDataJet << std::endl;
@@ -132,6 +143,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << endl;
 
 	}
+
 	return bTagWeight;
 }
 
