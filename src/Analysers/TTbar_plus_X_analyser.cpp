@@ -86,6 +86,7 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("lepton_eta",signalLepton->eta());
 	treeMan_->Fill("lepton_pt",signalLepton->pt());
 	treeMan_->Fill("lepton_charge",signalLepton->charge());
+
 	if (selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsReference) ||
 		selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsQCDNonIsolated) ||
 		selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsQCDConversion)){
@@ -140,6 +141,11 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
 	treeMan_->Fill("LightJetDownWeight",event->LightJetDownWeight());
+
+	treeMan_->Fill("tau1", event->tau1());
+	treeMan_->Fill("tau2", event->tau2());
+	treeMan_->Fill("tau3", event->tau3());
+	treeMan_->Fill("tau4", event->tau4());
 
 	// MET Uncertainties		
 	for ( unsigned int unc_i = 0; unc_i < MET_original->getAllMETUncertainties().size(); ++unc_i ) {		
@@ -255,6 +261,10 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("lepton_hltHCALisolation", "F", "AnalysisVariables");
 	treeMan_->addBranch("lepton_hltTrackerisolation", "F", "AnalysisVariables");
 	treeMan_->addBranch("lepton_hltTrackerisolation_overPt", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau1", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau2", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau3", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau4", "F", "AnalysisVariables");
 	treeMan_->addBranch("M3", "F", "AnalysisVariables");
 	treeMan_->addBranch("NJets", "F", "AnalysisVariables");
 	treeMan_->addBranch("NBJets", "F", "AnalysisVariables");

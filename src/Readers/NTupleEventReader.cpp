@@ -81,6 +81,10 @@ NTupleEventReader::NTupleEventReader() :
 		centralFragReader_( new VariableReader<double>(input, "Event.centralFrag")), //
 		upFragReader_( new VariableReader<double>(input, "Event.upFrag")), //
 		downFragReader_( new VariableReader<double>(input, "Event.downFrag")), //
+		tau1Reader_( new VariableReader<float>(input, "Jets.tau1")), //
+		tau2Reader_( new VariableReader<float>(input, "Jets.tau2")), //
+		tau3Reader_( new VariableReader<float>(input, "Jets.tau3")), //
+		tau4Reader_( new VariableReader<float>(input, "Jets.tau4")), //
 		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
 		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
@@ -282,6 +286,13 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		// bweight = btagWeight->weight( currentEvent->CleanedJets(), -2, {"T", "T"}  );
 		// currentEvent->setTightBJetDownWeight( bweight );	
 	}
+
+
+	currentEvent->setTau1( tau1Reader_->getVariable() );
+	currentEvent->setTau2( tau2Reader_->getVariable() );
+	currentEvent->setTau3( tau3Reader_->getVariable() );
+	currentEvent->setTau4( tau4Reader_->getVariable() );
+
 
 
 	double sysShiftMetCorrectionX = 0;
