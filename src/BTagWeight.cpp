@@ -61,10 +61,6 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		// Get efficiency for this jet
 		const double eff = getEfficiency( hadronFlavour, jet );
 		const double eff_PowhegPythia8 = getEfficiency( hadronFlavour, jet, true );
-		// double scaleFactorCorrection = 1;
-		// if ( eff > 0 && hadronFlavour == 5 ) {
-		// 	scaleFactorCorrection = eff_PowhegPythia8 / eff;
-		// }
 
 		// Systematic Option
 		// 2 = b/c jet up
@@ -95,11 +91,6 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 
 		(isLight==true) ? sfToUse = sfToUse_l : sfToUse = sfToUse_bc;
 
-		// if ( std::isnan(sfToUse) || sfToUse < 0.1 || sfToUse > 2 ) {
-		// 	std::cout << "Old/new scale factor, efficiency : " << sfToUse << " " << sfToUse * scaleFactorCorrection << " " << eff << std::endl;
-		// }
-		// sfToUse *= scaleFactorCorrection;
-
 		// if (isBTagged) {
 		// 	// std::cout << "BTagged eff*sf : " << eff*sfToUse << std::endl;
 		// 	bTaggedMCJet *= eff;
@@ -110,22 +101,18 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		// 	nonBTaggedDataJet *= ( 1 - eff*sfToUse );
 		// }
 
+		// NEW B tag scale factor
+		// We apply two weights, both calculated by the same method
+		// The first corrects the efficiencies in Powheg Pythia 8 MC (or the central MC, which should also be the same generator+PS used to derive the scale factors) to data
+		// The second corrects the efficiencies in the sample you are considering (e.g. Powheg+Herwig++) to Powheg Pythia 8 (or whichever central MC you are using)
+		// The denominator of the first weight cancels with the numerator of the second, so the total weight simplifies to this below
 		if (isBTagged) {
-			// std::cout << "BTagged eff*sf : " << eff*sfToUse << std::endl;
 			bTaggedMCJet *= eff_PowhegPythia8;
 			bTaggedDataJet *= eff*sfToUse;
 		}else{
-			// std::cout << "Not BTagged eff*sf : " << ( 1 - eff*sfToUse ) << std::endl;
 			nonBTaggedMCJet *= ( 1 - eff_PowhegPythia8 );
 			nonBTaggedDataJet *= ( 1 - eff*sfToUse );
 		}
-
-
-		// if ( std::isnan( nonBTaggedDataJet ) ) {
-		// 	std::cout << nonBTaggedDataJet << std::endl;
-		// 	std::cout << "Efficiencies : " << eff << " " << eff_PowhegPythia8 << " " << scaleFactorCorrection << std::endl;
-		// 	std::cout << "Old/new scale factor, efficiency : " << sfToUse << " " << sfToUse * scaleFactorCorrection << " " << eff << std::endl;
-		// }
 	}
 
 	double bTagWeight = (nonBTaggedDataJet * bTaggedDataJet) / (nonBTaggedMCJet * bTaggedMCJet);
