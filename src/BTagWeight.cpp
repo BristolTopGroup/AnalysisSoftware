@@ -101,17 +101,32 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		// 	nonBTaggedDataJet *= ( 1 - eff*sfToUse );
 		// }
 
+
+		// 						eff_data   	          		               		eff_PP8   
+		// 			PROD ( ————————————————————  . eff_PP8 )    		PROD ( ————————— . eff_PH )
+		// 	      			eff_MC(QCD (Pythia))			  		        	eff_PH
+		// 	     (	—————————————————————————————————————————— ) .  ( ——————————————————————————————— )
+		// 	       				PROD ( eff_PP8 )                             PROD ( eff_PH )
+
+		
+		// 						eff_data   	          		               			   
+		// 			PROD ( ————————————————————  . eff_PP8 )    
+		// 	      			eff_MC(QCD (Pythia))			  		        		
+		// 	    (	—————————————————————————————————————————— ) 
+		// 	       				PROD ( eff_PH ) 
+
+
 		// NEW B tag scale factor
 		// We apply two weights, both calculated by the same method
 		// The first corrects the efficiencies in Powheg Pythia 8 MC (or the central MC, which should also be the same generator+PS used to derive the scale factors) to data
 		// The second corrects the efficiencies in the sample you are considering (e.g. Powheg+Herwig++) to Powheg Pythia 8 (or whichever central MC you are using)
 		// The denominator of the first weight cancels with the numerator of the second, so the total weight simplifies to this below
 		if (isBTagged) {
-			bTaggedMCJet *= eff_PowhegPythia8;
-			bTaggedDataJet *= eff*sfToUse;
+			bTaggedMCJet *= eff;
+			bTaggedDataJet *= eff_PowhegPythia8*sfToUse;
 		}else{
-			nonBTaggedMCJet *= ( 1 - eff_PowhegPythia8 );
-			nonBTaggedDataJet *= ( 1 - eff*sfToUse );
+			nonBTaggedMCJet *= ( 1 - eff );
+			nonBTaggedDataJet *= ( 1 - eff_PowhegPythia8*sfToUse );
 		}
 	}
 
