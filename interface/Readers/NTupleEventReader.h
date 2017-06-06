@@ -120,7 +120,7 @@ private:
 	boost::scoped_ptr<VariableReader<double> > centralFragReader_;
 	boost::scoped_ptr<VariableReader<double> > upFragReader_;
 	boost::scoped_ptr<VariableReader<double> > downFragReader_;
-
+	
 	boost::scoped_ptr<VariableReader<float> > tau1Reader_;
 	boost::scoped_ptr<VariableReader<float> > tau2Reader_;
 	boost::scoped_ptr<VariableReader<float> > tau3Reader_;
