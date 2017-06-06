@@ -46,6 +46,9 @@ boost::shared_ptr<TH2F> Globals::LeptonicRecoIncorrectPermHistogram = boost::sha
 boost::shared_ptr<TH2F> Globals::bQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH2F> Globals::cQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH2F> Globals::udsgQuarkJet = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::bQuarkJet_PowhegPythia8 = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::cQuarkJet_PowhegPythia8 = boost::shared_ptr<TH2F>(new TH2F());
+boost::shared_ptr<TH2F> Globals::udsgQuarkJet_PowhegPythia8 = boost::shared_ptr<TH2F>(new TH2F());
 
 //electrons
 ElectronAlgorithm::value Globals::electronAlgorithm = ElectronAlgorithm::ParticleFlow;

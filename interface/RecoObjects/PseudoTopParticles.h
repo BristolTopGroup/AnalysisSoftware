@@ -38,8 +38,8 @@ public:
 	void setPseudoJets( JetCollection newPseudoJets );
 	JetCollection getPseudoJets() const;
 
-	void setAllPseudoLeptons( ParticleCollection newPseudoLeptons );
-	ParticleCollection getAllPseudoLeptons() const;
+	void setAllPseudoLeptons( MCParticleCollection newPseudoLeptons );
+	MCParticleCollection getAllPseudoLeptons() const;
 
 	void setPseudoNeutrino( ParticlePointer newPseudoNeutrino );
 	ParticlePointer getPseudoNeutrino() const;
@@ -54,7 +54,7 @@ protected:
 	MCParticleCollection pseudoTops_;
 	MCParticlePointer pseudoLeptonicW_;
 	MCParticlePointer pseudoLepton_;
-	ParticleCollection allPseudoLeptons_;
+	MCParticleCollection allPseudoLeptons_;
 	JetCollection pseudoJets_;
 	MCParticleCollection pseudoBs_;
 	ParticlePointer pseudoNeutrino_;

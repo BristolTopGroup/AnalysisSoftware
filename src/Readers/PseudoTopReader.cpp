@@ -31,6 +31,7 @@ PseudoTopReader::PseudoTopReader() :
     pseudoTop_lepton_pxReader_(),
     pseudoTop_lepton_pyReader_(),
     pseudoTop_lepton_pzReader_(),
+    pseudoTop_lepton_pdgIdReader_(),
     pseudoTop_met_exReader_(),
     pseudoTop_met_eyReader_(),
     pseudoTopParticles_( new PseudoTopParticles() ),
@@ -64,6 +65,7 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     pseudoTop_lepton_pxReader_(input, "PseudoTopLeptons.Px"),
     pseudoTop_lepton_pyReader_(input, "PseudoTopLeptons.Py"),
     pseudoTop_lepton_pzReader_(input, "PseudoTopLeptons.Pz"),
+    pseudoTop_lepton_pdgIdReader_(input, "PseudoTopLeptons.pdgId"),
     pseudoTop_met_exReader_(input, "PseudoTopMETs.Ex"),
     pseudoTop_met_eyReader_(input, "PseudoTopMETs.Ey"),
     pseudoTopParticles_( new PseudoTopParticles() ),
@@ -219,7 +221,11 @@ void PseudoTopReader::readPseudoTopParticles() {
         double px = pseudoTop_lepton_pxReader_.getVariableAt(index);
         double py = pseudoTop_lepton_pyReader_.getVariableAt(index);
         double pz = pseudoTop_lepton_pzReader_.getVariableAt(index);
-        newAllLeptons_.push_back( ParticlePointer( new Particle( energy, px, py, pz )) );
+        int pdgId = pseudoTop_lepton_pdgIdReader_.getIntVariableAt(index);
+
+        MCParticlePointer newLepton( new MCParticle( energy, px, py, pz ) );
+        newLepton->setPdgId( pdgId );
+        newAllLeptons_.push_back( newLepton );
     }
     pseudoTopParticles_->setAllPseudoLeptons( newAllLeptons_ );
 
@@ -249,6 +255,7 @@ void PseudoTopReader::initialise() {
     pseudoTop_lepton_pxReader_.initialiseBlindly();
     pseudoTop_lepton_pyReader_.initialiseBlindly();
     pseudoTop_lepton_pzReader_.initialiseBlindly();
+    pseudoTop_lepton_pdgIdReader_.initialiseBlindly();
 
     // pseudoTop_met_energyReader_.initialiseBlindly();
     // pseudoTop_met_pxReader_.initialiseBlindly();

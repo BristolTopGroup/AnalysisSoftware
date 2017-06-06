@@ -39,7 +39,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	const MCParticleCollection pseudoTops = pseudoTopParticles->getPseudoTops();
 	const MCParticlePointer pseudoLeptonicW = pseudoTopParticles->getPseudoLeptonicW();
 	const MCParticlePointer pseudoLepton = pseudoTopParticles->getPseudoLepton();
-	const ParticleCollection allPseudoLeptons = pseudoTopParticles->getAllPseudoLeptons();
+	const MCParticleCollection allPseudoLeptons = pseudoTopParticles->getAllPseudoLeptons();
 	const MCParticleCollection pseudoBs = pseudoTopParticles->getPseudoBs();
 	const ParticlePointer pseudoMET = pseudoTopParticles->getPseudoMET();
 	const JetCollection pseudoJets = pseudoTopParticles->getPseudoJets();
@@ -122,9 +122,11 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		// Store info on lepton
 		treeMan_->Fill("pseudoLepton_pT", allPseudoLeptons[0]->pt() );
 		treeMan_->Fill("pseudoLepton_eta", allPseudoLeptons[0]->eta() );		
+
+		treeMan_->Fill("pseudoLepton_pdgId", fabs(allPseudoLeptons[0]->pdgId()));
 	}
 	else {
-		treeMan_->Fill("pseudoLepton_pT", 0 );
+		treeMan_->Fill("pseudoLepton_pT", -50 );
 		treeMan_->Fill("pseudoLepton_eta", -50 );
 	}
 
@@ -211,6 +213,7 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("isSemiLeptonicMuon", "F","Unfolding" + Globals::treePrefix_);
 
 	treeMan_->addBranch("passesGenEventSelection","F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoLepton_pdgId", "F", "Unfolding" + Globals::treePrefix_);
 
 	// Branches for top
 	treeMan_->addBranch("pseudoTop_pT", "F", "Unfolding" + Globals::treePrefix_, false);
@@ -250,7 +253,7 @@ void PseudoTopAnalyser::createTrees() {
 
 }
 
-bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons ) {
+bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons ) {
 
 	// Event selection taken from here : https://twiki.cern.ch/twiki/bin/view/LHCPhysics/ParticleLevelTopDefinitions
 	unsigned int numberGoodLeptons = 0;
@@ -259,7 +262,7 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 
 	// Lepton selection
 	for ( unsigned int leptonIndex = 0; leptonIndex < allPseudoLeptons.size(); ++ leptonIndex ) {
-		const ParticlePointer lepton = allPseudoLeptons.at(leptonIndex);
+		const MCParticlePointer lepton = allPseudoLeptons.at(leptonIndex);
 
 		// Check if this is a good signal type lepton
 		if ( lepton->pt() > minLeptonPt_ && fabs(lepton->eta()) < maxLeptonAbsEta_ ) {

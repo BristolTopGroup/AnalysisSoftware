@@ -39,6 +39,7 @@ private:
     VariableReader<MultiDoublePointer> pseudoTop_lepton_pxReader_;
     VariableReader<MultiDoublePointer> pseudoTop_lepton_pyReader_;
     VariableReader<MultiDoublePointer> pseudoTop_lepton_pzReader_;
+    VariableReader<MultiIntPointer> pseudoTop_lepton_pdgIdReader_;
 
     // VariableReader< double > pseudoTop_met_energyReader_;
     // VariableReader< double > pseudoTop_met_pxReader_;
@@ -51,7 +52,7 @@ private:
     MCParticleCollection newPseudoTops_;
     MCParticlePointer newLeptonicW_;
     MCParticlePointer newLepton_;
-    ParticleCollection newAllLeptons_;
+    MCParticleCollection newAllLeptons_;
     JetCollection newJets_;
     MCParticleCollection newPseudoBs_;
     ParticlePointer newNeutrino_;

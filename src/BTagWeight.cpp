@@ -60,6 +60,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 
 		// Get efficiency for this jet
 		const double eff = getEfficiency( hadronFlavour, jet );
+		const double eff_PowhegPythia8 = getEfficiency( hadronFlavour, jet, true );
 
 		// Systematic Option
 		// 2 = b/c jet up
@@ -90,13 +91,26 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 
 		(isLight==true) ? sfToUse = sfToUse_l : sfToUse = sfToUse_bc;
 
+		// if (isBTagged) {
+		// 	// std::cout << "BTagged eff*sf : " << eff*sfToUse << std::endl;
+		// 	bTaggedMCJet *= eff;
+		// 	bTaggedDataJet *= eff*sfToUse;
+		// }else{
+		// 	// std::cout << "Not BTagged eff*sf : " << ( 1 - eff*sfToUse ) << std::endl;
+		// 	nonBTaggedMCJet *= ( 1 - eff );
+		// 	nonBTaggedDataJet *= ( 1 - eff*sfToUse );
+		// }
+
+		// NEW B tag scale factor
+		// We apply two weights, both calculated by the same method
+		// The first corrects the efficiencies in Powheg Pythia 8 MC (or the central MC, which should also be the same generator+PS used to derive the scale factors) to data
+		// The second corrects the efficiencies in the sample you are considering (e.g. Powheg+Herwig++) to Powheg Pythia 8 (or whichever central MC you are using)
+		// The denominator of the first weight cancels with the numerator of the second, so the total weight simplifies to this below
 		if (isBTagged) {
-			// std::cout << "BTagged eff*sf : " << eff*sfToUse << std::endl;
-			bTaggedMCJet *= eff;
+			bTaggedMCJet *= eff_PowhegPythia8;
 			bTaggedDataJet *= eff*sfToUse;
 		}else{
-			// std::cout << "Not BTagged eff*sf : " << ( 1 - eff*sfToUse ) << std::endl;
-			nonBTaggedMCJet *= ( 1 - eff );
+			nonBTaggedMCJet *= ( 1 - eff_PowhegPythia8 );
 			nonBTaggedDataJet *= ( 1 - eff*sfToUse );
 		}
 	}
@@ -116,24 +130,25 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << endl;
 
 	}
+
 	return bTagWeight;
 }
 
 
-double BTagWeight::getEfficiency( const unsigned int hadronFlavour, const JetPointer jet ) const {
+double BTagWeight::getEfficiency( const unsigned int hadronFlavour, const JetPointer jet, bool centralMCEfficiency ) const {
 	if ( hadronFlavour == 5) { //b-quark
-		return getBEfficiency( jet );
+		return getBEfficiency( jet, centralMCEfficiency );
 	}
 	else if ( hadronFlavour == 4) { //c-quark
-		return getCEfficiency( jet );
+		return getCEfficiency( jet, centralMCEfficiency );
 	}
 	else if ( hadronFlavour == 0) { // u/d/s/g/unclassified-quark
-		return getUDSGEfficiency ( jet );
+		return getUDSGEfficiency ( jet, centralMCEfficiency );
 	}
 	else return 0.;
 }
 
-float BTagWeight::getBEfficiency(const JetPointer jet) const {
+float BTagWeight::getBEfficiency(const JetPointer jet, bool centralMCEfficiency ) const {
 	double jetPt = jet->pt();
 	const double jetEta = jet->eta();
 	const double maxPt = Globals::bQuarkJet->GetXaxis()->GetXmax();
@@ -144,7 +159,14 @@ float BTagWeight::getBEfficiency(const JetPointer jet) const {
 	}
 
 	int binNumber = Globals::bQuarkJet->FindBin( jetPt , jetEta );
-	float BTagEff = Globals::bQuarkJet->GetBinContent( binNumber );
+	float BTagEff = 1;
+
+	if ( centralMCEfficiency ) {
+		BTagEff = Globals::bQuarkJet_PowhegPythia8->GetBinContent( binNumber );
+	}
+	else {
+		BTagEff = Globals::bQuarkJet->GetBinContent( binNumber );
+	}
 
 	// if ( jetPt >= maxPt ) {
 	// 	std::cout << "Jet Pt : " << jetPt << ", Jet Eta : " << jetEta << std::endl;
@@ -153,7 +175,7 @@ float BTagWeight::getBEfficiency(const JetPointer jet) const {
 	return BTagEff;
 }
 
-double BTagWeight::getCEfficiency(const JetPointer jet) const {
+double BTagWeight::getCEfficiency(const JetPointer jet, bool centralMCEfficiency ) const {
 	double jetPt = jet->pt();
 	const double jetEta = jet->eta();
 	const double maxPt = Globals::cQuarkJet->GetXaxis()->GetXmax();
@@ -164,12 +186,19 @@ double BTagWeight::getCEfficiency(const JetPointer jet) const {
 	}
 
 	int binNumber = Globals::cQuarkJet->FindBin( jetPt , jetEta );
-	float BTagEff = Globals::cQuarkJet->GetBinContent( binNumber );	
+	float BTagEff = 1;
+
+	if ( centralMCEfficiency ) {
+		BTagEff = Globals::cQuarkJet_PowhegPythia8->GetBinContent( binNumber );
+	}
+	else {
+		BTagEff = Globals::cQuarkJet->GetBinContent( binNumber );
+	}
 	// std::cout << "C-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
 	return BTagEff;
 }
 
-double BTagWeight::getUDSGEfficiency(const JetPointer jet) const {
+double BTagWeight::getUDSGEfficiency(const JetPointer jet, bool centralMCEfficiency ) const {
 	double jetPt = jet->pt();
 	const double jetEta = jet->eta();
 	const double maxPt = Globals::udsgQuarkJet->GetXaxis()->GetXmax();
@@ -180,7 +209,14 @@ double BTagWeight::getUDSGEfficiency(const JetPointer jet) const {
 	}
 
 	int binNumber = Globals::udsgQuarkJet->FindBin( jetPt , jetEta );
-	float BTagEff = Globals::udsgQuarkJet->GetBinContent( binNumber );
+	float BTagEff = 1;
+
+	if ( centralMCEfficiency ) {
+		BTagEff = Globals::udsgQuarkJet_PowhegPythia8->GetBinContent( binNumber );
+	}
+	else {
+		BTagEff = Globals::udsgQuarkJet->GetBinContent( binNumber );
+	}
 	// std::cout << "UDS-quark Jet, B Tag Efficiency : " << BTagEff << std::endl;
 	return BTagEff;
 }

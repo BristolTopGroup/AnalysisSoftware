@@ -20,16 +20,16 @@ public:
 
 	bool filter(unsigned int t) const;
 
-	double getEfficiency( const unsigned int, const JetPointer ) const;
+	double getEfficiency( const unsigned int, const JetPointer, bool centralMCEfficiency=false ) const;
 	std::vector<double> getScaleFactor( const double, const JetPointer ) const;
 
 	std::vector<double> getBScaleFactor(const JetPointer, double uncertaintyFactor = 1.) const;
 	std::vector<double> getCScaleFactor(const JetPointer) const;
 	std::vector<double> getUDSGScaleFactor(const JetPointer) const;
 
-	float getBEfficiency(const JetPointer) const;
-	double getCEfficiency(const JetPointer) const;
-	double getUDSGEfficiency(const JetPointer) const;
+	float getBEfficiency(const JetPointer, bool centralMCEfficiency=false) const;
+	double getCEfficiency(const JetPointer, bool centralMCEfficiency=false) const;
+	double getUDSGEfficiency(const JetPointer, bool centralMCEfficiency=false) const;
 
 private:
 	unsigned int minNumberOfTags_;
