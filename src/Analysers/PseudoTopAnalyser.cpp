@@ -23,6 +23,7 @@ double const PseudoTopAnalyser::minWMt_ = 0;
 unsigned int const PseudoTopAnalyser::minNJets_ = 4;
 unsigned int const PseudoTopAnalyser::minNBJets_ = 2;
 double const PseudoTopAnalyser::minJetPt_ = 30;
+double const PseudoTopAnalyser::minJetPt_lowerThreshold_ = 20;
 double const PseudoTopAnalyser::maxJetAbsEta_ = 2.4;
 
 void PseudoTopAnalyser::analyse(const EventPtr event) {
@@ -148,7 +149,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// std::cout << pseudoBs.size() << " " << allPseudoLeptons.size() << std::endl;
 	if ( pseudoBs.size() >= 1 && allPseudoLeptons.size() > 0 ) {
-		treeMan_->Fill("angle_bl",Event::pseudo_angle_bl( pseudoBs, allPseudoLeptons[0]));
+		treeMan_->Fill("angle_bl",Event::pseudo_angle_bl( pseudoBs, allPseudoLeptons[0], minJetPt_lowerThreshold_) );
 	}
 
 	if ( pseudoBs.size() >= 2 ) {
@@ -192,8 +193,11 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 
 	// Store pseudo HT
-	treeMan_->Fill("pseudoHT", event->HT( pseudoJets ) );
+	treeMan_->Fill("pseudoHT", event->HT( pseudoJets, minJetPt_lowerThreshold_ ) );
 
+	// if ( passesGenSelection && event->HT( pseudoJets, minJetPt_lowerThreshold_ ) < 120 ) {
+	// 	std::cout << "HT : " << event->HT( pseudoJets, minJetPt_lowerThreshold_ ) << std::endl;
+	// }
 	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
 		treeMan_->Fill("pseudoJet_pT", pseudoJets.at(index)->pt() );
 		treeMan_->Fill("pseudoJet_eta", pseudoJets.at(index)->eta() );
@@ -201,7 +205,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// Store pseudo ST
 	if ( allPseudoLeptons.size() > 0 ) {
-		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) ) );
+		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() ) ), minJetPt_lowerThreshold_ ) );
 	}
 	else {
 		treeMan_->Fill("pseudoST", 0 );
@@ -234,12 +238,12 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	unsigned int numberOfJets(0);
 	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
 		const JetPointer jet(pseudoJets.at(index));
-		if (jet->pt() < 30 ) continue;
+		if (jet->pt() < minJetPt_lowerThreshold_ ) continue;
 		++numberOfJets;
 	}
 	for (unsigned int index = 0; index < pseudoBs.size(); ++index) {
 		const MCParticlePointer bJet(pseudoBs.at(index));
-		if ( bJet->pt() < 30 ) continue;
+		if ( bJet->pt() < minJetPt_lowerThreshold_ ) continue;
 		++numberOfBJets;
 	}
 
@@ -295,7 +299,7 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding" + Globals::treePrefix_);
 }
 
-bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons ) {
+bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets ) {
 
 	// Event selection taken from here : https://twiki.cern.ch/twiki/bin/view/LHCPhysics/ParticleLevelTopDefinitions
 	unsigned int numberGoodLeptons = 0;
@@ -329,7 +333,7 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		const JetPointer jet = pseudoJets.at(jetIndex);
 
 		// Check if this is a good jet
-		if ( jet->pt() > 20 && fabs(jet->eta()) < maxJetAbsEta_ ) {
+		if ( jet->pt() > minJetPt_lowerThreshold_ && fabs(jet->eta()) < maxJetAbsEta_ ) {
 			++numberGoodJets_lowerPt;
 			if ( fabs( jet->partonFlavour() ) == 5 ) {
 				++numberGoodBJets_lowerPt;
