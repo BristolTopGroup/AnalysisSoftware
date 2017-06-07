@@ -29,10 +29,11 @@ public:
 	static unsigned int const minNJets_;
 	static unsigned int const minNBJets_;
 	static double const minJetPt_;
+	static double const minJetPt_lowerThreshold_;
 	static double const maxJetAbsEta_;
 
 protected:
-	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const ParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets );
+	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets );
 
 private:
 	unsigned int nEventsInPS_;
