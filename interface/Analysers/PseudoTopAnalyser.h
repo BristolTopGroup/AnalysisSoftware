@@ -33,26 +33,29 @@ public:
 	static double const maxJetAbsEta_;
 
 protected:
-	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets );
+	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets, double highJetPTThreshold, double lowerJetPtThreshold );
 
 private:
 	unsigned int nEventsInPS_;
 	unsigned int nEventsOfflineButNotInPS_;
 
-	unsigned int nEventsInPS_4j0b_;
-	unsigned int nEventsOfflineButNotInPS_4j0b_;
+	unsigned int nEventsInPS_lowerThresholdLastJet_;
+	unsigned int nEventsOfflineButNotInPS_lowerThresholdLastJet_;
 
-	unsigned int nEventsInPS_4j1b_;
-	unsigned int nEventsOfflineButNotInPS_4j1b_;
+	// unsigned int nEventsInPS_4j0b_;
+	// unsigned int nEventsOfflineButNotInPS_4j0b_;
 
-	unsigned int nEventsInPS_3j2b_;
-	unsigned int nEventsOfflineButNotInPS_3j2b_;
+	// unsigned int nEventsInPS_4j1b_;
+	// unsigned int nEventsOfflineButNotInPS_4j1b_;
 
-	unsigned int nEventsInPS_3j0b_;
-	unsigned int nEventsOfflineButNotInPS_3j0b_;
+	// unsigned int nEventsInPS_3j2b_;
+	// unsigned int nEventsOfflineButNotInPS_3j2b_;
 
-	unsigned int nEventsInPS_3j1b_;
-	unsigned int nEventsOfflineButNotInPS_3j1b_;
+	// unsigned int nEventsInPS_3j0b_;
+	// unsigned int nEventsOfflineButNotInPS_3j0b_;
+
+	// unsigned int nEventsInPS_3j1b_;
+	// unsigned int nEventsOfflineButNotInPS_3j1b_;
 
 	unsigned int nEventsOffline_;
 };
