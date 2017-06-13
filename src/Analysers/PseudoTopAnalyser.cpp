@@ -84,42 +84,6 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		}
 	}
 
-
-	// if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 4, 1 ) ) {
-	// 	++nEventsInPS_4j1b_;
-	// }
-	// else if ( passesOfflineSelection ){
-	// 	++nEventsOfflineButNotInPS_4j1b_;
-	// }
-
-	// if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 4, 0 ) ) {
-	// 	++nEventsInPS_4j0b_;
-	// }
-	// else if ( passesOfflineSelection ){
-	// 	++nEventsOfflineButNotInPS_4j0b_;
-	// }
-
-	// if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 3, 2 ) ) {
-	// 	++nEventsInPS_3j2b_;
-	// }
-	// else if ( passesOfflineSelection ){
-	// 	++nEventsOfflineButNotInPS_3j2b_;
-	// }
-
-	// if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 3, 1 ) ) {
-	// 	++nEventsInPS_3j1b_;
-	// }
-	// else if ( passesOfflineSelection ){
-	// 	++nEventsOfflineButNotInPS_3j1b_;
-	// }
-
-	// if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, 3, 0 ) ) {
-	// 	++nEventsInPS_3j0b_;
-	// }
-	// else if ( passesOfflineSelection ){
-	// 	++nEventsOfflineButNotInPS_3j0b_;
-	// }
-
 	//
 	// TOP VARIABLES
 	// Top reco at particle level performed
@@ -162,7 +126,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// std::cout << pseudoBs.size() << " " << allPseudoLeptons.size() << std::endl;
 	if ( pseudoBs.size() >= 1 && allPseudoLeptons.size() > 0 ) {
-		treeMan_->Fill("angle_bl",Event::pseudo_angle_bl( pseudoBs, allPseudoLeptons[0], minJetPt_lowerThreshold_) );
+		treeMan_->Fill("angle_bl",Event::pseudo_angle_bl( pseudoBs, allPseudoLeptons[0], minJetPt_) );
 	}
 
 	if ( pseudoBs.size() >= 2 ) {
@@ -411,16 +375,6 @@ PseudoTopAnalyser::PseudoTopAnalyser(TreeManagerPtr treeMan, std::string histogr
 		nEventsOfflineButNotInPS_(0),
 		nEventsInPS_lowerThresholdLastJet_(0),
 		nEventsOfflineButNotInPS_lowerThresholdLastJet_(0),
-		// nEventsInPS_4j0b_(0),
-		// nEventsOfflineButNotInPS_4j0b_(0),
-		// nEventsInPS_4j1b_(0),
-		// nEventsOfflineButNotInPS_4j1b_(0),
-		// nEventsInPS_3j2b_(0),
-		// nEventsOfflineButNotInPS_3j2b_(0),
-		// nEventsInPS_3j0b_(0),
-		// nEventsOfflineButNotInPS_3j0b_(0),
-		// nEventsInPS_3j1b_(0),
-		// nEventsOfflineButNotInPS_3j1b_(0),
 		nEventsOffline_(0)
 		 {
 }
@@ -443,47 +397,6 @@ PseudoTopAnalyser::~PseudoTopAnalyser() {
 	std::cout << "Size wrt default : " << float( nEventsInPS_lowerThresholdLastJet_ ) / float( nEventsInPS_ ) * 100 << std::endl;
 	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_lowerThresholdLastJet_ << std::endl;
 	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_lowerThresholdLastJet_ ) / float( nEventsOffline_ ) * 100 << std::endl;
-
-	// std::cout << "N jets : 4" << std::endl;
-	// std::cout << "N b jets : 1" << std::endl;
-	// std::cout << "Number events in PS : " << nEventsInPS_4j1b_ << std::endl;
-	// std::cout << "Size wrt default : " << float( nEventsInPS_4j1b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
-	// std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_4j1b_ << std::endl;
-	// std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_4j1b_) / float( nEventsOffline_ ) * 100 << std::endl;
-	// std::cout << std::endl;
-
-	// std::cout << "N jets : 4" << std::endl;
-	// std::cout << "N b jets : 0" << std::endl;
-	// std::cout << "Number events in PS : " << nEventsInPS_4j0b_ << std::endl;
-	// std::cout << "Size wrt default : " << float( nEventsInPS_4j0b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
-	// std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_4j0b_ << std::endl;
-	// std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_4j0b_) / float( nEventsOffline_ ) * 100 << std::endl;
-	// std::cout << std::endl;
-
-	// std::cout << "N jets : 3" << std::endl;
-	// std::cout << "N b jets : 2" << std::endl;
-	// std::cout << "Number events in PS : " << nEventsInPS_3j2b_ << std::endl;
-	// std::cout << "Size wrt default : " << float( nEventsInPS_3j2b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
-	// std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_3j2b_ << std::endl;
-	// std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_3j2b_) / float( nEventsOffline_ ) * 100 << std::endl;
-	// std::cout << std::endl;
-
-	// std::cout << "N jets : 3" << std::endl;
-	// std::cout << "N b jets : 1" << std::endl;
-	// std::cout << "Number events in PS : " << nEventsInPS_3j1b_ << std::endl;
-	// std::cout << "Size wrt default : " << float( nEventsInPS_3j1b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
-	// std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_3j1b_ << std::endl;
-	// std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_3j1b_) / float( nEventsOffline_ ) * 100 << std::endl;
-	// std::cout << std::endl;
-
-	// std::cout << "N jets : 3" << std::endl;
-	// std::cout << "N b jets : 0" << std::endl;
-	// std::cout << "Number events in PS : " << nEventsInPS_3j0b_ << std::endl;
-	// std::cout << "Size wrt default : " << float( nEventsInPS_3j0b_ ) / float( nEventsInPS_ ) * 100 << std::endl;
-	// std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_3j0b_ << std::endl;
-	// std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_3j0b_) / float( nEventsOffline_ ) * 100 << std::endl;
-	// std::cout << std::endl;
-
 }
 
 } /* namespace BAT */

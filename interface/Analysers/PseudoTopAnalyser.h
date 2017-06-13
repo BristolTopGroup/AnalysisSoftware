@@ -42,21 +42,6 @@ private:
 	unsigned int nEventsInPS_lowerThresholdLastJet_;
 	unsigned int nEventsOfflineButNotInPS_lowerThresholdLastJet_;
 
-	// unsigned int nEventsInPS_4j0b_;
-	// unsigned int nEventsOfflineButNotInPS_4j0b_;
-
-	// unsigned int nEventsInPS_4j1b_;
-	// unsigned int nEventsOfflineButNotInPS_4j1b_;
-
-	// unsigned int nEventsInPS_3j2b_;
-	// unsigned int nEventsOfflineButNotInPS_3j2b_;
-
-	// unsigned int nEventsInPS_3j0b_;
-	// unsigned int nEventsOfflineButNotInPS_3j0b_;
-
-	// unsigned int nEventsInPS_3j1b_;
-	// unsigned int nEventsOfflineButNotInPS_3j1b_;
-
 	unsigned int nEventsOffline_;
 };
 typedef boost::scoped_ptr<PseudoTopAnalyser> PseudoTopAnalyserLocalPtr;
