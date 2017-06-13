@@ -155,7 +155,9 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 		treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalLepton, METForUnc_i));		
 	}
 
-	fillLeptonEfficiencyCorrectionBranches( event, selectionCriteria, signalLepton );	
+	fillLeptonEfficiencyCorrectionBranches( event, selectionCriteria, signalLepton );
+
+	wAnalyser_->analyseHadronicW( event, jets, bJets, folder );
 }
 
 void TTbar_plus_X_analyser::fillCommonTreesNoBSelection(const EventPtr event,  const unsigned int selectionCriteria, std::string folder ) {
@@ -295,6 +297,8 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("BJetDownWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("LightJetUpWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("LightJetDownWeight", "F", "AnalysisVariables");
+
+	wAnalyser_->createTrees(folder);
 }
 
 void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
@@ -351,7 +355,9 @@ void TTbar_plus_X_analyser::createTrees() {
 TTbar_plus_X_analyser::TTbar_plus_X_analyser(TreeManagerPtr treeMan, std::string histogramFolder) :
 		BasicAnalyser(treeMan, histogramFolder),
 		BTagEffAnalyserEPlusJetsRefSelection_(new BTagEff(treeMan, histogramFolder + "/EPlusJets/Ref selection NoBSelection/BTagEfficiencies")),
-		BTagEffAnalyserMuPlusJetsRefSelection_(new BTagEff(treeMan, histogramFolder + "/MuPlusJets/Ref selection NoBSelection/BTagEfficiencies")){
+		BTagEffAnalyserMuPlusJetsRefSelection_(new BTagEff(treeMan, histogramFolder + "/MuPlusJets/Ref selection NoBSelection/BTagEfficiencies")),
+
+		wAnalyser_(new WAnalyser(treeMan, histogramFolder)){
 }
 
 TTbar_plus_X_analyser::~TTbar_plus_X_analyser() {
