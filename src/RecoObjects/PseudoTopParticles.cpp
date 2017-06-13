@@ -20,6 +20,10 @@ PseudoTopParticles::PseudoTopParticles() :
 		pseudoBs_(),
 		pseudoNeutrino_( new Particle() ),
 		pseudoMET_( new Particle() ),
+		tau1_( -1 ),
+		tau2_( -1 ),
+		tau3_( -1 ),
+		tau4_( -1 ),
 		isSemiLeptonic_(false)
 {
 }
@@ -102,6 +106,39 @@ void PseudoTopParticles::setPseudoMET( ParticlePointer newPseudoMET ) {
 ParticlePointer PseudoTopParticles::getPseudoMET() const {
 	return pseudoMET_;
 }
+
+void PseudoTopParticles::setPseudoTau1( double tau1 ) {
+	tau1_ = tau1;
+}
+
+double PseudoTopParticles::getPseudoTau1() const {
+	return tau1_;
+}
+
+void PseudoTopParticles::setPseudoTau2( double tau2 ) {
+	tau2_ = tau2;
+}
+
+double PseudoTopParticles::getPseudoTau2() const {
+	return tau2_;
+}
+
+void PseudoTopParticles::setPseudoTau3( double tau3 ) {
+	tau3_ = tau3;
+}
+
+double PseudoTopParticles::getPseudoTau3() const {
+	return tau3_;
+}
+
+void PseudoTopParticles::setPseudoTau4( double tau4 ) {
+	tau4_ = tau4;
+}
+
+double PseudoTopParticles::getPseudoTau4() const {
+	return tau4_;
+}
+
 
 void PseudoTopParticles::setIsSemiLeptonic( bool isSemiLeptonic ) {
 	isSemiLeptonic_ = isSemiLeptonic;

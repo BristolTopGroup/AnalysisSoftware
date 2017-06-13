@@ -109,7 +109,11 @@ Event::Event() : //
 		passesTrackingFailureFilter_(false), //
 		passesEEBadSCFilter_(false), //
 		passesECALLaserCorrFilter_(false), //
-		passesTrackingPOGFilters_(false) //
+		passesTrackingPOGFilters_(false), //
+		tau1_(-1),
+		tau2_(-1),
+		tau3_(-1),
+		tau4_(-1)
 {
 }
 
@@ -1473,6 +1477,38 @@ bool Event::passesECALLaserCorrFilter() const {
 
 bool Event::passesTrackingPOGFilters() const {
 	return passesTrackingPOGFilters_;
+}
+
+double Event::getTau1() const {
+	return tau1_;
+}
+
+void Event::setTau1(double tau) {
+	tau1_ = tau;
+}
+
+double Event::getTau2() const {
+	return tau2_;
+}
+
+void Event::setTau2(double tau) {
+	tau2_ = tau;
+}
+
+double Event::getTau3() const {
+	return tau3_;
+}
+
+void Event::setTau3(double tau) {
+	tau3_ = tau;
+}
+
+double Event::getTau4() const {
+	return tau4_;
+}
+
+void Event::setTau4(double tau) {
+	tau4_ = tau;
 }
 
 double Event::HT(const JetCollection jets, const double jetPtThreshold ) {

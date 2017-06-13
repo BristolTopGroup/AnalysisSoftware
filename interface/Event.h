@@ -139,6 +139,8 @@ protected:
 	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_, passesECALDeadCellTPFilter_,
 			passesTrackingFailureFilter_, passesEEBadSCFilter_, passesECALLaserCorrFilter_, passesTrackingPOGFilters_;
 
+	double tau1_, tau2_, tau3_, tau4_;
+
 public:
 	Event();
 	virtual ~Event();
@@ -385,6 +387,19 @@ public:
 	static double M_bl(const JetCollection, const ParticlePointer, const double jetPtThreshold = minJetPt_ );
 	static double angle_bl(const JetCollection, const ParticlePointer, const double jetPtThreshold = minJetPt_ );
 	static double pseudo_angle_bl( const MCParticleCollection pseudoBs, const ParticlePointer pseudoLepton, const double jetPtThreshold = minJetPt_ );
+
+	double getTau1() const;
+	void setTau1(double tau);
+
+	double getTau2() const;
+	void setTau2(double tau);
+
+	double getTau3() const;
+	void setTau3(double tau);
+
+	double getTau4() const;
+	void setTau4(double tau);
+
 	static void getTopTwoCSVJets(const JetCollection, unsigned int& highestCSVJetIndex, unsigned int& secondHighestCSVJetIndex);
 	static double deltaPhi_bb(const ParticlePointer, const ParticlePointer);
 	static double deltaEta_bb(const ParticlePointer, const ParticlePointer);

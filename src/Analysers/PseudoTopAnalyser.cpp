@@ -61,6 +61,15 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	if ( passesGenSelection ) {
 		++nEventsInPS_;
 		treeMan_->Fill("passesGenEventSelection",1);
+
+		cout << "Event passes gen selection..." << endl;
+		if ( event->PassesMuonTriggerAndSelection() || event->PassesElectronTriggerAndSelection() ) {
+			cout << "... and offline selection" << endl;
+			cout << "Pseudo/reco Tau 1 : " << pseudoTopParticles->getPseudoTau1() << " " << event->getTau1() << endl;
+			cout << "Pseudo/reco Tau 2 : " << pseudoTopParticles->getPseudoTau2() << " " << event->getTau2() << endl;
+			cout << "Pseudo/reco Tau 3 : " << pseudoTopParticles->getPseudoTau3() << " " << event->getTau3() << endl;
+			cout << "Pseudo/reco Tau 4 : " << pseudoTopParticles->getPseudoTau4() << " " << event->getTau4() << endl;
+		}
 	}
 	else {
 		treeMan_->Fill("passesGenEventSelection",0);

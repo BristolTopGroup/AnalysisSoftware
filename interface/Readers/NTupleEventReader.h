@@ -133,6 +133,12 @@ private:
 	boost::scoped_ptr<VariableReader<double> > sumETReader_;
 	boost::scoped_ptr<VariableReader<bool> > HCALLaserFilter, ECALDeadCellFilter, ECALDeadCellTPFilter, TrackingFailureFilter,
 								CSCTightHaloId, EEBadSCFilter, ECALLaserCorrFilter, TrackingPOGFilters;
+
+	VariableReader<float> tau1Reader;
+	VariableReader<float> tau2Reader;
+	VariableReader<float> tau3Reader;
+	VariableReader<float> tau4Reader;
+	
 	bool areReadersSet, areDatatypesKnown;
 	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;

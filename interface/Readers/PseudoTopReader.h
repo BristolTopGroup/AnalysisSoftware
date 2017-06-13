@@ -48,6 +48,11 @@ private:
     VariableReader< double > pseudoTop_met_exReader_;
     VariableReader< double > pseudoTop_met_eyReader_;
 
+    VariableReader< double > tau1_Reader_;
+    VariableReader< double > tau2_Reader_;
+    VariableReader< double > tau3_Reader_;
+    VariableReader< double > tau4_Reader_;
+
     PseudoTopParticlesPointer pseudoTopParticles_;
     MCParticleCollection newPseudoTops_;
     MCParticlePointer newLeptonicW_;

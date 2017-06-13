@@ -101,6 +101,10 @@ NTupleEventReader::NTupleEventReader() :
 		EEBadSCFilter(new VariableReader<bool>(input, "Event.EEBadSCFilter")), //
 		ECALLaserCorrFilter(new VariableReader<bool>(input, "Event.ECALLaserCorrFilter")), //
 		TrackingPOGFilters(new VariableReader<bool>(input, "Event.TrackingPOGFilters")), //
+		tau1Reader(input, "Jets.tau1"),
+		tau2Reader(input, "Jets.tau2"),
+		tau3Reader(input, "Jets.tau3"),
+		tau4Reader(input, "Jets.tau4"),
 		areReadersSet(false), //
 		areDatatypesKnown(false), //
 		currentEvent(), //
@@ -346,6 +350,11 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		currentEvent->setPassesMETFilters(passesMetFilterReader_->getVariable());
 	}
 
+	currentEvent->setTau1( tau1Reader.getVariable());
+	currentEvent->setTau2( tau2Reader.getVariable());
+	currentEvent->setTau3( tau3Reader.getVariable());
+	currentEvent->setTau4( tau4Reader.getVariable());
+
 	return currentEvent;
 }
 
@@ -465,6 +474,12 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 				metReaders.at(index)->initialise();
 
 		}
+
+		tau1Reader.initialise();
+		tau2Reader.initialise();
+		tau3Reader.initialise();
+		tau4Reader.initialise();
+
 		genMetReader->initialise();
 		areReadersSet = true;
 	}
