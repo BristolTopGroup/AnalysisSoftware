@@ -95,6 +95,10 @@ Event::Event() : //
 		centralFragWeight_(0), //
 		upFragWeight_(0), //
 		downFragWeight_(0), //
+		tau1_(0), //
+		tau2_(0), //
+		tau3_(0), //
+		tau4_(0), //		
 		ptdensityRho(0.), //
 		file_(""), //
 		passesCSCTightBeamHaloFilter_(false), //
@@ -152,7 +156,8 @@ bool Event::isTTJet( DataType::value type) const {
     	type == DataType::TTJets_PowhegPythia8_hdampdown ||
     	type == DataType::TTJets_PowhegPythia8_hdampup ||
     	type == DataType::TTJets_PowhegPythia8_erdOn ||
-    	type == DataType::TTJets_PowhegPythia8_QCDbased_erdOn
+    	type == DataType::TTJets_PowhegPythia8_QCDbased_erdOn ||
+    	type == DataType::TTJets_PowhegPythia8_GluonMove
 		// type == DataType::TTJets_synch
 		)
 		return true;
@@ -191,7 +196,6 @@ void Event::setElectrons(ElectronCollection electrons) {
 
 void Event::setJets(JetCollection jets) {
 	allJets.clear();
-
 	allJets = jets;
 }
 
@@ -1217,6 +1221,21 @@ const double Event::downFragWeight() const {
 	return downFragWeight_;
 }
 
+const float Event::tau1() const {
+	return tau1_;
+}
+
+const float Event::tau2() const {
+	return tau2_;
+}
+
+const float Event::tau3() const {
+	return tau3_;
+}
+
+const float Event::tau4() const {
+	return tau4_;
+}
 
 void Event::setSemiLepBrUpWeight( double weight ) {
 	semiLepBrUpWeight_ = weight;
@@ -1242,6 +1261,21 @@ void Event::setDownFragWeight( double weight ) {
 	downFragWeight_ = weight;
 }
 
+void Event::setTau1( float tau ) {
+	tau1_ = tau;
+}
+
+void Event::setTau2( float tau ) {
+	tau2_ = tau;
+}
+
+void Event::setTau3( float tau ) {
+	tau3_ = tau;
+}
+
+void Event::setTau4( float tau ) {
+	tau4_ = tau;
+}
 
 const std::vector<int> Event::generatorSystematicWeightsID() const {
 	return generatorSystematicWeightsID_;

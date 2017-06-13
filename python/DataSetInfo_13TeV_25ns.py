@@ -55,6 +55,7 @@ datasetInfo['TTJets_PowhegPythia8_hdampdown'] = { "cross-section" : 831.76, "Num
 datasetInfo['TTJets_PowhegPythia8_hdampup'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58858606}
 datasetInfo['TTJets_PowhegPythia8_erdOn'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59882210}
 datasetInfo['TTJets_PowhegPythia8_QCDbased_erdOn'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :25129038}
+datasetInfo['TTJets_PowhegPythia8_GluonMove'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :0}
 
 datasetInfo['TTJets_amcatnloFXFX'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :15065716}
 datasetInfo['TTJets_madgraphMLM'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :10139950}

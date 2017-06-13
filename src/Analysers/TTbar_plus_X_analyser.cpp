@@ -86,6 +86,7 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("lepton_eta",signalLepton->eta());
 	treeMan_->Fill("lepton_pt",signalLepton->pt());
 	treeMan_->Fill("lepton_charge",signalLepton->charge());
+
 	if (selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsReference) ||
 		selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsQCDNonIsolated) ||
 		selection == SelectionCriteria::selection(SelectionCriteria::ElectronPlusJetsQCDConversion)){
@@ -140,6 +141,11 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
 	treeMan_->Fill("LightJetDownWeight",event->LightJetDownWeight());
+
+	treeMan_->Fill("tau1", event->tau1());
+	treeMan_->Fill("tau2", event->tau2());
+	treeMan_->Fill("tau3", event->tau3());
+	treeMan_->Fill("tau4", event->tau4());
 
 	// MET Uncertainties		
 	for ( unsigned int unc_i = 0; unc_i < MET_original->getAllMETUncertainties().size(); ++unc_i ) {		
@@ -238,87 +244,91 @@ void TTbar_plus_X_analyser::fillLeptonEfficiencyCorrectionBranches( const EventP
 
 void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->setCurrentFolder(folder);
-	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_phi", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
-	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ST_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
-	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("WPT_METUncertainties", "F", "FitVariables" + Globals::treePrefix_, false);
-	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_charge", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_isolation", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_hltECALisolation", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_hltHCALisolation", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_hltTrackerisolation", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_hltTrackerisolation_overPt", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("NVertices", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("jet_pt", "F", "FitVariables" + Globals::treePrefix_, false);
-	treeMan_->addBranch("jet_eta", "F", "FitVariables" + Globals::treePrefix_, false);
-	treeMan_->addBranch("jet_csv", "F", "FitVariables" + Globals::treePrefix_, false);
-	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("deltaPhi_bb", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("deltaEta_bb", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("angle_bb", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepTopPt", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("hadTopPt", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepTopRap", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("hadTopRap", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ttbarPt", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ttbarM", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ttbarRap", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("LightJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("LightJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("HT", "F", "AnalysisVariables");
+	treeMan_->addBranch("MET", "F", "AnalysisVariables");
+	treeMan_->addBranch("MET_phi", "F", "AnalysisVariables");
+	treeMan_->addBranch("MET_METUncertainties", "F", "AnalysisVariables", false);
+	treeMan_->addBranch("ST", "F", "AnalysisVariables");
+	treeMan_->addBranch("ST_METUncertainties", "F", "AnalysisVariables", false);
+	treeMan_->addBranch("WPT", "F", "AnalysisVariables");
+	treeMan_->addBranch("WPT_METUncertainties", "F", "AnalysisVariables", false);
+	treeMan_->addBranch("MT", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_eta", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_pt", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_charge", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_isolation", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_hltECALisolation", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_hltHCALisolation", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_hltTrackerisolation", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_hltTrackerisolation_overPt", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau1", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau2", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau3", "F", "AnalysisVariables");
+	treeMan_->addBranch("tau4", "F", "AnalysisVariables");
+	treeMan_->addBranch("M3", "F", "AnalysisVariables");
+	treeMan_->addBranch("NJets", "F", "AnalysisVariables");
+	treeMan_->addBranch("NBJets", "F", "AnalysisVariables");
+	treeMan_->addBranch("NVertices", "F", "AnalysisVariables");
+	treeMan_->addBranch("M_bl", "F", "AnalysisVariables");
+	treeMan_->addBranch("jet_pt", "F", "AnalysisVariables", false);
+	treeMan_->addBranch("jet_eta", "F", "AnalysisVariables", false);
+	treeMan_->addBranch("jet_csv", "F", "AnalysisVariables", false);
+	treeMan_->addBranch("angle_bl", "F", "AnalysisVariables");
+	treeMan_->addBranch("deltaPhi_bb", "F", "AnalysisVariables");
+	treeMan_->addBranch("deltaEta_bb", "F", "AnalysisVariables");
+	treeMan_->addBranch("angle_bb", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepTopPt", "F", "AnalysisVariables");
+	treeMan_->addBranch("hadTopPt", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepTopRap", "F", "AnalysisVariables");
+	treeMan_->addBranch("hadTopRap", "F", "AnalysisVariables");
+	treeMan_->addBranch("ttbarPt", "F", "AnalysisVariables");
+	treeMan_->addBranch("ttbarM", "F", "AnalysisVariables");
+	treeMan_->addBranch("ttbarRap", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronUp", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetUpWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetDownWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("LightJetUpWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("LightJetDownWeight", "F", "AnalysisVariables");
 }
 
 void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->setCurrentFolder(folder);
 
-	treeMan_->addBranch("NJets", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("NBJets", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("NVertices", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronUp", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ElectronDown", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonUp", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MuonDown", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("BJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("LightJetUpWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("LightJetDownWeight", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_isolation", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("jet_csv", "F", "FitVariables" + Globals::treePrefix_, false);
+	treeMan_->addBranch("NJets", "F", "AnalysisVariables");
+	treeMan_->addBranch("NBJets", "F", "AnalysisVariables");
+	treeMan_->addBranch("NVertices", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronUp", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetUpWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetDownWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("LightJetUpWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("LightJetDownWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_isolation", "F", "AnalysisVariables");
+	treeMan_->addBranch("jet_csv", "F", "AnalysisVariables", false);
 
-	treeMan_->addBranch("HT", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MET_phi", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("ST", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("WPT", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("MT", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_eta", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("lepton_pt", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("HT", "F", "AnalysisVariables");
+	treeMan_->addBranch("MET", "F", "AnalysisVariables");
+	treeMan_->addBranch("MET_phi", "F", "AnalysisVariables");
+	treeMan_->addBranch("ST", "F", "AnalysisVariables");
+	treeMan_->addBranch("WPT", "F", "AnalysisVariables");
+	treeMan_->addBranch("MT", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_eta", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepton_pt", "F", "AnalysisVariables");
 
-	treeMan_->addBranch("M_bl", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("M3", "F", "FitVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("angle_bl", "F", "FitVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("M_bl", "F", "AnalysisVariables");
+	treeMan_->addBranch("M3", "F", "AnalysisVariables");
+	treeMan_->addBranch("angle_bl", "F", "AnalysisVariables");
 
 }
 

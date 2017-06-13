@@ -166,86 +166,84 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 
 
 void UnfoldingRecoAnalyser::createTrees() {
-
 	treeMan_->setCurrentFolder(histogramFolder_);
-	treeMan_->addBranch("passSelection", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("passSelection", "F", "Unfolding");
 
-	treeMan_->addBranch("MET", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("HT", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("ST", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("WPT", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("MT", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("MET", "F", "Unfolding");
+	treeMan_->addBranch("HT", "F", "Unfolding");
+	treeMan_->addBranch("ST", "F", "Unfolding");
+	treeMan_->addBranch("WPT", "F", "Unfolding");
+	treeMan_->addBranch("MT", "F", "Unfolding");
 
-	treeMan_->addBranch("NJets", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("NBJets", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("NJets", "F", "Unfolding");
+	treeMan_->addBranch("NBJets", "F", "Unfolding");
 
-	treeMan_->addBranch("angle_bl", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("deltaPhi_bb", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("deltaEta_bb", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("angle_bb", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("angle_bl", "F", "Unfolding");
+	treeMan_->addBranch("deltaPhi_bb", "F", "Unfolding");
+	treeMan_->addBranch("deltaEta_bb", "F", "Unfolding");
+	treeMan_->addBranch("angle_bb", "F", "Unfolding");
 
-	treeMan_->addBranch("lepTopPt", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("hadTopPt", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("lepTopRap", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("hadTopRap", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("ttbarPt", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("ttbarM", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("ttbarRap", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("lepTopPt", "F", "Unfolding");
+	treeMan_->addBranch("hadTopPt", "F", "Unfolding");
+	treeMan_->addBranch("lepTopRap", "F", "Unfolding");
+	treeMan_->addBranch("hadTopRap", "F", "Unfolding");
+	treeMan_->addBranch("ttbarPt", "F", "Unfolding");
+	treeMan_->addBranch("ttbarM", "F", "Unfolding");
+	treeMan_->addBranch("ttbarRap", "F", "Unfolding");
 
-	treeMan_->addBranch("leptonPt", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("leptonEta", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("leptonCharge", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("LeptonEfficiencyCorrection", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("LeptonEfficiencyCorrectionUp", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("LeptonEfficiencyCorrectionDown", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("leptonPt", "F", "Unfolding");
+	treeMan_->addBranch("leptonEta", "F", "Unfolding");
+	treeMan_->addBranch("leptonCharge", "F", "Unfolding");
+	treeMan_->addBranch("LeptonEfficiencyCorrection", "F", "Unfolding");
+	treeMan_->addBranch("LeptonEfficiencyCorrectionUp", "F", "Unfolding");
+	treeMan_->addBranch("LeptonEfficiencyCorrectionDown", "F", "Unfolding");
 
-	treeMan_->addBranch("MET_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("ST_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("WPT_METUncertainties", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("BJetWeight", "F", "Unfolding" + Globals::treePrefix_ );
-	treeMan_->addBranch("LightJetUpWeight", "F", "Unfolding" + Globals::treePrefix_ );
-	treeMan_->addBranch("LightJetDownWeight", "F", "Unfolding" + Globals::treePrefix_ );
-	treeMan_->addBranch("BJetUpWeight", "F", "Unfolding" + Globals::treePrefix_ );
-	treeMan_->addBranch("BJetDownWeight", "F", "Unfolding" + Globals::treePrefix_ );
+	treeMan_->addBranch("MET_METUncertainties", "F", "Unfolding", false);
+	treeMan_->addBranch("ST_METUncertainties", "F", "Unfolding", false);
+	treeMan_->addBranch("WPT_METUncertainties", "F", "Unfolding", false);
+	treeMan_->addBranch("BJetWeight", "F", "Unfolding" );
+	treeMan_->addBranch("LightJetUpWeight", "F", "Unfolding" );
+	treeMan_->addBranch("LightJetDownWeight", "F", "Unfolding" );
+	treeMan_->addBranch("BJetUpWeight", "F", "Unfolding" );
+	treeMan_->addBranch("BJetDownWeight", "F", "Unfolding" );
 
-	treeMan_->addBranch("bPt", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("bEta", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("bPt", "F", "Unfolding", false);
+	treeMan_->addBranch("bEta", "F", "Unfolding", false);
 
-	treeMan_->addBranch("jetPt", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("jetEta", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("jetParton", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("jetPt", "F", "Unfolding", false);
+	treeMan_->addBranch("jetEta", "F", "Unfolding", false);
+	treeMan_->addBranch("jetParton", "F", "Unfolding", false);
 
 	for ( unsigned int i = 0; i < 9; ++i ) {
-		treeMan_->addBranch("muFmuRWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+		treeMan_->addBranch("muFmuRWeight_" + to_string(i), "F", "Unfolding");
 	}
 
 	for ( unsigned int i = 0; i < 100; ++i ) {
-		treeMan_->addBranch("pdfWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+		treeMan_->addBranch("pdfWeight_" + to_string(i), "F", "Unfolding");
 	}
 
 	for ( unsigned int i = 0; i < 2; ++i ) {
-		treeMan_->addBranch("alphaSWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+		treeMan_->addBranch("alphaSWeight_" + to_string(i), "F", "Unfolding");
 	}
 
 	for ( unsigned int i = 0; i < 27; ++i ) {
-		treeMan_->addBranch("matchingWeight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+		treeMan_->addBranch("matchingWeight_" + to_string(i), "F", "Unfolding");
 	}
 
 	for ( unsigned int i = 0; i < 55; ++i ) {
-		treeMan_->addBranch("CT14Weight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+		treeMan_->addBranch("CT14Weight_" + to_string(i), "F", "Unfolding");
 	}
 	for ( unsigned int i = 0; i < 56; ++i ) {
-		treeMan_->addBranch("MMHT14Weight_" + to_string(i), "F", "Unfolding" + Globals::treePrefix_);
+		treeMan_->addBranch("MMHT14Weight_" + to_string(i), "F", "Unfolding");
 	}
 
-	treeMan_->addBranch("semilepbrUp", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("semilepbrDown", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("semilepbrUp", "F", "Unfolding");
+	treeMan_->addBranch("semilepbrDown", "F", "Unfolding");
 
-	treeMan_->addBranch("petersonFrag", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("centralFrag", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("upFrag", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("downFrag", "F", "Unfolding" + Globals::treePrefix_);
-
+	treeMan_->addBranch("petersonFrag", "F", "Unfolding");
+	treeMan_->addBranch("centralFrag", "F", "Unfolding");
+	treeMan_->addBranch("upFrag", "F", "Unfolding");
+	treeMan_->addBranch("downFrag", "F", "Unfolding");
 }
 
 
