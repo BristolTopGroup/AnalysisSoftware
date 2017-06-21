@@ -260,54 +260,54 @@ void PseudoTopAnalyser::createTrees() {
 
 	treeMan_->setCurrentFolder(histogramFolder_);
 	// Generator level selecton
-	treeMan_->addBranch("isSemiLeptonicElectron", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("isSemiLeptonicMuon", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("isSemiLeptonicElectron", "F","Unfolding");
+	treeMan_->addBranch("isSemiLeptonicMuon", "F","Unfolding");
 
-	treeMan_->addBranch("passesGenEventSelection","F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("passesGenEventSelection_20GeVLastJet","F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoLepton_pdgId", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("passesGenEventSelection","F","Unfolding");
+	treeMan_->addBranch("passesGenEventSelection_20GeVLastJet","F","Unfolding");
+	treeMan_->addBranch("pseudoLepton_pdgId", "F", "Unfolding");
 
 	// Branches for top
-	treeMan_->addBranch("pseudoTop_pT", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudoTop_y", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("pseudoTop_pT", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudoTop_y", "F", "Unfolding", false);
 	// Branches for ttbar
-	treeMan_->addBranch("pseudoTTbar_pT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoTTbar_y", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoTTbar_m", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoTTbar_pT", "F","Unfolding");
+	treeMan_->addBranch("pseudoTTbar_y", "F","Unfolding");
+	treeMan_->addBranch("pseudoTTbar_m", "F","Unfolding");
 	// Branches for lepton
-	treeMan_->addBranch("pseudoLepton_pT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoLepton_eta", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoLepton_pT", "F","Unfolding");
+	treeMan_->addBranch("pseudoLepton_eta", "F","Unfolding");
 	// Branches for b jets
-	treeMan_->addBranch("pseudoB_pT", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudoB_eta", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudo_angle_bl", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudo_deltaPhi_bb", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudo_deltaEta_bb", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudo_angle_bb", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoB_pT", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudoB_eta", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudo_angle_bl", "F", "Unfolding");
+	treeMan_->addBranch("pseudo_deltaPhi_bb", "F", "Unfolding");
+	treeMan_->addBranch("pseudo_deltaEta_bb", "F", "Unfolding");
+	treeMan_->addBranch("pseudo_angle_bb", "F", "Unfolding");
 	// Branches for jets
-	treeMan_->addBranch("pseudoJet_pT", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudoJet_eta", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("pseudoJet_pT", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudoJet_eta", "F", "Unfolding", false);
 	// Branch for pseudo MET
-	treeMan_->addBranch("pseudoMET", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoMET_mass", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoMET", "F","Unfolding");
+	treeMan_->addBranch("pseudoMET_mass", "F","Unfolding");
 	// Branch for gen MET
-	treeMan_->addBranch("genMET", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("genMET", "F","Unfolding");
 	// Branches for other pseudo global variables
-	treeMan_->addBranch("pseudoHT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoST", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoWPT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoMT", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoHT", "F","Unfolding");
+	treeMan_->addBranch("pseudoST", "F","Unfolding");
+	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding");
+	treeMan_->addBranch("pseudoWPT", "F","Unfolding");
+	treeMan_->addBranch("pseudoMT", "F","Unfolding");
 
 	// Number of pseudo jets
-	treeMan_->addBranch("NPseudoJets", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("NPseudoJets", "F", "Unfolding");
+	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding");
 
 	// New/alternative phase space
-	treeMan_->addBranch("pseudoHT_20GeVLastJet", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoST_20GeVLastJet", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("NPseudoJets_20GeVLastJet", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("NPseudoBJets_20GeVLastJet", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoHT_20GeVLastJet", "F","Unfolding");
+	treeMan_->addBranch("pseudoST_20GeVLastJet", "F","Unfolding");
+	treeMan_->addBranch("NPseudoJets_20GeVLastJet", "F", "Unfolding");
+	treeMan_->addBranch("NPseudoBJets_20GeVLastJet", "F", "Unfolding");
 }
 
 bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets, double highJetPTThreshold, double lowerJetPtThreshold ) {
