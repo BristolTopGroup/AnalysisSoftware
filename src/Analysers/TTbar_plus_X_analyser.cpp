@@ -155,6 +155,26 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 		treeMan_->Fill("WPT_METUncertainties",Event::WPT(signalLepton, METForUnc_i));		
 	}
 
+	double topPtWeight = 1.;
+
+	if ( ( event->isSemiLeptonicElectron() || event->isSemiLeptonicMuon() ) ) {
+
+	const TTGenInfoPointer ttGen( event->TTGenInfo() );
+	const ParticlePointer leptonicTop = ttGen->getLeptonicTop();
+	const ParticlePointer hadronicTop = ttGen->getHadronicTop();
+
+		if ( leptonicTop != 0 && hadronicTop != 0 ) {
+			// Store info on leptonic top
+			treeMan_->Fill("lepTopPt_parton", leptonicTop->pt() );
+			treeMan_->Fill("hadTopPt_parton", hadronicTop->pt() );
+			topPtWeight = exp( 0.0615 - 0.0005 * leptonicTop->pt() ) * exp( 0.0615 - 0.0005 * hadronicTop->pt() );
+
+		}
+
+	}
+
+	treeMan_->Fill("topPtWeight",topPtWeight);
+
 	fillLeptonEfficiencyCorrectionBranches( event, selectionCriteria, signalLepton );
 
 	wAnalyser_->analyseHadronicW( event, jets, bJets, folder );
@@ -297,6 +317,9 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("BJetDownWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("LightJetUpWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("LightJetDownWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("lepTopPt_parton", "F", "AnalysisVariables");
+	treeMan_->addBranch("hadTopPt_parton", "F", "AnalysisVariables");
+	treeMan_->addBranch("topPtWeight", "F", "AnalysisVariables");
 
 	wAnalyser_->createTrees(folder);
 }

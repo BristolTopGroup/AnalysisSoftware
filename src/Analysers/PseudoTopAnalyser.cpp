@@ -23,6 +23,7 @@ double const PseudoTopAnalyser::minWMt_ = 0;
 unsigned int const PseudoTopAnalyser::minNJets_ = 4;
 unsigned int const PseudoTopAnalyser::minNBJets_ = 2;
 double const PseudoTopAnalyser::minJetPt_ = 30;
+double const PseudoTopAnalyser::minJetPt_lowerThreshold_ = 20;
 double const PseudoTopAnalyser::maxJetAbsEta_ = 2.4;
 
 void PseudoTopAnalyser::analyse(const EventPtr event) {
@@ -56,11 +57,31 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	// if ( !pseudoTopParticles->isSemiLeptonic() ) return;
 
 	// Check if event passes event selection (at pseudo top level)
-	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons ) ) {
+	bool passesGenSelection = passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, minNJets_, minNBJets_, minJetPt_, minJetPt_ );
+	if ( passesGenSelection ) {
+		++nEventsInPS_;
 		treeMan_->Fill("passesGenEventSelection",1);
 	}
 	else {
 		treeMan_->Fill("passesGenEventSelection",0);
+	}
+
+	bool passesOfflineSelection = event->PassesElectronTriggerAndSelection() || event->PassesMuonTriggerAndSelection();
+	if ( passesOfflineSelection ) ++nEventsOffline_;
+	if ( passesOfflineSelection && !passesGenSelection ){
+		++nEventsOfflineButNotInPS_;
+	}
+
+	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, minNJets_, minNBJets_, minJetPt_, minJetPt_lowerThreshold_ ) ) {
+		++nEventsInPS_lowerThresholdLastJet_;
+		treeMan_->Fill("passesGenEventSelection_20GeVLastJet",1);
+
+	}
+	else { 
+		treeMan_->Fill("passesGenEventSelection_20GeVLastJet",0);
+		if ( passesOfflineSelection ){
+			++nEventsOfflineButNotInPS_lowerThresholdLastJet_;
+		}
 	}
 
 	//
@@ -105,7 +126,7 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	// std::cout << pseudoBs.size() << " " << allPseudoLeptons.size() << std::endl;
 	if ( pseudoBs.size() >= 1 && allPseudoLeptons.size() > 0 ) {
-		treeMan_->Fill("angle_bl",Event::pseudo_angle_bl( pseudoBs, allPseudoLeptons[0]));
+		treeMan_->Fill("angle_bl",Event::pseudo_angle_bl( pseudoBs, allPseudoLeptons[0], minJetPt_) );
 	}
 
 	if ( pseudoBs.size() >= 2 ) {
@@ -148,22 +169,6 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 	}
 
 
-	// Store pseudo HT
-	treeMan_->Fill("pseudoHT", event->HT( pseudoJets ) );
-
-	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
-		treeMan_->Fill("pseudoJet_pT", pseudoJets.at(index)->pt() );
-		treeMan_->Fill("pseudoJet_eta", pseudoJets.at(index)->eta() );
-	}
-
-	// Store pseudo ST
-	if ( allPseudoLeptons.size() > 0 ) {
-		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() )) ) );
-	}
-	else {
-		treeMan_->Fill("pseudoST", 0 );
-	}
-
 	// Store pseudo MT and WPT
 	// These are from the W reconstructed from the pseudo particles
 	// i.e. use the neutrino assocaited with the W rather than the more "global" MET
@@ -186,74 +191,126 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		treeMan_->Fill("pseudoMT", 0 );
 	}
 
+	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
+		treeMan_->Fill("pseudoJet_pT", pseudoJets.at(index)->pt() );
+		treeMan_->Fill("pseudoJet_eta", pseudoJets.at(index)->eta() );
+	}
+
+	// Nominal phase space
+
+	// Store pseudo HT
+	treeMan_->Fill("pseudoHT", event->HT( pseudoJets, minJetPt_ ) );
+
+	// Store pseudo ST
+	if ( allPseudoLeptons.size() > 0 ) {
+		treeMan_->Fill("pseudoST", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() ) ), minJetPt_ ) );
+	}
+	else {
+		treeMan_->Fill("pseudoST", 0 );
+	}
+
 	// NJets && NBJets
 	unsigned int numberOfBJets(0);
 	unsigned int numberOfJets(0);
 	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
 		const JetPointer jet(pseudoJets.at(index));
-		if (jet->pt() < 30 ) continue;
+		if (jet->pt() < minJetPt_ ) continue;
 		++numberOfJets;
 	}
 	for (unsigned int index = 0; index < pseudoBs.size(); ++index) {
 		const MCParticlePointer bJet(pseudoBs.at(index));
-		if ( bJet->pt() < 30 ) continue;
+		if ( bJet->pt() < minJetPt_ ) continue;
 		++numberOfBJets;
 	}
 
 	treeMan_->Fill("NPseudoJets", numberOfJets );
 	treeMan_->Fill("NPseudoBJets", numberOfBJets );
 
+	// New/alternative phase space
+	// Store pseudo HT
+	treeMan_->Fill("pseudoHT_20GeVLastJet", event->HT( pseudoJets, minJetPt_lowerThreshold_ ) );
+
+	// Store pseudo ST
+	if ( allPseudoLeptons.size() > 0 ) {
+		treeMan_->Fill("pseudoST_20GeVLastJet", event->ST( pseudoJets, allPseudoLeptons[0], METPointer( new MET( pseudoMET->px(), pseudoMET->py() ) ), minJetPt_lowerThreshold_ ) );
+	}
+	else {
+		treeMan_->Fill("pseudoST_20GeVLastJet", 0 );
+	}
+
+	// NJets && NBJets
+	unsigned int numberOfBJets_20GeVLastJet(0);
+	unsigned int numberOfJets_20GeVLastJet(0);
+	for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
+		const JetPointer jet(pseudoJets.at(index));
+		if (jet->pt() < minJetPt_lowerThreshold_ ) continue;
+		++numberOfJets_20GeVLastJet;
+	}
+	for (unsigned int index = 0; index < pseudoBs.size(); ++index) {
+		const MCParticlePointer bJet(pseudoBs.at(index));
+		if ( bJet->pt() < minJetPt_lowerThreshold_ ) continue;
+		++numberOfBJets_20GeVLastJet;
+	}
+
+	treeMan_->Fill("NPseudoJets_20GeVLastJet", numberOfJets_20GeVLastJet );
+	treeMan_->Fill("NPseudoBJets_20GeVLastJet", numberOfBJets_20GeVLastJet );
 }
 
 void PseudoTopAnalyser::createTrees() {
 
 	treeMan_->setCurrentFolder(histogramFolder_);
 	// Generator level selecton
-	treeMan_->addBranch("isSemiLeptonicElectron", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("isSemiLeptonicMuon", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("isSemiLeptonicElectron", "F","Unfolding");
+	treeMan_->addBranch("isSemiLeptonicMuon", "F","Unfolding");
 
-	treeMan_->addBranch("passesGenEventSelection","F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoLepton_pdgId", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("passesGenEventSelection","F","Unfolding");
+	treeMan_->addBranch("passesGenEventSelection_20GeVLastJet","F","Unfolding");
+	treeMan_->addBranch("pseudoLepton_pdgId", "F", "Unfolding");
 
 	// Branches for top
-	treeMan_->addBranch("pseudoTop_pT", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudoTop_y", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("pseudoTop_pT", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudoTop_y", "F", "Unfolding", false);
 	// Branches for ttbar
-	treeMan_->addBranch("pseudoTTbar_pT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoTTbar_y", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoTTbar_m", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoTTbar_pT", "F","Unfolding");
+	treeMan_->addBranch("pseudoTTbar_y", "F","Unfolding");
+	treeMan_->addBranch("pseudoTTbar_m", "F","Unfolding");
 	// Branches for lepton
-	treeMan_->addBranch("pseudoLepton_pT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoLepton_eta", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoLepton_pT", "F","Unfolding");
+	treeMan_->addBranch("pseudoLepton_eta", "F","Unfolding");
 	// Branches for b jets
-	treeMan_->addBranch("pseudoB_pT", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudoB_eta", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudo_angle_bl", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudo_deltaPhi_bb", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudo_deltaEta_bb", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudo_angle_bb", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoB_pT", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudoB_eta", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudo_angle_bl", "F", "Unfolding");
+	treeMan_->addBranch("pseudo_deltaPhi_bb", "F", "Unfolding");
+	treeMan_->addBranch("pseudo_deltaEta_bb", "F", "Unfolding");
+	treeMan_->addBranch("pseudo_angle_bb", "F", "Unfolding");
 	// Branches for jets
-	treeMan_->addBranch("pseudoJet_pT", "F", "Unfolding" + Globals::treePrefix_, false);
-	treeMan_->addBranch("pseudoJet_eta", "F", "Unfolding" + Globals::treePrefix_, false);
+	treeMan_->addBranch("pseudoJet_pT", "F", "Unfolding", false);
+	treeMan_->addBranch("pseudoJet_eta", "F", "Unfolding", false);
 	// Branch for pseudo MET
-	treeMan_->addBranch("pseudoMET", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoMET_mass", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoMET", "F","Unfolding");
+	treeMan_->addBranch("pseudoMET_mass", "F","Unfolding");
 	// Branch for gen MET
-	treeMan_->addBranch("genMET", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("genMET", "F","Unfolding");
 	// Branches for other pseudo global variables
-	treeMan_->addBranch("pseudoHT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoST", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoWPT", "F","Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("pseudoMT", "F","Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("pseudoHT", "F","Unfolding");
+	treeMan_->addBranch("pseudoST", "F","Unfolding");
+	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding");
+	treeMan_->addBranch("pseudoWPT", "F","Unfolding");
+	treeMan_->addBranch("pseudoMT", "F","Unfolding");
 
 	// Number of pseudo jets
-	treeMan_->addBranch("NPseudoJets", "F", "Unfolding" + Globals::treePrefix_);
-	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding" + Globals::treePrefix_);
+	treeMan_->addBranch("NPseudoJets", "F", "Unfolding");
+	treeMan_->addBranch("NPseudoBJets", "F", "Unfolding");
 
+	// New/alternative phase space
+	treeMan_->addBranch("pseudoHT_20GeVLastJet", "F","Unfolding");
+	treeMan_->addBranch("pseudoST_20GeVLastJet", "F","Unfolding");
+	treeMan_->addBranch("NPseudoJets_20GeVLastJet", "F", "Unfolding");
+	treeMan_->addBranch("NPseudoBJets_20GeVLastJet", "F", "Unfolding");
 }
 
-bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons ) {
+bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets, double highJetPTThreshold, double lowerJetPtThreshold ) {
 
 	// Event selection taken from here : https://twiki.cern.ch/twiki/bin/view/LHCPhysics/ParticleLevelTopDefinitions
 	unsigned int numberGoodLeptons = 0;
@@ -280,11 +337,21 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 	unsigned int numberGoodJets = 0;
 	unsigned int numberGoodBJets = 0;
 
+	unsigned int numberGoodJets_lowerPt = 0;
+	unsigned int numberGoodBJets_lowerPt = 0;
+
 	for ( unsigned int jetIndex = 0; jetIndex < pseudoJets.size(); ++ jetIndex ) {
 		const JetPointer jet = pseudoJets.at(jetIndex);
 
 		// Check if this is a good jet
-		if ( jet->pt() > minJetPt_ && fabs(jet->eta()) < maxJetAbsEta_ ) {
+		if ( jet->pt() > lowerJetPtThreshold && fabs(jet->eta()) < maxJetAbsEta_ ) {
+			++numberGoodJets_lowerPt;
+			if ( fabs( jet->partonFlavour() ) == 5 ) {
+				++numberGoodBJets_lowerPt;
+			}
+		}
+
+		if ( jet->pt() > highJetPTThreshold && fabs(jet->eta()) < maxJetAbsEta_ ) {
 			++numberGoodJets;
 
 			// Check if this is also a good b jet
@@ -294,7 +361,8 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		}
 	}
 	
-	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets_ && numberGoodBJets >= minNBJets_ ) {
+	// if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets && numberGoodBJets >= minNBJets ) {
+	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets_ - 1 && numberGoodBJets >= minNBJets - 1 && numberGoodJets_lowerPt >= minNJets_ && numberGoodBJets_lowerPt >= minNBJets ) {
 		return true;
 	}
 	else return false;
@@ -302,10 +370,33 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 }
 
 PseudoTopAnalyser::PseudoTopAnalyser(TreeManagerPtr treeMan, std::string histogramFolder) :
-		BasicAnalyser(treeMan, histogramFolder) {
+		BasicAnalyser(treeMan, histogramFolder),
+		nEventsInPS_(0),
+		nEventsOfflineButNotInPS_(0),
+		nEventsInPS_lowerThresholdLastJet_(0),
+		nEventsOfflineButNotInPS_lowerThresholdLastJet_(0),
+		nEventsOffline_(0)
+		 {
 }
 
 PseudoTopAnalyser::~PseudoTopAnalyser() {
+	std::cout << "PseudoTopAnalyser : Phase Space Info" << std::endl;
+	std::cout << "N event offline : " << nEventsOffline_ << std::endl;
+
+	std::cout << "N jets : " << minNJets_ << std::endl;
+	std::cout << "N b jets : " << minNBJets_ << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_ ) / float( nEventsOffline_ ) * 100 << std::endl;
+
+	std::cout << "N jets : " << minNJets_ << std::endl;
+	std::cout << "N b jets : " << minNBJets_ << std::endl;
+	std::cout << "Last jet pt threshold at : " << minJetPt_lowerThreshold_ << std::endl;
+	std::cout << "Number events in PS : " << nEventsInPS_lowerThresholdLastJet_ << std::endl;
+	std::cout << "Size wrt default : " << float( nEventsInPS_lowerThresholdLastJet_ ) / float( nEventsInPS_ ) * 100 << std::endl;
+	std::cout << "Number events offline but not in PS : " << nEventsOfflineButNotInPS_lowerThresholdLastJet_ << std::endl;
+	std::cout << "Fraction offline but not in PS : " << float( nEventsOfflineButNotInPS_lowerThresholdLastJet_ ) / float( nEventsOffline_ ) * 100 << std::endl;
 }
 
 } /* namespace BAT */

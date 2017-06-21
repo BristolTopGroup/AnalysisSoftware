@@ -1459,19 +1459,19 @@ bool Event::passesTrackingPOGFilters() const {
 	return passesTrackingPOGFilters_;
 }
 
-double Event::HT(const JetCollection jets) {
+double Event::HT(const JetCollection jets, const double jetPtThreshold ) {
 	double ht(0);
 	//Take ALL the jets!
 	for (unsigned int index = 0; index < jets.size(); ++index) {
-		if(jets.at(index)->pt() > minJetPt_)
+		if(jets.at(index)->pt() > jetPtThreshold)
 			ht += jets.at(index)->pt();
 	}
 	return ht;
 }
 
-double Event::ST(const JetCollection jets, const ParticlePointer lepton, const METPointer met) {
+double Event::ST(const JetCollection jets, const ParticlePointer lepton, const METPointer met, const double jetPtThreshold ) {
 	// ST = HT + MET + lepton pt
-	double ht = Event::HT(jets);
+	double ht = Event::HT(jets, jetPtThreshold);
 	double MET = met == 0 ? 0 : met->et();
 	double lpt = lepton == 0 ? 0 : lepton->pt();
 
@@ -1496,7 +1496,7 @@ double Event::WPT(const ParticlePointer particle, const METPointer met) {
 	return W_boson->pt();
 }
 
-double Event::M3(const JetCollection jets) {
+double Event::M3(const JetCollection jets, const double jetPtThreshold ) {
 	double m3(0), max_pt(0);
 	if (jets.size() >= 3) {
 		for (unsigned int index1 = 0; index1 < jets.size() - 2; ++index1) {
@@ -1504,9 +1504,9 @@ double Event::M3(const JetCollection jets) {
 					++index2) {
 				for (unsigned int index3 = index2 + 1; index3 < jets.size();
 						++index3) {
-					if ( jets.at(index1)->pt() <= minJetPt_ ||
-						 jets.at(index2)->pt() <= minJetPt_ ||
-						 jets.at(index3)->pt() <= minJetPt_ )
+					if ( jets.at(index1)->pt() <= jetPtThreshold ||
+						 jets.at(index2)->pt() <= jetPtThreshold ||
+						 jets.at(index3)->pt() <= jetPtThreshold )
 						continue;
 					FourVector m3Vector(
 							jets.at(index1)->getFourVector()
@@ -1525,13 +1525,13 @@ double Event::M3(const JetCollection jets) {
 	return m3;
 }
 
-double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton) {
+double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton, const double jetPtThreshold ) {
 	double m_bl(0.);
 	if (b_jets.size() != 0) {
 		// store the jets as particle pointers
 		ParticleCollection particles;
 		for (unsigned int i = 0; i < b_jets.size(); ++i) {
-			if ( b_jets.at(i)->pt() <= minJetPt_ ) continue;
+			if ( b_jets.at(i)->pt() <= jetPtThreshold ) continue;
 			particles.push_back(b_jets.at(i));
 		}
 
@@ -1547,24 +1547,24 @@ double Event::M_bl(const JetCollection b_jets, const ParticlePointer lepton) {
 	return m_bl;
 }
 
-double Event::pseudo_angle_bl( const MCParticleCollection pseudoBs, const ParticlePointer pseudoLepton ) {
+double Event::pseudo_angle_bl( const MCParticleCollection pseudoBs, const ParticlePointer pseudoLepton, const double jetPtThreshold ) {
 	JetCollection pseudoBJets;
 	for ( unsigned int i = 0; i < pseudoBs.size(); ++i ) {
 		MCParticlePointer p(pseudoBs.at(i));
 		JetPointer jet(new Jet(p->energy(), p->px(), p->py(), p->pz() ) );
 		pseudoBJets.push_back( jet );
 	}
-	return Event::angle_bl( pseudoBJets, pseudoLepton );
+	return Event::angle_bl( pseudoBJets, pseudoLepton, jetPtThreshold );
 }
 
 double Event::angle_bl(const JetCollection b_jets,
-		const ParticlePointer lepton) {
+		const ParticlePointer lepton, const double jetPtThreshold ) {
 	double angle(-1);
 	if (b_jets.size() != 0) {
 		// store the jets as particle pointers
 		ParticleCollection particles;
 		for (unsigned int i = 0; i < b_jets.size(); ++i) {
-			if ( b_jets.at(i)->pt() <= minJetPt_ ) continue;
+			if ( b_jets.at(i)->pt() <= jetPtThreshold ) continue;
 			particles.push_back(b_jets.at(i));
 		}
 
@@ -1615,12 +1615,12 @@ double Event::angle_bb(const ParticlePointer b_jet1, const ParticlePointer b_jet
 	return b_jet1->angle( b_jet2 );
 }
 
-unsigned int Event::NJets(const JetCollection jets) {
+unsigned int Event::NJets(const JetCollection jets, const double jetPtThreshold ) {
 	unsigned int nJets(0);
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		const JetPointer jet(jets.at(index));
 
-		if ( jet->pt() < minJetPt_ ) continue;
+		if ( jet->pt() < jetPtThreshold ) continue;
 
 		++nJets;
 	}

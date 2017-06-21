@@ -374,17 +374,17 @@ public:
 
 	bool passesMETFilters() const;
 
-	static double HT(const JetCollection jets);
-	static double M3(const JetCollection jets);
-	static double M_bl(const JetCollection, const ParticlePointer);
-	static double angle_bl(const JetCollection, const ParticlePointer);
-	static double pseudo_angle_bl( const MCParticleCollection pseudoBs, const ParticlePointer pseudoLepton );
+	static double HT(const JetCollection jets, const double jetPtThreshold = minJetPt_ );
+	static double M3(const JetCollection jets, const double jetPtThreshold = minJetPt_ );
+	static double M_bl(const JetCollection, const ParticlePointer, const double jetPtThreshold = minJetPt_ );
+	static double angle_bl(const JetCollection, const ParticlePointer, const double jetPtThreshold = minJetPt_ );
+	static double pseudo_angle_bl( const MCParticleCollection pseudoBs, const ParticlePointer pseudoLepton, const double jetPtThreshold = minJetPt_ );
 	static void getTopTwoCSVJets(const JetCollection, unsigned int& highestCSVJetIndex, unsigned int& secondHighestCSVJetIndex);
 	static double deltaPhi_bb(const ParticlePointer, const ParticlePointer);
 	static double deltaEta_bb(const ParticlePointer, const ParticlePointer);
 	static double angle_bb(const ParticlePointer, const ParticlePointer);
-	static unsigned int NJets(const JetCollection);
-	static double ST(const JetCollection, const ParticlePointer, const METPointer);
+	static unsigned int NJets(const JetCollection, const double jetPtThreshold = minJetPt_ );
+	static double ST(const JetCollection, const ParticlePointer, const METPointer, const double jetPtThreshold = minJetPt_ );
 	static double MT(const ParticlePointer, const METPointer);
 	static double WPT(const ParticlePointer, const METPointer);
 

@@ -29,10 +29,20 @@ public:
 	static unsigned int const minNJets_;
 	static unsigned int const minNBJets_;
 	static double const minJetPt_;
+	static double const minJetPt_lowerThreshold_;
 	static double const maxJetAbsEta_;
 
 protected:
-	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons );
+	bool passesEventSelection(const MCParticlePointer pseudoLepton, const JetCollection pseudoJets, const MCParticleCollection pseudoBs, const MCParticleCollection allPseudoLeptons, unsigned int minNJets, unsigned int minNBJets, double highJetPTThreshold, double lowerJetPtThreshold );
+
+private:
+	unsigned int nEventsInPS_;
+	unsigned int nEventsOfflineButNotInPS_;
+
+	unsigned int nEventsInPS_lowerThresholdLastJet_;
+	unsigned int nEventsOfflineButNotInPS_lowerThresholdLastJet_;
+
+	unsigned int nEventsOffline_;
 };
 typedef boost::scoped_ptr<PseudoTopAnalyser> PseudoTopAnalyserLocalPtr;
 typedef boost::shared_ptr<PseudoTopAnalyser> PseudoTopAnalyserPtr;

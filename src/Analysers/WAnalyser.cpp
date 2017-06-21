@@ -75,12 +75,12 @@ void WAnalyser::analyseHadronicW(const EventPtr event, const JetCollection jets,
 void WAnalyser::createTrees( std::string folder ) {
 	treeMan_->setCurrentFolder(folder);
 
-	treeMan_->addBranch("mjj", "F", "AnalysisVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("mjj_correctlyRecod", "F", "AnalysisVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("mjj_jet1Pt", "F", "AnalysisVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("mjj_jet2Pt", "F", "AnalysisVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("mjj_jet1Eta", "F", "AnalysisVariables" + Globals::treePrefix_);
-	treeMan_->addBranch("mjj_jet2Eta", "F", "AnalysisVariables" + Globals::treePrefix_);
+	treeMan_->addBranch("mjj", "F", "AnalysisVariables");
+	treeMan_->addBranch("mjj_correctlyRecod", "F", "AnalysisVariables");
+	treeMan_->addBranch("mjj_jet1Pt", "F", "AnalysisVariables");
+	treeMan_->addBranch("mjj_jet2Pt", "F", "AnalysisVariables");
+	treeMan_->addBranch("mjj_jet1Eta", "F", "AnalysisVariables");
+	treeMan_->addBranch("mjj_jet2Eta", "F", "AnalysisVariables");
 }
 
 WAnalyser::WAnalyser(boost::shared_ptr<TreeManager> treeMan, std::string histogramFolder) :
