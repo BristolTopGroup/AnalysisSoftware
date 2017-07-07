@@ -42,24 +42,24 @@ datasetInfo['SingleMuon_RunH_v2'] = {"cross-section": 0, "NumberOfProcessedEvent
 datasetInfo['SingleMuon_RunH_v3'] = {"cross-section": 0, "NumberOfProcessedEvents":0}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/TtbarNNLO
-datasetInfo['TTJets_PowhegPythia8'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :154948894}
+datasetInfo['TTJets_PowhegPythia8'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :147890482}
 datasetInfo['TTJets_PowhegPythia8_fsrdown'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59306906}
 datasetInfo['TTJets_PowhegPythia8_fsrup'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59230899}
 datasetInfo['TTJets_PowhegPythia8_isrdown'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58999580}
 datasetInfo['TTJets_PowhegPythia8_isrup'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59033604}
-datasetInfo['TTJets_PowhegPythia8_down'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :57156956}
+datasetInfo['TTJets_PowhegPythia8_down'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58338240}
 datasetInfo['TTJets_PowhegPythia8_up'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58953660}
 datasetInfo['TTJets_PowhegPythia8_mtop1695'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58542590}
-datasetInfo['TTJets_PowhegPythia8_mtop1755'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59384660}
-datasetInfo['TTJets_PowhegPythia8_hdampdown'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :56075543}
-datasetInfo['TTJets_PowhegPythia8_hdampup'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :57116401}
-datasetInfo['TTJets_PowhegPythia8_erdOn'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :57402180}
-datasetInfo['TTJets_PowhegPythia8_QCDbased_erdOn'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :55201618}
-datasetInfo['TTJets_PowhegPythia8_GluonMove'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58710642}
+datasetInfo['TTJets_PowhegPythia8_mtop1755'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59321568}
+datasetInfo['TTJets_PowhegPythia8_hdampdown'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58163976}
+datasetInfo['TTJets_PowhegPythia8_hdampup'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58681132}
+datasetInfo['TTJets_PowhegPythia8_erdOn'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59882210}
+datasetInfo['TTJets_PowhegPythia8_QCDbased_erdOn'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :55407698}
+datasetInfo['TTJets_PowhegPythia8_GluonMove'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :58692876}
 
 datasetInfo['TTJets_amcatnloFXFX'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :15065716}
-datasetInfo['TTJets_madgraphMLM'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :9686836}
-datasetInfo['TTJets_PowhegHerwigpp'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :57907938}
+datasetInfo['TTJets_madgraphMLM'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :10139950}
+datasetInfo['TTJets_PowhegHerwigpp'] = { "cross-section" : 831.76, "NumberOfProcessedEvents" :59174465}
 
 # # Cross sections from https://twiki.cern.ch/twiki/bin/view/CMS/StandardModelCrossSectionsat13TeV
 # DY New XSec 1921.8 for Z->mumu m(ll)>50
