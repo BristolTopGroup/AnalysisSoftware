@@ -110,6 +110,7 @@ protected:
 	double eventWeight;
 	double pileUpWeight_, pileUpWeight_up_, pileUpWeight_down_;
 	double bJetWeight_, lightJetUpWeight_, lightJetDownWeight_, bJetUpWeight_, bJetDownWeight_;
+	double bJetEfficiencyCorrectionWeight_, bJetAlternativeWeight_;
 	double tightbJetWeight_, tightlightJetUpWeight_, tightlightJetDownWeight_, tightbJetUpWeight_, tightbJetDownWeight_;
 	//These values are calculated with PileUp_2011_truth_finebin.root
 	double PUWeightInTimeOnly_, PUWeight3BX_, // PUWeight3D_,
@@ -201,6 +202,8 @@ public:
 	void setEventWeight(double weight);
 	void setPileUpWeight(double weight, int systematic=0);
 	void setBJetWeight(double weight);
+	void setBJetEfficiencyCorrectionWeight(double weight);
+	void setBJetAlternativeWeight(double weight);
 	void setLightJetUpWeight(double weight);
 	void setLightJetDownWeight(double weight);
 	void setBJetUpWeight(double weight);
@@ -316,6 +319,9 @@ public:
 	double PileUpWeight( int systematic = 0 ) const;
 
 	double BJetWeight() const;
+	double BJetEfficiencyCorrectionWeight() const;
+	double BJetAlternativeWeight() const;
+
 	double LightJetUpWeight() const;
 	double LightJetDownWeight() const;
 	double BJetUpWeight() const;

@@ -137,6 +137,9 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("NVertices",	event->Vertices().size());
 
 	treeMan_->Fill("BJetWeight",event->BJetWeight());
+	treeMan_->Fill("BJetEfficiencyCorrectionWeight",event->BJetEfficiencyCorrectionWeight());
+	treeMan_->Fill("BJetAlternativeWeight",event->BJetAlternativeWeight());
+
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
@@ -218,6 +221,9 @@ void TTbar_plus_X_analyser::fillCommonTreesNoBSelection(const EventPtr event,  c
 	treeMan_->Fill("NVertices",	event->Vertices().size());
 
 	treeMan_->Fill("BJetWeight",event->BJetWeight());
+	treeMan_->Fill("BJetEfficiencyCorrectionWeight",event->BJetEfficiencyCorrectionWeight());
+	treeMan_->Fill("BJetAlternativeWeight",event->BJetAlternativeWeight());
+
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
 	treeMan_->Fill("BJetDownWeight",event->BJetDownWeight());
 	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
@@ -313,6 +319,8 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetEfficiencyCorrectionWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetAlternativeWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetUpWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetDownWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("LightJetUpWeight", "F", "AnalysisVariables");
@@ -337,6 +345,8 @@ void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetEfficiencyCorrectionWeight", "F", "AnalysisVariables");
+	treeMan_->addBranch("BJetAlternativeWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetUpWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetDownWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("LightJetUpWeight", "F", "AnalysisVariables");

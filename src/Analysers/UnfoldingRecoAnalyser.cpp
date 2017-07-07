@@ -108,6 +108,9 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	treeMan_->Fill("PUWeight_up", event->PileUpWeight(1) );
 	treeMan_->Fill("PUWeight_down", event->PileUpWeight(-1) );
 	treeMan_->Fill("BJetWeight",event->BJetWeight());
+	treeMan_->Fill("BJetEfficiencyCorrectionWeight",event->BJetEfficiencyCorrectionWeight());
+	treeMan_->Fill("BJetAlternativeWeight",event->BJetAlternativeWeight());
+
 	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
 	treeMan_->Fill("LightJetDownWeight",event->LightJetDownWeight());
 	treeMan_->Fill("BJetUpWeight",event->BJetUpWeight());
@@ -202,6 +205,9 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("ST_METUncertainties", "F", "Unfolding", false);
 	treeMan_->addBranch("WPT_METUncertainties", "F", "Unfolding", false);
 	treeMan_->addBranch("BJetWeight", "F", "Unfolding" );
+	treeMan_->addBranch("BJetEfficiencyCorrectionWeight", "F", "Unfolding" );
+	treeMan_->addBranch("BJetAlternativeWeight", "F", "Unfolding" );
+
 	treeMan_->addBranch("LightJetUpWeight", "F", "Unfolding" );
 	treeMan_->addBranch("LightJetDownWeight", "F", "Unfolding" );
 	treeMan_->addBranch("BJetUpWeight", "F", "Unfolding" );

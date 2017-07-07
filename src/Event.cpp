@@ -963,6 +963,14 @@ void Event::setBJetWeight(double weight) {
 	bJetWeight_ = weight;
 }
 
+void Event::setBJetEfficiencyCorrectionWeight(double weight) {
+	bJetEfficiencyCorrectionWeight_ = weight;
+}
+
+void Event::setBJetAlternativeWeight(double weight) {
+	bJetAlternativeWeight_ = weight;
+}
+
 void Event::setLightJetUpWeight(double weight) {
 	lightJetUpWeight_ = weight;
 }
@@ -1104,6 +1112,14 @@ double Event::PileUpWeight( int systematic ) const {
 
 double Event::BJetWeight() const {
 	return bJetWeight_;
+}
+
+double Event::BJetEfficiencyCorrectionWeight() const {
+	return bJetEfficiencyCorrectionWeight_;
+}
+
+double Event::BJetAlternativeWeight() const {
+	return bJetAlternativeWeight_;
 }
 
 double Event::LightJetUpWeight() const {
