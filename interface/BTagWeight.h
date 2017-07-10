@@ -14,7 +14,8 @@ class BTagWeight {
 public:
 	BTagWeight();
 
-	double weight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs) const;
+	double weight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs ) const;
+	double weight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs, double& efficiencyCorrection, double& alternativeWeight) const;
 
 	void setNumberOfBtags(unsigned int min, unsigned int max);
 
@@ -38,6 +39,7 @@ private:
 };
 
 double BjetWeights(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs);
+double BjetWeights(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs, double& efficiencyCorrection, double& alternativeWeight );
 }
 #endif
 

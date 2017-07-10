@@ -264,8 +264,12 @@ const EventPtr NTupleEventReader::getNextEvent() {
 		// M = Medium, 
 		// T = Tight, 
 		// Currently only same WP jets are supported
-		double bweight = btagWeight->weight( currentEvent->CleanedJets(), 0, {"M", "M"} );
+		double bEfficiencyCorrection = 1.;
+		double bAlternativeWeight = 1.;
+		double bweight = btagWeight->weight( currentEvent->CleanedJets(), 0, {"M", "M"}, bEfficiencyCorrection, bAlternativeWeight );
 		currentEvent->setBJetWeight( bweight );
+		currentEvent->setBJetEfficiencyCorrectionWeight( bEfficiencyCorrection );
+		currentEvent->setBJetAlternativeWeight( bAlternativeWeight );
 		bweight = btagWeight->weight( currentEvent->CleanedJets(), 1, {"M", "M"}  );
 		currentEvent->setLightJetUpWeight( bweight );
 		bweight = btagWeight->weight( currentEvent->CleanedJets(), -1, {"M", "M"}  );

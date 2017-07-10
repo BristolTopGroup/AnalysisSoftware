@@ -12,9 +12,18 @@ namespace BAT {
 double BjetWeight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs) {
 	boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
 
-	double weight = btagWeight->weight( jets, systematic, bJetWPs );
+	double dummy1 = 0, dummy2 = 0;
+	double weight = btagWeight->weight( jets, systematic, bJetWPs, dummy1, dummy2 );
 	return weight;
 }
+
+double BjetWeights(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs, double& efficiencyCorrection, double& alternativeWeight ) {
+	boost::scoped_ptr<BTagWeight> btagWeight(new BTagWeight());
+
+	double weight = btagWeight->weight( jets, systematic, bJetWPs, efficiencyCorrection, alternativeWeight );
+	return weight;
+}
+
 
 BTagWeight::BTagWeight() :
 				minNumberOfTags_(0), //
@@ -22,10 +31,23 @@ BTagWeight::BTagWeight() :
 }
 
 double BTagWeight::weight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs) const {
+	double dummy1 = 0, dummy2 = 0;
+	return weight( jets, systematic, bJetWPs, dummy1, dummy2 );
+}
+
+double BTagWeight::weight(const JetCollection jets, const int systematic, const std::vector<std::string> bJetWPs, double& efficiencyCorrection, double& alternativeWeight ) const {
 	float bTaggedMCJet = 1.0;
 	float nonBTaggedMCJet = 1.0;
 	float bTaggedDataJet = 1.0;
 	float nonBTaggedDataJet = 1.0;
+
+	efficiencyCorrection = 1.;
+
+	float alternative_bTaggedMCJet = 1.0;
+	float alternative_nonBTaggedMCJet = 1.0;
+	float alternative_bTaggedDataJet = 1.0;
+	float alternative_nonBTaggedDataJet = 1.0;
+	alternativeWeight = 1.;
 
 	for (unsigned int index = 0; index < jets.size(); ++index) {
 		// Info on this jet
@@ -121,16 +143,46 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		// The first corrects the efficiencies in Powheg Pythia 8 MC (or the central MC, which should also be the same generator+PS used to derive the scale factors) to data
 		// The second corrects the efficiencies in the sample you are considering (e.g. Powheg+Herwig++) to Powheg Pythia 8 (or whichever central MC you are using)
 		// The denominator of the first weight cancels with the numerator of the second, so the total weight simplifies to this below
+		// if (isBTagged) {
+		// 	bTaggedMCJet *= eff;
+		// 	bTaggedDataJet *= eff*sfToUse;
+		// }else{
+		// 	nonBTaggedMCJet *= ( 1 - eff );
+		// 	nonBTaggedDataJet *= ( 1 - eff*sfToUse );
+		// }
+
 		if (isBTagged) {
-			bTaggedMCJet *= eff;
+			bTaggedMCJet *= eff_PowhegPythia8;
 			bTaggedDataJet *= eff_PowhegPythia8*sfToUse;
+
+			alternative_bTaggedMCJet *= eff;
+			alternative_bTaggedDataJet *= eff*sfToUse;
 		}else{
-			nonBTaggedMCJet *= ( 1 - eff );
+			nonBTaggedMCJet *= ( 1 - eff_PowhegPythia8 );
 			nonBTaggedDataJet *= ( 1 - eff_PowhegPythia8*sfToUse );
+
+			alternative_nonBTaggedMCJet *= ( 1 - eff );
+			alternative_nonBTaggedDataJet *= ( 1 - eff*sfToUse );
 		}
+
+		// if ( std::isnan( eff_PowhegPythia8 ) || std::isnan( eff ) ) {
+		// }
+		// else {
+		double correctionForThisJet = 1;
+		if ( eff > 0 ) {
+			correctionForThisJet = eff_PowhegPythia8 / eff;
+		}
+		if ( correctionForThisJet > 0 )  {
+			efficiencyCorrection *= correctionForThisJet;
+		}
+
+		// if ( std::isnan( efficiencyCorrection ) ) {
+		// 	std::cout << "Efficiency correction nan " << eff << " " << eff_PowhegPythia8 << " " << eff_PowhegPythia8 / eff  << std::endl;
+		// }
 	}
 
 	double bTagWeight = (nonBTaggedDataJet * bTaggedDataJet) / (nonBTaggedMCJet * bTaggedMCJet);
+	alternativeWeight = (alternative_nonBTaggedDataJet * alternative_bTaggedDataJet) / (alternative_nonBTaggedMCJet * alternative_bTaggedMCJet);
 
 	if ( nonBTaggedMCJet == 0 || bTaggedMCJet == 0 ) {
 		bTagWeight = 1;
@@ -138,7 +190,7 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 
 	if ( std::isnan( bTagWeight )) {
 		cout << "Btag weight is nan : " << bTagWeight << endl;
-		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << endl;
+		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << " " << efficiencyCorrection << endl;
 	}
 	else if ( bTagWeight > 10 || bTagWeight < 0 ) {
 		cout << "Odd b tag weight : " << bTagWeight << endl;
