@@ -992,7 +992,7 @@ std::string ConfigFile::getSampleBTagEffTag(std::string sample, std::string mode
 	else if( sample == "TTJets_PowhegPythia8_hdampup") return "PowhegPythia8_hdampdown/";
 	else if( sample == "TTJets_PowhegPythia8_erdOn") return "PowhegPythia8_erdOn/";
 	else if( sample == "TTJets_PowhegPythia8_QCDbased_erdOn") return "PowhegPythia8_QCDbased_erdOn/";
-	// else if( sample == "TTJets_PowhegPythia8_GluonMove") return "PowhegPythia8_GluonMove/";
+	else if( sample == "TTJets_PowhegPythia8_GluonMove") return "PowhegPythia8_GluonMove/";
 	else return "PowhegPythia8/";
 }
 
