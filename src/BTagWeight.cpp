@@ -188,13 +188,28 @@ double BTagWeight::weight(const JetCollection jets, const int systematic, const 
 		bTagWeight = 1;
 	}
 
+	if ( alternative_nonBTaggedMCJet == 0 || alternative_bTaggedMCJet == 0 ) {
+		alternativeWeight = 1;
+	}
+
 	if ( std::isnan( bTagWeight )) {
 		cout << "Btag weight is nan : " << bTagWeight << endl;
 		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << " " << efficiencyCorrection << endl;
+		bTagWeight = 1;
 	}
 	else if ( bTagWeight > 10 || bTagWeight < 0 ) {
 		cout << "Odd b tag weight : " << bTagWeight << endl;
 		cout << nonBTaggedDataJet << " " << bTaggedDataJet << " " << nonBTaggedMCJet << " " << bTaggedMCJet << endl;
+	}
+
+	if ( std::isnan( alternativeWeight )) {
+		cout << "Alternative Btag weight is nan : " << alternativeWeight << endl;
+		cout << alternative_nonBTaggedDataJet << " " << alternative_bTaggedDataJet << " " << alternative_nonBTaggedMCJet << " " << alternative_bTaggedMCJet << " " << efficiencyCorrection << endl;
+		alternativeWeight = 1;
+	}
+	else if ( alternativeWeight > 10 || alternativeWeight < 0 ) {
+		cout << "Odd alternative b tag weight : " << alternativeWeight << endl;
+		cout << alternative_nonBTaggedDataJet << " " << alternative_bTaggedDataJet << " " << alternative_nonBTaggedMCJet << " " << alternative_bTaggedMCJet << endl;
 
 	}
 
