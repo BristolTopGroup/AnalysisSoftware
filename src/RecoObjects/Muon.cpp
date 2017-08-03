@@ -160,11 +160,17 @@ double Muon::relTrkIso() const {
 }
 
 
-
 double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
+
+	double dummy = 1;
+	return getEfficiencyCorrection( muon_scale_factor_systematic, dummy );
+}
+
+double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic, double& correctionFromEtaOnly ) const {
 	double muonPt = pt();
 	double muonEta = eta();
 	double muonAbsEta = fabs(muonEta);
+	correctionFromEtaOnly = 1;
 
 	//
 	// Trigger SF
@@ -172,6 +178,10 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	double triggerEfficiency(1.);
 	double triggerEfficiencyError(0.);
 	boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram(Globals::muonTriggerScaleFactorsHistogram);
+
+	double triggerEfficiency_etaBins(1.);
+	double triggerEfficiencyError_etaBins(0.);
+	boost::shared_ptr<TH1F> muonTriggerScaleFactorsHistogram_etaBins(Globals::muonTriggerScaleFactorsHistogram_etaBins);
 
 	double maxPt = muonTriggerScaleFactorsHistogram->GetYaxis()->GetXmax();
 	unsigned int bin = 0;
@@ -185,12 +195,20 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	triggerEfficiency = muonTriggerScaleFactorsHistogram->GetBinContent( bin );
 	triggerEfficiencyError = muonTriggerScaleFactorsHistogram->GetBinError( bin );
 
+	bin = muonTriggerScaleFactorsHistogram_etaBins->FindBin(muonEta);
+	triggerEfficiency_etaBins = muonTriggerScaleFactorsHistogram_etaBins->GetBinContent( bin );
+	triggerEfficiencyError_etaBins = muonTriggerScaleFactorsHistogram_etaBins->GetBinError( bin );
+
 	//
 	// ID SF
 	//
 	double idSF(1.);
 	double idSFError(0.);
 	boost::shared_ptr<TH2F> muonIdScaleFactorsHistogram(Globals::muonIdScaleFactorsHistogram);
+
+	double idSF_etaBins(1.);
+	double idSFError_etaBins(0.);
+	boost::shared_ptr<TH1F> muonIdScaleFactorsHistogram_etaBins(Globals::muonIdScaleFactorsHistogram_etaBins);
 
 	maxPt = muonIdScaleFactorsHistogram->GetYaxis()->GetXmax();
 	bin = 0;
@@ -204,6 +222,10 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	idSF = muonIdScaleFactorsHistogram->GetBinContent( bin );
 	idSFError = muonIdScaleFactorsHistogram->GetBinError( bin );
 
+	bin = muonIdScaleFactorsHistogram_etaBins->FindBin(muonEta);
+	idSF_etaBins = muonIdScaleFactorsHistogram_etaBins->GetBinContent( bin );
+	idSFError_etaBins = muonIdScaleFactorsHistogram_etaBins->GetBinError( bin );
+
 
 	//
 	// ISO scale factor
@@ -211,6 +233,10 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	double isoSF(1.);
 	double isoSFError(0.);
 	boost::shared_ptr<TH2F> muonIsoScaleFactorsHistogram(Globals::muonIsoScaleFactorsHistogram);
+
+	double isoSF_etaBins(1.);
+	double isoSFError_etaBins(0.);
+	boost::shared_ptr<TH1F> muonIsoScaleFactorsHistogram_etaBins(Globals::muonIsoScaleFactorsHistogram_etaBins);
 
 	maxPt = muonIsoScaleFactorsHistogram->GetYaxis()->GetXmax();
 	bin = 0;
@@ -223,6 +249,10 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 	}
 	isoSF = muonIsoScaleFactorsHistogram->GetBinContent( bin );
 	isoSFError = muonIsoScaleFactorsHistogram->GetBinError( bin );
+
+	bin = muonIsoScaleFactorsHistogram_etaBins->FindBin(muonEta);
+	isoSF_etaBins = muonIsoScaleFactorsHistogram_etaBins->GetBinContent( bin );
+	isoSFError_etaBins = muonIsoScaleFactorsHistogram_etaBins->GetBinError( bin );
 
 	
 	//
@@ -240,12 +270,28 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic ) const {
 		isoSF -= isoSFError;
 		triggerEfficiency -= triggerEfficiencyError;
 		trackingSF -= trackingSFError;
+
+		idSF_etaBins -= idSFError_etaBins;
+		isoSF_etaBins -= isoSFError_etaBins;
+		triggerEfficiency_etaBins -= triggerEfficiencyError_etaBins;
 	}
 	else if (muon_scale_factor_systematic == +1 ) {
 		idSF += idSFError;
 		isoSF += isoSFError;
 		triggerEfficiency += triggerEfficiencyError;
 		trackingSF += trackingSFError;
+
+		idSF_etaBins += idSFError_etaBins;
+		isoSF_etaBins += isoSFError_etaBins;
+		triggerEfficiency_etaBins += triggerEfficiencyError_etaBins;
+	}
+
+	correctionFromEtaOnly = idSF_etaBins * isoSF_etaBins * triggerEfficiency_etaBins * trackingSF;
+
+	if ( correctionFromEtaOnly < 0.5 ) {
+		std::cout << "Muon pt, eta, syst : " << muonEta << " " << muonPt << " " << muon_scale_factor_systematic << std::endl;
+		std::cout << "Original SFs : " << idSF << " " << isoSF << " " << triggerEfficiency << " " << trackingSF << " " << idSF * isoSF * triggerEfficiency * trackingSF << std::endl;
+		std::cout << "---> New SFs : " << idSF_etaBins << " " << isoSF_etaBins << " " << triggerEfficiency_etaBins << " " << trackingSF << " " << correctionFromEtaOnly << std::endl;		
 	}
 
 	return idSF * isoSF * triggerEfficiency * trackingSF;

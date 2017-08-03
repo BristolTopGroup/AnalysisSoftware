@@ -532,6 +532,11 @@ void ConfigFile::loadIntoMemory() {
 		Globals::muonIsoScaleFactorsHistogram = getMuonIsoScaleFactorsHistogram(MuonIsoScaleFactorsFile());
 		Globals::muonTriggerScaleFactorsHistogram = getMuonTriggerScaleFactorsHistogram(MuonTriggerScaleFactorsFile());
 		Globals::muonTrackingScaleFactorsHistogram = getMuonTrackingScaleFactorsHistogram(MuonTrackingScaleFactorsFile());
+
+		Globals::muonIdScaleFactorsHistogram_etaBins = getMuonIdScaleFactorsHistogram_etaBins(MuonIdScaleFactorsFile());
+		Globals::muonIsoScaleFactorsHistogram_etaBins = getMuonIsoScaleFactorsHistogram_etaBins(MuonIsoScaleFactorsFile());
+		Globals::muonTriggerScaleFactorsHistogram_etaBins = getMuonTriggerScaleFactorsHistogram_etaBins(MuonTriggerScaleFactorsFile());
+
 	}
 	else{
 		std::cout << "Unable to get muon scale factors from file - Check input file names"  << std::endl;
@@ -663,6 +668,51 @@ boost::shared_ptr<TH2F> ConfigFile::getMuonTriggerScaleFactorsHistogram(std::str
 
 	boost::scoped_ptr<TFile> file(TFile::Open(muonTriggerScaleFactorsFile.c_str()));
 	boost::shared_ptr<TH2F> triggerHistogram((TH2F*) file->Get("abseta_pt_ratio")->Clone());
+	file->Close();
+
+	return triggerHistogram;
+}
+
+boost::shared_ptr<TH1F> ConfigFile::getMuonIdScaleFactorsHistogram_etaBins(std::string muonIdScaleFactorsFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(muonIdScaleFactorsFile)) {
+		cerr << "ConfigFile::getMuonIdScaleFactorsHistogram(" << muonIdScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find muon ID scale factors histogram file in " + muonIdScaleFactorsFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(muonIdScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH1F> idHistogram((TH1F*) file->Get("eta_ratio")->Clone());
+	file->Close();
+
+	return idHistogram;
+}
+
+boost::shared_ptr<TH1F> ConfigFile::getMuonIsoScaleFactorsHistogram_etaBins(std::string muonIsoScaleFactorsFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(muonIsoScaleFactorsFile)) {
+		cerr << "ConfigFile::getMuonIsoScaleFactorsHistogram(" << muonIsoScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find muon iso scale factors histogram file in " + muonIsoScaleFactorsFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(muonIsoScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH1F> isoHistogram((TH1F*) file->Get("eta_ratio")->Clone());
+	file->Close();
+
+	return isoHistogram;
+}
+
+boost::shared_ptr<TH1F> ConfigFile::getMuonTriggerScaleFactorsHistogram_etaBins(std::string muonTriggerScaleFactorsFile) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(muonTriggerScaleFactorsFile)) {
+		cerr << "ConfigFile::getMuonTriggerScaleFactorsHistogram(" << muonTriggerScaleFactorsFile << "): could not find file" << endl;
+		throw "Could not find muon trigger scale factors histogram file in " + muonTriggerScaleFactorsFile;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(muonTriggerScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH1F> triggerHistogram((TH1F*) file->Get("eta_ratio")->Clone());
 	file->Close();
 
 	return triggerHistogram;

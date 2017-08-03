@@ -74,6 +74,9 @@ struct Globals {
 	static boost::shared_ptr<TH2F> muonIsoScaleFactorsHistogram;
 	static boost::shared_ptr<TH2F> muonTriggerScaleFactorsHistogram;
 	static boost::shared_ptr<TH1F> muonTrackingScaleFactorsHistogram;
+	static boost::shared_ptr<TH1F> muonIdScaleFactorsHistogram_etaBins;
+	static boost::shared_ptr<TH1F> muonIsoScaleFactorsHistogram_etaBins;
+	static boost::shared_ptr<TH1F> muonTriggerScaleFactorsHistogram_etaBins;
 
 	//jets
 	static JetAlgorithm::value jetAlgorithm;
