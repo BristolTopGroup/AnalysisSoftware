@@ -40,8 +40,10 @@ void Analysis::analyse() {
 		if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;
 
 		ttbar_plus_X_analyser_->analyse(currentEvent);
+
 		if ( currentEvent->isTTJet(currentEvent->getDataType()) ) {
 			pseudoTopAnalyser_->analyse(currentEvent);
+			JESAnalyser_->analyse(currentEvent);
 			unfoldingRecoAnalyser_->analyse(currentEvent);
 			if ( Globals::treePrefix_ == "" ) {
 				partonAnalyser_->analyse(currentEvent);
@@ -117,6 +119,7 @@ void Analysis::createHistograms() {
 	ttbar_plus_X_analyser_->createTrees();
 
 	pseudoTopAnalyser_->createTrees();
+	JESAnalyser_->createTrees();
 	unfoldingRecoAnalyser_->createTrees();
 
 	if ( Globals::treePrefix_ == "" ) {
@@ -137,6 +140,7 @@ Analysis::Analysis(std::string datasetInfoFile) : //
 		ttbar_plus_X_analyser_(new TTbar_plus_X_analyser(treeMan)), //
 		pseudoTopAnalyser_(new PseudoTopAnalyser(treeMan)),
 		unfoldingRecoAnalyser_(new UnfoldingRecoAnalyser(treeMan)),
+		JESAnalyser_(new JESAnalyser(treeMan)),
 		partonAnalyser_(new PartonAnalyser(treeMan)),
 		likelihoodInputAnalyser_(new LikelihoodInputAnalyser(treeMan)) {
 }
