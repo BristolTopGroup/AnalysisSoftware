@@ -262,9 +262,9 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic, double& 
 	double trackingSFError(0.);
 	boost::shared_ptr<TH1F> muonTrackingScaleFactorsHistogram(Globals::muonTrackingScaleFactorsHistogram);
 	bin = muonTrackingScaleFactorsHistogram->FindBin( muonEta );
-
 	trackingSF = muonTrackingScaleFactorsHistogram->GetBinContent( bin );
 	trackingSFError = muonTrackingScaleFactorsHistogram->GetBinError( bin );
+
 	if (muon_scale_factor_systematic == -1 ) {
 		idSF -= idSFError;
 		isoSF -= isoSFError;

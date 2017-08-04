@@ -31,7 +31,7 @@
 #include "../interface/TopPairEventCandidate.h"
 #include "../interface/Analysers/PseudoTopAnalyser.h"
 
-// #include "../interface/Analysers/VertexAnalyser.h"
+#include "../interface/Analysers/JESAnalyser.h"
 #include "../interface/Analysers/UnfoldingRecoAnalyser.h"
 #include "../interface/Analysers/PartonAnalyser.h"
 #include "../interface/Analysers/LikelihoodInputAnalyser.h"
@@ -51,6 +51,7 @@ private:
 
     BAT::PseudoTopAnalyserLocalPtr pseudoTopAnalyser_;
     BAT::UnfoldingRecoAnalyserLocalPtr unfoldingRecoAnalyser_;
+    BAT::JESAnalyserLocalPtr JESAnalyser_;
     BAT::PartonAnalyserLocalPtr partonAnalyser_;
 
     BAT::LikelihoodInputAnalyserLocalPtr likelihoodInputAnalyser_;
