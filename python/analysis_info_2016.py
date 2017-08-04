@@ -1,6 +1,6 @@
 import os
-mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.10/ntuple/v1.0.10/Moriond17/'
-central_ttbar_mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.10/ntuple/v1.0.10/Moriond17/'
+mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.9/ntuple/v1.0.9/Moriond17/'
+central_ttbar_mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.12/ntuple/v1.0.12/Moriond17/'
 data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.9/ntuple/v1.0.9/Moriond17/'
 
 datasets_13TeV = {
@@ -25,22 +25,22 @@ datasets_13TeV = {
     'SingleElectron_RunH_v3' : [ data_path_13TeV + 'SingleElectron_RunH_v3/tmp/'],
 
     'TTJets_PowhegPythia8' : [ central_ttbar_mc_path_13TeV  + 'TTJets_PowhegPythia8/tmp/', central_ttbar_mc_path_13TeV  + 'TTJets_PowhegPythia8_ext*/tmp/' ],
-    'TTJets_PowhegPythia8_fsrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrdown*/tmp/' ],
-    'TTJets_PowhegPythia8_fsrup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_fsrup*/tmp/' ],
-    'TTJets_PowhegPythia8_isrdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_isrdown*/tmp/' ],
-    'TTJets_PowhegPythia8_isrup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_isrup*/tmp/' ],
-    'TTJets_PowhegPythia8_down' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_down*/tmp/' ],
-    'TTJets_PowhegPythia8_up' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_up*/tmp/' ],
-    'TTJets_PowhegPythia8_mtop1695' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695*/tmp/' ],
-    'TTJets_PowhegPythia8_mtop1755' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755*/tmp/' ],
-    'TTJets_PowhegPythia8_hdampdown' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_hdampdown*/tmp/' ],
-    'TTJets_PowhegPythia8_hdampup' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_hdampup*/tmp/' ],
-    'TTJets_PowhegPythia8_erdOn' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_erdOn*/tmp/' ],
-    'TTJets_PowhegPythia8_QCDbased_erdOn' : [ mc_path_13TeV + 'TTJets_PowhegPythia8_QCDbased_erdOn*/tmp/' ],
-    'TTJets_PowhegPythia8_GluonMove' : [mc_path_13TeV + 'TTJets_PowhegPythia8_GluonMove*/tmp/'],
-    'TTJets_amcatnloFXFX' : [ mc_path_13TeV + 'TTJets_amcatnloFXFX*/tmp/' ],
-    'TTJets_madgraphMLM' : [ mc_path_13TeV + 'TTJets_madgraphMLM*/tmp/'],
-    'TTJets_PowhegHerwigpp' : [ mc_path_13TeV + 'TTJets_PowhegHerwigpp*/tmp/'],
+    'TTJets_PowhegPythia8_fsrdown' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_fsrdown*/tmp/' ],
+    'TTJets_PowhegPythia8_fsrup' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_fsrup*/tmp/' ],
+    'TTJets_PowhegPythia8_isrdown' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_isrdown*/tmp/' ],
+    'TTJets_PowhegPythia8_isrup' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_isrup*/tmp/' ],
+    'TTJets_PowhegPythia8_down' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_down*/tmp/' ],
+    'TTJets_PowhegPythia8_up' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_up*/tmp/' ],
+    'TTJets_PowhegPythia8_mtop1695' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1695*/tmp/' ],
+    'TTJets_PowhegPythia8_mtop1755' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_mtop1755*/tmp/' ],
+    'TTJets_PowhegPythia8_hdampdown' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_hdampdown*/tmp/' ],
+    'TTJets_PowhegPythia8_hdampup' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_hdampup*/tmp/' ],
+    'TTJets_PowhegPythia8_erdOn' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_erdOn*/tmp/' ],
+    'TTJets_PowhegPythia8_QCDbased_erdOn' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_QCDbased_erdOn*/tmp/' ],
+    'TTJets_PowhegPythia8_GluonMove' : [central_ttbar_mc_path_13TeV + 'TTJets_PowhegPythia8_GluonMove*/tmp/'],
+    'TTJets_amcatnloFXFX' : [ central_ttbar_mc_path_13TeV + 'TTJets_amcatnloFXFX*/tmp/' ],
+    'TTJets_madgraphMLM' : [ central_ttbar_mc_path_13TeV + 'TTJets_madgraphMLM*/tmp/'],
+    'TTJets_PowhegHerwigpp' : [ central_ttbar_mc_path_13TeV + 'TTJets_PowhegHerwigpp*/tmp/'],
 
     # # # # 'TTJets_synch' : [ mc_path_13TeV + 'TTJets_synch/tmp/'],
 
@@ -50,7 +50,7 @@ datasets_13TeV = {
     'DY3JetsToLL_M50' : [ mc_path_13TeV + 'DY3JetsToLL_M50*/tmp/' ],
     'DY4JetsToLL_M50' : [ mc_path_13TeV + 'DY4JetsToLL_M50*/tmp/' ],
 
-    # # # 'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu/tmp/' ],
+    # # # # 'WJetsToLNu' : [ mc_path_13TeV + 'WJetsToLNu/tmp/' ],
     'W1JetsToLNu' : [ mc_path_13TeV + 'W1JetsToLNu*/tmp/' ],
     'W2JetsToLNu' : [ mc_path_13TeV + 'W2JetsToLNu*/tmp/' ],
     'W3JetsToLNu' : [ mc_path_13TeV + 'W3JetsToLNu*/tmp/' ],

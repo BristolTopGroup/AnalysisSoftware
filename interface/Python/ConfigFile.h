@@ -129,6 +129,9 @@ private:
 	boost::shared_ptr<TH2F> getMuonIsoScaleFactorsHistogram(std::string muonIsoScaleFactorsFile);
 	boost::shared_ptr<TH2F> getMuonTriggerScaleFactorsHistogram(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH1F> getMuonTrackingScaleFactorsHistogram(std::string muonTrackingScaleFactorsFile);
+	boost::shared_ptr<TH1F> getMuonIdScaleFactorsHistogram_etaBins(std::string muonIdScaleFactorsFile);
+	boost::shared_ptr<TH1F> getMuonIsoScaleFactorsHistogram_etaBins(std::string muonIsoScaleFactorsFile);
+	boost::shared_ptr<TH1F> getMuonTriggerScaleFactorsHistogram_etaBins(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronRecoScaleFactorsHistogram(std::string electronRecoScaleFactorsFile);

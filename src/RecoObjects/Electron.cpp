@@ -556,6 +556,10 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	recoSF = electronRecoScaleFactorsHistogram->GetBinContent( bin );
 	recoSFError = electronRecoScaleFactorsHistogram->GetBinError( bin );
 
+	if ( electronPt >= 80 ) {
+		recoSFError += 0.01;
+	}
+
 	if (electron_scale_factor_systematic == -1 ) {
 		idSF -= idSFError;
 		recoSF -= recoSFError;

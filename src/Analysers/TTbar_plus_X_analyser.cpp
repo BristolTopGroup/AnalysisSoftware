@@ -258,15 +258,20 @@ void TTbar_plus_X_analyser::fillLeptonEfficiencyCorrectionBranches( const EventP
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		double muonEfficiencyCorrection = 1, muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
+		double muonEfficiencyCorrection_etaBins = 1, muonEfficiencyCorrection_down_etaBins = 1, muonEfficiencyCorrection_up_etaBins = 1;
 		if ( !event->isRealData() ) {
 			const MuonPointer signalMuon(boost::static_pointer_cast<Muon>(signalLepton));
-			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0 );
-			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1 );
-			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1 );
+			muonEfficiencyCorrection = signalMuon->getEfficiencyCorrection( 0, muonEfficiencyCorrection_etaBins );
+			muonEfficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1, muonEfficiencyCorrection_down_etaBins );
+			muonEfficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1, muonEfficiencyCorrection_up_etaBins );
 		}
 		treeMan_->Fill("MuonEfficiencyCorrection",muonEfficiencyCorrection);
 		treeMan_->Fill("MuonUp",muonEfficiencyCorrection_up);
 		treeMan_->Fill("MuonDown",muonEfficiencyCorrection_down);
+
+		treeMan_->Fill("MuonEfficiencyCorrection_etaBins",muonEfficiencyCorrection_etaBins);
+		treeMan_->Fill("MuonUp_etaBins",muonEfficiencyCorrection_up_etaBins);
+		treeMan_->Fill("MuonDown_etaBins",muonEfficiencyCorrection_down_etaBins);
 	}
 }
 
@@ -318,6 +323,9 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonEfficiencyCorrection_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonUp_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonDown_etaBins", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetEfficiencyCorrectionWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetAlternativeWeight", "F", "AnalysisVariables");
@@ -344,6 +352,9 @@ void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonEfficiencyCorrection_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonUp_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("MuonDown_etaBins", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetEfficiencyCorrectionWeight", "F", "AnalysisVariables");
 	treeMan_->addBranch("BJetAlternativeWeight", "F", "AnalysisVariables");

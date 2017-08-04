@@ -69,7 +69,8 @@ public:
 	double relTrkIso() const;
 
 	//other
-	double getEfficiencyCorrection(int muon_scale_factor_systematic) const;
+	double getEfficiencyCorrection(int muon_scale_factor_systematic ) const;
+	double getEfficiencyCorrection(int muon_scale_factor_systematic, double& correctionFromEtaOnly ) const;
 
 private:
 	MuonAlgorithm::value usedAlgorithm_;

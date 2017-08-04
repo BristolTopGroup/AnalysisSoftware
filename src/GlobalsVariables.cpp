@@ -64,6 +64,9 @@ boost::shared_ptr<TH2F> Globals::muonIdScaleFactorsHistogram = boost::shared_ptr
 boost::shared_ptr<TH2F> Globals::muonIsoScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH2F> Globals::muonTriggerScaleFactorsHistogram = boost::shared_ptr<TH2F>(new TH2F());
 boost::shared_ptr<TH1F> Globals::muonTrackingScaleFactorsHistogram = boost::shared_ptr<TH1F>(new TH1F());
+boost::shared_ptr<TH1F> Globals::muonIdScaleFactorsHistogram_etaBins = boost::shared_ptr<TH1F>(new TH1F());
+boost::shared_ptr<TH1F> Globals::muonIsoScaleFactorsHistogram_etaBins = boost::shared_ptr<TH1F>(new TH1F());
+boost::shared_ptr<TH1F> Globals::muonTriggerScaleFactorsHistogram_etaBins = boost::shared_ptr<TH1F>(new TH1F());
 
 //jets
 JetAlgorithm::value Globals::jetAlgorithm = JetAlgorithm::PF2PAT;
