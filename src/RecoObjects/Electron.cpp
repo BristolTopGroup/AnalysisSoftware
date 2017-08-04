@@ -511,11 +511,11 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 		}
 		if ( fabs( electronSCEta ) > maxEta ){
 			if ( electronSCEta > 0 ) {
-				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
-					electronIDScaleFactorsHistogram->GetNbinsY() );			
+				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetXaxis()->GetBinCenter( 
+					electronIDScaleFactorsHistogram->GetNbinsX() );			
 			}
 			else {
-				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetYaxis()->GetBinCenter( 1 );							
+				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetXaxis()->GetBinCenter( 1 );							
 			}
 		}
 		bin = electronIDScaleFactorsHistogram->FindBin( lastEtaBinCentre, lastPtBinCentre );
