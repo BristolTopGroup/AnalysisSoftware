@@ -139,8 +139,6 @@ protected:
 	bool passesCSCTightBeamHaloFilter_, passesHBHENoiseFilter_, passesHCALLaserFilter_, passesECALDeadCellFilter_, passesECALDeadCellTPFilter_,
 			passesTrackingFailureFilter_, passesEEBadSCFilter_, passesECALLaserCorrFilter_, passesTrackingPOGFilters_;
 
-	double tau1_, tau2_, tau3_, tau4_;
-
 public:
 	Event();
 	virtual ~Event();
@@ -228,10 +226,6 @@ public:
 	void setCentralFragWeight( double weight );
 	void setUpFragWeight( double weight );
 	void setDownFragWeight( double weight );
-	void setTau1( float tau );
-	void setTau2( float tau );
-	void setTau3( float tau );
-	void setTau4( float tau );
 	void setPtDensityRho(double rho);
 	void setPUWeightInTimeOnly(double puweight);
 	void setPUWeight3BX(double puweight);
@@ -352,11 +346,6 @@ public:
 	const double centralFragWeight() const;
 	const double upFragWeight() const;
 	const double downFragWeight() const;
-
-	const float tau1() const;
-	const float tau2() const;
-	const float tau3() const;
-	const float tau4() const;
 
 	double averageNumberOfVertices() const;
 	double inTimeOnlyNumberOfVertices() const;

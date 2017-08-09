@@ -62,14 +62,14 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		++nEventsInPS_;
 		treeMan_->Fill("passesGenEventSelection",1);
 
-		cout << "Event passes gen selection..." << endl;
-		if ( event->PassesMuonTriggerAndSelection() || event->PassesElectronTriggerAndSelection() ) {
-			cout << "... and offline selection" << endl;
-			cout << "Pseudo/reco Tau 1 : " << pseudoTopParticles->getPseudoTau1() << " " << event->getTau1() << endl;
-			cout << "Pseudo/reco Tau 2 : " << pseudoTopParticles->getPseudoTau2() << " " << event->getTau2() << endl;
-			cout << "Pseudo/reco Tau 3 : " << pseudoTopParticles->getPseudoTau3() << " " << event->getTau3() << endl;
-			cout << "Pseudo/reco Tau 4 : " << pseudoTopParticles->getPseudoTau4() << " " << event->getTau4() << endl;
-		}
+		// cout << "Event passes gen selection..." << endl;
+		// if ( event->PassesMuonTriggerAndSelection() || event->PassesElectronTriggerAndSelection() ) {
+		// 	cout << "... and offline selection" << endl;
+		// 	cout << "Pseudo/reco Tau 1 : " << pseudoTopParticles->getPseudoTau1() << " " << event->getTau1() << endl;
+		// 	cout << "Pseudo/reco Tau 2 : " << pseudoTopParticles->getPseudoTau2() << " " << event->getTau2() << endl;
+		// 	cout << "Pseudo/reco Tau 3 : " << pseudoTopParticles->getPseudoTau3() << " " << event->getTau3() << endl;
+		// 	cout << "Pseudo/reco Tau 4 : " << pseudoTopParticles->getPseudoTau4() << " " << event->getTau4() << endl;
+		// }
 	}
 	else {
 		treeMan_->Fill("passesGenEventSelection",0);
@@ -81,7 +81,8 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		++nEventsOfflineButNotInPS_;
 	}
 
-	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, minNJets_, minNBJets_, minJetPt_, minJetPt_lowerThreshold_ ) ) {
+	bool passesGenSelection_lowerThresholdLastJet = passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, minNJets_, minNBJets_, minJetPt_, minJetPt_lowerThreshold_ );
+	if ( passesGenSelection_lowerThresholdLastJet ) {
 		++nEventsInPS_lowerThresholdLastJet_;
 		treeMan_->Fill("passesGenEventSelection_20GeVLastJet",1);
 
@@ -263,6 +264,28 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	treeMan_->Fill("NPseudoJets_20GeVLastJet", numberOfJets_20GeVLastJet );
 	treeMan_->Fill("NPseudoBJets_20GeVLastJet", numberOfBJets_20GeVLastJet );
+
+	treeMan_->Fill("pseudoTau1", pseudoTopParticles->getPseudoTau1() );
+	treeMan_->Fill("pseudoTau2", pseudoTopParticles->getPseudoTau2() );
+	treeMan_->Fill("pseudoTau3", pseudoTopParticles->getPseudoTau3() );
+	treeMan_->Fill("pseudoTau4", pseudoTopParticles->getPseudoTau4() );
+
+	// if ( event->eventnumber() == 315715 ) {
+	if ( passesGenSelection_lowerThresholdLastJet ) {
+		std::cout << "Lepton : " << allPseudoLeptons[0]->pt() <<  " " << allPseudoLeptons[0]->eta() << std::endl;
+		for (unsigned int index = 0; index < pseudoJets.size(); ++index) {
+			std::cout << "Jet " << index << " : " << pseudoJets.at(index)->pt() << " " << pseudoJets.at(index)->eta() << std::endl;
+			if ( fabs( pseudoJets.at(index)->partonFlavour() ) == 5 ) {
+				std::cout << "---> B tagged" << std::endl;
+			}
+		}
+		std::cout << "N b jets : " << pseudoBs.size() << " " << numberOfBJets_20GeVLastJet << std::endl;
+		for (unsigned int index = 0; index < pseudoBs.size(); ++index) {
+			std::cout << "B Jet " << index << " : " << pseudoBs.at(index)->pt() << " " << pseudoBs.at(index)->eta() << std::endl;
+		}
+		std::cout << "Met : " << pseudoMET->et() << " " << genMET->et() << std::endl;
+	}
+
 }
 
 void PseudoTopAnalyser::createTrees() {
@@ -307,6 +330,11 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding");
 	treeMan_->addBranch("pseudoWPT", "F","Unfolding");
 	treeMan_->addBranch("pseudoMT", "F","Unfolding");
+
+	treeMan_->addBranch("pseudoTau1", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau2", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau3", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau4", "F","Unfolding");
 
 	// Number of pseudo jets
 	treeMan_->addBranch("NPseudoJets", "F", "Unfolding");
@@ -370,8 +398,14 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 		}
 	}
 	
+	// if ( event->eventnumber() == 315715 ) {
+	std::cout << numberGoodJets << " " << numberGoodJets_lowerPt << std::endl;
+	std::cout << numberGoodBJets << " " << numberGoodBJets_lowerPt << std::endl;
+	// }
+
 	// if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets && numberGoodBJets >= minNBJets ) {
 	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets_ - 1 && numberGoodBJets >= minNBJets - 1 && numberGoodJets_lowerPt >= minNJets_ && numberGoodBJets_lowerPt >= minNBJets ) {
+		std::cout << "Event passes selection" << std::endl;
 		return true;
 	}
 	else return false;

@@ -32,9 +32,10 @@ void Analysis::analyse() {
 
 	while (eventReader->hasNextEvent()) {
 		initiateEvent();
-		printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
+		// printNumberOfProccessedEventsEvery(Globals::printEveryXEvents);
+		printNumberOfProccessedEventsEvery(1);
 		inspectEvents();
-
+		currentEvent->inspect();
 		// Check if MET fitlers are satisfied
 		// cout << "Pass event filter? " << currentEvent->passesMETFilters() << endl;
 		if ( currentEvent->isRealData() && !currentEvent->passesMETFilters() ) continue;

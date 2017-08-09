@@ -183,6 +183,12 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	unsigned int numberOfBJets(event->NJets(bjets));
 	treeMan_->Fill("NJets", numberOfJets );
 	treeMan_->Fill("NBJets", numberOfBJets );
+
+	treeMan_->Fill("tau1", event->getTau1() );
+	treeMan_->Fill("tau2", event->getTau2() );
+	treeMan_->Fill("tau3", event->getTau3() );
+	treeMan_->Fill("tau4", event->getTau4() );
+
 }
 
 
@@ -198,6 +204,11 @@ void UnfoldingRecoAnalyser::createTrees() {
 
 	treeMan_->addBranch("NJets", "F", "Unfolding");
 	treeMan_->addBranch("NBJets", "F", "Unfolding");
+
+	treeMan_->addBranch("tau1", "F", "Unfolding");
+	treeMan_->addBranch("tau2", "F", "Unfolding");
+	treeMan_->addBranch("tau3", "F", "Unfolding");
+	treeMan_->addBranch("tau4", "F", "Unfolding");
 
 	treeMan_->addBranch("angle_bl", "F", "Unfolding");
 	treeMan_->addBranch("deltaPhi_bb", "F", "Unfolding");

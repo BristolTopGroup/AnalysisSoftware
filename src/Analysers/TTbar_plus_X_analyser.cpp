@@ -145,10 +145,10 @@ void TTbar_plus_X_analyser::fillCommonTrees(const EventPtr event, const unsigned
 	treeMan_->Fill("LightJetUpWeight",event->LightJetUpWeight());
 	treeMan_->Fill("LightJetDownWeight",event->LightJetDownWeight());
 
-	treeMan_->Fill("tau1", event->tau1());
-	treeMan_->Fill("tau2", event->tau2());
-	treeMan_->Fill("tau3", event->tau3());
-	treeMan_->Fill("tau4", event->tau4());
+	treeMan_->Fill("tau1", event->getTau1());
+	treeMan_->Fill("tau2", event->getTau2());
+	treeMan_->Fill("tau3", event->getTau3());
+	treeMan_->Fill("tau4", event->getTau4());
 
 	// MET Uncertainties		
 	for ( unsigned int unc_i = 0; unc_i < MET_original->getAllMETUncertainties().size(); ++unc_i ) {		

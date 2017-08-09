@@ -109,11 +109,7 @@ Event::Event() : //
 		passesTrackingFailureFilter_(false), //
 		passesEEBadSCFilter_(false), //
 		passesECALLaserCorrFilter_(false), //
-		passesTrackingPOGFilters_(false), //
-		tau1_(-1),
-		tau2_(-1),
-		tau3_(-1),
-		tau4_(-1)
+		passesTrackingPOGFilters_(false) //
 {
 }
 
@@ -1164,17 +1160,17 @@ double Event::TightBJetDownWeight() const {
 void Event::inspect() const {
 	cout << "run " << runNumber << ", event number " << eventNumber << ", lumi section " << lumiBlock << endl;
 
-	cout << "number of tracks: " << tracks.size() << endl;
-	cout << "number of high purity tracks: " << numberOfHighPurityTracks_ << endl;
+	// cout << "number of tracks: " << tracks.size() << endl;
+	// cout << "number of high purity tracks: " << numberOfHighPurityTracks_ << endl;
 
-	cout << "number of jets: " << allJets.size() << endl;
-	EventContentPrinter::printJets(allJets);
+	// cout << "number of jets: " << allJets.size() << endl;
+	// EventContentPrinter::printJets(allJets);
 
-	cout << "number of electrons: " << allElectrons.size() << endl;
-	EventContentPrinter::printElectrons(allElectrons);
+	// cout << "number of electrons: " << allElectrons.size() << endl;
+	// EventContentPrinter::printElectrons(allElectrons);
 
-	cout << "number of muons: " << allMuons.size() << endl;
-	EventContentPrinter::printMuons(allMuons);
+	// cout << "number of muons: " << allMuons.size() << endl;
+	// EventContentPrinter::printMuons(allMuons);
 }
 
 bool Event::HLT(HLTriggers::value trigger) const {
@@ -1241,22 +1237,6 @@ const double Event::downFragWeight() const {
 	return downFragWeight_;
 }
 
-const float Event::tau1() const {
-	return tau1_;
-}
-
-const float Event::tau2() const {
-	return tau2_;
-}
-
-const float Event::tau3() const {
-	return tau3_;
-}
-
-const float Event::tau4() const {
-	return tau4_;
-}
-
 void Event::setSemiLepBrUpWeight( double weight ) {
 	semiLepBrUpWeight_ = weight;
 }
@@ -1279,22 +1259,6 @@ void Event::setUpFragWeight( double weight ) {
 
 void Event::setDownFragWeight( double weight ) {
 	downFragWeight_ = weight;
-}
-
-void Event::setTau1( float tau ) {
-	tau1_ = tau;
-}
-
-void Event::setTau2( float tau ) {
-	tau2_ = tau;
-}
-
-void Event::setTau3( float tau ) {
-	tau3_ = tau;
-}
-
-void Event::setTau4( float tau ) {
-	tau4_ = tau;
 }
 
 const std::vector<int> Event::generatorSystematicWeightsID() const {
