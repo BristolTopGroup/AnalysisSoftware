@@ -125,6 +125,8 @@ private:
 	boost::scoped_ptr<VariableReader<float> > tau2Reader_;
 	boost::scoped_ptr<VariableReader<float> > tau3Reader_;
 	boost::scoped_ptr<VariableReader<float> > tau4Reader_;
+	boost::scoped_ptr<VariableReader<float> > tau5Reader_;
+	boost::scoped_ptr<VariableReader<float> > tau6Reader_;
 
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;

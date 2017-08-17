@@ -24,6 +24,8 @@ PseudoTopParticles::PseudoTopParticles() :
 		tau2_( -1 ),
 		tau3_( -1 ),
 		tau4_( -1 ),
+		tau5_( -1 ),
+		tau6_( -1 ),
 		isSemiLeptonic_(false)
 {
 }
@@ -139,6 +141,21 @@ double PseudoTopParticles::getPseudoTau4() const {
 	return tau4_;
 }
 
+void PseudoTopParticles::setPseudoTau5( double tau5 ) {
+	tau5_ = tau5;
+}
+
+double PseudoTopParticles::getPseudoTau5() const {
+	return tau5_;
+}
+
+void PseudoTopParticles::setPseudoTau6( double tau6 ) {
+	tau6_ = tau6;
+}
+
+double PseudoTopParticles::getPseudoTau6() const {
+	return tau6_;
+}
 
 void PseudoTopParticles::setIsSemiLeptonic( bool isSemiLeptonic ) {
 	isSemiLeptonic_ = isSemiLeptonic;

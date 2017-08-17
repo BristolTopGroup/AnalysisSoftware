@@ -59,6 +59,12 @@ public:
 	void setPseudoTau4( double );
 	double getPseudoTau4() const;
 
+	void setPseudoTau5( double );
+	double getPseudoTau5() const;
+
+	void setPseudoTau6( double );
+	double getPseudoTau6() const;
+
 	void setIsSemiLeptonic( bool isSemiLeptonic_ );
 	bool isSemiLeptonic() const;
 protected:
@@ -72,7 +78,7 @@ protected:
 	ParticlePointer pseudoNeutrino_;
 	ParticlePointer pseudoMET_;
 
-	double tau1_, tau2_, tau3_, tau4_;
+	double tau1_, tau2_, tau3_, tau4_, tau5_, tau6_;
 
 	bool isSemiLeptonic_;
 };

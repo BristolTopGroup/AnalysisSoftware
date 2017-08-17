@@ -52,6 +52,8 @@ private:
     VariableReader< double > tau2_Reader_;
     VariableReader< double > tau3_Reader_;
     VariableReader< double > tau4_Reader_;
+    VariableReader< double > tau5_Reader_;
+    VariableReader< double > tau6_Reader_;
 
     PseudoTopParticlesPointer pseudoTopParticles_;
     MCParticleCollection newPseudoTops_;

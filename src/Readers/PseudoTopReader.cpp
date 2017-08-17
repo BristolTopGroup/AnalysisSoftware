@@ -38,6 +38,8 @@ PseudoTopReader::PseudoTopReader() :
     tau2_Reader_(),
     tau3_Reader_(),
     tau4_Reader_(),
+    tau5_Reader_(),
+    tau6_Reader_(),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new MCParticle() ),
@@ -77,6 +79,8 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     tau2_Reader_(input, "Event.tau2"),
     tau3_Reader_(input, "Event.tau3"),
     tau4_Reader_(input, "Event.tau4"),
+    tau5_Reader_(input, "Event.tau5"),
+    tau6_Reader_(input, "Event.tau6"),
     
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
@@ -215,6 +219,8 @@ void PseudoTopReader::readPseudoTopParticles() {
     pseudoTopParticles_->setPseudoTau2( tau2_Reader_.getVariable() );
     pseudoTopParticles_->setPseudoTau3( tau3_Reader_.getVariable() );
     pseudoTopParticles_->setPseudoTau4( tau4_Reader_.getVariable() );
+    pseudoTopParticles_->setPseudoTau5( tau5_Reader_.getVariable() );
+    pseudoTopParticles_->setPseudoTau6( tau6_Reader_.getVariable() );
 
     // Get Jets for HT calculation
     for (unsigned int index = 0; index < pseudoTop_jet_energyReader_.size(); index++) {
@@ -283,6 +289,8 @@ void PseudoTopReader::initialise() {
     tau2_Reader_.initialiseBlindly();
     tau3_Reader_.initialiseBlindly();
     tau4_Reader_.initialiseBlindly();
+    tau5_Reader_.initialiseBlindly();
+    tau6_Reader_.initialiseBlindly();
 
 }
 

@@ -131,7 +131,7 @@ protected:
 	double centralFragWeight_;
 	double upFragWeight_;
 	double downFragWeight_;
-	float tau1_, tau2_, tau3_, tau4_;
+	float tau1_, tau2_, tau3_, tau4_, tau5_, tau6_;
 
 	double ptdensityRho;
 	std::string file_;
@@ -388,6 +388,12 @@ public:
 
 	double getTau4() const;
 	void setTau4(double tau);
+
+	double getTau5() const;
+	void setTau5(double tau);
+
+	double getTau6() const;
+	void setTau6(double tau);
 
 	static void getTopTwoCSVJets(const JetCollection, unsigned int& highestCSVJetIndex, unsigned int& secondHighestCSVJetIndex);
 	static double deltaPhi_bb(const ParticlePointer, const ParticlePointer);

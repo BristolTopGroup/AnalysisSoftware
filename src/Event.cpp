@@ -99,6 +99,8 @@ Event::Event() : //
 		tau2_(0), //
 		tau3_(0), //
 		tau4_(0), //		
+		tau5_(0), //		
+		tau6_(0), //		
 		ptdensityRho(0.), //
 		file_(""), //
 		passesCSCTightBeamHaloFilter_(false), //
@@ -1473,6 +1475,22 @@ double Event::getTau4() const {
 
 void Event::setTau4(double tau) {
 	tau4_ = tau;
+}
+
+double Event::getTau5() const {
+	return tau5_;
+}
+
+void Event::setTau5(double tau) {
+	tau5_ = tau;
+}
+
+double Event::getTau6() const {
+	return tau6_;
+}
+
+void Event::setTau6(double tau) {
+	tau6_ = tau;
 }
 
 double Event::HT(const JetCollection jets, const double jetPtThreshold ) {
