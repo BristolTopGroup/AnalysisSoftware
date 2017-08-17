@@ -131,7 +131,9 @@ public:
     void setIsTightConversionElectron(bool passes);
     void setIsTightNonIsoElectron(bool passes);
 
-    double getEfficiencyCorrection(int electron_scale_factor_systematic) const;
+    double getEfficiencyCorrection(int electron_scale_factor_systematic ) const;
+    double getEfficiencyCorrection(int electron_scale_factor_systematic, double& correctionFromEtaOnly ) const;
+
     virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
     // double PFRelIsoWithEA() const;
 

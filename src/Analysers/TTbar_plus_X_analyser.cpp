@@ -246,15 +246,20 @@ void TTbar_plus_X_analyser::fillLeptonEfficiencyCorrectionBranches( const EventP
 	SelectionCriteria::selection selection = SelectionCriteria::selection(selectionCriteria);
 	if ( selection == SelectionCriteria::ElectronPlusJetsReference ) {
 		double electronEfficiencyCorrection = 1, electronEfficiencyCorrection_down = 1, electronEfficiencyCorrection_up = 1;
+		double electronEfficiencyCorrection_etaBins = 1, electronEfficiencyCorrection_down_etaBins = 1, electronEfficiencyCorrection_up_etaBins = 1;
 		if ( !event->isRealData() ) {
 			const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
-			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );
-			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );
-			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );
+			electronEfficiencyCorrection = signalElectron->getEfficiencyCorrection( 0, electronEfficiencyCorrection_etaBins );
+			electronEfficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1, electronEfficiencyCorrection_down_etaBins );
+			electronEfficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1, electronEfficiencyCorrection_up_etaBins );
 		}
 		treeMan_->Fill("ElectronEfficiencyCorrection",electronEfficiencyCorrection);
 		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
+
+		treeMan_->Fill("ElectronEfficiencyCorrection_etaBins",electronEfficiencyCorrection_etaBins );
+		treeMan_->Fill("ElectronUp_etaBins",electronEfficiencyCorrection_up_etaBins );
+		treeMan_->Fill("ElectronDown_etaBins",electronEfficiencyCorrection_down_etaBins );
 
 		if ( event->isRealData() ) {
 			const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -329,6 +334,9 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "AnalysisVariables");
 	treeMan_->addBranch("ElectronUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("ElectronDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronEfficiencyCorrection_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronUp_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronDown_etaBins", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");
@@ -358,6 +366,9 @@ void TTbar_plus_X_analyser::createCommonNoBSelectionTrees( std::string folder) {
 	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "AnalysisVariables");
 	treeMan_->addBranch("ElectronUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("ElectronDown", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronEfficiencyCorrection_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronUp_etaBins", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronDown_etaBins", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("MuonDown", "F", "AnalysisVariables");

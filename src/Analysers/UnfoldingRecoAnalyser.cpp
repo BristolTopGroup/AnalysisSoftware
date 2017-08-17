@@ -109,17 +109,21 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 	}
 	else if ( event->PassesElectronTriggerAndSelection() ) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
-		double efficiencyCorrection = signalElectron->getEfficiencyCorrection( 0 );	
-		double efficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1 );	
-		double efficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1 );	
+		double efficiencyCorrection_etaBins = 1;
+		double efficiencyCorrection_down_etaBins = 1;
+		double efficiencyCorrection_up_etaBins = 1;
+
+		double efficiencyCorrection = signalElectron->getEfficiencyCorrection( 0, efficiencyCorrection_etaBins );	
+		double efficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1, efficiencyCorrection_down_etaBins );	
+		double efficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1, efficiencyCorrection_up_etaBins );	
 
 		treeMan_->Fill("LeptonEfficiencyCorrection", efficiencyCorrection );
 		treeMan_->Fill("LeptonEfficiencyCorrectionUp", efficiencyCorrection_up );
 		treeMan_->Fill("LeptonEfficiencyCorrectionDown", efficiencyCorrection_down );
 
-		treeMan_->Fill("LeptonEfficiencyCorrection_etaBins", efficiencyCorrection);
-		treeMan_->Fill("LeptonEfficiencyCorrectionUp_etaBins", efficiencyCorrection_up );
-		treeMan_->Fill("LeptonEfficiencyCorrectionDown_etaBins", efficiencyCorrection_down );
+		treeMan_->Fill("LeptonEfficiencyCorrection_etaBins", efficiencyCorrection_etaBins );
+		treeMan_->Fill("LeptonEfficiencyCorrectionUp_etaBins", efficiencyCorrection_up_etaBins );
+		treeMan_->Fill("LeptonEfficiencyCorrectionDown_etaBins", efficiencyCorrection_down_etaBins );
 	}
 
 	treeMan_->Fill("PUWeight", event->PileUpWeight() );

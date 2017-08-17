@@ -43,6 +43,7 @@ public:
 	std::string MuonTrackingScaleFactorsFile() const;
 	std::string ElectronTriggerScaleFactorsFile() const;
 	std::string ElectronIdScaleFactorsFile() const;
+	std::string ElectronIdScaleFactorsFile_etaBins() const;
 	std::string ElectronRecoScaleFactorsFile() const;
 	std::string bJetResoFile() const;
     std::string lightJetResoFile() const;
@@ -92,6 +93,7 @@ private:
 	std::string muonTrackingScaleFactorsFile_;
 	bool getElectronScaleFactorsFromFile_;
 	std::string electronIdScaleFactorsFile_;
+	std::string electronIdScaleFactorsFile_etaBins_;
 	std::string electronRecoScaleFactorsFile_;
 	std::string electronTriggerScaleFactorsFile_;
 	std::string bJetResoFile_;
@@ -134,6 +136,7 @@ private:
 	boost::shared_ptr<TH1F> getMuonTriggerScaleFactorsHistogram_etaBins(std::string muonScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronTriggerScaleFactorsHistogram(std::string electronTriggerScaleFactorsFile);
 	boost::shared_ptr<TH2F> getElectronIdScaleFactorsHistogram(std::string electronIdScaleFactorsFile);
+	boost::shared_ptr<TH2F> getElectronIdScaleFactorsHistogram_etaBins(std::string electronIdScaleFactorsFile_etaBins);
 	boost::shared_ptr<TH2F> getElectronRecoScaleFactorsHistogram(std::string electronRecoScaleFactorsFile);
 	boost::array<boost::shared_ptr<TF1>, 12> getL7Correction(std::string correctionFile);
 	
