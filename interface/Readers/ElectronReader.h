@@ -31,6 +31,9 @@ private:
 	VariableReader<MultiDoublePointer> d0_PV_Reader;
 	VariableReader<MultiIntPointer> numberOfInnerLayerMissingHitsReader;
 
+	VariableReader<MultiDoublePointer> etaReader;
+	VariableReader<MultiDoublePointer> gsfTrackEtaReader;
+
 	VariableReader<MultiDoublePointer> ecalIsolationReader_DR03_;
 	VariableReader<MultiDoublePointer> hcalIsolationReader_DR03_;
 	VariableReader<MultiDoublePointer> trackerIsolationReader_DR03_;

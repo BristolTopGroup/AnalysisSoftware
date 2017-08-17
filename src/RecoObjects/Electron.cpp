@@ -317,6 +317,22 @@ void Electron::setNumberOfMissingInnerLayerHits(double missingHits) {
 	innerLayerMissingHits_ = missingHits;
 }
 
+void Electron::setElectronEta(double eta) {
+	electronEta_ = eta;
+}
+
+void Electron::setGsfTrackEta(double eta) {
+	gsfTrackEta_ = eta;
+}
+
+double Electron::electronEta() {
+	return electronEta_;
+}
+
+double Electron::gsfTrackEta() {
+	return gsfTrackEta_;
+}
+
 unsigned short Electron::getClosestJetIndex(const JetCollection& jets) const {
 	unsigned short idOfClosest = 999;
 	double closestDR = 999.;

@@ -23,6 +23,8 @@ ElectronReader::ElectronReader() : //
 		d0_BS_Reader(), //
 		d0_PV_Reader(), //
 		numberOfInnerLayerMissingHitsReader(), //
+		etaReader(), //
+		gsfTrackEtaReader(), //
 		ecalIsolationReader_DR03_(), //
 		hcalIsolationReader_DR03_(), //
 		trackerIsolationReader_DR03_(), //
@@ -68,6 +70,8 @@ ElectronReader::ElectronReader(TChainPointer input, ElectronAlgorithm::value alg
 		d0_BS_Reader(input, "Electrons.BeamSpotDXY"), //
 		d0_PV_Reader(input, "Electrons.PrimaryVertexDXY"), //
 		numberOfInnerLayerMissingHitsReader(input, "Electrons.MissingHits"), //
+		// etaReader(input, "Electrons.Eta"), //
+		// gsfTrackEtaReader(input, "Electrons.gsfTrackEta"), //
 		ecalIsolationReader_DR03_(input, "Electrons.EcalIso03"), //
 		hcalIsolationReader_DR03_(input, "Electrons.HcalIso03"), //
 		trackerIsolationReader_DR03_(input, "Electrons.TrkIso03"), //
@@ -129,6 +133,9 @@ void ElectronReader::readElectrons() {
 		electron->setZDistanceToPrimaryVertex(vertex_dist_z.getVariableAt(index));
 		electron->setNumberOfMissingInnerLayerHits(numberOfInnerLayerMissingHitsReader.getIntVariableAt(index));
 
+		// electron->setElectronEta( etaReader.getVariableAt(index) );
+		// electron->setGsfTrackEta( gsfTrackEtaReader.getVariableAt(index) );
+
 		electron->setEcalIsolation(ecalIsolationReader_DR03_.getVariableAt(index), 0.3);
 		electron->setHcalIsolation(hcalIsolationReader_DR03_.getVariableAt(index), 0.3);
 		electron->setTrackerIsolation(trackerIsolationReader_DR03_.getVariableAt(index), 0.3);
@@ -182,6 +189,9 @@ void ElectronReader::initialise() {
 		d0_BS_Reader.initialise();
 	d0_PV_Reader.initialise();
 	numberOfInnerLayerMissingHitsReader.initialise();
+
+	// etaReader.initialise();
+	// gsfTrackEtaReader.initialise();
 
 	ecalIsolationReader_DR03_.initialise();
 	hcalIsolationReader_DR03_.initialise();

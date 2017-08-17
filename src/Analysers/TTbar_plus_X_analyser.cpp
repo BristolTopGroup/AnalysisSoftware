@@ -255,6 +255,14 @@ void TTbar_plus_X_analyser::fillLeptonEfficiencyCorrectionBranches( const EventP
 		treeMan_->Fill("ElectronEfficiencyCorrection",electronEfficiencyCorrection);
 		treeMan_->Fill("ElectronUp",electronEfficiencyCorrection_up);
 		treeMan_->Fill("ElectronDown",electronEfficiencyCorrection_down);
+
+		if ( event->isRealData() ) {
+			const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
+
+			double deltaEta = fabs( signalElectron->electronEta() - signalElectron->gsfTrackEta() );
+			// std::cout << "Electron eta, gsf track eta : " << signalElectron->electronEta() << " " << signalElectron->gsfTrackEta() << " " << deltaEta << std::endl;
+			treeMan_->Fill("ElectronGSFDeltaEta", deltaEta);
+		}
 	}
 	else if ( selection == SelectionCriteria::MuonPlusJetsReference ) {
 		double muonEfficiencyCorrection = 1, muonEfficiencyCorrection_down = 1, muonEfficiencyCorrection_up = 1;
@@ -317,6 +325,7 @@ void TTbar_plus_X_analyser::createCommonTrees( std::string folder) {
 	treeMan_->addBranch("ttbarPt", "F", "AnalysisVariables");
 	treeMan_->addBranch("ttbarM", "F", "AnalysisVariables");
 	treeMan_->addBranch("ttbarRap", "F", "AnalysisVariables");
+	treeMan_->addBranch("ElectronGSFDeltaEta", "F", "AnalysisVariables");
 	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "AnalysisVariables");
 	treeMan_->addBranch("ElectronUp", "F", "AnalysisVariables");
 	treeMan_->addBranch("ElectronDown", "F", "AnalysisVariables");
