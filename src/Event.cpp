@@ -1162,17 +1162,17 @@ double Event::TightBJetDownWeight() const {
 void Event::inspect() const {
 	cout << "run " << runNumber << ", event number " << eventNumber << ", lumi section " << lumiBlock << endl;
 
-	// cout << "number of tracks: " << tracks.size() << endl;
-	// cout << "number of high purity tracks: " << numberOfHighPurityTracks_ << endl;
+	cout << "number of tracks: " << tracks.size() << endl;
+	cout << "number of high purity tracks: " << numberOfHighPurityTracks_ << endl;
 
-	// cout << "number of jets: " << allJets.size() << endl;
-	// EventContentPrinter::printJets(allJets);
+	cout << "number of jets: " << allJets.size() << endl;
+	EventContentPrinter::printJets(allJets);
 
-	// cout << "number of electrons: " << allElectrons.size() << endl;
-	// EventContentPrinter::printElectrons(allElectrons);
+	cout << "number of electrons: " << allElectrons.size() << endl;
+	EventContentPrinter::printElectrons(allElectrons);
 
-	// cout << "number of muons: " << allMuons.size() << endl;
-	// EventContentPrinter::printMuons(allMuons);
+	cout << "number of muons: " << allMuons.size() << endl;
+	EventContentPrinter::printMuons(allMuons);
 }
 
 bool Event::HLT(HLTriggers::value trigger) const {
