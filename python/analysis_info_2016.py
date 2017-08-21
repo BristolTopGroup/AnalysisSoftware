@@ -1,7 +1,7 @@
 import os
 mc_path_13TeV = '/hdfs/TopQuarkGroup/db0268/1.0.9/ntuple/v1.0.9/Moriond17/'
 central_ttbar_mc_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.12/ntuple/v1.0.12/Moriond17/'
-data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.9/ntuple/v1.0.9/Moriond17/'
+data_path_13TeV = '/hdfs/TopQuarkGroup/ec6821/1.0.12/ntuple/v1.0.12/Moriond17/'
 
 datasets_13TeV = {
 
