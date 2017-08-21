@@ -99,13 +99,13 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		double efficiencyCorrection_down = signalMuon->getEfficiencyCorrection( -1, efficiencyCorrection_down_etaBins );
 		double efficiencyCorrection_up = signalMuon->getEfficiencyCorrection( 1, efficiencyCorrection_up_etaBins );
 
-		treeMan_->Fill("LeptonEfficiencyCorrection", efficiencyCorrection);
-		treeMan_->Fill("LeptonEfficiencyCorrectionDown", efficiencyCorrection_down );
-		treeMan_->Fill("LeptonEfficiencyCorrectionUp", efficiencyCorrection_up );
+		treeMan_->Fill("MuonEfficiencyCorrection", efficiencyCorrection);
+		treeMan_->Fill("MuonEfficiencyCorrectionDown", efficiencyCorrection_down );
+		treeMan_->Fill("MuonEfficiencyCorrectionUp", efficiencyCorrection_up );
 
-		treeMan_->Fill("LeptonEfficiencyCorrection_etaBins", efficiencyCorrection_etaBins);
-		treeMan_->Fill("LeptonEfficiencyCorrectionDown_etaBins", efficiencyCorrection_down_etaBins );
-		treeMan_->Fill("LeptonEfficiencyCorrectionUp_etaBins", efficiencyCorrection_up_etaBins );
+		treeMan_->Fill("MuonEfficiencyCorrection_etaBins", efficiencyCorrection_etaBins);
+		treeMan_->Fill("MuonEfficiencyCorrectionDown_etaBins", efficiencyCorrection_down_etaBins );
+		treeMan_->Fill("MuonEfficiencyCorrectionUp_etaBins", efficiencyCorrection_up_etaBins );
 	}
 	else if ( event->PassesElectronTriggerAndSelection() ) {
 		const ElectronPointer signalElectron(boost::static_pointer_cast<Electron>(signalLepton));
@@ -117,13 +117,13 @@ void UnfoldingRecoAnalyser::analyse(const EventPtr event) {
 		double efficiencyCorrection_down = signalElectron->getEfficiencyCorrection( -1, efficiencyCorrection_down_etaBins );	
 		double efficiencyCorrection_up = signalElectron->getEfficiencyCorrection( 1, efficiencyCorrection_up_etaBins );	
 
-		treeMan_->Fill("LeptonEfficiencyCorrection", efficiencyCorrection );
-		treeMan_->Fill("LeptonEfficiencyCorrectionUp", efficiencyCorrection_up );
-		treeMan_->Fill("LeptonEfficiencyCorrectionDown", efficiencyCorrection_down );
+		treeMan_->Fill("ElectronEfficiencyCorrection", efficiencyCorrection );
+		treeMan_->Fill("ElectronEfficiencyCorrectionUp", efficiencyCorrection_up );
+		treeMan_->Fill("ElectronEfficiencyCorrectionDown", efficiencyCorrection_down );
 
-		treeMan_->Fill("LeptonEfficiencyCorrection_etaBins", efficiencyCorrection_etaBins );
-		treeMan_->Fill("LeptonEfficiencyCorrectionUp_etaBins", efficiencyCorrection_up_etaBins );
-		treeMan_->Fill("LeptonEfficiencyCorrectionDown_etaBins", efficiencyCorrection_down_etaBins );
+		treeMan_->Fill("ElectronEfficiencyCorrection_etaBins", efficiencyCorrection_etaBins );
+		treeMan_->Fill("ElectronEfficiencyCorrectionUp_etaBins", efficiencyCorrection_up_etaBins );
+		treeMan_->Fill("ElectronEfficiencyCorrectionDown_etaBins", efficiencyCorrection_down_etaBins );
 	}
 
 	treeMan_->Fill("PUWeight", event->PileUpWeight() );
@@ -219,13 +219,20 @@ void UnfoldingRecoAnalyser::createTrees() {
 	treeMan_->addBranch("leptonPt", "F", "Unfolding");
 	treeMan_->addBranch("leptonEta", "F", "Unfolding");
 	treeMan_->addBranch("leptonCharge", "F", "Unfolding");
-	treeMan_->addBranch("LeptonEfficiencyCorrection", "F", "Unfolding");
-	treeMan_->addBranch("LeptonEfficiencyCorrectionUp", "F", "Unfolding");
-	treeMan_->addBranch("LeptonEfficiencyCorrectionDown", "F", "Unfolding");
 
-	treeMan_->addBranch("LeptonEfficiencyCorrection_etaBins", "F", "Unfolding");
-	treeMan_->addBranch("LeptonEfficiencyCorrectionUp_etaBins", "F", "Unfolding");
-	treeMan_->addBranch("LeptonEfficiencyCorrectionDown_etaBins", "F", "Unfolding");
+	treeMan_->addBranch("MuonEfficiencyCorrection", "F", "Unfolding");
+	treeMan_->addBranch("MuonEfficiencyCorrectionUp", "F", "Unfolding");
+	treeMan_->addBranch("MuonEfficiencyCorrectionDown", "F", "Unfolding");
+	treeMan_->addBranch("MuonEfficiencyCorrection_etaBins", "F", "Unfolding");
+	treeMan_->addBranch("MuonEfficiencyCorrectionUp_etaBins", "F", "Unfolding");
+	treeMan_->addBranch("MuonEfficiencyCorrectionDown_etaBins", "F", "Unfolding");
+
+	treeMan_->addBranch("ElectronEfficiencyCorrection", "F", "Unfolding");
+	treeMan_->addBranch("ElectronEfficiencyCorrectionUp", "F", "Unfolding");
+	treeMan_->addBranch("ElectronEfficiencyCorrectionDown", "F", "Unfolding");
+	treeMan_->addBranch("ElectronEfficiencyCorrection_etaBins", "F", "Unfolding");
+	treeMan_->addBranch("ElectronEfficiencyCorrectionUp_etaBins", "F", "Unfolding");
+	treeMan_->addBranch("ElectronEfficiencyCorrectionDown_etaBins", "F", "Unfolding");
 
 	treeMan_->addBranch("MET_METUncertainties", "F", "Unfolding", false);
 	treeMan_->addBranch("ST_METUncertainties", "F", "Unfolding", false);
