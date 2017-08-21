@@ -254,7 +254,18 @@ double Muon::getEfficiencyCorrection( int muon_scale_factor_systematic, double& 
 	isoSF_etaBins = muonIsoScaleFactorsHistogram_etaBins->GetBinContent( bin );
 	isoSFError_etaBins = muonIsoScaleFactorsHistogram_etaBins->GetBinError( bin );
 
-	
+	// Additional systematic uncertainties
+	// Based on those from 2015 data (no new reccomendations)
+	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffsRun2#Results_for_CMSSW_7_6_X_dataset
+	idSFError += 0.01;
+	idSFError_etaBins += 0.01;
+
+	isoSFError += 0.005;
+	isoSFError_etaBins += 0.005;
+
+	triggerEfficiencyError += 0.005;
+	triggerEfficiencyError_etaBins += 0.005;
+
 	//
 	// Tracking SF	
 	//
