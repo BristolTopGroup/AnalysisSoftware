@@ -47,6 +47,24 @@ public:
 	void setPseudoMET( ParticlePointer newPseudoMET );
 	ParticlePointer getPseudoMET() const;
 
+	void setPseudoTau1( double );
+	double getPseudoTau1() const;
+
+	void setPseudoTau2( double );
+	double getPseudoTau2() const;
+
+	void setPseudoTau3( double );
+	double getPseudoTau3() const;
+
+	void setPseudoTau4( double );
+	double getPseudoTau4() const;
+
+	void setPseudoTau5( double );
+	double getPseudoTau5() const;
+
+	void setPseudoTau6( double );
+	double getPseudoTau6() const;
+
 	void setIsSemiLeptonic( bool isSemiLeptonic_ );
 	bool isSemiLeptonic() const;
 protected:
@@ -59,6 +77,8 @@ protected:
 	MCParticleCollection pseudoBs_;
 	ParticlePointer pseudoNeutrino_;
 	ParticlePointer pseudoMET_;
+
+	double tau1_, tau2_, tau3_, tau4_, tau5_, tau6_;
 
 	bool isSemiLeptonic_;
 };

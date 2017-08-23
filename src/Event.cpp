@@ -99,6 +99,8 @@ Event::Event() : //
 		tau2_(0), //
 		tau3_(0), //
 		tau4_(0), //		
+		tau5_(0), //		
+		tau6_(0), //		
 		ptdensityRho(0.), //
 		file_(""), //
 		passesCSCTightBeamHaloFilter_(false), //
@@ -1237,22 +1239,6 @@ const double Event::downFragWeight() const {
 	return downFragWeight_;
 }
 
-const float Event::tau1() const {
-	return tau1_;
-}
-
-const float Event::tau2() const {
-	return tau2_;
-}
-
-const float Event::tau3() const {
-	return tau3_;
-}
-
-const float Event::tau4() const {
-	return tau4_;
-}
-
 void Event::setSemiLepBrUpWeight( double weight ) {
 	semiLepBrUpWeight_ = weight;
 }
@@ -1275,22 +1261,6 @@ void Event::setUpFragWeight( double weight ) {
 
 void Event::setDownFragWeight( double weight ) {
 	downFragWeight_ = weight;
-}
-
-void Event::setTau1( float tau ) {
-	tau1_ = tau;
-}
-
-void Event::setTau2( float tau ) {
-	tau2_ = tau;
-}
-
-void Event::setTau3( float tau ) {
-	tau3_ = tau;
-}
-
-void Event::setTau4( float tau ) {
-	tau4_ = tau;
 }
 
 const std::vector<int> Event::generatorSystematicWeightsID() const {
@@ -1473,6 +1443,54 @@ bool Event::passesECALLaserCorrFilter() const {
 
 bool Event::passesTrackingPOGFilters() const {
 	return passesTrackingPOGFilters_;
+}
+
+double Event::getTau1() const {
+	return tau1_;
+}
+
+void Event::setTau1(double tau) {
+	tau1_ = tau;
+}
+
+double Event::getTau2() const {
+	return tau2_;
+}
+
+void Event::setTau2(double tau) {
+	tau2_ = tau;
+}
+
+double Event::getTau3() const {
+	return tau3_;
+}
+
+void Event::setTau3(double tau) {
+	tau3_ = tau;
+}
+
+double Event::getTau4() const {
+	return tau4_;
+}
+
+void Event::setTau4(double tau) {
+	tau4_ = tau;
+}
+
+double Event::getTau5() const {
+	return tau5_;
+}
+
+void Event::setTau5(double tau) {
+	tau5_ = tau;
+}
+
+double Event::getTau6() const {
+	return tau6_;
+}
+
+void Event::setTau6(double tau) {
+	tau6_ = tau;
 }
 
 double Event::HT(const JetCollection jets, const double jetPtThreshold ) {

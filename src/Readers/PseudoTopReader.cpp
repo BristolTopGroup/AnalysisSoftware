@@ -34,6 +34,12 @@ PseudoTopReader::PseudoTopReader() :
     pseudoTop_lepton_pdgIdReader_(),
     pseudoTop_met_exReader_(),
     pseudoTop_met_eyReader_(),
+    tau1_Reader_(),
+    tau2_Reader_(),
+    tau3_Reader_(),
+    tau4_Reader_(),
+    tau5_Reader_(),
+    tau6_Reader_(),
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new MCParticle() ),
@@ -68,6 +74,14 @@ PseudoTopReader::PseudoTopReader(TChainPointer input) :
     pseudoTop_lepton_pdgIdReader_(input, "PseudoTopLeptons.pdgId"),
     pseudoTop_met_exReader_(input, "PseudoTopMETs.Ex"),
     pseudoTop_met_eyReader_(input, "PseudoTopMETs.Ey"),
+
+    tau1_Reader_(input, "Event.tau1"),
+    tau2_Reader_(input, "Event.tau2"),
+    tau3_Reader_(input, "Event.tau3"),
+    tau4_Reader_(input, "Event.tau4"),
+    tau5_Reader_(input, "Event.tau5"),
+    tau6_Reader_(input, "Event.tau6"),
+    
     pseudoTopParticles_( new PseudoTopParticles() ),
     newPseudoTops_(),
     newLeptonicW_( new MCParticle() ),
@@ -200,6 +214,13 @@ void PseudoTopReader::readPseudoTopParticles() {
 
     pseudoTopParticles_->setPseudoMET( METPointer( newPseudoMET_ ) );
 
+    // Get Pseudo NJettiness
+    pseudoTopParticles_->setPseudoTau1( tau1_Reader_.getVariable() );
+    pseudoTopParticles_->setPseudoTau2( tau2_Reader_.getVariable() );
+    pseudoTopParticles_->setPseudoTau3( tau3_Reader_.getVariable() );
+    pseudoTopParticles_->setPseudoTau4( tau4_Reader_.getVariable() );
+    pseudoTopParticles_->setPseudoTau5( tau5_Reader_.getVariable() );
+    pseudoTopParticles_->setPseudoTau6( tau6_Reader_.getVariable() );
 
     // Get Jets for HT calculation
     for (unsigned int index = 0; index < pseudoTop_jet_energyReader_.size(); index++) {
@@ -263,6 +284,14 @@ void PseudoTopReader::initialise() {
     // pseudoTop_met_pzReader_.initialiseBlindly();
     pseudoTop_met_exReader_.initialiseBlindly();
     pseudoTop_met_eyReader_.initialiseBlindly();
+
+    tau1_Reader_.initialiseBlindly();
+    tau2_Reader_.initialiseBlindly();
+    tau3_Reader_.initialiseBlindly();
+    tau4_Reader_.initialiseBlindly();
+    tau5_Reader_.initialiseBlindly();
+    tau6_Reader_.initialiseBlindly();
+
 }
 
 }

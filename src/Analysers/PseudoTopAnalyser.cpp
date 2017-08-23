@@ -72,7 +72,8 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 		++nEventsOfflineButNotInPS_;
 	}
 
-	if ( passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, minNJets_, minNBJets_, minJetPt_, minJetPt_lowerThreshold_ ) ) {
+	bool passesGenSelection_lowerThresholdLastJet = passesEventSelection( pseudoLepton, pseudoJets, pseudoBs, allPseudoLeptons, minNJets_, minNBJets_, minJetPt_, minJetPt_lowerThreshold_ );
+	if ( passesGenSelection_lowerThresholdLastJet ) {
 		++nEventsInPS_lowerThresholdLastJet_;
 		treeMan_->Fill("passesGenEventSelection_20GeVLastJet",1);
 
@@ -254,6 +255,13 @@ void PseudoTopAnalyser::analyse(const EventPtr event) {
 
 	treeMan_->Fill("NPseudoJets_20GeVLastJet", numberOfJets_20GeVLastJet );
 	treeMan_->Fill("NPseudoBJets_20GeVLastJet", numberOfBJets_20GeVLastJet );
+
+	treeMan_->Fill("pseudoTau1", pseudoTopParticles->getPseudoTau1() );
+	treeMan_->Fill("pseudoTau2", pseudoTopParticles->getPseudoTau2() );
+	treeMan_->Fill("pseudoTau3", pseudoTopParticles->getPseudoTau3() );
+	treeMan_->Fill("pseudoTau4", pseudoTopParticles->getPseudoTau4() );
+	treeMan_->Fill("pseudoTau5", pseudoTopParticles->getPseudoTau5() );
+	treeMan_->Fill("pseudoTau6", pseudoTopParticles->getPseudoTau6() );
 }
 
 void PseudoTopAnalyser::createTrees() {
@@ -298,6 +306,13 @@ void PseudoTopAnalyser::createTrees() {
 	treeMan_->addBranch("pseudoWPT_reco", "F","Unfolding");
 	treeMan_->addBranch("pseudoWPT", "F","Unfolding");
 	treeMan_->addBranch("pseudoMT", "F","Unfolding");
+
+	treeMan_->addBranch("pseudoTau1", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau2", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau3", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau4", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau5", "F","Unfolding");
+	treeMan_->addBranch("pseudoTau6", "F","Unfolding");
 
 	// Number of pseudo jets
 	treeMan_->addBranch("NPseudoJets", "F", "Unfolding");
@@ -360,7 +375,7 @@ bool PseudoTopAnalyser::passesEventSelection( const MCParticlePointer pseudoLept
 			}
 		}
 	}
-	
+
 	// if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets && numberGoodBJets >= minNBJets ) {
 	if ( numberGoodLeptons == 1 && numberVetoLeptons <= 1 && numberGoodJets >= minNJets_ - 1 && numberGoodBJets >= minNBJets - 1 && numberGoodJets_lowerPt >= minNJets_ && numberGoodBJets_lowerPt >= minNBJets ) {
 		return true;

@@ -85,6 +85,8 @@ NTupleEventReader::NTupleEventReader() :
 		tau2Reader_( new VariableReader<float>( input, "Jets.tau2")), //
 		tau3Reader_( new VariableReader<float>( input, "Jets.tau3")), //
 		tau4Reader_( new VariableReader<float>( input, "Jets.tau4")), //
+		tau5Reader_( new VariableReader<float>( input, "Jets.tau5")), //
+		tau6Reader_( new VariableReader<float>( input, "Jets.tau6")), //
 		PileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.PileUpInteractions")), //
 		TruePileupInfoReader(new VariableReader<MultiIntPointer>(input, "Event.NumberOfTrueInteractions")), //
 		PUWeightInTimeOnly_(new VariableReader<double>(input, "Event.PUWeightInTimeOnly")), //
@@ -295,6 +297,8 @@ const EventPtr NTupleEventReader::getNextEvent() {
 	currentEvent->setTau2( tau2Reader_->getVariable() );
 	currentEvent->setTau3( tau3Reader_->getVariable() );
 	currentEvent->setTau4( tau4Reader_->getVariable() );
+	currentEvent->setTau5( tau5Reader_->getVariable() );
+	currentEvent->setTau6( tau6Reader_->getVariable() );
 
 	double sysShiftMetCorrectionX = 0;
 	double sysShiftMetCorrectionY = 0;
@@ -423,6 +427,8 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 		tau2Reader_->initialiseBlindly();
 		tau3Reader_->initialiseBlindly();
 		tau4Reader_->initialiseBlindly();
+		tau5Reader_->initialiseBlindly();
+		tau6Reader_->initialiseBlindly();
 
 		TruePileupInfoReader->initialiseBlindly();
 
@@ -465,6 +471,7 @@ void NTupleEventReader::initiateReadersIfNotSet() {
 				metReaders.at(index)->initialise();
 
 		}
+
 		genMetReader->initialise();
 		areReadersSet = true;
 	}

@@ -125,6 +125,8 @@ private:
 	boost::scoped_ptr<VariableReader<float> > tau2Reader_;
 	boost::scoped_ptr<VariableReader<float> > tau3Reader_;
 	boost::scoped_ptr<VariableReader<float> > tau4Reader_;
+	boost::scoped_ptr<VariableReader<float> > tau5Reader_;
+	boost::scoped_ptr<VariableReader<float> > tau6Reader_;
 
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > PileupInfoReader;
 	boost::scoped_ptr<VariableReader<MultiIntPointer> > TruePileupInfoReader;
@@ -133,6 +135,7 @@ private:
 	boost::scoped_ptr<VariableReader<double> > sumETReader_;
 	boost::scoped_ptr<VariableReader<bool> > HCALLaserFilter, ECALDeadCellFilter, ECALDeadCellTPFilter, TrackingFailureFilter,
 								CSCTightHaloId, EEBadSCFilter, ECALLaserCorrFilter, TrackingPOGFilters;
+	
 	bool areReadersSet, areDatatypesKnown;
 	EventPtr currentEvent;
 	boost::array<bool, DataType::NUMBER_OF_DATA_TYPES> seenDataTypes;
