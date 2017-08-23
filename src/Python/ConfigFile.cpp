@@ -43,6 +43,7 @@ ConfigFile::ConfigFile(int argc, char **argv) :
 		muonTrackingScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "MuonTrackingScaleFactorsFile")), //
 		getElectronScaleFactorsFromFile_(PythonParser::getAttributeFromPyObject<bool>(config, "getElectronScaleFactorsFromFile")), //
 		electronIdScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdScaleFactorsFile")), //
+		electronIdScaleFactorsFile_etaBins_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronIdScaleFactorsFile_etaBins")), //
 		electronRecoScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronRecoScaleFactorsFile")), //
 		electronTriggerScaleFactorsFile_(PythonParser::getAttributeFromPyObject<string>(config, "ElectronTriggerScaleFactorsFile")), //
 		bJetResoFile_(PythonParser::getAttributeFromPyObject<string>(config, "bJetResoFile")), //
@@ -287,6 +288,13 @@ string ConfigFile::ElectronIdScaleFactorsFile() const {
 		return programOptions["ElectronIdScaleFactorsFile"].as<std::string>();
 	else
 		return electronIdScaleFactorsFile_;
+}
+
+string ConfigFile::ElectronIdScaleFactorsFile_etaBins() const {
+	if (programOptions.count("ElectronIdScaleFactorsFile_etaBins"))
+		return programOptions["ElectronIdScaleFactorsFile_etaBins"].as<std::string>();
+	else
+		return electronIdScaleFactorsFile_etaBins_;
 }
 
 string ConfigFile::ElectronRecoScaleFactorsFile() const {
@@ -545,15 +553,19 @@ void ConfigFile::loadIntoMemory() {
 	if ( getElectronScaleFactorsFromFile_ 
 		&& boost::filesystem::exists(ElectronTriggerScaleFactorsFile()) 
 		&& boost::filesystem::exists(ElectronIdScaleFactorsFile()) 
+		&& boost::filesystem::exists(ElectronIdScaleFactorsFile_etaBins()) 
 		&& boost::filesystem::exists(ElectronRecoScaleFactorsFile())
 		) {
 		std::cout << "Getting electron scale factors from file :"  << std::endl
 			<< ElectronTriggerScaleFactorsFile()  << std::endl
 			<< ElectronIdScaleFactorsFile() << std::endl
+			<< ElectronIdScaleFactorsFile_etaBins() << std::endl
 			<< ElectronRecoScaleFactorsFile() << std::endl;
 		Globals::electronTriggerScaleFactorsHistogram = getElectronTriggerScaleFactorsHistogram(ElectronTriggerScaleFactorsFile());
 		Globals::electronIdScaleFactorsHistogram = getElectronIdScaleFactorsHistogram(ElectronIdScaleFactorsFile());
+		Globals::electronIdScaleFactorsHistogram_etaBins = getElectronIdScaleFactorsHistogram_etaBins(ElectronIdScaleFactorsFile_etaBins());
 		Globals::electronRecoScaleFactorsHistogram = getElectronRecoScaleFactorsHistogram(ElectronRecoScaleFactorsFile());
+
 
 	}
 	else{
@@ -742,6 +754,21 @@ boost::shared_ptr<TH2F> ConfigFile::getElectronIdScaleFactorsHistogram(std::stri
 	}
 
 	boost::scoped_ptr<TFile> file(TFile::Open(electronIdScaleFactorsFile.c_str()));
+	boost::shared_ptr<TH2F> idHistogram((TH2F*) file->Get("EGamma_SF2D")->Clone());
+	file->Close();
+
+	return idHistogram;
+}
+
+boost::shared_ptr<TH2F> ConfigFile::getElectronIdScaleFactorsHistogram_etaBins(std::string electronIdScaleFactorsFile_etaBins) {
+	using namespace std;
+
+	if (!boost::filesystem::exists(electronIdScaleFactorsFile_etaBins)) {
+		cerr << "ConfigFile::getElectronIdScaleFactorsHistogram(" << electronIdScaleFactorsFile_etaBins << "): could not find file" << endl;
+		throw "Could not find electron ID scale factors histogram file in " + electronIdScaleFactorsFile_etaBins;
+	}
+
+	boost::scoped_ptr<TFile> file(TFile::Open(electronIdScaleFactorsFile_etaBins.c_str()));
 	boost::shared_ptr<TH2F> idHistogram((TH2F*) file->Get("EGamma_SF2D")->Clone());
 	file->Close();
 

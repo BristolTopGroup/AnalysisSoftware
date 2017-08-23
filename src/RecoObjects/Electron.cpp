@@ -317,6 +317,22 @@ void Electron::setNumberOfMissingInnerLayerHits(double missingHits) {
 	innerLayerMissingHits_ = missingHits;
 }
 
+void Electron::setElectronEta(double eta) {
+	electronEta_ = eta;
+}
+
+void Electron::setGsfTrackEta(double eta) {
+	gsfTrackEta_ = eta;
+}
+
+double Electron::electronEta() {
+	return electronEta_;
+}
+
+double Electron::gsfTrackEta() {
+	return gsfTrackEta_;
+}
+
 unsigned short Electron::getClosestJetIndex(const JetCollection& jets) const {
 	unsigned short idOfClosest = 999;
 	double closestDR = 999.;
@@ -436,27 +452,20 @@ double Electron::mvaNonTrigV0() const {
 	return mvaNonTrigV0_;
 }
 
-// double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) const {
-// 	if ( electron_scale_factor_systematic == 0 ) {
-// 		return 1.;
-// 	}
-// 	else if ( electron_scale_factor_systematic == -1 ) {
-// 		return 0.99;
-// 	}
-// 	else if ( electron_scale_factor_systematic == 1 ) {
-// 		return 1.01;
-// 	}
+double Electron::getEfficiencyCorrection( int electron_scale_factor_systematic ) const {
 
-// 	return 0.;
-// }
+	double dummy = 1;
+	return getEfficiencyCorrection( electron_scale_factor_systematic, dummy );
+}
 
-
-double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) const {
+double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic, double& correctionFromEtaOnly ) const {
 	double electronPt = pt();
 	// double electronEta = fabs(eta());
 	double electronSCEta = superClusterEta();
 	double maxPt, maxEta;
-	unsigned int bin;
+	unsigned int bin = 0;
+	correctionFromEtaOnly = 1;
+
 
 	// Trigger scalefactor
 	double triggerEfficiency(1.);
@@ -495,33 +504,51 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 	double idSF(1.);
 	double idSFError(0.);
 	boost::shared_ptr<TH2F> electronIDScaleFactorsHistogram(Globals::electronIdScaleFactorsHistogram);
+
+	double idSF_etaBins(1.);
+	double idSFError_etaBins(0.);
+	boost::shared_ptr<TH2F> electronIdScaleFactorsHistogram_etaBins(Globals::electronIdScaleFactorsHistogram_etaBins);
+
 	maxPt = electronIDScaleFactorsHistogram->GetYaxis()->GetXmax();
 	maxEta = electronIDScaleFactorsHistogram->GetXaxis()->GetXmax();
 
 	bin = 0;
+	unsigned int bin_etaBin = 0;
 	if ( electronPt <= maxPt && fabs( electronSCEta ) < maxEta ) {
 		bin = electronIDScaleFactorsHistogram->FindBin( electronSCEta, electronPt );
+		bin_etaBin = electronIdScaleFactorsHistogram_etaBins->FindBin(electronSCEta, electronPt );
 	}
 	else {
 		double lastPtBinCentre = electronPt;
 		double lastEtaBinCentre = electronSCEta;
+		double lastPtBinCentre_etaBins = electronPt;
+		double lastEtaBinCentre_etaBins = electronSCEta;
 		if ( electronPt > maxPt ){
 			lastPtBinCentre = electronIDScaleFactorsHistogram->GetYaxis()->GetBinCenter( 
 				electronIDScaleFactorsHistogram->GetNbinsY() );
+			lastPtBinCentre_etaBins = electronIdScaleFactorsHistogram_etaBins->GetYaxis()->GetBinCenter( 
+				electronIdScaleFactorsHistogram_etaBins->GetNbinsY() );
 		}
 		if ( fabs( electronSCEta ) > maxEta ){
 			if ( electronSCEta > 0 ) {
 				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetXaxis()->GetBinCenter( 
-					electronIDScaleFactorsHistogram->GetNbinsX() );			
+					electronIDScaleFactorsHistogram->GetNbinsX() );	
+				lastEtaBinCentre_etaBins = electronIdScaleFactorsHistogram_etaBins->GetXaxis()->GetBinCenter( 
+					electronIdScaleFactorsHistogram_etaBins->GetNbinsX() );
 			}
 			else {
 				lastEtaBinCentre = electronIDScaleFactorsHistogram->GetXaxis()->GetBinCenter( 1 );							
+				lastEtaBinCentre_etaBins = electronIdScaleFactorsHistogram_etaBins->GetXaxis()->GetBinCenter( 1 );							
 			}
 		}
 		bin = electronIDScaleFactorsHistogram->FindBin( lastEtaBinCentre, lastPtBinCentre );
+		bin_etaBin = electronIdScaleFactorsHistogram_etaBins->FindBin(lastEtaBinCentre_etaBins, lastPtBinCentre_etaBins );
 	}
 	idSF = electronIDScaleFactorsHistogram->GetBinContent( bin );
 	idSFError = electronIDScaleFactorsHistogram->GetBinError( bin );
+
+	idSF_etaBins = electronIdScaleFactorsHistogram_etaBins->GetBinContent( bin_etaBin );
+	idSFError_etaBins = electronIdScaleFactorsHistogram_etaBins->GetBinError( bin_etaBin );
 
 
 	// Reco scalefactor
@@ -565,12 +592,18 @@ double Electron::getEfficiencyCorrection(int electron_scale_factor_systematic) c
 		recoSF -= recoSFError;
 		triggerEfficiency -= triggerEfficiencyError;
 
+		idSF_etaBins -= idSFError_etaBins;
+
 	}
 	else if ( electron_scale_factor_systematic == 1 ) {
 		idSF += idSFError;
 		recoSF += recoSFError;
 		triggerEfficiency += triggerEfficiencyError;
+
+		idSF_etaBins += idSFError_etaBins;
 	}
+
+	correctionFromEtaOnly = triggerEfficiency * idSF_etaBins * recoSF;
 
 	// return idSF * recoSF;
 	return triggerEfficiency * idSF * recoSF;

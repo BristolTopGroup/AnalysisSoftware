@@ -106,6 +106,11 @@ public:
     void setRobustLooseID(bool id);
     void setRobustTightID(bool id);
 
+    void setElectronEta(double eta);
+    void setGsfTrackEta( double eta );
+    double electronEta();
+    double gsfTrackEta();
+
     void setSuperClusterEta(double eta);
     void setNumberOfMissingInnerLayerHits(double missingHits);
     void setUsedAlgorithm(ElectronAlgorithm::value algo);
@@ -126,7 +131,9 @@ public:
     void setIsTightConversionElectron(bool passes);
     void setIsTightNonIsoElectron(bool passes);
 
-    double getEfficiencyCorrection(int electron_scale_factor_systematic) const;
+    double getEfficiencyCorrection(int electron_scale_factor_systematic ) const;
+    double getEfficiencyCorrection(int electron_scale_factor_systematic, double& correctionFromEtaOnly ) const;
+
     virtual double pfRelativeIsolation(double coneSize = 0.3, bool deltaBetaCorrection = true) const;
     // double PFRelIsoWithEA() const;
 
@@ -141,6 +148,8 @@ private:
     // double PFRelIsoWithEA_;//
     bool robustLooseId, robustTightId;
     double superCluser_Eta;
+    double electronEta_;
+    double gsfTrackEta_;
     double innerLayerMissingHits_;
     //used for electron ID
     double sigma_IEtaIEta, dPhi_In, dEta_In, hadOverEm;
